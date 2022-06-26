@@ -2,19 +2,15 @@
 import { defineEmits } from 'vue';
 
 import IconTime from '~icons/app/time';
-import IconRemove from '~icons/app/remove';
+
 import IconHeart from '~icons/app/heart';
-
-import { useUserInfoStore } from '@/stores';
-
-const userInfo = useUserInfoStore();
 
 const i18n = {
   download: '下载量',
   uploadTime: '上传时间',
 };
 
-const props = defineProps({
+defineProps({
   detailData: {
     type: Object,
     default: () => {
@@ -29,10 +25,6 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'jump']);
 
-function removeItemClick(item) {
-  emit('delete', [item, props.name]);
-}
-
 function goDetailClick(item) {
   emit('jump', item);
 }
@@ -45,12 +37,12 @@ function goDetailClick(item) {
       class="project-item"
       @click="goDetailClick(item)"
     >
-      <o-icon
+      <!-- <o-icon
         v-if="userInfo.userName === detailData.owner_name.name"
         class="remove-item"
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove
-      ></o-icon>
+      ></o-icon> -->
       <div
         class="card-top"
         :style="{ backgroundImage: 'url(' + item.photo + ')' }"
@@ -121,8 +113,9 @@ function goDetailClick(item) {
     padding: 8px 24px;
     font-size: 18px;
     background-position: center;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    object-fit: scale-down;
+    // background-size: 100% 100%;
+    // background-repeat: no-repeat;
   }
 
   .project-bottom {

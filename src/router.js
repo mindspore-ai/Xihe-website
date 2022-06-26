@@ -139,6 +139,14 @@ export const routes = [
       },
     ],
   },
+  // 个人主页空白页，用于点击左侧按钮刷新粉丝数量
+  {
+    path: '/:user/userblack',
+    name: 'userblack',
+    component: () => {
+      return import('@/views/user/UserBlack.vue');
+    },
+  },
   // 个人中心设置页
   {
     path: '/settings',
@@ -321,7 +329,7 @@ export const routes = [
     },
     children: [
       {
-        path: 'card',
+        path: '',
         name: 'datasetCard',
         component: () => {
           return import('@/views/dataset/DatasetCard.vue');
@@ -421,10 +429,9 @@ export const routes = [
     component: () => {
       return import('@/views/project/ProjectDetail.vue');
     },
-    redirect: '/projects/:user/:name/card',
     children: [
       {
-        path: 'card',
+        path: '',
         name: 'projectCard',
         component: () => {
           return import('@/views/project/ProjectCard.vue');

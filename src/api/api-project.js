@@ -197,10 +197,10 @@ export function trainList(projectId) {
  * 终止训练
  * @returns
  */
-export function stopTrain(projectId, trainId){
+export function stopTrain(projectId, trainId) {
   console.log(projectId, trainId);
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
-  return request.put(url, null,getHeaderConfig()).then((res) => {
+  return request.put(url, null, getHeaderConfig()).then((res) => {
     return res;
   });
 }
@@ -249,8 +249,42 @@ export function projectFork(params, projectId) {
 export function getTrainLog(params) {
   const { projectId, trainId } = params;
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
+  console.log(url);
   return request
     .get(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 新增项目推理
+ * @returns
+ */
+export function startInference(params) {
+  // const { projectId } = params;
+  const url = `/api/projects/${params}/inference/infertask/`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 终止项目推理
+ * @returns
+ */
+export function stopInference(params) {
+  // const { projectId } = params;
+  const url = `/api/projects/${params}/inference/infertask/`;
+  console.log('params', params);
+  return request
+    .delete(url, getHeaderConfig())
     .then((res) => {
       return res;
     })

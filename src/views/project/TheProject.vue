@@ -18,6 +18,9 @@ import { debounce } from 'lodash/function';
 
 import { getProjectData, getModelTags } from '@/api/api-project';
 
+import { useLoginStore, useUserInfoStore } from '@/stores';
+
+const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';
 // const fileData = useFileData();
 // const detailData = computed(() => {
@@ -352,7 +355,7 @@ getModelTag();
 
 function goDetail(user, name) {
   router.push({
-    path: `/projects/${user}/${name}/card`,
+    path: `/projects/${user}/${name}`,
   });
 }
 
@@ -403,7 +406,7 @@ onMounted(() => {
           <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">{{ i18n.head.introduce }}</div>
         </div>
-        <div class="banner-right">
+        <div v-if="loginStore.isLogined" class="banner-right">
           <o-button type="primary" @click="goSetNew">{{
             i18n.head.btn
           }}</o-button>
@@ -411,6 +414,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="model-body warp">
+      <div></div>
       <!-- 标签二级(全部) -->
       <div v-show="showDetail" class="condition">
         <p class="getback" @click="backCondition">

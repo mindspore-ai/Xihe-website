@@ -25,7 +25,6 @@ const props = defineProps({
     default: 'python',
   },
 });
-console.log(props.modelValue);
 const language = ref('');
 const fillLang = {
   py: 'python',

@@ -68,7 +68,7 @@ let tabTitle = reactive([
   {
     label: '数据集卡片',
     id: 0,
-    path: 'card',
+    path: '',
     isPrivate: false,
   },
   {
@@ -155,7 +155,6 @@ function handleTabClick(item) {
 }
 // 点击标签
 function tagClick(it, key) {
-  console.log('key', key);
   // if (key === 'task' || key === 'licenses') {
   if (key === 'licenses') {
     if (it.isActive) {
@@ -163,14 +162,29 @@ function tagClick(it, key) {
       renderList.value[key].forEach((item) => {
         item.isSelected = false;
       });
+      headTags.value.forEach((item, index) => {
+        if (item.name == it.name) {
+          headTags.value.splice(index, 1);
+        }
+      });
     } else {
       renderList.value[key].forEach((item) => {
+        if (item.isActive === true) {
+          headTags.value.forEach((tag, index) => {
+            if (item.name == tag.name) {
+              headTags.value.splice(index, 1);
+            }
+          });
+          item.isActive = false;
+        }
         item.isSelected = true;
-        item.isActive = false;
       });
       it.isActive = true;
       it.isSelected = false;
+      headTags.value.push(it);
     }
+    console.log('isActive', it.isActive);
+    console.log('isSelected', it.isSelected);
   } else {
     it.isActive = !it.isActive;
     if (it.isActive === true) {
@@ -519,10 +533,10 @@ watch(
                   v-for="item in renderList[menu.key]"
                   :key="item.id"
                   class="condition-detail"
-                  :class="
-                    ({ 'condition-active': item.isActive },
-                    { 'condition-active1': item.isSelected })
-                  "
+                  :class="[
+                    { 'condition-active': item.isActive },
+                    { 'condition-active1': item.isSelected },
+                  ]"
                   @click="tagClick(item, menu.key)"
                 >
                   {{ item.name }}
@@ -583,27 +597,34 @@ $theme: #0d8dff;
       display: flex;
       align-items: center;
       padding: 0 12px;
-      margin: 0 16px 16px 0;
+      margin: 0 16px 10px 0;
       height: 28px;
       font-size: 14px;
-      color: #555;
+      // color: #555;
+      color: $theme;
       user-select: none;
       background-color: #f3f9ff;
       border-radius: 8px;
       border: 1px solid #e5e5e5;
-      // .icon-x {
-      //   display: none;
-      // }
-    }
-    .condition-active {
-      color: $theme;
+      .icon-x {
+        padding: 2px;
+        font-size: 20px;
+      }
     }
   }
 }
 :deep .el-dialog {
-  min-height: 664px;
+  width: 800px;
+  min-height: 502px;
+  --el-dialog-margin-top: 24vh;
 }
 .dialog-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 472px;
+  padding-bottom: 60px;
   :deep .el-tabs__item {
     width: 188px;
     height: 56px;

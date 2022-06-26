@@ -59,13 +59,13 @@ if (routerParams.contents.length) {
 } else {
   currentContents = `${routerParams.name}/`;
 }
+console.log(route.params.contents);
 async function upLoadObs(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let path = `xihe-obj/projects/${
-        route.params.user
-      }/${currentContents}${query.fileName.trim()}`;
+      let path = `xihe-obj/projects/${route.params.user
+        }/${currentContents}${query.fileName.trim()}`;
       let blob = new Blob([query.textValue], {
         type: 'text/plain;charset=utf-8',
       });

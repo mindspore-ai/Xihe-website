@@ -14,7 +14,7 @@ import OIcon from '@/components/OIcon.vue';
 import OHeart from '@/components/OHeart.vue';
 import OPopper from '@/components/OPopper.vue';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
 import {
   getProjectData,
@@ -25,6 +25,7 @@ import {
 } from '@/api/api-project';
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
+const loginStore = useLoginStore();
 
 const router = useRouter();
 const route = useRoute();
@@ -78,7 +79,7 @@ let tabTitle = reactive([
   {
     label: '推理',
     id: 0,
-    path: 'card',
+    path: '',
     isPrivate: false,
   },
   {
@@ -134,8 +135,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -212,7 +213,7 @@ function forkCreateClick() {
         if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
-            `/projects/${userInfoStore.userName}/${forkForm.storeName}/card`
+            `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );
         } else {
           loadingShow.value = false;
@@ -277,13 +278,14 @@ function getDetailData() {
         router.push('/notfound');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -515,7 +517,7 @@ watch(
       getDetailData();
     } else if (
       router.currentRoute.value.path ==
-      `/projects/${userInfoStore.userName}/${forkForm.storeName}/card`
+      `/projects/${userInfoStore.userName}/${forkForm.storeName}`
     ) {
       getDetailData();
     }
@@ -591,7 +593,7 @@ function goTrain(path) {
             </div>
           </div>
         </div>
-        <div>
+        <div v-if="loginStore.isLogined">
           <o-button @click="forkClick">
             <div class="fork-btn">
               <o-icon><icon-fork></icon-fork></o-icon> Fork
@@ -733,6 +735,7 @@ function goTrain(path) {
           :model="forkForm"
           :rules="rules"
           :label-position="tabPosition"
+          hide-required-asterisk
         >
           <el-form-item label="拥有者" prop="owner">
             <el-select v-model="forkForm.owner">

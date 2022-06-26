@@ -2,7 +2,7 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconModel from '~icons/app/model-blue';
+import IconProject from '~icons/app/project';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import IconDownload from '~icons/app/download';
@@ -78,6 +78,7 @@ function getDetailData(path) {
           return b.is_folder - a.is_folder;
         });
       } else if (route.params.contents && route.params.contents.length) {
+        filesList.value = [];
         useFileData().fileStoreData['is_empty'] = false;
       } else {
         useFileData().fileStoreData['is_empty'] = true;
@@ -99,7 +100,9 @@ function getFilesByPath() {
     );
   } else {
     // 根目录下
-    getDetailData(`xihe-obj/projects/${route.params.user}/${routerParams.name}/`);
+    getDetailData(
+      `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
+    );
   }
 }
 function emptyClick(ind) {
@@ -200,7 +203,7 @@ watch(
         <tr class="tree-head">
           <td class="tree-head-left">
             <div class="inner-box">
-              <o-icon><icon-model></icon-model> </o-icon>
+              <o-icon><icon-project></icon-project> </o-icon>
               <span class="tree-head-left-describe" title="模型描述">{{
                 detailData.description
               }}</span>

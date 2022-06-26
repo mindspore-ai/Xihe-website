@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Markdown from 'markdown-it';
 
@@ -18,6 +18,8 @@ import {
   modifyProjectAdd,
   addModel,
   modifyModelAdd,
+  startInference,
+  stopInference,
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -178,7 +180,8 @@ function confirmClick() {
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
         console.log(res);
-        if (res.status === 100) {
+        if (res.status === 200) {
+          emit('on-click');
           isShow1.value = false;
           addSearch.value = '';
         }
@@ -235,27 +238,51 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    findFile(
-      `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
-    ).then((tree) => {
-      if (
-        tree.status === 200 &&
-        tree.data.children &&
-        tree.data.children.length
-      ) {
-        README = tree.data.children.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README[0]) {
-          downloadObs(README[0].path).then((res) => {
-            res ? (codeString.value = res) : '';
+    if (detailData.value.sdk_name === 'Gradio') {
+      findFile(
+        `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
+      ).then((tree) => {
+        if (
+          tree.status === 200 &&
+          tree.data.children &&
+          tree.data.children.length
+        ) {
+          README = tree.data.children.filter((item) => {
+            return item.name === 'README.md';
           });
-          result.value = mkit.render(codeString.value);
-        } else {
-          codeString.value = '';
+          if (README[0]) {
+            downloadObs(README[0].path).then((res) => {
+              res ? (codeString.value = res) : '';
+            });
+            result.value = mkit.render(codeString.value);
+          } else {
+            codeString.value = '';
+          }
         }
-      }
-    });
+      });
+    } else {
+      findFile(
+        `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
+      ).then((tree) => {
+        if (
+          tree.status === 200 &&
+          tree.data.children &&
+          tree.data.children.length
+        ) {
+          README = tree.data.children.filter((item) => {
+            return item.name === 'README.md';
+          });
+          if (README[0]) {
+            downloadObs(README[0].path).then((res) => {
+              res ? (codeString.value = res) : '';
+            });
+            result.value = mkit.render(codeString.value);
+          } else {
+            codeString.value = '';
+          }
+        }
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -296,11 +323,11 @@ function emptyClick(ind) {
 }
 
 function goDetailClick(val) {
-  router.push(`/models/${val.owner_name.name}/${val.name}/card`);
+  router.push(`/models/${val.owner_name.name}/${val.name}`);
 }
 
 function goDetasetClick(val) {
-  router.push(`/datasets/${val.owner_name.name}/${val.name}/card`);
+  router.push(`/datasets/${val.owner_name.name}/${val.name}`);
 }
 
 watch(
@@ -314,38 +341,140 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
+//判断是否有app.py
+findFile(
+  `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
+).then((res) => {
+  console.log('inference/app.py', res.data.children.length);
+  canStart.value = !!res.data.children.length ? true : false;
+});
+//判断显示哪一个页面
+const canStart = ref(false);
+const msg = ref('未启动');
+const clientSrc = ref('http://www.bilibili.com');
+let timer = null;
+// 启动推理
+function start() {
+  startInference(detailData.value.id).then((res) => {
+    console.log('res', res);
+    msg.value = '启动中';
+    // if (socket.readyState === 1) {
+    //   socket.send(JSON.stringify({ pk: detailData.value.id }));
+    //   socket.onopen;
+    // } else {
+    //   socket.onopen;
+    // }
+    const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/inference');
+    socket.onopen;
+  });
+}
+//停止推理
+function stop() {
+  stopInference(detailData.value.id).then((res) => {
+    console.log('res', res);
+    socket.send(JSON.stringify({ pk: detailData.value.id }));
+    closeConn();
+    clearInterval(timer);
+    msg.value = '';
+  });
+}
+const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/inference');
+// console.log(socket.readyState);
+socket.onopen = function () {
+  console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
+  timer = setInterval(() => {
+    socket.send(JSON.stringify({ pk: detailData.value.id }));
+  }, 5000);
+};
+socket.onmessage = function (event) {
+  console.log('收到服务器消息', JSON.parse(event.data));
+  msg.value = JSON.parse(event.data).msg;
+  if (!!JSON.parse(event.data).data) {
+    clientSrc.value = JSON.parse(event.data).data.url;
+  }
+  if (detailData.value.is_owner) {
+    if (
+      JSON.parse(event.data).msg === '启动失败' ||
+      JSON.parse(event.data).msg === '文件收集失败' ||
+      JSON.parse(event.data).msg === '创建项目推理任务错误'
+    ) {
+      stopInference(detailData.value.id).then((res) => {
+        console.log(res);
+      });
+    }
+  }
+};
+function closeConn() {
+  socket.close(); // 向服务端发送断开连接的请求
+}
+onUnmounted(() => {
+  closeConn();
+  clearInterval(timer);
+});
 </script>
 <template>
   <div v-if="detailData" class="model-card">
-    <div v-if="codeString" class="markdown-body">
-      <!-- <div v-highlight class="markdown-file" v-html="result"></div>
-      <o-button v-if="detailData.is_owner" @click="goEditor">{{
-        i18n.editor
-      }}</o-button> -->
-    </div>
-    <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
-      <div class="upload-readme-img">
-        <o-icon> <icon-add-file></icon-add-file> </o-icon>
-      </div>
-      <div class="upload-readme-tip">
-        <p
-          v-for="(item, index) in i18n.uploadReadMe"
-          :key="item"
-          :class="{ 'link-style': index === 1 || index === 3 }"
-          @click="emptyClick(index)"
+    <div v-if="detailData.sdk_name === 'Gradio'" class="left-data2">
+      <div v-if="msg === '运行中'" class="markdown-body">
+        <iframe
+          :src="clientSrc"
+          width="100%"
+          height="100%"
+          frameborder="0"
+        ></iframe>
+        <o-button v-if="detailData.is_owner" status="error" @click="stop"
+          >停止</o-button
         >
-          {{ item }}
-        </p>
+      </div>
+      <div v-else-if="msg === '启动中'" class="markdown-body">
+        <div class="loading">
+          <img src="@/assets/gifs/loading.gif" alt="" />
+          <p>启动中,请耐心等待</p>
+        </div>
+        <o-button disabled type="primary">启动</o-button>
+      </div>
+      <div v-else class="markdown-body">
+        <div v-highlight class="markdown-file" v-html="result"></div>
+        <o-button
+          v-if="detailData.is_owner"
+          type="primary"
+          :disabled="!canStart"
+          @click="start"
+          >启动</o-button
+        >
       </div>
     </div>
-    <div v-else class="upload-readme markdown-body">
-      <div class="upload-readme-img">
-        <o-icon> <icon-file></icon-file> </o-icon>
+    <div v-else class="left-data1">
+      <div v-if="codeString" class="markdown-body">
+        <div v-highlight class="markdown-file" v-html="result"></div>
+        <o-button v-if="detailData.is_owner" @click="goEditor">{{
+          i18n.editor
+        }}</o-button>
       </div>
-      <div class="upload-readme-tip">
-        <p>
-          {{ i18n.emptyVisited }}
-        </p>
+      <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
+        <div class="upload-readme-img">
+          <o-icon> <icon-add-file></icon-add-file> </o-icon>
+        </div>
+        <div class="upload-readme-tip">
+          <p
+            v-for="(item, index) in i18n.uploadReadMe"
+            :key="item"
+            :class="{ 'link-style': index === 1 || index === 3 }"
+            @click="emptyClick(index)"
+          >
+            {{ item }}
+          </p>
+        </div>
+      </div>
+      <div v-else class="upload-readme markdown-body">
+        <div class="upload-readme-img">
+          <o-icon> <icon-file></icon-file> </o-icon>
+        </div>
+        <div class="upload-readme-tip">
+          <p>
+            {{ i18n.emptyVisited }}
+          </p>
+        </div>
       </div>
     </div>
     <div class="right-data">
@@ -398,7 +527,7 @@ watch(
             !detailData.relate_infer_models_list ||
             detailData.relate_infer_models_list.length === 0
           "
-          :relate-name="'project'"
+          :relate-name="'model'"
         ></no-relate>
         <relate-card
           :detail-data="detailData"
@@ -488,14 +617,33 @@ watch(
   min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   .markdown-body {
+    iframe {
+      padding-top: 25px;
+    }
     position: relative;
-    margin-right: 40px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    // margin-right: 40px;
+    // width: 100%;
+    // border-right: 1px solid #d8d8d8;
+    height: 100%;
     .o-button {
       position: absolute;
       top: 0px;
       right: 40px;
+    }
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      img {
+        width: 56px;
+      }
+      p {
+        font-size: 18px;
+        color: #555555;
+        margin-top: 19px;
+      }
     }
   }
   .upload-readme {
@@ -523,6 +671,16 @@ watch(
         }
       }
     }
+  }
+  .left-data1 {
+    margin-right: 40px;
+    width: 100%;
+    border-right: 1px solid #d8d8d8;
+  }
+  .left-data2 {
+    margin-right: 40px;
+    width: 100%;
+    border-right: 1px solid #d8d8d8;
   }
   .right-data {
     max-width: 425px;

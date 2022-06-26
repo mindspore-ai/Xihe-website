@@ -14,31 +14,47 @@ const route = useRoute();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log(detailData.value.is_empty);
 const i18n = {
   addList: [
     {
       value: '新建文件',
       path: 'datasetFileNew',
+      action: () => {
+        router.push({
+          name: 'datasetFileNew',
+          params: {
+            user: route.params.user,
+            name: route.params.name,
+            contents: route.params.contents,
+          },
+        });
+      },
+    },
+    {
+      value: '新建文件夹',
+      path: false,
+      action: () => {
+        useFileData().setShowFolder(true);
+      },
     },
     {
       value: '上传文件',
       path: 'datasetFileUpload',
+      action: () => {
+        router.push({
+          name: 'datasetFileUpload',
+          params: {
+            user: route.params.user,
+            name: route.params.name,
+            contents: route.params.contents,
+          },
+        });
+      },
     },
   ],
   downloadAll: '下载全部',
-  addNew: '添加文件',
+  addNew: '添加',
 };
-function dropdownClick(path) {
-  router.push({
-    name: path,
-    params: {
-      user: route.params.user,
-      name: route.params.name,
-      contents: route.params.contents,
-    },
-  });
-}
 function pathClick(index) {
   let contents = '';
   if (route.params.contents) {
@@ -56,7 +72,12 @@ function pathClick(index) {
 </script>
 <template>
   <div class="model-file">
-    <div :class="{ 'file-top-hide': detailData.is_empty }" class="file-top">
+    <div
+      :class="{
+        'file-top-hide': detailData.is_empty && !route.params.contents,
+      }"
+      class="file-top"
+    >
       <div class="file-top-left">
         <div class="file-path">
           <div class="item-path" @click="pathClick()">
@@ -79,7 +100,7 @@ function pathClick(index) {
             <o-icon><icon-download></icon-download></o-icon>
           </template>
         </o-button>
-        <el-dropdown v-if="detailData.is_owner">
+        <el-dropdown v-if="detailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}
             <template #prefix>
@@ -91,7 +112,7 @@ function pathClick(index) {
               <el-dropdown-item
                 v-for="item in i18n.addList"
                 :key="item.value"
-                @click="dropdownClick(item.path)"
+                @click="item.action()"
                 >{{ item.value }}</el-dropdown-item
               >
             </el-dropdown-menu>

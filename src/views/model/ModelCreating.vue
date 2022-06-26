@@ -15,7 +15,7 @@ const router = useRouter();
 const userInfo = useUserInfoStore();
 
 const i18n = {
-  homePage: '用户首页',
+  homePage: '个人主页',
   createPlaceholder: '新建模型',
   datasetOwner: '拥有者',
   datasetName: '模型名称',
@@ -41,7 +41,7 @@ let query = reactive({
   name: '',
   is_private: 'false',
   description: '',
-  licenses: [null],
+  licenses: null,
 });
 
 try {
@@ -49,16 +49,19 @@ try {
   query.owner_type = JSON.parse(localStorage.getItem('base')).models_type_id;
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
+    console.log(licenses.value);
+    query.licenses = licenses.value[0].id;
   });
 } catch (err) {
   console.log(err);
 }
 function create(formEl) {
-  console.log(query);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      createModelStore(query).then((res) => {
+      let newList = JSON.parse(JSON.stringify(query));
+      newList.licenses = [newList.licenses];
+      createModelStore(newList).then((res) => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -189,14 +192,14 @@ function create(formEl) {
       </el-form-item>
       <el-form-item
         class="item"
-        prop="licenses[0]"
+        prop="licenses"
         :rules="{ required: true, message: '必填项', trigger: 'change' }"
       >
         <div class="requirement">
           <icon-necessary></icon-necessary><span>{{ i18n.license }}</span>
         </div>
         <el-select
-          v-model="query.licenses[0]"
+          v-model="query.licenses"
           class="m-2"
           placeholder="Select"
           size="large"

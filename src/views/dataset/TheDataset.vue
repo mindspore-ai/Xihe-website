@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import OIcon from '@/components/OIcon.vue';
@@ -18,6 +18,8 @@ import { useUserInfoStore } from '@/stores';
 import { getModelTags } from '@/api/api-model';
 import { getDatasetData } from '@/api/api-dataset';
 import { goAuthorize } from '@/shared/login';
+import { debounce } from 'lodash/function';
+
 const userInfoStore = useUserInfoStore();
 
 const route = useRoute();
@@ -101,6 +103,9 @@ let query = reactive({
 });
 
 query.search = route.query.search;
+const debounceSearch = debounce(getDataset, 500, {
+  trailing: true,
+});
 
 function moreClick() {
   showDetail.value = true;
@@ -303,7 +308,7 @@ function dropdownClick(index) {
   query.ordering = index + 1;
 }
 
-function getDataset(query) {
+function getDataset() {
   getDatasetData(query).then((res) => {
     modelCount.value = res.count;
     if (modelCount.value / query.size < 8) {
@@ -358,7 +363,7 @@ getModelTag();
 
 function goDetail(user, name) {
   router.push({
-    path: `/datasets/${user}/${name}/card`,
+    path: `/datasets/${user}/${name}`,
   });
 }
 
@@ -388,12 +393,15 @@ function getKeyWord() {
 watch(
   query,
   () => {
-    getDataset(query);
+    debounceSearch();
   },
   {
     immediate: true,
   }
 );
+onUnmounted(() => {
+  debounceSearch.cancel();
+});
 </script>
 
 <template>
@@ -620,6 +628,7 @@ watch(
             :page-size="query.size"
             :total="modelCount"
             layout="sizes, prev, pager, next, jumper"
+            hide-on-single-page
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           ></el-pagination>
@@ -917,13 +926,9 @@ $theme: #0d8dff;
       }
 
       .pagination {
-        position: absolute;
         display: flex;
         justify-content: center;
-        // margin-top: 40px;
-        bottom: -76px;
-        left: 50%;
-        transform: translateX(-50%);
+        margin-top: 40px;
       }
     }
   }

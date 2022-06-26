@@ -200,7 +200,6 @@ function conditionClick(index, index2, detail) {
       renderCondition.value[index].haveActive = false;
     }
   }
-  console.log('1', renderCondition.value);
   goSearch(renderCondition.value);
 }
 function clearItem(index) {
@@ -445,7 +444,7 @@ function handleCurrentChange(val) {
 }
 function goDetail(user, name) {
   router.push({
-    path: `/models/${user}/${name}/card`,
+    path: `/models/${user}/${name}`,
   });
 }
 function goNewModel() {
@@ -910,13 +909,13 @@ $theme: #0d8dff;
         margin-top: 40px;
       }
       .pagination {
-        position: absolute;
         display: flex;
         justify-content: center;
-        // margin-top: 40px;
-        bottom: -76px;
-        left: 50%;
-        transform: translateX(-50%);
+        margin-top: 40px;
+        // position: absolute;
+        // bottom: -76px;
+        // left: 50%;
+        // transform: translateX(-50%);
       }
     }
   }

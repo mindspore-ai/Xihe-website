@@ -16,7 +16,7 @@ const router = useRouter();
 const userInfo = useUserInfoStore();
 // const visual = ref('Public');
 const i18n = {
-  homePage: '用户首页',
+  homePage: '个人主页',
   createPlaceholder: '新建数据集',
   datasetOwner: '拥有者',
   datasetName: '数据集名称',

@@ -3,7 +3,6 @@ import { ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
-import OInput from '@/components/OInput.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -14,9 +13,9 @@ import {
 } from '@/api/api-dataset';
 import { fileRename } from '@/api/api-obs';
 
+import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
-import { ElMessage } from 'element-plus';
 
 let detailData = reactive(useFileData().fileStoreData);
 
@@ -71,10 +70,14 @@ const i18n = {
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref('');
 const newOwn = ref('');
-const newName = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
-const showConfirm = ref(false); // 控制删除成功跳转个人主要弹窗
+const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
+const queryRef = ref(null);
+
+let query = reactive({
+  name: '',
+});
 
 detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
 
@@ -85,54 +88,60 @@ function getOwnSelect(value) {
   newOwn.value = value;
 }
 function getVisiableSelect(value) {
-  console.log(value);
   value === 'Private'
     ? (visibleValue.value = true)
     : (visibleValue.value = false);
 }
 
-async function confirmRename() {
-  try {
-    let query = {
-      new_path: `xihe-obj/datasets/${route.params.user}/${newName.value}/`,
-      old_path: `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`,
-    };
-
-    await fileRename(query).then((res) => {
-      if (res.status === 200) {
-        // 改名成功更新pinia数据
-        getDatasetData({ name: newName.value }).then((res) => {
-          if (res.results.data.length) {
-            let storeData = res.results.data[0];
-            storeData['is_owner'] =
-              userInfoStore.userName === storeData.owner_name.name;
-            fileData.setFileData(storeData);
+async function confirmRename(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      try {
+        let pathQuery = {
+          new_path: `xihe-obj/datasets/${route.params.user}/${query.name}/`,
+          old_path: `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`,
+        };
+        fileRename(pathQuery).then((res) => {
+          if (res.status === 200) {
+            // 改名成功更新pinia数据
+            getDatasetData({ name: query.name }).then((res) => {
+              if (res.results.data.length) {
+                let storeData = res.results.data[0];
+                storeData['is_owner'] =
+                  userInfoStore.userName === storeData.owner_name.name;
+                fileData.setFileData(storeData);
+              }
+              ElMessage({
+                type: 'success',
+                message: '仓库信息更新成功',
+              });
+              router.push({
+                name: 'datasetSet',
+                params: {
+                  user: routerParams.user,
+                  name: query.name,
+                },
+              });
+            });
+          } else {
+            ElMessage({
+              type: 'error',
+              message: res.msg,
+            });
           }
-          ElMessage({
-            type: 'success',
-            message: '仓库信息更新成功',
-          });
-          router.push({
-            name: 'datasetSet',
-            params: {
-              user: routerParams.user,
-              name: newName.value,
-            },
-          });
         });
-      } else {
+      } catch (error) {
         ElMessage({
           type: 'error',
-          message: res.msg,
+          message: error,
         });
       }
-    });
-  } catch (error) {
-    ElMessage({
-      type: 'error',
-      message: error,
-    });
-  }
+    } else {
+      console.log('error submit!');
+      return false;
+    }
+  });
 }
 function confirmPrivate() {
   let query = {
@@ -158,7 +167,6 @@ function confirmDel() {
     if (res.status === 200) {
       showDel.value = false;
       showConfirm.value = true;
-      console.log(showConfirm.value);
     } else {
       ElMessage({
         type: 'error',
@@ -201,26 +209,102 @@ function toggleDelDlg(flag) {
           value="name"
           @change="getOwnSelect"
         ></o-select>
-        <p class="setting-tip">{{ i18n.rename.newName }}</p>
-        <o-input v-model="newName" :placeholder="i18n.rename.placeholder">
-        </o-input>
+        <el-form
+          ref="queryRef"
+          class="creating-box"
+          :model="query"
+          prop="region"
+        >
+          <p class="setting-tip">{{ i18n.rename.newName }}</p>
+          <el-form-item
+            class="item"
+            prop="name"
+            :rules="[
+              {
+                pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
+                message: '仓库名目前只支持英文',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
+                message: '格式不正确',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^[^.]*[^.]$/,
+                message: '格式不正确',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              v-model="query.name"
+              :placeholder="i18n.rename.placeholder"
+            >
+            </el-input>
+            <el-popover
+              placement="bottom-start"
+              :width="372"
+              trigger="hover"
+              :teleported="false"
+            >
+              <template #reference>
+                <o-icon><icon-poppver></icon-poppver></o-icon>
+              </template>
+              <template #>
+                <div>- 仓库名目前只支持英文</div>
+                <div>
+                  - 仓库名名称不能以英文句号(<span class="remind">.</span
+                  >)开头或结尾，且不能包含以下字符<span class="remind"
+                    >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                  >
+                </div>
+                <div>
+                  -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
+                    class="remind"
+                    >不能超过1000字符</span
+                  >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
+                </div>
+              </template>
+            </el-popover>
+          </el-form-item>
+        </el-form>
         <p class="setting-tip">{{ i18n.rename.describe }}</p>
-        <o-button @click="confirmRename">{{ i18n.rename.btnText }}</o-button>
+        <o-button @click="confirmRename(queryRef)">{{
+          i18n.rename.btnText
+        }}</o-button>
         <h4 class="setting-title">{{ i18n.delete.title }}</h4>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button @click="showDel = true">{{ i18n.delete.btnText }}</o-button>
+        <o-button
+          class="delete-btn"
+          :style="{
+            color: '##F3524DFF',
+            borderColor: '##F3524DFF',
+          }"
+          @click="showDel = true"
+          >{{ i18n.delete.btnText }}</o-button
+        >
       </div>
-      <o-dialog :show="showDel" @close-click="toggleDelDlg(false)">
+      <o-dialog
+        :show="showDel"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
         <template #head>
-          <div class="dlg-title" :style="{ textAlign: 'center' }">
+          <div
+            class="dlg-title"
+            :style="{ textAlign: 'center', paddingTop: '40px' }"
+          >
             <img :src="warningImg" alt="" />
           </div>
         </template>
         <div
           class="dlg-body"
           :style="{
+            padding: '8px 0 30px',
             fontSize: '18px',
             textAlign: 'center',
+            width: '640px',
           }"
         >
           {{ i18n.delete.describe1 }}
@@ -228,21 +312,33 @@ function toggleDelDlg(flag) {
         <template #foot>
           <div
             class="dlg-actions"
-            :style="{ display: 'flex', justifyContent: 'center' }"
+            :style="{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingBottom: '56px',
+            }"
           >
             <o-button
-              type="primary"
               :style="{ marginRight: '24px' }"
               @click="toggleDelDlg(false)"
               >{{ i18n.delete.cancel }}</o-button
             >
-            <o-button @click="confirmDel">{{ i18n.delete.confirm }}</o-button>
+            <o-button type="primary" @click="confirmDel">{{
+              i18n.delete.confirm
+            }}</o-button>
           </div>
         </template>
       </o-dialog>
-      <o-dialog :show="showConfirm" @close-click="toggleDelDlg(false)">
+      <o-dialog
+        :show="showConfirm"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
         <template #head>
-          <div class="dlg-title" :style="{ textAlign: 'center' }">
+          <div
+            class="dlg-title"
+            :style="{ textAlign: 'center', paddingTop: '40px' }"
+          >
             <img :src="successImg" alt="" />
           </div>
         </template>
@@ -251,6 +347,7 @@ function toggleDelDlg(flag) {
           :style="{
             fontSize: '18px',
             textAlign: 'center',
+            width: '640px',
           }"
         >
           {{ i18n.delete.describe2 }}
@@ -258,7 +355,11 @@ function toggleDelDlg(flag) {
         <template #foot>
           <div
             class="dlg-actions"
-            :style="{ display: 'flex', justifyContent: 'center' }"
+            :style="{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingBottom: '56px',
+            }"
           >
             <router-link :to="{ path: `/${userInfoStore.userName}` }">
               <o-button type="primary">{{ i18n.delete.confirm }}</o-button>

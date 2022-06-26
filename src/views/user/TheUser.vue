@@ -38,7 +38,7 @@ const navItems = [
     id: 'lives',
     label: '动态',
     creative: false,
-    isPrivate: true,
+    // isPrivate: true,
   },
   {
     id: 'projects',
@@ -221,6 +221,7 @@ function getFollow(userId, fans) {
           }
         }
         jointUserInfo.isFollow = !jointUserInfo.isFollow;
+        router.replace({ path: '/:user/userblack', name: 'userblack' });
       });
     } catch (error) {
       console.log(error);
@@ -325,7 +326,7 @@ function getFollow(userId, fans) {
               :active-item="activeNavItem"
               @nav-click="handleNavClick"
             ></ONav>
-            <div v-if="i18n.placeholder[holder]" class="moderl-head-right">
+            <!-- <div v-if="i18n.placeholder[holder]" class="moderl-head-right">
               <el-input
                 size="large"
                 :prefix-icon="Search"
@@ -346,7 +347,7 @@ function getFollow(userId, fans) {
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </div>
+            </div> -->
           </div>
 
           <el-dropdown
@@ -388,6 +389,7 @@ function getFollow(userId, fans) {
 <style lang="scss" scoped>
 .user-banner {
   width: 100%;
+  padding-top: 80px;
   background-color: #0f1927;
   color: #ffffff;
   background-image: url(../../assets/banner-head.png);
@@ -397,8 +399,9 @@ function getFollow(userId, fans) {
   .wrap {
     max-width: 1472px;
     margin: 0 auto;
-    height: 100%;
-    padding: 138px 16px 58px;
+    // height: 100%;
+    height: 177px;
+    padding: 42px 16px;
     font-size: 36px;
     font-weight: normal;
     line-height: 48px;

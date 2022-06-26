@@ -16,12 +16,13 @@ import { ElMessage } from 'element-plus';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { downloadObs, findFile } from '@/api/api-obs';
+import { trainList } from '@/api/api-project';
+
 import {
   addDataset,
   modifyProjectAdd,
   addModel,
   modifyModelAdd,
-  createTrainProject,
 } from '@/api/api-project';
 
 const route = useRoute();
@@ -35,11 +36,23 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 console.log(detailData.value);
-const filePath = ref('');
-const textarea = ref('');
+// const filePath = ref('');
+// const textarea = ref('');
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
+
+// 左侧显示文件内容
+const result = ref();
+const codeString = ref('');
+const mkit = new Markdown({ html: true });
+let routerParams = router.currentRoute.value.params;
+let README = '';
+const pushParams = {
+  user: routerParams.user,
+  name: routerParams.name,
+  contents: ['train'],
+};
 
 const i18n = {
   createTrain: '创建训练实例',
@@ -54,6 +67,7 @@ const i18n = {
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
   emptyVisited: '该用户还未上传模型卡片',
 };
+/*
 const activeName = ref('first');
 const handleClick = (tab, event) => {
   console.log(tab, event);
@@ -72,13 +86,33 @@ const form = reactive({
   description: '',
   variate: '',
 });
-// 点击按钮显示出创建实例的弹窗
-const showTrainInstance = ref(false);
-function crateTrainInstance(flag) {
-  if (flag === undefined) {
-    showTrainInstance.value = !showTrainInstance.value;
+*/
+
+const trainListData = ref([]);
+// 获取训练列表数据
+function getTrainList() {
+  trainList(detailData.value.id).then((res) => {
+    trainListData.value = res.data.data;
+    console.log(trainListData.value);
+  });
+}
+getTrainList();
+
+//跳转到选择文件创建训练实例页
+function goSelectFile() {
+  // 判断每一项的status是否为Running,如果有，则不能创建训练实例
+  if (trainListData.value.some((item) => item.status === 'Running')) {
+    ElMessage.error(
+      '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。'
+    );
+    return;
   } else {
-    showTrainInstance.value = flag;
+    router.push({
+      path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+      query: {
+        projectId: detailData.value.id,
+      },
+    });
   }
 }
 
@@ -257,47 +291,8 @@ function addModeClick() {
   isShow1.value = true;
 }
 
-// 选择配置文件创建训练实例
-function confirmCreating() {
-  let params = { config_path: filePath.value };
-  createTrainProject(params, detailData.value.id).then((res) => {
-    console.log(res);
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '创建训练实例成功',
-        center: true,
-      });
-      setTimeout(() => {
-        router.push({
-          name: 'projectTrainList',
-        });
-      }, 500);
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-        center: true,
-      });
-    }
-  });
-}
-
-// 左侧显示文件内容
-const result = ref();
-const codeString = ref('');
-const mkit = new Markdown({ html: true });
-let routerParams = router.currentRoute.value.params;
-let README = '';
-const pushParams = {
-  user: routerParams.user,
-  name: routerParams.name,
-  contents: routerParams.contents,
-};
-
 // 获取README文件
 function getReadMeFile() {
-  console.log('获取文件成功');
   try {
     findFile(
       `xihe-obj/projects/${route.params.user}/${routerParams.name}/train/`
@@ -315,6 +310,7 @@ function getReadMeFile() {
             res ? (codeString.value = res) : '';
           });
           result.value = mkit.render(codeString.value);
+          console.log(codeString.value);
         } else {
           codeString.value = '';
         }
@@ -338,34 +334,35 @@ watch(
     immediate: true,
   }
 );
+
 function goEditor() {
-  pushParams.contents = ['README.md'];
   router.push({
-    name: 'ProjectFileEditor',
+    name: 'projectFileEditor',
     params: pushParams,
   });
 }
 
 function emptyClick(ind) {
+  console.log(route.params.contents);
   if (ind === 1) {
     router.push({
-      name: 'ProjectFileNew',
+      name: 'projectFileNew',
       params: pushParams,
     });
   } else if (ind === 3) {
     router.push({
-      name: 'ProjectFileUpload',
+      name: 'projectFileUpload',
       params: pushParams,
     });
   }
 }
 
 function goDetailClick(val) {
-  router.push(`/models/${val.owner_name.name}/${val.name}/card`);
+  router.push(`/models/${val.owner_name.name}/${val.name}`);
 }
 
 function goDetasetClick(val) {
-  router.push(`/datasets/${val.owner_name.name}/${val.name}/card`);
+  router.push(`/datasets/${val.owner_name.name}/${val.name}`);
 }
 
 watch(
@@ -381,22 +378,25 @@ watch(
 );
 </script>
 <template>
-  <div class="train-card">
-    <div class="createTrain-btn">
-      <template v-if="userInfo.userName === detailData.owner_name.name">
-        <o-button class="btn">{{ i18n.editor }}</o-button>
+  <div class="project-train">
+    <div class="project-train-file">
+      <div
+        v-if="userInfo.userName === detailData.owner_name.name"
+        class="createtrain-btn"
+      >
         <o-button
           type="primary"
-          style="height: 48px; padding: 11px 4px"
-          @click="crateTrainInstance(true)"
-          >+ {{ i18n.createTrain }}</o-button
+          style="height: 48px; width: ; padding: 11px 4px"
+          @click="goSelectFile"
         >
-      </template>
+          {{ i18n.createTrain }}</o-button
+        >
+      </div>
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
-        <!-- <o-button v-if="detailData.is_owner" @click="goEditor">{{
+        <o-button v-if="detailData.is_owner" @click="goEditor">{{
           i18n.editor
-        }}</o-button> -->
+        }}</o-button>
       </div>
       <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
         <div class="upload-readme-img">
@@ -423,160 +423,6 @@ watch(
           </p>
         </div>
       </div>
-      <!-- <template v-if="userInfo.userName === detailData.owner_name.name">
-        <o-button class="btn">{{ i18n.editor }}</o-button>
-        <o-button
-          type="primary"
-          style="height: 48px; padding: 11px 4px"
-          @click="crateTrainInstance(true)"
-          >+ {{ i18n.createTrain }}</o-button
-        >
-      </template> -->
-      <el-dialog v-model="showTrainInstance" title="创建训练实例" center>
-        <el-tabs
-          v-model="activeName"
-          class="demo-tabs"
-          @tab-click="handleClick"
-        >
-          <!-- 训练实例表单导航 -->
-          <el-tab-pane
-            class="config-file-creating"
-            label="创建配置文件"
-            name="first"
-          >
-            <div class="config-file-creating-tip">
-              为训练实例选择对应的配置，若你已有配置文件，也可通过选择相应配置文件进行创建。
-            </div>
-            <el-form
-              :inline="true"
-              :model="form"
-              label-width="90px"
-              label-position="left"
-              class="train-card-form1"
-            >
-              <el-row>
-                <el-col :span="12">
-                  <el-form-item label="训练名称">
-                    <el-input v-model="form.name" placeholder="请输入训练名" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12" class="train-card-launch-file">
-                  <el-form-item label="训练SDK">
-                    <el-select v-model="form.SDK" placeholder="ModelArts">
-                      <el-option label="Zone one" value="shanghai" />
-                      <el-option label="Zone two" value="beijing" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="12">
-                  <el-form-item label="代码目录">
-                    <el-select
-                      v-model="form.codeCatalog"
-                      placeholder="ModelArts"
-                    >
-                      <el-option label="Zone one" value="shanghai" />
-                      <el-option label="Zone two" value="beijing" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12" class="train-card-launch-file">
-                  <el-form-item label="启动文件">
-                    <el-select
-                      v-model="form.launchFile"
-                      placeholder="ModelArts"
-                    >
-                      <el-option label="Zone one" value="shanghai" />
-                      <el-option label="Zone two" value="beijing" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
-            <el-form
-              class="train-card-form2"
-              :model="form"
-              label-width="90px"
-              label-position="left"
-            >
-              <el-form-item label="框架">
-                <el-select v-model="form.frame" placeholder="ModelArts">
-                  <el-option label="Zone one" value="shanghai" />
-                  <el-option label="Zone two" value="beijing" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="规格">
-                <el-select v-model="form.rule" placeholder="ModelArts">
-                  <el-option class="int1" label="Zone one" value="shanghai" />
-                  <el-option class="int1" label="Zone two" value="beijing" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="日志路径">
-                <el-input
-                  v-model="form.logPath"
-                  placeholder="请输入训练日志输出路径"
-                />
-              </el-form-item>
-              <el-form-item label="输入">
-                <el-input v-model="form.input" placeholder="请输入内容" />
-              </el-form-item>
-
-              <el-form-item label="输出">
-                <el-input v-model="form.output" placeholder="请输入内容" />
-              </el-form-item>
-              <el-form-item label="超参">
-                <el-input v-model="form.parameter" placeholder="请输入内容" />
-              </el-form-item>
-              <el-form-item label="描述">
-                <el-input
-                  v-model="form.description"
-                  :rows="3"
-                  type="textarea"
-                  placeholder="请输入内容"
-                  maxlength="100"
-                  show-word-limit
-                />
-              </el-form-item>
-              <el-form-item label="环境变量">
-                <el-input v-model="form.variate" placeholder="请输入内容" />
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
-          <el-tab-pane
-            class="config-file-select"
-            label="选择配置文件"
-            name="second"
-          >
-            <div class="config-file-select-tip">
-              若你已有配置文件，你可以输入配置文件路径参数进行创建，相关文档参考创建训练实例。
-            </div>
-            <div class="config-file-select-path">
-              <el-input
-                v-model="filePath"
-                class="file-select-int"
-                placeholder="直接输入json文件名读取"
-              >
-              </el-input>
-              <o-button class="file-select-btn">确认</o-button>
-            </div>
-            <div class="config-file-select-textarea">
-              <el-input
-                v-model="textarea"
-                class="file-select-textarea-int"
-                type="textarea"
-              />
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-        <template #footer>
-          <span class="dialog-footer">
-            <!-- TODO:centerDialogVisible -->
-            <o-button @click="showTrainInstance = false">取消</o-button>
-            <o-button type="primary" @click="confirmCreating">确认</o-button>
-          </span>
-        </template>
-      </el-dialog>
     </div>
     <div class="right-data">
       <div class="download-data">
@@ -693,59 +539,59 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.markdown-body {
-  position: relative;
-  margin-right: 40px;
-  width: 100%;
-  // border-right: 1px solid #d8d8d8;
-  .o-button {
-    position: absolute;
-    top: 0px;
-    right: 40px;
-  }
-}
-.upload-readme {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  .upload-readme-img {
-    .o-icon {
-      display: block;
-    }
-    font-size: 48px;
-  }
-  .upload-readme-tip {
-    display: flex;
-    margin-top: 24px;
-    line-height: 17px;
-    color: #999;
-    .link-style {
-      cursor: pointer;
-      color: #33b3ff;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-}
-.train-card {
+.project-train {
   display: flex;
   padding-bottom: 40px;
   min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
-  .createTrain-btn {
+  &-file {
     font-size: 14px;
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
     display: flex;
     flex-direction: row-reverse;
-    .btn {
-      margin-left: 24px;
-      margin-right: 48px;
-      height: 48px;
+    position: relative;
+    .createtrain-btn {
+      position: absolute;
+      right: 184px;
+      z-index: 1;
+    }
+    .markdown-body {
+      position: relative;
+      // margin-right: 40px;
+      width: 100%;
+      .o-button {
+        position: absolute;
+        top: 0px;
+        right: 40px;
+      }
+    }
+    .upload-readme {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      .upload-readme-img {
+        .o-icon {
+          display: block;
+        }
+        font-size: 48px;
+      }
+      .upload-readme-tip {
+        display: flex;
+        margin-top: 24px;
+        line-height: 17px;
+        color: #999;
+        .link-style {
+          cursor: pointer;
+          color: #33b3ff;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
   .right-data {

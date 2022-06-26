@@ -131,6 +131,8 @@ function goDetailClick(item) {
     display: flex;
     justify-content: start;
     align-items: center;
+    color: #555;
+
     & > div {
       display: flex;
       align-items: center;
@@ -138,6 +140,7 @@ function goDetailClick(item) {
       .o-icon {
         font-size: 16px;
         margin-right: 4px;
+        fill: #555;
       }
     }
   }

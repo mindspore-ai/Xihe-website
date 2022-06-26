@@ -71,7 +71,7 @@ function getUserProject(query) {
 getUserProject(userInfo.value.id);
 function goDetail(user, name) {
   router.push({
-    path: `/projects/${user}/${name}/card`,
+    path: `/projects/${user}/${name}`,
   });
 }
 

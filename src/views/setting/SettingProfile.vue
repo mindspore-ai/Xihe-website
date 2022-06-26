@@ -139,13 +139,10 @@ function confirmAvatar() {
           paddingBottom: '16px',
         }"
       >
-        <o-button
-          type="primary"
-          :style="{ marginRight: '38px' }"
-          @click="toggleDelDlg(false)"
+        <o-button :style="{ marginRight: '38px' }" @click="toggleDelDlg(false)"
           >取消</o-button
         >
-        <o-button @click="confirmAvatar">确认</o-button>
+        <o-button type="primary" @click="confirmAvatar">确认</o-button>
       </div>
     </template>
   </o-dialog>

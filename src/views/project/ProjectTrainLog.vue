@@ -1,8 +1,9 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onUnmounted, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getTrainLog } from '@/api/api-project';
+
 import { useFileData } from '@/stores';
+import { getTrainLog } from '@/api/api-project';
 
 const route = useRoute();
 //训练日志js
@@ -10,6 +11,7 @@ const form = reactive({
   name: '',
   desc: '',
 });
+
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -22,6 +24,8 @@ const detailData = computed(() => {
 const trainDetail = ref({});
 
 console.log(route.params);
+
+var timer = null;
 // 获得训练日志页面数据
 function getTrainLogData() {
   const trainLogParams = {
@@ -30,16 +34,66 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
-      console.log(111);
       console.log(res.data.data);
       trainDetail.value = res.data.data;
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
-      // console.log(trainDetail.value);
+      console.log(trainDetail.value);
+      // if (trainDetail.value.status === 'Running') {
+      //   timer = setInterval(() => {
+      //     socket.send(JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId }));
+      //   }, 15000);
+      // }
     }
   });
 }
+
 getTrainLogData();
+
+const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
+// 创建好连接之后自动触发（ 服务端执行self.accept() )
+socket.onopen = function (event) {
+  console.log('连接成功');
+  socket.send(
+    JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
+  );
+};
+
+// 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+socket.onmessage = function (event) {
+  console.log(JSON.parse(event.data));
+
+  console.log('收到服务器消息');
+};
+
+// 服务端主动断开连接时，这个方法也被触发。
+socket.onclose = function (event) {
+  console.log('服务器主动断开连接');
+};
+
+function sendMessage() {
+  console.log('发送消息');
+}
+
+function closeConn() {
+  socket.close(); // 向服务端发送断开连接的请求
+}
+
+// 页面刷新
+function reloadPage() {
+  console.log('页面刷新了');
+  closeConn();
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', (e) => reloadPage());
+});
+
+onUnmounted(() => {
+  closeConn();
+  clearInterval(timer);
+});
+
 // 自动评估
 function autoEvaluate() {
   console.log(2222);

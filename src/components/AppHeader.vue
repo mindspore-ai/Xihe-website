@@ -252,7 +252,7 @@ function goFirstResult() {
     return;
   } else {
     router.push({
-      path: `/${pathName.value}/${firstData.value.owner_name.name}/${firstData.value.name}/card`,
+      path: `/${pathName.value}/${firstData.value.owner_name.name}/${firstData.value.name}`,
     });
     emptyValue();
   }
@@ -274,22 +274,22 @@ function getProject(keyword) {
 
 // 跳转到模型、数据集、项目的详情页
 function goModelDetail(user, name) {
-  console.log(`/models/${user}/${name}/card`)
+  console.log(`/models/${user}/${name}`)
   router.push({
-    path: `/models/${user}/${name}/card`,
+    path: `/models/${user}/${name}`,
   });
   emptyValue();
   // console.log(33333)
 }
 function goDatasetDetail(user, name) {
   router.push({
-    path: `/datasets/${user}/${name}/card`,
+    path: `/datasets/${user}/${name}`,
   });
   emptyValue();
 }
 function goProjectDetail(user, name) {
   router.push({
-    path: `/projects/${user}/${name}/card`,
+    path: `/projects/${user}/${name}`,
   });
   emptyValue();
 }

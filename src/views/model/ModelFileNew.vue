@@ -52,7 +52,7 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-
+console.log(routerParams.contents);
 if (routerParams.contents.length) {
   currentContents =
     `${routerParams.name}/${routerParams.contents.join('/')}/` || '';
@@ -156,15 +156,8 @@ function pathClick() {
                   >>&nbsp;:&nbsp;:&nbsp;*?'&lt;&gt;|</span
                 >
               </div>
-              <!-- <div>
-                -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-                  class="remind"
-                  >不能超过1000字符</span
-                >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
-              </div> -->
             </template>
           </el-popover>
-          <!-- <span class="name-input-text">{{ i18n.modelUpload.inputText }}</span> -->
         </el-form-item>
         <el-form-item class="fill">
           <div class="upload-title tip-text">
@@ -208,7 +201,6 @@ function pathClick() {
 </template>
 
 <style lang="scss" scoped>
-
 .upload-file {
   padding: 30px 24px 50px;
   background-color: #fff;

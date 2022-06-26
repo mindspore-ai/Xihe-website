@@ -30,6 +30,7 @@ const result = ref(mkit.render(codeString.value));
 const rawData = ref('');
 const router = useRouter();
 const route = useRoute();
+
 let routerParams = router.currentRoute.value.params;
 const path = `xihe-obj/datasets/${route.params.user}/${
   routerParams.name
@@ -46,6 +47,7 @@ const showBlob = ref(false);
 const suffix = ref('');
 const inputDom = ref();
 const rawBlob = ref();
+
 let reopt = {
   method: 'get',
   url: null,
@@ -61,16 +63,15 @@ let reopt = {
 
 function preview(objkey) {
   getDownLoadToken({ objkey }).then((res) => {
-    console.log(res);
     reopt.url = res.data.signedUrl;
     reopt.responseType = 'blob';
-    console.log(reopt);
     downloadFileObs(reopt).then((res) => {
       rawBlob.value = res;
       let reader = new FileReader();
       reader.readAsText(res, 'utf-8');
       reader.onload = function () {
         rawData.value = reader.result;
+        // md文件不需加```
         suffix.value === 'md'
           ? (codeString.value = reader.result)
           : (codeString.value =
@@ -79,6 +80,7 @@ function preview(objkey) {
     });
   });
 }
+
 async function headleDelFile(objkey) {
   try {
     await getDelToken({ objkey }).then((res) => {
@@ -111,12 +113,6 @@ function goEditor() {
     },
   });
 }
-watch(
-  () => codeString.value,
-  (val) => {
-    result.value = mkit.render(val);
-  }
-);
 
 findFile(path).then((res) => {
   if (res.status === 200 && res.data.children.length) {
@@ -136,8 +132,9 @@ function goRaw(blob) {
   let href = window.URL.createObjectURL(blobs);
   window.open(href);
 }
-function copyText(value) {
-  inputDom.value.value = value;
+
+function copyText(textValue) {
+  inputDom.value.value = textValue;
   inputDom.value.select();
   document.execCommand('Copy'); // 执行浏览器复制命令
   ElMessage({
@@ -146,6 +143,7 @@ function copyText(value) {
     center: true,
   });
 }
+
 function pathClick(index) {
   // let routeParams = route.params.contents;
   // !!! 此处填写各自模块的组件！！！
@@ -164,6 +162,12 @@ function pathClick(index) {
     });
   }
 }
+watch(
+  () => codeString.value,
+  (val) => {
+    result.value = mkit.render(val);
+  }
+);
 </script>
 
 <template>
@@ -295,8 +299,8 @@ function pathClick(index) {
       }
     }
     .blank {
-      overflow: auto;
       padding: 16px;
+      overflow: auto;
       min-height: calc(100vh - 400px);
       background-color: #ffffff;
       pre {

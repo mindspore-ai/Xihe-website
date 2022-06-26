@@ -50,12 +50,12 @@ console.log(bannerLabel.value);
 <style lang="scss" scoped>
 .creating-banner {
   width: 100%;
-  background-color: #0f1927;
   padding: 21px 16px;
   background-image: url('@/assets/banner-head.png');
+  height: 257px;
 
   .warp {
-    padding: 80px 16px 0;
+    padding: 80px 0 0;
     max-width: 1440px;
     margin: 0 auto;
     color: #ffffff;

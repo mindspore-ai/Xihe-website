@@ -1,15 +1,136 @@
 <script setup>
+import { ref, computed, reactive } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 
-import { ref } from 'vue';
-const textarea = ref('');
+import { useUserInfoStore, useFileData } from '@/stores';
+
+import { createTrainProject } from '@/api/api-project';
+import {
+  findFile,
+  downloadFileObs,
+  getDownLoadToken,
+  handleUpload,
+} from '@/api/api-obs';
+
+const route = useRoute();
+const router = useRouter();
+let routerParams = route.params;
 
 const filePath = ref('');
+const isShow = ref(false);
+
+// 返回训练页面
+function goTrain() {
+  router.push({
+    name: 'projectTrain',
+  });
+}
+
+// 选择配置文件创建训练实例
+function confirmCreating() {
+  let params = { config_path: filePath.value };
+  createTrainProject(params, route.query.projectId).then((res) => {
+    console.log(res);
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '创建训练实例成功',
+        center: true,
+      });
+      setTimeout(() => {
+        router.push({
+          name: 'projectTrainList',
+        });
+      }, 500);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+        center: true,
+      });
+    }
+  });
+}
+const describe = ref('');
+let fileData = reactive({});
+let reopt = {
+  method: 'get',
+  url: null,
+  withCredentials: false,
+  headers: null,
+  validateStatus: function (status) {
+    return status >= 200;
+  },
+  maxRedirects: 0,
+  responseType: 'blob',
+  data: null,
+};
+
+const codeString = ref('');
+function downLoad(objkey) {
+  let params = {
+    objkey: objkey,
+  };
+  getDownLoadToken(params).then((res) => {
+    reopt.url = res.data.signedUrl;
+    downloadFileObs(reopt).then((res) => {
+      let reader = new FileReader();
+      reader.readAsText(res, 'utf-8');
+      reader.onload = function () {
+        codeString.value = reader.result;
+        isShow.value = true;
+      };
+    });
+  });
+}
+// SDK 上传
+async function upLoadObs() {
+  // 构造文件对象
+  let blob = new Blob([codeString.value], {
+    type: 'text/plain;charset=utf-8',
+  });
+  let file = new File([blob], fileData.name, {
+    type: 'text/plain;charset=utf-8',
+    lastModified: Date.now(),
+  });
+  await handleUpload(
+    {
+      file,
+      path,
+      isEdit: true,
+      description: describe.value || `edit ${fileData.name}`,
+    },
+    null,
+    function () {
+      ElMessage({
+        type: 'success',
+        message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
+      });
+    }
+  );
+  pathClick(route.params.contents.length);
+}
+
+function findFileByPath() {
+  let path = `xihe-obj/projects/${route.params.user}/${routerParams.name}/${filePath.value}`;
+  findFile(path).then((res) => {
+    if (res.status && res.data && res.data.children.length) {
+      fileData = res.data.children[0];
+      downLoad(fileData.path);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+      });
+    }
+  });
+}
 </script>
 <template>
   <div class="selectfile">
     <div class="selectfile-wrap">
-      <div class="selectfile-back">
+      <div class="selectfile-back" @click="goTrain">
         <o-icon class="right-icon"><icon-back /> </o-icon>
         <span> 返回训练 </span>
       </div>
@@ -31,20 +152,20 @@ const filePath = ref('');
             placeholder="直接输入json文件名读取"
           >
           </el-input>
-          <o-button class="file-select-btn">确认</o-button>
+          <o-button class="file-select-btn" @click="findFileByPath"
+            >确认</o-button
+          >
         </div>
         <div class="selectfile-content-textarea">
-          <el-input
-            v-model="textarea"
-            class="file-select-textarea-int"
-            type="textarea"
-          />
+          <o-editor
+            v-if="isShow"
+            v-model="codeString"
+            lang="json"
+            :model-value="codeString"
+          ></o-editor>
+          <el-input v-else class="file-select-textarea-int" type="textarea" />
         </div>
         <div class="selectfile-content-action">
-          <!-- TODO:centerDialogVisible -->
-          <o-button class="cancel" @click="showTrainInstance = false"
-            >取消</o-button
-          >
           <o-button class="confim" type="primary" @click="confirmCreating"
             >确认</o-button
           >
@@ -61,7 +182,6 @@ const filePath = ref('');
   margin-top: 80px;
   // margin-bottom: 49px;
   background-color: #f5f6f8;
-
   // display: flex;
   // justify-content: center;
   // align-items: center;
@@ -131,21 +251,13 @@ const filePath = ref('');
           width: 87%;
         }
         .file-select-btn {
-          height: 36px;
-          padding: 0;
-          // width: 10%;
-          // margin-left: 8px;
+          height: 45px;
         }
       }
       &-textarea {
-        // .el-textarea {
-        //   max-width: 100% !important;
-        // }
         .file-select-textarea-int {
           width: 100% !important;
-          // height: 500px;
           :deep .el-textarea__inner {
-            // height: 71.4%;
             height: 600px;
           }
         }
@@ -155,9 +267,6 @@ const filePath = ref('');
         justify-content: center;
         margin-top: 48px;
         margin-bottom: 32px;
-        .cancel {
-          margin-right: 24px;
-        }
       }
     }
   }

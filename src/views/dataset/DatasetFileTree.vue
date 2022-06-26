@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconModel from '~icons/app/model-blue';
@@ -8,8 +8,10 @@ import IconFile from '~icons/app/file';
 import IconDownload from '~icons/app/download';
 import IconAddFile from '~icons/app/add-file';
 import IconFileVisited from '~icons/app/other-file';
+import IconCircleCheck from '~icons/app/circle-check';
+import IconCircleClose from '~icons/app/circle-close';
 
-import { downloadFile, findFile } from '@/api/api-obs';
+import { downloadFile, findFile, createFolder } from '@/api/api-obs';
 import { changeByte } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -17,7 +19,9 @@ import { useUserInfoStore, useFileData } from '@/stores';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-
+const showFolder = computed(() => {
+  return useFileData().showCreateFolder;
+});
 const router = useRouter();
 const route = useRoute();
 
@@ -43,20 +47,38 @@ const i18n = {
   emptyVisited: '该用户还未上传任何文件',
 };
 
+let queryRef = ref(null);
+const rules = reactive({
+  folderName: [
+    { required: true, message: '禁止为空', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -._]{1,120}$/,
+      message: '格式不正确',
+      trigger: 'blur',
+    },
+  ],
+});
+
+let query = reactive({
+  folderName: '',
+  description: '',
+  textValue: '',
+});
 function getDetailData(path) {
   try {
     findFile(path).then((tree) => {
       if (
-        (tree.status === 200 &&
-          tree.data.children &&
-          tree.data.children.length) ||
-        (route.params.contents && route.params.contents.length)
+        tree.status === 200 &&
+        tree.data.children &&
+        tree.data.children.length
       ) {
         filesList.value = tree.data.children;
         useFileData().fileStoreData['is_empty'] = false;
         filesList.value.sort((a, b) => {
           return b.is_folder - a.is_folder;
         });
+      } else if (route.params.contents && route.params.contents.length) {
+        useFileData().fileStoreData['is_empty'] = false;
       } else {
         useFileData().fileStoreData['is_empty'] = true;
       }
@@ -77,9 +99,7 @@ function getFilesByPath() {
     );
   } else {
     // 根目录下
-    getDetailData(
-      `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`
-    );
+    getDetailData(`xihe-obj/datasets/${route.params.user}/${routerParams.name}/`);
   }
 }
 function emptyClick(ind) {
@@ -117,52 +137,49 @@ function goBlob(item) {
     });
   }
 }
-// function downLoad(objkey, fileName) {
-//   try {
-//     getDownLoadToken({ objkey }).then((res) => {
-//       reopt.method = 'get';
-//       reopt.url = res.data.signedUrl;
-//       reopt.responseType = 'blob';
-//       console.log(reopt);
-//       downloadFileObs(reopt).then((res) => {
-//         console.log(res);
-//         let blob = new Blob([res], { type: res.type });
-//         let downloadElement = document.createElement('a');
-//         // 创建下载的链接
-//         let href = window.URL.createObjectURL(blob);
-//         console.log(href);
-//         downloadElement.href = href;
-//         //下载后文件名
-//         downloadElement.download = fileName;
-//         document.body.appendChild(downloadElement);
-//         //点击下载
-//         downloadElement.click();
-//         //下载完成移除元素
-//         document.body.removeChild(downloadElement);
-//         //释放掉blob对象
-//         window.URL.revokeObjectURL(href);
-//         // 添加下载记录 下载量以仓库为单位
-//         addDownloadRecord(detailData.id).then((res) => {
-//           ElMessage({
-//             type: 'success',
-//             message: res.msg,
-//             center: true,
-//           });
-//         });
-//       });
-//     });
-//   } catch (error) {
-//     ElMessage({
-//       type: 'error',
-//       message: error,
-//       center: true,
-//     });
-//   }
-// }
+function creatFolter(formEl) {
+  if (!formEl) return;
+  let path = '';
+  if (contents && contents.length) {
+    path = `xihe-obj/datasets/${route.params.user}/${
+      routerParams.name
+    }/${contents.join('/')}/${query.folderName}/.keep`;
+  } else {
+    // 根目录下
+    path = `xihe-obj/datasets/${route.params.user}/${routerParams.name}/${query.folderName}/.keep`;
+  }
+
+  formEl.validate((valid) => {
+    if (valid) {
+      createFolder(
+        {
+          folderName: query.folderName,
+          path,
+        },
+        function () {
+          useFileData().setShowFolder(false);
+          getFilesByPath();
+          query.folderName = '';
+          ElMessage({
+            type: 'success',
+            message: '新建成功！',
+          });
+        }
+      );
+    } else {
+      console.log('error submit!');
+      return false;
+    }
+  });
+}
+function cancelCreat() {
+  useFileData().setShowFolder(false);
+  query.folderName = '';
+}
 watch(
-  () => router,
-  (val) => {
-    if (val.currentRoute.value.name === 'datasetFile') {
+  () => route.fullPath,
+  () => {
+    if (router.currentRoute.value.name === 'datasetFile') {
       getFilesByPath();
     }
   },
@@ -173,58 +190,109 @@ watch(
 );
 </script>
 <template>
-  <div v-if="filesList.length" class="tree">
+  <div v-if="!detailData.is_empty" class="tree">
     <table class="tree-table">
-      <tr class="tree-head">
-        <td class="tree-head-left">
-          <div class="inner-box">
-            <o-icon><icon-model></icon-model> </o-icon>
-            <span class="tree-head-left-describe" title="数据集描述"
-              >数据集描述</span
+      <col width="330px" />
+      <col width="120px" />
+      <col width="670px" />
+      <col width="200px" />
+      <tbody>
+        <tr class="tree-head">
+          <td class="tree-head-left" rowspan="3">
+            <div class="inner-box">
+              <o-icon><icon-model></icon-model> </o-icon>
+              <span
+                class="tree-head-left-describe"
+                :title="detailData.description"
+                >{{ detailData.description }}</span
+              >
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td class="tree-head-right">
+            <div class="inner-box">
+              {{ i18n.uploadTime }}
+            </div>
+          </td>
+        </tr>
+        <tr v-if="showFolder" class="tree-table-item create-file">
+          <td class="tree-head-left">
+            <div class="inner-box">
+              <o-icon><icon-folder></icon-folder> </o-icon>
+              <el-form
+                ref="queryRef"
+                :rules="rules"
+                :model="query"
+                prop="region"
+              >
+                <el-form-item class="form-item" prop="folderName">
+                  <div class="model-name tip-text">
+                    <el-input
+                      v-model="query.folderName"
+                      class="name-input"
+                      placeholder="新建文件夹"
+                    ></el-input>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </div>
+          </td>
+          <td>
+            <div class="check-name">
+              <o-icon @click="creatFolter(queryRef)">
+                <icon-circle-check></icon-circle-check>
+              </o-icon>
+              <o-icon @click="cancelCreat">
+                <icon-circle-close></icon-circle-close>
+              </o-icon>
+            </div>
+          </td>
+          <td>
+            <div class="tip">
+              提示: 暂不不支持空文件夾，创建文件夹后会生成空的 .keep 文件
+            </div>
+          </td>
+          <td class="tree-head-right"></td>
+        </tr>
+        <template v-if="filesList.length">
+          <tr
+            v-for="item in filesList"
+            :key="item.download_path"
+            class="tree-table-item"
+          >
+            <td class="tree-table-item-name" @click="goBlob(item)">
+              <div class="inner-box">
+                <o-icon v-if="!item.is_folder"><icon-file></icon-file> </o-icon>
+                <o-icon v-else><icon-folder></icon-folder> </o-icon>
+                <span>{{ item.name }}</span>
+              </div>
+            </td>
+            <td
+              class="tree-table-item-download"
+              width="10%"
+              @click="downloadFile(item.path, item.name, detailData.id)"
             >
-          </div>
-        </td>
-        <td></td>
-        <td></td>
-        <td class="tree-head-right">
-          <div class="inner-box">
-            {{ i18n.uploadTime }}
-          </div>
-        </td>
-      </tr>
-      <tr
-        v-for="item in filesList"
-        :key="item.download_path"
-        class="tree-table-item"
-      >
-        <td class="tree-table-item-name" @click="goBlob(item)">
-          <div class="inner-box">
-            <o-icon v-if="!item.is_folder"><icon-file></icon-file> </o-icon>
-            <o-icon v-else><icon-folder></icon-folder> </o-icon>
-            <span>{{ item.name }}</span>
-          </div>
-        </td>
-        <td
-          class="tree-table-item-download"
-          @click="downloadFile(item.path, item.name, detailData.id)"
-        >
-          <div v-if="item.size" class="inner-box">
-            <o-icon><icon-download></icon-download></o-icon>
-            <span class="size">{{ changeByte(item.size) }}</span>
-          </div>
-        </td>
-        <td class="tree-table-item-from">
-          <div class="inner-box">
-            {{ item.description }}
-          </div>
-        </td>
-        <td class="tree-table-item-time">
-          <div class="inner-box">
-            {{ item.time_pass }}
-          </div>
-        </td>
-      </tr>
+              <div v-if="item.size" class="inner-box">
+                <o-icon><icon-download></icon-download></o-icon>
+                <span class="size">{{ changeByte(item.size) }}</span>
+              </div>
+            </td>
+            <td class="tree-table-item-from">
+              <div class="inner-box">
+                <span>{{ item.description }}</span>
+              </div>
+            </td>
+            <td class="tree-table-item-time">
+              <div class="inner-box">
+                {{ item.time_pass }}
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
     </table>
+    <div v-if="!filesList.length" class="empyt-folder">空文件夹</div>
   </div>
   <div v-else-if="isAuthentic" class="empty-own">
     <div class="upload-readme-img">
@@ -258,6 +326,19 @@ watch(
   margin-right: 6px;
   font-size: 24px;
 }
+:deep(.el-form) {
+  .el-form-item {
+    .el-form-item__content {
+      .el-form-item__error {
+        white-space: nowrap;
+        padding-right: 400px;
+        bottom: 0;
+        left: calc(100% + 123px);
+        background-color: #fff;
+      }
+    }
+  }
+}
 .tree {
   min-height: calc(100vh - 400px);
   &-head {
@@ -287,38 +368,93 @@ watch(
     width: 100%;
     border: 1px solid #e5e5e5;
     background-color: #fff;
+    table-layout: fixed;
+    word-break: break-all;
+    border-collapse: collapse;
     tr {
       height: 56px;
+      .el-form {
+        display: flex;
+        justify-content: center;
+        .form-item {
+          margin: 0;
+          width: 260px;
+          .el-input {
+            width: 260px;
+            box-shadow: none;
+            .el-input__wrapper {
+              box-shadow: 0 0 0 1px #e5e5e5ff inset;
+            }
+          }
+        }
+      }
+      .check-name {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 30px;
+        span {
+          cursor: pointer;
+        }
+      }
       td {
+        overflow: hidden;
+        word-wrap: break-word;
         border-bottom: 1px solid #e5e5e5;
         .inner-box {
           display: flex;
           align-items: center;
+          padding-right: 8px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
       td:first-child {
         padding-left: 36px;
-        width: 330px;
-      }
-      td:nth-child(3) {
-        max-width: 800px;
+        span:nth-child(1) {
+          flex-shrink: 0;
+        }
       }
     }
     &-item {
       &-name {
         cursor: pointer;
+        &:hover {
+          color: #33b3ff;
+          text-decoration: underline;
+        }
       }
       &-time {
-        width: 170px;
         padding-right: 50px;
       }
       &-download {
         cursor: pointer;
-        width: 115px;
         font-size: 12px;
         color: #999;
+        .inner-box {
+          padding: 0 24px;
+        }
+        span {
+          line-height: 18px;
+        }
         .o-icon {
           font-size: 16px;
+        }
+      }
+    }
+    .create-file {
+      td {
+        overflow: visible;
+        .inner-box {
+          overflow: visible;
+          .el-form-item__error {
+            left: calc(100% + 120px);
+          }
         }
       }
     }
@@ -333,6 +469,14 @@ watch(
         align-items: center;
       }
     }
+  }
+  .empyt-folder {
+    display: flex;
+    padding: 30px 0;
+    justify-content: center;
+    align-items: center;
+    // border: 1px solid ;
+    border: 1px solid #e5e5e5;
   }
 }
 .empty-own {

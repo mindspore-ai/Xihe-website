@@ -33,8 +33,8 @@ switch (prop.relateName) {
 <template>
   <div class="no-data-box">
     <o-icon v-if="isShow1"><icon-empty></icon-empty></o-icon>
-    <o-icon v-if="isShow2"><icon-dataset></icon-dataset></o-icon>
-    <o-icon v-if="isShow3"><icon-project></icon-project></o-icon>
+    <o-icon v-if="isShow3"><icon-dataset></icon-dataset></o-icon>
+    <o-icon v-if="isShow2"><icon-project></icon-project></o-icon>
     暂未添加相关{{ relName }}
   </div>
 </template>

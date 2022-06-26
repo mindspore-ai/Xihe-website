@@ -54,7 +54,7 @@ getUserModelData(userInfo.value.id).then((res) => {
 
 function goDetail(user, modelName) {
   router.push({
-    path: `/models/${user}/${modelName}/card`,
+    path: `/models/${user}/${modelName}`,
   });
 }
 
@@ -101,7 +101,7 @@ onMounted(() => {
         @click="goDetail(item.owner_name.name, item.name)"
       ></o-card>
     </div>
-    <div class="pagination">
+    <!-- <div class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
@@ -112,7 +112,7 @@ onMounted(() => {
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>
-    </div>
+    </div> -->
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />

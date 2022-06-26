@@ -49,15 +49,15 @@ getUserLive(userInfo.value.id).then((res) => {
 function goDetail(item) {
   if (item.type.indexOf('模型') > -1) {
     router.push({
-      path: `/models/${item.owner.name}/${item.name}/card`,
+      path: `/models/${item.owner.name}/${item.name}`,
     });
   } else if (item.type.indexOf('数据集') > -1) {
     router.push({
-      path: `/datasets/${item.owner.name}/${item.name}/card`,
+      path: `/datasets/${item.owner.name}/${item.name}`,
     });
   } else if (item.type.indexOf('项目') > -1) {
     router.push({
-      path: `/projects/${item.owner.name}/${item.name}/card`,
+      path: `/projects/${item.owner.name}/${item.name}`,
     });
   }
 }

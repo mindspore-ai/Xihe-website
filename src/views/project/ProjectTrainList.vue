@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -31,20 +31,43 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 
-// console.log(detailData.value);
+console.log(detailData.value.id);
 
 let projectId = detailData.value.id;
 const trainData = ref([]);
 
-// 获取训练列表
-// function getTrainList() {
-//   trainList(projectId).then((res) => {
-//     trainData.value = res.data.data;
-//     console.log(trainData.value);
-//   });
-// }
-// getTrainList();
+var timer = null;
 
+// 获取训练列表
+function getTrainList() {
+  trainList(projectId).then((res) => {
+    trainData.value = res.data.data;
+    console.log(trainData.value);
+    trainData.value.forEach((item) => {
+      if (item.status === 'Running') {
+        timer = setInterval(() => {
+          socket.send(JSON.stringify({ pk: detailData.value.id }));
+        }, 1000);
+      }
+    });
+  });
+}
+getTrainList();
+// 判断列表状态有Running，然后发请求建立websocket
+// function getWbsocket() {
+//   getTrainList();
+// }
+// getWbsocket();
+
+//跳转到选择文件创建训练实例页
+function goSelectFile() {
+  router.push({
+    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+    query: {
+      projectId: detailData.value.id,
+    },
+  });
+}
 const showDel = ref(false);
 function showDelClick() {
   showDel.value = true;
@@ -53,7 +76,7 @@ function showDelClick() {
 function deleteClick(id) {
   deleteTainList(projectId, id).then((res) => {
     if (res.status === 200) {
-      // getTrainList();
+      getTrainList();
       showDel.value = false;
     }
   });
@@ -74,6 +97,11 @@ function stopClick(id) {
   console.log(id);
   stopTrain(projectId, id).then((res) => {
     console.log(res);
+    if (res.status === 200) {
+      getTrainList();
+      closeConn();
+      clearInterval(timer);
+    }
   });
 }
 
@@ -83,6 +111,7 @@ function quitClick(val) {
     showStop.value = false;
   } else {
     stopClick(val);
+    console.log(val);
   }
 }
 
@@ -111,6 +140,7 @@ function resetClick(val) {
 }
 
 function goTrainLog(trainId) {
+  console.log(trainId);
   router.push({
     name: 'projectTrainLog',
     params: {
@@ -118,7 +148,7 @@ function goTrainLog(trainId) {
     },
   });
 }
-// http://localhost:3000/projects/yyj/modelartsTest/blob/train/config.json
+
 // 参数文件详情跳转
 function goDateDetail(path) {
   console.log(path);
@@ -127,30 +157,25 @@ function goDateDetail(path) {
   );
 }
 
-// function goTrainLog(trainId) {
-//   console.log(trainId);
-//   trainId = JSON.parse(trainId);
-//   console.log(trainId);
-//   router.push({
-//     name: 'projectTrainLog',
-//     params: {
-//       trainId: trainId,
-//     },
-//   });
-// }
-
 const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
-console.log(socket.readyState);
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
-  socket.send(JSON.stringify({ pk: 203, username: 'bbbbb' }));
+  // socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   console.log(JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
+  trainData.value.forEach((item) => {
+    if (item.status === 'Running') {
+      return;
+    } else {
+      clearInterval(timer);
+      closeConn();
+    }
+  });
   console.log('收到服务器消息');
 };
 
@@ -166,12 +191,27 @@ function sendMessage() {
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
 }
+
+// 页面刷新
+function reloadPage() {
+  console.log('页面刷新了');
+  closeConn();
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', (e) => reloadPage());
+});
+
+onUnmounted(() => {
+  closeConn();
+  clearInterval(timer);
+});
 </script>
 <template>
   <div class="train-list">
     <div class="list-top">
       <p class="title">训练列表</p>
-      <o-button type="primary">
+      <o-button type="primary" @click="goSelectFile">
         <div class="btn-content">
           <o-icon><icon-plus></icon-plus></o-icon>
           <span>创建训练实例</span>

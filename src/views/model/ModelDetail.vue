@@ -74,7 +74,7 @@ let tabTitle = reactive([
   {
     label: '模型卡片',
     id: 0,
-    path: 'card',
+    path: '',
     isPrivate: false,
   },
   {
@@ -186,7 +186,6 @@ getDetailData();
 // }
 function tagClick(it, key) {
   if (key === 'task' || key === 'licenses') {
-    console.log(it);
     if (it.isActive) {
       it.isActive = false;
       renderList.value[key].forEach((item) => {

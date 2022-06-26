@@ -131,6 +131,11 @@ function keepPhone(formEl) {
     }
   });
 }
+function resetForm(formEl) {
+  if (!formEl) return;
+  formEl.resetFields();
+  togglePhoneDlg(false);
+}
 </script>
 
 <template>
@@ -237,7 +242,7 @@ function keepPhone(formEl) {
           </el-form>
           <div class="dlg-body-list note-btn">
             <div class="verify-note">
-              <o-button class="cancel-btn" @click="togglePhoneDlg(false)"
+              <o-button class="cancel-btn" @click="resetForm(ruleFormRef)"
                 >取消</o-button
               >
               <o-button class="comfilm-btn" @click="keepPhone(ruleFormRef)"

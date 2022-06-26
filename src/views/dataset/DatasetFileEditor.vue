@@ -24,9 +24,9 @@ const route = useRoute();
 let routerParams = route.params;
 let path = '';
 routerParams.contents
-  ? (path = `xihe-obj/datasets/${route.params.user}/${routerParams.name}/${routerParams.contents.join(
-      '/'
-    )}`)
+  ? (path = `xihe-obj/datasets/${route.params.user}/${
+      routerParams.name
+    }/${routerParams.contents.join('/')}`)
   : '';
 
 const lang = ref('');
@@ -95,7 +95,7 @@ async function upLoadObs() {
     function () {
       ElMessage({
         type: 'success',
-        message: '保存成功！',
+        message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
       });
     }
   );
@@ -116,7 +116,6 @@ function pathClick(index) {
     ? (routerName = 'datasetFileBlob')
     : (routerName = 'datasetFile');
   let contents = route.params.contents.splice(0, index);
-  console.log(contents);
   router.push({
     name: routerName,
     params: {

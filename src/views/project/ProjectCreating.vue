@@ -373,7 +373,7 @@ onMounted(() => {});
   position: relative;
   margin: 0 auto;
   max-width: 1440px;
-  min-height: 1009px;
+  min-height: 972px;
   margin-bottom: 64px;
   background: #ffffff;
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
@@ -410,7 +410,7 @@ onMounted(() => {});
       }
       .store-item {
         align-self: start;
-        padding-top: 26px;
+        padding-top: 14px;
       }
       .el-form-item {
         display: flex;
@@ -472,17 +472,19 @@ onMounted(() => {});
         width: 144px;
         height: 48px;
         margin-left: 128px;
+        margin-top: 24px;
       }
     }
     .view {
       display: flex;
       :deep .el-form-item__label {
-        height: 216px !important;
-        padding-top: 18px;
+        height: 128px !important;
+        padding-top: 6px;
       }
     }
     .visual {
       display: flex;
+      align-self: flex-start !important;
       flex-direction: column;
       .visual-desc {
         padding-left: 22px;

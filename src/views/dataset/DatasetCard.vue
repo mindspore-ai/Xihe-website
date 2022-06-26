@@ -237,6 +237,9 @@ watch(
     }
   }
   .right-data {
+    :deep(.remove-item){
+      visibility: hidden;
+    }
     max-width: 425px;
     width: 100%;
     color: #000;
@@ -252,6 +255,9 @@ watch(
     }
     .dataset-data {
       .dataset-box {
+        :deep(.remove-item) {
+          visibility: hidden;
+        }
         display: grid;
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;

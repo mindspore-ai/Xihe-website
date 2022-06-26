@@ -1,0 +1,12 @@
+.el-form {
+  .el-form-item {
+    .el-form-item__content {
+      .el-form-item__error {
+        white-space: nowrap;
+        transform: translateY(-50%);
+        top: 50%;
+        left: calc(100% + 52px);
+      }
+    }
+  }
+}

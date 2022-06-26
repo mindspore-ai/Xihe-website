@@ -1,0 +1,85 @@
+<script setup>
+// import { watch } from 'vue';
+import IconHeart from '~icons/app/heart';
+import IconDigged from '~icons/app/digged';
+
+const props = defineProps({
+  isDigged: {
+    type: Boolean,
+    default: false,
+  },
+  digCount: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const emit = defineEmits(['click']);
+
+function onClick(e) {
+  // if (props.disabled) {
+  //   return;
+  // }
+  emit('click', e);
+}
+
+// watch();
+// () => props.isDigged,
+// (newValue, oldValue) => {},
+// () => props.digCount,
+// (newValue, oldValue) => {}
+</script>
+<template>
+  <div class="digg-content">
+    <div
+      @click="onClick"
+      :class="[
+        { 'un-digged': isDigged === false },
+        { 'is-digged': isDigged === true },
+      ]"
+    >
+      <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
+      <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
+      <span>{{ props.digCount }}</span>
+    </div>
+  </div>
+</template>
+<style lang="scss">
+.digg-content {
+  cursor: pointer;
+  .un-digged {
+    display: flex;
+    align-items: center;
+    line-height: 24px;
+    &:hover {
+      svg {
+        fill: rgba(13, 141, 255, 1);
+      }
+      color: rgba(13, 141, 255, 1);
+    }
+    .o-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+  .is-digged {
+    display: flex;
+    align-items: center;
+    line-height: 24px;
+    color: rgba(13, 141, 255, 1);
+    svg {
+      fill: rgba(13, 141, 255, 1);
+    }
+    &:hover {
+      svg {
+        fill: rgba(51, 179, 255, 1);
+      }
+      color: rgba(51, 179, 255, 1);
+    }
+    .o-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+}
+</style>

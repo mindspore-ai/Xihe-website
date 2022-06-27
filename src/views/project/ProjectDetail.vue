@@ -165,8 +165,8 @@ const rules = reactive({
   storeName: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
-      message: '不允许输⼊中⽂',
+      pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
+      message: '暂不支持中文字符',
       trigger: 'blur',
     },
     {

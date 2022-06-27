@@ -94,12 +94,12 @@ function pathClick(index) {
         </div>
       </div>
       <div class="file-top-right">
-        <o-button class="download-all"
+        <!-- <o-button class="download-all"
           >{{ i18n.downloadAll }}
           <template #suffix>
             <o-icon><icon-download></icon-download></o-icon>
           </template>
-        </o-button>
+        </o-button> -->
         <el-dropdown v-if="detailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}

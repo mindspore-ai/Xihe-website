@@ -12,8 +12,6 @@ import ODialog from '@/components/ODialog.vue';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/other-file';
 import IconPlus from '~icons/app/plus';
-import NoRelate from '@/components/NoRelate.vue';
-import RelateCard from '@/components/RelateCard.vue';
 import DeleteRelate from '@/components/DeleteRelate.vue';
 
 import { ElMessage } from 'element-plus';
@@ -413,19 +411,19 @@ function toggleDelDlg(flag) {
 <template>
   <div class="project-train">
     <div class="project-train-file">
-      <div
-        v-if="userInfo.userName === detailData.owner_name.name"
-        class="createtrain-btn"
-      >
-        <o-button
-          type="primary"
-          style="height: 48px; width: ; padding: 11px 4px"
-          @click="goSelectFile"
-        >
-          {{ i18n.createTrain }}</o-button
-        >
-      </div>
       <div v-if="codeString" class="markdown-body">
+        <div
+          v-if="userInfo.userName === detailData.owner_name.name"
+          class="createtrain-btn"
+        >
+          <o-button
+            type="primary"
+            style="height: 48px; padding: 11px 4px"
+            @click="goSelectFile"
+          >
+            {{ i18n.createTrain }}</o-button
+          >
+        </div>
         <div v-highlight class="markdown-file" v-html="result"></div>
         <o-button v-if="detailData.is_owner" @click="goEditor">{{
           i18n.editor
@@ -629,15 +627,17 @@ function toggleDelDlg(flag) {
     display: flex;
     flex-direction: row-reverse;
     position: relative;
-    .createtrain-btn {
-      position: absolute;
-      right: 184px;
-      z-index: 1;
-    }
     .markdown-body {
       position: relative;
       margin-right: 40px;
       width: 100%;
+      .createtrain-btn {
+        width: 120px;
+        height: 48px;
+        position: absolute;
+        right: 184px;
+        // z-index: 1;
+      }
       .o-button {
         position: absolute;
         top: 0px;

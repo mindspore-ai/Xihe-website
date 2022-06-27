@@ -512,7 +512,7 @@ function toggleDelDlg(flag) {
             !detailData.relate_infer_models_list ||
             detailData.relate_infer_models_list.length === 0
           "
-          :relate-name="'project'"
+          :relate-name="'model'"
         ></no-relate>
         <relate-card
           :detail-data="detailData"

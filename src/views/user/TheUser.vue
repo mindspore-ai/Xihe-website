@@ -231,10 +231,16 @@ function getFollow(userId, fans) {
     }
   }
 }
+console.log(route.params.user);
 </script>
 
 <template>
   <div class="user-banner">
+    <!-- <div class="wrap">
+      <span v-if="isAuthentic">{{ isAuthentic ? '个人' : userInfo.userName }}</span>
+      <span>{{ isAuthentic ? '' : '的' }}</span>
+      <span>{{ headTitle[label] ? headTitle[label] : headTitle.user }}</span>
+    </div> -->
     <div class="wrap">
       {{ isAuthentic ? '我' : userInfo.userName }}的{{
         headTitle[label] ? headTitle[label] : headTitle.user

@@ -416,6 +416,13 @@ export const routes = [
     },
   },
   {
+    path: '/projects/:user/:name/createfile',
+    name: 'projectsCreateFile',
+    component: () => {
+      return import('@/views/project/ProjectCreateFile.vue');
+    },
+  },
+  {
     path: '/projects/:user/:name',
     name: 'project-detail',
     component: () => {
@@ -460,7 +467,7 @@ export const routes = [
           return import('@/views/project/ProjectTrainList.vue');
         },
         meta: {
-          index: 4,
+          index: 1,
         },
       },
       {
@@ -470,7 +477,7 @@ export const routes = [
           return import('@/views/project/ProjectTrainLog.vue');
         },
         meta: {
-          index: 5,
+          index: 1,
         },
       },
       {

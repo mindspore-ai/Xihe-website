@@ -87,20 +87,6 @@ let tabTitle = reactive([
     label: '训练',
     id: 1,
     path: 'train',
-    /*
-    children: [
-      {
-        label: '训练代码',
-        id: 0,
-        path: 'train/code',
-      },
-      {
-        label: '训练数据',
-        id: 1,
-        path: 'trainlist',
-      },
-    ],
-    */
     isPrivate: false,
   },
   {
@@ -136,8 +122,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
@@ -245,7 +231,7 @@ function getDetailData() {
         router.push('/notfound');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
@@ -268,8 +254,7 @@ const completedStatus = ref(false);
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -560,17 +545,19 @@ watch(
     }
   }
 );
-// TODO: 自己去router里面配置mate nav高亮跟随
-// watch(
-//   () => {
-//     return route.name;
-//   },
-//   () => {
-//     if (route.meta.index === 2) {
-//       activeName.value = 'tree';
-//     }
-//   }
-// );
+// 在router里面配置mate nav高亮跟随
+watch(
+  () => {
+    return route.name;
+  },
+  () => {
+    if (route.meta.index === 2) {
+      activeName.value = 'tree';
+    } else if (route.meta.index === 1) {
+      activeName.value = 'train';
+    }
+  }
+);
 // 中途登录页面更新
 watch(
   () => {

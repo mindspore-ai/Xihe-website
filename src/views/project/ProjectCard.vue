@@ -37,6 +37,7 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+console.log(routerParams);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,

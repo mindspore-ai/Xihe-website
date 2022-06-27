@@ -70,7 +70,6 @@ watch(
   }
 );
 
-// console.log(currentFollowList.value)
 // 取消关注or取消点赞
 function getWatched(userId, follow) {
   if (!userInfoStore.id) {
@@ -83,14 +82,8 @@ function getWatched(userId, follow) {
           if (loginFollowIdList.value.indexOf(follow.id) !== -1) {
             let index = loginFollowIdList.value.indexOf(follow.id);
             loginFollowList.value.splice(index, 1);
-            // loginFollowIdList = loginFollowList.map((val) => {
-            //   return val.id;
-            // });
           } else {
             loginFollowList.value.push(follow);
-            // loginFollowIdList = loginFollowList.map((val) => {
-            //   return val.id;
-            // });
           }
         }
         follow.isFollow = !follow.isFollow;

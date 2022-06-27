@@ -37,18 +37,13 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// console.log(detailData.value);
+console.log(detailData.value);
 // const filePath = ref('');
 // const textarea = ref('');
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
 const showTip = ref(false);
-// const trainTipInfo = reactive({
-//   describe:
-//     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
-//   confirm: '确认',
-// });
 
 // 左侧显示文件内容
 const result = ref();
@@ -60,6 +55,7 @@ const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
   contents: ['train'],
+  // contents: routerParams.contents,
 };
 
 const i18n = {
@@ -270,44 +266,44 @@ function concelClick() {
 function deleteClick(item) {
   deleteRelate.value = true;
   console.log(item);
-  // let projectId = detailData.value.id;
-  // let modifyParams = {
-  //   relate_infer_datasets: [],
-  // };
-  // let modelParams = {
-  //   relate_infer_models: [],
-  // };
-  // if (item[1] === 'relate_infer_datasets_list') {
-  //   detailData.value.relate_infer_datasets_list.forEach((child) => {
-  //     if (item[0].id !== child.id) {
-  //       modifyParams.relate_infer_datasets.push(child.id);
-  //     }
-  //   });
-  //   modifyProjectAdd(modifyParams, projectId).then((res) => {
-  //     if (res.status === 200) {
-  //       ElMessage({
-  //         type: 'success',
-  //         message: '删除成功！你可再次添加相关数据集。',
-  //       });
-  //       emit('on-click');
-  //     }
-  //   });
-  // } else if (item[1] === 'relate_infer_models_list') {
-  //   detailData.value.relate_infer_models_list.forEach((child) => {
-  //     if (item[0].id !== child.id) {
-  //       modelParams.relate_infer_models.push(child.id);
-  //     }
-  //   });
-  //   modifyProjectAdd(modelParams, projectId).then((res) => {
-  //     if (res.status === 200) {
-  //       ElMessage({
-  //         type: 'success',
-  //         message: '删除成功！你可再次添加相关模型。',
-  //       });
-  //       emit('on-click');
-  //     }
-  //   });
-  // }
+  let projectId = detailData.value.id;
+  let modifyParams = {
+    relate_infer_datasets: [],
+  };
+  let modelParams = {
+    relate_infer_models: [],
+  };
+  if (item[1] === 'relate_infer_datasets_list') {
+    detailData.value.relate_infer_datasets_list.forEach((child) => {
+      if (item[0].id !== child.id) {
+        modifyParams.relate_infer_datasets.push(child.id);
+      }
+    });
+    modifyProjectAdd(modifyParams, projectId).then((res) => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功！你可再次添加相关数据集。',
+        });
+        emit('on-click');
+      }
+    });
+  } else if (item[1] === 'relate_infer_models_list') {
+    detailData.value.relate_infer_models_list.forEach((child) => {
+      if (item[0].id !== child.id) {
+        modelParams.relate_infer_models.push(child.id);
+      }
+    });
+    modifyProjectAdd(modelParams, projectId).then((res) => {
+      if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功！你可再次添加相关模型。',
+        });
+        emit('on-click');
+      }
+    });
+  }
 }
 
 function addModeClick() {
@@ -359,6 +355,7 @@ watch(
 );
 
 function goEditor() {
+  pushParams.contents = [...pushParams.contents, 'README.md'];
   router.push({
     name: 'projectFileEditor',
     params: pushParams,
@@ -411,19 +408,19 @@ function toggleDelDlg(flag) {
 <template>
   <div class="project-train">
     <div class="project-train-file">
-      <div v-if="codeString" class="markdown-body">
-        <div
-          v-if="userInfo.userName === detailData.owner_name.name"
-          class="createtrain-btn"
+      <div
+        v-if="userInfo.userName === detailData.owner_name.name"
+        class="createtrain-btn"
+      >
+        <o-button
+          type="primary"
+          style="height: 48px; padding: 11px 4px"
+          @click="goSelectFile"
         >
-          <o-button
-            type="primary"
-            style="height: 48px; padding: 11px 4px"
-            @click="goSelectFile"
-          >
-            {{ i18n.createTrain }}</o-button
-          >
-        </div>
+          {{ i18n.createTrain }}</o-button
+        >
+      </div>
+      <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
         <o-button v-if="detailData.is_owner" @click="goEditor">{{
           i18n.editor
@@ -627,21 +624,22 @@ function toggleDelDlg(flag) {
     display: flex;
     flex-direction: row-reverse;
     position: relative;
+    .createtrain-btn {
+      width: 120px;
+      height: 48px;
+      position: absolute;
+      right: 184px;
+      z-index: 1;
+    }
     .markdown-body {
       position: relative;
       margin-right: 40px;
       width: 100%;
-      .createtrain-btn {
-        width: 120px;
-        height: 48px;
-        position: absolute;
-        right: 184px;
-        // z-index: 1;
-      }
       .o-button {
         position: absolute;
         top: 0px;
         right: 0px;
+        z-index: 1;
       }
     }
     .upload-readme {

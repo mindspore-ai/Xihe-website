@@ -71,7 +71,7 @@ if (props.cardType === 'model') {
         {{ label.name }}
       </div>
     </div>
-    <p class="model-introduce">
+    <p class="model-F">
       {{ cardData.description }}
     </p>
     <div class="card-bottom">

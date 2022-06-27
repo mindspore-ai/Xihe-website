@@ -6,18 +6,8 @@ import { ElMessage } from 'element-plus';
 
 // import { useUserInfoStore, useFileData } from '@/stores';
 
-import { createTrainProject } from '@/api/api-project';
-import { fileVerify } from '@/api/api-obs.js';
-import {
-  findFile,
-  downloadFileObs,
-  getDownLoadToken,
-  handleUpload,
-} from '@/api/api-obs';
-
 const route = useRoute();
 const router = useRouter();
-let routerParams = route.params;
 
 const filePath = ref('');
 const isShow = ref(false);
@@ -27,113 +17,6 @@ function goTrain() {
   router.push({
     name: 'projectTrain',
   });
-}
-
-// 确认创建训练实例
-function confirmCreating() {
-  let params = { config_path: filePath.value };
-  createTrainProject(params, route.query.projectId).then((res) => {
-    console.log(res);
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '创建训练实例成功',
-        center: true,
-      });
-      setTimeout(() => {
-        router.push({
-          name: 'projectTrainList',
-        });
-      }, 500);
-    } else {
-      ElMessage({
-        type: 'error',
-        message: '训练实例创建失败，请修改json文件中的job_name',
-        center: true,
-      });
-    }
-  });
-}
-const describe = ref('');
-let fileData = reactive({});
-let reopt = {
-  method: 'get',
-  url: null,
-  withCredentials: false,
-  headers: null,
-  validateStatus: function (status) {
-    return status >= 200;
-  },
-  maxRedirects: 0,
-  responseType: 'blob',
-  data: null,
-};
-
-const codeString = ref('');
-function downLoad(objkey) {
-  let params = {
-    objkey: objkey,
-  };
-  getDownLoadToken(params).then((res) => {
-    reopt.url = res.data.signedUrl;
-    downloadFileObs(reopt).then((res) => {
-      let reader = new FileReader();
-      reader.readAsText(res, 'utf-8');
-      reader.onload = function () {
-        codeString.value = reader.result;
-        isShow.value = true;
-      };
-    });
-  });
-}
-// SDK 上传
-async function upLoadObs() {
-  // 构造文件对象
-  let blob = new Blob([codeString.value], {
-    type: 'text/plain;charset=utf-8',
-  });
-  let file = new File([blob], fileData.name, {
-    type: 'text/plain;charset=utf-8',
-    lastModified: Date.now(),
-  });
-  await handleUpload(
-    {
-      file,
-      path,
-      isEdit: true,
-      description: describe.value || `edit ${fileData.name}`,
-    },
-    null,
-    function () {
-      ElMessage({
-        type: 'success',
-        message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
-      });
-    }
-  );
-  pathClick(route.params.contents.length);
-}
-
-function findFileByPath() {
-  if (!filePath.value.endsWith('.json')) {
-    ElMessage({
-      type: 'error',
-      message: '请输入json文件路径',
-    });
-  } else {
-    let path = `xihe-obj/projects/${route.params.user}/${routerParams.name}/${filePath.value}`;
-    findFile(path).then((res) => {
-      if (res.status && res.data && res.data.children.length) {
-        fileData = res.data.children[0];
-        downLoad(fileData.path);
-      } else {
-        ElMessage({
-          type: 'error',
-          message: '路径错误，请重新输入',
-        });
-      }
-    });
-  }
 }
 </script>
 <template>
@@ -152,9 +35,14 @@ function findFileByPath() {
           </div>
         </div>
         <div class="selectfile-content-tip">
-          若你已有配置文件，你可以输入配置文件路径参数进行创建，相关文档参考创建训练实例。
+          为训练实例选择对应的配置，若你已有配置文件，也可通过选择相应配置文件进行创建。
         </div>
-        <div class="selectfile-content-path">
+        <div class="selectfile-form-wrap">
+          <div class="selectfile-form-left"></div>
+          <div class="selectfile-form-right"></div>
+        </div>
+
+        <!-- <div class="selectfile-content-path">
           <el-input
             v-model="filePath"
             class="file-select-int"
@@ -173,7 +61,7 @@ function findFileByPath() {
             :model-value="codeString"
           ></o-editor>
           <el-input v-else class="file-select-textarea-int" type="textarea" />
-        </div>
+        </div> -->
         <div class="selectfile-content-action">
           <o-button class="confim" type="primary" @click="confirmCreating"
             >确认</o-button
@@ -250,25 +138,18 @@ function findFileByPath() {
         font-size: 14px;
         color: #999;
       }
-      &-path {
-        margin: 24px 0;
-        // margin-bottom: 24px;
+      .selectfile-form-wrap {
         display: flex;
         justify-content: space-between;
-        .file-select-int {
-          max-width: 1200px;
-          width: 87%;
+        .selectfile-form-left {
+          width: 400px;
+          height: 400px;
+          background-color: #bfa;
         }
-        .file-select-btn {
-          height: 45px;
-        }
-      }
-      &-textarea {
-        .file-select-textarea-int {
-          width: 100% !important;
-          :deep .el-textarea__inner {
-            height: 600px;
-          }
+        .selectfile-form-right {
+          width: 400px;
+          height: 400px;
+          background-color: #bfa;
         }
       }
       &-action {

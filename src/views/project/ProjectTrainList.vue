@@ -53,7 +53,7 @@ function getTrainList() {
   });
 }
 getTrainList();
-
+console.log(route)
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   router.push({

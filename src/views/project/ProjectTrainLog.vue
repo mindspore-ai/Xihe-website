@@ -120,9 +120,9 @@ function saveSetting() {
       <div class="train-log-desc">
         <el-input v-model="form.desc" type="textarea" />
       </div>
-      <div>
+      <!-- <div>
         <o-button type="primary" @click="autoEvaluate">自动评估</o-button>
-      </div>
+      </div> -->
     </div>
     <div class="train-log-detail">
       <div class="train-log-detail-title">训练详情</div>
@@ -166,9 +166,9 @@ function saveSetting() {
             <el-input type="textarea" />
           </div>
         </li>
-        <div class="info-btn">
+        <!-- <div class="info-btn">
           <o-button type="primary" @click="saveSetting">保存设置</o-button>
-        </div>
+        </div> -->
       </ul>
     </div>
   </div>

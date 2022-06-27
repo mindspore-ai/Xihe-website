@@ -16,6 +16,8 @@ import OButton from '@/components/OButton.vue';
 
 import { debounce } from 'lodash/function';
 
+import { goAuthorize } from '@/shared/login';
+
 import { getProjectData, getModelTags } from '@/api/api-project';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -360,7 +362,12 @@ function goDetail(user, name) {
 }
 
 function goSetNew() {
-  router.push('/new/projects');
+  console.log(loginStore.isLogined);
+  if (loginStore.isLogined) {
+    router.push('/new/projects');
+  } else {
+    goAuthorize();
+  }
 }
 const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
@@ -406,7 +413,7 @@ onMounted(() => {
           <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">{{ i18n.head.introduce }}</div>
         </div>
-        <div v-if="loginStore.isLogined" class="banner-right">
+        <div class="banner-right">
           <o-button type="primary" @click="goSetNew">{{
             i18n.head.btn
           }}</o-button>

@@ -6,19 +6,20 @@ const route = useRoute();
 const i18n = {
   models: {
     new: '新建模型',
-    introduce: '简单介绍简单介绍简单介绍',
+    introduce: '新建一个模型仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
   },
   datasets: {
     new: '新建数据集',
-    introduce: '简单介绍简单介绍简单介绍',
+    introduce: '新建一个数据集仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
   },
   projects: {
     new: '新建项目',
-    introduce: '简单介绍简单介绍简单介绍',
+    introduce:
+      '新建一个项目仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个项目仓库',
     progress2: '上传文件',
   },
@@ -35,13 +36,13 @@ console.log(bannerLabel.value);
     <div class="warp">
       <div class="wrap">{{ i18n[bannerLabel].new }}</div>
       <div class="introduce">{{ i18n[bannerLabel].introduce }}</div>
-      <div class="step">
+      <!-- <div class="step">
         <span class="step-step1">1</span>
         <span class="step-text1">{{ i18n[bannerLabel].progress1 }}</span>
         <span class="step-point">························</span>
         <span class="step-step2">2</span>
         <span class="step-text2">{{ i18n[bannerLabel].progress2 }}</span>
-      </div>
+      </div> -->
     </div>
   </div>
   <router-view></router-view>
@@ -60,9 +61,15 @@ console.log(bannerLabel.value);
     margin: 0 auto;
     color: #ffffff;
     .wrap {
-      font-size: 19px;
+      font-size: 24px;
       font-weight: normal;
-      line-height: 48px;
+      line-height: 32px;
+    }
+    .introduce {
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 22px;
+      margin-top: 8px;
     }
     .step {
       margin-top: 22px;

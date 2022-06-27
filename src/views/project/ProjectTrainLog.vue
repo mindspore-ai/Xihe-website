@@ -54,9 +54,9 @@ const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
-  socket.send(
-    JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
-  );
+  // socket.send(
+  //   JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
+  // );
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。

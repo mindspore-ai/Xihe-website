@@ -379,7 +379,7 @@ function stop() {
     msg.value = '';
   });
 }
-const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/inference');
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/inference');
 // console.log(socket.readyState);
 socket.onopen = function () {
   console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));

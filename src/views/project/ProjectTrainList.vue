@@ -155,7 +155,7 @@ function goDateDetail(path) {
 }
 
 const socket = new WebSocket(
-  'wss://xihebackend.test.osinfra.cn/train_task'
+  'wss://xihe.test.osinfra.cn/train_task'
 );
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
@@ -176,7 +176,7 @@ socket.onmessage = function (event) {
       closeConn();
     }
   });
-  // console.log('收到服务器消息');
+  console.log('收到服务器消息');
 };
 
 // 服务端主动断开连接时，这个方法也被触发。

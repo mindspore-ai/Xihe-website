@@ -47,8 +47,8 @@ export default defineConfig({
         target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,
       },
-      '/websocket': {
-        target: 'ws://xihebackend.test.osinfra.cn/',
+      '/wss': {
+        target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,
       },
     },

@@ -22,6 +22,7 @@ import {
   getModelTags,
   getUserDig,
   projectFork,
+  trainList,
 } from '@/api/api-project';
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
@@ -32,6 +33,7 @@ const route = useRoute();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+
 const modelTags = ref([]);
 const headTags = ref([]);
 const isDigged = ref(false);
@@ -40,7 +42,6 @@ const inputDom = ref();
 const forkShow = ref(false);
 const loadingShow = ref(false);
 const renderList = ref([]);
-
 const isShow = ref();
 const isTagShow = ref(false);
 const tabPosition = ref('left');
@@ -194,51 +195,6 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
-function forkCreateClick() {
-  ruleFormRef.value.validate((valid) => {
-    if (valid) {
-      forkShow.value = false;
-      loadingShow.value = true;
-      let projectId = detailData.value.id;
-      let params = {};
-      params.name = forkForm.storeName;
-      params.owner_id = userInfoStore.id;
-      params.description = forkForm.describe;
-      params.owner_type = JSON.parse(localStorage.getItem('base')).user_type_id;
-
-      forkShow.value = false;
-      loadingShow.value = true;
-      projectFork(params, projectId).then((res) => {
-        console.log(res);
-        if (res.status === 200 && res.data.status === 200) {
-          loadingShow.value = false;
-          router.push(
-            `/projects/${userInfoStore.userName}/${forkForm.storeName}`
-          );
-        } else {
-          loadingShow.value = false;
-          ElMessage({
-            type: 'error',
-            message: res.data.msg,
-            center: true,
-          });
-        }
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: '请按要求填写信息',
-        center: true,
-      });
-      return;
-    }
-  });
-}
-
-function forkClick() {
-  forkShow.value = true;
-}
-
 // 详情数据
 function getDetailData() {
   try {
@@ -248,6 +204,7 @@ function getDetailData() {
     }).then((res) => {
       if (res.results.data.length) {
         let storeData = res.results.data[0];
+        console.log(storeData);
         // 判断仓库是否属于自己
         storeData['is_owner'] =
           userInfoStore.userName === storeData.owner_name.name;
@@ -257,7 +214,17 @@ function getDetailData() {
         }
 
         fileData.setFileData(storeData);
-
+        console.log(detailData.value);
+        // trainList(detailData.value.id).then((res) => {
+        //   console.log(res.data.data);
+        //   res.data.data.forEach((item) => {
+        //     if (item.status === 'Running') {
+        //     runingStatus.value = true;
+        //     }else{
+        //     completedStatus.value = true
+        //   }
+        //   });
+        // });
         isShow.value = userInfoStore.userName === storeData.owner_name.name;
 
         forkForm.storeName = detailData.value.name;
@@ -282,6 +249,23 @@ function getDetailData() {
 }
 getDetailData();
 
+const runingStatus = ref(false);
+const completedStatus = ref(false);
+// 获取训练列表
+// function getTrainList() {
+// trainList(detailData.value.id).then((res) => {
+//   console.log(res.data.data);
+//   res.data.data.forEach((item) => {
+//     if (item.status === 'Running') {
+//     runingStatus.value = true;
+//     }else{
+//     completedStatus.value = true
+//   }
+//   });
+// });
+// }
+// getTrainList();
+
 function handleTabClick(item) {
   router.push(
     `/projects/${route.params.user}/${route.params.name}/${
@@ -305,7 +289,7 @@ function tagClick(it, key) {
       });
     } else {
       renderList.value[key].forEach((item) => {
-        if (item.isActive === true) {
+        if (item.isActive) {
           headTags.value.forEach((tag, index) => {
             if (item.name == tag.name) {
               headTags.value.splice(index, 1);
@@ -336,6 +320,8 @@ function tagClick(it, key) {
 // 添加标签
 function addTagClick() {
   isTagShow.value = true;
+  getAllTags();
+  getDetailData();
 }
 
 // 点赞
@@ -409,7 +395,6 @@ function confirmBtn() {
           }
         });
       });
-      // TODO: 修改, 情况重复;
     } else if (menu.key == 'tags') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
@@ -438,6 +423,8 @@ function confirmBtn() {
   modifyProject(params).then((res) => {
     if (res.status === 200) {
       getDetailData();
+      getAllTags();
+      console.log(detailData.value);
     }
   });
   isTagShow.value = false;
@@ -446,54 +433,59 @@ function confirmBtn() {
 // 取消
 function concelBtn() {
   isTagShow.value = false;
+  getAllTags();
+  getDetailData();
 }
-getModelTags().then((res) => {
-  renderList.value = res.data;
-  localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
 
-  let menu = dialogList.menuList.map((item) => item.key);
-  menu.forEach((key) => {
-    if (key == 'task') {
-      renderList.value[key].forEach((item) => {
-        item.task_list.forEach((it) => {
-          it.isActive = false;
+function getAllTags() {
+  getModelTags().then((res) => {
+    renderList.value = res.data;
+    localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
+
+    let menu = dialogList.menuList.map((item) => item.key);
+    menu.forEach((key) => {
+      if (key == 'task') {
+        renderList.value[key].forEach((item) => {
+          item.task_list.forEach((it) => {
+            it.isActive = false;
+          });
         });
-      });
-    } else {
-      renderList.value[key].forEach((item) => {
-        item.isActive = false;
-        item.isSelected = false;
-      });
-    }
-  });
+      } else {
+        renderList.value[key].forEach((item) => {
+          item.isActive = false;
+          item.isSelected = false;
+        });
+      }
+    });
 
-  modelTags.value.forEach((item) => {
-    menu.forEach((menuitem) => {
-      if (menuitem === 'task') {
-        renderList.value[menuitem].forEach((mit) => {
-          mit.task_list.forEach((it) => {
+    modelTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        if (menuitem === 'task') {
+          renderList.value[menuitem].forEach((mit) => {
+            mit.task_list.forEach((it) => {
+              if (it.name === item.name) {
+                it.isActive = true;
+              }
+            });
+          });
+        } else if (menuitem === 'tags') {
+          renderList.value[menuitem].forEach((it) => {
             if (it.name === item.name) {
               it.isActive = true;
             }
           });
-        });
-      } else if (menuitem === 'tags') {
-        renderList.value[menuitem].forEach((it) => {
-          if (it.name === item.name) {
-            it.isActive = true;
-          }
-        });
-      } else {
-        renderList.value[menuitem].forEach((it) => {
-          if (it.name === item.name) {
-            it.isActive = true;
-          }
-        });
-      }
+        } else {
+          renderList.value[menuitem].forEach((it) => {
+            if (it.name === item.name) {
+              it.isActive = true;
+            }
+          });
+        }
+      });
     });
   });
-});
-
+}
+getAllTags();
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
@@ -506,6 +498,51 @@ function copyText(textValue) {
       center: true,
     });
   }
+}
+
+function forkCreateClick() {
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      forkShow.value = false;
+      loadingShow.value = true;
+      let projectId = detailData.value.id;
+      let params = {};
+      params.name = forkForm.storeName;
+      params.owner_id = userInfoStore.id;
+      params.description = forkForm.describe;
+      params.owner_type = JSON.parse(localStorage.getItem('base')).user_type_id;
+
+      forkShow.value = false;
+      loadingShow.value = true;
+      projectFork(params, projectId).then((res) => {
+        console.log(res);
+        if (res.status === 200 && res.data.status === 200) {
+          loadingShow.value = false;
+          router.push(
+            `/projects/${userInfoStore.userName}/${forkForm.storeName}`
+          );
+        } else {
+          loadingShow.value = false;
+          ElMessage({
+            type: 'error',
+            message: res.data.msg,
+            center: true,
+          });
+        }
+      });
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '请按要求填写信息',
+        center: true,
+      });
+      return;
+    }
+  });
+}
+
+function forkClick() {
+  forkShow.value = true;
 }
 
 watch(
@@ -619,7 +656,20 @@ function goTrain(path) {
             >
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">
-                  <span> 训练 </span>
+                  <!-- <p>训练 </p> -->
+                  <p>
+                    训练
+                    <span
+                      v-if="completedStatus"
+                      class="status train-status"
+                    ></span>
+                    <span
+                      v-if="runingStatus"
+                      class="status train-status1"
+                    ></span>
+                    <!-- <span class="status train-status2"></span>
+                    <span class="status train-status3"></span> -->
+                  </p>
                   <template
                     v-if="userInfoStore.userName === detailData.owner_name.name"
                     #dropdown
@@ -1127,6 +1177,24 @@ $theme: #0d8dff;
       }
     }
     .head-tabs {
+      .status {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .train-status {
+        background-color: rgba(98, 175, 48, 1);
+      }
+      .train-status1 {
+        background-color: rgba(77, 205, 255, 1);
+      }
+      .train-status2 {
+        background-color: rgba(204, 204, 204, 1);
+      }
+      .train-status3 {
+        background-color: rgba(228, 22, 15, 1);
+      }
       .el-tabs {
         :deep .el-tabs__nav {
           display: flex;

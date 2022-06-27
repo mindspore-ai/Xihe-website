@@ -12,6 +12,7 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
+import IconInstance from '~icons/app/train-instance';
 
 import { useFileData } from '@/stores';
 
@@ -42,7 +43,7 @@ var timer = null;
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
-    console.log(trainData.value);
+    console.log(trainData.value.length);
     trainData.value.forEach((item) => {
       if (item.status === 'Running') {
         timer = setInterval(() => {
@@ -53,11 +54,6 @@ function getTrainList() {
   });
 }
 getTrainList();
-// 判断列表状态有Running，然后发请求建立websocket
-// function getWbsocket() {
-//   getTrainList();
-// }
-// getWbsocket();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -78,6 +74,7 @@ function deleteClick(id) {
     if (res.status === 200) {
       getTrainList();
       showDel.value = false;
+      socket.close();
     }
   });
 }
@@ -157,7 +154,9 @@ function goDateDetail(path) {
   );
 }
 
-const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
+const socket = new WebSocket(
+  'wss://xihebackend.test.osinfra.cn/train_task'
+);
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
@@ -166,6 +165,7 @@ socket.onopen = function (event) {
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
+  console.log(event.data);
   console.log(JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
   trainData.value.forEach((item) => {
@@ -176,7 +176,7 @@ socket.onmessage = function (event) {
       closeConn();
     }
   });
-  console.log('收到服务器消息');
+  // console.log('收到服务器消息');
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
@@ -194,7 +194,7 @@ function closeConn() {
 
 // 页面刷新
 function reloadPage() {
-  console.log('页面刷新了');
+  // console.log('页面刷新了');
   closeConn();
 }
 
@@ -218,7 +218,7 @@ onUnmounted(() => {
         </div>
       </o-button>
     </div>
-    <el-table :data="trainData" style="width: 100%">
+    <el-table v-if="trainData.length" :data="trainData" style="width: 100%">
       <el-table-column label="训练名称/ID" width="180">
         <template #default="scope">
           <div>
@@ -305,6 +305,10 @@ onUnmounted(() => {
       <el-table-column label="更新时间" prop="create_time" width="154">
       </el-table-column>
     </el-table>
+    <div v-else class="instance-box">
+      <o-icon><icon-instance></icon-instance></o-icon>
+      <p>暂无训练实例</p>
+    </div>
   </div>
 </template>
 
@@ -331,6 +335,22 @@ onUnmounted(() => {
       .o-icon {
         margin-right: 12px;
       }
+    }
+  }
+  .instance-box {
+    width: 100%;
+    min-height: calc(100vh - 450px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+      font-size: 14px;
+      color: #999;
+    }
+    .o-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
     }
   }
 

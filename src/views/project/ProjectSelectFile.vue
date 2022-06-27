@@ -2,8 +2,9 @@
 import { ref, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
+import { ElMessage } from 'element-plus';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+// import { useUserInfoStore, useFileData } from '@/stores';
 
 import { createTrainProject } from '@/api/api-project';
 import {
@@ -27,7 +28,7 @@ function goTrain() {
   });
 }
 
-// 选择配置文件创建训练实例
+// 确认创建训练实例
 function confirmCreating() {
   let params = { config_path: filePath.value };
   createTrainProject(params, route.query.projectId).then((res) => {

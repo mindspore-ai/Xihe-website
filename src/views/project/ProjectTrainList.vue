@@ -44,20 +44,15 @@ function getTrainList() {
     trainData.value = res.data.data;
     console.log(trainData.value);
     trainData.value.forEach((item) => {
-      if (item.status === 'Running') {
-        timer = setInterval(() => {
-          socket.send(JSON.stringify({ pk: detailData.value.id }));
-        }, 1000);
-      }
+      // if (item.status === 'Running') {
+      //   timer = setInterval(() => {
+      //     socket.send(JSON.stringify({ pk: detailData.value.id }));
+      //   }, 1000);
+      // }
     });
   });
 }
 getTrainList();
-// 判断列表状态有Running，然后发请求建立websocket
-// function getWbsocket() {
-//   getTrainList();
-// }
-// getWbsocket();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -161,7 +156,7 @@ const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
-  // socket.send(JSON.stringify({ pk: detailData.value.id }));
+  socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。

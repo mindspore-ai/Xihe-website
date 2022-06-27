@@ -139,14 +139,6 @@ export const routes = [
       },
     ],
   },
-  // 个人主页空白页，用于点击左侧按钮刷新粉丝数量
-  {
-    path: '/:user/userblack',
-    name: 'userblack',
-    component: () => {
-      return import('@/views/user/UserBlack.vue');
-    },
-  },
   // 个人中心设置页
   {
     path: '/settings',

@@ -667,19 +667,20 @@ onMounted(() => {
                 </div>
               </div>
             </div>
+            <!-- 分页 -->
+            <div v-if="projectCount > 10" class="pagination">
+              <el-pagination
+                :page-sizes="[12, 24, 60]"
+                :current-page="queryData.page"
+                :page-size="queryData.size"
+                :total="projectCount"
+                :layout="layout"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
+            </div>
           </div>
-          <!-- 分页 -->
-          <div v-if="projectCount > 10" class="pagination">
-            <el-pagination
-              :page-sizes="[12, 24, 60]"
-              :current-page="queryData.page"
-              :page-size="queryData.size"
-              :total="projectCount"
-              :layout="layout"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-            ></el-pagination>
-          </div>
+
           <!-- 无项目显示 -->
           <div v-if="projectCount == 0" class="empty-status">
             <img src="@/assets/empty/project-empty.png" alt="" />
@@ -950,7 +951,16 @@ $theme: #0d8dff;
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 40px;
-
+        position: relative;
+        .pagination {
+          display: flex;
+          justify-content: center;
+          // margin-top: 40px;
+          position: absolute;
+          bottom: -76px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
         .pro-card {
           cursor: pointer;
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
@@ -1034,15 +1044,6 @@ $theme: #0d8dff;
             }
           }
         }
-      }
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
-        // position: absolute;
-        // bottom: -76px;
-        // left: 50%;
-        // transform: translateX(-50%);
       }
     }
   }

@@ -2,7 +2,7 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconProject from '~icons/app/project';
+import IconProject from '~icons/app/project-tree';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import IconDownload from '~icons/app/download';

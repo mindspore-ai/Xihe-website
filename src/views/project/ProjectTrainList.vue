@@ -45,16 +45,16 @@ function getTrainList() {
     trainData.value = res.data.data;
     console.log(trainData.value.length);
     trainData.value.forEach((item) => {
-      // if (item.status === 'Running') {
-      //   timer = setInterval(() => {
-      //     socket.send(JSON.stringify({ pk: detailData.value.id }));
-      //   }, 1000);
-      // }
+      if (item.status === 'Running') {
+        timer = setInterval(() => {
+          socket.send(JSON.stringify({ pk: detailData.value.id }));
+          console.log(JSON.stringify({ pk: detailData.value.id }));
+        }, 1000);
+      }
     });
   });
 }
 getTrainList();
-
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   router.push({
@@ -154,9 +154,7 @@ function goDateDetail(path) {
   );
 }
 
-const socket = new WebSocket(
-  'wss://xihe.test.osinfra.cn/train_task'
-);
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');

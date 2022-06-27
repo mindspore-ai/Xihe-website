@@ -16,10 +16,10 @@ const route = useRoute();
 const router = useRouter();
 
 const collectionCount = ref(0);
-let query = reactive({
+let queryData = reactive({
   search: null,
   page: 1,
-  size: 5,
+  size: 6,
 });
 
 const collectionData = ref([]);
@@ -67,11 +67,11 @@ function handleSizeChange(val) {
   if (collectionCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  queryData.size = val;
 }
 
 function handleCurrentChange(val) {
-  query.page = val;
+  queryData.page = val;
   toTop();
 }
 
@@ -85,8 +85,8 @@ function toTop() {
       <div v-if="collectionData.length" class="collection-list">
         <div
           v-for="item in collectionData.slice(
-            (query.page - 1) * query.size,
-            query.page * query.size
+            (queryData.page - 1) * queryData.size,
+            queryData.page * queryData.size
           )"
           :key="item.id"
           class="collection-list-item"
@@ -128,11 +128,11 @@ function toTop() {
         </div>
       </div>
     </div>
-    <div v-if="collectionCount > 5" class="pagination">
+    <div v-if="collectionCount > 6" class="pagination">
       <el-pagination
-        :page-sizes="[5, 10, 15]"
-        :current-page="query.page"
-        :page-size="query.size"
+        :page-sizes="[6, 12, 18]"
+        :current-page="queryData.page"
+        :page-size="queryData.size"
         :total="collectionCount"
         :layout="layout"
         @size-change="handleSizeChange"
@@ -144,9 +144,6 @@ function toTop() {
 
 <style lang="scss" scoped>
 .user-collection {
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   height: 100%;
   &-wrap {
     height: 100%;

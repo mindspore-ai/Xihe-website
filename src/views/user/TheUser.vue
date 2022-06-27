@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
+import UserLive from './UserLive.vue';
 
 import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
@@ -93,11 +94,20 @@ let i18n = {
   ],
 };
 // 登录用户关注列表
-const followList = userInfoStore.followList;
+const followList = computed(() => {
+  return userInfoStore.followList;
+});
 
 // 登录用户关注id列表
-let followIdList = followList.map((val) => {
+let followIdList = followList.value.map((val) => {
   return val.id;
+});
+// 拼接登陆用户信息与关注列表的信息一致
+let currentUserInfo = reactive({
+  avatar: userInfoStore.avatar,
+  description: userInfoStore.description,
+  id: userInfoStore.id,
+  name: userInfoStore.nickName,
 });
 // 拼接当前用户信息与关注列表的信息一致
 let jointUserInfo = reactive({
@@ -106,7 +116,6 @@ let jointUserInfo = reactive({
   id: userInfo.value.id,
   name: userInfo.value.nickName,
 });
-
 // 判断用户关注id列表是否含有该粉丝id
 if (followIdList.indexOf(jointUserInfo.id) !== -1) {
   jointUserInfo.isFollow = true;
@@ -173,7 +182,7 @@ function handleNavClick(item) {
 const orderValue = ref('123');
 function dropdownClick(item) {
   orderValue.value = item.value;
-  console.log(orderValue.value);
+  // console.log(orderValue.value);
 }
 
 function createNew(item) {
@@ -191,6 +200,7 @@ function goFollow() {
 function goWatched() {
   router.push({ path: `/${userInfo.value.userName}/watched` });
 }
+
 // 关注用户or点赞
 function getFollow(userId, fans) {
   // 如果用户没有登录，则跳转到登录页面
@@ -199,29 +209,22 @@ function getFollow(userId, fans) {
   } else {
     try {
       getUserDig({ userId, fans }).then((res) => {
-        console.log(res);
         if (res.status === 200) {
-          // console.log('jointUserInfo', fans);
           if (followIdList.indexOf(fans.id) !== -1) {
             let index = followIdList.indexOf(fans.id);
-            followList.splice(index, 1);
-
-            followIdList = followList.map((val) => {
-              return val.id;
-            });
-            // fansIdList = fansList.value.map((val) => {
-            //   return val.id;
-            // });
+            followList.value.splice(index, 1);
           } else {
-            followList.push(fans);
-            // fansList.value.push(fans);
-            followIdList = followList.map((val) => {
-              return val.id;
-            });
+            followList.value.push(fans);
+          }
+          if (jointUserInfo.isFollow) {
+            // 删除粉丝列表中的粉丝信息
+            let index = userInfo.value.fansList.indexOf(currentUserInfo);
+            userInfo.value.fansList.splice(index, 1);
+          } else {
+            userInfo.value.fansList.push(currentUserInfo);
           }
         }
         jointUserInfo.isFollow = !jointUserInfo.isFollow;
-        router.replace({ path: '/:user/userblack', name: 'userblack' });
       });
     } catch (error) {
       console.log(error);
@@ -376,6 +379,7 @@ function getFollow(userId, fans) {
         <!-- 具体内容 -->
         <div class="content-detail-info">
           <!-- 默认显示动态 -->
+          <UserLive v-if="showLives" />
           <router-view
             :key="$route.fullPath"
             :order-value="orderValue"

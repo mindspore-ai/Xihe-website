@@ -45,11 +45,11 @@ function getTrainList() {
     trainData.value = res.data.data;
     console.log(trainData.value.length);
     trainData.value.forEach((item) => {
-      if (item.status === 'Running') {
-        timer = setInterval(() => {
-          socket.send(JSON.stringify({ pk: detailData.value.id }));
-        }, 1000);
-      }
+      // if (item.status === 'Running') {
+      //   timer = setInterval(() => {
+      //     socket.send(JSON.stringify({ pk: detailData.value.id }));
+      //   }, 1000);
+      // }
     });
   });
 }
@@ -160,7 +160,7 @@ const socket = new WebSocket(
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
-  // socket.send(JSON.stringify({ pk: detailData.value.id }));
+  socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。

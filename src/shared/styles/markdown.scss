@@ -1,6 +1,8 @@
 .markdown-file {
     padding-top: 48px;
-
+    .hljs-keyword {
+        color: #0099ff;
+    }
     img:not(.emoji) {
         max-width: 100%;
         cursor: pointer;

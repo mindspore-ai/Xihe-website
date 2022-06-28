@@ -226,7 +226,7 @@ function checkAllClick(item, index) {
   console.log(radioList.value);
 }
 function radioClick(detail, list) {
-  console.log(detail, list);
+  console.log('1111111', detail, list);
   // console.log(renderCondition.value[list.num]);
   if (list.title.key === 'licenses') {
     if (detail.isActive === true) {

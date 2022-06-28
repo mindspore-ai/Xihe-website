@@ -2,7 +2,7 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconModel from '~icons/app/model-blue';
+import IconModel from '~icons/app/dataset-blue';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import IconDownload from '~icons/app/download';

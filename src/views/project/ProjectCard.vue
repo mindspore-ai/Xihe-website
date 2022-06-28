@@ -20,6 +20,7 @@ import {
   modifyModelAdd,
   startInference,
   stopInference,
+  getGuide,
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -238,27 +239,40 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    findFile(
-      `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
-    ).then((tree) => {
-      if (
-        tree.status === 200 &&
-        tree.data.children &&
-        tree.data.children.length
-      ) {
-        README = tree.data.children.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README[0]) {
-          downloadObs(README[0].path).then((res) => {
-            res ? (codeString.value = res) : '';
+    // console.log('detailData', detailData.value.sdk_name);
+    if (detailData.value.sdk_name === 'Gradio') {
+      getGuide().then((tree) => {
+        console.log('1', tree);
+        README = tree.data;
+
+        codeString.value = README;
+
+        result.value = mkit.render(codeString.value);
+      });
+    } else {
+      findFile(
+        `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
+      ).then((tree) => {
+        console.log('qwq', tree);
+        if (
+          tree.status === 200 &&
+          tree.data.children &&
+          tree.data.children.length
+        ) {
+          README = tree.data.children.filter((item) => {
+            return item.name === 'README.md';
           });
-          result.value = mkit.render(codeString.value);
-        } else {
-          codeString.value = '';
+          if (README[0]) {
+            downloadObs(README[0].path).then((res) => {
+              res ? (codeString.value = res) : '';
+            });
+            result.value = mkit.render(codeString.value);
+          } else {
+            codeString.value = '';
+          }
         }
-      }
-    });
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -410,7 +424,9 @@ onUnmounted(() => {
           <img src="@/assets/gifs/loading.gif" alt="" />
           <p>启动中,请耐心等待</p>
         </div>
-        <o-button status="error" @click="stop">停止</o-button>
+        <o-button v-if="detailData.is_owner" status="error" @click="stop"
+          >停止</o-button
+        >
       </div>
       <div v-else class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>

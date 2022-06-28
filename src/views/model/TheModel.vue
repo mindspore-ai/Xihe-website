@@ -657,20 +657,20 @@ onUnmounted(() => {
               :card-data="item"
               @click="goDetail(item.owner_name.name, item.name)"
             ></o-card>
+            <div v-if="modelCount > 0" class="pagination">
+              <el-pagination
+                :page-sizes="[10, 20, 50]"
+                :current-page="queryData.page"
+                :page-size="queryData.size"
+                :total="modelCount"
+                :layout="layout"
+                hide-on-single-page
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
+            </div>
           </div>
           <o-empty v-else :img="ImgEmpty" describe="无匹配模型"></o-empty>
-        </div>
-        <div v-if="modelCount > 0" class="pagination">
-          <el-pagination
-            :page-sizes="[10, 20, 50]"
-            :current-page="queryData.page"
-            :page-size="queryData.size"
-            :total="modelCount"
-            :layout="layout"
-            hide-on-single-page
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
         </div>
       </div>
     </div>
@@ -902,20 +902,21 @@ $theme: #0d8dff;
         }
       }
       .card-list {
+        position: relative;
         display: grid;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 40px;
-      }
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
-        // position: absolute;
-        // bottom: -76px;
-        // left: 50%;
-        // transform: translateX(-50%);
+        .pagination {
+          display: flex;
+          justify-content: center;
+          margin-top: 40px;
+          position: absolute;
+          bottom: -76px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
       }
     }
   }

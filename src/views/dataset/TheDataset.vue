@@ -618,20 +618,20 @@ onUnmounted(() => {
               card-type="dataset"
               @click="goDetail(item.owner_name.name, item.name)"
             ></o-card>
+            <div v-if="modelCount > 0" class="pagination">
+              <el-pagination
+                :page-sizes="[10, 20, 50]"
+                :current-page="query.page"
+                :page-size="query.size"
+                :total="modelCount"
+                layout="sizes, prev, pager, next, jumper"
+                hide-on-single-page
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
+            </div>
           </div>
           <o-empty v-else :img="ImgEmpty" describe="无匹配数据集"></o-empty>
-        </div>
-        <div v-if="modelCount > 0" class="pagination">
-          <el-pagination
-            :page-sizes="[10, 20, 50]"
-            :current-page="query.page"
-            :page-size="query.size"
-            :total="modelCount"
-            layout="sizes, prev, pager, next, jumper"
-            hide-on-single-page
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
         </div>
       </div>
     </div>
@@ -911,11 +911,21 @@ $theme: #0d8dff;
         }
       }
       .card-list {
+        position: relative;
         display: grid;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 40px;
+        .pagination {
+          display: flex;
+          justify-content: center;
+          margin-top: 40px;
+          position: absolute;
+          bottom: -76px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
       }
       :deep(.o-empty) {
         .empty-img {
@@ -923,12 +933,6 @@ $theme: #0d8dff;
             width: 280px;
           }
         }
-      }
-
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
       }
     }
   }

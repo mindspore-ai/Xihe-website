@@ -108,7 +108,7 @@ function getDetailData() {
       name: route.params.name,
       owner_name: route.params.user,
     }).then((res) => {
-      if (res.results.data.length) {
+      if (res.results.status === 200 && res.results.data.length) {
         let storeData = res.results.data[0];
         // 判断仓库是否属于自己
         storeData['is_owner'] =
@@ -137,7 +137,14 @@ function getDetailData() {
           ...device_target_list,
           ...files_list,
         ];
-        modelTags.value = [...licenses_list, ...task_list, ...tags_list];
+        modelTags.value = [
+          ...licenses_list,
+          ...device_target_list,
+          ...files_list,
+          ...task_list,
+          ...tags_list,
+          ...libraries_list,
+        ];
         modelTags.value = modelTags.value.map((item) => {
           return item;
         });

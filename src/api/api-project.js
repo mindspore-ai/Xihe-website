@@ -220,6 +220,7 @@ export function deleteTainList(projectId, trainId) {
  * @returns
  */
 export function createTrainProject(params, projectId) {
+  console.log(params, projectId);
   const url = `/api/projects/${projectId}/train/trainins/`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;

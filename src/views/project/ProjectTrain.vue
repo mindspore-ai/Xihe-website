@@ -37,7 +37,7 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log(detailData.value);
+// console.log(detailData.value);
 // const filePath = ref('');
 // const textarea = ref('');
 const isShow = ref(false);
@@ -55,7 +55,6 @@ const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
   contents: ['train'],
-  // contents: routerParams.contents,
 };
 
 const i18n = {
@@ -233,7 +232,6 @@ function confirmClick() {
     params.owner_name = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params).then((res) => {
-      console.log(res);
       let modifyParams = {
         relate_infer_models: [],
       };
@@ -246,7 +244,6 @@ function confirmClick() {
       modifyParams.relate_infer_models.push(res.results.data[0].id);
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
-        console.log(res);
         if (res.status === 200) {
           emit('on-click');
           isShow1.value = false;
@@ -265,7 +262,6 @@ function concelClick() {
 // 删除数据集
 function deleteClick(item) {
   deleteRelate.value = true;
-  console.log(item);
   let projectId = detailData.value.id;
   let modifyParams = {
     relate_infer_datasets: [],
@@ -329,7 +325,6 @@ function getReadMeFile() {
             res ? (codeString.value = res) : '';
           });
           result.value = mkit.render(codeString.value);
-          // console.log(codeString.value);
         } else {
           codeString.value = '';
         }
@@ -363,7 +358,6 @@ function goEditor() {
 }
 
 function emptyClick(ind) {
-  console.log(route.params.contents);
   if (ind === 1) {
     router.push({
       name: 'projectFileNew',

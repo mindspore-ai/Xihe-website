@@ -231,7 +231,6 @@ function getFollow(userId, fans) {
     }
   }
 }
-console.log(route.params.user);
 </script>
 
 <template>

@@ -33,7 +33,9 @@ let routerParams = router.currentRoute.value.params;
 
 const mkit = new Markdown({ html: true });
 const codeString = ref('');
+const codeString2 = ref('');
 const result = ref();
+const result2 = ref();
 let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -167,7 +169,7 @@ function confirmClick() {
     params.owner_name = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params).then((res) => {
-      console.log(res);
+      //console.log(res);
       let modifyParams = {
         relate_infer_models: [],
       };
@@ -180,7 +182,7 @@ function confirmClick() {
       modifyParams.relate_infer_models.push(res.results.data[0].id);
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.status === 200) {
           emit('on-click');
           isShow1.value = false;
@@ -239,21 +241,18 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    // console.log('detailData', detailData.value.sdk_name);
+    // //console.log('detailData', detailData.value.sdk_name);
     if (detailData.value.sdk_name === 'Gradio') {
       getGuide().then((tree) => {
-        console.log('1', tree);
+        //console.log('1', tree);
         README = tree.data;
-
-        codeString.value = README;
-
-        result.value = mkit.render(codeString.value);
+        codeString2.value = README;
+        result2.value = mkit.render(codeString2.value);
       });
     } else {
       findFile(
         `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
       ).then((tree) => {
-        console.log('qwq', tree);
         if (
           tree.status === 200 &&
           tree.data.children &&
@@ -274,7 +273,7 @@ function getReadMeFile() {
       });
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 // 路由监听
@@ -336,7 +335,7 @@ findFile(
   `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
 ).then((res) => {
   if (res.status === 200) {
-    // console.log('inference/app.py', res);
+    // //console.log('inference/app.py', res);
     canStart.value = true;
   }
 });
@@ -348,16 +347,16 @@ let timer = null;
 // 启动推理
 function start() {
   startInference(detailData.value.id).then((res) => {
-    console.log('res', res);
+    //console.log('res', res);
     msg.value = '启动中';
     socket.send(JSON.stringify({ pk: detailData.value.id }));
-    console.log(socket.readyState);
+    //console.log(socket.readyState);
   });
 }
 //停止推理
 function stop() {
   stopInference(detailData.value.id).then((res) => {
-    console.log('res', res);
+    //console.log('res', res);
     socket.send(JSON.stringify({ pk: detailData.value.id }));
     // closeConn();
     // clearInterval(timer);
@@ -365,17 +364,17 @@ function stop() {
   });
 }
 const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/inference');
-// console.log(socket.readyState);
+// //console.log(socket.readyState);
 socket.onopen = function () {
-  console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
+  //console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
   socket.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {
-    console.log(JSON.stringify({ pk: detailData.value.id }));
+    //console.log(JSON.stringify({ pk: detailData.value.id }));
     socket.send(JSON.stringify({ pk: detailData.value.id }));
   }, 5000);
 };
 socket.onmessage = function (event) {
-  console.log('收到服务器消息', JSON.parse(event.data));
+  //console.log('收到服务器消息', JSON.parse(event.data));
   msg.value = JSON.parse(event.data).msg;
   if (!!JSON.parse(event.data).data) {
     clientSrc.value = JSON.parse(event.data).data.url;
@@ -391,13 +390,13 @@ socket.onmessage = function (event) {
         message: JSON.parse(event.data).msg,
       });
       stopInference(detailData.value.id).then((res) => {
-        console.log('1', res.data.msg);
+        //console.log('1', res.data.msg);
       });
     }
   }
 };
 function closeConn() {
-  console.log('前端关闭了');
+  //console.log('前端关闭了');
   socket.close(); // 向服务端发送断开连接的请求
 }
 onUnmounted(() => {
@@ -429,7 +428,7 @@ onUnmounted(() => {
         >
       </div>
       <div v-else class="markdown-body">
-        <div v-highlight class="markdown-file" v-html="result"></div>
+        <div v-highlight class="markdown-file" v-html="result2"></div>
         <o-button
           v-if="detailData.is_owner"
           type="primary"

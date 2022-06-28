@@ -255,6 +255,7 @@ function radioClick(detail, list) {
       list.haveActive = true;
     }
   }
+  goSearch(renderCondition.value);
 }
 // 分类二级标签
 function sortTagClick(index, index2) {

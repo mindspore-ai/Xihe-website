@@ -122,8 +122,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -217,6 +217,11 @@ function getDetailData() {
         forkForm.owner = userInfoStore.userName;
 
         /*  detailData.value = res.results.data[0]; */
+        if (detailData.value.sdk_name !== 'Gradio') {
+          console.log('1', tabTitle);
+          tabTitle[0].label = '项目卡片';
+        }
+
         digCount.value = detailData.value.digg_count;
 
         const { licenses_list, task_list, tags_list } = detailData.value;
@@ -231,7 +236,7 @@ function getDetailData() {
         router.push('/notfound');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -254,7 +259,8 @@ const completedStatus = ref(false);
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }

@@ -146,8 +146,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 watch(
@@ -161,10 +161,6 @@ watch(
   { immediate: true }
 );
 
-// 是否显示用户动态组件
-const showLives = computed(() => {
-  return route.name === 'user';
-});
 // 是否显示工具栏
 // 用户关注和用户粉丝列表不显示
 const showTool = computed(() => {
@@ -385,7 +381,6 @@ console.log(route.params.user);
         <!-- 具体内容 -->
         <div class="content-detail-info">
           <!-- 默认显示动态 -->
-          <UserLive v-if="showLives" />
           <router-view
             :key="$route.fullPath"
             :order-value="orderValue"

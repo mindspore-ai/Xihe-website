@@ -249,7 +249,6 @@ export function projectFork(params, projectId) {
 export function getTrainLog(params) {
   const { projectId, trainId } = params;
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
-  console.log(url);
   return request
     .get(url, params, getHeaderConfig())
     .then((res) => {
@@ -282,7 +281,6 @@ export function startInference(params) {
 export function stopInference(params) {
   // const { projectId } = params;
   const url = `/api/projects/${params}/inference/infertask/`;
-  console.log('params', params);
   return request
     .delete(url, getHeaderConfig())
     .then((res) => {

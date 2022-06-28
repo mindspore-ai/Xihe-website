@@ -59,7 +59,6 @@ if (routerParams.contents.length) {
 } else {
   currentContents = `${routerParams.name}/`;
 }
-console.log(route.params.contents);
 async function upLoadObs(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -102,7 +101,7 @@ async function upLoadObs(formEl) {
         }
       );
     } else {
-      console.log('error submit!');
+      // console.log('error submit!');
       return false;
     }
   });

@@ -32,8 +32,6 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 
-console.log(detailData.value.id);
-
 let projectId = detailData.value.id;
 const trainData = ref([]);
 
@@ -43,12 +41,10 @@ var timer = null;
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
-    console.log(trainData.value.length);
     trainData.value.forEach((item) => {
       if (item.status === 'Running') {
         timer = setInterval(() => {
           socket.send(JSON.stringify({ pk: detailData.value.id }));
-          console.log(JSON.stringify({ pk: detailData.value.id }));
         }, 1000);
       }
     });
@@ -80,7 +76,6 @@ function deleteClick(id) {
 }
 
 function onClick(val) {
-  console.log(val);
   if (val === 2) {
     showDel.value = false;
   } else {
@@ -91,9 +86,7 @@ function onClick(val) {
 // 终止训练
 const showStop = ref(false);
 function stopClick(id) {
-  console.log(id);
   stopTrain(projectId, id).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       getTrainList();
       closeConn();
@@ -103,12 +96,10 @@ function stopClick(id) {
 }
 
 function quitClick(val) {
-  console.log(val);
   if (val === 1) {
     showStop.value = false;
   } else {
     stopClick(val);
-    console.log(val);
   }
 }
 
@@ -137,7 +128,6 @@ function resetClick(val) {
 }
 
 function goTrainLog(trainId) {
-  console.log(trainId);
   router.push({
     name: 'projectTrainLog',
     params: {
@@ -148,7 +138,6 @@ function goTrainLog(trainId) {
 
 // 参数文件详情跳转
 function goDateDetail(path) {
-  console.log(path);
   router.push(
     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
   );
@@ -157,34 +146,35 @@ function goDateDetail(path) {
 const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  console.log('连接成功');
+  // console.log('连接成功');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log(event.data);
-  console.log(JSON.parse(event.data).data);
+  // console.log(event.data);
+  // console.log(JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
   trainData.value.forEach((item) => {
     if (item.status === 'Running') {
       return;
     } else {
       clearInterval(timer);
-      closeConn();
+
+      setTimeout(closeConn(), 15000);
     }
   });
-  console.log('收到服务器消息');
+  // console.log('收到服务器消息');
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
 socket.onclose = function (event) {
-  console.log('服务器主动断开连接');
+  // console.log('服务器主动断开连接');
 };
 
-function sendMessage() {
-  console.log('发送消息');
-}
+// function sendMessage() {
+//   console.log('发送消息');
+// }
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -192,7 +182,6 @@ function closeConn() {
 
 // 页面刷新
 function reloadPage() {
-  // console.log('页面刷新了');
   closeConn();
 }
 

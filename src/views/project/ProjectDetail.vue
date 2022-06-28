@@ -122,8 +122,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -181,6 +181,8 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
+const isForkShow = ref();
+
 // 详情数据
 function getDetailData() {
   try {
@@ -190,7 +192,10 @@ function getDetailData() {
     }).then((res) => {
       if (res.results.data.length) {
         let storeData = res.results.data[0];
-        console.log(storeData);
+
+        isForkShow.value =
+          storeData.owner_name.name !== userInfoStore.userName ? true : false;
+
         // 判断仓库是否属于自己
         storeData['is_owner'] =
           userInfoStore.userName === storeData.owner_name.name;
@@ -200,7 +205,6 @@ function getDetailData() {
         }
 
         fileData.setFileData(storeData);
-        console.log(detailData.value);
         // trainList(detailData.value.id).then((res) => {
         //   console.log(res.data.data);
         //   res.data.data.forEach((item) => {
@@ -212,7 +216,6 @@ function getDetailData() {
         //   });
         // });
         isShow.value = userInfoStore.userName === storeData.owner_name.name;
-
         forkForm.storeName = detailData.value.name;
         forkForm.owner = userInfoStore.userName;
 
@@ -231,7 +234,7 @@ function getDetailData() {
         router.push('/notfound');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -254,7 +257,8 @@ const completedStatus = ref(false);
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -409,7 +413,6 @@ function confirmBtn() {
     if (res.status === 200) {
       getDetailData();
       getAllTags();
-      console.log(detailData.value);
     }
   });
   isTagShow.value = false;
@@ -500,7 +503,6 @@ function forkCreateClick() {
       forkShow.value = false;
       loadingShow.value = true;
       projectFork(params, projectId).then((res) => {
-        console.log(res);
         if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
@@ -617,7 +619,7 @@ function goTrain(path) {
             </div>
           </div>
         </div>
-        <div v-if="loginStore.isLogined">
+        <div v-if="loginStore.isLogined && isForkShow">
           <o-button @click="forkClick">
             <div class="fork-btn">
               <o-icon><icon-fork></icon-fork></o-icon> Fork
@@ -650,10 +652,10 @@ function goTrain(path) {
                       v-if="completedStatus"
                       class="status train-status"
                     ></span>
-                    <span
+                    <!-- <span
                       v-if="runingStatus"
                       class="status train-status1"
-                    ></span>
+                    ></span> -->
                     <!-- <span class="status train-status2"></span>
                     <span class="status train-status3"></span> -->
                   </p>
@@ -1134,6 +1136,7 @@ $theme: #0d8dff;
     }
     .label-box {
       display: flex;
+      flex-wrap: wrap;
       margin: 8px 0 16px;
       font-size: 14px;
       .label-item {
@@ -1146,6 +1149,7 @@ $theme: #0d8dff;
         border: 1px solid #dbedff;
         background-color: #f3f9ff;
         border-radius: 8px;
+        margin-bottom: 16px;
         cursor: pointer;
       }
       .label-add-item {

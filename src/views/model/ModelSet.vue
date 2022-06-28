@@ -65,6 +65,7 @@ const i18n = {
 };
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref('');
+const newName = ref('');
 const newOwn = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);

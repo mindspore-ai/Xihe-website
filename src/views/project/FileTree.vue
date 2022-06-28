@@ -85,7 +85,7 @@ function getDetailData(path) {
       }
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 
@@ -170,7 +170,7 @@ function creatFolter(formEl) {
         }
       );
     } else {
-      console.log('error submit!');
+      // console.log('error submit!');
       return false;
     }
   });

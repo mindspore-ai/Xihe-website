@@ -12,11 +12,8 @@ import IconNecessary from '~icons/app/necessary.svg';
 import { ElMessage } from 'element-plus';
 
 const userInfo = useUserInfoStore();
-console.log(userInfo);
 const router = useRouter();
 const route = useRoute();
-console.log(route);
-console.log(router.options.history.state.back);
 
 const i18n = {
   create: '新建项目',
@@ -78,8 +75,8 @@ const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
-      message: '不允许输⼊中⽂',
+      pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
+      message: '暂不支持中文字符',
       trigger: 'blur',
     },
     {

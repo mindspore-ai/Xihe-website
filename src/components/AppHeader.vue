@@ -69,6 +69,13 @@ const loginedDropdownItems = [
     },
   },
   {
+    id: 'projects',
+    label: '新建项目',
+    action: () => {
+      router.push('/new/projects');
+    },
+  },
+  {
     id: 'models',
     label: '新建模型',
     action: () => {
@@ -80,13 +87,6 @@ const loginedDropdownItems = [
     label: '新建数据集',
     action: () => {
       router.push('/new/datasets');
-    },
-  },
-  {
-    id: 'projects',
-    label: '新建项目',
-    action: () => {
-      router.push('/new/projects');
     },
   },
   // {
@@ -232,16 +232,16 @@ const firstData = computed(() => {
   return modelData.value.length !== 0
     ? modelData.value[0]
     : datasetData.value.length !== 0
-      ? datasetData.value[0]
-      : projectData.value[0];
+    ? datasetData.value[0]
+    : projectData.value[0];
 });
 // 获得当回车时需要跳转的路径
 const pathName = computed(() => {
   return modelData.value.length !== 0
     ? 'models'
     : datasetData.value.length !== 0
-      ? 'datasets'
-      : 'projects';
+    ? 'datasets'
+    : 'projects';
 });
 // 回车以第一条数据跳转页面
 function goFirstResult() {
@@ -277,7 +277,6 @@ function goModelDetail(user, name) {
     path: `/models/${user}/${name}`,
   });
   emptyValue();
-  // console.log(33333)
 }
 function goDatasetDetail(user, name) {
   router.push({
@@ -438,7 +437,7 @@ function hideInput() {
             <el-dropdown
               v-if="!userInfoStore.id"
               class="user-login"
-              popper-class="nav"
+              popper-class="header-nav"
             >
               <icon-user class="user-login-icon"></icon-user>
               <template #dropdown>
@@ -450,7 +449,7 @@ function hideInput() {
             <el-dropdown
               v-if="userInfoStore.id"
               class="user-info"
-              popper-class="nav"
+              popper-class="header-nav"
             >
               <el-avatar :size="40" :src="userInfoStore.avatar" fit="fill" />
               <template #dropdown>

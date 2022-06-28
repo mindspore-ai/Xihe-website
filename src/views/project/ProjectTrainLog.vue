@@ -5,6 +5,11 @@ import { useRoute } from 'vue-router';
 import { useFileData } from '@/stores';
 import { getTrainLog } from '@/api/api-project';
 
+import IconFinished from '~icons/app/finished';
+import IconStopped from '~icons/app/stopped';
+import IconRuning from '~icons/app/runing';
+import IconFailed from '~icons/app/failed';
+
 const route = useRoute();
 //训练日志js
 const form = reactive({
@@ -23,9 +28,8 @@ const detailData = computed(() => {
 // 训练日志详情数据
 const trainDetail = ref({});
 
-console.log(route.params);
-
 var timer = null;
+var timer1 = null;
 // 获得训练日志页面数据
 function getTrainLogData() {
   const trainLogParams = {
@@ -34,54 +38,96 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
-      console.log(res.data.data);
       trainDetail.value = res.data.data;
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
-      console.log(trainDetail.value);
-      // if (trainDetail.value.status === 'Running') {
-      //   timer = setInterval(() => {
-      //     socket.send(JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId }));
-      //   }, 15000);
-      // }
+      if (trainDetail.value.status === 'Running') {
+        timer = setInterval(() => {
+          socket.send(
+            JSON.stringify({
+              pk: detailData.value.id,
+              train_id: route.params.trainId,
+              is_log: false,
+            })
+          );
+        }, 1000);
+        timer1 = setInterval(() => {
+          socket.send(
+            JSON.stringify({
+              pk: detailData.value.id,
+              train_id: route.params.trainId,
+              is_log: true,
+            })
+          );
+        }, 10000);
+      }
     }
   });
 }
 
 getTrainLogData();
 
-const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
-// 创建好连接之后自动触发（ 服务端执行self.accept() )
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
+// // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  console.log('连接成功');
-  // socket.send(
-  //   JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
-  // );
+  // console.log('连接成功');
+  socket.send(
+    JSON.stringify({
+      pk: detailData.value.id,
+      train_id: route.params.trainId,
+      is_log: true,
+    })
+  );
+  socket.send(
+    JSON.stringify({
+      pk: detailData.value.id,
+      train_id: route.params.trainId,
+      is_log: false,
+    })
+  );
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log(JSON.parse(event.data));
+  if (event.data.substring(0, 3) === 'log') {
+    form.desc = event.data.substring(4);
+  } else {
+    trainDetail.value = JSON.parse(event.data).data;
+    // console.log(trainDetail.value );
+    if (trainDetail.value.status !== 'Running') {
+      // socket.send(
+      //   JSON.stringify({
+      //     pk: detailData.value.id,
+      //     train_id: route.params.trainId,
+      //     is_log: true,
+      //   })
+      // );
+      clearInterval(timer);
+      setTimeout(closeConn(), 15000);
+      setTimeout(clearInterval(timer1), 15000);
+      // closeConn();
 
-  console.log('收到服务器消息');
+      // clearInterval(timer1);
+    }
+  }
 };
 
-// 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function (event) {
-  console.log('服务器主动断开连接');
-};
+// // 服务端主动断开连接时，这个方法也被触发。
+// socket.onclose = function (event) {
+//   // console.log('服务器主动断开连接');
+// };
 
-function sendMessage() {
-  console.log('发送消息');
-}
+// function sendMessage() {
+//   console.log('发送消息');
+// }
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
 }
 
-// 页面刷新
+// // 页面刷新
 function reloadPage() {
-  console.log('页面刷新了');
+  // console.log('页面刷新了');
   closeConn();
 }
 
@@ -92,15 +138,16 @@ onMounted(() => {
 onUnmounted(() => {
   closeConn();
   clearInterval(timer);
+  clearInterval(timer1);
 });
 
 // 自动评估
 function autoEvaluate() {
-  console.log(2222);
+  // console.log(2222);
 }
 // 保存设置
 function saveSetting() {
-  console.log(1111);
+  // console.log(1111);
 }
 </script>
 <template>
@@ -133,7 +180,22 @@ function saveSetting() {
         </li>
         <li class="info-list">
           <div class="info-list-title">运行状态</div>
-          <div class="info-list-detail">{{ trainDetail.status }}</div>
+          <div class="info-list-detail">
+            <o-icon v-if="trainDetail.status === 'Completed'"
+              ><icon-finished></icon-finished
+            ></o-icon>
+            <o-icon v-if="trainDetail.status === 'Terminated'"
+              ><icon-stopped></icon-stopped
+            ></o-icon>
+            <o-icon v-if="trainDetail.status === 'Running'"
+              ><icon-runing></icon-runing
+            ></o-icon>
+            <o-icon v-if="trainDetail.status === 'Failed'"
+              ><icon-failed></icon-failed
+            ></o-icon>
+
+            {{ trainDetail.status }}
+          </div>
         </li>
         <li class="info-list">
           <div class="info-list-title">运行时长</div>
@@ -153,22 +215,24 @@ function saveSetting() {
         </li>
         <li class="info-list">
           <div class="info-list-title">输入参数文件</div>
-          <div class="info-list-detail">{{ trainDetail.config_path }}</div>
+          <div class="info-list-detail document">
+            {{ trainDetail.config_path }}
+          </div>
         </li>
         <li class="info-list">
           <div class="info-list-title">日志文件</div>
-          <div class="info-list-detail">{{ trainDetail.log_file }}</div>
+          <div class="info-list-detai document">{{ trainDetail.log_file }}</div>
         </li>
         <li class="info-list">
-          <div class="info-list-title">超参数</div>
+          <div class="info-list-title">评估指标</div>
           <div class="info-list-detail">
             <!-- v-model="form.desc" -->
             <el-input type="textarea" />
           </div>
         </li>
-        <!-- <div class="info-btn">
+        <div class="info-btn">
           <o-button type="primary" @click="saveSetting">保存设置</o-button>
-        </div> -->
+        </div>
       </ul>
     </div>
   </div>
@@ -181,7 +245,7 @@ function saveSetting() {
   display: flex;
   // padding-bottom: 40px;
   padding: 40px 24px 48px;
-  min-height: calc(100vh - 340px);
+  min-height: calc(100vh - 370px);
   background-color: #fff;
   &-form {
     width: 55%;
@@ -231,6 +295,14 @@ function saveSetting() {
         &-detail {
           font-size: 14px;
           margin-left: 30px;
+        }
+        .document {
+          color: #0d8dff;
+          border-bottom: 1px solid #0d8dff;
+          margin-left: 37px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
       .info-btn {

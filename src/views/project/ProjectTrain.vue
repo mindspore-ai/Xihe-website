@@ -13,6 +13,7 @@ import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/other-file';
 import IconPlus from '~icons/app/plus';
 import DeleteRelate from '@/components/DeleteRelate.vue';
+import IconInstance from '~icons/app/train-instance';
 
 import { ElMessage } from 'element-plus';
 import warningImg from '@/assets/icons/warning.png';
@@ -37,7 +38,6 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// console.log(detailData.value);
 // const filePath = ref('');
 // const textarea = ref('');
 const isShow = ref(false);
@@ -103,7 +103,6 @@ const trainListData = ref([]);
 function getTrainList() {
   trainList(detailData.value.id).then((res) => {
     trainListData.value = res.data.data;
-    console.log(trainListData.value);
   });
 }
 getTrainList();
@@ -331,7 +330,7 @@ function getReadMeFile() {
       }
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 // 路由监听
@@ -421,7 +420,12 @@ function toggleDelDlg(flag) {
         }}</o-button>
       </div>
       <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
-        <div class="upload-readme-img">
+        <div class="instance-box">
+          <o-icon><icon-instance></icon-instance></o-icon>
+          <p>暂未开始训练，请先创建训练实例</p>
+        </div>
+
+        <!-- <div class="upload-readme-img">
           <o-icon> <icon-add-file></icon-add-file> </o-icon>
         </div>
         <div class="upload-readme-tip">
@@ -433,7 +437,7 @@ function toggleDelDlg(flag) {
           >
             {{ item }}
           </p>
-        </div>
+        </div> -->
       </div>
       <div v-else class="upload-readme markdown-body">
         <div class="upload-readme-img">
@@ -518,6 +522,7 @@ function toggleDelDlg(flag) {
     <el-dialog
       v-model="isShow"
       :title="i18n.addDataset"
+      :showClose="false"
       width="30%"
       destroy-on-close
       center
@@ -532,10 +537,15 @@ function toggleDelDlg(flag) {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 38px" @click="isShow = false"
+          <o-button
+            size="small"
+            style="margin-right: 38px"
+            @click="isShow = false"
             >取消</o-button
           >
-          <o-button type="primary" @click="confirmAdd">确定</o-button>
+          <o-button size="small" type="primary" @click="confirmAdd"
+            >确定</o-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -543,6 +553,7 @@ function toggleDelDlg(flag) {
     <el-dialog
       v-model="isShow1"
       :title="i18n.addModel"
+      :showClose="false"
       width="30%"
       destroy-on-close
       center
@@ -605,6 +616,36 @@ function toggleDelDlg(flag) {
 </template>
 
 <style lang="scss" scoped>
+:deep .el-dialog {
+  width: 800px;
+  min-height: 284px;
+  --el-dialog-margin-top: 35vh;
+  .el-dialog__header {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    font-size: 24px;
+    font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
+    font-weight: normal;
+    color: #000000;
+    line-height: 32px;
+  }
+  .el-dialog__body {
+    padding-top: 0;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    .el-form-item__label {
+      padding-right: 35px;
+    }
+    .el-form-item__content {
+      width: 400px;
+    }
+  }
+  .el-dialog__footer {
+    padding-top: 0;
+    padding-bottom: 48px;
+  }
+}
 .project-train {
   display: flex;
   padding-bottom: 40px;
@@ -642,6 +683,22 @@ function toggleDelDlg(flag) {
       align-items: center;
       justify-content: center;
       font-size: 14px;
+      .instance-box {
+        width: 100%;
+        // min-height: calc(100vh - 450px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        p {
+          font-size: 14px;
+          color: #999;
+        }
+        .o-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+        }
+      }
       .upload-readme-img {
         .o-icon {
           display: block;

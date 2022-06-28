@@ -20,6 +20,7 @@ import {
   modifyModelAdd,
   startInference,
   stopInference,
+  getGuide,
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -32,12 +33,13 @@ let routerParams = router.currentRoute.value.params;
 
 const mkit = new Markdown({ html: true });
 const codeString = ref('');
+const codeString2 = ref('');
 const result = ref();
+const result2 = ref();
 let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log(routerParams);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -54,7 +56,7 @@ const i18n = {
   addModel: '添加相关模型',
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '该用户还未上传模型卡片',
+  emptyVisited: '无项目卡片',
 };
 
 const isShow = ref(false);
@@ -167,7 +169,7 @@ function confirmClick() {
     params.owner_name = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params).then((res) => {
-      console.log(res);
+      //console.log(res);
       let modifyParams = {
         relate_infer_models: [],
       };
@@ -180,7 +182,7 @@ function confirmClick() {
       modifyParams.relate_infer_models.push(res.results.data[0].id);
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.status === 200) {
           emit('on-click');
           isShow1.value = false;
@@ -239,27 +241,13 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
+    // //console.log('detailData', detailData.value.sdk_name);
     if (detailData.value.sdk_name === 'Gradio') {
-      findFile(
-        `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
-      ).then((tree) => {
-        if (
-          tree.status === 200 &&
-          tree.data.children &&
-          tree.data.children.length
-        ) {
-          README = tree.data.children.filter((item) => {
-            return item.name === 'README.md';
-          });
-          if (README[0]) {
-            downloadObs(README[0].path).then((res) => {
-              res ? (codeString.value = res) : '';
-            });
-            result.value = mkit.render(codeString.value);
-          } else {
-            codeString.value = '';
-          }
-        }
+      getGuide().then((tree) => {
+        //console.log('1', tree);
+        README = tree.data;
+        codeString2.value = README;
+        result2.value = mkit.render(codeString2.value);
       });
     } else {
       findFile(
@@ -285,7 +273,7 @@ function getReadMeFile() {
       });
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 // 路由监听
@@ -346,49 +334,47 @@ watch(
 findFile(
   `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
 ).then((res) => {
-  console.log('inference/app.py', res.data.children.length);
-  canStart.value = !!res.data.children.length ? true : false;
+  if (res.status === 200) {
+    // //console.log('inference/app.py', res);
+    canStart.value = true;
+  }
 });
 //判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
-const clientSrc = ref('http://www.bilibili.com');
+const clientSrc = ref('');
 let timer = null;
 // 启动推理
 function start() {
   startInference(detailData.value.id).then((res) => {
-    console.log('res', res);
+    //console.log('res', res);
     msg.value = '启动中';
-    // if (socket.readyState === 1) {
-    //   socket.send(JSON.stringify({ pk: detailData.value.id }));
-    //   socket.onopen;
-    // } else {
-    //   socket.onopen;
-    // }
-    const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/inference');
-    socket.onopen;
+    socket.send(JSON.stringify({ pk: detailData.value.id }));
+    //console.log(socket.readyState);
   });
 }
 //停止推理
 function stop() {
   stopInference(detailData.value.id).then((res) => {
-    console.log('res', res);
+    //console.log('res', res);
     socket.send(JSON.stringify({ pk: detailData.value.id }));
-    closeConn();
-    clearInterval(timer);
+    // closeConn();
+    // clearInterval(timer);
     msg.value = '';
   });
 }
 const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/inference');
-// console.log(socket.readyState);
+// //console.log(socket.readyState);
 socket.onopen = function () {
-  console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
+  //console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
+  socket.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {
+    //console.log(JSON.stringify({ pk: detailData.value.id }));
     socket.send(JSON.stringify({ pk: detailData.value.id }));
   }, 5000);
 };
 socket.onmessage = function (event) {
-  console.log('收到服务器消息', JSON.parse(event.data));
+  //console.log('收到服务器消息', JSON.parse(event.data));
   msg.value = JSON.parse(event.data).msg;
   if (!!JSON.parse(event.data).data) {
     clientSrc.value = JSON.parse(event.data).data.url;
@@ -399,13 +385,18 @@ socket.onmessage = function (event) {
       JSON.parse(event.data).msg === '文件收集失败' ||
       JSON.parse(event.data).msg === '创建项目推理任务错误'
     ) {
+      ElMessage({
+        type: 'error',
+        message: JSON.parse(event.data).msg,
+      });
       stopInference(detailData.value.id).then((res) => {
-        console.log(res);
+        //console.log('1', res.data.msg);
       });
     }
   }
 };
 function closeConn() {
+  //console.log('前端关闭了');
   socket.close(); // 向服务端发送断开连接的请求
 }
 onUnmounted(() => {
@@ -432,10 +423,12 @@ onUnmounted(() => {
           <img src="@/assets/gifs/loading.gif" alt="" />
           <p>启动中,请耐心等待</p>
         </div>
-        <o-button disabled type="primary">启动</o-button>
+        <o-button v-if="detailData.is_owner" status="error" @click="stop"
+          >停止</o-button
+        >
       </div>
       <div v-else class="markdown-body">
-        <div v-highlight class="markdown-file" v-html="result"></div>
+        <div v-highlight class="markdown-file" v-html="result2"></div>
         <o-button
           v-if="detailData.is_owner"
           type="primary"

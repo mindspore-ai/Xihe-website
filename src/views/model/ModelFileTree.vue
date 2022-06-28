@@ -193,13 +193,13 @@ watch(
 <template>
   <div v-if="!detailData.is_empty" class="tree">
     <table class="tree-table">
-      <col width="330px" colspan="2"/>
+      <col width="330px" />
       <col width="120px" />
       <col width="670px" />
       <col width="200px" />
       <tbody>
         <tr class="tree-head">
-          <td class="tree-head-left" colspan="1">
+          <td class="tree-head-left">
             <div class="inner-box">
               <o-icon><icon-model></icon-model> </o-icon>
               <span
@@ -209,7 +209,7 @@ watch(
               >
             </div>
           </td>
-          <td colspan="2"></td>
+          <td></td>
           <td></td>
           <td class="tree-head-right">
             <div class="inner-box">

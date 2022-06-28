@@ -27,7 +27,7 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 
-// console.log(detailData.value);
+console.log(detailData.value);
 // 返回训练页面
 function goTrain() {
   router.push({
@@ -40,7 +40,6 @@ function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
   createTrainProject(params, route.query.projectId).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',
@@ -142,15 +141,15 @@ function findFileByPath() {
     });
   }
 }
-//跳转到配置文件创建训练实例页
-function goCreateFile() {
-  router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
-    query: {
-      projectId: detailData.value.id,
-    },
-  });
-}
+// //跳转到配置文件创建训练实例页
+// function goCreateFile() {
+//   router.push({
+//     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
+//     query: {
+//       projectId: detailData.value.id,
+//     },
+//   });
+// }
 </script>
 <template>
   <div class="selectfile">

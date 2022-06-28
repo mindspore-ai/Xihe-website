@@ -65,6 +65,7 @@ const i18n = {
 };
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref('');
+const newName = ref('');
 const newOwn = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
@@ -217,7 +218,7 @@ function toggleDelDlg(flag) {
             prop="name"
             :rules="[
               {
-                pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
+                pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
                 message: '仓库名目前只支持英文',
                 trigger: 'blur',
               },

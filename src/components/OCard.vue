@@ -219,5 +219,8 @@ if (props.cardType === 'model') {
   .card-bg {
     background: url(@/assets/dataset-card-bg.png) no-repeat;
   }
+  &:hover {
+    background: #7f78c3;
+  }
 }
 </style>

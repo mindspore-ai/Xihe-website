@@ -39,7 +39,7 @@ const i18n = {
 const Progress = ref(0);
 function callback(transferredAmount, totalAmount, totalSeconds) {
   // 获取上传平均速率（KB/S）
-  console.log((transferredAmount * 1.0) / totalSeconds / 1024);
+  //console.log((transferredAmount * 1.0) / totalSeconds / 1024);
   // 获取上传进度百分比
   Progress.value = parseFloat(
     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
@@ -106,7 +106,7 @@ onMounted(() => {
   // document.querySelector(
   //   '.upload-body .el-upload__input'
   // ).webkitdirectory = true;
-  // console.log(document.querySelector('.upload-body .el-upload__input'));
+  // //console.log(document.querySelector('.upload-body .el-upload__input'));
 });
 </script>
 <template>

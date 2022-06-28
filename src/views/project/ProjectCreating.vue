@@ -12,11 +12,8 @@ import IconNecessary from '~icons/app/necessary.svg';
 import { ElMessage } from 'element-plus';
 
 const userInfo = useUserInfoStore();
-console.log(userInfo);
 const router = useRouter();
 const route = useRoute();
-console.log(route);
-console.log(router.options.history.state.back);
 
 const i18n = {
   create: '新建项目',

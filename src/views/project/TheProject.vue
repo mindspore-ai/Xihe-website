@@ -362,7 +362,6 @@ function goDetail(user, name) {
 }
 
 function goSetNew() {
-  console.log(loginStore.isLogined);
   if (loginStore.isLogined) {
     router.push('/new/projects');
   } else {
@@ -1044,9 +1043,13 @@ $theme: #0d8dff;
               font-size: 12px;
               display: flex;
               align-items: center;
+              color: #555;
               .o-icon {
                 font-size: 16px;
                 margin-right: 4px;
+                svg {
+                  fill: #555;
+                }
               }
             }
           }

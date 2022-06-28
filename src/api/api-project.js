@@ -290,3 +290,18 @@ export function stopInference(params) {
       return e;
     });
 }
+/**
+ * 获取用户指引
+ * @returns
+ */
+export function getGuide() {
+  const url = `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_docs/README.md`;
+  return request
+    .get(url)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

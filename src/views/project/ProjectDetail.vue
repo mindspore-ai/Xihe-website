@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
@@ -24,6 +24,10 @@ import {
   projectFork,
   trainList,
 } from '@/api/api-project';
+onBeforeRouteLeave(() => {
+  fileData.$reset();
+  //console.log(1111111111111111111111111111111);
+});
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
 const loginStore = useLoginStore();
@@ -192,6 +196,8 @@ function getDetailData() {
     }).then((res) => {
       if (res.results.data.length) {
         let storeData = res.results.data[0];
+        //console.log(storeData);
+        // //console.log
 
         isForkShow.value =
           storeData.owner_name.name !== userInfoStore.userName ? true : false;
@@ -205,8 +211,9 @@ function getDetailData() {
         }
 
         fileData.setFileData(storeData);
+        //console.log(detailData.value);
         // trainList(detailData.value.id).then((res) => {
-        //   console.log(res.data.data);
+        //   //console.log(res.data.data);
         //   res.data.data.forEach((item) => {
         //     if (item.status === 'Running') {
         //     runingStatus.value = true;
@@ -221,7 +228,7 @@ function getDetailData() {
 
         /*  detailData.value = res.results.data[0]; */
         if (detailData.value.sdk_name !== 'Gradio') {
-          console.log('1', tabTitle);
+          //console.log('1', tabTitle);
           tabTitle[0].label = '项目卡片';
         }
 
@@ -248,7 +255,7 @@ const completedStatus = ref(false);
 // 获取训练列表
 // function getTrainList() {
 // trainList(detailData.value.id).then((res) => {
-//   console.log(res.data.data);
+//   //console.log(res.data.data);
 //   res.data.data.forEach((item) => {
 //     if (item.status === 'Running') {
 //     runingStatus.value = true;
@@ -418,6 +425,7 @@ function confirmBtn() {
     if (res.status === 200) {
       getDetailData();
       getAllTags();
+      //console.log(detailData.value);
     }
   });
   isTagShow.value = false;
@@ -508,6 +516,7 @@ function forkCreateClick() {
       forkShow.value = false;
       loadingShow.value = true;
       projectFork(params, projectId).then((res) => {
+        //console.log(res);
         if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(

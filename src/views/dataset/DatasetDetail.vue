@@ -113,6 +113,7 @@ function getDetailData() {
         }
         fileData.setFileData(storeData);
         digCount.value = detailData.value.digg_count;
+        //console.log('111111111111', detailData.value);
         const {
           licenses_list,
           // libraries_list,
@@ -141,7 +142,7 @@ function getDetailData() {
       }
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 getDetailData();
@@ -183,8 +184,8 @@ function tagClick(it, key) {
       it.isSelected = false;
       headTags.value.push(it);
     }
-    console.log('isActive', it.isActive);
-    console.log('isSelected', it.isSelected);
+    //console.log('isActive', it.isActive);
+    //console.log('isSelected', it.isSelected);
   } else {
     it.isActive = !it.isActive;
     if (it.isActive === true) {
@@ -275,7 +276,7 @@ function digClick() {
 
 // 确认
 function confirmBtn() {
-  console.log(queryDate);
+  //console.log(queryDate);
   dialogList.menuList.forEach((menu) => {
     if (menu.key == 'task') {
       queryDate[menu.key] = [];
@@ -306,7 +307,7 @@ function confirmBtn() {
   });
   let params = queryDate;
   params.id = detailData.value.id;
-  console.log('params', params);
+  //console.log('params', params);
   modifyDataset(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -333,9 +334,9 @@ function concelBtn() {
 
 getModelTags().then((res) => {
   renderList.value = res.data;
-  console.log(renderList.value);
+  //console.log(renderList.value);
   let menu = dialogList.menuList.map((item) => item.key);
-  console.log(menu);
+  //console.log(menu);
   menu.forEach((key) => {
     if (key == 'task') {
       renderList.value[key].map((item) => {
@@ -381,14 +382,14 @@ getModelTags().then((res) => {
       }
     });
   });
-  console.log(renderList.value);
+  //console.log(renderList.value);
 });
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
   inputDom.value.select();
   document.execCommand('Copy'); // 执行浏览器复制命令
-  console.log('textValue', inputDom.value.select());
+  //console.log('textValue', inputDom.value.select());
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -460,7 +461,11 @@ watch(
         <div v-for="label in modelTags" :key="label" class="label-item">
           {{ label.name }}
         </div>
-        <div v-if="detailData.is_owner" class="label-item" @click="addTagClick">
+        <div
+          v-if="detailData.is_owner"
+          class="label-add-item"
+          @click="addTagClick"
+        >
           + 添加标签
         </div>
       </div>
@@ -477,82 +482,84 @@ watch(
     <div v-if="detailData.id" class="model-detail-body">
       <router-view class="warp"></router-view>
     </div>
-    <el-dialog v-model="isTagShow" width="804px">
-      <div class="dialog-head">
-        <div class="head-left">
-          <div class="head-title">{{ dialogList.head.title }}</div>
-          <div class="head-delete" @click="deleteModelTags">
-            <o-icon><icon-clear></icon-clear></o-icon>
-            {{ dialogList.head.delete }}
+    <div class="tags-box">
+      <el-dialog v-model="isTagShow" width="804px" :show-close="false">
+        <div class="dialog-head">
+          <div class="head-left">
+            <div class="head-title">{{ dialogList.head.title }}</div>
+            <div class="head-delete" @click="deleteModelTags">
+              <o-icon><icon-clear></icon-clear></o-icon>
+              {{ dialogList.head.delete }}
+            </div>
           </div>
-        </div>
 
-        <div class="head-tags">
-          <div v-for="it in headTags" :key="it" class="condition-detail">
-            {{ it.name }}
-            <o-icon class="icon-x" @click="deleteClick(it)"
-              ><icon-x></icon-x
-            ></o-icon>
+          <div class="head-tags">
+            <div v-for="it in headTags" :key="it" class="condition-detail">
+              {{ it.name }}
+              <o-icon class="icon-x" @click="deleteClick(it)"
+                ><icon-x></icon-x
+              ></o-icon>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="dialog-body">
-        <el-tabs :tab-position="tabPosition" style="height: 100%">
-          <el-tab-pane
-            v-for="menu in dialogList.menuList"
-            :key="menu.key"
-            :label="menu.tab"
-          >
-            <div class="body-right-container">
-              <div v-if="menu.key == 'task'" class="body-right">
-                <div
-                  v-for="item in renderList[menu.key]"
-                  :key="item.id"
-                  class="detail-box"
-                >
-                  <div>
-                    <p class="tan-title">
-                      {{ item.name }}
-                    </p>
-                    <div class="tag-box">
-                      <div
-                        v-for="it in item.task_list"
-                        :key="it.id"
-                        class="condition-detail"
-                        :class="{ 'condition-active': it.isActive }"
-                        @click="tagClick(it, menu.key)"
-                      >
-                        {{ it.name }}
+        <div class="dialog-body">
+          <el-tabs :tab-position="tabPosition" style="height: 100%">
+            <el-tab-pane
+              v-for="menu in dialogList.menuList"
+              :key="menu.key"
+              :label="menu.tab"
+            >
+              <div class="body-right-container">
+                <div v-if="menu.key == 'task'" class="body-right">
+                  <div
+                    v-for="item in renderList[menu.key]"
+                    :key="item.id"
+                    class="detail-box"
+                  >
+                    <div>
+                      <p class="tan-title">
+                        {{ item.name }}
+                      </p>
+                      <div class="tag-box">
+                        <div
+                          v-for="it in item.task_list"
+                          :key="it.id"
+                          class="condition-detail"
+                          :class="{ 'condition-active': it.isActive }"
+                          @click="tagClick(it, menu.key)"
+                        >
+                          {{ it.name }}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div v-else class="noTask-box">
-                <div
-                  v-for="item in renderList[menu.key]"
-                  :key="item.id"
-                  class="condition-detail"
-                  :class="[
-                    { 'condition-active': item.isActive },
-                    { 'condition-active1': item.isSelected },
-                  ]"
-                  @click="tagClick(item, menu.key)"
-                >
-                  {{ item.name }}
+                <div v-else class="noTask-box">
+                  <div
+                    v-for="item in renderList[menu.key]"
+                    :key="item.id"
+                    class="condition-detail"
+                    :class="[
+                      { 'condition-active': item.isActive },
+                      { 'condition-active1': item.isSelected },
+                    ]"
+                    @click="tagClick(item, menu.key)"
+                  >
+                    {{ item.name }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-        <div class="btn-box">
-          <o-button style="margin-right: 24px" @click="concelBtn"
-            >取消</o-button
-          >
-          <o-button @click="confirmBtn">确定</o-button>
+            </el-tab-pane>
+          </el-tabs>
+          <div class="btn-box">
+            <o-button style="margin-right: 24px" @click="concelBtn"
+              >取消</o-button
+            >
+            <o-button type="primary" @click="confirmBtn">确定</o-button>
+          </div>
         </div>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -787,8 +794,9 @@ $theme: #0d8dff;
         cursor: pointer;
       }
       .label-add-item {
-        padding: 7px 12px;
-        font-size: 14px;
+        height: 28px;
+        line-height: 28px;
+        padding: 0px 12px;
         background: #f7f8fa;
         border-radius: 8px;
         border: 1px solid #999999;
@@ -833,5 +841,8 @@ $theme: #0d8dff;
   .el-tabs__nav-wrap::after {
     display: none;
   }
+}
+.el-tabs.el-tabs--left {
+  width: 100%;
 }
 </style>

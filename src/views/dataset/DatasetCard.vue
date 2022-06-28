@@ -12,7 +12,7 @@ import IconTime from '~icons/app/time';
 import IconDownload from '~icons/app/download';
 import IconHeart from '~icons/app/heart';
 import IconAddFile from '~icons/app/add-file';
-import IconFile from '~icons/app/other-file';
+import IconFile from '~icons/app/dataset';
 
 import { downloadObs, findFile } from '@/api/api-obs';
 import { useFileData } from '@/stores';
@@ -42,7 +42,7 @@ const i18n = {
   relatedItem: '相关项目',
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '该用户还未上传数据集卡片',
+  emptyVisited: '无数据集卡片',
 };
 // 获取README文件
 function getReadMeFile() {
@@ -60,7 +60,7 @@ function getReadMeFile() {
         });
         if (README[0]) {
           downloadObs(README[0].path).then((res) => {
-            console.log(res);
+            //console.log(res);
             res ? (codeString.value = res) : '';
           });
           result.value = mkit.render(codeString.value);
@@ -70,7 +70,7 @@ function getReadMeFile() {
       }
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 

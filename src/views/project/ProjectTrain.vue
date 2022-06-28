@@ -5,14 +5,17 @@ import Markdown from 'markdown-it';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
+import NoRelate from '@/components/NoRelate.vue';
+import RelateCard from '@/components/RelateCard.vue';
+import ODialog from '@/components/ODialog.vue';
+
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/other-file';
 import IconPlus from '~icons/app/plus';
-import NoRelate from '@/components/NoRelate.vue';
-import RelateCard from '@/components/RelateCard.vue';
-import { ElMessage } from 'element-plus';
+import DeleteRelate from '@/components/DeleteRelate.vue';
 
-// import ODialog from '@/components/ODialog.vue';
+import { ElMessage } from 'element-plus';
+import warningImg from '@/assets/icons/warning.png';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { downloadObs, findFile } from '@/api/api-obs';
@@ -27,7 +30,6 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-// const fileData = useFileData();
 
 // 登录用户信息
 const userInfo = useUserInfoStore();
@@ -41,6 +43,7 @@ console.log(detailData.value);
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
+const showTip = ref(false);
 
 // 左侧显示文件内容
 const result = ref();
@@ -52,6 +55,7 @@ const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
   contents: ['train'],
+  // contents: routerParams.contents,
 };
 
 const i18n = {
@@ -66,7 +70,14 @@ const i18n = {
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
   emptyVisited: '该用户还未上传模型卡片',
+  describe1:
+    '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
+  describe2:
+    '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
+  confirm: '确认',
 };
+const describe = ref('');
+
 /*
 const activeName = ref('first');
 const handleClick = (tab, event) => {
@@ -97,15 +108,15 @@ function getTrainList() {
   });
 }
 getTrainList();
-
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
-  // 判断每一项的status是否为Running,如果有，则不能创建训练实例
-  if (trainListData.value.some((item) => item.status === 'Running')) {
-    ElMessage.error(
-      '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。'
-    );
-    return;
+  if (trainListData.value.length === 5) {
+    describe.value = i18n.describe2;
+    showTip.value = true;
+    // 判断每一项的status是否为Running,如果有，则不能创建训练实例
+  } else if (trainListData.value.some((item) => item.status === 'Running')) {
+    describe.value = i18n.describe1;
+    showTip.value = true;
   } else {
     router.push({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
@@ -236,7 +247,8 @@ function confirmClick() {
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
         console.log(res);
-        if (res.status === 100) {
+        if (res.status === 200) {
+          emit('on-click');
           isShow1.value = false;
           addSearch.value = '';
         }
@@ -245,8 +257,15 @@ function confirmClick() {
   }
 }
 
+const deleteRelate = ref(false);
+function concelClick() {
+  deleteRelate.value = false;
+}
+
 // 删除数据集
 function deleteClick(item) {
+  deleteRelate.value = true;
+  console.log(item);
   let projectId = detailData.value.id;
   let modifyParams = {
     relate_infer_datasets: [],
@@ -310,7 +329,7 @@ function getReadMeFile() {
             res ? (codeString.value = res) : '';
           });
           result.value = mkit.render(codeString.value);
-          console.log(codeString.value);
+          // console.log(codeString.value);
         } else {
           codeString.value = '';
         }
@@ -336,6 +355,7 @@ watch(
 );
 
 function goEditor() {
+  pushParams.contents = [...pushParams.contents, 'README.md'];
   router.push({
     name: 'projectFileEditor',
     params: pushParams,
@@ -376,6 +396,14 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
+
+function toggleDelDlg(flag) {
+  if (flag === undefined) {
+    showTip.value = !showTip.value;
+  } else {
+    showTip.value = flag;
+  }
+}
 </script>
 <template>
   <div class="project-train">
@@ -386,7 +414,7 @@ watch(
       >
         <o-button
           type="primary"
-          style="height: 48px; width: ; padding: 11px 4px"
+          style="height: 48px; padding: 11px 4px"
           @click="goSelectFile"
         >
           {{ i18n.createTrain }}</o-button
@@ -451,12 +479,19 @@ watch(
           ></no-relate>
           <relate-card
             :detail-data="detailData"
+            :delete-relate="deleteRelate"
             :name="'relate_infer_datasets_list'"
             @delete="deleteClick"
             @jump="goDetasetClick"
+            @concel="concelClick"
           ></relate-card>
         </div>
       </div>
+      <!-- 删除相关弹框 -->
+      <!-- <delete-relate
+        :delete-relate="deleteRelate"
+        @concel="concelClick"
+      ></delete-relate> -->
       <!-- 添加模型 -->
       <div class="related-project">
         <div class="add-title">
@@ -474,7 +509,7 @@ watch(
             !detailData.relate_infer_models_list ||
             detailData.relate_infer_models_list.length === 0
           "
-          :relate-name="'project'"
+          :relate-name="'model'"
         ></no-relate>
         <relate-card
           :detail-data="detailData"
@@ -535,6 +570,43 @@ watch(
         </span>
       </template>
     </el-dialog>
+
+    <!-- 如已有正在训练中的实例，弹窗提示 -->
+    <o-dialog :show="showTip" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '40px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          padding: '8px 0 30px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '640px',
+        }"
+      >
+        {{ describe }}
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '56px',
+          }"
+        >
+          <o-button type="primary" @click="showTip = false">{{
+            i18n.confirm
+          }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 
@@ -553,18 +625,21 @@ watch(
     flex-direction: row-reverse;
     position: relative;
     .createtrain-btn {
+      width: 120px;
+      height: 48px;
       position: absolute;
       right: 184px;
       z-index: 1;
     }
     .markdown-body {
       position: relative;
-      // margin-right: 40px;
+      margin-right: 40px;
       width: 100%;
       .o-button {
         position: absolute;
         top: 0px;
-        right: 40px;
+        right: 0px;
+        z-index: 1;
       }
     }
     .upload-readme {
@@ -703,137 +778,6 @@ watch(
         margin-left: 4px;
         font-size: 12px;
       }
-    }
-  }
-}
-:deep .el-overlay-dialog {
-  top: 100px;
-}
-:deep .el-dialog {
-  min-height: 292px !important;
-  width: 800px;
-  .el-dialog__header {
-    padding-top: 40px !important;
-    padding-bottom: 15px !important;
-    .el-dialog__title {
-      font-size: 24px;
-      line-height: 32px;
-    }
-  }
-  .el-dialog__body {
-    display: flex;
-    justify-content: center;
-  }
-}
-:deep .el-dialog {
-  max-width: 800px;
-  width: 800px;
-  // height: 915px;
-  .el-dialog__header {
-    padding-top: 30px;
-    .el-dialog__title {
-      font-size: 24px;
-      color: #000;
-    }
-  }
-  .el-dialog__body {
-    padding-top: 0;
-    .el-tabs {
-      .el-tabs__nav-scroll {
-        display: flex;
-        justify-content: center;
-        .el-tabs__nav {
-          width: 50%;
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-      .config-file-creating {
-        margin-top: 17px;
-        &-tip {
-          height: 22px;
-          font-size: 14px;
-          font-weight: normal;
-          color: #999999;
-          line-height: 22px;
-          margin-bottom: 28px;
-        }
-        .train-card-form1 {
-          .train-card-launch-file {
-            padding-left: 15px;
-          }
-          .el-form-item {
-            display: flex;
-            align-items: center;
-            .el-form-item__content {
-              width: 270px;
-              .el-input {
-                width: 270px;
-              }
-            }
-          }
-        }
-        .train-card-form2 {
-          .el-form-item {
-            display: flex;
-            align-items: center;
-            .el-form-item__content {
-              .el-input {
-                width: 100%;
-              }
-              .el-select {
-                width: 100%;
-              }
-              .el-textarea {
-                width: 100% !important;
-              }
-            }
-          }
-        }
-      }
-      .config-file-select {
-        &-tip {
-          width: 724px;
-          height: 22px;
-          font-size: 14px;
-          font-weight: normal;
-          color: #999999;
-          line-height: 22px;
-          margin-top: 17px;
-          margin-bottom: 28px;
-        }
-        &-path {
-          margin-bottom: 24px;
-          display: flex;
-          justify-content: space-between;
-          .file-select-int {
-            width: 82%;
-          }
-          .file-select-btn {
-            height: 36px;
-            padding: 0;
-            // width: 10%;
-            // margin-left: 8px;
-          }
-        }
-        &-textarea {
-          width: 100%;
-          .file-select-textarea-int {
-            width: 100% !important;
-            // height: 500px;
-            .el-textarea__inner {
-              // height: 71.4%;
-              height: 570px;
-            }
-          }
-        }
-      }
-    }
-  }
-  .el-dialog__footer {
-    padding-bottom: 30px;
-    .o-button {
-      margin-right: 38px;
     }
   }
 }

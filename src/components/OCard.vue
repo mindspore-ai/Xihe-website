@@ -71,7 +71,7 @@ if (props.cardType === 'model') {
         {{ label.name }}
       </div>
     </div>
-    <p class="model-introduce">
+    <p class="model-F">
       {{ cardData.description }}
     </p>
     <div class="card-bottom">
@@ -218,6 +218,9 @@ if (props.cardType === 'model') {
 .o-dataset-hover {
   .card-bg {
     background: url(@/assets/dataset-card-bg.png) no-repeat;
+  }
+  &:hover {
+    background: #7f78c3;
   }
 }
 </style>

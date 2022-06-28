@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits } from 'vue';
+import { defineEmits, ref, watch } from 'vue';
 
 import IconTime from '~icons/app/time';
 import IconRemove from '~icons/app/remove';
@@ -24,8 +24,12 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  deleteRelate: {
+    type: Boolean,
+    default: false,
+  },
 });
-const emit = defineEmits(['delete', 'jump']);
+const emit = defineEmits(['delete', 'jump', 'concel']);
 
 function removeItemClick(item) {
   emit('delete', [item, props.name]);
@@ -34,9 +38,26 @@ function removeItemClick(item) {
 function goDetailClick(item) {
   emit('jump', item);
 }
+
+function concelClick() {
+  emit('concel');
+}
+
+const delRelate = ref();
+
+watch(
+  () => props.deleteRelate,
+  (newValue, oldValue) => {
+    delRelate.value = newValue;
+  }
+);
 </script>
 <template>
   <div>
+    <delete-relate
+      :del-relate="delRelate"
+      @concel="concelClick"
+    ></delete-relate>
     <div
       v-for="item in detailData[name]"
       :key="item"

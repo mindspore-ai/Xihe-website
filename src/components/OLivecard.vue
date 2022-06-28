@@ -38,8 +38,7 @@ const i18n = {
       </div>
     </div>
     <p class="model-introduce">
-      ResNet50-plain derived by resiudal distillation method, and is used to
-      classify 10 classes of CIFAR-10
+      {{ cardData.description }}
     </p>
     <div class="card-bottom">
       <div class="card-bottom-left">
@@ -109,7 +108,10 @@ const i18n = {
     }
   }
   .model-introduce {
+    height: 22px;
+    line-height: 22px;
     overflow: hidden;
+    word-wrap: break-word;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;

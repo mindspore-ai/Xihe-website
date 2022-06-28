@@ -17,10 +17,10 @@ const router = useRouter();
 
 const liveCount = ref(0);
 const liveData = ref([]);
-let query = reactive({
+let queryData = reactive({
   search: null,
   page: 1,
-  size: 5,
+  size: 6,
 });
 const i18n = {
   emptyText: '暂无动态',
@@ -38,7 +38,7 @@ const userInfo = computed(() => {
 // 获得动态页面数据
 getUserLive(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
-    // console.log(res.data);
+    console.log(res.data);
     liveCount.value = res.data.length;
     liveData.value = res.data;
   } else {
@@ -67,15 +67,20 @@ function handleSizeChange(val) {
   if (liveCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  queryData.size = val;
 }
 function handleCurrentChange(val) {
-  query.page = val;
+  queryData.page = val;
   toTop();
 }
 function toTop() {
   document.documentElement.scrollTop = 0;
 }
+const emit = defineEmits(['getlivecount']);
+function getCount() {
+  emit('getlivecount', liveCount);
+}
+getCount();
 </script>
 <template>
   <div class="user-live">
@@ -83,8 +88,8 @@ function toTop() {
       <div v-if="liveData.length" class="card-list">
         <div
           v-for="item in liveData.slice(
-            (query.page - 1) * query.size,
-            query.page * query.size
+            (queryData.page - 1) * queryData.size,
+            queryData.page * queryData.size
           )"
           :key="item.id"
           class="card-list-item"
@@ -134,11 +139,11 @@ function toTop() {
         </div>
       </div>
     </div>
-    <div v-if="liveCount > 5" class="pagination">
+    <div v-if="liveCount > 6" class="pagination">
       <el-pagination
-        :page-sizes="[5, 10, 15]"
-        :current-page="query.page"
-        :page-size="query.size"
+        :page-sizes="[6, 12, 18]"
+        :current-page="queryData.page"
+        :page-size="queryData.size"
         :total="liveCount"
         hide-on-single-page
         :layout="layout"
@@ -151,9 +156,6 @@ function toTop() {
 
 <style lang="scss" scoped>
 .user-live {
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   height: 100%;
   &-wrap {
     height: 100%;

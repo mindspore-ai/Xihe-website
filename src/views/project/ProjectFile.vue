@@ -9,6 +9,10 @@ import IconPlus from '~icons/app/plus';
 
 import { useFileData } from '@/stores';
 
+import { useLoginStore } from '@/stores';
+
+const loginStore = useLoginStore();
+
 const router = useRouter();
 const route = useRoute();
 const detailData = computed(() => {
@@ -94,7 +98,7 @@ function pathClick(index) {
         </div>
       </div>
       <div class="file-top-right">
-        <!-- <o-button class="download-all"
+        <!-- <o-button v-if="loginStore.isLogined" class="download-all"
           >{{ i18n.downloadAll }}
           <template #suffix>
             <o-icon><icon-download></icon-download></o-icon>

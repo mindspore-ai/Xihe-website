@@ -1,10 +1,10 @@
 <script setup>
-import { reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
-import { Search } from '@element-plus/icons-vue';
+// import { Search } from '@element-plus/icons-vue';
 
-import IconMenu from '~icons/app/menu';
+// import IconMenu from '~icons/app/menu';
 import IconStar from '~icons/app/Star';
 
 import OButton from '@/components/OButton.vue';
@@ -33,39 +33,43 @@ let i18n = {
     { text: '按照首字母排序', value: '' },
   ],
 };
-let query = reactive({
+let queryData = reactive({
   search: null,
   page: 1,
   size: 6,
 });
 
 // 登录用户的关注列表
-const loginFollowList = userInfoStore.followList;
-// 登录用户关注id列表
-let loginFollowIdList = loginFollowList.map((val) => {
-  return val.id;
+const loginFollowList = computed(() => {
+  return userInfoStore.followList;
 });
-// console.log('loginFollowIdList', loginFollowIdList);
+// 登录用户关注id列表
+let loginFollowIdList = computed(() =>
+  loginFollowList.value.map((val) => val.id)
+);
 // 当前用户的关注列表
 const currentFollowList = computed(() => {
   return userInfo.value.followList;
 });
 
-function handleSizeChange(val) {
-  query.size = val;
+// 用于判断按钮的内容状态
+function watchFollowList() {
+  currentFollowList.value.forEach((val) => {
+    if (loginFollowIdList.value.indexOf(val.id) !== -1) {
+      val.isFollow = true;
+    } else {
+      val.isFollow = false;
+    }
+  });
 }
-function handleCurrentChange(val) {
-  query.page = val;
-}
-
-currentFollowList.value.forEach((val) => {
-  if (loginFollowIdList.indexOf(val.id) !== -1) {
-    val.isFollow = true;
-  } else {
-    val.isFollow = false;
+watchFollowList();
+watch(
+  () => currentFollowList.value,
+  () => {
+    watchFollowList();
   }
-});
-console.log(currentFollowList.value)
+);
+
 // 取消关注or取消点赞
 function getWatched(userId, follow) {
   if (!userInfoStore.id) {
@@ -75,17 +79,11 @@ function getWatched(userId, follow) {
     try {
       getUserDig2({ userId, follow }).then((res) => {
         if (res.status === 200) {
-          if (loginFollowIdList.indexOf(follow.id) !== -1) {
-            let index = loginFollowIdList.indexOf(follow.id);
-            loginFollowList.splice(index, 1);
-            loginFollowIdList = loginFollowList.map((val) => {
-              return val.id;
-            });
+          if (loginFollowIdList.value.indexOf(follow.id) !== -1) {
+            let index = loginFollowIdList.value.indexOf(follow.id);
+            loginFollowList.value.splice(index, 1);
           } else {
-            loginFollowList.push(follow);
-            loginFollowIdList = loginFollowList.map((val) => {
-              return val.id;
-            });
+            loginFollowList.value.push(follow);
           }
         }
         follow.isFollow = !follow.isFollow;
@@ -94,6 +92,24 @@ function getWatched(userId, follow) {
       console.log(error);
     }
   }
+}
+
+// 分页器
+const layout = ref('sizes, prev, pager, next, jumper');
+function handleSizeChange(val) {
+  if (currentFollowList.value.length / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
+  queryData.size = val;
+}
+
+function handleCurrentChange(val) {
+  queryData.page = val;
+  toTop();
+}
+
+function toTop() {
+  document.documentElement.scrollTop = 0;
 }
 </script>
 
@@ -110,7 +126,8 @@ function getWatched(userId, follow) {
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
-      <div class="watched-head">
+      <!-- TODO:下拉排序 暂无接口-->
+      <!-- <div class="watched-head">
         <div class="watched-head-left">筛选</div>
         <div class="watched-head-right">
           <el-input
@@ -118,13 +135,12 @@ function getWatched(userId, follow) {
             class="w-50 m-2"
             :placeholder="i18n.placeholder"
           />
-          <!-- TODO:下拉排序 暂无接口-->
-          <!-- <el-dropdown>
+          <el-dropdown popper-class="filter">
             <span class="el-dropdown-link">
               <o-icon><icon-menu></icon-menu></o-icon>
             </span>
             <template #dropdown>
-              <el-dropdown-menu>
+              <el-dropdown-menu class="watched-dropdown">
                 <el-dropdown-item
                   v-for="(item, index) in i18n.sortCondition"
                   :key="item.text"
@@ -133,14 +149,14 @@ function getWatched(userId, follow) {
                 >
               </el-dropdown-menu>
             </template>
-          </el-dropdown> -->
+          </el-dropdown>
         </div>
-      </div>
+      </div> -->
       <div v-if="currentFollowList.length" class="watched-list-wrap">
         <div
           v-for="follow in currentFollowList.slice(
-            (query.page - 1) * query.size,
-            query.page * query.size
+            (queryData.page - 1) * queryData.size,
+            queryData.page * queryData.size
           )"
           :key="follow.id"
           class="watched-list-item"
@@ -169,24 +185,24 @@ function getWatched(userId, follow) {
             <o-button v-else type="primary">关注TA</o-button>
           </div>
         </div>
-        <div class="pagination">
-          <el-pagination
-            :page-sizes="[6, 12, 18]"
-            :current-page="query.page"
-            :page-size="query.size"
-            :total="currentFollowList.length"
-            hide-on-single-page
-            layout="sizes, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
-        </div>
       </div>
 
       <div v-else class="nowatched">
         <o-icon class="star-icon"><icon-star></icon-star></o-icon>
         <div class="star-info">暂未关注任何人</div>
       </div>
+    </div>
+    <!-- 分页 -->
+    <div v-if="currentFollowList.length > 6" class="pagination">
+      <el-pagination
+        :page-sizes="[6, 12, 18]"
+        :current-page="queryData.page"
+        :page-size="queryData.size"
+        :total="currentFollowList.length"
+        :layout="layout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -229,6 +245,10 @@ function getWatched(userId, follow) {
       .watched-head-right {
         display: flex;
         align-items: center;
+        .watched-dropdown {
+          position: relative;
+          // right: -10px;
+        }
       }
       .o-icon {
         cursor: pointer;
@@ -237,7 +257,9 @@ function getWatched(userId, follow) {
       }
     }
     .watched-list-wrap {
-      height: calc(100% - 123px);
+      height: calc(100% - 21px);
+      // height: calc(100% - 123px);
+      overflow: hidden;
       .watched-list-item {
         width: 100%;
         height: 140px;
@@ -275,7 +297,7 @@ function getWatched(userId, follow) {
     }
 
     .nowatched {
-      height: calc(100% - 123px);
+      height: calc(100% - 21px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -293,7 +315,7 @@ function getWatched(userId, follow) {
   .pagination {
     display: flex;
     justify-content: center;
-    margin: 24px 0 64px 0;
+    // margin: 24px 0 64px 0;
   }
 }
 </style>

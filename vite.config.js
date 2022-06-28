@@ -42,11 +42,16 @@ export default defineConfig({
     // new MonacoWebpackPlugin(),
   ],
   server: {
+    https:true,
     proxy: {
       '/api': {
         target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,
       },
+      // '/wss': {
+      //   target: 'https://xihebackend.test.osinfra.cn/',
+      //   changeOrigin: true,
+      // },
     },
   },
 });

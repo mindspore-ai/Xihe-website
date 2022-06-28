@@ -54,9 +54,9 @@ const socket = new WebSocket('ws://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   console.log('连接成功');
-  socket.send(
-    JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
-  );
+  // socket.send(
+  //   JSON.stringify({ pk: detailData.value.id, train_id: route.params.trainId })
+  // );
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
@@ -120,9 +120,9 @@ function saveSetting() {
       <div class="train-log-desc">
         <el-input v-model="form.desc" type="textarea" />
       </div>
-      <div>
+      <!-- <div>
         <o-button type="primary" @click="autoEvaluate">自动评估</o-button>
-      </div>
+      </div> -->
     </div>
     <div class="train-log-detail">
       <div class="train-log-detail-title">训练详情</div>
@@ -166,9 +166,9 @@ function saveSetting() {
             <el-input type="textarea" />
           </div>
         </li>
-        <div class="info-btn">
+        <!-- <div class="info-btn">
           <o-button type="primary" @click="saveSetting">保存设置</o-button>
-        </div>
+        </div> -->
       </ul>
     </div>
   </div>

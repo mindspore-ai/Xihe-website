@@ -252,7 +252,7 @@ const handleTimeChange2 = () => {
         :rules="[
           {
             pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-            message: '不允许输⼊中⽂',
+            message: '暂不支持中文字符',
             trigger: 'blur',
           },
           { required: true, message: '必填项', trigger: 'blur' },

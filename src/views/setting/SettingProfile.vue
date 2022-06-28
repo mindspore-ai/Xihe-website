@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useUserInfoStore } from '@/stores';
 
 import { setUserData } from '@/api/api-user';
@@ -19,9 +19,24 @@ const avatar = ref(userInfoStore.avatar); // 头像
 const showAvatarList = ref(false);
 const checkedAvatar = ref(1);
 
+const avatarCount = ref(0);
+let query = reactive({
+  page: 1,
+  size: 12,
+});
+
+const layout = ref('sizes, prev, pager, next, jumper');
+function handleSizeChange(val) {
+  if (avatarCount.value / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
+  query.size = val;
+}
+
 try {
   getModelTags().then((res) => {
     filterData.value = res.data;
+    avatarCount.value = filterData.value.user_avatar.length;
     getCheckedId(filterData.value.user_avatar);
   });
 } catch (error) {
@@ -76,6 +91,9 @@ function confirmAvatar() {
   avatar.value = filterData.value.user_avatar[checkedAvatar.value - 1].url;
   toggleDelDlg(false);
 }
+function handleCurrentChange(val) {
+  query.page = val;
+}
 </script>
 
 <template>
@@ -120,7 +138,10 @@ function confirmAvatar() {
     >
       <ul v-if="filterData" class="avatar-list">
         <li
-          v-for="item in filterData.user_avatar"
+          v-for="item in filterData.user_avatar.slice(
+            (query.page - 1) * query.size,
+            query.page * query.size
+          )"
           :key="item.id"
           class="avatar-item"
           :class="{ 'checked-avater': item.id === checkedAvatar }"
@@ -131,6 +152,18 @@ function confirmAvatar() {
       </ul>
     </div>
     <template #foot>
+      <div v-if="avatarCount > 5" class="pagination">
+        <el-pagination
+          :page-sizes="[5, 10, 15]"
+          :current-page="query.page"
+          :page-size="12"
+          :total="avatarCount"
+          hide-on-single-page
+          :layout="layout"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
+      </div>
       <div
         class="dlg-actions"
         :style="{
@@ -151,9 +184,33 @@ function confirmAvatar() {
 .o-dialog {
   width: 800px;
 }
+.el-pagination__sizes {
+  display: none;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: -24px;
+  margin-bottom: 48px;
+  :deep(.el-pagination__sizes) {
+    display: none;
+  }
+  :deep(.el-pagination__jump) {
+    display: none;
+  }
+  :deep(.el-pager) {
+    li {
+      background-color: #fff;
+    }
+  }
+  .el-select {
+    display: none;
+  }
+}
 .dlg-body {
   width: 800px;
   padding: 0 40px;
+  min-height: 382px;
   .avatar-list {
     display: grid;
     grid-template-columns: repeat(4, minmax(100px, 1fr));

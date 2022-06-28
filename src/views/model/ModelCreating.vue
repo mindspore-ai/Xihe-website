@@ -125,6 +125,11 @@ function create(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
+            pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
+            message: '暂不支持中文字符',
+            trigger: 'blur',
+          },
+          {
             pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
             message: '格式不正确',
             trigger: 'blur',

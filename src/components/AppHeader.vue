@@ -69,6 +69,13 @@ const loginedDropdownItems = [
     },
   },
   {
+    id: 'projects',
+    label: '新建项目',
+    action: () => {
+      router.push('/new/projects');
+    },
+  },
+  {
     id: 'models',
     label: '新建模型',
     action: () => {
@@ -80,13 +87,6 @@ const loginedDropdownItems = [
     label: '新建数据集',
     action: () => {
       router.push('/new/datasets');
-    },
-  },
-  {
-    id: 'projects',
-    label: '新建项目',
-    action: () => {
-      router.push('/new/projects');
     },
   },
   // {
@@ -166,7 +166,7 @@ function getSearch() {
         modelData.value = res.data[0].data;
         datasetData.value = res.data[1].data;
         projectData.value = res.data[2].data;
-        console.log(modelData.value)
+        console.log(modelData.value);
       }
     });
   } catch (error) {
@@ -234,16 +234,16 @@ const firstData = computed(() => {
   return modelData.value.length !== 0
     ? modelData.value[0]
     : datasetData.value.length !== 0
-      ? datasetData.value[0]
-      : projectData.value[0];
+    ? datasetData.value[0]
+    : projectData.value[0];
 });
 // 获得当回车时需要跳转的路径
 const pathName = computed(() => {
   return modelData.value.length !== 0
     ? 'models'
     : datasetData.value.length !== 0
-      ? 'datasets'
-      : 'projects';
+    ? 'datasets'
+    : 'projects';
 });
 // 回车以第一条数据跳转页面
 function goFirstResult() {
@@ -274,7 +274,7 @@ function getProject(keyword) {
 
 // 跳转到模型、数据集、项目的详情页
 function goModelDetail(user, name) {
-  console.log(`/models/${user}/${name}`)
+  console.log(`/models/${user}/${name}`);
   router.push({
     path: `/models/${user}/${name}`,
   });
@@ -440,7 +440,7 @@ function hideInput() {
             <el-dropdown
               v-if="!userInfoStore.id"
               class="user-login"
-              popper-class="nav"
+              popper-class="header-nav"
             >
               <icon-user class="user-login-icon"></icon-user>
               <template #dropdown>
@@ -452,7 +452,7 @@ function hideInput() {
             <el-dropdown
               v-if="userInfoStore.id"
               class="user-info"
-              popper-class="nav"
+              popper-class="header-nav"
             >
               <el-avatar :size="40" :src="userInfoStore.avatar" fit="fill" />
               <template #dropdown>

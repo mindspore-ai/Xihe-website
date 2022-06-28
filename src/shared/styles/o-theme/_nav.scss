@@ -1,6 +1,9 @@
-.el-popper.nav {
+.el-popper.nav,
+.el-popper.header-nav {
   background-color: rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05) !important;
+  // box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05) !important;
+  // backdrop-filter: blur(5px) !important;
+  box-shadow: none !important;
   backdrop-filter: blur(5px) !important;
 
   .el-dropdown-menu {
@@ -32,6 +35,20 @@
 
       &:last-child::after {
         display: none;
+      }
+    }
+  }
+}
+
+.el-popper.header-nav {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  .el-dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.45) !important;
+    &__item {
+      background-color: rgba(255, 255, 255, 0.45) !important;
+      &::after {
+        background-color: #555555;
+        opacity: 0.2;
       }
     }
   }

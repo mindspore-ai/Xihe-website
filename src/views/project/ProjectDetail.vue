@@ -185,6 +185,8 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
+const isForkShow = ref();
+
 // 详情数据
 function getDetailData() {
   try {
@@ -196,6 +198,10 @@ function getDetailData() {
         let storeData = res.results.data[0];
         //console.log(storeData);
         // //console.log
+
+        isForkShow.value =
+          storeData.owner_name.name !== userInfoStore.userName ? true : false;
+
         // 判断仓库是否属于自己
         storeData['is_owner'] =
           userInfoStore.userName === storeData.owner_name.name;
@@ -217,7 +223,6 @@ function getDetailData() {
         //   });
         // });
         isShow.value = userInfoStore.userName === storeData.owner_name.name;
-
         forkForm.storeName = detailData.value.name;
         forkForm.owner = userInfoStore.userName;
 
@@ -628,7 +633,7 @@ function goTrain(path) {
             </div>
           </div>
         </div>
-        <div v-if="loginStore.isLogined">
+        <div v-if="loginStore.isLogined && isForkShow">
           <o-button @click="forkClick">
             <div class="fork-btn">
               <o-icon><icon-fork></icon-fork></o-icon> Fork
@@ -661,10 +666,10 @@ function goTrain(path) {
                       v-if="completedStatus"
                       class="status train-status"
                     ></span>
-                    <span
+                    <!-- <span
                       v-if="runingStatus"
                       class="status train-status1"
-                    ></span>
+                    ></span> -->
                     <!-- <span class="status train-status2"></span>
                     <span class="status train-status3"></span> -->
                   </p>
@@ -1145,6 +1150,7 @@ $theme: #0d8dff;
     }
     .label-box {
       display: flex;
+      flex-wrap: wrap;
       margin: 8px 0 16px;
       font-size: 14px;
       .label-item {
@@ -1157,6 +1163,7 @@ $theme: #0d8dff;
         border: 1px solid #dbedff;
         background-color: #f3f9ff;
         border-radius: 8px;
+        margin-bottom: 16px;
         cursor: pointer;
       }
       .label-add-item {

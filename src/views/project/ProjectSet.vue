@@ -3,7 +3,6 @@ import { ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
-import OInput from '@/components/OInput.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -14,6 +13,7 @@ import {
 } from '@/api/api-project';
 import { fileRename } from '@/api/api-obs';
 
+import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
@@ -78,6 +78,11 @@ const newName = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
 const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
+const queryRef = ref(null);
+
+let query = reactive({
+  name: '',
+});
 
 detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
 
@@ -125,47 +130,55 @@ function confirmAmend() {
   });
 }
 
-async function confirmRename() {
-  try {
-    let query = {
-      new_path: `xihe-obj/projects/${route.params.user}/${newName.value}/`,
-      old_path: `xihe-obj/projects/${route.params.user}/${routerParams.name}/`,
-    };
-    await fileRename(query).then((res) => {
-      if (res.status === 200) {
-        // 改名成功更新pinia数据
-        getProjectData({ name: newName.value }).then((res) => {
-          if (res.results.data.length) {
-            let storeData = res.results.data[0];
-            storeData['is_owner'] =
-              userInfoStore.userName === storeData.owner_name.name;
-            fileData.setFileData(storeData);
+async function confirmRename(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      try {
+        let pathQuery = {
+          new_path: `xihe-obj/projects/${route.params.user}/${query.name}/`,
+          old_path: `xihe-obj/projects/${route.params.user}/${routerParams.name}/`,
+        };
+        fileRename(pathQuery).then((res) => {
+          if (res.status === 200) {
+            // 改名成功更新pinia数据
+            getProjectData({ name: query.name }).then((res) => {
+              if (res.results.data.length) {
+                let storeData = res.results.data[0];
+                storeData['is_owner'] =
+                  userInfoStore.userName === storeData.owner_name.name;
+                fileData.setFileData(storeData);
+              }
+              ElMessage({
+                type: 'success',
+                message: '仓库信息更新成功',
+              });
+              router.push({
+                name: 'projectSet',
+                params: {
+                  user: routerParams.user,
+                  name: query.name,
+                },
+              });
+            });
+          } else {
+            ElMessage({
+              type: 'error',
+              message: res.msg,
+            });
           }
-          ElMessage({
-            type: 'success',
-            message: '仓库信息更新成功',
-          });
-          router.push({
-            name: 'projectSet',
-            params: {
-              user: routerParams.user,
-              name: newName.value,
-            },
-          });
         });
-      } else {
+      } catch (error) {
         ElMessage({
           type: 'error',
-          message: res.msg,
+          message: error,
         });
       }
-    });
-  } catch (error) {
-    ElMessage({
-      type: 'error',
-      message: error,
-    });
-  }
+    } else {
+      console.log('error submit!');
+      return false;
+    }
+  });
 }
 function confirmPrivate() {
   let query = {
@@ -233,11 +246,74 @@ function toggleDelDlg(flag) {
           value="name"
           @change="getOwnSelect"
         ></o-select>
-        <p class="setting-tip">{{ i18n.rename.newName }}</p>
+        <el-form
+          ref="queryRef"
+          class="creating-box"
+          :model="query"
+          prop="region"
+        >
+          <p class="setting-tip">{{ i18n.rename.newName }}</p>
+          <el-form-item
+            class="item"
+            prop="name"
+            :rules="[
+              {
+                pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
+                message: '仓库名目前只支持英文',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
+                message: '格式不正确',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^[^.]*[^.]$/,
+                message: '格式不正确',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              v-model="query.name"
+              :placeholder="i18n.rename.placeholder"
+            >
+            </el-input>
+            <el-popover
+              placement="bottom-start"
+              :width="372"
+              trigger="hover"
+              :teleported="false"
+            >
+              <template #reference>
+                <o-icon><icon-poppver></icon-poppver></o-icon>
+              </template>
+              <template #>
+                <div>- 仓库名目前只支持英文</div>
+                <div>
+                  - 仓库名名称不能以英文句号(<span class="remind">.</span
+                  >)开头或结尾，且不能包含以下字符<span class="remind"
+                    >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                  >
+                </div>
+                <div>
+                  -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
+                    class="remind"
+                    >不能超过1000字符</span
+                  >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
+                </div>
+              </template>
+            </el-popover>
+          </el-form-item>
+        </el-form>
+
+        <!-- <p class="setting-tip">{{ i18n.rename.newName }}</p>
         <o-input v-model="newName" :placeholder="i18n.rename.placeholder">
-        </o-input>
+        </o-input> -->
         <p class="setting-tip">{{ i18n.rename.describe }}</p>
-        <o-button @click="confirmRename">{{ i18n.rename.btnText }}</o-button>
+        <o-button @click="confirmRename(queryRef)">{{
+          i18n.rename.btnText
+        }}</o-button>
         <!-- 封面 -->
         <h4 class="setting-title">{{ i18n.covers.title }}</h4>
         <div class="photo_container">
@@ -378,6 +454,56 @@ function toggleDelDlg(flag) {
           .img-modal {
             display: block;
           }
+        }
+      }
+    }
+    .el-form-item {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      .el-popover.el-popper {
+        padding: 24px 16px 16px 16px;
+        font-size: 12px;
+        line-height: 16px;
+        color: #656565;
+        .remind {
+          color: #f13b35;
+        }
+      }
+      position: relative;
+      .el-tooltip__trigger {
+        cursor: pointer;
+        position: absolute;
+        right: -32px;
+        top: 5px;
+        font-size: 24px;
+      }
+      .requirement {
+        line-height: 34px;
+      }
+      margin-top: 24px;
+      width: 400px;
+      display: flex;
+      :deep(.el-form-item__content) {
+        display: flex;
+        // flex-direction: column;
+        justify-content: start;
+      }
+      justify-content: space-between;
+      :deep(.el-select__popper) {
+        top: 390px;
+      }
+      .text {
+        height: 40px;
+        line-height: 40px;
+      }
+      .radio {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        .explain {
+          color: #999999;
+          font-size: 14px;
         }
       }
     }

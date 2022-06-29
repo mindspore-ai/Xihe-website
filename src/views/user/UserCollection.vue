@@ -38,7 +38,7 @@ const userInfo = computed(() => {
 // 获得收藏页面数据
 getUserCollection(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
-    console.log(res.data);
+    // console.log(res.data);
     collectionCount.value = res.data.length;
     collectionData.value = res.data;
   } else {

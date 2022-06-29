@@ -579,7 +579,7 @@ router.beforeEach(async (to, from) => {
     return true;
   }
   // 白名单中路由可直接进入
-  const whiteList = ['home', 'models', 'datasets', 'projects', 'search'];
+  const whiteList = ['home', 'models', 'datasets', 'projects'];
   if (whiteList.indexOf(to.name) !== -1) {
     doLogin();
     return true;

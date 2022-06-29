@@ -10,6 +10,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isCenter: {
+    type: Boolean,
+    default: false,
+  },
 });
 const attrs = useAttrs();
 
@@ -24,7 +28,7 @@ function onCloseClick() {
   <teleport to="body">
     <div class="o-dialog" :class="{ show: show, hide: !show }" v-bind="attrs">
       <div class="o-dialog-mask"></div>
-      <div class="o-dialog-wrap">
+      <div class="o-dialog-wrap" :class="{ center: isCenter }">
         <div v-if="close" class="o-dialog-close-btn" @click="onCloseClick">
           <OIcon><IconX /></OIcon>
         </div>
@@ -96,8 +100,10 @@ function onCloseClick() {
       min-width: auto;
       width: 90%;
     }
+    &.center {
+      top: 0;
+    }
   }
-
   &-head {
     padding: 40px 80px 16px;
     font-size: 24px;

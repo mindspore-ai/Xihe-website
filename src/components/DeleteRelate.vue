@@ -22,16 +22,12 @@ const prop = defineProps({
   //     default: '',
   //   },
 });
-console.log(prop.delRelate);
-// let id = prop.trainId;
-// // console.log(id);
 
 const isShow = ref();
 const emit = defineEmits(['comfirm', 'concel']);
 
 function confirmDel() {
   emit('comfirm');
-  console.log(123);
 }
 function concelClick() {
   emit('concel');

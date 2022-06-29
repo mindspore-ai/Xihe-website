@@ -177,7 +177,7 @@ function setNewClick() {
         font-size: 12px;
         display: flex;
         align-items: center;
-        z-index: 100;
+        z-index: 6;
         svg {
           fill: #fff;
         }

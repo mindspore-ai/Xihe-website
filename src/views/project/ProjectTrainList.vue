@@ -199,10 +199,7 @@ onUnmounted(() => {
     <div class="list-top">
       <p class="title">训练列表</p>
       <o-button type="primary" @click="goSelectFile">
-        <div class="btn-content">
-          <o-icon><icon-plus></icon-plus></o-icon>
-          <span>创建训练实例</span>
-        </div>
+        <span>创建训练实例</span>
       </o-button>
     </div>
     <el-table v-if="trainData.length" :data="trainData" style="width: 100%">
@@ -315,13 +312,6 @@ onUnmounted(() => {
     }
     .o-button {
       padding: 12px !important;
-    }
-    .btn-content {
-      display: flex;
-      align-items: center;
-      .o-icon {
-        margin-right: 12px;
-      }
     }
   }
   .instance-box {

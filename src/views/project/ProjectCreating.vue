@@ -10,6 +10,7 @@ import IconPopver from '~icons/app/popover.svg';
 import IconNecessary from '~icons/app/necessary.svg';
 // import OButton from '@/components/OButton.vue';
 import { ElMessage } from 'element-plus';
+import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfo = useUserInfoStore();
 const router = useRouter();
@@ -144,7 +145,7 @@ function setProject() {
 
   setNewProject(newList).then((res) => {
     if (res.status == 200) {
-      router.push(`/${userInfo.userName}/projects`);
+      router.push(`/projects/${userInfo.userName}/${proList.name}`);
     }
   });
 }
@@ -168,13 +169,20 @@ onMounted(() => {});
 </script>
 
 <template>
-  <div>
+  <div class="create">
     <div class="link">
-      <span class="home" @click="router.push(`/${userInfo.userName}`)"
+      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)"
         >个人主页</span
       ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.create }}</span>
+      ><span class="createPlaceholder">{{ i18n.create }}</span> -->
+      <el-breadcrumb :separator-icon="ArrowRight">
+        <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
+          >个人主页</el-breadcrumb-item
+        >
+        <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+
     <div class="newpro-body">
       <el-form
         ref="ruleFormRef"
@@ -345,21 +353,36 @@ onMounted(() => {});
 </template>
 
 <style lang="scss" scoped>
+.create {
+  background: #f5f6f8;
+  padding-bottom: 64px;
+}
 .link {
   padding: 24px 0;
   font-size: 12px;
   margin: 0 auto;
   max-width: 1440px;
-  color: #555555;
-  .home {
-    cursor: pointer;
+  :deep .el-breadcrumb {
+    font-size: 12px;
+    color: #555555;
+    .el-breadcrumb__inner.is-link {
+      font-weight: normal;
+      color: #555;
+    }
+    .set-new span{
+      color: #000;
+      font-weight: 400;
+    }
   }
-  .arrow {
-    margin: 0 3px;
-  }
-  .createPlaceholder {
-    color: #000000;
-  }
+  // .home {
+  //   cursor: pointer;
+  // }
+  // .arrow {
+  //   margin: 0 3px;
+  // }
+  // .createPlaceholder {
+  //   color: #000000;
+  // }
 }
 
 .select_active {
@@ -371,7 +394,7 @@ onMounted(() => {});
   margin: 0 auto;
   max-width: 1440px;
   min-height: 972px;
-  margin-bottom: 64px;
+  // margin-bottom: 64px;
   background: #ffffff;
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
@@ -415,6 +438,7 @@ onMounted(() => {});
       }
     }
     .item-img {
+      cursor: pointer;
       margin-bottom: 8px !important;
       .image {
         position: relative;

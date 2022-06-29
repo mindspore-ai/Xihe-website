@@ -198,7 +198,6 @@ export function trainList(projectId) {
  * @returns
  */
 export function stopTrain(projectId, trainId) {
-  console.log(projectId, trainId);
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
   return request.put(url, null, getHeaderConfig()).then((res) => {
     return res;

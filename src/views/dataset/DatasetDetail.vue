@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, computed, watch, onBeforeRouteLeave } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, reactive, computed, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';

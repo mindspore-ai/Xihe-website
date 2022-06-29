@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onBeforeRouteLeave } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -94,7 +94,9 @@ const renderNav = computed(() => {
         return !item.isPrivate;
       });
 });
-
+onBeforeRouteLeave(() => {
+  fileData.$reset();
+});
 let modelTags = ref([]);
 function getDetailData() {
   try {

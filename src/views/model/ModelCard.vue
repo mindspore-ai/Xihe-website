@@ -128,7 +128,6 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
-  console.log(item);
   let projectId = detailData.value.id;
   if (item[1] === 'relate_datasets_list') {
     let modifyParams = {
@@ -192,7 +191,6 @@ function emptyClick(ind) {
 }
 // TODO:子组件传路径，统一跳转
 function goDetailClick(val) {
-  console.log(val);
   router.push(`/datasets/${val.owner_name.name}/${val.name}`);
 }
 function goProjectClick(val) {
@@ -396,6 +394,9 @@ watch(
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
+    .markdown-file {
+      padding-right: 40px;
+    }
     .o-button {
       position: absolute;
       top: 0px;

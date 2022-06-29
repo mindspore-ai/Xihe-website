@@ -204,6 +204,9 @@ watch(
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
+    .markdown-file {
+      padding-right: 40px;
+    }
     .o-button {
       position: absolute;
       top: 0px;

@@ -42,7 +42,7 @@ let query = reactive({
   name: '',
   is_private: 'false',
   description: '',
-  licenses: [null],
+  licenses: null,
 });
 // function getOwnSelect(value) {
 //   ////console.log(value);
@@ -58,6 +58,7 @@ try {
   query.owner_type = JSON.parse(localStorage.getItem('base')).datasets_type_id;
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
+    query.licenses = licenses.value[0].id;
   });
   ////console.log(owner.value);
   // query.owner_id = owner.value[0];
@@ -208,14 +209,14 @@ function create(formEl) {
       </el-form-item>
       <el-form-item
         class="item"
-        prop="licenses[0]"
+        prop="licenses"
         :rules="{ required: true, message: '必填项', trigger: 'change' }"
       >
         <div class="requirement">
           <icon-necessary></icon-necessary><span>{{ i18n.license }}</span>
         </div>
         <el-select
-          v-model="query.licenses[0]"
+          v-model="query.licenses"
           class="m-2"
           placeholder="Select"
           size="large"

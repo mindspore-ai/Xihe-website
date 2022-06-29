@@ -220,6 +220,7 @@ export function deleteTainList(projectId, trainId) {
  * @returns
  */
 export function createTrainProject(params, projectId) {
+  console.log(params, projectId);
   const url = `/api/projects/${projectId}/train/trainins/`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
@@ -249,7 +250,6 @@ export function projectFork(params, projectId) {
 export function getTrainLog(params) {
   const { projectId, trainId } = params;
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
-  console.log(url);
   return request
     .get(url, params, getHeaderConfig())
     .then((res) => {
@@ -282,9 +282,23 @@ export function startInference(params) {
 export function stopInference(params) {
   // const { projectId } = params;
   const url = `/api/projects/${params}/inference/infertask/`;
-  console.log('params', params);
   return request
     .delete(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 获取用户指引
+ * @returns
+ */
+export function getGuide() {
+  const url = `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_docs/README.md`;
+  return request
+    .get(url)
     .then((res) => {
       return res;
     })

@@ -72,7 +72,7 @@ const i18n = {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .o-livecard {
   display: flex;
   flex-direction: column;

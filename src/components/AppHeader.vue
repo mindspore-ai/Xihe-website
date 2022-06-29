@@ -114,7 +114,6 @@ const loginedDropdownItems = [
 ];
 
 const activeNavItem = ref('');
-// console.log(route);
 watch(
   () => {
     return route.name;
@@ -140,7 +139,6 @@ function handleLogoClick() {
 function handleNavClick(item) {
   router.push({ path: item.href });
 }
-// TODO:显示搜索框时，输入框获得焦点
 
 // 输入框自动获得焦点
 function showInput() {
@@ -166,7 +164,7 @@ function getSearch() {
         modelData.value = res.data[0].data;
         datasetData.value = res.data[1].data;
         projectData.value = res.data[2].data;
-        console.log(modelData.value);
+        // console.log(modelData.value)
       }
     });
   } catch (error) {
@@ -274,12 +272,11 @@ function getProject(keyword) {
 
 // 跳转到模型、数据集、项目的详情页
 function goModelDetail(user, name) {
-  console.log(`/models/${user}/${name}`);
+  // console.log(`/models/${user}/${name}`)
   router.push({
     path: `/models/${user}/${name}`,
   });
   emptyValue();
-  // console.log(33333)
 }
 function goDatasetDetail(user, name) {
   router.push({

@@ -46,6 +46,10 @@
     background-color: rgba(255, 255, 255, 0.45) !important;
     &__item {
       background-color: rgba(255, 255, 255, 0.45) !important;
+      &::after {
+        background-color: #555555;
+        opacity: 0.2;
+      }
     }
   }
 }

@@ -45,11 +45,11 @@ let query = reactive({
   licenses: [null],
 });
 // function getOwnSelect(value) {
-//   console.log(value);
+//   ////console.log(value);
 //   query.owner_id = value;
 // }
 // function getLicenses(value) {
-//   console.log(value);
+//   ////console.log(value);
 //   query.licenses.push(value);
 // }
 
@@ -59,19 +59,19 @@ try {
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
   });
-  console.log(owner.value);
+  ////console.log(owner.value);
   // query.owner_id = owner.value[0];
   // query.licenses[0] = licenses.value[0];
 } catch (err) {
-  console.log(err);
+  ////console.log(err);
 }
 function create(formEl) {
-  console.log('formEl', formEl);
+  ////console.log('formEl', formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
       createDataset(query).then((res) => {
-        console.log(res);
+        ////console.log(res);
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -88,7 +88,7 @@ function create(formEl) {
         }
       });
     } else {
-      console.log('error submit!');
+      ////console.log('error submit!');
       return false;
     }
   });

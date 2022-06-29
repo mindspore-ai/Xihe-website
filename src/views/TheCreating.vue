@@ -6,13 +6,15 @@ const route = useRoute();
 const i18n = {
   models: {
     new: '新建模型',
-    introduce: '新建一个模型仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
+    introduce:
+      '新建一个模型仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
   },
   datasets: {
     new: '新建数据集',
-    introduce: '新建一个数据集仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
+    introduce:
+      '新建一个数据集仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
   },
@@ -34,8 +36,10 @@ console.log(bannerLabel.value);
 <template>
   <div class="creating-banner">
     <div class="warp">
-      <div class="wrap">{{ i18n[bannerLabel].new }}</div>
-      <div class="introduce">{{ i18n[bannerLabel].introduce }}</div>
+      <div>
+        <div class="title">{{ i18n[bannerLabel].new }}</div>
+        <div class="introduce">{{ i18n[bannerLabel].introduce }}</div>
+      </div>
       <!-- <div class="step">
         <span class="step-step1">1</span>
         <span class="step-text1">{{ i18n[bannerLabel].progress1 }}</span>
@@ -45,31 +49,34 @@ console.log(bannerLabel.value);
       </div> -->
     </div>
   </div>
+
   <router-view></router-view>
 </template>
 
 <style lang="scss" scoped>
+.warp {
+  max-width: 1472px;
+}
 .creating-banner {
-  width: 100%;
-  padding: 21px 16px;
+  // width: 100%;
+  padding: 0 16px;
+  padding-top: 80px;
+  background-size: cover;
   background-image: url('@/assets/banner-head.png');
-  height: 244px;
 
   .warp {
-    padding: 106px 0 0;
-    max-width: 1440px;
+    display: flex;
+    justify-content: space-between;
+    padding: 42px 16px;
+    color: #fff;
     margin: 0 auto;
-    color: #ffffff;
-    .wrap {
-      font-size: 24px;
-      font-weight: normal;
-      line-height: 32px;
+
+    .title {
+      padding-bottom: 8px;
+      font-size: 36px;
     }
     .introduce {
-      font-size: 14px;
-      font-weight: normal;
-      line-height: 22px;
-      margin-top: 8px;
+      font-size: 18px;
     }
     // .step {
     //   margin-top: 22px;

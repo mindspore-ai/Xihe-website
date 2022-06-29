@@ -379,6 +379,10 @@ function handleSizeChange(val) {
 
 function handleCurrentChange(val) {
   query.page = val;
+  toTop();
+}
+function toTop() {
+  document.documentElement.scrollTop = 0;
 }
 function goNewModel() {
   if (userInfoStore.id) {

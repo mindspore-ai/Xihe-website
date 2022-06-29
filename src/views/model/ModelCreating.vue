@@ -49,7 +49,6 @@ try {
   query.owner_type = JSON.parse(localStorage.getItem('base')).models_type_id;
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
-    console.log(licenses.value);
     query.licenses = licenses.value[0].id;
   });
 } catch (err) {

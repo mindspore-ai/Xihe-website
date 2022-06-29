@@ -614,6 +614,9 @@ onUnmounted(() => {
     iframe {
       padding-top: 25px;
     }
+    .markdown-file {
+      padding-right: 40px;
+    }
     position: relative;
     // margin-right: 40px;
     // width: 100%;

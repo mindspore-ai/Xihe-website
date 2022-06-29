@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
@@ -100,6 +100,10 @@ const renderNav = computed(() => {
         return !item.isPrivate;
       });
 });
+// 离开详情页清除 pinia数据
+onBeforeRouteLeave(() => {
+  fileData.$reset();
+});
 
 let modelTags = ref([]);
 function getDetailData() {
@@ -108,7 +112,7 @@ function getDetailData() {
       name: route.params.name,
       owner_name: route.params.user,
     }).then((res) => {
-      if (res.results.data.length) {
+      if (res.results.status === 200 && res.results.data.length) {
         let storeData = res.results.data[0];
         // 判断仓库是否属于自己
         storeData['is_owner'] =
@@ -137,7 +141,14 @@ function getDetailData() {
           ...device_target_list,
           ...files_list,
         ];
-        modelTags.value = [...licenses_list, ...task_list, ...tags_list];
+        modelTags.value = [
+          ...licenses_list,
+          ...device_target_list,
+          ...files_list,
+          ...task_list,
+          ...tags_list,
+          ...libraries_list,
+        ];
         modelTags.value = modelTags.value.map((item) => {
           return item;
         });
@@ -152,38 +163,6 @@ function getDetailData() {
 }
 getDetailData();
 
-// 点击标签
-// function tagClick(it, key) {
-//   // if (key === 'task' || key === 'licenses') {
-//   if (null) {
-//     if (it.isActive) {
-//       headTags.value.forEach((item, index) => {
-//         if (item.name == it.name) {
-//           headTags.value.splice(index, 1);
-//         }
-//       });
-//     } else {
-//       renderList.value[key].forEach((item) => {
-//         item.isActive = false;
-//         headTags.value.push(it);
-//       });
-//       it.isActive = !it.isActive;
-//     }
-
-//     return;
-//   } else {
-//     it.isActive = !it.isActive;
-//     if (it.isActive === true) {
-//       headTags.value.push(it);
-//     } else {
-//       headTags.value.forEach((item, index) => {
-//         if (item.name == it.name) {
-//           headTags.value.splice(index, 1);
-//         }
-//       });
-//     }
-//   }
-// }
 function tagClick(it, key) {
   if (key === 'task' || key === 'licenses') {
     if (it.isActive) {
@@ -326,9 +305,7 @@ function concelBtn() {
 }
 getModelTags().then((res) => {
   renderList.value = res.data;
-
   localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
-
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
     if (key == 'task') {
@@ -585,64 +562,103 @@ $theme: #0d8dff;
   height: 0;
   opacity: 0;
 }
-// :deep .el-dialog {
-//   width: 800px;
-//   min-height: 502px;
-//   --el-dialog-margin-top: 24vh;
-//   .el-dialog__body {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//     height: 472px;
-//     padding-bottom: 60px;
-//   }
-
-//   img {
-//     width: 56px;
-//     height: 56px;
-//   }
-//   p {
-//     font-size: 18px;
-//     color: #555555;
-//     line-height: 22px;
-//     margin-top: 22px;
-//   }
-// }
-.dialog-head {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  .head-left {
-    width: 188px;
+.tags-box {
+  :deep .el-dialog {
+    // --el-dialog-margin-top: 20vh;
+  }
+  .dialog-head {
     display: flex;
     align-items: center;
-    .head-title {
-      margin-right: 16px;
-      font-size: 18px;
-      line-height: 24px;
-    }
-    .head-delete {
-      font-size: 12px;
-      line-height: 18px;
-      margin-right: 52px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d8d8d8;
+    .head-left {
+      width: 188px;
       display: flex;
+      padding-left: 20px;
+      align-items: center;
+      margin-bottom: 7px;
+      .head-title {
+        margin-right: 16px;
+        font-size: 18px;
+        line-height: 24px;
+        min-width: 72px;
+      }
+      .head-delete {
+        font-size: 12px;
+        line-height: 18px;
+        // margin-right: 52px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        .o-icon {
+          margin-right: 6px;
+          align-self: center;
+        }
+      }
+    }
 
-      cursor: pointer;
-      .o-icon {
-        margin-right: 6px;
-        align-self: center;
+    .icon-x {
+      margin-left: 4px;
+    }
+    .head-tags {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      .condition-detail {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        margin: 0 16px 10px 0;
+        height: 28px;
+        font-size: 14px;
+        // color: #555;
+        color: $theme;
+        user-select: none;
+        background-color: #f3f9ff;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+        .icon-x {
+          padding: 2px;
+          font-size: 20px;
+        }
+      }
+      .condition-active {
+        color: $theme;
       }
     }
   }
-
-  .icon-x {
-    margin-left: 4px;
-  }
-  .head-tags {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
+  .dialog-body {
+    :deep .el-tabs__item {
+      width: 188px;
+      height: 56px;
+      text-align: left;
+      line-height: 56px;
+      font-size: 18px;
+    }
+    :deep .el-tabs .el-tabs__header {
+      box-shadow: none;
+    }
+    .el-tabs--left,
+    .el-tabs--right {
+      border-bottom: 1px solid #d8d8d8;
+    }
+    :deep .el-tabs__item.is-active {
+      background: #f7f8fa;
+    }
+    .tan-title {
+      margin: 14px 0;
+    }
+    .noTask-box {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .detail-box {
+      .tag-box {
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
     .condition-detail {
       cursor: pointer;
       display: flex;
@@ -651,92 +667,47 @@ $theme: #0d8dff;
       margin: 0 16px 16px 0;
       height: 28px;
       font-size: 14px;
-      color: $theme;
+      color: #555;
       user-select: none;
       background-color: #f3f9ff;
       border-radius: 8px;
       border: 1px solid #e5e5e5;
-      .icon-x {
-        padding: 2px;
-        font-size: 20px;
+    }
+    .condition-active {
+      color: $theme;
+    }
+    .condition-single {
+      color: #ccc;
+    }
+    .body-right-container {
+      padding-left: 24px;
+      height: 280px;
+      overflow-y: scroll;
+      .noTask-box {
+        display: flex;
       }
+      .body-right {
+        .tan-title {
+          font-size: 16px;
+          line-height: 24px;
+        }
+        .el-tag {
+          margin: 13px 16px 29px 0;
+        }
+      }
+    }
+    .body-right-container::-webkit-scrollbar {
+      width: 10px;
+    }
+    .body-right-container::-webkit-scrollbar-thumb {
+      background: #bfbfbf;
+      border-radius: 10px;
     }
   }
 }
 :deep .el-dialog {
   min-height: 664px;
 }
-.dialog-body {
-  :deep .el-tabs__item {
-    width: 188px;
-    height: 56px;
-    text-align: center;
-    line-height: 56px;
-    font-size: 18px;
-  }
-  :deep .el-tabs__item.is-active {
-    background: #f7f8fa;
-  }
-  .tan-title {
-    margin: 14px 0;
-  }
-  .noTask-box {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .detail-box {
-    .tag-box {
-      display: flex;
-      flex-wrap: wrap;
-    }
-  }
-  .condition-detail {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    margin: 0 16px 16px 0;
-    height: 28px;
-    font-size: 14px;
-    color: #555;
-    user-select: none;
-    background-color: #f3f9ff;
-    border-radius: 8px;
-    border: 1px solid #e5e5e5;
-  }
-  .condition-active {
-    color: $theme;
-  }
-  .condition-single {
-    color: #ccc;
-  }
-  .body-right-container {
-    padding-left: 24px;
-    height: 428px;
-    overflow-y: scroll;
-    .noTask-box {
-      display: flex;
-    }
-    .body-right {
-      // margin-left: 24px;
-      .tan-title {
-        font-size: 16px;
-        line-height: 24px;
-      }
-      .el-tag {
-        margin: 13px 16px 29px 0;
-      }
-    }
-  }
-  .body-right-container::-webkit-scrollbar {
-    width: 10px;
-  }
-  .body-right-container::-webkit-scrollbar-thumb {
-    background: #bfbfbf;
-    border-radius: 10px;
-  }
-}
-
 .btn-box {
   display: flex;
   justify-content: center;

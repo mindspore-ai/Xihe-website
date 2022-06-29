@@ -71,7 +71,7 @@ if (props.cardType === 'model') {
         {{ label.name }}
       </div>
     </div>
-    <p class="model-F">
+    <p class="model-introduce">
       {{ cardData.description }}
     </p>
     <div class="card-bottom">
@@ -116,6 +116,7 @@ if (props.cardType === 'model') {
   .o-icon {
     margin-right: 4px;
     font-size: 16px;
+    color: #555;
   }
   .card-top {
     display: flex;
@@ -147,7 +148,6 @@ if (props.cardType === 'model') {
       padding: 3px 8px;
       line-height: 14px;
       white-space: nowrap;
-      // overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 8px;
       background-color: #efefef;
@@ -210,8 +210,8 @@ if (props.cardType === 'model') {
         color: #555;
       }
     }
-    svg {
-      fill: #ccc;
+    .o-icon {
+      color: #ccc;
     }
   }
 }

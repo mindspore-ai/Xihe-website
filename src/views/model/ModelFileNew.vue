@@ -52,7 +52,6 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-console.log(routerParams.contents);
 if (routerParams.contents.length) {
   currentContents =
     `${routerParams.name}/${routerParams.contents.join('/')}/` || '';

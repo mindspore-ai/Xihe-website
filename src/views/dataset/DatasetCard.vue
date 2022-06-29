@@ -60,7 +60,6 @@ function getReadMeFile() {
         });
         if (README[0]) {
           downloadObs(README[0].path).then((res) => {
-            //console.log(res);
             res ? (codeString.value = res) : '';
           });
           result.value = mkit.render(codeString.value);
@@ -70,7 +69,7 @@ function getReadMeFile() {
       }
     });
   } catch (error) {
-    //console.log(error);
+    console.error(error);
   }
 }
 
@@ -240,7 +239,7 @@ watch(
     }
   }
   .right-data {
-    :deep(.remove-item){
+    :deep(.remove-item) {
       visibility: hidden;
     }
     max-width: 425px;

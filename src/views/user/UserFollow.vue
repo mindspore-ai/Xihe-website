@@ -23,7 +23,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
-// console.log(userInfoStore);
 let queryData = reactive({
   search: null,
   page: 1,
@@ -52,7 +51,6 @@ function watchFansList() {
       val.isFollow = false;
     }
   });
-  // console.log(userInfoStore, 'userInfoStore');
 }
 
 watchFansList();
@@ -83,7 +81,7 @@ function getFollow(userId, fans) {
         fans.isFollow = !fans.isFollow;
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

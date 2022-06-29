@@ -21,9 +21,7 @@ const prop = defineProps({
     default: '',
   },
 });
-// console.log(prop.trainId);
 let id = prop.trainId;
-// console.log(id);
 
 const isShow = ref();
 const emit = defineEmits(['on-click']);

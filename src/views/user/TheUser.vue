@@ -178,7 +178,6 @@ function handleNavClick(item) {
 const orderValue = ref('123');
 function dropdownClick(item) {
   orderValue.value = item.value;
-  // console.log(orderValue.value);
 }
 
 function createNew(item) {
@@ -223,7 +222,7 @@ function getFollow(userId, fans) {
         jointUserInfo.isFollow = !jointUserInfo.isFollow;
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

@@ -198,7 +198,6 @@ export function trainList(projectId) {
  * @returns
  */
 export function stopTrain(projectId, trainId) {
-  console.log(projectId, trainId);
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
   return request.put(url, null, getHeaderConfig()).then((res) => {
     return res;
@@ -220,7 +219,6 @@ export function deleteTainList(projectId, trainId) {
  * @returns
  */
 export function createTrainProject(params, projectId) {
-  console.log(params, projectId);
   const url = `/api/projects/${projectId}/train/trainins/`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;

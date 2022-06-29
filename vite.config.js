@@ -29,17 +29,6 @@ export default defineConfig({
         app: FileSystemIconLoader('./src/assets/svg-icons'),
       },
     }),
-    // optimizeDeps({
-    //   include: [
-    //     `monaco-editor/esm/vs/language/json/json.worker`,
-    //     `monaco-editor/esm/vs/editor/editor.worker`
-    //   ],
-    // }),
-    // chainWebpack(config) {
-    //   config.plugin('monaco').use(new MonacoWebpackPlugin()) // monaco-editor
-    // },
-    // monaco.use(new MonacoWebpackPlugin())
-    // new MonacoWebpackPlugin(),
   ],
   server: {
     https: true,

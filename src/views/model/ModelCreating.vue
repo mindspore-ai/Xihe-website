@@ -51,8 +51,8 @@ try {
     licenses.value = res.data.licenses;
     query.licenses = licenses.value[0].id;
   });
-} catch (err) {
-  console.log(err);
+} catch (error) {
+  console.error(error);
 }
 function create(formEl) {
   if (!formEl) return;
@@ -77,7 +77,7 @@ function create(formEl) {
         }
       });
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

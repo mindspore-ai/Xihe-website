@@ -27,7 +27,6 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 
-console.log(detailData.value);
 // 返回训练页面
 function goTrain() {
   router.push({

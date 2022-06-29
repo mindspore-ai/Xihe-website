@@ -41,7 +41,6 @@ export const routes = [
           });
           if (res.status === 200 && res.data && res.data.length) {
             const vistorInfo = res.data[0];
-            console.log(vistorInfo);
             const {
               id,
               username: userName,
@@ -97,9 +96,6 @@ export const routes = [
         name: 'userModels',
         component: () => {
           return import('@/views/user/UserModel.vue');
-        },
-        beforeEach: (to) => {
-          console.log(to);
         },
       },
       {

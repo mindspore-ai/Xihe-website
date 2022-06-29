@@ -93,7 +93,6 @@ function getOwnSelect(value) {
   newOwn.value = value;
 }
 function getVisiableSelect(value) {
-  console.log(value);
   value === 'Private'
     ? (visibleValue.value = true)
     : (visibleValue.value = false);
@@ -107,7 +106,6 @@ photos.value.forEach((item) => {
 });
 
 function selectImgClick(item) {
-  console.log(item);
   photoId.value = item.id;
   photos.value.forEach((single) => {
     single.is_active = false;
@@ -120,7 +118,6 @@ function confirmAmend() {
     photo: photoId.value,
   };
   modifyProject(query).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',
@@ -175,7 +172,7 @@ async function confirmRename(formEl) {
         });
       }
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

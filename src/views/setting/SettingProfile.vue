@@ -40,7 +40,7 @@ try {
     getCheckedId(filterData.value.user_avatar);
   });
 } catch (error) {
-  console.log(error);
+  console.error(error);
 }
 
 function getCheckedId(list) {

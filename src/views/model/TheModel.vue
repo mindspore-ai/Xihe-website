@@ -462,7 +462,6 @@ function getKeyWord() {
 // watch(
 //   useFilterData(),
 //   (val) => {
-//     console.log(val.filterData);
 //     if (val.filterData) {
 //       getModelTag(val.filterData);
 //     }

@@ -29,11 +29,9 @@ function togglePhoneDlg(flag) {
 }
 //获取手机号
 const userInfoStore = useUserInfoStore();
-console.log('userInfoStore', userInfoStore);
 const phoneExhibition = ref('');
 try {
   getUserPhone(userInfoStore.id).then((res) => {
-    console.log(res);
     if (res.data) {
       userInfoStore.phone = res.data;
       phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
@@ -43,17 +41,14 @@ try {
 //获取验证码
 function setPhone(formEl) {
   if (!formEl) return;
-  console.log('formEl', formEl);
   formEl.validateField('phone', (vaild) => {
     if (vaild) {
       setUserPhone(ruleForm.phone).then((res) => {
-        console.log('获取验证码结果', res);
         isDisposed.value = true;
         handleTimeChange();
       });
     }
   });
-  console.log('phone', ruleForm.phone);
 }
 //倒计时
 const time = ref(60);
@@ -77,17 +72,13 @@ const newQuery = reactive({
   new_mobile_code: '',
 });
 function keepPhone(formEl) {
-  console.log(formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
       let query = { mobile: ruleForm.phone, sms_code: ruleForm.code };
-      console.log('query', query);
       if (!userInfoStore.phone) {
         keepUserPhone(query)
-          .then((res) => {
-            console.log(res);
-          })
+          .then((res) => {})
           .catch((err) => {
             ElMessage({ type: 'error', message: err.msg });
           });
@@ -101,7 +92,6 @@ function keepPhone(formEl) {
       } else {
         newQuery.new_mobile = ruleForm.phone;
         newQuery.new_mobile_code = ruleForm.code;
-        console.log('newQuery', newQuery);
         changeUserPhone(newQuery)
           .then((res) => {
             if (res.status === 200) {
@@ -126,7 +116,7 @@ function keepPhone(formEl) {
           });
       }
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

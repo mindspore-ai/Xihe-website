@@ -32,24 +32,18 @@ const ruleForm = reactive({
 });
 try {
   getUserEmail(userInfoStore.id).then((res) => {
-    console.log(res.data);
     if (res.data[0].email) {
       userInfoStore.email = res.data[0].email;
-      console.log('2', userInfoStore.email);
       is_active.value = res.data[0].is_active;
       scene.value = is_active.value ? 'change_email' : 'change_email';
-      console.log(scene);
     }
   });
 } catch {}
 function setEmail(formEl) {
   if (!formEl) return;
-  console.log('formEl', formEl);
   formEl.validateField('email', (vaild) => {
     if (vaild) {
-      console.log('ruleForm.email', ruleForm.email);
       setUserEmail({ email: ruleForm.email, scene }).then((res) => {
-        console.log('获取验证码结果', res);
         isDisposed.value = true;
         handleTimeChange();
         regular.value = false;
@@ -60,7 +54,6 @@ function setEmail(formEl) {
 //激活邮箱
 function setEmail2() {
   setUserEmail({ email: userInfoStore.email, scene }).then((res) => {
-    console.log('获取验证码结果', res);
     isDisposed2.value = true;
     handleTimeChange2();
     regular.value = false;
@@ -72,7 +65,6 @@ function keepEmail2() {
     email_code: ruleForm.email_code2,
   };
 
-  console.log('query', qurey);
   keepUserEmail(qurey)
     .then((res) => {
       if (res.status === 200) {
@@ -86,21 +78,18 @@ function keepEmail2() {
           message: '',
         });
       }
-      console.log(res);
     })
     .catch((err) => {
       ElMessage({ type: 'error', message: err.msg });
     });
 }
 // function judge() {
-//   console.log();
 //   const reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 //   if (reg.test(email.value)) {
 //     regular.value = false;
 //   }
 // }
 function keepEmail(formEl) {
-  console.log(formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -109,7 +98,6 @@ function keepEmail(formEl) {
           email: ruleForm.email,
           email_code: ruleForm.email_code,
         };
-        console.log('query', qurey);
         keepUserEmail(qurey)
           .then((res) => {
             if (res.status === 200) {
@@ -136,10 +124,8 @@ function keepEmail(formEl) {
           new_email: ruleForm.email,
           new_email_code: ruleForm.email_code,
         };
-        console.log('query', qurey);
         changeUserEmail(qurey)
           .then((res) => {
-            console.log('res', res);
             if (res.status === 200) {
               ElMessage({
                 type: 'success',
@@ -159,7 +145,7 @@ function keepEmail(formEl) {
           });
       }
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

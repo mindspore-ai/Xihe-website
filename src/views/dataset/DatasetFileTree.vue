@@ -84,7 +84,7 @@ function getDetailData(path) {
       }
     });
   } catch (error) {
-    //console.log(error);
+    console.error(error);
   }
 }
 
@@ -99,7 +99,9 @@ function getFilesByPath() {
     );
   } else {
     // 根目录下
-    getDetailData(`xihe-obj/datasets/${route.params.user}/${routerParams.name}/`);
+    getDetailData(
+      `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`
+    );
   }
 }
 function emptyClick(ind) {
@@ -167,7 +169,7 @@ function creatFolter(formEl) {
         }
       );
     } else {
-      //console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

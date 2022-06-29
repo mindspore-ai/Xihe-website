@@ -104,7 +104,6 @@ onMounted(() => {
   // document.querySelector(
   //   '.upload-body .el-upload__input'
   // ).webkitdirectory = true;
-  // console.log(document.querySelector('.upload-body .el-upload__input'));
 });
 </script>
 <template>

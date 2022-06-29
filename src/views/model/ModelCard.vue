@@ -81,7 +81,7 @@ function getReadMeFile() {
       }
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 function addRelateClick() {

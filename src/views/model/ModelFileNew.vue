@@ -101,7 +101,7 @@ async function upLoadObs(formEl) {
         }
       );
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

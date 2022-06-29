@@ -29,29 +29,14 @@ export default defineConfig({
         app: FileSystemIconLoader('./src/assets/svg-icons'),
       },
     }),
-    // optimizeDeps({
-    //   include: [
-    //     `monaco-editor/esm/vs/language/json/json.worker`,
-    //     `monaco-editor/esm/vs/editor/editor.worker`
-    //   ],
-    // }),
-    // chainWebpack(config) {
-    //   config.plugin('monaco').use(new MonacoWebpackPlugin()) // monaco-editor
-    // },
-    // monaco.use(new MonacoWebpackPlugin())
-    // new MonacoWebpackPlugin(),
   ],
   server: {
-    // https:true,
+    https: true,
     proxy: {
       '/api': {
         target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,
       },
-      // '/wss': {
-      //   target: 'https://xihebackend.test.osinfra.cn/',
-      //   changeOrigin: true,
-      // },
     },
   },
 });

@@ -1,19 +1,24 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import logoImg from '@/assets/logo-footer.png';
+
+const router = useRouter();
+
+function goToPage(url) {
+  router.push(`/${url}`);
+}
 </script>
 
 <template>
-  <div class="footer">
+  <footer class="footer">
     <div class="footer-logo">
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="footer-content">
       <div class="above">
-        <span class="text">品牌</span>
+        <span class="text" @click="goToPage('privacy')">隐私政策</span>
         <div class="division"></div>
-        <a href="https://www.mindspore.cn/privacy" target="_blank" class="text">隐私政策</a>
-        <div class="division"></div>
-        <a href="https://www.mindspore.cn/legal" target="_blank" class="text">法律声明</a>
+        <span class="text" @click="goToPage('legal')">法律声明</span>
       </div>
       <div class="below">
         <span>版权所有</span>
@@ -21,8 +26,8 @@ import logoImg from '@/assets/logo-footer.png';
         <span>&nbsp;保留一切权利</span>
       </div>
     </div>
-    <div class="footer-QRcode"></div>
-  </div>
+    <div class="footer-code"></div>
+  </footer>
 </template>
 
 <style lang="scss" scoped>
@@ -55,9 +60,10 @@ import logoImg from '@/assets/logo-footer.png';
     font-size: 14px;
     margin: 0 auto;
     .text {
-      color:  rgba(255, 255, 255, 1);
+      color: rgba(255, 255, 255, 1);
       height: 26px;
       line-height: 26px;
+      cursor: pointer;
     }
 
     .division {

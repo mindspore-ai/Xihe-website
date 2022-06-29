@@ -41,7 +41,6 @@ export const routes = [
           });
           if (res.status === 200 && res.data && res.data.length) {
             const vistorInfo = res.data[0];
-            console.log(vistorInfo);
             const {
               id,
               username: userName,
@@ -97,9 +96,6 @@ export const routes = [
         name: 'userModels',
         component: () => {
           return import('@/views/user/UserModel.vue');
-        },
-        beforeEach: (to) => {
-          console.log(to);
         },
       },
       {
@@ -178,6 +174,22 @@ export const routes = [
         },
       },
     ],
+  },
+  // 隐私政策
+  {
+    path: '/privacy',
+    name: 'privacy',
+    component: () => {
+      return import('@/views/other/ThePrivacy.vue');
+    },
+  },
+  // 法律声明
+  {
+    path: '/legal',
+    name: 'legal',
+    component: () => {
+      return import('@/views/other/TheLegal.vue');
+    },
   },
   // 创建 新模型｜新数据集｜新项目
   {

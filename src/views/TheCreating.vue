@@ -30,7 +30,6 @@ const i18n = {
 const bannerLabel = computed(() => {
   return route.path.split('/')[2];
 });
-console.log(bannerLabel.value);
 </script>
 
 <template>

@@ -158,7 +158,7 @@ function getDetailData() {
       }
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 getDetailData();

@@ -170,7 +170,6 @@ function confirmClick() {
     params.owner_name = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params).then((res) => {
-      //console.log(res);
       let modifyParams = {
         relate_infer_models: [],
       };
@@ -183,7 +182,6 @@ function confirmClick() {
       modifyParams.relate_infer_models.push(res.results.data[0].id);
 
       modifyModelAdd(modifyParams, projectId).then((res) => {
-        //console.log(res);
         if (res.status === 200) {
           emit('on-click');
           isShow1.value = false;
@@ -242,10 +240,8 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    // //console.log('detailData', detailData.value.sdk_name);
     if (detailData.value.sdk_name === 'Gradio') {
       getGuide().then((tree) => {
-        //console.log('1', tree);
         README = tree.data;
         codeString2.value = README;
         result2.value = mkit.render(codeString2.value);
@@ -274,7 +270,7 @@ function getReadMeFile() {
       });
     }
   } catch (error) {
-    //console.log(error);
+    console.error(error);
   }
 }
 // 路由监听
@@ -336,7 +332,6 @@ findFile(
   `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
 ).then((res) => {
   if (res.status === 200) {
-    // //console.log('inference/app.py', res);
     canStart.value = true;
   }
 });
@@ -348,34 +343,27 @@ let timer = null;
 // 启动推理
 function start() {
   startInference(detailData.value.id).then((res) => {
-    //console.log('res', res);
     msg.value = '启动中';
     socket.send(JSON.stringify({ pk: detailData.value.id }));
-    //console.log(socket.readyState);
   });
 }
 //停止推理
 function stop() {
   stopInference(detailData.value.id).then((res) => {
-    //console.log('res', res);
     socket.send(JSON.stringify({ pk: detailData.value.id }));
     // closeConn();
     // clearInterval(timer);
     msg.value = '';
   });
 }
-let socket = new WebSocket('wss://xihebackend.test.osinfra.cn/inference');
-// //console.log(socket.readyState);
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/inference');
 socket.onopen = function () {
-  //console.log('连接成功', JSON.stringify({ pk: detailData.value.id }));
   socket.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {
-    //console.log(JSON.stringify({ pk: detailData.value.id }));
     socket.send(JSON.stringify({ pk: detailData.value.id }));
   }, 5000);
 };
 socket.onmessage = function (event) {
-  //console.log('收到服务器消息', JSON.parse(event.data));
   msg.value = JSON.parse(event.data).msg;
   if (!!JSON.parse(event.data).data) {
     clientSrc.value = JSON.parse(event.data).data.url;
@@ -390,14 +378,11 @@ socket.onmessage = function (event) {
         type: 'error',
         message: JSON.parse(event.data).msg,
       });
-      stopInference(detailData.value.id).then((res) => {
-        //console.log('1', res.data.msg);
-      });
+      stopInference(detailData.value.id).then((res) => {});
     }
   }
 };
 function closeConn() {
-  //console.log('前端关闭了');
   socket.close(); // 向服务端发送断开连接的请求
 }
 onUnmounted(() => {

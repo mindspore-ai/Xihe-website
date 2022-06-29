@@ -80,7 +80,6 @@ const describe = ref('');
 /*
 const activeName = ref('first');
 const handleClick = (tab, event) => {
-  console.log(tab, event);
 };
 const form = reactive({
   name: '',
@@ -330,7 +329,7 @@ function getReadMeFile() {
       }
     });
   } catch (error) {
-    // console.log(error);
+    console.error(error);
   }
 }
 // 路由监听

@@ -10,7 +10,7 @@ import RelateCard from '@/components/RelateCard.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import IconAddFile from '~icons/app/add-file';
-import IconFile from '~icons/app/other-file';
+// import IconFile from '~icons/app/other-file';
 import IconPlus from '~icons/app/plus';
 import DeleteRelate from '@/components/DeleteRelate.vue';
 import IconInstance from '~icons/app/train-instance';
@@ -68,7 +68,7 @@ const i18n = {
   addModel: '添加相关模型',
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '该用户还未上传模型卡片',
+  emptyVisited: '暂未开始训练',
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
   describe2:
@@ -440,7 +440,7 @@ function toggleDelDlg(flag) {
       </div>
       <div v-else class="upload-readme markdown-body">
         <div class="upload-readme-img">
-          <o-icon> <icon-file></icon-file> </o-icon>
+          <o-icon> <icon-instance></icon-instance> </o-icon>
         </div>
         <div class="upload-readme-tip">
           <p>

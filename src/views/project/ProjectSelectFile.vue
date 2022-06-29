@@ -192,7 +192,7 @@ function findFileByPath() {
         </div>
         <div class="selectfile-content-action">
           <o-button class="confim" type="primary" @click="confirmCreating"
-            >确认</o-button
+            >保存</o-button
           >
         </div>
       </div>
@@ -232,8 +232,13 @@ function findFileByPath() {
     .selectfile-content {
       padding: 16px 32px;
       background-color: #fff;
-
-      // background-color: blue;
+      .selectfile-content-path{
+        display: flex;
+        .el-input{
+          flex: 1;
+          margin-right: 16px;
+        }
+      }
       &-title {
         display: flex;
         justify-content: space-between;

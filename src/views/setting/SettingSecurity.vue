@@ -363,7 +363,7 @@ function resetForm(formEl) {
   }
   .note-btn {
     margin-top: 48px;
-    width: 326px;
+    width: 264px;
   }
 }
 </style>

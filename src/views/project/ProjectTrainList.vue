@@ -146,14 +146,11 @@ function goDateDetail(path) {
 const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  // console.log('连接成功');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  // console.log(event.data);
-  // console.log(JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
   trainData.value.forEach((item) => {
     if (item.status === 'Running') {
@@ -164,17 +161,10 @@ socket.onmessage = function (event) {
       setTimeout(closeConn(), 15000);
     }
   });
-  // console.log('收到服务器消息');
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function (event) {
-  // console.log('服务器主动断开连接');
-};
-
-// function sendMessage() {
-//   console.log('发送消息');
-// }
+socket.onclose = function (event) {};
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求

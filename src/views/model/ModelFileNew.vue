@@ -52,7 +52,6 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-console.log(routerParams.contents);
 if (routerParams.contents.length) {
   currentContents =
     `${routerParams.name}/${routerParams.contents.join('/')}/` || '';
@@ -102,7 +101,7 @@ async function upLoadObs(formEl) {
         }
       );
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });

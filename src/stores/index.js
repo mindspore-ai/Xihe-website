@@ -76,7 +76,6 @@ export const useUserInfoStore = defineStore('userInfo', {
       return this.organizationList.length;
     },
     owner() {
-      console.log(this.userName);
       return [{ id: this.id, name: this.userName }];
     },
   },

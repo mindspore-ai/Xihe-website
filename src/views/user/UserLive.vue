@@ -38,7 +38,6 @@ const userInfo = computed(() => {
 // 获得动态页面数据
 getUserLive(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
-    console.log(res.data);
     liveCount.value = res.data.length;
     liveData.value = res.data;
   } else {

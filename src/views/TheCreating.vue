@@ -6,13 +6,15 @@ const route = useRoute();
 const i18n = {
   models: {
     new: '新建模型',
-    introduce: '新建一个模型仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
+    introduce:
+      '新建一个模型仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
   },
   datasets: {
     new: '新建数据集',
-    introduce: '新建一个数据集仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
+    introduce:
+      '新建一个数据集仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
   },
@@ -28,7 +30,6 @@ const i18n = {
 const bannerLabel = computed(() => {
   return route.path.split('/')[2];
 });
-console.log(bannerLabel.value);
 </script>
 
 <template>

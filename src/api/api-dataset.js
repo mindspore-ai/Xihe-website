@@ -76,7 +76,6 @@ export function createDataset(params) {
  */
 export function modifyDataset(params) {
   const url = `/api/datasets/${params.id}`;
-  console.log(params);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

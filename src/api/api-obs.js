@@ -202,7 +202,7 @@ export async function handleUpload(params, progressCallback, successCallback) {
               Metadata: { description },
             },
             function (err, result) {
-              console.log(err);
+              console.error(err);
               if (err) {
                 ElMessage({
                   type: 'error',
@@ -222,7 +222,7 @@ export async function handleUpload(params, progressCallback, successCallback) {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 // 新建文件夹封装
@@ -278,7 +278,7 @@ export async function createFolder(params, successCallback) {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 // 文件下载 封装
@@ -299,8 +299,8 @@ export function downloadFile(objkey, fileName, storeId) {
           //   center: true,
           // });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.error(error);
         });
     });
   } catch (error) {

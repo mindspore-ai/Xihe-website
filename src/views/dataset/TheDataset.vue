@@ -124,7 +124,6 @@ function sortsClick(index, index2) {
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
     !renderSorts.value[index].condition[index2].isActive;
-  console.log(renderSorts.value);
   goSearch(renderSorts.value);
 }
 function clearItem1(index) {
@@ -160,7 +159,6 @@ function conditionClick(index, index2) {
   } else {
     renderCondition.value[index].condition[index2].isActive =
       !renderCondition.value[index].condition[index2].isActive;
-    console.log(renderCondition.value[index].condition);
     let bool = renderCondition.value[index].condition.every(
       (item) => item.isActive === false
     );
@@ -168,9 +166,7 @@ function conditionClick(index, index2) {
       renderCondition.value[index].haveActive = false;
     }
   }
-  console.log(query);
-  // console.log('1', renderCondition.value[index]);
-  console.log('1', renderCondition.value);
+
   goSearch(renderCondition.value);
 }
 
@@ -187,7 +183,6 @@ function goSearch(render) {
         if (item.title.key == 'task') {
           taskCate.push(value.id);
           query.task_cate = taskCate.join(',');
-          console.log(query.task_cate);
         } else if (item.title.key == 'tags') {
           tagLists.push(value.id);
           query.tags = tagLists.join(',');
@@ -223,11 +218,8 @@ function checkAllClick(item, index) {
   item.showTagsAll = true;
   showTags.value = true;
   radioList.value = renderCondition.value[index];
-  console.log(radioList.value);
 }
 function radioClick(detail, list) {
-  console.log('1111111', detail, list);
-  // console.log(renderCondition.value[list.num]);
   if (list.title.key === 'licenses') {
     if (detail.isActive === true) {
       detail.isActive = false;
@@ -327,10 +319,7 @@ function getModelTag() {
       });
     });
 
-    console.log('筛选', i18n.screenCondition);
-
     renderCondition.value = i18n.screenCondition.splice(1, 3);
-    console.log(renderCondition.value);
 
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
@@ -339,15 +328,11 @@ function getModelTag() {
       });
       item.num = index;
     });
-    console.log(renderCondition.value);
-    renderSorts.value = i18n.screenCondition.splice(0, 1);
 
-    // otherCondition.value = i18n.screenCondition;
-    // console.log(otherCondition.value);
+    renderSorts.value = i18n.screenCondition.splice(0, 1);
 
     //应用分类二级菜单查看全部
     moreSortTags.value = renderSorts.value[0].condition;
-    console.log(moreSortTags.value);
 
     moreSortTags.value.forEach((sort) => {
       sort.haveActive = false;
@@ -357,7 +342,6 @@ function getModelTag() {
       });
       // sort.condition = sort.task_list;
     });
-    console.log(moreSortTags.value);
   });
 }
 getModelTag();
@@ -374,7 +358,6 @@ function handleSizeChange(val) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
   query.size = val;
-  console.log(query);
 }
 
 function handleCurrentChange(val) {
@@ -619,20 +602,20 @@ onUnmounted(() => {
               card-type="dataset"
               @click="goDetail(item.owner_name.name, item.name)"
             ></o-card>
+            <div v-if="modelCount > 0" class="pagination">
+              <el-pagination
+                :page-sizes="[10, 20, 50]"
+                :current-page="query.page"
+                :page-size="query.size"
+                :total="modelCount"
+                layout="sizes, prev, pager, next, jumper"
+                hide-on-single-page
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
+            </div>
           </div>
           <o-empty v-else :img="ImgEmpty" describe="无匹配数据集"></o-empty>
-        </div>
-        <div v-if="modelCount > 0" class="pagination">
-          <el-pagination
-            :page-sizes="[10, 20, 50]"
-            :current-page="query.page"
-            :page-size="query.size"
-            :total="modelCount"
-            layout="sizes, prev, pager, next, jumper"
-            hide-on-single-page
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
         </div>
       </div>
     </div>
@@ -912,11 +895,21 @@ $theme: #0d8dff;
         }
       }
       .card-list {
+        position: relative;
         display: grid;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 40px;
+        .pagination {
+          display: flex;
+          justify-content: center;
+          margin-top: 40px;
+          position: absolute;
+          bottom: -76px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
       }
       :deep(.o-empty) {
         .empty-img {
@@ -924,12 +917,6 @@ $theme: #0d8dff;
             width: 280px;
           }
         }
-      }
-
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
       }
     }
   }

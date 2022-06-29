@@ -21,9 +21,7 @@ import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 // });
 
 // watch(props, (newProps) => {
-//   console.log(newProps.orderValue);
 //   queryData.order = newProps.orderValue;
-//   console.log(queryData);
 //   getUserProject(queryData);
 // });
 
@@ -62,7 +60,6 @@ function getUserProject(query) {
     if (res.status === 200 && res.data.length) {
       projectCount.value = res.data.length;
       projectData.value = res.data;
-      console.log(projectData.value);
     } else {
       projectData.value = [];
     }

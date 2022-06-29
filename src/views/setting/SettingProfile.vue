@@ -40,7 +40,7 @@ try {
     getCheckedId(filterData.value.user_avatar);
   });
 } catch (error) {
-  console.log(error);
+  console.error(error);
 }
 
 function getCheckedId(list) {
@@ -124,7 +124,13 @@ function handleCurrentChange(val) {
   </div>
 
   <o-button type="primary" @click="saveData">保存</o-button>
-  <o-dialog :show="showAvatarList" @close-click="toggleDelDlg(false)">
+  <o-dialog
+    :close="false"
+    :is-center="true"
+    :show="showAvatarList"
+    class="my-dialog"
+    @close-click="toggleDelDlg(false)"
+  >
     <template #head>
       <div class="dlg-title" :style="{ textAlign: 'center' }">选择头像</div>
     </template>
@@ -181,8 +187,11 @@ function handleCurrentChange(val) {
   </o-dialog>
 </template>
 <style lang="scss" scoped>
-.o-dialog {
+.my-dialog {
   width: 800px;
+  .o-dialog-wrap {
+    top: auto;
+  }
 }
 .el-pagination__sizes {
   display: none;

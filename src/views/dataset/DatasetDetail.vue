@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
@@ -94,7 +94,9 @@ const renderNav = computed(() => {
         return !item.isPrivate;
       });
 });
-
+onBeforeRouteLeave(() => {
+  fileData.$reset();
+});
 let modelTags = ref([]);
 function getDetailData() {
   try {
@@ -113,7 +115,6 @@ function getDetailData() {
         }
         fileData.setFileData(storeData);
         digCount.value = detailData.value.digg_count;
-        //console.log('111111111111', detailData.value);
         const {
           licenses_list,
           // libraries_list,
@@ -142,7 +143,7 @@ function getDetailData() {
       }
     });
   } catch (error) {
-    //console.log(error);
+    console.error(error);
   }
 }
 getDetailData();
@@ -184,8 +185,6 @@ function tagClick(it, key) {
       it.isSelected = false;
       headTags.value.push(it);
     }
-    //console.log('isActive', it.isActive);
-    //console.log('isSelected', it.isSelected);
   } else {
     it.isActive = !it.isActive;
     if (it.isActive === true) {
@@ -271,12 +270,10 @@ function digClick() {
       getDetailData();
     }
   });
-  // }
 }
 
 // 确认
 function confirmBtn() {
-  //console.log(queryDate);
   dialogList.menuList.forEach((menu) => {
     if (menu.key == 'task') {
       queryDate[menu.key] = [];
@@ -307,7 +304,6 @@ function confirmBtn() {
   });
   let params = queryDate;
   params.id = detailData.value.id;
-  //console.log('params', params);
   modifyDataset(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -334,9 +330,7 @@ function concelBtn() {
 
 getModelTags().then((res) => {
   renderList.value = res.data;
-  //console.log(renderList.value);
   let menu = dialogList.menuList.map((item) => item.key);
-  //console.log(menu);
   menu.forEach((key) => {
     if (key == 'task') {
       renderList.value[key].map((item) => {
@@ -382,14 +376,12 @@ getModelTags().then((res) => {
       }
     });
   });
-  //console.log(renderList.value);
 });
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
   inputDom.value.select();
   document.execCommand('Copy'); // 执行浏览器复制命令
-  //console.log('textValue', inputDom.value.select());
   ElMessage({
     type: 'success',
     message: '复制成功',

@@ -87,7 +87,6 @@ getTrainLogData();
 const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  // console.log('连接成功');
   socket.send(
     JSON.stringify({
       pk: detailData.value.id,
@@ -110,7 +109,6 @@ socket.onmessage = function (event) {
     form.desc = event.data.substring(4);
   } else {
     trainDetail.value = JSON.parse(event.data).data;
-    // console.log(trainDetail.value );
     if (trainDetail.value.status !== 'Running') {
       // socket.send(
       //   JSON.stringify({
@@ -131,11 +129,9 @@ socket.onmessage = function (event) {
 
 // // 服务端主动断开连接时，这个方法也被触发。
 // socket.onclose = function (event) {
-//   // console.log('服务器主动断开连接');
 // };
 
 // function sendMessage() {
-//   console.log('发送消息');
 // }
 
 function closeConn() {
@@ -144,7 +140,6 @@ function closeConn() {
 
 // // 页面刷新
 function reloadPage() {
-  // console.log('页面刷新了');
   closeConn();
 }
 
@@ -159,13 +154,9 @@ onUnmounted(() => {
 });
 
 // 自动评估
-function autoEvaluate() {
-  // console.log(2222);
-}
+function autoEvaluate() {}
 // 保存设置
-function saveSetting() {
-  // console.log(1111);
-}
+function saveSetting() {}
 </script>
 <template>
   <div class="train-log">

@@ -23,8 +23,8 @@ const i18n = {
   license: '协议',
   visualization: '仓库属性',
   preserve: '保存',
-  public: '简要说明',
-  private: '简要说明',
+  public: '所有人可见',
+  private: '仅自己可见',
   placeholder: {
     name: '请输入模型名称',
     describe: '请输入内容',
@@ -49,11 +49,10 @@ try {
   query.owner_type = JSON.parse(localStorage.getItem('base')).models_type_id;
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
-    console.log(licenses.value);
     query.licenses = licenses.value[0].id;
   });
-} catch (err) {
-  console.log(err);
+} catch (error) {
+  console.error(error);
 }
 function create(formEl) {
   if (!formEl) return;
@@ -78,7 +77,7 @@ function create(formEl) {
         }
       });
     } else {
-      console.log('error submit!');
+      console.error('error submit!');
       return false;
     }
   });
@@ -126,7 +125,7 @@ function create(formEl) {
           { required: true, message: '必填项', trigger: 'blur' },
           {
             pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-            message: '暂不支持中文字符',
+            message: '暂不支持中文字符，且长度需大于3个字符',
             trigger: 'blur',
           },
           {

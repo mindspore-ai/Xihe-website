@@ -10,6 +10,23 @@ import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 
+const i18n = {
+  title: '自动评估',
+  desc: '自动评估aaaaaaaaaaaa',
+  learning: {
+    name: 'learning_rate',
+    placeholder: '请输入例如[0.01, 0.02, 0.03]的字段',
+  },
+  momentum: { name: 'momentum', placeholder: '请输入例如[0.9,0.99]的字段' },
+  batch: { name: 'batch_size', placeholder: '请输入例如 [32, 64]的字段' },
+};
+
+const query = {
+  learning: '',
+  momentum: '',
+  batch: '',
+};
+
 const route = useRoute();
 //训练日志js
 const form = reactive({
@@ -151,16 +168,11 @@ function saveSetting() {}
           disabled
           placeholder="please select your zone"
         >
-          <!-- <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" /> -->
         </el-input>
       </div>
       <div class="train-log-desc">
         <el-input v-model="form.desc" type="textarea" />
       </div>
-      <!-- <div>
-        <o-button type="primary" @click="autoEvaluate">自动评估</o-button>
-      </div> -->
     </div>
     <div class="train-log-detail">
       <div class="train-log-detail-title">训练详情</div>
@@ -212,18 +224,42 @@ function saveSetting() {}
         </li>
         <li class="info-list">
           <div class="info-list-title">日志文件</div>
-          <div class="info-list-detai document">{{ trainDetail.log_file }}</div>
-        </li>
-        <li class="info-list">
-          <div class="info-list-title">评估指标</div>
-          <div class="info-list-detail">
-            <!-- v-model="form.desc" -->
-            <el-input type="textarea" />
+          &nbsp;
+          <div class="info-list-detail document">
+            {{ trainDetail.log_file }}
           </div>
         </li>
-        <div class="info-btn">
-          <o-button type="primary" @click="saveSetting">保存设置</o-button>
-        </div>
+        <li class="assess-box">
+          <p class="assess-title">{{ i18n.title }}</p>
+          <p class="assess-desc">
+            {{ i18n.desc }}
+          </p>
+          <div class="button-box">
+            <el-form>
+              <el-form-item :label="i18n.learning.name">
+                <el-input
+                  v-model="query.learning"
+                  :placeholder="i18n.learning.placeholder"
+                ></el-input>
+              </el-form-item>
+              <el-form-item :label="i18n.momentum.name">
+                <el-input
+                  v-model="query.momentum"
+                  :placeholder="i18n.momentum.placeholder"
+                ></el-input>
+              </el-form-item>
+              <el-form-item :label="i18n.batch.name">
+                <el-input
+                  v-model="query.batch"
+                  :placeholder="i18n.batch.placeholder"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+            <div class="info-btn">
+              <o-button type="primary" @click="saveSetting">自动评估</o-button>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
@@ -234,9 +270,8 @@ function saveSetting() {}
   max-width: 1440px;
   margin: 0 auto;
   display: flex;
-  // padding-bottom: 40px;
-  padding: 40px 24px 48px;
-  min-height: calc(100vh - 370px);
+  padding: 40px 24px 48px !important;
+  min-height: calc(100vh - 400px);
   background-color: #fff;
   &-form {
     width: 55%;
@@ -252,9 +287,9 @@ function saveSetting() {}
 
       .el-textarea {
         width: 100% !important;
-        height: 525px;
+        height: 640px;
         margin-top: 24px;
-        margin-bottom: 30px;
+        // margin-bottom: 30px;
         :deep .el-textarea__inner {
           min-height: 560px;
           height: 100%;
@@ -265,7 +300,6 @@ function saveSetting() {}
   &-detail {
     width: 45%;
     padding-left: 5%;
-    // background-color: #bfa;
     &-title {
       height: 24px;
       line-height: 24px;
@@ -274,6 +308,38 @@ function saveSetting() {}
       margin-top: 6px;
     }
     &-info {
+      .assess-box {
+        margin-top: 48px;
+        .button-box {
+          display: flex;
+          flex-direction: column;
+          .info-btn {
+            align-self: end;
+            margin-top: 37px;
+            padding-right: 50px;
+          }
+        }
+        .assess-title {
+          font-size: 18px;
+          color: #000;
+          line-height: 24px;
+          font-weight: normal;
+        }
+        .assess-desc {
+          margin-top: 16px;
+          font-size: 14px;
+          color: #999;
+          line-height: 22px;
+          font-weight: normal;
+        }
+        :deep .el-form-item {
+          margin-top: 16px;
+          .el-form-item__label {
+            width: 110px;
+            text-align: left;
+          }
+        }
+      }
       .info-list {
         margin-top: 24px;
         color: #555;
@@ -290,16 +356,16 @@ function saveSetting() {}
         .document {
           color: #0d8dff;
           border-bottom: 1px solid #0d8dff;
-          margin-left: 37px;
+          margin-left: 32px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
       }
-      .info-btn {
-        margin-left: 140px;
-        margin-top: 25px;
-      }
+      // .info-btn {
+      //   margin-left: 140px;
+      //   margin-top: 25px;
+      // }
     }
   }
 }

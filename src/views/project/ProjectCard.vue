@@ -7,7 +7,7 @@ import { useUserInfoStore } from '@/stores';
 
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
-import IconFile from '~icons/app/other-file';
+import IconFile from '~icons/app/project';
 
 import RelateCard from '@/components/RelateCard.vue';
 import NoRelate from '@/components/NoRelate.vue';
@@ -57,6 +57,7 @@ const i18n = {
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
   emptyVisited: '无项目卡片',
+  emptystart: '无启动项目',
 };
 
 const isShow = ref(false);
@@ -412,7 +413,7 @@ onUnmounted(() => {
           >停止</o-button
         >
       </div>
-      <div v-else class="markdown-body">
+      <div v-else-if="detailData.is_owner" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result2"></div>
         <o-button
           v-if="detailData.is_owner"
@@ -421,6 +422,16 @@ onUnmounted(() => {
           @click="start"
           >启动</o-button
         >
+      </div>
+      <div v-else class="upload-readme markdown-body">
+        <div class="upload-readme-img">
+          <o-icon> <icon-file></icon-file> </o-icon>
+        </div>
+        <div class="upload-readme-tip">
+          <p>
+            {{ i18n.emptystart }}
+          </p>
+        </div>
       </div>
     </div>
     <div v-else class="left-data1">

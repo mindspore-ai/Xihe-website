@@ -10,7 +10,7 @@ import RelateCard from '@/components/RelateCard.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import IconAddFile from '~icons/app/add-file';
-import IconFile from '~icons/app/other-file';
+// import IconFile from '~icons/app/other-file';
 import IconPlus from '~icons/app/plus';
 import DeleteRelate from '@/components/DeleteRelate.vue';
 import IconInstance from '~icons/app/train-instance';
@@ -38,6 +38,7 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+// console.log(detailData.value);
 // const filePath = ref('');
 // const textarea = ref('');
 const isShow = ref(false);
@@ -68,7 +69,7 @@ const i18n = {
   addModel: '添加相关模型',
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '该用户还未上传模型卡片',
+  emptyVisited: '暂未开始训练',
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
   describe2:
@@ -76,26 +77,6 @@ const i18n = {
   confirm: '确认',
 };
 const describe = ref('');
-
-/*
-const activeName = ref('first');
-const handleClick = (tab, event) => {
-};
-const form = reactive({
-  name: '',
-  SDK: '',
-  codeCatalog: '',
-  launchFile: '',
-  frame: '',
-  rule: '',
-  logPath: '',
-  input: '',
-  output: '',
-  parameter: '',
-  description: '',
-  variate: '',
-});
-*/
 
 const trainListData = ref([]);
 // 获取训练列表数据
@@ -118,7 +99,7 @@ function goSelectFile() {
     router.push({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
       query: {
-        projectId: detailData.value.id,
+        id: detailData.value.id,
       },
     });
   }
@@ -404,11 +385,7 @@ function toggleDelDlg(flag) {
         v-if="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
       >
-        <o-button
-          type="primary"
-          style="height: 48px; padding: 11px 4px"
-          @click="goSelectFile"
-        >
+        <o-button type="primary" @click="goSelectFile">
           {{ i18n.createTrain }}</o-button
         >
       </div>
@@ -440,7 +417,7 @@ function toggleDelDlg(flag) {
       </div>
       <div v-else class="upload-readme markdown-body">
         <div class="upload-readme-img">
-          <o-icon> <icon-file></icon-file> </o-icon>
+          <o-icon> <icon-instance></icon-instance> </o-icon>
         </div>
         <div class="upload-readme-tip">
           <p>
@@ -659,8 +636,8 @@ function toggleDelDlg(flag) {
     flex-direction: row-reverse;
     position: relative;
     .createtrain-btn {
-      width: 120px;
-      height: 48px;
+      // width: 120px;
+      // height: 48px;
       position: absolute;
       right: 184px;
       z-index: 1;

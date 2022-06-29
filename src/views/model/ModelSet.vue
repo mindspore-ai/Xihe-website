@@ -272,15 +272,9 @@ function toggleDelDlg(flag) {
         }}</o-button>
         <h4 class="setting-title">{{ i18n.delete.title }}</h4>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button
-          class="delete-btn"
-          :style="{
-            color: '##F3524DFF',
-            borderColor: '##F3524DFF',
-          }"
-          @click="showDel = true"
-          >{{ i18n.delete.btnText }}</o-button
-        >
+        <o-button class="delete-btn" status="error" @click="showDel = true">{{
+          i18n.delete.btnText
+        }}</o-button>
       </div>
       <o-dialog
         :show="showDel"
@@ -437,14 +431,6 @@ function toggleDelDlg(flag) {
     .setting-tip {
       margin: 8px 0 16px;
       color: #999999;
-    }
-    .delete-btn {
-      color: #f3524dff;
-      border-color: #f3524dff;
-      &:hover {
-        color: #b4110cff;
-        border-color: #b4110cff;
-      }
     }
   }
 }

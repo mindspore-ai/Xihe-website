@@ -8,6 +8,8 @@ import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import hoemVideo from '@/assets/videos/home.mp4';
+
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 
@@ -62,16 +64,34 @@ onUnmounted(() => {
 
 <template>
   <div ref="homeIns" class="home">
+    <video
+      muted
+      autoplay
+      loop
+      playsinline
+      :src="hoemVideo"
+      class="home-video"
+    ></video>
+    <div class="home-mask"></div>
+
+    <div class="home-content">
+      <p class="home-desc">{{ homeDesc }}</p>
+      <p class="home-title">{{ homeTitle }}</p>
+      <OButton
+        type="primary"
+        animation
+        class="home-btn"
+        @click="handleBtnClick"
+      >
+        {{ quickStartLabel }}
+        <template #suffix>
+          <OIcon><IconArrowRight /></OIcon>
+        </template>
+      </OButton>
+    </div>
     <!-- <div class="home-content"> -->
     <!-- <div class="home-slide"> -->
-    <p class="home-desc">{{ homeDesc }}</p>
-    <p class="home-title">{{ homeTitle }}</p>
-    <OButton type="primary" animation class="home-btn" @click="handleBtnClick">
-      {{ quickStartLabel }}
-      <template #suffix>
-        <OIcon><IconArrowRight /></OIcon>
-      </template>
-    </OButton>
+
     <!-- </div> -->
     <!-- <div class="home-slide">2</div> -->
     <!-- <div class="home-slide">3</div> -->
@@ -81,37 +101,64 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .home {
-  overflow-y: hidden;
+  position: relative;
+  width: 100%;
   height: 100vh;
   background-color: #0f1927;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 80px;
-  color: #ffffff;
-  background-image: url(../assets/home.png);
-  background-size: cover;
-  background-repeat: no-repeat;
 
-  .home-desc {
-    font-size: 44px;
-    font-weight: bold;
-    color: #ffffff;
-    line-height: 52px;
+  &-video {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    pointer-events: none;
   }
 
-  .home-title {
-    height: 45px;
-    font-size: 32px;
-    font-weight: 400;
-    color: #ffffff;
-    line-height: 45px;
-    margin-top: 20px;
+  .home-mask {
+    position: absolute;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+
+    background-color: rgba($color: #000000, $alpha: 0.35);
   }
 
-  .home-btn {
-    margin-top: 45px;
+  &-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 80px;
+    color: #ffffff;
+    overflow-y: hidden;
+    z-index: 2;
+
+    .home-desc {
+      font-size: 44px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 52px;
+    }
+
+    .home-title {
+      height: 45px;
+      font-size: 32px;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 45px;
+      margin-top: 20px;
+    }
+
+    .home-btn {
+      margin-top: 45px;
+    }
   }
 
   // &-content {

@@ -118,14 +118,14 @@ const classNames = computed(() => {
     background-color: transparent;
 
     &:hover {
-      color: #f3524d;
-      border-color: #f3524d;
+      color: #b4110c;
+      border-color: #b4110c;
       background-color: transparent;
     }
 
     &:active {
-      color: #f3524d;
-      border-color: #f3524d;
+      color: #b4110c;
+      border-color: #b4110c;
       background-color: transparent;
     }
   }

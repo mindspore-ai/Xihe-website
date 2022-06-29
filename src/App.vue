@@ -60,8 +60,7 @@ onUnmounted(() => {
 
 <style lang="scss">
 #app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  min-width: 1280px;
 }
 
 .app-header {

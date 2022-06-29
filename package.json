@@ -20,7 +20,6 @@
     "lodash": "^4.17.21",
     "markdown-it": "^12.3.2",
     "monaco-editor": "^0.33.0",
-    "monaco-editor-webpack-plugin": "^7.0.1",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.13",
     "sass": "^1.50.0",
@@ -38,6 +37,7 @@
     "husky": "^7.0.4",
     "prettier": "^2.6.2",
     "unplugin-auto-import": "^0.7.1",
+    "unplugin-element-plus": "^0.4.0",
     "unplugin-icons": "^0.14.1",
     "unplugin-vue-components": "^0.19.3",
     "vite": "^2.9.5"

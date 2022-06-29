@@ -13,7 +13,7 @@ const statementHtml = mkit.render(props.statement);
 </script>
 
 <template>
-  <div class="statement">
+  <div class="statement markdown-file">
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-html="statementHtml"></div>
   </div>

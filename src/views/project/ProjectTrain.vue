@@ -38,6 +38,7 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+// console.log(detailData.value);
 // const filePath = ref('');
 // const textarea = ref('');
 const isShow = ref(false);
@@ -77,26 +78,6 @@ const i18n = {
 };
 const describe = ref('');
 
-/*
-const activeName = ref('first');
-const handleClick = (tab, event) => {
-};
-const form = reactive({
-  name: '',
-  SDK: '',
-  codeCatalog: '',
-  launchFile: '',
-  frame: '',
-  rule: '',
-  logPath: '',
-  input: '',
-  output: '',
-  parameter: '',
-  description: '',
-  variate: '',
-});
-*/
-
 const trainListData = ref([]);
 // 获取训练列表数据
 function getTrainList() {
@@ -118,7 +99,7 @@ function goSelectFile() {
     router.push({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
       query: {
-        projectId: detailData.value.id,
+        id: detailData.value.id,
       },
     });
   }
@@ -404,11 +385,7 @@ function toggleDelDlg(flag) {
         v-if="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
       >
-        <o-button
-          type="primary"
-          style="height: 48px; padding: 11px 4px"
-          @click="goSelectFile"
-        >
+        <o-button type="primary" @click="goSelectFile">
           {{ i18n.createTrain }}</o-button
         >
       </div>
@@ -659,8 +636,8 @@ function toggleDelDlg(flag) {
     flex-direction: row-reverse;
     position: relative;
     .createtrain-btn {
-      width: 120px;
-      height: 48px;
+      // width: 120px;
+      // height: 48px;
       position: absolute;
       right: 184px;
       z-index: 1;

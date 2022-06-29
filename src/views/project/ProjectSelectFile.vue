@@ -4,9 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useFileData } from '@/stores';
 
-import { createTrainProject } from '@/api/api-project';
+import { createTrainProject, getProjectData } from '@/api/api-project';
 // import { fileVerify } from '@/api/api-obs.js';
 import {
   findFile,
@@ -21,24 +21,24 @@ let routerParams = route.params;
 
 const filePath = ref('');
 const isShow = ref(false);
+const codeString = ref('');
 
 // 当前项目的详情数据
-const detailData = computed(() => {
-  return useFileData().fileStoreData;
-});
-
+// const detailData = computed(() => {
+//   return useFileData().fileStoreData;
+// });
+const detailData = ref({});
 // 返回训练页面
 function goTrain() {
   router.push({
     name: 'projectTrain',
   });
 }
-
 // 确认创建训练实例
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
-  createTrainProject(params, route.query.projectId).then((res) => {
+  createTrainProject(params, route.query.id).then((res) => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
@@ -74,7 +74,6 @@ let reopt = {
   data: null,
 };
 
-const codeString = ref('');
 function downLoad(objkey) {
   let params = {
     objkey: objkey,
@@ -140,15 +139,31 @@ function findFileByPath() {
     });
   }
 }
-// //跳转到配置文件创建训练实例页
-// function goCreateFile() {
-//   router.push({
-//     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
-//     query: {
-//       projectId: detailData.value.id,
-//     },
-//   });
-// }
+//跳转到配置文件创建训练实例页2
+function goCreateFile() {
+  router.push({
+    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
+    query: {
+      id: detailData.value.id,
+    },
+  });
+}
+// 获得项目详情数据
+function getDetailData() {
+  try {
+    getProjectData({
+      name: route.params.name,
+      owner_name: route.params.user,
+    }).then((res) => {
+      if (res.results.status === 200) {
+        detailData.value = res.results.data[0];
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+getDetailData();
 </script>
 <template>
   <div class="selectfile">

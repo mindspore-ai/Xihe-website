@@ -4,8 +4,10 @@ import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
 import IconNecessary from '~icons/app/necessary.svg';
+import IconPoppver from '~icons/app/popover.svg';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useFileData } from '@/stores';
+import { createTrainProject, getProjectData } from '@/api/api-project';
 
 const route = useRoute();
 const router = useRouter();
@@ -13,38 +15,95 @@ const router = useRouter();
 const filePath = ref('');
 const isShow = ref(false);
 const form = reactive({
-  name: '',
-  catalog: '',
-  versions: '',
-  logPath: '',
-  input: '',
-  superParams: '',
+  job_name: '',
+  code_dir: '',
+  frameworks: { framework_type: '', framework_version: '' },
+  log_url: '',
+  inputs: '',
+  hypeparameters: '',
+  SDK: '',
+  boot_file: '',
+  train_instance_type: '',
+  job_description: '',
+  outputs: '',
+  env_variables: '',
 });
-const form2 = reactive({
-  platform: '',
-  file: '',
-  resource: '',
-  desc: '',
-  output: '',
-  variate: '',
+const rules = reactive({
+  name: [
+    { required: true, message: '请输入训练实例名称', trigger: 'blur' },
+    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
+  ],
 });
 // 当前项目的详情数据
-const detailData = computed(() => {
-  return useFileData().fileStoreData;
-});
+// const detailData = computed(() => {
+//   return useFileData().fileStoreData;
+// });
+const detailData = ref({});
 // 返回训练页面
 function goTrain() {
   router.push({
     name: 'projectTrain',
   });
 }
+// 获得项目详情数据
+function getDetailData() {
+  try {
+    getProjectData({
+      name: route.params.name,
+      owner_name: route.params.user,
+    }).then((res) => {
+      if (res.results.status === 200) {
+        detailData.value = res.results.data[0];
+        // console.log(detailData.value);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+getDetailData();
 // 跳转到选择文件创建训练实例页
 function goSelectFile() {
   router.push({
     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
     query: {
-      projectId: detailData.value.id,
+      id: detailData.value.id,
     },
+  });
+}
+// 确认创建训练实例
+function confirmCreating() {
+  // let params = { config_path: filePath.value };
+  let input = {},
+    output = {};
+  try {
+    input = JSON.parse(JSON.stringify(form.inputs));
+    output = JSON.parse(JSON.stringify(form.outputs));
+  } catch (e) {
+    console.error(e);
+  }
+  let params = form;
+  params.inputs = input;
+  params.outputs = output;
+  createTrainProject(params, route.query.id).then((res) => {
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '创建训练实例成功',
+        center: true,
+      });
+      setTimeout(() => {
+        router.push({
+          name: 'projectTrainList',
+        });
+      }, 500);
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '训练实例创建失败，请修改json文件中的job_name',
+        center: true,
+      });
+    }
   });
 }
 </script>
@@ -69,30 +128,52 @@ function goSelectFile() {
           为训练实例选择对应的配置，若你已有配置文件，也可通过选择相应配置文件进行创建。
         </div>
         <div class="createfile-form-wrap">
-          <el-form :model="form" label-width="80px" label-position="left">
+          <el-form
+            :model="form"
+            :rules="rules"
+            label-width="80px"
+            label-position="left"
+          >
             <div class="createfile-form-left">
-              <div class="item-title">
-                <icon-necessary></icon-necessary><span>训练名称</span>
+              <div class="createfile-form-item">
+                <div class="item-title">
+                  <icon-necessary></icon-necessary><span>训练名称</span>
+                </div>
+                <el-form-item prop="name">
+                  <el-input
+                    v-model="form.job_name"
+                    placeholder="请输入训练名"
+                  />
+                </el-form-item>
               </div>
-              <el-form-item>
-                <el-input v-model="form.name" placeholder="请输入训练名" />
-              </el-form-item>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>代码目录</span>
                 </div>
 
                 <el-form-item placeholder="请输入末尾带/的文件夹格式目录">
-                  <el-input v-model="form.catalog" placeholder="MindSpore" />
+                  <el-input v-model="form.code_dir" placeholder="MindSpore" />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>框架版本</span>
                 </div>
-                <el-form-item class="versions">
+                <el-form-item placeholder="请输入内容">
+                  <el-input
+                    v-model="form.frameworks.framework_type"
+                    style="width: 30%; margin-right: 18px"
+                    placeholder="MindSpore"
+                  />
+                  <el-input
+                    v-model="form.frameworks.framework_version"
+                    style="width: 66%"
+                    placeholder="MindSpore"
+                  />
+                </el-form-item>
+                <!-- <el-form-item class="versions">
                   <el-select
-                    v-model="form.versions"
+                    v-model="form.framework_type"
                     placeholder="please select your zone"
                     style="width: 160px; margin-right: 20px"
                   >
@@ -100,14 +181,14 @@ function goSelectFile() {
                     <el-option label="Zone two" value="beijing" />
                   </el-select>
                   <el-select
-                    v-model="form.versions"
+                    v-model="form.framework_version"
                     placeholder="please select your zone"
                     style="width: 340px"
                   >
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
@@ -115,14 +196,31 @@ function goSelectFile() {
                 </div>
                 <el-form-item placeholder="请输入训练日志输出路径">
                   <el-input
-                    v-model="form.name"
+                    v-model="form.log_url"
                     placeholder="请输入训练日志输出路径"
                   />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
-                  <span>输入</span>
+                  <span class="item-title-text">输入</span>
+                  <el-popover
+                    placement="bottom-start"
+                    :width="372"
+                    trigger="hover"
+                    :teleported="false"
+                  >
+                    <template #reference>
+                      <o-icon style="font-size: 18px"
+                        ><icon-poppver></icon-poppver
+                      ></o-icon>
+                    </template>
+                    <template #>
+                      <div>
+                        输入数据配置：在您的算法代码中需要解析的输入参数，比如预训练模型的路径，训练数据集的路径等。
+                      </div>
+                    </template>
+                  </el-popover>
                 </div>
                 <el-form-item prop="desc">
                   <el-input
@@ -134,11 +232,28 @@ function goSelectFile() {
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
-                  <span>超参</span>
+                  <span class="item-title-text">超参</span>
+                  <el-popover
+                    placement="bottom-start"
+                    :width="372"
+                    trigger="hover"
+                    :teleported="false"
+                  >
+                    <template #reference>
+                      <o-icon style="font-size: 18px"
+                        ><icon-poppver></icon-poppver
+                      ></o-icon>
+                    </template>
+                    <template #>
+                      <div>
+                        在您的算法代码中除了输入、输出和日志参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
+                      </div>
+                    </template>
+                  </el-popover>
                 </div>
                 <el-form-item prop="desc">
                   <el-input
-                    v-model="form.output"
+                    v-model="form.hypeparameters"
                     type="textarea"
                     placeholder="请输入内容，格式为{'':'',},为json格式"
                   />
@@ -150,11 +265,14 @@ function goSelectFile() {
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>训练平台</span>
                 </div>
-                <el-form-item required>
-                  <el-select v-model="form2.platform" placeholder="ModelArts">
+                <!-- <el-form-item>
+                  <el-select v-model="form.SDK" placeholder="ModelArts">
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                   </el-select>
+                </el-form-item> -->
+                <el-form-item prop="desc">
+                  <el-input v-model="form.SDK" placeholder="ModelArts" />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
@@ -162,21 +280,27 @@ function goSelectFile() {
                   <icon-necessary></icon-necessary><span>启动文件</span>
                 </div>
                 <el-form-item placeholder="请输入文件名">
-                  <el-input v-model="form2.file" placeholder="MindSpore" />
+                  <el-input v-model="form.boot_file" placeholder="MindSpore" />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>计算资源</span>
                 </div>
-                <el-form-item>
+                <!-- <el-form-item>
                   <el-select
-                    v-model="form2.resource"
+                    v-model="form.train_instance_type"
                     placeholder="MPI | mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64"
                   >
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                   </el-select>
+                </el-form-item> -->
+                <el-form-item placeholder="">
+                  <el-input
+                    v-model="form.train_instance_type"
+                    placeholder="MindSpore"
+                  />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
@@ -184,16 +308,36 @@ function goSelectFile() {
                   <span>描述</span>
                 </div>
                 <el-form-item placeholder="请输入描述">
-                  <el-input v-model="form2.desc" placeholder="请输入描述" />
+                  <el-input
+                    v-model="form.job_description"
+                    placeholder="请输入描述"
+                  />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
-                  <span>输出</span>
+                  <span class="item-title-text">输出</span>
+                  <el-popover
+                    placement="bottom-start"
+                    :width="372"
+                    trigger="hover"
+                    :teleported="false"
+                  >
+                    <template #reference>
+                      <o-icon style="font-size: 18px"
+                        ><icon-poppver></icon-poppver
+                      ></o-icon>
+                    </template>
+                    <template #>
+                      <div>
+                        输出数据配置：在您的算法代码中需要解析的输出参数，比如保存预训练模型的路径等。
+                      </div>
+                    </template>
+                  </el-popover>
                 </div>
                 <el-form-item prop="desc">
                   <el-input
-                    v-model="form2.output"
+                    v-model="form.output"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'',''},{'',''}]"
                   />
@@ -205,7 +349,7 @@ function goSelectFile() {
                 </div>
                 <el-form-item prop="desc">
                   <el-input
-                    v-model="form2.variate"
+                    v-model="form.env_variables"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'',''},{'',''}]"
                   />
@@ -216,8 +360,9 @@ function goSelectFile() {
         </div>
 
         <div class="createfile-content-action">
-          <!-- @click="confirmCreating" -->
-          <o-button class="confim" type="primary">确认</o-button>
+          <o-button class="confim" type="primary" @click="confirmCreating"
+            >确认</o-button
+          >
         </div>
       </div>
     </div>
@@ -225,19 +370,20 @@ function goSelectFile() {
 </template>
 
 <style lang="scss" scoped>
-.item-title {
-  position: absolute;
-  transform: translateY(40%);
-}
+// .el-popover.el-popper {
+//   padding: 24px 16px 16px 16px;
+//   font-size: 12px;
+//   line-height: 16px;
+//   color: #656565;
+//   .remind {
+//     color: #f13b35;
+//   }
+// }
 .createfile {
   max-width: 100%;
   height: 100%;
   margin-top: 80px;
-  // margin-bottom: 49px;
   background-color: #f5f6f8;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   .createfile-wrap {
     max-width: 1440px;
     height: 100%;
@@ -261,7 +407,6 @@ function goSelectFile() {
       padding: 16px 32px;
       background-color: #fff;
 
-      // background-color: blue;
       &-title {
         display: flex;
         justify-content: space-between;
@@ -273,14 +418,6 @@ function goSelectFile() {
           font-size: 18px;
           color: #000;
           cursor: pointer;
-          .createfile-form-item {
-            .item-title {
-              position: absolute;
-              transform: translateY(50%);
-            }
-            // display: flex;
-            // align-items: center;
-          }
         }
         &-right {
           display: flex;
@@ -309,14 +446,35 @@ function goSelectFile() {
           justify-content: space-between;
         }
         .createfile-form-left {
-          // width: 50%;
-          // height: 800px;
-          // background-color: #bfa;
+          .createfile-form-item {
+            .item-title {
+              position: absolute;
+              transform: translateY(40%);
+              display: flex;
+              align-items: center;
+              .item-title-text {
+                vertical-align: middle;
+                margin-right: 8px;
+              }
+              // .o-icon .el-tooltip__trigger{
+              //   font-size: 30px;
+              // }
+            }
+          }
         }
         .createfile-form-right {
-          // width: 50%;
-          // height: 400px;
-          // background-color: #bfa;
+          .createfile-form-item {
+            .item-title {
+              position: absolute;
+              transform: translateY(40%);
+              display: flex;
+              align-items: center;
+              .item-title-text {
+                vertical-align: middle;
+                margin-right: 8px;
+              }
+            }
+          }
         }
       }
       &-action {
@@ -330,13 +488,11 @@ function goSelectFile() {
 }
 
 :deep .el-form {
+  font-size: 14px;
+  color: #555;
   .el-form-item {
     margin-bottom: 24px;
-    width: 600px;
-    // .item-title {
-    //   position: absolute;
-    //   transform: translateY(50%);
-    // }
+    width: 560px;
     .el-form-item__content {
       width: 80%;
       .el-input {

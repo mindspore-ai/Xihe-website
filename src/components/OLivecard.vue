@@ -184,34 +184,34 @@ const i18n = {
     background: url(@/assets/model-card-bg.png) no-repeat;
     display: none;
   }
-  &:hover {
-    color: #ccc;
-    background-color: #4d66ca;
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-    .time {
-      color: #ccc;
-    }
-    .o-icon {
-      color: #ccc;
-    }
-    .card-bg {
-      display: block;
-    }
-    .card-top {
-      color: #fff;
-    }
-    .label-box {
-      .label-item {
-        color: #555;
-      }
-    }
-    .nickname {
-      color: #fff;
-    }
-    svg {
-      fill: #ccc;
-      color: #ccc;
-    }
-  }
+  // &:hover {
+  //   color: #ccc;
+  //   background-color: #4d66ca;
+  //   box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+  //   .time {
+  //     color: #ccc;
+  //   }
+  //   .o-icon {
+  //     color: #ccc;
+  //   }
+  //   .card-bg {
+  //     display: block;
+  //   }
+  //   .card-top {
+  //     color: #fff;
+  //   }
+  //   .label-box {
+  //     .label-item {
+  //       color: #555;
+  //     }
+  //   }
+  //   .nickname {
+  //     color: #fff;
+  //   }
+  //   svg {
+  //     fill: #ccc;
+  //     color: #ccc;
+  //   }
+  // }
 }
 </style>

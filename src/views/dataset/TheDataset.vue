@@ -166,7 +166,6 @@ function conditionClick(index, index2) {
       renderCondition.value[index].haveActive = false;
     }
   }
-
   goSearch(renderCondition.value);
 }
 
@@ -362,6 +361,10 @@ function handleSizeChange(val) {
 
 function handleCurrentChange(val) {
   query.page = val;
+  toTop();
+}
+function toTop() {
+  document.documentElement.scrollTop = 0;
 }
 function goNewModel() {
   if (userInfoStore.id) {
@@ -626,7 +629,7 @@ onUnmounted(() => {
 $theme: #0d8dff;
 .warp {
   margin: 0 auto;
-  padding: 50px 16px 100px 16px;
+  padding: 50px 16px 136px 16px;
   max-width: 1472px;
 }
 .model-page {

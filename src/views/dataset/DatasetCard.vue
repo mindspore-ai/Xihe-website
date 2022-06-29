@@ -93,6 +93,12 @@ function emptyClick(ind) {
     });
   }
 }
+function goDetailClick(val) {
+  router.push(`/models/${val.owner_name.name}/${val.name}`);
+}
+function goProjectClick(val) {
+  router.push(`/projects/${val.owner_name.name}/${val.name}`);
+}
 // 文本监听
 watch(
   () => codeString.value,
@@ -169,6 +175,7 @@ watch(
           <relate-card
             :detail-data="detailData"
             :name="'relate_models_list'"
+            @jump="goDetailClick"
           ></relate-card>
         </div>
       </div>
@@ -186,6 +193,7 @@ watch(
           v-else
           :detail-data="detailData"
           :name="'relate_projects_list'"
+          @jump="goProjectClick"
         ></project-relate-card>
       </div>
     </div>

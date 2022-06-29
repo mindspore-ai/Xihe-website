@@ -4,10 +4,10 @@ import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
 
-// import { useUserInfoStore, useFileData } from '@/stores';
+import { useUserInfoStore, useFileData } from '@/stores';
 
 import { createTrainProject } from '@/api/api-project';
-import { fileVerify } from '@/api/api-obs.js';
+// import { fileVerify } from '@/api/api-obs.js';
 import {
   findFile,
   downloadFileObs,
@@ -22,6 +22,12 @@ let routerParams = route.params;
 const filePath = ref('');
 const isShow = ref(false);
 
+// 当前项目的详情数据
+const detailData = computed(() => {
+  return useFileData().fileStoreData;
+});
+
+console.log(detailData.value);
 // 返回训练页面
 function goTrain() {
   router.push({
@@ -31,7 +37,8 @@ function goTrain() {
 
 // 确认创建训练实例
 function confirmCreating() {
-  let params = { config_path: filePath.value };
+  // let params = { config_path: filePath.value };
+  let params = codeString.value;
   createTrainProject(params, route.query.projectId).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -134,6 +141,15 @@ function findFileByPath() {
     });
   }
 }
+// //跳转到配置文件创建训练实例页
+// function goCreateFile() {
+//   router.push({
+//     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
+//     query: {
+//       projectId: detailData.value.id,
+//     },
+//   });
+// }
 </script>
 <template>
   <div class="selectfile">
@@ -146,7 +162,9 @@ function findFileByPath() {
         <div class="selectfile-content-title">
           <div class="selectfile-content-title-left">创建训练实例</div>
           <div class="selectfile-content-title-right">
-            <div class="createfile-option">创建配置文件</div>
+            <div class="createfile-option" @click="goCreateFile">
+              创建配置文件
+            </div>
             <div class="selectfile-option">选择配置文件</div>
           </div>
         </div>
@@ -266,7 +284,7 @@ function findFileByPath() {
         .file-select-textarea-int {
           width: 100% !important;
           :deep .el-textarea__inner {
-            height: 600px;
+            height: 560px;
           }
         }
       }

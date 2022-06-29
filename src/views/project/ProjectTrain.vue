@@ -55,7 +55,6 @@ const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
   contents: ['train'],
-  // contents: routerParams.contents,
 };
 
 const i18n = {

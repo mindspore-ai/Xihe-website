@@ -62,7 +62,7 @@ if (props.cardType === 'model') {
         <img :src="cardData.owner_name.avatar_url" alt="" />
       </div>
       <div v-if="cardData.owner_name" class="nickname">
-        {{ cardData.owner_name.nickname || cardData.owner_name.name }}
+        {{ cardData.owner_name.name }}
       </div>
       <div class="model-name">/{{ cardData.name }}</div>
     </div>

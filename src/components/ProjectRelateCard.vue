@@ -56,7 +56,7 @@ function goDetailClick(item) {
           </div>
 
           <p v-if="item.owner_name" class="nick-name">
-            {{ item.owner_name.nickname }}
+            {{ item.owner_name.name }}
           </p>
         </div>
         <div class="project-bottom-right">
@@ -114,7 +114,7 @@ function goDetailClick(item) {
     font-size: 18px;
     background-position: center;
     object-fit: scale-down;
-    // background-size: 100% 100%;
+    background-size: 100% 100%;
     // background-repeat: no-repeat;
   }
 

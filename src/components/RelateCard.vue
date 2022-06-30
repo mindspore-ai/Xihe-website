@@ -76,7 +76,7 @@ watch(
         </div>
 
         <p v-if="item.owner_name" class="nick-name">
-          {{ item.owner_name.nickname }}/{{ item.name }}
+          {{ item.owner_name.name }}/{{ item.name }}
         </p>
       </div>
       <div class="dataset-bottom">

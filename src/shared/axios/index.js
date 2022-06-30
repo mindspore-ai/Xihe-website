@@ -25,13 +25,14 @@ let pendingPool = new Map();
  */
 const requestInterceptorId = request.interceptors.request.use(
   (config) => {
-    if (loadingCount === 0) {
+    if (loadingCount === 0 && !config.url.includes('fork')) {
       loadingInstance = ElLoading.service({
         fullscreen: true,
         text: 'Loading',
         background: 'rgba(255,255,255,0.5)',
       });
     }
+
     loadingCount++;
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
     request.config = Object.assign({}, config);

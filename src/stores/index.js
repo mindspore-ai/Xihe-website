@@ -98,6 +98,8 @@ export const useVistorInfoStore = defineStore('vistorInfo', {
       modelDiggList: [], // 模型点赞信息列表
       datasetDiggList: [], // 数据集点赞信息列表
       organizationList: [], // 组织列表
+      email: null,
+      emailStatus: false, // 邮箱状态
     };
   },
   getters: {

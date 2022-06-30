@@ -808,6 +808,7 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
+    min-height: calc(100vh - 400px);
     background-color: #f5f6f8;
     padding: 35px 0 64px;
   }

@@ -92,6 +92,9 @@ function getVisiableSelect(value) {
 
 async function confirmRename(formEl) {
   if (!formEl) return;
+  if (!query.name.trim()) {
+    return false
+  }
   formEl.validate((valid) => {
     if (valid) {
       try {

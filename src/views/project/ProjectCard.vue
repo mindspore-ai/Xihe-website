@@ -344,7 +344,7 @@ let timer = null;
 function start() {
   startInference(detailData.value.id).then((res) => {
     msg.value = '启动中';
-    socket.send(JSON.stringify({ pk: detailData.value.id }));
+    // socket.send(JSON.stringify({ pk: detailData.value.id }));
   });
 }
 //停止推理

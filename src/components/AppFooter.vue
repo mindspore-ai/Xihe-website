@@ -36,9 +36,10 @@ function goToPage(url) {
 
 <style lang="scss" scoped>
 .footer {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   max-width: 1472px;
   margin: 0 auto;
   height: 200px;
@@ -57,6 +58,9 @@ function goToPage(url) {
   }
 
   &-content {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     .above {
       width: 202px;
       display: flex;

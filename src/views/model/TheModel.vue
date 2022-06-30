@@ -10,7 +10,7 @@ import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
-import emptyImg from '@/assets/img/model-empty.png';
+import emptyImg from '@/assets/imgs/model-empty.png';
 
 import { Search } from '@element-plus/icons-vue';
 import { useUserInfoStore } from '@/stores';

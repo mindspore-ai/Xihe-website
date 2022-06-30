@@ -38,19 +38,19 @@ const rules = reactive({
   ],
   momentum: [
     { required: true, message: '必填项', trigger: 'blur' },
-    // {
-    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
+    {
+      pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
+      message: '格式不正确',
+      trigger: 'blur',
+    },
   ],
   batch: [
     { required: true, message: '必填项', trigger: 'blur' },
-    // {
-    //   pattern: /^\[(\d+\,)+\d+\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
+    {
+      pattern: /^\[((\d+\,)+\d+)*\]$/,
+      message: '格式不正确',
+      trigger: 'blur',
+    },
   ],
 });
 //  pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
@@ -83,17 +83,14 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    console.log(res.data.data);
     if (res.status === 200) {
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
-      console.log(trainDetail.value);
       if (trainDetail.value.metrics) {
         query.learning = JSON.parse(trainDetail.value.metrics).learning_rate;
         query.momentum = JSON.parse(trainDetail.value.metrics).momentum;
         query.batch = JSON.parse(trainDetail.value.metrics).batch_size;
-        console.log(query);
       } else {
         return;
       }
@@ -124,12 +121,10 @@ function getTrainLogData() {
 }
 getTrainLogData();
 
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
-// // 创建好连接之后自动触发（ 服务端执行self.accept() )
+const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
 
+// // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  console.log('链接成功');
-  console.log(detailData.value);
   socket.send(
     JSON.stringify({
       pk: detailData.value.id,
@@ -151,12 +146,11 @@ socket.onmessage = function (event) {
   if (event.data.substring(0, 3) === 'log') {
     form.desc = event.data.substring(4);
   } else {
-    console.log(JSON.parse(event.data).data);
     trainDetail.value = JSON.parse(event.data).data;
     if (trainDetail.value.status !== 'Running') {
       clearInterval(timer);
-      setTimeout(closeConn(), 15000);
-      setTimeout(clearInterval(timer1), 15000);
+      setTimeout(closeConn(), 10000);
+      setTimeout(clearInterval(timer1), 10000);
     }
   }
 };
@@ -177,19 +171,14 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket('wss://xihe.test.osinfra.cn/wss/logvisual');
+const ws = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
 ws.onopen = function (event) {
-  console.log('评估已连接');
 };
 
 ws.onmessage = function (event) {
-  console.log('收到服务器消息');
-  console.log(event.data);
-  console.log(JSON.parse(event.data).data.url);
   showAnaButton.value = false;
   showGoButton.value = true;
   evaluateUrl.value = JSON.parse(event.data).data.url;
-  console.log(evaluateUrl.value);
 };
 
 // 跳到评估页面
@@ -203,28 +192,22 @@ const showGoButton = ref(false);
 const evaluateUrl = ref();
 // 自动评估
 function saveSetting() {
-  let params = {
-    learning_rate: [0.01],
-    momentum: [],
-    batch_size: [],
-  };
-
+  // let params = {
+  //   learning_rate: [0.01],
+  //   momentum: [],
+  //   batch_size: [],
+  // };
   // ruleRef.value.validate((valid) => {
-  // console.log(valid);
   // if (valid) {
-  console.log(query);
-  autoEvaluate(params, detailData.value.id, route.params.trainId).then(
-    (res) => {
-      console.log(res);
-      if (res.status === 200) {
-        showEvaBtn.value = false;
-        showAnaButton.value = true;
-        setTimeout(() => {
-          ws.send(JSON.stringify({ pk: detailData.value.id }));
-        }, 10000);
-      }
+  autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
+    if (res.status === 200) {
+      showEvaBtn.value = false;
+      showAnaButton.value = true;
+      setTimeout(() => {
+        ws.send(JSON.stringify({ pk: detailData.value.id }));
+      }, 15000);
     }
-  );
+  });
   // } else {
   //   console.log('验证不过');
   // }

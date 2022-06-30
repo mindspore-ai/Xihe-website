@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
-import UserLive from './UserLive.vue';
 
 import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
@@ -297,8 +296,8 @@ function getFollow(userId, fans) {
             <div class="info-extends-detail gray">
               <OIcon size="medium"><IconEmail /></OIcon>
               <span style="margin-left: 8px">{{
-                userInfoStore.email && userInfoStore.emailStatus
-                  ? userInfoStore.email
+                userInfo.email && userInfo.emailStatus
+                  ? userInfo.email
                   : '暂未留下邮箱地址'
               }}</span>
             </div>

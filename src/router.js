@@ -57,6 +57,7 @@ export const routes = [
                 github,
                 nickname: nickName,
               },
+              user_email: { email, is_active },
             } = vistorInfo;
 
             const vistorInfoStore = useVistorInfoStore();
@@ -73,6 +74,9 @@ export const routes = [
             vistorInfoStore.datasetDiggList = datasetDiggList;
             vistorInfoStore.organizationList = organizationList;
             vistorInfoStore.organizationAdminList = organizationAdminList;
+
+            vistorInfoStore.email = email;
+            vistorInfoStore.emailStatus = is_active;
           } else {
             return { name: 'home' };
           }

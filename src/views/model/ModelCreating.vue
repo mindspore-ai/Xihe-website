@@ -241,11 +241,11 @@ function create(formEl) {
 
 <style lang="scss" scoped>
 .creating-body {
-  min-height: calc(100vh - 220px);
+  min-height: calc(100vh - 460px);
   width: 100%;
   padding: 0 16px;
   background: #f5f6f8;
-  padding-bottom: 48px;
+  padding-bottom: 64px;
   opacity: 1;
 
   .link {

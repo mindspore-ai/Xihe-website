@@ -67,7 +67,9 @@ function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      createDataset(query).then((res) => {
+      let newList = JSON.parse(JSON.stringify(query));
+      newList.licenses = [newList.licenses];
+      createDataset(newList).then((res) => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -249,11 +251,12 @@ function create(formEl) {
 
 <style lang="scss" scoped>
 .creating-body {
-  min-height: calc(100vh - 220px);
+  min-height: calc(100vh - 460px);
+  height: 100%;
   width: 100%;
   padding: 0 16px;
   background: #f5f6f8;
-  padding-bottom: 48px;
+  padding-bottom: 64px;
   opacity: 1;
 
   .link {

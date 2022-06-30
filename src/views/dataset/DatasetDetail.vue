@@ -773,17 +773,19 @@ $theme: #0d8dff;
     padding-top: 105px;
     .label-box {
       display: flex;
-      margin: 8px 0 16px;
+      margin: 8px 0;
       font-size: 12px;
+      flex-wrap: wrap;
       .label-item {
+        cursor: pointer;
         padding: 3px 6px;
         margin-right: 8px;
+        margin-bottom: 8px;
         font-size: 14px;
         color: #555;
         border: 1px solid #dbedff;
         background-color: #f3f9ff;
         border-radius: 8px;
-        cursor: pointer;
       }
       .label-add-item {
         height: 28px;

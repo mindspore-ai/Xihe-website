@@ -53,8 +53,15 @@ watch(
   },
   { immediate: true }
 );
+
 function goSetting(item) {
   router.push(`/settings/${item.id}`);
+}
+
+function goUserPage() {
+  if (userInfoStore.id) {
+    router.push(`/${userInfoStore.userName}`);
+  }
 }
 </script>
 
@@ -62,7 +69,7 @@ function goSetting(item) {
   <div class="setting">
     <div class="wrap">
       <div class="setting-menu">
-        <div class="user-info">
+        <div class="user-info" @click="goUserPage">
           <el-avatar :size="64" :src="userInfoStore.avatar" fit="fill" />
           <div class="user-name">
             <p>{{ userInfoStore.userName }}</p>
@@ -111,6 +118,7 @@ function goSetting(item) {
       .user-info {
         display: flex;
         align-items: flex-start;
+        cursor: pointer;
 
         .user-name {
           margin-left: 24px;

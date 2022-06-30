@@ -51,6 +51,7 @@ let queryDate = {
   tags: [],
   task: [],
   model_format: [],
+  files:[]
 };
 
 let dialogList = {
@@ -129,7 +130,7 @@ function getDetailData() {
           task_list,
           tags_list,
           device_target_list,
-          files_list,
+          model_format_list,
         } = detailData.value;
         isDigged.value = detailData.value.digg.includes(userInfoStore.id);
 
@@ -139,12 +140,12 @@ function getDetailData() {
           ...tags_list,
           ...libraries_list,
           ...device_target_list,
-          ...files_list,
+          ...model_format_list,
         ];
         modelTags.value = [
           ...licenses_list,
           ...device_target_list,
-          ...files_list,
+          ...model_format_list,
           ...task_list,
           ...tags_list,
           ...libraries_list,
@@ -153,6 +154,7 @@ function getDetailData() {
           return item;
         });
         headTags.value = [...modelTags.value];
+        getTagList()
       } else {
         router.push('/notfound');
       }
@@ -303,56 +305,45 @@ function confirmBtn() {
 function concelBtn() {
   isTagShow.value = false;
 }
-getModelTags().then((res) => {
-  renderList.value = res.data;
-  localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
-  let menu = dialogList.menuList.map((item) => item.key);
-  menu.forEach((key) => {
-    if (key == 'task') {
-      renderList.value[key].forEach((item) => {
-        item.task_list.forEach((it) => {
-          it.isActive = false;
+function getTagList() {
+  getModelTags().then((res) => {
+    renderList.value = res.data;
+    localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
+    let menu = dialogList.menuList.map((item) => item.key);
+    menu.forEach((key) => {
+      if (key == 'task') {
+        renderList.value[key].forEach((item) => {
+          item.task_list.forEach((it) => {
+            it.isActive = false;
+          });
         });
-      });
-    } else {
-      renderList.value[key].forEach((item) => {
-        item.isActive = false;
-      });
-    }
-  });
-
-  modelTags.value.forEach((item) => {
-    menu.forEach((menuitem) => {
-      if (menuitem == 'task') {
-        renderList.value[menuitem].forEach((mit) => {
-          mit.task_list.map((it) => {
+      } else {
+        renderList.value[key].forEach((item) => {
+          item.isActive = false;
+        });
+      }
+    });
+    modelTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        if (menuitem == 'task') {
+          renderList.value[menuitem].forEach((mit) => {
+            mit.task_list.map((it) => {
+              if (it.name == item.name) {
+                it.isActive = true;
+              }
+            });
+          });
+        } else {
+          renderList.value[menuitem].forEach((it) => {
             if (it.name == item.name) {
               it.isActive = true;
             }
           });
-        });
-      } else if (menuitem === 'status') {
-        renderList.value[menuitem].forEach((it) => {
-          if (detailData.value.status_name === it.name) {
-            it.isActive = true;
-          }
-        });
-      } else if (menuitem === 'sdk') {
-        renderList.value[menuitem].forEach((it) => {
-          if (detailData.value.sdk_name === it.name) {
-            it.isActive = true;
-          }
-        });
-      } else {
-        renderList.value[menuitem].forEach((it) => {
-          if (it.name == item.name) {
-            it.isActive = true;
-          }
-        });
-      }
+        }
+      });
     });
   });
-});
+}
 
 function handleTabClick(item) {
   router.push(
@@ -681,7 +672,7 @@ $theme: #0d8dff;
     }
     .body-right-container {
       padding-left: 24px;
-      height: 280px;
+      height: 320px;
       overflow-y: scroll;
       .noTask-box {
         display: flex;
@@ -813,6 +804,7 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
+    min-height: calc(100vh - 400px);
     background-color: #f5f6f8;
     padding: 35px 0 64px;
   }

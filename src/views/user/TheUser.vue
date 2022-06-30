@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
-import UserLive from './UserLive.vue';
 
 import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
@@ -12,6 +11,7 @@ import IconPlus from '~icons/app/plus';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 import IconHome from '~icons/app/home';
+import IconEmail from '~icons/app/email';
 import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
@@ -292,14 +292,21 @@ function getFollow(userId, fans) {
             </div>
           </div>
           <div class="info-extends-box">
-            <p class="info-extends-title">详细信息</p>
-            <div v-if="userInfo.description" class="info-extends-detail">
-              <p class="extends-detail-item">
-                <OIcon size="medium"><IconHome /></OIcon>
-                <span>主页地址</span>
-                <span>{{ userInfo.link }}</span>
-              </p>
+            <p class="info-extends-title">个人邮箱</p>
+            <div class="info-extends-detail gray">
+              <OIcon size="medium"><IconEmail /></OIcon>
+              <span style="margin-left: 8px">{{
+                userInfo.email && userInfo.emailStatus
+                  ? userInfo.email
+                  : '暂未留下邮箱地址'
+              }}</span>
             </div>
+          </div>
+          <div
+            v-if="userInfo.github || userInfo.gitee"
+            class="info-extends-box"
+          >
+            <p class="info-extends-title">详细信息</p>
             <div v-if="userInfo.github" class="info-extends-detail">
               <p class="extends-detail-item">
                 <OIcon size="medium"><IconGithub /></OIcon>
@@ -395,7 +402,7 @@ function getFollow(userId, fans) {
   padding-top: 80px;
   background-color: #0f1927;
   color: #ffffff;
-  background-image: url(../../assets/banner-head.png);
+  background-image: url('@/assets/imgs/banner-head.png');
   background-size: cover;
   background-repeat: no-repeat;
 
@@ -499,6 +506,8 @@ function getFollow(userId, fans) {
           }
 
           .info-extends-detail {
+            display: flex;
+            align-items: center;
             margin-top: 16px;
             font-size: 18px;
             font-weight: normal;

@@ -100,7 +100,7 @@ function setNewClick() {
           <div class="info-avata">
             <img :src="item.owner_name.avatar_url" alt="" />
           </div>
-          <div class="info-name">{{ item.owner_name.nickname }}</div>
+          <div class="info-name">{{ item.owner_name.name }}</div>
         </div>
         <div class="time">
           <o-icon>
@@ -112,7 +112,7 @@ function setNewClick() {
     </div>
   </div>
   <div v-else class="empty-status">
-    <img src="@/assets/empty/project-empty.png" alt="" />
+    <img src="@/assets/imgs/project-empty.png" alt="" />
     <p @click="setNewClick">暂未创建项目，点击创建项目</p>
   </div>
 </template>

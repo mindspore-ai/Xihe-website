@@ -138,6 +138,7 @@ function getDetailData() {
         });
 
         headTags.value = [...modelTags.value];
+        getTagList()
       } else {
         router.push('/notfound');
       }
@@ -328,55 +329,58 @@ function concelBtn() {
   isTagShow.value = false;
 }
 
-getModelTags().then((res) => {
-  renderList.value = res.data;
-  let menu = dialogList.menuList.map((item) => item.key);
-  menu.forEach((key) => {
-    if (key == 'task') {
-      renderList.value[key].map((item) => {
-        item.task_list.map((it) => {
-          it.isActive = false;
+function getTagList() {
+  getModelTags().then((res) => {
+    renderList.value = res.data;
+    let menu = dialogList.menuList.map((item) => item.key);
+    menu.forEach((key) => {
+      if (key == 'task') {
+        renderList.value[key].map((item) => {
+          item.task_list.map((it) => {
+            it.isActive = false;
+          });
         });
-      });
-    } else {
-      renderList.value[key].map((item) => {
-        item.isActive = false;
-      });
-    }
-  });
+      } else {
+        renderList.value[key].map((item) => {
+          item.isActive = false;
+        });
+      }
+    });
 
-  modelTags.value.forEach((item) => {
-    menu.forEach((menuitem) => {
-      if (menuitem == 'task') {
-        renderList.value[menuitem].map((mit) => {
-          mit.task_list.map((it) => {
+    modelTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        if (menuitem == 'task') {
+          renderList.value[menuitem].map((mit) => {
+            mit.task_list.map((it) => {
+              if (it.name == item.name) {
+                it.isActive = true;
+              }
+            });
+          });
+        } else if (menuitem === 'status') {
+          renderList.value[menuitem].forEach((it) => {
+            if (detailData.value.status_name === it.name) {
+              it.isActive = true;
+            }
+          });
+        } else if (menuitem === 'sdk') {
+          renderList.value[menuitem].forEach((it) => {
+            if (detailData.value.sdk_name === it.name) {
+              it.isActive = true;
+            }
+          });
+        } else {
+          renderList.value[menuitem].map((it) => {
             if (it.name == item.name) {
               it.isActive = true;
             }
           });
-        });
-      } else if (menuitem === 'status') {
-        renderList.value[menuitem].forEach((it) => {
-          if (detailData.value.status_name === it.name) {
-            it.isActive = true;
-          }
-        });
-      } else if (menuitem === 'sdk') {
-        renderList.value[menuitem].forEach((it) => {
-          if (detailData.value.sdk_name === it.name) {
-            it.isActive = true;
-          }
-        });
-      } else {
-        renderList.value[menuitem].map((it) => {
-          if (it.name == item.name) {
-            it.isActive = true;
-          }
-        });
-      }
+        }
+      });
     });
   });
-});
+}
+
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
@@ -802,6 +806,7 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
+    min-height: calc(100vh - 400px);
     background-color: #f5f6f8;
     padding: 35px 0 64px;
   }

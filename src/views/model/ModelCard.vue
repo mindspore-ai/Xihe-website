@@ -395,6 +395,7 @@ watch(
     width: 100%;
     border-right: 1px solid #d8d8d8;
     .markdown-file {
+      // max-width: 800px;
       padding-right: 40px;
     }
     .o-button {
@@ -430,9 +431,20 @@ watch(
     }
   }
   .right-data {
+    flex-shrink: 0;
     max-width: 425px;
     width: 100%;
     color: #000;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      font-weight: 500;
+    }
     .download-data {
       .download-title {
         font-size: 16px;

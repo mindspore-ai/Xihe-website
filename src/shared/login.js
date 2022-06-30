@@ -148,6 +148,7 @@ function afterLogined(userInfo) {
       github,
       nickname: nickName,
     },
+    user_email: { email, is_active },
   } = userInfo;
 
   if (!id || !token) {
@@ -174,6 +175,9 @@ function afterLogined(userInfo) {
   userInfoStore.datasetDiggList = datasetDiggList;
   userInfoStore.organizationList = organizationList;
   userInfoStore.organizationAdminList = organizationAdminList;
+
+  userInfoStore.email = email;
+  userInfoStore.emailStatus = is_active;
 }
 
 export function reLogin() {

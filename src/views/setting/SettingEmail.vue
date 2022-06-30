@@ -14,7 +14,6 @@ import IconActivation from '~icons/app/activation.svg';
 
 const userInfoStore = useUserInfoStore();
 // const email2 = ref();
-const is_active = ref(true);
 // const email = ref('');
 // const email_code = ref('');
 // const email_code2 = ref('');
@@ -34,8 +33,9 @@ try {
   getUserEmail(userInfoStore.id).then((res) => {
     if (res.data[0].email) {
       userInfoStore.email = res.data[0].email;
-      is_active.value = res.data[0].is_active;
-      scene.value = is_active.value ? 'change_email' : 'change_email';
+      userInfoStore.emailStatus = res.data[0].is_active;
+      // TODO:39行的判断意义何在？
+      scene.value = userInfoStore.emailStatus ? 'change_email' : 'change_email';
     }
   });
 } catch {}
@@ -182,7 +182,7 @@ const handleTimeChange2 = () => {
       此邮箱为用户名登录账户，此邮箱将会接收账号相关的通知以及在密码重置中使用
     </p>
   </div>
-  <div v-if="!is_active" class="setting-box">
+  <div v-if="!userInfoStore.emailStatus" class="setting-box">
     <div class="activation-tip">
       <o-icon><icon-activation></icon-activation></o-icon>
       <span class="font">该邮箱还未激活，点击获取验证码激活</span>
@@ -201,7 +201,7 @@ const handleTimeChange2 = () => {
       <OButton class="setting-btn" @click="keepEmail2">保存更改</OButton>
     </div>
   </div>
-  <div v-if="is_active" class="setting-box">
+  <div v-if="userInfoStore.emailStatus" class="setting-box">
     <p class="setting-title">
       {{ userInfoStore.email ? '更改' : '添加' }}主要电子邮件地址
     </p>
@@ -209,7 +209,7 @@ const handleTimeChange2 = () => {
     <el-form ref="ruleFormRef" class="setting-content" :model="ruleForm">
       <!-- 换绑邮箱新增 -->
       <el-form-item
-        v-if="is_active && userInfoStore.email"
+        v-if="userInfoStore.emailStatus && userInfoStore.email"
         prop="email_code2"
         :rules="{ required: true, message: '必填项', trigger: 'blur' }"
       >

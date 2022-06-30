@@ -110,7 +110,10 @@ onUnmounted(() => {
     position: absolute;
     z-index: 0;
     top: 0;
+    left: 0;
     right: 0;
+    width: 100%;
+    object-fit: fill;
     height: 100vh;
     pointer-events: none;
   }
@@ -118,13 +121,12 @@ onUnmounted(() => {
   .home-mask {
     position: absolute;
     z-index: 1;
-    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
+    width: 100%;
     height: 100vh;
-
     background-color: rgba($color: #000000, $alpha: 0.35);
+    pointer-events: none;
   }
 
   &-content {

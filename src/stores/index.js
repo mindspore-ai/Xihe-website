@@ -57,6 +57,7 @@ export const useUserInfoStore = defineStore('userInfo', {
       organizationAdminList: [], // 可转移组织列表
       phone: null,
       email: null,
+      emailStatus: false, // 邮箱状态
     };
   },
   getters: {

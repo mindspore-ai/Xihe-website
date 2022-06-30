@@ -270,6 +270,9 @@ function toTop() {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        &:hover {
+          box-shadow: 0px 4px 18px 0px rgba(13, 141, 255, 0.14);
+        }
         .list-item-left {
           width: 70%;
           // margin-left: 24px;

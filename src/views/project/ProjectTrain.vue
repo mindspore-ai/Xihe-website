@@ -240,7 +240,7 @@ function concelClick() {
 
 // 删除数据集
 function deleteClick(item) {
-  deleteRelate.value = true;
+  // deleteRelate.value = true;
   let projectId = detailData.value.id;
   let modifyParams = {
     relate_infer_datasets: [],
@@ -384,6 +384,11 @@ function toggleDelDlg(flag) {
       <div
         v-if="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
+        :style="{
+          position: 'absolute',
+          right: codeString ? '184px' : '40px',
+          zIndex: 1,
+        }"
       >
         <o-button type="primary" @click="goSelectFile">
           {{ i18n.createTrain }}</o-button

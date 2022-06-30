@@ -16,6 +16,7 @@ import IconInstance from '~icons/app/train-instance';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
+import warningImg from '@/assets/icons/warning.png';
 
 import { useRoute, useRouter } from 'vue-router';
 import { useFileData } from '@/stores';
@@ -29,15 +30,25 @@ const router = useRouter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-
 let projectId = detailData.value.id;
 const trainData = ref([]);
 const listId = ref();
+const showTip = ref(false);
+const i18n = {
+  describe1:
+    '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
+  describe2:
+    '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
+  confirm: '确定',
+};
+const describe = ref('');
+
 var timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
+    console.log(trainData.value);
     trainData.value.forEach((item) => {
       if (item.status === 'Running') {
         timer = setInterval(() => {
@@ -51,13 +62,39 @@ getTrainList();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
-  router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-    query: {
-      projectId: detailData.value.id,
-    },
-  });
+  if (trainData.value.length === 5) {
+    describe.value = i18n.describe2;
+    showTip.value = true;
+    // 判断每一项的status是否为Running,如果有，则不能创建训练实例
+  } else if (trainData.value.some((item) => item.status === 'Running')) {
+    describe.value = i18n.describe1;
+    showTip.value = true;
+  } else {
+    router.push({
+      path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+      query: {
+        id: detailData.value.id,
+      },
+    });
+  }
 }
+function toggleDelDlg(flag) {
+  if (flag === undefined) {
+    showTip.value = !showTip.value;
+  } else {
+    showTip.value = flag;
+  }
+}
+//跳转到选择文件创建训练实例页
+// function goSelectFile() {
+//   router.push({
+//     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+//     query: {
+//       projectId: detailData.value.id,
+//     },
+//   });
+// }
+
 const showDel = ref(false);
 function showDelClick(val) {
   listId.value = val;
@@ -168,6 +205,7 @@ socket.onmessage = function (event) {
 // socket.onclose = function (event) {
 //   // console.log('服务器主动断开');
 // };
+socket.onclose = function (event) { };
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -286,6 +324,42 @@ onUnmounted(() => {
       <o-icon><icon-instance></icon-instance></o-icon>
       <p>暂无训练实例</p>
     </div>
+    <!-- 如已有正在训练中的实例，弹窗提示 -->
+    <o-dialog :show="showTip" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '40px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          padding: '8px 0 30px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '640px',
+        }"
+      >
+        {{ describe }}
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '46px',
+          }"
+        >
+          <o-button type="primary" @click="showTip = false">{{
+            i18n.confirm
+          }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 

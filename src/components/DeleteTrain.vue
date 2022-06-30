@@ -16,18 +16,17 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
-  trainId: {
+  listId: {
     type: String,
     default: '',
   },
 });
-let id = prop.trainId;
-
+const id = ref();
 const isShow = ref();
 const emit = defineEmits(['on-click']);
 
 function confirmDel() {
-  emit('on-click', id);
+  emit('on-click', id.value);
 }
 function concelClick() {
   emit('on-click', 2);
@@ -37,6 +36,12 @@ watch(
   () => prop.showDel,
   (oldValue, newValue) => {
     isShow.value = oldValue;
+  }
+);
+watch(
+  () => prop.listId,
+  (newValue, oldValue) => {
+    id.value = newValue;
   }
 );
 </script>

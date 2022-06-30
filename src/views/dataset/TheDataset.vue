@@ -12,7 +12,7 @@ import IconX from '~icons/app/x';
 // import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
-import ImgEmpty from '@/assets/empty/dataset-empty.png';
+import emptyImg from '@/assets/imgs/dataset-empty.png';
 import { useUserInfoStore } from '@/stores';
 
 import { getModelTags } from '@/api/api-model';
@@ -619,7 +619,7 @@ onUnmounted(() => {
               ></el-pagination>
             </div>
           </div>
-          <o-empty v-else :img="ImgEmpty" describe="无匹配数据集"></o-empty>
+          <o-empty v-else :img="emptyImg" describe="无匹配数据集"></o-empty>
         </div>
       </div>
     </div>
@@ -638,7 +638,7 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('../../assets/banner-head.png');
+    background-image: url('@/assets/imgs/banner-head.png');
     .warp {
       display: flex;
       justify-content: space-between;

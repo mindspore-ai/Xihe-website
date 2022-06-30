@@ -3,7 +3,7 @@ import { ref, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUserCollection } from '@/api/api-user';
-import emptyImg from '@/assets/empty/live-empty.png';
+import emptyImg from '@/assets/imgs/live-empty.png';
 import OProjectcard from '@/components/OProjectcard.vue';
 import OLivecard from '@/components/OLivecard.vue';
 

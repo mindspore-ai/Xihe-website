@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import emptyImg from '@/assets/empty/dataset-empty.png';
+import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import { getUserDatasetData } from '@/api/api-user';
 // import { getModelData } from '@/api/api-model';

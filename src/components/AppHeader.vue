@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { debounce } from 'lodash/function';
 
-import logoImg from '@/assets/logo.png';
+import logoImg from '@/assets/imgs/logo.png';
 import { goAuthorize, logout } from '@/shared/login';
 // import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
@@ -423,6 +423,7 @@ function hideInput() {
             @click="showInput"
           />
         </div>
+        <a class="header-doc" target="_blank" href="https://xihe-docs.mindspore.cn/"> 文档 </a>
         <div class="header-tool">
           <loading-arc
             v-if="loginStore.isLoggingIn"
@@ -607,7 +608,7 @@ function hideInput() {
 
       .header-search {
         position: relative;
-        margin-right: 30px;
+        // margin-right: 30px;
         .search-icon {
           width: 24px;
           height: 24px;
@@ -625,7 +626,12 @@ function hideInput() {
           padding-left: 48px;
         }
       }
-
+      .header-doc {
+        padding: 0 20px;
+        font-size: 12px;
+        line-height: 24px;
+        color: #ffffff;
+      }
       .header-tool {
         height: 100%;
         display: flex;

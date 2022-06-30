@@ -35,7 +35,7 @@ try {
       userInfoStore.email = res.data[0].email;
       userInfoStore.emailStatus = res.data[0].is_active;
       // TODO:39行的判断意义何在？
-      scene.value = userInfoStore.emailStatus ? 'change_email' : 'change_email';
+      scene.value = 'change_email';
     }
   });
 } catch {}
@@ -68,6 +68,7 @@ function keepEmail2() {
   keepUserEmail(qurey)
     .then((res) => {
       if (res.status === 200) {
+        userInfoStore.emailStatus = true;
         ElMessage({
           type: 'success',
           message: '激活成功',

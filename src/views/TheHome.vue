@@ -113,7 +113,7 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     width: 100%;
-    object-fit: fill;
+    object-fit: cover;
     height: 100vh;
     pointer-events: none;
   }

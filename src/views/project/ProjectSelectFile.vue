@@ -38,11 +38,7 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
-<<<<<<< Updated upstream
-  console.log(params);
-=======
   // console.log(route.query.id)
->>>>>>> Stashed changes
   createTrainProject(params, route.query.id).then((res) => {
     if (res.status === 200) {
       ElMessage({

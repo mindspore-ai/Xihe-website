@@ -38,7 +38,11 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
+<<<<<<< Updated upstream
   console.log(params);
+=======
+  // console.log(route.query.id)
+>>>>>>> Stashed changes
   createTrainProject(params, route.query.id).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -229,7 +233,7 @@ getDetailData();
   &-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px;
+    padding: 50px 80px 64px;
     margin: 0 auto;
     .selectfile-back {
       font-size: 16px;
@@ -248,9 +252,9 @@ getDetailData();
     .selectfile-content {
       padding: 16px 32px;
       background-color: #fff;
-      .selectfile-content-path{
+      .selectfile-content-path {
         display: flex;
-        .el-input{
+        .el-input {
           flex: 1;
           margin-right: 16px;
         }

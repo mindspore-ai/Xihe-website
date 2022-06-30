@@ -1,19 +1,17 @@
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 
-import { useFileData } from '@/stores';
 import { createTrainProject, getProjectData } from '@/api/api-project';
 
 const route = useRoute();
 const router = useRouter();
+let queryRef = ref(null);
 
-const filePath = ref('');
-const isShow = ref(false);
 const form = reactive({
   job_name: '',
   code_dir: '',
@@ -21,23 +19,119 @@ const form = reactive({
   log_url: '',
   inputs: '',
   hypeparameters: '',
-  SDK: '',
+  SDK: 'ModelArts',
   boot_file: '',
   train_instance_type: '',
   job_description: '',
   outputs: '',
   env_variables: '',
 });
-const rules = reactive({
-  name: [
-    { required: true, message: '请输入训练实例名称', trigger: 'blur' },
-    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
-  ],
+// 三级联动数据
+const selectData = reactive({
+  com1: '',
+  com2: '',
+  com3: '',
 });
-// 当前项目的详情数据
-// const detailData = computed(() => {
-//   return useFileData().fileStoreData;
-// });
+// window.xxx = form;
+// form.frameworks.framework_type = selectData.com1;
+const optionData = reactive({
+  com1: [
+    { value: 'A', name: 'MindSpore', content: 'MPI' },
+    { value: 'B', name: 'Ascend', content: 'Ascend-Powered-Engine' },
+  ],
+  com2: {
+    A: [
+      {
+        value: 'A1',
+        name: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
+        content: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
+      },
+    ],
+    B: [
+      {
+        value: 'B1',
+        name: 'mindspore_1.3.0-cann_5.0.2-py_3.7-euler_2.8.3-aarch64',
+        content: 'mindspore_1.3.0-cann_5.0.2-py_3.7-euler_2.8.3-aarch64',
+      },
+      {
+        value: 'B2',
+        name: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
+        content: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
+      },
+    ],
+  },
+  com3: {
+    A1: [
+      {
+        value: 'A11',
+        name: 'GPU:1*NVIDIA-V100(32GB)|CPU:8核 64GB 3200 GB',
+        content: 'modelarts.p3.large.public',
+      },
+      {
+        value: 'A12',
+        name: 'GPU:8*NVIDIA-V100(32GB)|CPU:72核 512GB 3200 GB',
+        content: 'modelarts.p3.8xlarge.public',
+      },
+    ],
+    B1: [
+      {
+        value: 'B11',
+        name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
+        content: 'modelarts.kat1.8xlarge.public',
+      },
+      {
+        value: 'B12',
+        name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
+        content: 'modelarts.kat1.xlarge.public',
+      },
+    ],
+    B2: [
+      {
+        value: 'B21',
+        name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
+        content: 'modelarts.kat1.8xlarge.public',
+      },
+      {
+        value: 'B22',
+        name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
+        content: 'modelarts.kat1.xlarge.public',
+      },
+    ],
+  },
+});
+
+function change1(val) {
+  if (val) {
+    let a = optionData.com1.find((item) => {
+      return item.value == val;
+    });
+    form.frameworks.framework_type = a.content;
+    selectData.com2 = optionData.com2[val][0].value; //根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
+    change2(); //控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
+  } else {
+    selectData.com2 = ''; //若前一个控件清空则后一个控件所选内容也清空
+    change2();
+  }
+}
+
+function change2() {
+  let val = selectData.com2;
+  if (val) {
+    let b = optionData.com2[selectData.com1].find((item) => {
+      return item.value == val;
+    });
+    form.frameworks.framework_version = b.content;
+
+    selectData.com3 = optionData.com3[val][0].value;
+    let c = optionData.com3[selectData.com2].find((item) => {
+      return item.value == selectData.com3;
+    });
+    form.train_instance_type = c.content;
+  } else {
+    selectData.com3 = '';
+  }
+}
+
 const detailData = ref({});
 // 返回训练页面
 function goTrain() {
@@ -72,40 +166,120 @@ function goSelectFile() {
   });
 }
 // 确认创建训练实例
-function confirmCreating() {
-  // let params = { config_path: filePath.value };
-  let input = {},
-    output = {};
-  try {
-    input = JSON.parse(JSON.stringify(form.inputs));
-    output = JSON.parse(JSON.stringify(form.outputs));
-  } catch (e) {
-    console.error(e);
-  }
-  let params = form;
-  params.inputs = input;
-  params.outputs = output;
-  createTrainProject(params, route.query.id).then((res) => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '创建训练实例成功',
-        center: true,
+function confirmCreating(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      // 如果表单为空，返回
+      let inputs = {},
+        outputs = {};
+      try {
+        inputs = JSON.parse(form.inputs);
+        outputs = JSON.parse(form.outputs);
+      } catch (e) {
+        console.error(e);
+      }
+      let params = {
+        job_name: form.job_name,
+        code_dir: form.code_dir,
+        frameworks: {
+          framework_type: form.frameworks.framework_type,
+          framework_version: form.frameworks.framework_version,
+        },
+        log_url: form.log_url,
+        inputs: inputs,
+        hypeparameters: form.hypeparameters,
+        SDK: form.SDK,
+        boot_file: form.boot_file,
+        train_instance_type: form.train_instance_type,
+        job_description: form.job_description,
+        outputs: outputs,
+        env_variables: form.env_variables,
+      };
+      // console.log(params.inputs);
+      // params.inputs = inputs;
+      // params.outputs = outputs;
+      createTrainProject(params, route.query.id).then((res) => {
+        // console.log(res);
+        if (res.status === 200) {
+          // console.log(res);
+          ElMessage({
+            type: 'success',
+            message: '创建训练实例成功',
+            center: true,
+          });
+          setTimeout(() => {
+            router.push({
+              name: 'projectTrainList',
+            });
+          }, 500);
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+            center: true,
+          });
+        }
       });
-      setTimeout(() => {
-        router.push({
-          name: 'projectTrainList',
-        });
-      }, 500);
     } else {
-      ElMessage({
-        type: 'error',
-        message: '训练实例创建失败，请修改json文件中的job_name',
-        center: true,
-      });
+      console.error('error submit!');
+      return false;
     }
   });
+
 }
+const rules = reactive({
+  job_name: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  SDK: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  code_dir: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  boot_file: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  frameworks: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  log_url: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+  train_instance_type: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+
+});
 </script>
 <template>
   <div class="createfile">
@@ -129,6 +303,7 @@ function confirmCreating() {
         </div>
         <div class="createfile-form-wrap">
           <el-form
+            ref="queryRef"
             :model="form"
             :rules="rules"
             label-width="80px"
@@ -139,7 +314,7 @@ function confirmCreating() {
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>训练名称</span>
                 </div>
-                <el-form-item prop="name">
+                <el-form-item prop="job_name">
                   <el-input
                     v-model="form.job_name"
                     placeholder="请输入训练名"
@@ -151,50 +326,59 @@ function confirmCreating() {
                   <icon-necessary></icon-necessary><span>代码目录</span>
                 </div>
 
-                <el-form-item placeholder="请输入末尾带/的文件夹格式目录">
-                  <el-input v-model="form.code_dir" placeholder="MindSpore" />
+                <el-form-item
+                  placeholder="请输入末尾带/的文件夹格式目录"
+                  prop="code_dir"
+                >
+                  <el-input
+                    v-model="form.code_dir"
+                    placeholder="请输入末尾带/的文件夹格式目录"
+                  />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>框架版本</span>
                 </div>
-                <el-form-item placeholder="请输入内容">
-                  <el-input
-                    v-model="form.frameworks.framework_type"
-                    style="width: 30%; margin-right: 18px"
-                    placeholder="MindSpore"
-                  />
-                  <el-input
-                    v-model="form.frameworks.framework_version"
-                    style="width: 66%"
-                    placeholder="MindSpore"
-                  />
+                <el-form-item prop="frameworks">
+                  <el-select
+                    v-model="selectData.com1"
+                    placeholder="请选择"
+                    clearable
+                    style="width: 30%; margin-right: 3%"
+                    @change="change1"
+                  >
+                    <el-option
+                      v-for="x in optionData.com1"
+                      :key="x.value"
+                      :value="x.value"
+                      :label="x.name"
+                    ></el-option>
+                  </el-select>
+                  <el-select
+                    v-model="selectData.com2"
+                    placeholder="请选择"
+                    clearable
+                    style="width: 67%"
+                    @change="change2"
+                  >
+                    <el-option
+                      v-for="x in optionData.com2[selectData.com1]"
+                      :key="x.value"
+                      :value="x.value"
+                      :label="x.name"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
-                <!-- <el-form-item class="versions">
-                  <el-select
-                    v-model="form.framework_type"
-                    placeholder="please select your zone"
-                    style="width: 160px; margin-right: 20px"
-                  >
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
-                  </el-select>
-                  <el-select
-                    v-model="form.framework_version"
-                    placeholder="please select your zone"
-                    style="width: 340px"
-                  >
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
-                  </el-select>
-                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>日志路径</span>
                 </div>
-                <el-form-item placeholder="请输入训练日志输出路径">
+                <el-form-item
+                  placeholder="请输入训练日志输出路径"
+                  prop="log_url"
+                >
                   <el-input
                     v-model="form.log_url"
                     placeholder="请输入训练日志输出路径"
@@ -222,11 +406,11 @@ function confirmCreating() {
                     </template>
                   </el-popover>
                 </div>
-                <el-form-item prop="desc">
+                <el-form-item>
                   <el-input
-                    v-model="form.input"
+                    v-model="form.inputs"
                     type="textarea"
-                    placeholder="请输入内容，格式为[{'',''},{'',''}]"
+                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
               </div>
@@ -251,7 +435,7 @@ function confirmCreating() {
                     </template>
                   </el-popover>
                 </div>
-                <el-form-item prop="desc">
+                <el-form-item>
                   <el-input
                     v-model="form.hypeparameters"
                     type="textarea"
@@ -265,43 +449,50 @@ function confirmCreating() {
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>训练平台</span>
                 </div>
-                <!-- <el-form-item>
-                  <el-select v-model="form.SDK" placeholder="ModelArts">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                <el-form-item prop="SDK">
+                  <el-select v-model="form.SDK" placeholder="请选择">
+                    <el-option label="ModelArts" value="ModelArts" />
                   </el-select>
-                </el-form-item> -->
-                <el-form-item prop="desc">
-                  <el-input v-model="form.SDK" placeholder="ModelArts" />
                 </el-form-item>
+                <!-- <el-form-item>
+                  <el-input v-model="form.SDK" placeholder="请输入训练平台" />
+                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>启动文件</span>
                 </div>
-                <el-form-item placeholder="请输入文件名">
-                  <el-input v-model="form.boot_file" placeholder="MindSpore" />
+                <el-form-item prop="boot_file">
+                  <el-input
+                    v-model="form.boot_file"
+                    placeholder="请输入文件名"
+                  />
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>计算资源</span>
                 </div>
-                <!-- <el-form-item>
+                <el-form-item prop="train_instance_type">
                   <el-select
-                    v-model="form.train_instance_type"
-                    placeholder="MPI | mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64"
+                    v-model="selectData.com3"
+                    placeholder="请选择"
+                    clearable
                   >
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                    <el-option
+                      v-for="x in optionData.com3[selectData.com2]"
+                      :key="x.value"
+                      :value="x.value"
+                      :label="x.name"
+                    ></el-option>
                   </el-select>
-                </el-form-item> -->
-                <el-form-item placeholder="">
+                </el-form-item>
+                <!-- 真正的html <el-form-item placeholder="">
                   <el-input
                     v-model="form.train_instance_type"
                     placeholder="MindSpore"
                   />
-                </el-form-item>
+                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
@@ -335,11 +526,11 @@ function confirmCreating() {
                     </template>
                   </el-popover>
                 </div>
-                <el-form-item prop="desc">
+                <el-form-item>
                   <el-input
-                    v-model="form.output"
+                    v-model="form.outputs"
                     type="textarea"
-                    placeholder="请输入内容，格式为[{'',''},{'',''}]"
+                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
               </div>
@@ -347,11 +538,11 @@ function confirmCreating() {
                 <div class="item-title">
                   <span>环境变量</span>
                 </div>
-                <el-form-item prop="desc">
+                <el-form-item>
                   <el-input
                     v-model="form.env_variables"
                     type="textarea"
-                    placeholder="请输入内容，格式为[{'',''},{'',''}]"
+                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
               </div>
@@ -360,7 +551,10 @@ function confirmCreating() {
         </div>
 
         <div class="createfile-content-action">
-          <o-button class="confim" type="primary" @click="confirmCreating"
+          <o-button
+            class="confim"
+            type="primary"
+            @click="confirmCreating(queryRef)"
             >确认</o-button
           >
         </div>
@@ -370,15 +564,6 @@ function confirmCreating() {
 </template>
 
 <style lang="scss" scoped>
-// .el-popover.el-popper {
-//   padding: 24px 16px 16px 16px;
-//   font-size: 12px;
-//   line-height: 16px;
-//   color: #656565;
-//   .remind {
-//     color: #f13b35;
-//   }
-// }
 .createfile {
   max-width: 100%;
   height: 100%;
@@ -387,7 +572,7 @@ function confirmCreating() {
   .createfile-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px;
+    padding: 50px 80px 64px;
     margin: 0 auto;
     .createfile-back {
       font-size: 16px;
@@ -443,6 +628,7 @@ function confirmCreating() {
       .createfile-form-wrap {
         .el-form {
           display: flex;
+          // display: grid;
           justify-content: space-between;
         }
         .createfile-form-left {
@@ -490,11 +676,22 @@ function confirmCreating() {
 :deep .el-form {
   font-size: 14px;
   color: #555;
+  // display: grid;
   .el-form-item {
     margin-bottom: 24px;
     width: 560px;
+    @media (max-width: 1440px) {
+      width: 500px;
+    }
+    // width: 39%;
     .el-form-item__content {
       width: 80%;
+      .el-form-item__error {
+        white-space: nowrap;
+        // transform: translateY(-50%);
+        top: calc(100% + 9px);
+        left: 0;
+      }
       .el-input {
         width: 100%;
       }
@@ -503,6 +700,10 @@ function confirmCreating() {
       }
       .el-textarea {
         width: 100% !important;
+        height: 276px;
+        .el-textarea__inner {
+          height: 100%;
+        }
       }
     }
   }

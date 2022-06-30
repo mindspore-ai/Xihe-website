@@ -33,6 +33,8 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
 const activeNavItem = ref('');
+// 路由变化动态改变下外边距
+const marginBottom = ref('');
 // 导航
 const navItems = [
   {
@@ -146,8 +148,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 watch(
@@ -155,6 +157,8 @@ watch(
     return route.name;
   },
   (val) => {
+    marginBottom.value =
+      val === 'userLives' || val === 'userCollections' ? '36px' : '0px';
     const name = val.substring(4) || 'lives';
     activeNavItem.value = name.toLowerCase();
   },
@@ -244,7 +248,7 @@ function getFollow(userId, fans) {
   <div class="user-content">
     <div class="wrap">
       <!-- sidebar -->
-      <div class="content-sidebar">
+      <div class="content-sidebar" :style="{ marginBottom: marginBottom }">
         <div class="user-info-basic">
           <div class="user-avatar">
             <el-avatar :size="160" :src="userInfo.avatar" fit="fill" />
@@ -434,7 +438,7 @@ function getFollow(userId, fans) {
       width: 25%;
       background: #ffffff;
       padding: 40px;
-      margin-bottom: 36px;
+      // margin-bottom: 36px;
       .user-info-basic {
         display: flex;
         flex-direction: column;

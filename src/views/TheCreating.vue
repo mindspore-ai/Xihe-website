@@ -61,7 +61,7 @@ const bannerLabel = computed(() => {
   padding: 0 16px;
   padding-top: 80px;
   background-size: cover;
-  background-image: url('@/assets/banner-head.png');
+  background-image: url('@/assets/imgs/banner-head.png');
 
   .warp {
     display: flex;

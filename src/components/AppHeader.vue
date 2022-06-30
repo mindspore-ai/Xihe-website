@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { debounce } from 'lodash/function';
 
-import logoImg from '@/assets/logo.png';
+import logoImg from '@/assets/imgs/logo.png';
 import { goAuthorize, logout } from '@/shared/login';
 // import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';

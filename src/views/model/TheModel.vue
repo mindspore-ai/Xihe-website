@@ -10,7 +10,7 @@ import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
-import ImgEmpty from '@/assets/empty/model-empty.png';
+import emptyImg from '@/assets/img/model-empty.png';
 
 import { Search } from '@element-plus/icons-vue';
 import { useUserInfoStore } from '@/stores';
@@ -669,7 +669,7 @@ onUnmounted(() => {
               ></el-pagination>
             </div>
           </div>
-          <o-empty v-else :img="ImgEmpty" describe="无匹配模型"></o-empty>
+          <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
         </div>
       </div>
     </div>
@@ -688,7 +688,7 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('../../assets/banner-head.png');
+    background-image: url('@/assets/imgs/banner-head.png');
     .warp {
       display: flex;
       justify-content: space-between;

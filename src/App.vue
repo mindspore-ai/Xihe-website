@@ -1,3 +1,4 @@
+aa
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -90,6 +91,9 @@ onUnmounted(() => {
 .app-footer {
   min-width: 1280px;
   background-color: #18191d;
+  background-image: url(@/assets/imgs/footer-bg.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 .slide-enter-active,

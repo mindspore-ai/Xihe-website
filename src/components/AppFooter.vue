@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import logoImg from '@/assets/logo-footer.png';
+import logoImg from '@/assets/imgs/footer-logo.png';
+import qrCodeImg from '@/assets/imgs/qr-code.png';
 
 const router = useRouter();
 
@@ -26,7 +27,10 @@ function goToPage(url) {
         <span>&nbsp;保留一切权利</span>
       </div>
     </div>
-    <div class="footer-code"></div>
+    <div class="footer-code">
+      <img :src="qrCodeImg" />
+      <p>扫码关注公众号</p>
+    </div>
   </footer>
 </template>
 
@@ -39,7 +43,6 @@ function goToPage(url) {
   margin: 0 auto;
   height: 200px;
   padding: 16px 16px;
-  background-color: rgba(25, 26, 32, 1);
   color: rgba(255, 255, 255, 1);
 
   &-logo {
@@ -53,31 +56,48 @@ function goToPage(url) {
     }
   }
 
-  .above {
-    width: 202px;
-    display: flex;
-    justify-content: space-around;
-    font-size: 14px;
-    margin: 0 auto;
-    .text {
-      color: rgba(255, 255, 255, 1);
-      height: 26px;
-      line-height: 26px;
-      cursor: pointer;
+  &-content {
+    .above {
+      width: 202px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 14px;
+      margin: 0 auto;
+      .text {
+        color: rgba(255, 255, 255, 1);
+        height: 26px;
+        line-height: 26px;
+        cursor: pointer;
+      }
+
+      .division {
+        width: 1px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 1);
+        margin-top: 2px;
+      }
     }
 
-    .division {
-      width: 1px;
-      height: 20px;
-      background-color: rgba(255, 255, 255, 1);
-      margin-top: 2px;
+    .below {
+      display: flex;
+      font-size: 12px;
+      margin-top: 21px;
     }
   }
 
-  .below {
-    display: flex;
-    font-size: 12px;
-    margin-top: 21px;
+  &-code {
+    img {
+      width: 78px;
+      height: 78px;
+    }
+
+    p {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #ffffff;
+      opacity: 0.8;
+      line-height: 12px;
+    }
   }
 }
 </style>

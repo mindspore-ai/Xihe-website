@@ -403,7 +403,7 @@ function getFollow(userId, fans) {
   padding-top: 80px;
   background-color: #0f1927;
   color: #ffffff;
-  background-image: url(../../assets/banner-head.png);
+  background-image: url('@/assets/imgs/banner-head.png');
   background-size: cover;
   background-repeat: no-repeat;
 

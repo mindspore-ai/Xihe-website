@@ -192,7 +192,7 @@ if (props.cardType === 'model') {
     right: 24px;
     bottom: 24px;
     border: none;
-    background: url(@/assets/model-card-bg.png) no-repeat;
+    background: url(@/assets/imgs/model-card-bg.png) no-repeat;
     display: none;
   }
   &:hover {
@@ -217,7 +217,7 @@ if (props.cardType === 'model') {
 }
 .o-dataset-hover {
   .card-bg {
-    background: url(@/assets/dataset-card-bg.png) no-repeat;
+    background: url(@/assets/imgs/dataset-card-bg.png) no-repeat;
   }
   &:hover {
     background: #7f78c3;

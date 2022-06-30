@@ -181,7 +181,7 @@ const i18n = {
     right: 24px;
     bottom: 24px;
     border: none;
-    background: url(@/assets/model-card-bg.png) no-repeat;
+    background: url(@/assets/imgs/model-card-bg.png) no-repeat;
     display: none;
   }
   // &:hover {

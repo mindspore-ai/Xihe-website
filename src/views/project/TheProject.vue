@@ -689,7 +689,7 @@ onMounted(() => {
 
           <!-- 无项目显示 -->
           <div v-if="projectCount == 0" class="empty-status">
-            <img src="@/assets/empty/project-empty.png" alt="" />
+            <img src="@/assets/imgs/project-empty.png" alt="" />
             <p @click="setNewClick">未搜索到相关项目</p>
           </div>
         </div>
@@ -711,7 +711,7 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('../../assets/banner-head.png');
+    background-image: url('@/assets/imgs/banner-head.png');
     .warp {
       display: flex;
       justify-content: space-between;

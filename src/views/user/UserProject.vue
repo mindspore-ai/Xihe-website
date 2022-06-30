@@ -100,7 +100,7 @@ function setNewClick() {
           <div class="info-avata">
             <img :src="item.owner_name.avatar_url" alt="" />
           </div>
-          <div class="info-name">{{ item.owner_name.nickname }}</div>
+          <div class="info-name">{{ item.owner_name.name }}</div>
         </div>
         <div class="time">
           <o-icon>

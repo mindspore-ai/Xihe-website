@@ -26,7 +26,7 @@ const route = useRoute();
 let i18n = {
   head: {
     title: '模型',
-    introduce: '简单介绍',
+    introduce: '在模型仓库中，你既可以下载公开的训练模型文件，也可以分享你训练的最好的预训练网络文件。更详细的模型介绍请参考文档。',
     btn: '新建模型',
     count: '总数',
   },
@@ -441,6 +441,7 @@ function handleSizeChange(val) {
 
 function handleCurrentChange(val) {
   queryData.page = val;
+  document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
   router.push({
@@ -656,14 +657,13 @@ onUnmounted(() => {
               :card-data="item"
               @click="goDetail(item.owner_name.name, item.name)"
             ></o-card>
-            <div v-if="modelCount > 0" class="pagination">
+            <div v-if="modelCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[10, 20, 50]"
                 :current-page="queryData.page"
                 :page-size="queryData.size"
                 :total="modelCount"
                 :layout="layout"
-                hide-on-single-page
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
               ></el-pagination>

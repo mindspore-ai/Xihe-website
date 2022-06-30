@@ -7,6 +7,7 @@ import IconNecessary from '~icons/app/necessary.svg';
 
 // import OSelect from '@/components/OSelect.vue';//
 // import OInput from '@/components/OInput.vue';
+import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
 import { getModelTags } from '@/api/api-model';
@@ -94,11 +95,17 @@ function create(formEl) {
 <template>
   <div class="creating-body">
     <div class="link">
-      <span class="home" @click="router.push(`/${userInfo.userName}`)">{{
+      <el-breadcrumb :separator-icon="ArrowRight">
+        <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
+          >个人主页</el-breadcrumb-item
+        >
+        <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
+      </el-breadcrumb>
+      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)">{{
         i18n.homePage
       }}</span
       ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.createPlaceholder }}</span>
+      ><span class="createPlaceholder">{{ i18n.createPlaceholder }}</span> -->
     </div>
 
     <el-form ref="queryRef" class="creating-box" :model="query" prop="region">
@@ -262,15 +269,27 @@ function create(formEl) {
     margin: 0 auto;
     max-width: 1440px;
     color: #555555;
-    .home {
-      cursor: pointer;
+    :deep .el-breadcrumb {
+      font-size: 12px;
+      color: #555555;
+      .el-breadcrumb__inner.is-link {
+        font-weight: normal;
+        color: #555;
+      }
+      .set-new span {
+        color: #000;
+        font-weight: 400;
+      }
     }
-    .arrow {
-      margin: 0 3px;
-    }
-    .createPlaceholder {
-      color: #000000;
-    }
+    // .home {
+    //   cursor: pointer;
+    // }
+    // .arrow {
+    //   margin: 0 3px;
+    // }
+    // .createPlaceholder {
+    //   color: #000000;
+    // }
   }
 
   .creating-box {

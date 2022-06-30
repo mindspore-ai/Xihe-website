@@ -38,6 +38,7 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
+  console.log(params);
   createTrainProject(params, route.query.id).then((res) => {
     if (res.status === 200) {
       ElMessage({

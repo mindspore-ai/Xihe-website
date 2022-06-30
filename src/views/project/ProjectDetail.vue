@@ -185,7 +185,7 @@ const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
 const isForkShow = ref();
-
+var timer = null;
 // 详情数据
 function getDetailData() {
   try {
@@ -206,22 +206,12 @@ function getDetailData() {
         if (detailData.value) {
           storeData['is_empty'] = detailData.value.is_empty;
         }
-
         fileData.setFileData(storeData);
-        // trainList(detailData.value.id).then((res) => {
-        //   res.data.data.forEach((item) => {
-        //     if (item.status === 'Running') {
-        //     runingStatus.value = true;
-        //     }else{
-        //     completedStatus.value = true
-        //   }
-        //   });
-        // });
+
         isShow.value = userInfoStore.userName === storeData.owner_name.name;
         forkForm.storeName = detailData.value.name;
         forkForm.owner = userInfoStore.userName;
 
-        /*  detailData.value = res.results.data[0]; */
         if (detailData.value.sdk_name !== 'Gradio') {
           tabTitle[0].label = '项目卡片';
         }
@@ -236,6 +226,7 @@ function getDetailData() {
           return item;
         });
         headTags.value = [...modelTags.value];
+        getAllTags();
       } else {
         router.push('/notfound');
       }
@@ -244,21 +235,7 @@ function getDetailData() {
 }
 getDetailData();
 
-const runingStatus = ref(false);
-const completedStatus = ref(false);
-// 获取训练列表
-// function getTrainList() {
-// trainList(detailData.value.id).then((res) => {
-//   res.data.data.forEach((item) => {
-//     if (item.status === 'Running') {
-//     runingStatus.value = true;
-//     }else{
-//     completedStatus.value = true
-//   }
-//   });
-// });
-// }
-// getTrainList();
+// const runingStatus = ref(false);
 
 function handleTabClick(item) {
   router.push(
@@ -314,8 +291,8 @@ function tagClick(it, key) {
 // 添加标签
 function addTagClick() {
   isTagShow.value = true;
-  getAllTags();
-  getDetailData();
+  // getAllTags();
+  // getDetailData();
 }
 
 // 点赞
@@ -417,7 +394,7 @@ function confirmBtn() {
   modifyProject(params).then((res) => {
     if (res.status === 200) {
       getDetailData();
-      getAllTags();
+      // getAllTags();
     }
   });
   isTagShow.value = false;
@@ -426,8 +403,8 @@ function confirmBtn() {
 // 取消
 function concelBtn() {
   isTagShow.value = false;
-  getAllTags();
-  getDetailData();
+  // getAllTags();
+  // getDetailData();
 }
 
 function getAllTags() {
@@ -478,7 +455,7 @@ function getAllTags() {
     });
   });
 }
-getAllTags();
+// getAllTags();
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
@@ -653,16 +630,14 @@ function goTrain(path) {
                   <!-- <p>训练 </p> -->
                   <p>
                     训练
-                    <span
-                      v-if="completedStatus"
-                      class="status train-status"
-                    ></span>
                     <!-- <span
                       v-if="runingStatus"
                       class="status train-status1"
-                    ></span> -->
-                    <!-- <span class="status train-status2"></span>
-                    <span class="status train-status3"></span> -->
+                    ></span>
+                    <span v-else class="status train-status"></span> -->
+
+                    <!-- <span v-else class="status train-status2"></span> -->
+                    <!-- <span v-else class="status train-status3"></span> -->
                   </p>
                   <template
                     v-if="userInfoStore.userName === detailData.owner_name.name"
@@ -1190,6 +1165,9 @@ $theme: #0d8dff;
       }
       .train-status3 {
         background-color: rgba(228, 22, 15, 1);
+      }
+      .empty-status {
+        display: none;
       }
       .el-tabs {
         :deep .el-tabs__nav {

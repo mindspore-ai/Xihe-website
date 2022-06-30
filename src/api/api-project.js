@@ -257,6 +257,7 @@ export function getTrainLog(params) {
       return e;
     });
 }
+
 /**
  * 新增项目推理
  * @returns
@@ -273,6 +274,7 @@ export function startInference(params) {
       return e;
     });
 }
+
 /**
  * 终止项目推理
  * @returns
@@ -289,6 +291,7 @@ export function stopInference(params) {
       return e;
     });
 }
+
 /**
  * 获取用户指引
  * @returns
@@ -303,4 +306,20 @@ export function getGuide() {
     .catch((e) => {
       return e;
     });
+}
+
+/**
+ * 获取用户指引
+ * @returns
+ */
+export function autoEvaluate(params,projectId, trainId){
+  const url = `/api/projects/${projectId}/train/trainins/${trainId}/logvisual/`
+  return request
+  .post(url,params, getHeaderConfig())
+  .then((res) => {
+    return res;
+  })
+  .catch((e) => {
+    return e;
+  });
 }

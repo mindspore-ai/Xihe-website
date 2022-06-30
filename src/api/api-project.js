@@ -309,7 +309,7 @@ export function getGuide() {
 }
 
 /**
- * 获取用户指引
+ * 自动评估
  * @returns
  */
 export function autoEvaluate(params,projectId, trainId){

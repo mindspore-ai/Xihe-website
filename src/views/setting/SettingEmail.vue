@@ -70,6 +70,7 @@ function keepEmail2() {
       if (res.status === 200) {
         userInfoStore.emailStatus = true;
         email_code = null;
+        time2.value = 0;
         ElMessage({
           type: 'success',
           message: '激活成功',

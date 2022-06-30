@@ -38,8 +38,8 @@ function goToPage(url) {
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 1440px;
+  justify-content: space-around;
+  max-width: 1472px;
   margin: 0 auto;
   height: 200px;
   padding: 16px 16px;

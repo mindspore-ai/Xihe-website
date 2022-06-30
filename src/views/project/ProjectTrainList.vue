@@ -7,26 +7,24 @@ import IconPlus from '~icons/app/plus';
 import IconRebuild from '~icons/app/rebuild';
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
-
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 import IconInstance from '~icons/app/train-instance';
 
-import { useFileData } from '@/stores';
-
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
 import { useRoute, useRouter } from 'vue-router';
-
+import { useFileData } from '@/stores';
 import { trainList, deleteTainList, stopTrain } from '@/api/api-project';
 import { ElMessageBox } from 'element-plus';
 
 const route = useRoute();
 const router = useRouter();
+
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -34,9 +32,8 @@ const detailData = computed(() => {
 
 let projectId = detailData.value.id;
 const trainData = ref([]);
-
+const listId = ref();
 var timer = null;
-
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
@@ -51,6 +48,7 @@ function getTrainList() {
   });
 }
 getTrainList();
+
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   router.push({
@@ -61,11 +59,12 @@ function goSelectFile() {
   });
 }
 const showDel = ref(false);
-function showDelClick() {
+function showDelClick(val) {
+  listId.value = val;
   showDel.value = true;
 }
 // 删除
-function deleteClick(id) {
+function deleteTrainList(id) {
   deleteTainList(projectId, id).then((res) => {
     if (res.status === 200) {
       getTrainList();
@@ -75,17 +74,17 @@ function deleteClick(id) {
   });
 }
 
-function onClick(val) {
+function delClick(val) {
   if (val === 2) {
     showDel.value = false;
   } else {
-    deleteClick(val);
+    deleteTrainList(val);
   }
 }
 
 // 终止训练
 const showStop = ref(false);
-function stopClick(id) {
+function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
     if (res.status === 200) {
       getTrainList();
@@ -99,7 +98,7 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopClick(val);
+    stopTrainList(val);
   }
 }
 
@@ -143,28 +142,32 @@ function goDateDetail(path) {
   );
 }
 
-const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/train_task');
+
+const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
+  console.log('服务器已连接');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
+  console.log('收到服务器的消息');
   trainData.value = JSON.parse(event.data).data;
   trainData.value.forEach((item) => {
     if (item.status === 'Running') {
       return;
     } else {
       clearInterval(timer);
-
       setTimeout(closeConn(), 15000);
     }
   });
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function (event) {};
+socket.onclose = function (event) {
+  console.log('服务器主动断开');
+};
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -227,9 +230,9 @@ onUnmounted(() => {
         <template #default="scope">
           <!-- 删除 -->
           <delete-train
-            :train-id="scope.row.train_id"
+            :list-id="listId"
             :show-del="showDel"
-            @on-click="onClick"
+            @on-click="delClick"
           ></delete-train>
           <!-- 终止 -->
           <stop-train
@@ -258,7 +261,7 @@ onUnmounted(() => {
                   <o-icon><icon-rebuild></icon-rebuild></o-icon>
                   <p>重建</p>
                 </div>
-                <div class="tools" @click="showDelClick">
+                <div class="tools" @click="showDelClick(scope.row.train_id)">
                   <o-icon><icon-remove></icon-remove></o-icon>
                   <p>删除</p>
                 </div>

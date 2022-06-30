@@ -17,17 +17,8 @@ const props = defineProps({
 const emit = defineEmits(['click']);
 
 function onClick(e) {
-  // if (props.disabled) {
-  //   return;
-  // }
   emit('click', e);
 }
-
-// watch();
-// () => props.isDigged,
-// (newValue, oldValue) => {},
-// () => props.digCount,
-// (newValue, oldValue) => {}
 </script>
 <template>
   <div class="digg-content">
@@ -59,6 +50,9 @@ function onClick(e) {
     }
     .o-icon {
       margin-right: 8px;
+      font-size: 20px;
+    }
+    span {
       font-size: 18px;
     }
   }
@@ -78,6 +72,9 @@ function onClick(e) {
     }
     .o-icon {
       margin-right: 8px;
+      font-size: 20px;
+    }
+    span {
       font-size: 18px;
     }
   }

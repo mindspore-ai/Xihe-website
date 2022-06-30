@@ -86,6 +86,9 @@ function goToPage(url) {
   }
 
   &-code {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     img {
       width: 78px;
       height: 78px;

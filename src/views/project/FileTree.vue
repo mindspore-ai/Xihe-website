@@ -372,6 +372,9 @@ watch(
     table-layout: fixed;
     word-break: break-all;
     border-collapse: collapse;
+    @media screen and (max-width: 1280px) {
+      width: inherit;
+    }
     tr {
       height: 56px;
       .el-form {

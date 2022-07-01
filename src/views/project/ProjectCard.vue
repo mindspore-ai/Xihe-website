@@ -356,7 +356,7 @@ function stop() {
     msg.value = '';
   });
 }
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
 socket.onopen = function () {
   socket.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {

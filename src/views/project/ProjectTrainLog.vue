@@ -192,7 +192,7 @@ ws.onmessage = function (event) {
 
 // 跳到评估页面
 function goToPage() {
-  window.location = `${evaluateUrl.value}`;
+  window.open( `${evaluateUrl.value}`)
 }
 
 const showEvaBtn = ref(true);
@@ -295,7 +295,7 @@ onUnmounted(() => {
           </li>
           <li class="info-list">
             <div class="info-list-title">规格</div>
-            <div class="info-list-detail">{{ trainDetail.flavor_type }}</div>
+            <div class="info-list-detail">{{ trainDetail.flavor }}</div>
           </li>
           <li class="info-list">
             <div class="info-list-title">输入参数文件</div>

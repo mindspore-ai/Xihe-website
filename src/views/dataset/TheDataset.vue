@@ -613,7 +613,6 @@ onUnmounted(() => {
                 :page-size="query.size"
                 :total="modelCount"
                 layout="sizes, prev, pager, next, jumper"
-                hide-on-single-page
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
               ></el-pagination>

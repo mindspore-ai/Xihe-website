@@ -620,6 +620,7 @@ $theme: #0d8dff;
     }
   }
   .dialog-body {
+    margin-bottom: 18px;
     :deep .el-tabs__item {
       width: 188px;
       height: 56px;
@@ -696,9 +697,7 @@ $theme: #0d8dff;
     }
   }
 }
-:deep .el-dialog {
-  min-height: 664px;
-}
+
 .btn-box {
   display: flex;
   justify-content: center;

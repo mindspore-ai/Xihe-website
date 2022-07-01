@@ -127,7 +127,9 @@ if (followIdList.indexOf(jointUserInfo.id) !== -1) {
 const holder = computed(() => {
   return route.path.split('/')[2];
 });
-// 头部标题
+// 动态显示banner标题
+const banner = ref('');
+// 头部banner标题
 const headTitle = {
   user: '主页',
   follows: '粉丝',
@@ -136,6 +138,7 @@ const headTitle = {
 const label = computed(() => {
   return route.path.split('/')[2];
 });
+
 // 可被创建的导航模块
 const creativeItems = computed(() => {
   return navItems.filter((item) => {
@@ -151,15 +154,16 @@ const renderNav = computed(() => {
       return !item.isPrivate;
     });
 });
-
 watch(
   () => {
     return route.name;
   },
   (val) => {
+    console.log(val)
     marginBottom.value =
       val === 'userLives' || val === 'userCollections' ? '36px' : '0px';
     const name = val.substring(4) || 'lives';
+    banner.value = val;
     activeNavItem.value = name.toLowerCase();
   },
   { immediate: true }
@@ -234,15 +238,16 @@ function getFollow(userId, fans) {
 
 <template>
   <div class="user-banner">
-    <!-- <div class="wrap">
-      <span v-if="isAuthentic">{{ isAuthentic ? '个人' : userInfo.userName }}</span>
-      <span>{{ isAuthentic ? '' : '的' }}</span>
-      <span>{{ headTitle[label] ? headTitle[label] : headTitle.user }}</span>
-    </div> -->
     <div class="wrap">
-      {{ isAuthentic ? '我' : userInfo.userName }}的{{
-        headTitle[label] ? headTitle[label] : headTitle.user
-      }}
+      <span>{{
+        isAuthentic
+          ? banner == 'userLives'
+            ? '个人'
+            : '我'
+          : userInfo.userName
+      }}</span>
+      <span>{{ isAuthentic && banner == 'userLives' ? '' : '的' }}</span>
+      <span>{{ headTitle[label] ? headTitle[label] : headTitle.user }}</span>
     </div>
   </div>
   <div class="user-content">
@@ -415,10 +420,10 @@ function getFollow(userId, fans) {
     margin: 0 auto;
     // height: 100%;
     height: 177px;
-    padding: 42px 16px;
+    padding: 0px 16px;
     font-size: 36px;
     font-weight: normal;
-    line-height: 48px;
+    line-height: 177px;
   }
 }
 

@@ -101,7 +101,7 @@ if (props.cardType === 'model') {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .o-card {
   display: flex;
   flex-direction: column;

@@ -54,6 +54,12 @@ const navItems = [
     label: '数据集',
     href: '/datasets',
   },
+  {
+    id: 'docs',
+    label: '文档',
+    href: 'https://xihe-docs.mindspore.cn/',
+    windowOpen: true,
+  },
   // {
   //   id: 'teams',
   //   label: '团队',
@@ -137,7 +143,11 @@ function handleLogoClick() {
 
 // 点击导航
 function handleNavClick(item) {
-  router.push({ path: item.href });
+  if (item.windowOpen) {
+    window.open('https://xihe-docs.mindspore.cn');
+  } else {
+    router.push({ path: item.href });
+  }
 }
 
 // 输入框自动获得焦点
@@ -423,7 +433,6 @@ function hideInput() {
             @click="showInput"
           />
         </div>
-        <a class="header-doc" target="_blank" href="https://xihe-docs.mindspore.cn/"> 文档 </a>
         <div class="header-tool">
           <loading-arc
             v-if="loginStore.isLoggingIn"
@@ -608,7 +617,7 @@ function hideInput() {
 
       .header-search {
         position: relative;
-        // margin-right: 30px;
+        margin-right: 30px;
         .search-icon {
           width: 24px;
           height: 24px;

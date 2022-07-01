@@ -126,6 +126,7 @@ let queryData = reactive({
 });
 
 queryData.search = route.query.search;
+keyWord.value = queryData.search;
 
 const debounceSearch = debounce(getModel, 500, {
   trailing: true,
@@ -366,7 +367,6 @@ function goSearch(render) {
 function dropdownClick(item) {
   queryData.order = item.value;
 }
-
 function getModel() {
   getModelData(queryData).then((res) => {
     modelCount.value = res.count;
@@ -699,6 +699,7 @@ $theme: #0d8dff;
         font-size: 36px;
       }
       .introduce {
+        padding-right: 24px;
         font-size: 18px;
       }
       .banner-right {

@@ -24,7 +24,7 @@ const i18n = {
 };
 </script>
 <template>
-  <div class="o-livecard o-model-hover">
+  <div class="o-livecard o-live-hover">
     <div class="card-top">
       <div class="model-name">{{ cardData.name }}</div>
     </div>
@@ -172,7 +172,7 @@ const i18n = {
     }
   }
 }
-.o-model-hover {
+.o-live-hover {
   position: relative;
   .card-bg {
     width: 84px;
@@ -184,34 +184,5 @@ const i18n = {
     background: url(@/assets/imgs/model-card-bg.png) no-repeat;
     display: none;
   }
-  // &:hover {
-  //   color: #ccc;
-  //   background-color: #4d66ca;
-  //   box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-  //   .time {
-  //     color: #ccc;
-  //   }
-  //   .o-icon {
-  //     color: #ccc;
-  //   }
-  //   .card-bg {
-  //     display: block;
-  //   }
-  //   .card-top {
-  //     color: #fff;
-  //   }
-  //   .label-box {
-  //     .label-item {
-  //       color: #555;
-  //     }
-  //   }
-  //   .nickname {
-  //     color: #fff;
-  //   }
-  //   svg {
-  //     fill: #ccc;
-  //     color: #ccc;
-  //   }
-  // }
 }
 </style>

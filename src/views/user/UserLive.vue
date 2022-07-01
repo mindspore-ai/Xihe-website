@@ -144,7 +144,6 @@ getCount();
         :current-page="queryData.page"
         :page-size="queryData.size"
         :total="liveCount"
-        hide-on-single-page
         :layout="layout"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"

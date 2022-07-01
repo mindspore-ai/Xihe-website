@@ -49,13 +49,14 @@ function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
     console.log(trainData.value);
-    trainData.value.forEach((item) => {
-      if (item.status === 'Running') {
-        timer = setInterval(() => {
-          socket.send(JSON.stringify({ pk: detailData.value.id }));
-        }, 1000);
-      }
-    });
+    console.log(trainData.value.findIndex((item) => item.status === 'Running'));
+    if (trainData.value.findIndex((item) => item.status === 'Running') > -1) {
+      console.log('Running-status');
+      timer = setInterval(() => {
+        socket.send(JSON.stringify({ pk: detailData.value.id }));
+        console.log(JSON.stringify({ pk: detailData.value.id }));
+      }, 1000);
+    }
   });
 }
 getTrainList();
@@ -179,11 +180,13 @@ function goDateDetail(path) {
   );
 }
 
-
-const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/train_task');
+// wss://xihe.test.osinfra.cn/wss/train_task
+const socket = new WebSocket(
+  'wss://xihebackend.test.osinfra.cn/wss/train_task'
+);
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
-  // console.log('服务器已连接');
+  console.log('服务器已连接');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
@@ -191,21 +194,18 @@ socket.onopen = function (event) {
 socket.onmessage = function (event) {
   // console.log('收到服务器的消息');
   trainData.value = JSON.parse(event.data).data;
-  trainData.value.forEach((item) => {
-    if (item.status === 'Running') {
-      return;
-    } else {
-      clearInterval(timer);
-      setTimeout(closeConn(), 15000);
-    }
-  });
+
+  if (trainData.value.findIndex((item) => item.status === 'Running') == -1) {
+    clearInterval(timer);
+    setTimeout(closeConn(), 10000);
+    console.log('无status');
+  }
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function (event) {
-//   // console.log('服务器主动断开');
-// };
-socket.onclose = function (event) { };
+socket.onclose = function (event) {
+  console.log('服务器主动断开');
+};
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求

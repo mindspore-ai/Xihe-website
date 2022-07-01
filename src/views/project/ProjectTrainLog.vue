@@ -23,38 +23,36 @@ const i18n = {
 };
 
 const query = reactive({
-  learning: '',
+  learning_rate: '',
   momentum: '',
-  batch: '',
+  batch_size: '',
 });
 const rules = reactive({
-  learning: [
+  learning_rate: [
     { required: true, message: '必填项', trigger: 'blur' },
-    {
-      pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-      message: '格式不正确',
-      trigger: 'blur',
-    },
+    // {
+    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
+    //   message: '格式不正确',
+    //   trigger: 'blur',
+    // },
   ],
   momentum: [
     { required: true, message: '必填项', trigger: 'blur' },
-    {
-      pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-      message: '格式不正确',
-      trigger: 'blur',
-    },
+    // {
+    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
+    //   message: '格式不正确',
+    //   trigger: 'blur',
+    // },
   ],
-  batch: [
+  batch_size: [
     { required: true, message: '必填项', trigger: 'blur' },
-    {
-      pattern: /^\[((\d+\,)+\d+)*\]$/,
-      message: '格式不正确',
-      trigger: 'blur',
-    },
+    // {
+    //   pattern: /^\[((\d+\,)+\d+)*\]$/,
+    //   message: '格式不正确',
+    //   trigger: 'blur',
+    // },
   ],
 });
-//  pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-//  attern: /^\[(\d+\,)+\d+\]$/,
 
 const route = useRoute();
 //训练日志js
@@ -83,20 +81,26 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
+    console.log(res);
     if (res.status === 200) {
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
+      // console.log(trainDetail.value);
       if (trainDetail.value.metrics) {
-        query.learning = JSON.parse(trainDetail.value.metrics).learning_rate;
+        query.learning_rate = JSON.parse(
+          trainDetail.value.metrics
+        ).learning_rate;
         query.momentum = JSON.parse(trainDetail.value.metrics).momentum;
-        query.batch = JSON.parse(trainDetail.value.metrics).batch_size;
+        query.batch_size = JSON.parse(trainDetail.value.metrics).batch_size;
       } else {
-        return;
       }
 
       if (trainDetail.value.status === 'Running') {
+        isDisabled.value = true;
+        showEvaBtn.value = false;
         timer = setInterval(() => {
+          // console.log(111);
           socket.send(
             JSON.stringify({
               pk: detailData.value.id,
@@ -106,6 +110,7 @@ function getTrainLogData() {
           );
         }, 1000);
         timer1 = setInterval(() => {
+          // console.log(222);
           socket.send(
             JSON.stringify({
               pk: detailData.value.id,
@@ -120,8 +125,10 @@ function getTrainLogData() {
   });
 }
 getTrainLogData();
-
-const socket = new WebSocket('wss:/xihebackend.test.osinfra.cn/wss/inference');
+// wss://xihe.test.osinfra.cn/wss/inference
+const socket = new WebSocket(
+  'wss://xihebackend.test.osinfra.cn/wss/train_task'
+);
 
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
@@ -143,11 +150,15 @@ socket.onopen = function (event) {
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
+  // console.log(event.data);
   if (event.data.substring(0, 3) === 'log') {
     form.desc = event.data.substring(4);
   } else {
     trainDetail.value = JSON.parse(event.data).data;
+    // console.log('收到服务器消息--日志');
     if (trainDetail.value.status !== 'Running') {
+      isDisabled.value = false;
+      showEvaBtn.value = true;
       clearInterval(timer);
       setTimeout(closeConn(), 10000);
       setTimeout(clearInterval(timer1), 10000);
@@ -156,11 +167,9 @@ socket.onmessage = function (event) {
 };
 
 // // 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function (event) {
-// };
-
-// function sendMessage() {
-// }
+socket.onclose = function (event) {
+  // console.log('主动断开');
+};
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -170,12 +179,12 @@ function closeConn() {
 function reloadPage() {
   closeConn();
 }
-
-const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
-ws.onopen = function (event) {
-};
+// wss://xihe.test.osinfra.cn/wss/inference
+const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
+ws.onopen = function (event) {};
 
 ws.onmessage = function (event) {
+  // console.log(event.data);
   showAnaButton.value = false;
   showGoButton.value = true;
   evaluateUrl.value = JSON.parse(event.data).data.url;
@@ -187,6 +196,7 @@ function goToPage() {
 }
 
 const showEvaBtn = ref(true);
+const isDisabled = ref(false);
 const showAnaButton = ref(false);
 const showGoButton = ref(false);
 const evaluateUrl = ref();
@@ -199,13 +209,15 @@ function saveSetting() {
   // };
   // ruleRef.value.validate((valid) => {
   // if (valid) {
+  // console.log(query);
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
+    // console.log(res);
     if (res.status === 200) {
       showEvaBtn.value = false;
       showAnaButton.value = true;
       setTimeout(() => {
         ws.send(JSON.stringify({ pk: detailData.value.id }));
-      }, 15000);
+      }, 10000);
     }
   });
   // } else {
@@ -310,9 +322,9 @@ onUnmounted(() => {
                 :rules="rules"
                 hide-required-asterisk
               >
-                <el-form-item :label="i18n.learning.name" prop="learning">
+                <el-form-item :label="i18n.learning.name" prop="learning_rate">
                   <el-input
-                    v-model="query.learning"
+                    v-model="query.learning_rate"
                     :placeholder="i18n.learning.placeholder"
                   ></el-input>
                 </el-form-item>
@@ -324,7 +336,7 @@ onUnmounted(() => {
                 </el-form-item>
                 <el-form-item :label="i18n.batch.name" prop="batch">
                   <el-input
-                    v-model="query.batch"
+                    v-model="query.batch_size"
                     :placeholder="i18n.batch.placeholder"
                   ></el-input>
                 </el-form-item>
@@ -336,6 +348,9 @@ onUnmounted(() => {
 
       <div class="info-btn">
         <o-button v-if="showEvaBtn" type="primary" @click="saveSetting"
+          >自动评估</o-button
+        >
+        <o-button disabled v-if="isDisabled" type="primary" @click="saveSetting"
           >自动评估</o-button
         >
         <o-button

@@ -187,7 +187,7 @@ export function modifyModelAdd(params, projectId) {
  * @returns
  */
 export function trainList(projectId) {
-  const url = `/api/projects/${projectId}/train/trainins`;
+  const url = `/api/projects/${projectId}/train/trainins/`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });

@@ -40,7 +40,8 @@ const router = useRouter();
 let i18n = {
   head: {
     title: '项目',
-    introduce: '简单介绍',
+    introduce:
+      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击参考文档。',
     btn: '新建项目',
     count: '总数',
   },

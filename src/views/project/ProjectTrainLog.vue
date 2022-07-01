@@ -121,7 +121,7 @@ function getTrainLogData() {
 }
 getTrainLogData();
 
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
+const socket = new WebSocket('wss:/xihebackend.test.osinfra.cn/wss/inference');
 
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
@@ -171,7 +171,7 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
+const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
 ws.onopen = function (event) {
 };
 

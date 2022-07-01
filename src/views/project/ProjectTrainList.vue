@@ -180,7 +180,7 @@ function goDateDetail(path) {
 }
 
 
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
+const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function (event) {
   // console.log('服务器已连接');

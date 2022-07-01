@@ -699,6 +699,7 @@ $theme: #0d8dff;
         font-size: 36px;
       }
       .introduce {
+        padding-right: 24px;
         font-size: 18px;
       }
       .banner-right {

@@ -51,7 +51,6 @@ let queryDate = {
   tags: [],
   task: [],
   model_format: [],
-  files:[]
 };
 
 let dialogList = {

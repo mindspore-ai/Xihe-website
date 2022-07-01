@@ -43,18 +43,14 @@ const i18n = {
 };
 const describe = ref('');
 
-var timer = null;
+let timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
-    console.log(trainData.value);
-    console.log(trainData.value.findIndex((item) => item.status === 'Running'));
     if (trainData.value.findIndex((item) => item.status === 'Running') > -1) {
-      console.log('Running-status');
       timer = setInterval(() => {
         socket.send(JSON.stringify({ pk: detailData.value.id }));
-        console.log(JSON.stringify({ pk: detailData.value.id }));
       }, 1000);
     }
   });
@@ -185,8 +181,8 @@ const socket = new WebSocket(
   'wss://xihebackend.test.osinfra.cn/wss/train_task'
 );
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
-socket.onopen = function (event) {
-  console.log('服务器已连接');
+socket.onopen = function () {
+  // console.log('服务器已连接');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
@@ -198,13 +194,13 @@ socket.onmessage = function (event) {
   if (trainData.value.findIndex((item) => item.status === 'Running') == -1) {
     clearInterval(timer);
     setTimeout(closeConn(), 10000);
-    console.log('无status');
+    // console.log('无status');
   }
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function (event) {
-  console.log('服务器主动断开');
+socket.onclose = function () {
+  // console.log('服务器主动断开');
 };
 
 function closeConn() {
@@ -217,7 +213,7 @@ function reloadPage() {
 }
 
 onMounted(() => {
-  window.addEventListener('beforeunload', (e) => reloadPage());
+  window.addEventListener('beforeunload', () => reloadPage());
 });
 
 onUnmounted(() => {

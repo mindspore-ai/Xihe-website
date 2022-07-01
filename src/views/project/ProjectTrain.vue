@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Markdown from 'markdown-it';
 
@@ -9,10 +9,9 @@ import NoRelate from '@/components/NoRelate.vue';
 import RelateCard from '@/components/RelateCard.vue';
 import ODialog from '@/components/ODialog.vue';
 
-import IconAddFile from '~icons/app/add-file';
-// import IconFile from '~icons/app/other-file';
+// import IconAddFile from '~icons/app/add-file';
 import IconPlus from '~icons/app/plus';
-import DeleteRelate from '@/components/DeleteRelate.vue';
+// import DeleteRelate from '@/components/DeleteRelate.vue';
 import IconInstance from '~icons/app/train-instance';
 
 import { ElMessage } from 'element-plus';
@@ -38,9 +37,6 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// console.log(detailData.value);
-// const filePath = ref('');
-// const textarea = ref('');
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
@@ -503,7 +499,7 @@ function toggleDelDlg(flag) {
     <el-dialog
       v-model="isShow"
       :title="i18n.addDataset"
-      :showClose="false"
+      :show-close="false"
       width="30%"
       destroy-on-close
       center
@@ -534,7 +530,7 @@ function toggleDelDlg(flag) {
     <el-dialog
       v-model="isShow1"
       :title="i18n.addModel"
-      :showClose="false"
+      :show-close="false"
       width="30%"
       destroy-on-close
       center

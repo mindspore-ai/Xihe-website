@@ -107,158 +107,151 @@ function toTop() {
 
 <template>
   <div class="user-follow">
-    <div class="follow-list">
-      <el-breadcrumb :separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
-          >个人主页</el-breadcrumb-item
-        >
-        <el-breadcrumb-item
-          >/ {{ isAuthentic ? '我' : userInfo.userName }}的粉丝({{
-            userInfo.fansCount
-          }})</el-breadcrumb-item
-        >
-      </el-breadcrumb>
-      <div v-if="currentFansList.length" class="follow-list-wrap">
-        <div
-          v-for="fans in currentFansList.slice(
-            (queryData.page - 1) * queryData.size,
-            queryData.page * queryData.size
-          )"
-          :key="fans.id"
-          class="follow-list-item"
-        >
-          <div class="list-item-left">
-            <div class="follow-avatar">
-              <router-link :to="`/${fans.name}`" target="_blank"
-                ><el-avatar :size="60" :src="fans.avatar_url" fit="fill"
-              /></router-link>
-            </div>
-            <div class="follow-info">
-              <div class="follow-info-name">{{ fans.name }}</div>
-              <div class="follow-info-desc">
-                {{ fans.description || '这个人很懒，啥都没留下' }}
-              </div>
-            </div>
+    <el-breadcrumb :separator-icon="ArrowRight">
+      <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
+        >个人主页</el-breadcrumb-item
+      >
+      <el-breadcrumb-item
+        >/ {{ isAuthentic ? '我' : userInfo.userName }}的粉丝({{
+          userInfo.fansCount
+        }})</el-breadcrumb-item
+      >
+    </el-breadcrumb>
+    <div v-if="currentFansList.length" class="follow-list">
+      <div
+        v-for="fans in currentFansList.slice(
+          (queryData.page - 1) * queryData.size,
+          queryData.page * queryData.size
+        )"
+        :key="fans.id"
+        class="follow-list-item"
+      >
+        <div class="list-item-left">
+          <div class="follow-avatar">
+            <router-link :to="`/${fans.name}`" target="_blank"
+              ><el-avatar :size="60" :src="fans.avatar_url" fit="fill"
+            /></router-link>
           </div>
-          <div
-            v-if="userInfoStore.nickName !== fans.name"
-            class="list-item-right"
-            @click="getFollow(userInfoStore.id, fans)"
-          >
-            <o-button v-if="fans.isFollow" type="secondary" class="item-btn">
-              取消关注
-            </o-button>
-            <o-button v-else type="primary">关注TA</o-button>
+          <div class="follow-info">
+            <div class="follow-info-name">{{ fans.name }}</div>
+            <div class="follow-info-desc">
+              {{ fans.description || '这个人很懒，啥都没留下' }}
+            </div>
           </div>
         </div>
-      </div>
-      <div v-else class="nofollow">
-        <o-icon class="star-icon"><icon-star></icon-star></o-icon>
-        <div class="star-info">暂未有人关注</div>
+        <div
+          v-if="userInfoStore.nickName !== fans.name"
+          class="list-item-right"
+          @click="getFollow(userInfoStore.id, fans)"
+        >
+          <o-button v-if="fans.isFollow" type="secondary" class="item-btn">
+            取消关注
+          </o-button>
+          <o-button v-else type="primary">关注TA</o-button>
+        </div>
       </div>
     </div>
-    <!-- 分页器 -->
-    <div v-if="currentFansList.length > 6" class="pagination">
-      <el-pagination
-        :page-sizes="[6, 12, 18]"
-        :current-page="queryData.page"
-        :page-size="queryData.size"
-        :total="currentFansList.length"
-        :layout="layout"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      ></el-pagination>
+    <div v-else class="nofollow">
+      <o-icon class="star-icon"><icon-star></icon-star></o-icon>
+      <div class="star-info">暂未有人关注</div>
     </div>
+  </div>
+  <!-- 分页器 -->
+  <div v-if="currentFansList.length > 6" class="pagination">
+    <el-pagination
+      :page-sizes="[6, 12, 18]"
+      :current-page="queryData.page"
+      :page-size="queryData.size"
+      :total="currentFansList.length"
+      :layout="layout"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    ></el-pagination>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .user-follow {
-  width: 100%;
   height: 100%;
-  background-color: #f5f6f8;
-  .follow-list {
-    height: 100%;
-    .el-breadcrumb {
-      height: 21px;
-      line-height: 21px;
-      .el-breadcrumb__item {
-        :deep(.el-breadcrumb__inner.is-link) {
-          color: #555;
-          font-weight: 400;
-          &:hover {
-            color: #0d8dff;
-          }
-        }
-        :deep(.el-breadcrumb__separator.el-icon) {
-          color: #555;
-        }
-      }
-      :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-        color: #000;
-      }
-    }
-    .follow-list-wrap {
-      height: calc(100% - 21px);
-      overflow: hidden;
-      .follow-list-item {
-        width: 100%;
-        // min-height: calc(17% - 35px);
-        height: 140px;
-        background-color: #fff;
-        margin-top: 20px;
-        padding: 30px 40px;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        &:hover {
-          box-shadow: 0px 4px 18px 0px rgba(13, 141, 255, 0.14);
-        }
-        .list-item-left {
-          width: 70%;
-          display: flex;
-          align-items: center;
-          .follow-info {
-            width: 75%;
-            margin-left: 24px;
-            &-name {
-              height: 24px;
-              line-height: 24px;
-              margin-bottom: 12px;
-              font-size: 16px;
-              color: #000;
-            }
-            &-desc {
-              height: 24px;
-              font-size: 16px;
-              color: #555;
-              line-height: 24px;
-            }
-          }
-        }
-      }
-    }
-    .nofollow {
-      height: calc(100% - 21px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      .star-icon {
-        font-size: 240px;
-      }
-      .star-info {
-        font-size: 18px;
+  .el-breadcrumb {
+    height: 21px;
+    line-height: 21px;
+    .el-breadcrumb__item {
+      :deep(.el-breadcrumb__inner.is-link) {
         color: #555;
-        margin-top: 24px;
+        font-weight: 400;
+        &:hover {
+          color: #0d8dff;
+        }
+      }
+      :deep(.el-breadcrumb__separator.el-icon) {
+        color: #555;
+      }
+    }
+    :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+      color: #000;
+    }
+  }
+  .follow-list {
+    height: calc(100% - 21px);
+    overflow: hidden;
+    .follow-list-item {
+      width: 100%;
+      // min-height: calc(17% - 35px);
+      height: 140px;
+      background-color: #fff;
+      margin-top: 20px;
+      padding: 30px 40px;
+      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &:hover {
+        box-shadow: 0px 4px 18px 0px rgba(13, 141, 255, 0.14);
+      }
+      .list-item-left {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        .follow-info {
+          width: 75%;
+          margin-left: 24px;
+          &-name {
+            height: 24px;
+            line-height: 24px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #000;
+          }
+          &-desc {
+            height: 24px;
+            font-size: 16px;
+            color: #555;
+            line-height: 24px;
+          }
+        }
       }
     }
   }
-  .pagination {
+  .nofollow {
+    height: calc(100% - 21px);
     display: flex;
     justify-content: center;
-    // margin: 24px 0 64px 0;
+    align-items: center;
+    flex-direction: column;
+    .star-icon {
+      font-size: 240px;
+    }
+    .star-info {
+      font-size: 18px;
+      color: #555;
+      margin-top: 24px;
+    }
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  // margin: 24px 0 64px 0;
 }
 </style>

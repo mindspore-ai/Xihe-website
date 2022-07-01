@@ -148,7 +148,6 @@ function getDetailData() {
     }).then((res) => {
       if (res.results.status === 200) {
         detailData.value = res.results.data[0];
-        // console.log(detailData.value);
       }
     });
   } catch (error) {
@@ -226,7 +225,6 @@ function confirmCreating(formEl) {
       return false;
     }
   });
-
 }
 const rules = reactive({
   job_name: [
@@ -278,7 +276,6 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-
 });
 </script>
 <template>

@@ -5,14 +5,14 @@ import { useRoute, useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
 
-import IconMenu from '~icons/app/menu';
+// import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
 // import IconLocation from '~icons/app/location';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
-import IconHome from '~icons/app/home';
+// import IconHome from '~icons/app/home';
 import IconEmail from '~icons/app/email';
-import { Search } from '@element-plus/icons-vue';
+// import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 import { getUserDig } from '@/api/api-user';
@@ -78,6 +78,7 @@ const navItems = [
   },
 ];
 //
+/*
 let i18n = {
   head: {
     title: '模型',
@@ -95,6 +96,7 @@ let i18n = {
     { text: '按照更新时间排序', value: 'update_time' },
   ],
 };
+*/
 // 登录用户关注列表
 const followList = computed(() => {
   return userInfoStore.followList;
@@ -124,9 +126,11 @@ if (followIdList.indexOf(jointUserInfo.id) !== -1) {
 } else {
   jointUserInfo.isFollow = false;
 }
+/*
 const holder = computed(() => {
   return route.path.split('/')[2];
 });
+*/
 // 动态显示banner标题
 const banner = ref('');
 // 头部banner标题
@@ -159,7 +163,7 @@ watch(
     return route.name;
   },
   (val) => {
-    console.log(val)
+    // console.log(val)
     marginBottom.value =
       val === 'userLives' || val === 'userCollections' ? '36px' : '0px';
     const name = val.substring(4) || 'lives';
@@ -184,10 +188,11 @@ function handleNavClick(item) {
 }
 
 const orderValue = ref('123');
+/*
 function dropdownClick(item) {
   orderValue.value = item.value;
 }
-
+*/
 function createNew(item) {
   router.push(`/new/${item.id}`);
 }
@@ -241,12 +246,21 @@ function getFollow(userId, fans) {
     <div class="wrap">
       <span>{{
         isAuthentic
-          ? banner == 'userLives'
-            ? '个人'
-            : '我'
+          ? banner == 'userFollows' || banner == 'userWatched'
+            ? '我'
+            : '个人'
           : userInfo.userName
       }}</span>
-      <span>{{ isAuthentic && banner == 'userLives' ? '' : '的' }}</span>
+      <span>{{
+        isAuthentic &&
+        (banner == 'userLives' ||
+          banner == 'userProjects' ||
+          banner == 'userModels' ||
+          banner == 'userDatasets' ||
+          banner == 'userCollections')
+          ? ''
+          : '的'
+      }}</span>
       <span>{{ headTitle[label] ? headTitle[label] : headTitle.user }}</span>
     </div>
   </div>
@@ -397,7 +411,6 @@ function getFollow(userId, fans) {
           <!-- 默认显示动态 -->
           <router-view
             :key="$route.fullPath"
-            :order-value="orderValue"
           ></router-view>
         </div>
       </div>

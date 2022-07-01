@@ -401,12 +401,12 @@ function toggleDelDlg(flag) {
         }}</o-button>
       </div>
       <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
-        <div class="instance-box">
+        <!-- <div class="instance-box">
           <o-icon><icon-instance></icon-instance></o-icon>
           <p>暂未开始训练，请先创建训练实例</p>
-        </div>
+        </div> -->
 
-        <!-- <div class="upload-readme-img">
+        <div class="upload-readme-img">
           <o-icon> <icon-add-file></icon-add-file> </o-icon>
         </div>
         <div class="upload-readme-tip">
@@ -418,7 +418,7 @@ function toggleDelDlg(flag) {
           >
             {{ item }}
           </p>
-        </div> -->
+        </div>
       </div>
       <div v-else class="upload-readme markdown-body">
         <div class="upload-readme-img">

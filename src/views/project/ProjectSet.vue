@@ -330,7 +330,7 @@ function toggleDelDlg(flag) {
 
         <h4 class="setting-title">{{ i18n.delete.title }}</h4>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button class="delete-btn" @click="showDel = true">{{
+        <o-button  status="error" class="delete-btn" @click="showDel = true">{{
           i18n.delete.btnText
         }}</o-button>
       </div>

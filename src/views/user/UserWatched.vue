@@ -319,8 +319,8 @@ function toTop() {
   }
 }
 .pagination {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  // margin: 24px 0 64px 0;
 }
 </style>

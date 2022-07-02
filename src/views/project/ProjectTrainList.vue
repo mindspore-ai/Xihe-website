@@ -30,9 +30,10 @@ const router = useRouter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-let projectId = detailData.value.id;
+const projectId = detailData.value.id;
 const trainData = ref([]);
 const listId = ref();
+const stopId = ref();
 const showTip = ref(false);
 const i18n = {
   describe1:
@@ -128,19 +129,23 @@ function stopTrainList(id) {
       getTrainList();
       closeConn();
       clearInterval(timer);
+      showStop.value = false;
     }
   });
 }
 
 function quitClick(val) {
+  console.log(val);
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopTrainList(val);
+    stopTrainList(stopId.value);
   }
 }
 
-function showStopClick(val) {
+function showStopClick(val, id) {
+  console.log(val, id);
+  stopId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
@@ -290,7 +295,7 @@ onUnmounted(() => {
                 <div
                   v-if="scope.row.status !== 'Completed'"
                   class="tools"
-                  @click="showStopClick(scope.row.status)"
+                  @click="showStopClick(scope.row.status, scope.row.train_id)"
                 >
                   <o-icon><icon-stop></icon-stop></o-icon>
                   <p>终止</p>

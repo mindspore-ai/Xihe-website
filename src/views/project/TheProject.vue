@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, watch, computed } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
@@ -20,7 +20,7 @@ import { goAuthorize } from '@/shared/login';
 
 import { getProjectData, getModelTags } from '@/api/api-project';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore } from '@/stores';
 
 const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';

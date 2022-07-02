@@ -72,8 +72,8 @@ const detailData = computed(() => {
 // 训练日志详情数据
 const trainDetail = ref({});
 
-var timer = null;
-var timer1 = null;
+let timer = null;
+let timer1 = null;
 // 获得训练日志页面数据
 function getTrainLogData() {
   const trainLogParams = {
@@ -81,8 +81,8 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    console.log(res);
     if (res.status === 200) {
+      console.log(res.data);
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
@@ -131,7 +131,7 @@ const socket = new WebSocket(
 );
 
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
-socket.onopen = function (event) {
+socket.onopen = function () {
   socket.send(
     JSON.stringify({
       pk: detailData.value.id,
@@ -167,7 +167,7 @@ socket.onmessage = function (event) {
 };
 
 // // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function (event) {
+socket.onclose = function () {
   // console.log('主动断开');
 };
 
@@ -181,7 +181,7 @@ function reloadPage() {
 }
 // wss://xihe.test.osinfra.cn/wss/inference
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
-ws.onopen = function (event) {};
+ws.onopen = function () {};
 
 ws.onmessage = function (event) {
   // console.log(event.data);
@@ -227,7 +227,7 @@ function saveSetting() {
 }
 
 onMounted(() => {
-  window.addEventListener('beforeunload', (e) => reloadPage());
+  window.addEventListener('beforeunload', () => reloadPage());
 });
 
 onUnmounted(() => {
@@ -317,8 +317,8 @@ onUnmounted(() => {
             </p>
             <div class="button-box">
               <el-form
-                :model="query"
                 ref="ruleRef"
+                :model="query"
                 :rules="rules"
                 hide-required-asterisk
               >
@@ -350,12 +350,12 @@ onUnmounted(() => {
         <o-button v-if="showEvaBtn" type="primary" @click="saveSetting"
           >自动评估</o-button
         >
-        <o-button disabled v-if="isDisabled" type="primary" @click="saveSetting"
+        <o-button v-if="isDisabled" disabled type="primary" @click="saveSetting"
           >自动评估</o-button
         >
         <o-button
-          disabled
           v-if="showAnaButton"
+          disabled
           type="primary"
           @click="saveSetting"
           >解析中</o-button

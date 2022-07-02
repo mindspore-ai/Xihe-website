@@ -83,124 +83,115 @@ getCount();
 </script>
 <template>
   <div class="user-live">
-    <div class="user-live-wrap">
-      <div v-if="liveData.length" class="card-list">
-        <div
-          v-for="item in liveData.slice(
-            (queryData.page - 1) * queryData.size,
-            queryData.page * queryData.size
-          )"
-          :key="item.id"
-          class="card-list-item"
-        >
-          <div class="card-list-item-title">
-            <img
-              v-if="item.type.includes('点赞')"
-              src="@/assets/icons/lovingHeart.png"
-            />
-            <img v-else src="@/assets/icons/creating.png" />
-            <span>
-              {{
-                item.type.includes('点赞') ? '收藏了一个' : '创建了一个'
-              }}</span
-            >
-            <span>
-              {{
-                item.type.includes('模型')
-                  ? '模型'
-                  : item.type.includes('数据集')
-                  ? '数据集'
-                  : '项目'
-              }}
-            </span>
-            <span class="item-title-time">{{
-              item.time.substring(0, 10)
-            }}</span>
-          </div>
-          <o-projectcard
-            v-if="item.type.includes('项目')"
-            :card-data="item"
-            class="card-list-item-content"
-            @click="goDetail(item)"
-          ></o-projectcard>
-          <o-livecard
-            v-else
-            :card-data="item"
-            class="card-list-item-content"
-            @click="goDetail(item)"
-          ></o-livecard>
+    <div v-if="liveData.length" class="card-list">
+      <div
+        v-for="item in liveData.slice(
+          (queryData.page - 1) * queryData.size,
+          queryData.page * queryData.size
+        )"
+        :key="item.id"
+        class="card-list-item"
+      >
+        <div class="card-list-item-title">
+          <img
+            v-if="item.type.includes('点赞')"
+            src="@/assets/icons/lovingHeart.png"
+          />
+          <img v-else src="@/assets/icons/creating.png" />
+          <span>
+            {{ item.type.includes('点赞') ? '收藏了一个' : '创建了一个' }}</span
+          >
+          <span>
+            {{
+              item.type.includes('模型')
+                ? '模型'
+                : item.type.includes('数据集')
+                ? '数据集'
+                : '项目'
+            }}
+          </span>
+          <span class="item-title-time">{{ item.time.substring(0, 10) }}</span>
         </div>
-      </div>
-      <div v-else class="empty-wrap">
-        <div class="empty">
-          <img class="empty-img" :src="emptyImg" />
-          <p class="empty-text">{{ i18n.emptyText }}</p>
-        </div>
+        <o-projectcard
+          v-if="item.type.includes('项目')"
+          :card-data="item"
+          class="card-list-item-content"
+          @click="goDetail(item)"
+        ></o-projectcard>
+        <o-livecard
+          v-else
+          :card-data="item"
+          class="card-list-item-content"
+          @click="goDetail(item)"
+        ></o-livecard>
       </div>
     </div>
-    <div v-if="liveCount > 6" class="pagination">
-      <el-pagination
-        :page-sizes="[6, 12, 18]"
-        :current-page="queryData.page"
-        :page-size="queryData.size"
-        :total="liveCount"
-        :layout="layout"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      ></el-pagination>
+    <div v-else class="empty-wrap">
+      <div class="empty">
+        <img class="empty-img" :src="emptyImg" />
+        <p class="empty-text">{{ i18n.emptyText }}</p>
+      </div>
     </div>
+  </div>
+  <div v-if="liveCount > 6" class="pagination">
+    <el-pagination
+      :page-sizes="[6, 12, 18]"
+      :current-page="queryData.page"
+      :page-size="queryData.size"
+      :total="liveCount"
+      :layout="layout"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    ></el-pagination>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .user-live {
   height: 100%;
-  &-wrap {
-    height: 100%;
-    .card-list {
+  .card-list {
+    width: 100%;
+    &-item {
+      margin-bottom: 30px;
       width: 100%;
-      &-item {
-        margin-bottom: 30px;
-        width: 100%;
-        &-title {
-          font-size: 18px;
-          color: #000;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          img {
-            width: 24px;
-            margin-right: 8px;
-          }
-          .item-title-time {
-            font-size: 16px;
-            line-height: 18px;
-            color: #555;
-            margin-left: 24px;
-          }
+      &-title {
+        font-size: 18px;
+        color: #000;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        img {
+          width: 24px;
+          margin-right: 8px;
         }
-        &-content {
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        .item-title-time {
+          font-size: 16px;
+          line-height: 18px;
+          color: #555;
+          margin-left: 24px;
         }
       }
+      &-content {
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      }
     }
-    .empty-wrap {
-      width: 100%;
+  }
+  .empty-wrap {
+    width: 100%;
+    height: 100%;
+    .empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100%;
-      .empty {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        flex-direction: column;
-        .empty-img {
-          width: 280px;
-        }
-        .empty-text {
-          margin-top: 24px;
-          font-size: 18px;
-          color: #555555ff;
-        }
+      flex-direction: column;
+      .empty-img {
+        width: 280px;
+      }
+      .empty-text {
+        margin-top: 24px;
+        font-size: 18px;
+        color: #555555ff;
       }
     }
   }

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, reactive, watch } from 'vue';
+import { computed, ref, reactive, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -12,7 +12,6 @@ import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 // import IconHome from '~icons/app/home';
 import IconEmail from '~icons/app/email';
-// import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 import { getUserDig } from '@/api/api-user';
@@ -33,8 +32,11 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
 const activeNavItem = ref('');
+
 // 路由变化动态改变下外边距
 const marginBottom = ref('');
+const detailInfo = ref(null);
+
 // 导航
 const navItems = [
   {
@@ -155,17 +157,15 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 watch(
   () => {
     return route.name;
   },
   (val) => {
-    // console.log(val)
-    marginBottom.value =
-      val === 'userLives' || val === 'userCollections' ? '36px' : '0px';
+    marginBottom.value = 0;
     const name = val.substring(4) || 'lives';
     banner.value = val;
     activeNavItem.value = name.toLowerCase();
@@ -239,6 +239,10 @@ function getFollow(userId, fans) {
     }
   }
 }
+
+function handleDomChange(val) {
+  marginBottom.value = val;
+}
 </script>
 
 <template>
@@ -267,7 +271,10 @@ function getFollow(userId, fans) {
   <div class="user-content">
     <div class="wrap">
       <!-- sidebar -->
-      <div class="content-sidebar" :style="{ marginBottom: marginBottom }">
+      <div
+        class="content-sidebar"
+        :style="{ marginBottom: marginBottom + 'px' }"
+      >
         <div class="user-info-basic">
           <div class="user-avatar">
             <el-avatar :size="160" :src="userInfo.avatar" fit="fill" />
@@ -407,10 +414,10 @@ function getFollow(userId, fans) {
           </el-dropdown>
         </div>
         <!-- 具体内容 -->
-        <div class="content-detail-info">
-          <!-- 默认显示动态 -->
+        <div ref="detailInfo" class="content-detail-info">
           <router-view
             :key="$route.fullPath"
+            @dom-change="handleDomChange"
           ></router-view>
         </div>
       </div>
@@ -584,14 +591,9 @@ function getFollow(userId, fans) {
         }
       }
 
-      &-info {
-        width: 100%;
-        height: 100%;
-      }
-
       &-tool + .content-detail-info {
+        position: relative;
         margin-top: 30px;
-        height: calc(100% - 88px);
       }
     }
   }

@@ -51,7 +51,18 @@ let loginFollowIdList = computed(() =>
 const currentFollowList = computed(() => {
   return userInfo.value.followList;
 });
-
+const emit = defineEmits(['domChange']);
+watch(
+  () => {
+    return currentFollowList.value.length;
+  },
+  (val) => {
+    if (val > 6) {
+      emit('domChange', 74);
+    }
+  },
+  { immediate: true }
+);
 // 用于判断按钮的内容状态
 function watchFollowList() {
   currentFollowList.value.forEach((val) => {

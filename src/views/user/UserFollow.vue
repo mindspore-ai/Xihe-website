@@ -37,10 +37,24 @@ const loginFollowList = computed(() => {
 let loginFollowIdList = computed(() =>
   loginFollowList.value.map((val) => val.id)
 );
+
 // 当前用户粉丝列表
 const currentFansList = computed(() => {
   return userInfo.value.fansList;
 });
+
+const emit = defineEmits(['domChange']);
+watch(
+  () => {
+    return currentFansList.value.length;
+  },
+  (val) => {
+    if (val > 6) {
+      emit('domChange', 74);
+    }
+  },
+  { immediate: true }
+);
 
 // 用于判断按钮的内容状态
 function watchFansList() {
@@ -250,8 +264,8 @@ function toTop() {
   }
 }
 .pagination {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  // margin: 24px 0 64px 0;
 }
 </style>

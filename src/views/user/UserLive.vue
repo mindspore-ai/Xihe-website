@@ -35,11 +35,16 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
 
+const emit = defineEmits(['getlivecount', 'domChange']);
+
 // 获得动态页面数据
 getUserLive(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
     liveCount.value = res.data.length;
     liveData.value = res.data;
+    if (liveCount.value > 6) {
+      emit('domChange', 76);
+    }
   } else {
     liveData.value = [];
   }
@@ -75,12 +80,13 @@ function handleCurrentChange(val) {
 function toTop() {
   document.documentElement.scrollTop = 0;
 }
-const emit = defineEmits(['getlivecount']);
+
 function getCount() {
   emit('getlivecount', liveCount);
 }
 getCount();
 </script>
+
 <template>
   <div class="user-live">
     <div v-if="liveData.length" class="card-list">
@@ -148,11 +154,13 @@ getCount();
 
 <style lang="scss" scoped>
 .user-live {
-  height: 100%;
   .card-list {
     width: 100%;
     &-item {
-      margin-bottom: 30px;
+      & + .card-list-item {
+        margin-top: 30px;
+      }
+
       width: 100%;
       &-title {
         font-size: 18px;
@@ -197,12 +205,8 @@ getCount();
   }
 }
 .pagination {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  margin-top: -30px;
-  // position: absolute;
-  // bottom: -76px;
-  // left: 50%;
-  // transform: translateX(-50%);
 }
 </style>

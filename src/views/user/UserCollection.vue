@@ -35,11 +35,15 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
 
+const emit = defineEmits(['domChange']);
 // 获得收藏页面数据
 getUserCollection(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
     collectionCount.value = res.data.length;
     collectionData.value = res.data;
+    if (collectionCount.value > 6) {
+      emit('domChange', 76);
+    }
   } else {
     collectionData.value = [];
   }
@@ -188,8 +192,8 @@ function toTop() {
   }
 }
 .pagination {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  margin-top: -30px;
 }
 </style>

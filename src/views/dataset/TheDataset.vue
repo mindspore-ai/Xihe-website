@@ -754,7 +754,7 @@ $theme: #0d8dff;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 24px;
-        max-height: 78px;
+        max-height: 130px !important;
         overflow: hidden;
       }
       .condition-radio {

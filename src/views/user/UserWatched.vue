@@ -276,6 +276,9 @@ function toTop() {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      &:hover {
+        box-shadow: 0px 4px 18px 0px rgba(13, 141, 255, 0.14);
+      }
       .list-item-left {
         width: 70%;
         // margin-left: 24px;
@@ -303,7 +306,13 @@ function toTop() {
   }
 
   .nowatched {
-    height: calc(100% - 21px);
+    position: absolute;
+    top: calc(50% + 21px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    // width: 100%;
+    // height: 100%;
+    // height: calc(100% - 21px);
     display: flex;
     justify-content: center;
     align-items: center;

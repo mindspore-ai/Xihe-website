@@ -9,7 +9,7 @@ import NoRelate from '@/components/NoRelate.vue';
 import RelateCard from '@/components/RelateCard.vue';
 import ODialog from '@/components/ODialog.vue';
 
-// import IconAddFile from '~icons/app/add-file';
+import IconAddFile from '~icons/app/add-file';
 import IconPlus from '~icons/app/plus';
 // import DeleteRelate from '@/components/DeleteRelate.vue';
 import IconInstance from '~icons/app/train-instance';

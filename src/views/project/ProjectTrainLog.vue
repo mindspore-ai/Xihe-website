@@ -98,6 +98,7 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
+      console.log(res.data);
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
@@ -199,6 +200,10 @@ ws.onmessage = function (event) {
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
   ) {
+    ElMessage({
+      type: 'success',
+      message: '自动评估完成！点击查看报告查看。',
+    });
     showAnaButton.value = false;
     showGoButton.value = true;
     evaluateUrl.value = JSON.parse(event.data).data.url;
@@ -244,7 +249,7 @@ function goJsonFile(file) {
 }
 
 // 日志详情
-function goLogFile(){
+function goLogFile() {
   router.push(
     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/tree/train/log/`
   );
@@ -395,7 +400,7 @@ watch(
           disabled
           type="primary"
           @click="saveSetting"
-          >解析中</o-button
+          >自动评估中...</o-button
         >
         <o-button v-if="showGoButton" type="primary" @click="goToPage"
           >查看报告</o-button

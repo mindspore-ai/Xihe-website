@@ -360,7 +360,6 @@ function confirmBtn() {
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
           if (it.isActive) {
-            console.log(it);
             queryDate[menu.key].push(it.id);
             let index = queryDate['task_cate'].indexOf(it.task_cate_id);
             if (index === -1) {

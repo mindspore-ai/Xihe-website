@@ -50,6 +50,7 @@ let queryDate = {
   licenses: [],
   tags: [],
   task: [],
+  task_cate: [],
   model_format: [],
 };
 
@@ -153,7 +154,7 @@ function getDetailData() {
           return item;
         });
         headTags.value = [...modelTags.value];
-        getTagList()
+        getTagList();
       } else {
         router.push('/notfound');
       }
@@ -274,8 +275,13 @@ function confirmBtn() {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
-          if (it.isActive == true) {
+          if (it.isActive) {
             queryDate[menu.key].push(it.id);
+            let index = queryDate['task_cate'].indexOf(it.task_cate_id);
+            if (index === -1) {
+              queryDate['task_cate'].push(it.task_cate_id);
+            }
+            console.log(queryDate['task_cate']);
           } else {
             return;
           }

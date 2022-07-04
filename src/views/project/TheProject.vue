@@ -789,7 +789,7 @@ $theme: #0d8dff;
           cursor: pointer;
           position: absolute;
           right: 0px;
-          bottom: 6px;
+          bottom: 10px;
           display: flex;
           &:hover {
             color: #0d8dff;
@@ -865,7 +865,7 @@ $theme: #0d8dff;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 24px;
-        max-height: 78px;
+        max-height: 130px;
         overflow: hidden;
       }
       &-radio {

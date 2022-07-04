@@ -195,13 +195,10 @@ function confirmCreating(formEl) {
         outputs: outputs,
         env_variables: form.env_variables,
       };
-      // console.log(params.inputs);
       // params.inputs = inputs;
       // params.outputs = outputs;
       createTrainProject(params, route.query.id).then((res) => {
-        // console.log(res);
         if (res.status === 200) {
-          // console.log(res);
           ElMessage({
             type: 'success',
             message: '创建训练实例成功',

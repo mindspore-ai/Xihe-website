@@ -1,6 +1,14 @@
 <script setup>
-import { ref, reactive, computed, onUnmounted, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import {
+  ref,
+  reactive,
+  computed,
+  onUnmounted,
+  onMounted,
+  watch,
+  nextTick,
+} from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import { useFileData } from '@/stores';
 import { getTrainLog, autoEvaluate } from '@/api/api-project';
@@ -11,7 +19,17 @@ import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 import { ElMessage } from 'element-plus';
 
+const showEvaBtn = ref(true);
+const isDisabled = ref(false);
+const showAnaButton = ref(false);
+const showGoButton = ref(false);
+const evaluateUrl = ref();
+
 const ruleRef = ref();
+
+const route = useRoute();
+const router = useRouter();
+
 const i18n = {
   title: '自动评估',
   desc: '训练日志可视化，请按顺序输入超参数范围，详细参考文档',
@@ -28,6 +46,7 @@ const query = reactive({
   momentum: '',
   batch_size: '',
 });
+
 const rules = reactive({
   learning_rate: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -55,7 +74,6 @@ const rules = reactive({
   ],
 });
 
-const route = useRoute();
 //训练日志js
 const form = reactive({
   name: '',
@@ -66,9 +84,6 @@ const form = reactive({
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// const i18n = {
-//   recentDownload: '',
-// };
 
 // 训练日志详情数据
 const trainDetail = ref({});
@@ -83,6 +98,7 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
+      console.log(res.data);
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
@@ -184,6 +200,10 @@ ws.onmessage = function (event) {
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
   ) {
+    ElMessage({
+      type: 'success',
+      message: '自动评估完成！点击查看报告查看。',
+    });
     showAnaButton.value = false;
     showGoButton.value = true;
     evaluateUrl.value = JSON.parse(event.data).data.url;
@@ -197,26 +217,10 @@ ws.onmessage = function (event) {
   }
 };
 
-// 跳到评估页面
-function goToPage() {
-  window.open(`${evaluateUrl.value}`);
-}
-
-const showEvaBtn = ref(true);
-const isDisabled = ref(false);
-const showAnaButton = ref(false);
-const showGoButton = ref(false);
-const evaluateUrl = ref();
 // 自动评估
 function saveSetting() {
-  // let params = {
-  //   learning_rate: [0.01],
-  //   momentum: [],
-  //   batch_size: [],
-  // };
   // ruleRef.value.validate((valid) => {
   // if (valid) {
-  // console.log(query);
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
     if (res.status === 200) {
       showEvaBtn.value = false;
@@ -232,6 +236,25 @@ function saveSetting() {
   // });
 }
 
+// 跳到评估页面
+function goToPage() {
+  window.open(`${evaluateUrl.value}`);
+}
+
+// config.json详情
+function goJsonFile(file) {
+  router.push(
+    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${file}`
+  );
+}
+
+// 日志详情
+function goLogFile() {
+  router.push(
+    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/tree/train/log/`
+  );
+}
+
 onMounted(() => {
   window.addEventListener('beforeunload', () => reloadPage());
 });
@@ -241,6 +264,16 @@ onUnmounted(() => {
   clearInterval(timer);
   clearInterval(timer1);
 });
+
+watch(
+  () => form.desc,
+  () => {
+    const obj = document.querySelector('#txt');
+    nextTick(() => {
+      obj.scrollTop = obj.scrollHeight;
+    });
+  }
+);
 </script>
 <template>
   <div class="train-log">
@@ -255,7 +288,7 @@ onUnmounted(() => {
         </el-input>
       </div>
       <div class="train-log-desc">
-        <el-input v-model="form.desc" type="textarea" />
+        <el-input id="txt" v-model="form.desc" type="textarea" />
       </div>
     </div>
     <div class="train-log-detail">
@@ -305,14 +338,17 @@ onUnmounted(() => {
           </li>
           <li class="info-list">
             <div class="info-list-title">输入参数文件</div>
-            <div class="info-list-detail document">
+            <div
+              @click="goJsonFile(trainDetail.config_path)"
+              class="info-list-detail document"
+            >
               {{ trainDetail.config_path }}
             </div>
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             &nbsp;
-            <div class="info-list-detail document">
+            <div @click="goLogFile" class="info-list-detail document">
               {{ trainDetail.log_file }}
             </div>
           </li>
@@ -364,7 +400,7 @@ onUnmounted(() => {
           disabled
           type="primary"
           @click="saveSetting"
-          >解析中</o-button
+          >自动评估中...</o-button
         >
         <o-button v-if="showGoButton" type="primary" @click="goToPage"
           >查看报告</o-button
@@ -413,6 +449,25 @@ onUnmounted(() => {
         :deep .el-textarea__inner {
           min-height: 560px !important;
           height: 100%;
+        }
+      }
+      :deep #txt {
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 3px;
+          background-color: #d8d8d8;
+          background-clip: content-box;
+        }
+
+        &::-webkit-scrollbar-track {
+          border-radius: 3px;
+          box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+          background: #ffffff;
+          // background:transparent;
         }
       }
     }
@@ -486,6 +541,7 @@ onUnmounted(() => {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          cursor: pointer;
         }
       }
       // .info-btn {

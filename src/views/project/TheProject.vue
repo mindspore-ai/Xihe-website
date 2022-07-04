@@ -312,7 +312,12 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  queryData.order = item.value;
+  console.log(item);
+  if (item.value === 'update_time') {
+    queryData.order = '-' + item.value;
+  } else {
+    queryData.order = item.value;
+  }
 }
 
 function getProject() {

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, reactive, watch, nextTick } from 'vue';
+import { computed, ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -157,8 +157,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 watch(
   () => {
@@ -166,8 +166,8 @@ watch(
   },
   (val) => {
     marginBottom.value = 0;
-    const name = val.substring(4) || 'lives';
     banner.value = val;
+    const name = val.substring(4) || 'lives';
     activeNavItem.value = name.toLowerCase();
   },
   { immediate: true }
@@ -187,7 +187,7 @@ function handleNavClick(item) {
   );
 }
 
-const orderValue = ref('123');
+// const orderValue = ref('123');
 /*
 function dropdownClick(item) {
   orderValue.value = item.value;
@@ -415,10 +415,7 @@ function handleDomChange(val) {
         </div>
         <!-- 具体内容 -->
         <div ref="detailInfo" class="content-detail-info">
-          <router-view
-            :key="$route.fullPath"
-            @dom-change="handleDomChange"
-          ></router-view>
+          <router-view @dom-change="handleDomChange"></router-view>
         </div>
       </div>
     </div>
@@ -592,7 +589,7 @@ function handleDomChange(val) {
       }
 
       &-tool + .content-detail-info {
-        position: relative;
+        // position: relative;
         margin-top: 30px;
       }
     }

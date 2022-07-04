@@ -23,7 +23,6 @@ const i18n = {
 };
 </script>
 <template>
-  <!-- v-if="projectData"  -->
   <div class="pro-card">
     <div class="card-top">
       <img :src="cardData.photo" alt="" />

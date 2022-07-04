@@ -6,7 +6,7 @@ import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconCopy from '~icons/app/copy-nickname';
 import IconPlus from '~icons/app/plus';
-import IconPopver from '~icons/app/popover.svg';
+// import IconPopver from '~icons/app/popover.svg';
 import IconFork from '~icons/app/fork';
 
 import OButton from '@/components/OButton.vue';
@@ -22,7 +22,6 @@ import {
   getModelTags,
   getUserDig,
   projectFork,
-  trainList,
 } from '@/api/api-project';
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -61,6 +60,7 @@ let queryDate = {
   licenses: [],
   tags: [],
   task: [],
+  task_cate: [],
 };
 
 let dialogList = {
@@ -359,8 +359,14 @@ function confirmBtn() {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
-          if (it.isActive == true) {
+          if (it.isActive) {
+            console.log(it);
             queryDate[menu.key].push(it.id);
+            let index = queryDate['task_cate'].indexOf(it.task_cate_id);
+            if (index === -1) {
+              queryDate['task_cate'].push(it.task_cate_id);
+            }
+            console.log(queryDate['task_cate']);
           } else {
             return;
           }

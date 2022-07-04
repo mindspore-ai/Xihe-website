@@ -9,6 +9,7 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
+import { ElMessage } from 'element-plus';
 
 const ruleRef = ref();
 const i18n = {
@@ -82,11 +83,9 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
-      console.log(res.data);
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
-      // console.log(trainDetail.value);
       if (trainDetail.value.metrics) {
         query.learning_rate = JSON.parse(
           trainDetail.value.metrics
@@ -100,7 +99,6 @@ function getTrainLogData() {
         isDisabled.value = true;
         showEvaBtn.value = false;
         timer = setInterval(() => {
-          // console.log(111);
           socket.send(
             JSON.stringify({
               pk: detailData.value.id,
@@ -110,7 +108,6 @@ function getTrainLogData() {
           );
         }, 1000);
         timer1 = setInterval(() => {
-          // console.log(222);
           socket.send(
             JSON.stringify({
               pk: detailData.value.id,
@@ -150,7 +147,6 @@ socket.onopen = function () {
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  // console.log(event.data);
   if (event.data.substring(0, 3) === 'log') {
     form.desc = event.data.substring(4);
   } else {
@@ -167,9 +163,9 @@ socket.onmessage = function (event) {
 };
 
 // // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function () {
-  // console.log('主动断开');
-};
+// socket.onclose = function () {
+//   // console.log('主动断开');
+// };
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -184,15 +180,26 @@ const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
 ws.onopen = function () {};
 
 ws.onmessage = function (event) {
-  // console.log(event.data);
-  showAnaButton.value = false;
-  showGoButton.value = true;
-  evaluateUrl.value = JSON.parse(event.data).data.url;
+  if (
+    JSON.parse(event.data).status === 200 &&
+    JSON.parse(event.data).msg === '运行中'
+  ) {
+    showAnaButton.value = false;
+    showGoButton.value = true;
+    evaluateUrl.value = JSON.parse(event.data).data.url;
+  } else {
+    showEvaBtn.value = true;
+    showAnaButton.value = false;
+    ElMessage({
+      type: 'error',
+      message: JSON.parse(event.data).msg,
+    });
+  }
 };
 
 // 跳到评估页面
 function goToPage() {
-  window.open( `${evaluateUrl.value}`)
+  window.open(`${evaluateUrl.value}`);
 }
 
 const showEvaBtn = ref(true);
@@ -211,7 +218,6 @@ function saveSetting() {
   // if (valid) {
   // console.log(query);
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
-    // console.log(res);
     if (res.status === 200) {
       showEvaBtn.value = false;
       showAnaButton.value = true;
@@ -361,7 +367,7 @@ onUnmounted(() => {
           >解析中</o-button
         >
         <o-button v-if="showGoButton" type="primary" @click="goToPage"
-          >前往</o-button
+          >查看报告</o-button
         >
       </div>
     </div>

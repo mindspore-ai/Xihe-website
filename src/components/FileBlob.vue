@@ -195,7 +195,7 @@ watch(
     </div>
     <div class="editing-card">
       <div v-if="fileData" class="file">
-        <div>
+        <div class="file-operation">
           <o-icon><files></files></o-icon
           ><span class="text">{{ fileData.description }}</span>
         </div>
@@ -285,12 +285,17 @@ watch(
     background-color: #ffffff;
     .file {
       display: flex;
+      padding: 0 12px;
       justify-content: space-between;
       background-color: #e5e8f0;
       .file-operation {
         display: flex;
+        align-items: center;
         &-item {
           cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           &:hover {
             text-decoration: underline;
           }
@@ -303,6 +308,7 @@ watch(
       .o-icon {
         display: inline-block;
         padding: 12px;
+        font-size: 24px;
       }
     }
     .blank {

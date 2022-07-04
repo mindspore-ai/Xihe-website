@@ -29,7 +29,7 @@ const requestInterceptorId = request.interceptors.request.use(
       loadingInstance = ElLoading.service({
         fullscreen: true,
         text: 'Loading',
-        background: 'rgba(255,255,255,0.5)',
+        background: 'transparent',
       });
     }
 

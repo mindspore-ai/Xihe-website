@@ -122,7 +122,7 @@ let queryData = reactive({
   model_format: null,
   device_target: null,
   relate_datasets: null,
-  ordering: null,
+  order: null,
 });
 
 queryData.search = route.query.search;

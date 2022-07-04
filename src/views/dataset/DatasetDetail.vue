@@ -619,19 +619,14 @@ $theme: #0d8dff;
 :deep .el-dialog {
   width: 800px;
   min-height: 502px;
-  --el-dialog-margin-top: 24vh;
+  // --el-dialog-margin-top: 24vh;
 }
 .dialog-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 472px;
-  padding-bottom: 60px;
+  margin-bottom: 18px;
   :deep .el-tabs__item {
     width: 188px;
     height: 56px;
-    text-align: center;
+    text-align: left;
     line-height: 56px;
     font-size: 18px;
   }
@@ -683,7 +678,7 @@ $theme: #0d8dff;
   }
   .body-right-container {
     padding-left: 24px;
-    height: 428px;
+    height: 320px;
     overflow-y: scroll;
     .noTask-box {
       display: flex;

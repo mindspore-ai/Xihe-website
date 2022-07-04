@@ -350,40 +350,45 @@ function start() {
 //停止推理
 function stop() {
   stopInference(detailData.value.id).then((res) => {
-    socket.send(JSON.stringify({ pk: detailData.value.id }));
+    socket.value.send(JSON.stringify({ pk: detailData.value.id }));
     // closeConn();
     // clearInterval(timer);
     msg.value = '';
   });
 }
-const socket = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
-socket.onopen = function () {
-  socket.send(JSON.stringify({ pk: detailData.value.id }));
-  timer = setInterval(() => {
-    socket.send(JSON.stringify({ pk: detailData.value.id }));
-  }, 5000);
-};
-socket.onmessage = function (event) {
-  msg.value = JSON.parse(event.data).msg;
-  if (!!JSON.parse(event.data).data) {
-    clientSrc.value = JSON.parse(event.data).data.url;
-  }
-  if (detailData.value.is_owner) {
-    if (
-      JSON.parse(event.data).msg === '启动失败' ||
-      JSON.parse(event.data).msg === '文件收集失败' ||
-      JSON.parse(event.data).msg === '创建项目推理任务错误'
-    ) {
-      ElMessage({
-        type: 'error',
-        message: JSON.parse(event.data).msg,
-      });
-      stopInference(detailData.value.id).then((res) => {});
+const socket = ref();
+if (detailData.value.sdk_name === 'Gradio') {
+  socket.value = new WebSocket(
+    'wss://xihebackend.test.osinfra.cn/wss/inference'
+  );
+  socket.value.onopen = function () {
+    socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+    timer = setInterval(() => {
+      socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+    }, 5000);
+  };
+  socket.value.onmessage = function (event) {
+    msg.value = JSON.parse(event.data).msg;
+    if (!!JSON.parse(event.data).data) {
+      clientSrc.value = JSON.parse(event.data).data.url;
     }
-  }
-};
+    if (detailData.value.is_owner) {
+      if (
+        JSON.parse(event.data).msg === '启动失败' ||
+        JSON.parse(event.data).msg === '文件收集失败' ||
+        JSON.parse(event.data).msg === '创建项目推理任务错误'
+      ) {
+        ElMessage({
+          type: 'error',
+          message: JSON.parse(event.data).msg,
+        });
+        stopInference(detailData.value.id).then((res) => {});
+      }
+    }
+  };
+}
 function closeConn() {
-  socket.close(); // 向服务端发送断开连接的请求
+  socket.value.close(); // 向服务端发送断开连接的请求
 }
 onUnmounted(() => {
   closeConn();

@@ -343,9 +343,9 @@ const handleTimeChange2 = () => {
   }
 
   margin-top: 24px;
-  &:last-child {
-    // margin-top: 94px;
-  }
+  // &:last-child {
+  // margin-top: 94px;
+  // }
 
   .setting-title {
     height: 24px;
@@ -378,6 +378,15 @@ const handleTimeChange2 = () => {
     .el-form-item {
       .setting-btn {
         margin-left: 8px;
+      }
+    }
+  }
+}
+:deep .el-form {
+  .el-form-item {
+    .el-form-item__content {
+      .el-form-item__error {
+        left: 435px;
       }
     }
   }

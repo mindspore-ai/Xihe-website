@@ -356,4 +356,13 @@ function resetForm(formEl) {
     width: 264px;
   }
 }
+.setting-content {
+  .o-dialog {
+    .o-dialog-wrap {
+      :deep(.o-dialog-body) {
+        padding-bottom: 0 !important;
+      }
+    }
+  }
+}
 </style>

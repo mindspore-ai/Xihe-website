@@ -155,10 +155,14 @@ onMounted(() => {
   }
 }
 .empty {
+  position: absolute;
+  top: calc(50% + 48px);
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  // height: 100%;
   flex-direction: column;
   .empty-img {
     width: 280px;

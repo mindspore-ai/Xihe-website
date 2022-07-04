@@ -230,6 +230,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
+    { max: 8, message: '名字不可以大于8个字符', trigger: 'blur' },
   ],
   SDK: [
     {
@@ -244,6 +245,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
+    { pattern: /\/$/, message: '请输入以/结尾的路径格式', trigger: 'blur' },
   ],
   boot_file: [
     {
@@ -265,6 +267,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
+    { pattern: /\/$/, message: '请输入以/结尾的路径格式', trigger: 'blur' },
   ],
   train_instance_type: [
     {
@@ -481,12 +484,6 @@ const rules = reactive({
                     ></el-option>
                   </el-select>
                 </el-form-item>
-                <!-- 真正的html <el-form-item placeholder="">
-                  <el-input
-                    v-model="form.train_instance_type"
-                    placeholder="MindSpore"
-                  />
-                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
@@ -560,7 +557,8 @@ const rules = reactive({
 <style lang="scss" scoped>
 .createfile {
   max-width: 100%;
-  height: 100%;
+  // height: 100%;
+  min-height: calc(100vh - 200px);
   margin-top: 80px;
   background-color: #f5f6f8;
   .createfile-wrap {
@@ -609,6 +607,9 @@ const rules = reactive({
             margin-right: 40px;
             color: #0d8dff;
             border-bottom: 1px solid #0d8dff;
+          }
+          .selectfile-option {
+            border-bottom: 1px solid transparent;
           }
         }
       }

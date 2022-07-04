@@ -430,12 +430,28 @@ export const routes = [
     component: () => {
       return import('@/views/project/ProjectSelectFile.vue');
     },
+    beforeEnter: async () => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: 'home',
+        };
+      }
+    },
   },
   {
     path: '/projects/:user/:name/createfile',
     name: 'projectsCreateFile',
     component: () => {
       return import('@/views/project/ProjectCreateFile.vue');
+    },
+    beforeEnter: async () => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: 'home',
+        };
+      }
     },
   },
   {
@@ -485,6 +501,14 @@ export const routes = [
         meta: {
           index: 1,
         },
+        beforeEnter: async () => {
+          const logingStore = useLoginStore();
+          if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+            return {
+              name: 'home',
+            };
+          }
+        },
       },
       {
         path: 'trainlog/:trainId',
@@ -494,6 +518,14 @@ export const routes = [
         },
         meta: {
           index: 1,
+        },
+        beforeEnter: async () => {
+          const logingStore = useLoginStore();
+          if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+            return {
+              name: 'home',
+            };
+          }
         },
       },
       {

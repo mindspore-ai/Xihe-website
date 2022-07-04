@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
 
-import { useFileData } from '@/stores';
+// import { useFileData } from '@/stores';
 
 import { createTrainProject, getProjectData } from '@/api/api-project';
 // import { fileVerify } from '@/api/api-obs.js';
@@ -38,7 +38,6 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
-  // console.log(route.query.id)
   createTrainProject(params, route.query.id).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -219,7 +218,8 @@ getDetailData();
 <style lang="scss" scoped>
 .selectfile {
   max-width: 100%;
-  height: 100%;
+  // height: 100%;
+  min-height: calc(100vh - 200px);
   margin-top: 80px;
   // margin-bottom: 49px;
   background-color: #f5f6f8;
@@ -278,6 +278,9 @@ getDetailData();
             margin-left: 40px;
             color: #0d8dff;
             border-bottom: 1px solid #0d8dff;
+          }
+          .createfile-option {
+            border-bottom: 1px solid transparent;
           }
         }
       }

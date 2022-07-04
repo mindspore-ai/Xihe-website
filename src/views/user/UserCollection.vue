@@ -121,12 +121,12 @@ function toTop() {
         ></o-livecard>
       </div>
     </div>
-    <div v-else class="empty-wrap">
-      <div class="empty">
-        <img class="empty-img" :src="emptyImg" />
-        <p class="empty-text">{{ i18n.emptyText }}</p>
-      </div>
+    <!-- <div v-else class="empty-wrap"> -->
+    <div v-else class="empty">
+      <img class="empty-img" :src="emptyImg" />
+      <p class="empty-text">{{ i18n.emptyText }}</p>
     </div>
+    <!-- </div> -->
   </div>
   <div v-if="collectionCount > 6" class="pagination">
     <el-pagination
@@ -171,23 +171,25 @@ function toTop() {
       }
     }
   }
-  .empty-wrap {
-    width: 100%;
-    height: 100%;
-    .empty {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      flex-direction: column;
-      .empty-img {
-        width: 280px;
-      }
-      .empty-text {
-        margin-top: 24px;
-        font-size: 18px;
-        color: #555555ff;
-      }
+  .empty {
+    position: absolute;
+    top: calc(50% + 48px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // width: 100%;
+    // height: 100%;
+    flex-direction: column;
+    .empty-img {
+      width: 280px;
+      height: 206px;
+    }
+    .empty-text {
+      margin-top: 24px;
+      font-size: 18px;
+      color: #555555ff;
     }
   }
 }

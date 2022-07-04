@@ -118,12 +118,16 @@ function setNewClick() {
 </template>
 <style lang="scss" scoped>
 .empty-status {
+  position: absolute;
+  top: calc(50% + 48px);
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
   img {
     width: 280px;
     height: 206px;

@@ -131,7 +131,6 @@ function stopTrainList(id) {
 }
 
 function quitClick(val) {
-  console.log(val);
   if (val === 1) {
     showStop.value = false;
   } else {
@@ -140,7 +139,6 @@ function quitClick(val) {
 }
 
 function showStopClick(val, id) {
-  console.log(val, id);
   stopId.value = id;
   if (val === 'Terminated') {
     ElMessage({

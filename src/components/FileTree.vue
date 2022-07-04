@@ -3,6 +3,8 @@ import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconModel from '~icons/app/model-blue';
+import IconDataset from '~icons/app/dataset-blue';
+import IconProject from '~icons/app/project-tree';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import IconDownload from '~icons/app/download';
@@ -39,7 +41,12 @@ const pushParams = {
   contents: routerParams.contents,
 };
 const filesList = ref([]);
-
+const prop = defineProps({
+  moduleName: {
+    type: String,
+    default: '',
+  },
+});
 const i18n = {
   uploadTime: '更新时间',
   download: '下载',
@@ -94,24 +101,26 @@ function getFilesByPath() {
   contents = routerParams.contents;
   if (contents && contents.length) {
     getDetailData(
-      `xihe-obj/models/${route.params.user}/${
+      `xihe-obj/${prop.moduleName}s/${route.params.user}/${
         routerParams.name
       }/${contents.join('/')}/`
     );
   } else {
     // 根目录下
-    getDetailData(`xihe-obj/models/${route.params.user}/${routerParams.name}/`);
+    getDetailData(
+      `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/`
+    );
   }
 }
 function emptyClick(ind) {
   if (ind === 1) {
     router.push({
-      name: 'modelFileNew',
+      name: `${prop.moduleName}FileNew`,
       params: pushParams,
     });
   } else if (ind === 3) {
     router.push({
-      name: 'modelFileUpload',
+      name: `${prop.moduleName}FileUpload`,
       params: pushParams,
     });
   }
@@ -120,7 +129,7 @@ function goBlob(item) {
   let contents = [...routerParams.contents, decodeURI(item.name)];
   if (!item.is_folder) {
     router.push({
-      name: 'modelFileBlob',
+      name: `${prop.moduleName}FileBlob`,
       params: {
         user: routerParams.user,
         name: routerParams.name,
@@ -129,7 +138,7 @@ function goBlob(item) {
     });
   } else {
     router.push({
-      name: 'modelFile',
+      name: `${prop.moduleName}File`,
       params: {
         user: routerParams.user,
         name: routerParams.name,
@@ -142,12 +151,12 @@ function creatFolter(formEl) {
   if (!formEl) return;
   let path = '';
   if (contents && contents.length) {
-    path = `xihe-obj/models/${route.params.user}/${
+    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
       routerParams.name
     }/${contents.join('/')}/${query.folderName}/.keep`;
   } else {
     // 根目录下
-    path = `xihe-obj/models/${route.params.user}/${routerParams.name}/${query.folderName}/.keep`;
+    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${query.folderName}/.keep`;
   }
 
   formEl.validate((valid) => {
@@ -180,7 +189,7 @@ function cancelCreat() {
 watch(
   () => route.fullPath,
   () => {
-    if (router.currentRoute.value.name === 'modelFile') {
+    if (router.currentRoute.value.name === `${prop.moduleName}File`) {
       getFilesByPath();
     }
   },
@@ -201,7 +210,15 @@ watch(
         <tr class="tree-head">
           <td class="tree-head-left">
             <div class="inner-box">
-              <o-icon><icon-model></icon-model> </o-icon>
+              <o-icon>
+                <icon-model v-if="moduleName === 'model'"></icon-model>
+                <icon-dataset
+                  v-else-if="moduleName === 'dataset'"
+                ></icon-dataset>
+                <icon-project
+                  v-else-if="moduleName === 'project'"
+                ></icon-project>
+              </o-icon>
               <span
                 class="tree-head-left-describe"
                 :title="detailData.description"

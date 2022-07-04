@@ -17,6 +17,7 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
+import { ElMessage } from 'element-plus';
 
 const showEvaBtn = ref(true);
 const isDisabled = ref(false);
@@ -177,9 +178,9 @@ socket.onmessage = function (event) {
 };
 
 // // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function () {
-  // console.log('主动断开');
-};
+// socket.onclose = function () {
+//   // console.log('主动断开');
+// };
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -194,10 +195,21 @@ const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
 ws.onopen = function () {};
 
 ws.onmessage = function (event) {
-  // console.log(event.data);
-  showAnaButton.value = false;
-  showGoButton.value = true;
-  evaluateUrl.value = JSON.parse(event.data).data.url;
+  if (
+    JSON.parse(event.data).status === 200 &&
+    JSON.parse(event.data).msg === '运行中'
+  ) {
+    showAnaButton.value = false;
+    showGoButton.value = true;
+    evaluateUrl.value = JSON.parse(event.data).data.url;
+  } else {
+    showEvaBtn.value = true;
+    showAnaButton.value = false;
+    ElMessage({
+      type: 'error',
+      message: JSON.parse(event.data).msg,
+    });
+  }
 };
 
 // 自动评估
@@ -386,7 +398,7 @@ watch(
           >解析中</o-button
         >
         <o-button v-if="showGoButton" type="primary" @click="goToPage"
-          >前往</o-button
+          >查看报告</o-button
         >
       </div>
     </div>

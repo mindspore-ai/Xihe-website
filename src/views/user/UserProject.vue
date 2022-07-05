@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
@@ -8,64 +8,59 @@ import IconHeart from '~icons/app/heart';
 
 import OIcon from '@/components/OIcon.vue';
 
-import { getProjectData } from '@/api/api-user';
-
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
-
-/* 个人排序（暂时不支持） */
-// const props = defineProps({
-//   orderValue: {
-//     type: String,
-//     default: 'name',
-//   },
-// });
-
-// watch(props, (newProps) => {
-//   queryData.order = newProps.orderValue;
-//   getUserProject(queryData);
-// });
-
-const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
+import { getProjectData } from '@/api/api-project';
 
 const route = useRoute();
 const router = useRouter();
 
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
-
-// 当前用户信息
-const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
-});
-
 const projectCount = ref(0);
 const projectData = ref([]);
 
-const queryData = reactive({
-  page: 1,
-  size: 10,
-  search: null,
-  tags: null,
-  sdk: null,
-  // task_cate: null,
-  licenses: null,
-  status: null,
+const props = defineProps({
+  queryData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
 });
-queryData.search = route.query.search;
 
-function getUserProject(query) {
+let query = reactive({
+  search: '',
+  page: 1,
+  size: 12,
+  owner_name: route.params.user,
+  order: '',
+});
+
+const layout = ref('sizes, prev, pager, next, jumper');
+const emit = defineEmits(['getlivecount', 'domChange']);
+
+function handleSizeChange(val) {
+  if (projectCount.value / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
+  query.size = val;
+}
+
+function handleCurrentChange(val) {
+  query.page = val;
+  document.documentElement.scrollTop = 0;
+}
+
+function getUserProject() {
   getProjectData(query).then((res) => {
-    if (res.status === 200 && res.data.length) {
-      projectCount.value = res.data.length;
-      projectData.value = res.data;
+    if (res.count && res.results.status === 200) {
+      if (res.count > 12) {
+        emit('domChange', 76);
+      }
+      projectCount.value = res.count;
+      projectData.value = res.results.data;
     } else {
       projectData.value = [];
     }
   });
 }
-getUserProject(userInfo.value.id);
 function goDetail(user, name) {
   router.push({
     path: `/projects/${user}/${name}`,
@@ -77,43 +72,73 @@ function setNewClick() {
     path: `/new/projects`,
   });
 }
+watch(
+  query,
+  () => {
+    getUserProject();
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+watch(props, () => {
+  query.search = props.queryData.keyWord;
+  query.order = props.queryData.order;
+  query.page = 1;
+});
 </script>
 <template>
-  <div v-if="projectCount > 0" class="card-list">
-    <div
-      v-for="item in projectData"
-      :key="item.id"
-      class="pro-card"
-      @click="goDetail(item.owner_name.name, item.name)"
-    >
-      <div class="card-top">
-        <img :src="item.photo_url" alt="" />
-        <p class="title">{{ item.name }}</p>
-        <div class="dig">
-          <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.digg_count }}
-        </div>
-        <div class="card-modal"></div>
-      </div>
-
-      <div class="card-bottom">
-        <div class="info">
-          <div class="info-avata">
-            <img :src="item.owner_name.avatar_url" alt="" />
+  <div>
+    <div v-if="projectCount > 12" class="project-card">
+      <div class="card-list">
+        <div
+          v-for="item in projectData"
+          :key="item.id"
+          class="pro-card"
+          @click="goDetail(item.owner_name.name, item.name)"
+        >
+          <div class="card-top">
+            <img :src="item.photo_url" alt="" />
+            <p class="title">{{ item.name }}</p>
+            <div class="dig">
+              <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.digg_count }}
+            </div>
+            <div class="card-modal"></div>
           </div>
-          <div class="info-name">{{ item.owner_name.name }}</div>
+
+          <div class="card-bottom">
+            <div class="info">
+              <div class="info-avata">
+                <img :src="item.owner_name.avatar_url" alt="" />
+              </div>
+              <div class="info-name">{{ item.owner_name.name }}</div>
+            </div>
+            <div class="time">
+              <o-icon>
+                <icon-time></icon-time>
+              </o-icon>
+              {{ item.update_date_time.split(' ')[0] }}
+            </div>
+          </div>
         </div>
-        <div class="time">
-          <o-icon>
-            <icon-time></icon-time>
-          </o-icon>
-          {{ item.update_date_time.split(' ')[0] }}
-        </div>
+      </div>
+      <div v-if="projectCount > 12" class="pagination">
+        <el-pagination
+          :page-sizes="[12, 24, 60]"
+          :current-page="queryData.page"
+          :page-size="queryData.size"
+          :total="projectCount"
+          :layout="layout"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
       </div>
     </div>
-  </div>
-  <div v-else class="empty-status">
-    <img src="@/assets/imgs/project-empty.png" alt="" />
-    <p @click="setNewClick">暂未创建项目，点击创建项目</p>
+    <div v-else class="empty-status">
+      <img src="@/assets/imgs/project-empty.png" alt="" />
+      <p @click="setNewClick">暂未创建项目，点击创建项目</p>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -222,5 +247,10 @@ function setNewClick() {
       }
     }
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
 }
 </style>

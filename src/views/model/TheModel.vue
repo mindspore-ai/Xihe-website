@@ -38,7 +38,7 @@ let i18n = {
   sortCondition: [
     { text: '按照下载量排序', value: 'download' },
     { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: 'update_time' },
+    { text: '按照更新时间排序', value: '-update_time' },
   ],
   screenCondition: [
     {

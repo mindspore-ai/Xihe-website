@@ -90,7 +90,7 @@ watch(props, () => {
 </script>
 <template>
   <div>
-    <div v-if="projectCount > 12" class="project-card">
+    <div v-if="projectCount > 0" class="project-card">
       <div class="card-list">
         <div
           v-for="item in projectData"

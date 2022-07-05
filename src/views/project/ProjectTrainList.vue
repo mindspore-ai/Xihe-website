@@ -18,8 +18,8 @@ import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
-import { useRouter } from 'vue-router';
-import { useFileData } from '@/stores';
+import { useRouter, useRoute } from 'vue-router';
+import { useFileData, useUserInfoStore } from '@/stores';
 import {
   trainList,
   deleteTainList,
@@ -27,7 +27,7 @@ import {
   rebuildTrain,
 } from '@/api/api-project';
 
-// const route = useRoute();
+const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 
@@ -108,6 +108,7 @@ function showDelClick(val) {
   listId.value = val;
   showDel.value = true;
 }
+
 // 删除
 function deleteTrainList(id) {
   deleteTainList(projectId, id).then((res) => {
@@ -174,7 +175,8 @@ function resetClick(val) {
       console.log(res);
       if (res.status === 200) {
         showReset.value = false;
-        getTrainList();
+        // getTrainList();
+        window.location.reload();
       }
     });
   }

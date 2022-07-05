@@ -19,12 +19,13 @@ import ResetTrain from '@/components/ResetTrain.vue';
 import warningImg from '@/assets/icons/warning.png';
 
 import { useRoute, useRouter } from 'vue-router';
-import { useFileData } from '@/stores';
+import { useFileData, useUserInfoStore } from '@/stores';
 import { trainList, deleteTainList, stopTrain } from '@/api/api-project';
 import { ElMessageBox } from 'element-plus';
 
 const route = useRoute();
 const router = useRouter();
+const userInfoStore = useUserInfoStore();
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -35,6 +36,7 @@ const trainData = ref([]);
 const listId = ref();
 const stopId = ref();
 const showTip = ref(false);
+const describe = ref('');
 const i18n = {
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
@@ -42,7 +44,18 @@ const i18n = {
     '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
   confirm: '确定',
 };
-const describe = ref('');
+
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+// 判断是否是自己的项目，不是则返回首页
+function beforeEnter() {
+  if (!isAuthentic.value) {
+    router.push('/');
+  }
+}
+beforeEnter();
 
 let timer = null;
 // 获取训练列表
@@ -83,15 +96,6 @@ function toggleDelDlg(flag) {
     showTip.value = flag;
   }
 }
-//跳转到选择文件创建训练实例页
-// function goSelectFile() {
-//   router.push({
-//     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-//     query: {
-//       projectId: detailData.value.id,
-//     },
-//   });
-// }
 
 const showDel = ref(false);
 function showDelClick(val) {

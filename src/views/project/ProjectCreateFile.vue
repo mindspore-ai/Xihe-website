@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
@@ -8,9 +8,18 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { createTrainProject, getProjectData } from '@/api/api-project';
 
+import { useUserInfoStore } from '@/stores';
+
+const userInfoStore = useUserInfoStore();
+
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
 const route = useRoute();
 const router = useRouter();
 let queryRef = ref(null);
+const detailData = ref({});
 
 const form = reactive({
   job_name: '',
@@ -33,7 +42,6 @@ const selectData = reactive({
   com3: '',
 });
 // window.xxx = form;
-// form.frameworks.framework_type = selectData.com1;
 const optionData = reactive({
   com1: [
     { value: 'A', name: 'MindSpore', content: 'MPI' },
@@ -132,7 +140,13 @@ function change2() {
   }
 }
 
-const detailData = ref({});
+// 判断是否是自己的项目，不是则返回首页
+function beforeEnter() {
+  if (!isAuthentic.value) {
+    router.push('/');
+  }
+}
+beforeEnter();
 // 返回训练页面
 function goTrain() {
   router.push({
@@ -166,10 +180,10 @@ function goSelectFile() {
 }
 // 确认创建训练实例
 function confirmCreating(formEl) {
+  // 如果表单为空，返回
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      // 如果表单为空，返回
       let inputs = {},
         outputs = {};
       try {
@@ -230,7 +244,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    { max: 8, message: '名字不可以大于8个字符', trigger: 'blur' },
+    { max: 8, message: '名称不可以大于8个字符', trigger: 'blur' },
   ],
   SDK: [
     {
@@ -245,7 +259,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    { pattern: /\/$/, message: '请输入以/结尾的路径格式', trigger: 'blur' },
+    { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
   ],
   boot_file: [
     {
@@ -267,7 +281,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    { pattern: /\/$/, message: '请输入以/结尾的路径格式', trigger: 'blur' },
+    { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
   ],
   train_instance_type: [
     {
@@ -277,6 +291,28 @@ const rules = reactive({
     },
   ],
 });
+// function checkCodeDir() {
+//   //校验路径是否以/结尾
+//   let reg = /\/$/;
+//   if (!reg.test(form.code_dir)) {
+//     ElMessage({
+//       type: 'error',
+//       message: '代码目录为文件夹格式，末尾必须带/，请重新输入',
+//       center: true,
+//     });
+//   }
+// }
+// function checkLogUrl() {
+//   //校验路径是否以/结尾
+//   let reg = /\/$/;
+//   if (!reg.test(form.log_url)) {
+//     ElMessage({
+//       type: 'error',
+//       message: '日志路径为文件夹格式，末尾必须带/，请重新输入',
+//       center: true,
+//     });
+//   }
+// }
 </script>
 <template>
   <div class="createfile">
@@ -546,7 +582,7 @@ const rules = reactive({
             class="confim"
             type="primary"
             @click="confirmCreating(queryRef)"
-            >确认</o-button
+            >保存</o-button
           >
         </div>
       </div>
@@ -668,12 +704,12 @@ const rules = reactive({
   }
 }
 
-:deep .el-form {
+:deep(.el-form) {
   font-size: 14px;
   color: #555;
   // display: grid;
   .el-form-item {
-    margin-bottom: 24px;
+    margin-bottom: 26px;
     width: 560px;
     @media (max-width: 1440px) {
       width: 500px;

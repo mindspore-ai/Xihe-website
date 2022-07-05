@@ -1,98 +1,84 @@
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 
-import { getUserDatasetData } from '@/api/api-user';
-// import { getModelData } from '@/api/api-model';
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
-
-const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
+import { getDatasetData } from '@/api/api-dataset';
 
 const route = useRoute();
 const router = useRouter();
 
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
-
 const i18n = {
   emptyText: '暂未创建数据集，点击创建数据集立即创建',
 };
-
-// 当前用户信息
-const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
+const props = defineProps({
+  queryData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
 });
-
 const modelCount = ref(0);
 const modelData = ref([]);
 let query = reactive({
-  search: null,
+  search: '',
   page: 1,
   size: 10,
-  task: null,
-  libraries: null,
-  licenses: null,
-  model_format: null,
-  device_target: null,
-  relate_datasets: null,
-  ordering: null,
+  owner_name: route.params.user,
+  order: '',
 });
-query.search = route.query.search;
-
-getUserDatasetData(userInfo.value.id).then((res) => {
-  if (res.status === 200 && res.data.length) {
-    modelCount.value = res.data.length;
-    modelData.value = res.data;
-  } else {
-    modelData.value = [];
-  }
-});
+const emit = defineEmits(['getlivecount', 'domChange']);
 
 function goDetail(user, modelName) {
   router.push({
     path: `/datasets/${user}/${modelName}`,
   });
 }
-
+function getUserDatasetData() {
+  getDatasetData(query).then((res) => {
+    if (res.count && res.results.status === 200) {
+      if (res.count > 10) {
+        emit('domChange', 76);
+      }
+      modelCount.value = res.count;
+      modelData.value = res.results.data;
+    } else {
+      modelData.value = [];
+    }
+  });
+}
 function handleSizeChange(val) {
+  if (modelCount.value / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
   query.size = val;
 }
+
 function handleCurrentChange(val) {
   query.page = val;
-  let lis = document.querySelectorAll('.el-pager li');
-  lis[val - 1].addEventListener('mousedown', function () {
-    lis[val - 1].classList.add('active');
-  });
+  document.documentElement.scrollTop = 0;
 }
 
-const test = ref(null);
-
-onMounted(() => {
-  // renderCondition.value = i18n.screenCondition;
-  // 分页器
-  let span = document.querySelectorAll('.el-select-dropdown__item span');
-  let spans = Array.from(span);
-  span = spans.map((item) => {
-    let i = item.__vnode.children.split('').indexOf('条');
-    return item.__vnode.children.substring(0, i);
-  });
-  span.forEach((item, index) => {
-    document
-      .querySelectorAll('.el-select-dropdown__item span')
-      .forEach((it, i) => {
-        if (index == i) {
-          it.innerHTML = item;
-        }
-      });
-  });
+watch(
+  query,
+  () => {
+    getUserDatasetData();
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+watch(props, () => {
+  query.search = props.queryData.keyWord;
+  query.order = props.queryData.order;
+  query.page = 1;
 });
 </script>
 <template>
-  <div v-if="modelData.length" ref="test" class="card-box">
+  <div v-if="modelData.length" class="card-box">
     <div class="card-list">
       <o-card
         v-for="item in modelData"
@@ -102,18 +88,17 @@ onMounted(() => {
         @click="goDetail(item.owner_name.name, item.name)"
       ></o-card>
     </div>
-    <!-- <div class="pagination">
+    <div v-if="modelCount > 10" class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
         :page-size="query.size"
         :total="modelCount"
-        hide-on-single-page
         layout="sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>
-    </div> -->
+    </div>
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />
@@ -151,7 +136,7 @@ onMounted(() => {
   .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 .empty {

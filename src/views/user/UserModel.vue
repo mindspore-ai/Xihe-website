@@ -1,21 +1,13 @@
 <script setup>
-import { ref, computed, onMounted, reactive, watch } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/model-empty.png';
 
 import { getModelData } from '@/api/api-model';
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
-
-const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
 
 const route = useRoute();
 const router = useRouter();
-
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
 
 const i18n = {
   emptyText: '暂未创建模型，点击创建模型立即创建',
@@ -30,31 +22,26 @@ const props = defineProps({
   },
 });
 
-const order = computed(() => {
-  return props.queryData.order;
-});
-const keyWord = computed(() => {
-  return props.queryData.keyWord;
-});
-
-// 当前用户信息
-const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
-});
+const layout = ref('sizes, prev, pager, next, jumper');
+const emit = defineEmits(['getlivecount', 'domChange']);
 
 const modelCount = ref(0);
 const modelData = ref([]);
+
 let query = reactive({
-  search: keyWord,
+  search: '',
   page: 1,
   size: 10,
   owner_name: route.params.user,
-  order: order,
+  order: '',
 });
 
 function getUserModelData() {
   getModelData(query).then((res) => {
     if (res.count && res.results.status === 200) {
+      if (res.count > 10) {
+        emit('domChange', 76);
+      }
       modelCount.value = res.count;
       modelData.value = res.results.data;
     } else {
@@ -81,10 +68,8 @@ function handleCurrentChange(val) {
   document.documentElement.scrollTop = 0;
 }
 
-const test = ref(null);
-
 watch(
-  [query, props],
+  query,
   () => {
     getUserModelData();
   },
@@ -93,37 +78,14 @@ watch(
     immediate: true,
   }
 );
-// watch(
-//   props,
-//   (val) => {
-//     console.log(val);
-//   },
-//   {
-//     deep: true,
-//   }
-// );
-onMounted(() => {
-  // renderCondition.value = i18n.screenCondition;
-  // 分页器
-  let span = document.querySelectorAll('.el-select-dropdown__item span');
-  let spans = Array.from(span);
-  span = spans.map((item) => {
-    let i = item.__vnode.children.split('').indexOf('条');
-    return item.__vnode.children.substring(0, i);
-  });
-  span.forEach((item, index) => {
-    document
-      .querySelectorAll('.el-select-dropdown__item span')
-      .forEach((it, i) => {
-        if (index == i) {
-          it.innerHTML = item;
-        }
-      });
-  });
+watch(props, () => {
+  query.search = props.queryData.keyWord;
+  query.order = props.queryData.order;
+  query.page = 1;
 });
 </script>
 <template>
-  <div v-if="modelData.length" ref="test" class="card-box">
+  <div v-if="modelData.length" class="card-box">
     <div class="card-list">
       <o-card
         v-for="item in modelData"
@@ -132,7 +94,7 @@ onMounted(() => {
         @click="goDetail(item.owner_name.name, item.name)"
       ></o-card>
     </div>
-    <div class="pagination">
+    <div v-if="modelCount > 10" class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
@@ -171,6 +133,7 @@ onMounted(() => {
     }
   }
   .card-list {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2, minmax(200px, 1fr));
     column-gap: 24px;
@@ -180,7 +143,7 @@ onMounted(() => {
   .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 .empty {

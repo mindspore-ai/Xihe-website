@@ -205,6 +205,17 @@ export function stopTrain(projectId, trainId) {
 }
 
 /**
+ * 重建训练
+ * @returns
+ */
+export function rebuildTrain(projectId, trainId) {
+  const url = `/api/projects/${projectId}/train/trainins/${trainId}/rebuild/`;
+  return request.put(url, null, getHeaderConfig()).then((res) => {
+    return res;
+  });
+}
+
+/**
  * 训练列表--删除
  * @returns
  */

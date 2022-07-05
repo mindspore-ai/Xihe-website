@@ -65,7 +65,7 @@ const i18n = {
   addModel: '添加相关模型',
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '暂未开始训练',
+  emptyVisited: '无训练内容',
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
   describe2:

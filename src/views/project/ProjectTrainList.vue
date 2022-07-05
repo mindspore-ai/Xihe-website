@@ -3,7 +3,7 @@ import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import IconPlus from '~icons/app/plus';
+// import IconPlus from '~icons/app/plus';
 import IconRebuild from '~icons/app/rebuild';
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
@@ -12,18 +12,22 @@ import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 import IconInstance from '~icons/app/train-instance';
+import warningImg from '@/assets/icons/warning.png';
 
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
-import warningImg from '@/assets/icons/warning.png';
 
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useFileData } from '@/stores';
-import { trainList, deleteTainList, stopTrain } from '@/api/api-project';
-import { ElMessageBox } from 'element-plus';
+import {
+  trainList,
+  deleteTainList,
+  stopTrain,
+  rebuildTrain,
+} from '@/api/api-project';
 
-const route = useRoute();
+// const route = useRoute();
 const router = useRouter();
 
 // 当前项目的详情数据
@@ -48,8 +52,10 @@ let timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
+    console.log(res.data.data);
     trainData.value = res.data.data;
-    if (trainData.value.findIndex((item) => item.status === 'Running') > -1) {
+    console.log(trainData.value.findIndex((item) => item.status === 'Running'));
+    if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
       timer = setInterval(() => {
         socket.send(JSON.stringify({ pk: detailData.value.id }));
       }, 1000);
@@ -104,7 +110,6 @@ function deleteTrainList(id) {
     if (res.status === 200) {
       getTrainList();
       showDel.value = false;
-      socket.close();
     }
   });
 }
@@ -160,6 +165,14 @@ function showResetClick() {
 function resetClick(val) {
   if (val === 1) {
     showReset.value = false;
+  } else {
+    rebuildTrain(projectId, val).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        showReset.value = false;
+        getTrainList();
+      }
+    });
   }
 }
 
@@ -173,11 +186,11 @@ function goTrainLog(trainId) {
 }
 
 // 参数文件详情跳转
-function goDateDetail(path) {
-  router.push(
-    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
-  );
-}
+// function goDateDetail(path) {
+//   router.push(
+//     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
+//   );
+// }
 
 // wss://xihe.test.osinfra.cn/wss/train_task
 const socket = new WebSocket(
@@ -191,20 +204,19 @@ socket.onopen = function () {
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  // console.log('收到服务器的消息');
+  console.log('收到服务器的消息');
   trainData.value = JSON.parse(event.data).data;
 
-  if (trainData.value.findIndex((item) => item.status === 'Running') == -1) {
+  if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
     clearInterval(timer);
     setTimeout(closeConn(), 10000);
-    // console.log('无status');
   }
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function () {
-  // console.log('服务器主动断开');
-};
+// socket.onclose = function () {
+//   // console.log('服务器主动断开');
+// };
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -279,6 +291,7 @@ onUnmounted(() => {
           ></stop-train>
           <!-- 重建 -->
           <reset-train
+            :reset-id="scope.row.train_id"
             :show-reset="showReset"
             @on-click="resetClick"
           ></reset-train>
@@ -294,7 +307,7 @@ onUnmounted(() => {
                   <o-icon><icon-stop></icon-stop></o-icon>
                   <p>终止</p>
                 </div>
-                <div class="tools" @click="showResetClick">
+                <div class="tools" @click="showResetClick(scope.row.train_id)">
                   <o-icon><icon-rebuild></icon-rebuild></o-icon>
                   <p>重建</p>
                 </div>
@@ -307,7 +320,7 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="参数文件" width="203">
+      <!-- <el-table-column label="参数文件" width="203">
         <template #default="scope">
           <div>
             <span class="date" @click="goDateDetail(scope.row.config_path)">
@@ -315,7 +328,7 @@ onUnmounted(() => {
             >
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="更新时间" prop="create_time" width="154">
       </el-table-column>
     </el-table>

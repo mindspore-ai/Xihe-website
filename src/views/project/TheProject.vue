@@ -53,7 +53,7 @@ let i18n = {
   sortCondition: [
     { text: '按照下载量排序', value: 'download' },
     { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: 'update_time' },
+    { text: '按照更新时间排序', value: '-update_time' },
   ],
   screenCondition: [
     {
@@ -312,12 +312,7 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  console.log(item);
-  if (item.value === 'update_time') {
-    queryData.order = '-' + item.value;
-  } else {
-    queryData.order = item.value;
-  }
+  queryData.order = item.value;
 }
 
 function getProject() {

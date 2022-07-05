@@ -17,18 +17,17 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
-  trainId: {
+  resetId: {
     type: String,
     default: '',
   },
 });
-
 const stopShow = ref();
 const emit = defineEmits(['on-click']);
 
 function confirmReset() {
   stopShow.value = false;
-  emit('on-click', prop.trainId);
+  emit('on-click', prop.resetId);
 }
 
 function concelClick() {

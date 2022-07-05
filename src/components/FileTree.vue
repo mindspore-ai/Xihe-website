@@ -127,25 +127,20 @@ function emptyClick(ind) {
 }
 function goBlob(item) {
   let contents = [...routerParams.contents, decodeURI(item.name)];
+  let targetRoute = null;
   if (!item.is_folder) {
-    router.push({
-      name: `${prop.moduleName}FileBlob`,
-      params: {
-        user: routerParams.user,
-        name: routerParams.name,
-        contents,
-      },
-    });
+    targetRoute = `${prop.moduleName}FileBlob`;
   } else {
-    router.push({
-      name: `${prop.moduleName}File`,
-      params: {
-        user: routerParams.user,
-        name: routerParams.name,
-        contents,
-      },
-    });
+    targetRoute = `${prop.moduleName}File`;
   }
+  router.push({
+    name: targetRoute,
+    params: {
+      user: routerParams.user,
+      name: routerParams.name,
+      contents,
+    },
+  });
 }
 function creatFolter(formEl) {
   if (!formEl) return;

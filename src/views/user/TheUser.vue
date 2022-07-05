@@ -5,13 +5,14 @@ import { useRoute, useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
 
-// import IconMenu from '~icons/app/menu';
+import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
 // import IconLocation from '~icons/app/location';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 // import IconHome from '~icons/app/home';
 import IconEmail from '~icons/app/email';
+import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 import { getUserDig } from '@/api/api-user';
@@ -80,7 +81,6 @@ const navItems = [
   },
 ];
 //
-/*
 let i18n = {
   head: {
     title: '模型',
@@ -98,7 +98,8 @@ let i18n = {
     { text: '按照更新时间排序', value: 'update_time' },
   ],
 };
-*/
+// 搜索关键词
+const keyWord = ref('');
 // 登录用户关注列表
 const followList = computed(() => {
   return userInfoStore.followList;
@@ -128,13 +129,16 @@ if (followIdList.indexOf(jointUserInfo.id) !== -1) {
 } else {
   jointUserInfo.isFollow = false;
 }
-/*
 const holder = computed(() => {
   return route.path.split('/')[2];
 });
-*/
 // 动态显示banner标题
 const banner = ref('');
+let queryData = reactive({
+  order: '',
+  keyWord: '',
+});
+
 // 头部banner标题
 const headTitle = {
   user: '主页',
@@ -157,8 +161,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 watch(
   () => {
@@ -187,18 +191,19 @@ function handleNavClick(item) {
   );
 }
 
-// const orderValue = ref('123');
-/*
 function dropdownClick(item) {
-  orderValue.value = item.value;
+  queryData.order = item.value;
 }
-*/
 function createNew(item) {
   router.push(`/new/${item.id}`);
 }
 
 function goSetting() {
   router.push(`/settings`);
+}
+function getKeyWord() {
+  queryData.page = 1;
+  queryData.keyWord = keyWord.value;
 }
 // 粉丝页
 function goFollow() {
@@ -366,11 +371,13 @@ function handleDomChange(val) {
               :active-item="activeNavItem"
               @nav-click="handleNavClick"
             ></ONav>
-            <!-- <div v-if="i18n.placeholder[holder]" class="moderl-head-right">
+            <div v-if="i18n.placeholder[holder]" class="moderl-head-right">
               <el-input
+                v-model="keyWord"
                 size="large"
                 :prefix-icon="Search"
                 :placeholder="i18n.placeholder[holder]"
+                @change="getKeyWord"
               />
               <el-dropdown popper-class="filter">
                 <span class="el-dropdown-link">
@@ -387,7 +394,7 @@ function handleDomChange(val) {
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </div> -->
+            </div>
           </div>
 
           <el-dropdown
@@ -415,7 +422,10 @@ function handleDomChange(val) {
         </div>
         <!-- 具体内容 -->
         <div ref="detailInfo" class="content-detail-info">
-          <router-view @dom-change="handleDomChange"></router-view>
+          <router-view
+            :query-data="queryData"
+            @dom-change="handleDomChange"
+          ></router-view>
         </div>
       </div>
     </div>

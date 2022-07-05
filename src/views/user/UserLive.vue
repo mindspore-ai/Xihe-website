@@ -88,65 +88,71 @@ getCount();
 </script>
 
 <template>
-  <div class="user-live">
-    <div v-if="liveData.length" class="card-list">
-      <div
-        v-for="item in liveData.slice(
-          (queryData.page - 1) * queryData.size,
-          queryData.page * queryData.size
-        )"
-        :key="item.id"
-        class="card-list-item"
-      >
-        <div class="card-list-item-title">
-          <img
-            v-if="item.type.includes('点赞')"
-            src="@/assets/icons/lovingHeart.png"
-          />
-          <img v-else src="@/assets/icons/creating.png" />
-          <span>
-            {{ item.type.includes('点赞') ? '收藏了一个' : '创建了一个' }}</span
-          >
-          <span>
-            {{
-              item.type.includes('模型')
-                ? '模型'
-                : item.type.includes('数据集')
-                ? '数据集'
-                : '项目'
-            }}
-          </span>
-          <span class="item-title-time">{{ item.time.substring(0, 10) }}</span>
+  <div>
+    <div class="user-live">
+      <div v-if="liveData.length" class="card-list">
+        <div
+          v-for="item in liveData.slice(
+            (queryData.page - 1) * queryData.size,
+            queryData.page * queryData.size
+          )"
+          :key="item.id"
+          class="card-list-item"
+        >
+          <div class="card-list-item-title">
+            <img
+              v-if="item.type.includes('点赞')"
+              src="@/assets/icons/lovingHeart.png"
+            />
+            <img v-else src="@/assets/icons/creating.png" />
+            <span>
+              {{
+                item.type.includes('点赞') ? '收藏了一个' : '创建了一个'
+              }}</span
+            >
+            <span>
+              {{
+                item.type.includes('模型')
+                  ? '模型'
+                  : item.type.includes('数据集')
+                  ? '数据集'
+                  : '项目'
+              }}
+            </span>
+            <span class="item-title-time">{{
+              item.time.substring(0, 10)
+            }}</span>
+          </div>
+          <o-projectcard
+            v-if="item.type.includes('项目')"
+            :card-data="item"
+            class="card-list-item-content"
+            @click="goDetail(item)"
+          ></o-projectcard>
+          <o-livecard
+            v-else
+            :card-data="item"
+            class="card-list-item-content"
+            @click="goDetail(item)"
+          ></o-livecard>
         </div>
-        <o-projectcard
-          v-if="item.type.includes('项目')"
-          :card-data="item"
-          class="card-list-item-content"
-          @click="goDetail(item)"
-        ></o-projectcard>
-        <o-livecard
-          v-else
-          :card-data="item"
-          class="card-list-item-content"
-          @click="goDetail(item)"
-        ></o-livecard>
+      </div>
+      <div v-else class="empty">
+        <img class="empty-img" :src="emptyImg" />
+        <p class="empty-text">{{ i18n.emptyText }}</p>
       </div>
     </div>
-    <div v-else class="empty">
-      <img class="empty-img" :src="emptyImg" />
-      <p class="empty-text">{{ i18n.emptyText }}</p>
+    <div v-if="liveCount > 6" class="pagination">
+      <el-pagination
+        :page-sizes="[6, 12, 18]"
+        :current-page="queryData.page"
+        :page-size="queryData.size"
+        :total="liveCount"
+        :layout="layout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
     </div>
-  </div>
-  <div v-if="liveCount > 6" class="pagination">
-    <el-pagination
-      :page-sizes="[6, 12, 18]"
-      :current-page="queryData.page"
-      :page-size="queryData.size"
-      :total="liveCount"
-      :layout="layout"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
   </div>
 </template>
 

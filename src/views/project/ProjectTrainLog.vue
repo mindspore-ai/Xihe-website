@@ -10,7 +10,7 @@ import {
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useFileData } from '@/stores';
+import { useFileData, useUserInfoStore } from '@/stores';
 import { getTrainLog, autoEvaluate } from '@/api/api-project';
 
 import IconFinished from '~icons/app/finished';
@@ -74,11 +74,24 @@ const rules = reactive({
   ],
 });
 
-//训练日志js
+//训练日志
 const form = reactive({
   name: '',
   desc: '',
 });
+const userInfoStore = useUserInfoStore();
+
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+// 判断是否是自己的项目，不是则返回首页
+function beforeEnter() {
+  if (!isAuthentic.value) {
+    router.push('/');
+  }
+}
+beforeEnter();
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -186,7 +199,7 @@ function reloadPage() {
 
 // wss://xihe.test.osinfra.cn/wss/inference
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
-ws.onopen = function () {};
+ws.onopen = function () { };
 
 ws.onmessage = function (event) {
   if (

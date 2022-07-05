@@ -1,11 +1,10 @@
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, computed, onMounted, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/model-empty.png';
 
-import { getUserModelData } from '@/api/api-user';
-// import { getModelData } from '@/api/api-model';
+import { getModelData } from '@/api/api-model';
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
@@ -22,6 +21,22 @@ const i18n = {
   emptyText: '暂未创建模型，点击创建模型立即创建',
 };
 
+const props = defineProps({
+  queryData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
+});
+
+const order = computed(() => {
+  return props.queryData.order;
+});
+const keyWord = computed(() => {
+  return props.queryData.keyWord;
+});
+
 // 当前用户信息
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
@@ -30,27 +45,23 @@ const userInfo = computed(() => {
 const modelCount = ref(0);
 const modelData = ref([]);
 let query = reactive({
-  search: null,
+  search: keyWord,
   page: 1,
   size: 10,
-  task: null,
-  libraries: null,
-  licenses: null,
-  model_format: null,
-  device_target: null,
-  relate_datasets: null,
-  ordering: null,
+  owner_name: route.params.user,
+  order: order,
 });
-query.search = route.query.search;
 
-getUserModelData(userInfo.value.id).then((res) => {
-  if (res.status === 200 && res.data.length) {
-    modelCount.value = res.data.length;
-    modelData.value = res.data;
-  } else {
-    modelData.value = [];
-  }
-});
+function getUserModelData() {
+  getModelData(query).then((res) => {
+    if (res.count && res.results.status === 200) {
+      modelCount.value = res.count;
+      modelData.value = res.results.data;
+    } else {
+      modelData.value = [];
+    }
+  });
+}
 
 function goDetail(user, modelName) {
   router.push({
@@ -59,18 +70,38 @@ function goDetail(user, modelName) {
 }
 
 function handleSizeChange(val) {
+  if (modelCount.value / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
   query.size = val;
 }
+
 function handleCurrentChange(val) {
   query.page = val;
-  let lis = document.querySelectorAll('.el-pager li');
-  lis[val - 1].addEventListener('mousedown', function () {
-    lis[val - 1].classList.add('active');
-  });
+  document.documentElement.scrollTop = 0;
 }
 
 const test = ref(null);
 
+watch(
+  [query, props],
+  () => {
+    getUserModelData();
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+// watch(
+//   props,
+//   (val) => {
+//     console.log(val);
+//   },
+//   {
+//     deep: true,
+//   }
+// );
 onMounted(() => {
   // renderCondition.value = i18n.screenCondition;
   // 分页器
@@ -101,18 +132,17 @@ onMounted(() => {
         @click="goDetail(item.owner_name.name, item.name)"
       ></o-card>
     </div>
-    <!-- <div class="pagination">
+    <div class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
         :page-size="query.size"
         :total="modelCount"
-        hide-on-single-page
         layout="sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>
-    </div> -->
+    </div>
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />

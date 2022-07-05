@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import { ElMessage } from 'element-plus';
@@ -8,6 +8,8 @@ import { ElMessage } from 'element-plus';
 
 import { createTrainProject, getProjectData } from '@/api/api-project';
 // import { fileVerify } from '@/api/api-obs.js';
+import { useUserInfoStore } from '@/stores';
+
 import {
   findFile,
   downloadFileObs,
@@ -17,17 +19,26 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-let routerParams = route.params;
+const routerParams = route.params;
+const userInfoStore = useUserInfoStore();
 
 const filePath = ref('');
 const isShow = ref(false);
 const codeString = ref('');
-
-// 当前项目的详情数据
-// const detailData = computed(() => {
-//   return useFileData().fileStoreData;
-// });
 const detailData = ref({});
+
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+
+// 判断是否是自己的项目，不是则返回首页
+function beforeEnter() {
+  if (!isAuthentic.value) {
+    router.push('/');
+  }
+}
+beforeEnter();
 // 返回训练页面
 function goTrain() {
   router.push({
@@ -39,6 +50,7 @@ function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
   createTrainProject(params, route.query.id).then((res) => {
+    console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',
@@ -53,7 +65,7 @@ function confirmCreating() {
     } else {
       ElMessage({
         type: 'error',
-        message: '训练实例创建失败，请修改json文件中的job_name',
+        message: res.msg,
         center: true,
       });
     }

@@ -7,7 +7,7 @@ import IconSearcherror from '~icons/app/search-error';
       <o-icon class="notFound-icon"
         ><icon-searcherror></icon-searcherror
       ></o-icon>
-      <div>你所访问的页面不存在！</div>
+      <div class="notFound-tip">你所访问的页面不存在！</div>
     </div>
   </div>
 </template>
@@ -24,7 +24,13 @@ import IconSearcherror from '~icons/app/search-error';
     flex-direction: column;
     align-items: center;
     .notFound-icon {
-      font-size: 240px;
+      font-size: 300px;
+    }
+    .notFound-tip {
+      height: 28px;
+      font-size: 18px;
+      color: #555555;
+      line-height: 28px;
     }
   }
 }

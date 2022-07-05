@@ -381,9 +381,7 @@ function toggleDelDlg(flag) {
         v-if="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
         :style="{
-          position: 'absolute',
           right: codeString ? '184px' : '40px',
-          zIndex: 1,
         }"
       >
         <o-button type="primary" @click="goSelectFile">
@@ -593,7 +591,7 @@ function toggleDelDlg(flag) {
 </template>
 
 <style lang="scss" scoped>
-:deep .el-dialog {
+:deep(.el-dialog) {
   width: 800px;
   min-height: 284px;
   --el-dialog-margin-top: 35vh;

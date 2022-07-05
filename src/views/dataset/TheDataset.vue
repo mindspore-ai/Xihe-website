@@ -103,7 +103,7 @@ let query = reactive({
   tags: null, //其他
 });
 
-query.search = route.query.search;
+// query.search = route.query.search;
 const debounceSearch = debounce(getDataset, 500, {
   trailing: true,
 });
@@ -378,6 +378,19 @@ function getKeyWord() {
   query.page = 1;
   query.search = keyWord.value;
 }
+
+// 二次点击数据集，跳转刷新数据集页面数据
+watch(
+  () => route.query.search,
+  () => {
+    query.search = route.query.search;
+    keyWord.value = query.search;
+    debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
 watch(
   query,
   () => {

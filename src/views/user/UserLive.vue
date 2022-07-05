@@ -25,8 +25,8 @@ let queryData = reactive({
 const i18n = {
   emptyText: '暂无动态',
 };
-// 是否是访客
 
+// 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });

@@ -125,8 +125,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
@@ -185,7 +185,7 @@ const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
 const isForkShow = ref();
-var timer = null;
+let timer = null;
 // 详情数据
 function getDetailData() {
   try {
@@ -231,7 +231,7 @@ function getDetailData() {
         router.push('/notfound');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
@@ -239,8 +239,7 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -1175,12 +1174,17 @@ $theme: #0d8dff;
         display: none;
       }
       .el-tabs {
-        :deep .el-tabs__nav {
+        :deep(.el-tabs__nav) {
           display: flex;
           .el-tabs__item:nth-child(3) {
             display: flex;
             align-items: center;
             padding-bottom: 0;
+          }
+          .is-active {
+            p {
+              color: #3d8df7;
+            }
           }
           .el-dropdown {
             height: 100%;

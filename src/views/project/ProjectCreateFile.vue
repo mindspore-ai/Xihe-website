@@ -582,7 +582,7 @@ const rules = reactive({
             class="confim"
             type="primary"
             @click="confirmCreating(queryRef)"
-            >保存</o-button
+            >创建</o-button
           >
         </div>
       </div>

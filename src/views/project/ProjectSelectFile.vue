@@ -189,7 +189,7 @@ getDetailData();
         </div>
         <div class="selectfile-content-action">
           <o-button class="confim" type="primary" @click="confirmCreating"
-            >保存</o-button
+            >创建</o-button
           >
         </div>
       </div>

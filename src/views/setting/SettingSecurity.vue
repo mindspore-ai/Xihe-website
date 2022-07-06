@@ -209,7 +209,14 @@ function resetForm(formEl) {
             <el-form-item
               class="dlg-body-list"
               prop="code"
-              :rules="{ required: true, message: '必填项', trigger: 'blur' }"
+              :rules="[
+                { required: true, message: '必填项', trigger: 'blur' },
+                {
+                  pattern: /^\d{4}$/,
+                  message: '验证码有误',
+                  trigger: 'blur',
+                },
+              ]"
             >
               <div class="requirement">
                 <icon-necessary></icon-necessary><span>短信验证</span>

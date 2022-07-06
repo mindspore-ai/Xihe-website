@@ -312,7 +312,12 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  queryData.order = item.value;
+  // console.log(item);
+  if (item.value === 'update_time') {
+    queryData.order = '-' + item.value;
+  } else {
+    queryData.order = item.value;
+  }
 }
 
 function getProject() {
@@ -390,6 +395,18 @@ function getKeyWord() {
   queryData.search = keyWord.value;
 }
 
+// 二次点击数据集，跳转刷新数据集页面数据
+watch(
+  () => route.query.search,
+  () => {
+    queryData.search = route.query.search;
+    keyWord.value = queryData.search;
+    debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
 watch(
   queryData,
   () => {

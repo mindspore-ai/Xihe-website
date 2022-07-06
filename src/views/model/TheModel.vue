@@ -125,8 +125,8 @@ let queryData = reactive({
   order: null,
 });
 
-queryData.search = route.query.search;
-keyWord.value = queryData.search;
+// queryData.search = route.query.search;
+// keyWord.value = queryData.search;
 
 const debounceSearch = debounce(getModel, 500, {
   trailing: true,
@@ -468,6 +468,19 @@ function getKeyWord() {
 //     }
 //   }
 // );
+
+// 二次点击模型，跳转刷新模型页面数据
+watch(
+  () => route.query.search,
+  () => {
+    queryData.search = route.query.search;
+    keyWord.value = queryData.search;
+    debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
 watch(
   queryData,
   () => {
@@ -477,6 +490,7 @@ watch(
     immediate: true,
   }
 );
+
 onUnmounted(() => {
   debounceSearch.cancel();
 });

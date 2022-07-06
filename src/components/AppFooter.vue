@@ -1,13 +1,6 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import logoImg from '@/assets/imgs/footer-logo.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
-
-const router = useRouter();
-
-function goToPage(url) {
-  router.push(`/${url}`);
-}
 </script>
 
 <template>
@@ -17,9 +10,9 @@ function goToPage(url) {
     </div>
     <div class="footer-content">
       <div class="above">
-        <span class="text" @click="goToPage('privacy')">隐私政策</span>
+        <router-link class="text" to="/privacy">隐私政策</router-link>
         <div class="division"></div>
-        <span class="text" @click="goToPage('legal')">法律声明</span>
+        <router-link class="text" to="/legal">法律声明</router-link>
       </div>
       <div class="below">
         <span>版权所有</span>

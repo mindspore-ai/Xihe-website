@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+
 import App from './App.vue';
-import { router } from './router';
+import { router } from './routers';
 
 import '@authing/native-js-ui-components/lib/index.min.css';
 import hljs from 'highlight.js';

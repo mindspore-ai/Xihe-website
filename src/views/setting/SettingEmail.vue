@@ -227,9 +227,7 @@ const handleTimeChange2 = () => {
               size="small"
               :disabled="isDisposed2"
               @click="setEmail2"
-              >{{
-                isDisposed2 ? `${time2}s后重新获取` : '获取验证码'
-              }}</o-button
+              >{{ isDisposed2 ? `${time2}s` : '获取验证码' }}</o-button
             >
           </div>
           <div class="item item-text">新邮箱认证</div>
@@ -268,7 +266,7 @@ const handleTimeChange2 = () => {
           size="small"
           :disabled="isDisposed"
           @click="setEmail(ruleFormRef)"
-          >{{ isDisposed ? `${time}s后重新获取` : '获取验证码' }}</OButton
+          >{{ isDisposed ? `${time}s` : '获取验证码' }}</OButton
         >
       </el-form-item>
       <OButton class="setting-btn" @click="keepEmail(ruleFormRef)"
@@ -318,10 +316,11 @@ const handleTimeChange2 = () => {
     margin-top: 16px;
 
     .el-input {
-      width: 258px;
+      width: 254px;
     }
     .o-button {
       margin-left: 8px;
+      min-width: 138px;
     }
   }
   .item-text {
@@ -363,7 +362,11 @@ const handleTimeChange2 = () => {
       display: flex;
       margin-bottom: 18px;
       .el-input {
-        width: 258px;
+        width: 254px;
+      }
+      .o-button {
+        margin-left: 8px;
+        min-width: 138px;
       }
     }
 

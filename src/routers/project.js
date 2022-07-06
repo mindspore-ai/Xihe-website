@@ -39,6 +39,21 @@ export default [
       }
     },
   },
+  // {
+  //   path: '/projects/:user/:name/projectAim',
+  //   name: 'projectsAim',
+  //   component: () => {
+  //     return import('@/views/project/ProjectAim.vue');
+  //   },
+  //   beforeEnter: async () => {
+  //     const logingStore = useLoginStore();
+  //     if (!logingStore.isLogined) {
+  //       return {
+  //         name: 'home',
+  //       };
+  //     }
+  //   },
+  // },
   {
     path: '/projects/:user/:name',
     name: 'project-detail',

@@ -126,8 +126,8 @@ watch(props, () => {
       <div v-if="projectCount > 12" class="pagination">
         <el-pagination
           :page-sizes="[12, 24, 60]"
-          :current-page="queryData.page"
-          :page-size="queryData.size"
+          :current-page="query.page"
+          :page-size="query.size"
           :total="projectCount"
           :layout="layout"
           @size-change="handleSizeChange"

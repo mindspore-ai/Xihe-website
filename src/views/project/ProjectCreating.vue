@@ -31,34 +31,6 @@ const i18n = {
   submit: '提交',
 };
 
-// const backPage = ref('');
-// switch (router.options.history.state.back) {
-//   case '/models':
-//     backPage.value = '模型';
-//     break;
-//   case '/projects':
-//     backPage.value = '项目';
-//     break;
-//   case '/datasets':
-//     backPage.value = '数据集';
-//     break;
-//   case `/${userInfo.userName}`:
-//     backPage.value = '个人主页';
-//     break;
-//   case `/${userInfo.userName}/projects`:
-//     backPage.value = '个人主页';
-//     break;
-//   case `/${userInfo.userName}/models`:
-//     backPage.value = '个人主页';
-//     break;
-//   case `/${userInfo.userName}/datasets`:
-//     backPage.value = '个人主页';
-//     break;
-//   case `/${userInfo.userName}/collections`:
-//     backPage.value = '个人主页';
-//     break;
-// }
-
 // 表单信息
 const proList = reactive({
   nickName: null,
@@ -146,6 +118,11 @@ function setProject() {
   setNewProject(newList).then((res) => {
     if (res.status == 200) {
       router.push(`/projects/${userInfo.userName}/${proList.name}`);
+    } else if (res.data.non_field_errors[0].indexOf('唯一集合') !== -1) {
+      ElMessage({
+        type: 'error',
+        message: '项目名已存在',
+      });
     }
   });
 }
@@ -369,7 +346,7 @@ onMounted(() => {});
       font-weight: normal;
       color: #555;
     }
-    .set-new span{
+    .set-new span {
       color: #000;
       font-weight: 400;
     }

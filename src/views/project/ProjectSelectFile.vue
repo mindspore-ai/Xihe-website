@@ -45,7 +45,7 @@ function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
   createTrainProject(params, route.query.id).then((res) => {
-    console.log(res);
+    // console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',
@@ -108,7 +108,6 @@ function findFileByPath() {
   } else {
     let path = `xihe-obj/projects/${route.params.user}/${routerParams.name}/${filePath.value}`;
     findFile(path).then((res) => {
-      console.log(res);
       if (res.status === 200 && res.data.children && res.data.children.length) {
         fileData = res.data.children[0];
         downLoad(fileData.path);
@@ -158,14 +157,15 @@ getDetailData();
         <div class="selectfile-content-title">
           <div class="selectfile-content-title-left">创建训练实例</div>
           <div class="selectfile-content-title-right">
+            <div class="selectfile-option">选择配置文件</div>
             <div class="createfile-option" @click="goCreateFile">
               创建配置文件
             </div>
-            <div class="selectfile-option">选择配置文件</div>
           </div>
         </div>
         <div class="selectfile-content-tip">
-          若你已有配置文件，你可以输入配置文件路径参数进行创建，相关文档参考创建训练实例。
+          若你已有配置文件，你可以输入配置文件模版路径（json文件）进行创建，文本框中可对json文件进行修改，注意json文件的字段为双引号。详情请参考
+          <a href="#" style="color: #0d8dff">配置模版方式-创建训练实例</a>
         </div>
         <div class="selectfile-content-path">
           <el-input
@@ -188,9 +188,14 @@ getDetailData();
           <el-input v-else class="file-select-textarea-int" type="textarea" />
         </div>
         <div class="selectfile-content-action">
-          <o-button class="confim" type="primary" @click="confirmCreating"
+          <o-button
+            v-if="codeString"
+            class="confim"
+            type="primary"
+            @click="confirmCreating"
             >创建</o-button
           >
+          <o-button v-else class="confim" type="secondary">创建</o-button>
         </div>
       </div>
     </div>
@@ -205,13 +210,10 @@ getDetailData();
   margin-top: 80px;
   // margin-bottom: 49px;
   background-color: #f5f6f8;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   &-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 80px 64px;
+    padding: 50px 130px 64px;
     margin: 0 auto;
     .selectfile-back {
       font-size: 16px;
@@ -257,11 +259,11 @@ getDetailData();
           font-size: 16px;
           cursor: pointer;
           .selectfile-option {
-            margin-left: 40px;
             color: #0d8dff;
             border-bottom: 1px solid #0d8dff;
           }
           .createfile-option {
+            margin-left: 40px;
             border-bottom: 1px solid transparent;
           }
         }

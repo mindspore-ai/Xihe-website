@@ -99,7 +99,7 @@ beforeEnter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log(detailData.value);
+// console.log(detailData.value);
 // 训练日志详情数据
 const trainDetail = ref({});
 
@@ -112,7 +112,7 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    console.log(res.data);
+    // console.log(res.data);
     if (res.status === 200) {
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
@@ -307,9 +307,9 @@ function goAimPage() {
   // console.log(
   //   `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
   // );
-  // router.push(
-  //   `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
-  // );
+  router.push(
+    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
+  );
 }
 </script>
 <template>
@@ -317,12 +317,7 @@ function goAimPage() {
     <div class="train-log-form">
       <div class="train-log-name">
         <span>训练日志</span>
-        <el-input
-          v-model="form.name"
-          disabled
-          placeholder="please select your zone"
-        >
-        </el-input>
+        <el-input v-model="form.name" disabled> </el-input>
       </div>
       <div class="train-log-desc">
         <el-input id="txt" v-model="form.desc" type="textarea" />

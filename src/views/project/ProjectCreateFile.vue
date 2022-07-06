@@ -24,7 +24,10 @@ const detailData = ref({});
 const form = reactive({
   job_name: '',
   code_dir: '',
-  frameworks: { framework_type: '', framework_version: '' },
+  frameworks: {
+    framework_type: '',
+    framework_version: '',
+  },
   log_url: '',
   inputs: '',
   hypeparameters: '',
@@ -325,14 +328,15 @@ const rules = reactive({
         <div class="createfile-content-title">
           <div class="createfile-content-title-left">创建训练实例</div>
           <div class="createfile-content-title-right">
-            <div class="createfile-option">创建配置文件</div>
             <div class="selectfile-option" @click="goSelectFile">
               选择配置文件
             </div>
+            <div class="createfile-option">创建配置文件</div>
           </div>
         </div>
         <div class="createfile-content-tip">
-          为训练实例选择对应的配置，若你已有配置文件，也可通过选择相应配置文件进行创建。
+          你可以通过表单方式创建训练实例，若你是第一次创建训练实例，系统会默认在train/config.json下生成配置文件。详情参考
+          <a href="#" style="color: #0d8dff">表单方式创建训练实例</a>
         </div>
         <div class="createfile-form-wrap">
           <el-form
@@ -600,7 +604,7 @@ const rules = reactive({
   .createfile-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 80px 64px;
+    padding: 50px 130px 64px;
     margin: 0 auto;
     .createfile-back {
       font-size: 16px;
@@ -639,13 +643,13 @@ const rules = reactive({
           color: #555;
           font-size: 16px;
           cursor: pointer;
-          .createfile-option {
-            margin-right: 40px;
-            color: #0d8dff;
-            border-bottom: 1px solid #0d8dff;
-          }
           .selectfile-option {
             border-bottom: 1px solid transparent;
+          }
+          .createfile-option {
+            color: #0d8dff;
+            margin-left: 40px;
+            border-bottom: 1px solid #0d8dff;
           }
         }
       }

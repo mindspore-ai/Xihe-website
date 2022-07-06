@@ -364,7 +364,7 @@ function confirmBtn() {
             if (index === -1) {
               queryDate['task_cate'].push(it.task_cate_id);
             }
-            console.log(queryDate['task_cate']);
+            // console.log(queryDate['task_cate']);
           } else {
             return;
           }

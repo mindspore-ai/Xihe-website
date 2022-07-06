@@ -1,4 +1,4 @@
-import { useLoginStore } from '@/stores';
+// import { useLoginStore } from '@/stores';
 
 export default [
   // 项目
@@ -15,13 +15,9 @@ export default [
     component: () => {
       return import('@/views/project/ProjectSelectFile.vue');
     },
-    beforeEnter: async () => {
-      const logingStore = useLoginStore();
-      if (!logingStore.isLogined) {
-        return {
-          name: 'home',
-        };
-      }
+    meta: {
+      index: 1,
+      isPrivate: true,
     },
   },
   {
@@ -30,30 +26,22 @@ export default [
     component: () => {
       return import('@/views/project/ProjectCreateFile.vue');
     },
-    beforeEnter: async () => {
-      const logingStore = useLoginStore();
-      if (!logingStore.isLogined) {
-        return {
-          name: 'home',
-        };
-      }
+    meta: {
+      index: 1,
+      isPrivate: true,
     },
   },
-  // {
-  //   path: '/projects/:user/:name/projectAim',
-  //   name: 'projectsAim',
-  //   component: () => {
-  //     return import('@/views/project/ProjectAim.vue');
-  //   },
-  //   beforeEnter: async () => {
-  //     const logingStore = useLoginStore();
-  //     if (!logingStore.isLogined) {
-  //       return {
-  //         name: 'home',
-  //       };
-  //     }
-  //   },
-  // },
+  {
+    path: '/projects/:user/:name/projectAim',
+    name: 'projectsAim',
+    component: () => {
+      return import('@/views/project/ProjectAim.vue');
+    },
+    meta: {
+      // index: 1,
+      isPrivate: true,
+    },
+  },
   {
     path: '/projects/:user/:name',
     name: 'project-detail',
@@ -100,14 +88,7 @@ export default [
         },
         meta: {
           index: 1,
-        },
-        beforeEnter: async () => {
-          const logingStore = useLoginStore();
-          if (!logingStore.isLogined) {
-            return {
-              name: 'home',
-            };
-          }
+          isPrivate: true,
         },
       },
       {
@@ -118,14 +99,7 @@ export default [
         },
         meta: {
           index: 1,
-        },
-        beforeEnter: async () => {
-          const logingStore = useLoginStore();
-          if (!logingStore.isLogined) {
-            return {
-              name: 'home',
-            };
-          }
+          isPrivate: true,
         },
       },
       {
@@ -146,7 +120,7 @@ export default [
           return import('@/views/project/ProjectFileBlob.vue');
         },
         meta: {
-          index: 1,
+          index: 2,
         },
       },
       // 新建文件页
@@ -157,7 +131,7 @@ export default [
           return import('@/views/project/ProjectFileNew.vue');
         },
         meta: {
-          index: 1,
+          index: 2,
           isPrivate: true,
         },
       },
@@ -169,7 +143,7 @@ export default [
           return import('@/views/project/ProjectFileEditor.vue');
         },
         meta: {
-          index: 1,
+          index: 2,
           isPrivate: true,
         },
       },
@@ -181,7 +155,7 @@ export default [
           return import('@/views/project/ProFileUpload.vue');
         },
         meta: {
-          index: 1,
+          index: 2,
           isPrivate: true,
         },
       },

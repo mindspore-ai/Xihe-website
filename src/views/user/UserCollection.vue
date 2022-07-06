@@ -179,8 +179,6 @@ function toTop() {
     display: flex;
     justify-content: center;
     align-items: center;
-    // width: 100%;
-    // height: 100%;
     flex-direction: column;
     .empty-img {
       width: 280px;

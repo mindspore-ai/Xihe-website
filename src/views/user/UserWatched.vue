@@ -26,6 +26,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
+/*TODO:暂无接口
 let i18n = {
   placeholder: '搜索我的关注',
   sortCondition: [
@@ -33,6 +34,7 @@ let i18n = {
     { text: '按照首字母排序', value: '' },
   ],
 };
+*/
 let queryData = reactive({
   search: null,
   page: 1,

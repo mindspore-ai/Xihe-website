@@ -40,7 +40,7 @@ let i18n = {
   sortCondition: [
     { text: '按照下载量排序', value: 'download' },
     { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: 'update_time' },
+    { text: '按照更新时间排序', value: '-update_time' },
   ],
   screenCondition: [
     {
@@ -61,7 +61,7 @@ let i18n = {
     // },
     {
       title: {
-        text: 'License',
+        text: '协议',
         key: 'licenses',
       },
       haveActive: false,
@@ -99,11 +99,11 @@ let query = reactive({
   model_format: null,
   device_target: null,
   relate_datasets: null,
-  ordering: null,
+  order: null,
   tags: null, //其他
 });
 
-query.search = route.query.search;
+// query.search = route.query.search;
 const debounceSearch = debounce(getDataset, 500, {
   trailing: true,
 });
@@ -297,8 +297,8 @@ function tagsSearch(date) {
   }
 }
 
-function dropdownClick(index) {
-  query.ordering = index + 1;
+function dropdownClick(item) {
+  query.order = item.value;
 }
 
 function getDataset() {
@@ -378,6 +378,19 @@ function getKeyWord() {
   query.page = 1;
   query.search = keyWord.value;
 }
+
+// 二次点击数据集，跳转刷新数据集页面数据
+watch(
+  () => route.query.search,
+  () => {
+    query.search = route.query.search;
+    keyWord.value = query.search;
+    debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
 watch(
   query,
   () => {
@@ -462,7 +475,7 @@ onUnmounted(() => {
         <p class="getback" @click="backCondition">
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
-        <p class="sort-title">Licence</p>
+        <p class="sort-title">协议</p>
         <!-- <el-input
           v-model="query.search"
           :prefix-icon="Search"
@@ -588,9 +601,9 @@ onUnmounted(() => {
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      v-for="(item, index) in i18n.sortCondition"
-                      :key="item.text"
-                      @click="dropdownClick(index)"
+                      v-for="item in i18n.sortCondition"
+                      :key="item"
+                      @click="dropdownClick(item)"
                       >{{ item.text }}</el-dropdown-item
                     >
                   </el-dropdown-menu>

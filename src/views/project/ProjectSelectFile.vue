@@ -10,12 +10,7 @@ import { createTrainProject, getProjectData } from '@/api/api-project';
 // import { fileVerify } from '@/api/api-obs.js';
 import { useUserInfoStore } from '@/stores';
 
-import {
-  findFile,
-  downloadFileObs,
-  getDownLoadToken,
-  handleUpload,
-} from '@/api/api-obs';
+import { findFile, downloadFileObs, getDownLoadToken } from '@/api/api-obs';
 
 const route = useRoute();
 const router = useRouter();
@@ -71,7 +66,7 @@ function confirmCreating() {
     }
   });
 }
-const describe = ref('');
+// const describe = ref('');
 let fileData = reactive({});
 let reopt = {
   method: 'get',
@@ -102,34 +97,8 @@ function downLoad(objkey) {
     });
   });
 }
-// SDK 上传
-async function upLoadObs() {
-  // 构造文件对象
-  let blob = new Blob([codeString.value], {
-    type: 'text/plain;charset=utf-8',
-  });
-  let file = new File([blob], fileData.name, {
-    type: 'text/plain;charset=utf-8',
-    lastModified: Date.now(),
-  });
-  await handleUpload(
-    {
-      file,
-      path,
-      isEdit: true,
-      description: describe.value || `edit ${fileData.name}`,
-    },
-    null,
-    function () {
-      ElMessage({
-        type: 'success',
-        message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
-      });
-    }
-  );
-  pathClick(route.params.contents.length);
-}
 
+// 读取文件到输入框
 function findFileByPath() {
   if (!filePath.value.endsWith('.json')) {
     ElMessage({
@@ -139,13 +108,14 @@ function findFileByPath() {
   } else {
     let path = `xihe-obj/projects/${route.params.user}/${routerParams.name}/${filePath.value}`;
     findFile(path).then((res) => {
-      if (res.status && res.data && res.data.children.length) {
+      console.log(res);
+      if (res.status === 200 && res.data.children && res.data.children.length) {
         fileData = res.data.children[0];
         downLoad(fileData.path);
       } else {
         ElMessage({
           type: 'error',
-          message: '路径错误，请重新输入',
+          message: '找不到该json文件,请确认路径是否输入正确',
         });
       }
     });

@@ -17,6 +17,8 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
+import IconWarning from '~icons/app/warning';
+
 import { ElMessage } from 'element-plus';
 
 const showEvaBtn = ref(true);
@@ -31,8 +33,8 @@ const route = useRoute();
 const router = useRouter();
 
 const i18n = {
-  title: '自动评估',
-  desc: '训练日志可视化，请按顺序输入超参数范围，详细参考文档',
+  title: '评估',
+  desc: '训练日志可视化，请按顺序输入超参数范围，目前只支持LossMonitor, 详情请参考文档，更多的参数评估请选用自定义评估',
   learning: {
     name: 'learning_rate',
     placeholder: '请输入例如[0.01, 0.02, 0.03]的字段',
@@ -97,7 +99,7 @@ beforeEnter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-
+console.log(detailData.value);
 // 训练日志详情数据
 const trainDetail = ref({});
 
@@ -110,6 +112,7 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
+    console.log(res.data);
     if (res.status === 200) {
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
@@ -199,7 +202,7 @@ function reloadPage() {
 
 // wss://xihe.test.osinfra.cn/wss/inference
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
-ws.onopen = function () { };
+// ws.onopen = function () { };
 
 ws.onmessage = function (event) {
   if (
@@ -248,11 +251,11 @@ function goToPage() {
 }
 
 // config.json详情
-function goJsonFile(file) {
-  router.push(
-    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${file}`
-  );
-}
+// function goJsonFile(file) {
+//   router.push(
+//     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${file}`
+//   );
+// }
 
 // 日志详情
 function goLogFile() {
@@ -280,6 +283,34 @@ watch(
     });
   }
 );
+const showContent = ref(true);
+const showContent1 = ref(false);
+function handleChangeClick() {
+  if (showContent.value) {
+    return;
+  } else {
+    showContent.value = true;
+    showContent1.value = false;
+  }
+}
+function handleChangeClick1() {
+  if (showContent1.value) {
+    return;
+  } else {
+    showContent.value = false;
+    showContent1.value = true;
+  }
+}
+
+//跳转到Aim嵌入页面
+function goAimPage() {
+  // console.log(
+  //   `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
+  // );
+  // router.push(
+  //   `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
+  // );
+}
 </script>
 <template>
   <div class="train-log">
@@ -357,59 +388,112 @@ watch(
               {{ trainDetail.log_file }}
             </div>
           </li>
+
           <li class="assess-box">
-            <p class="assess-title">{{ i18n.title }}</p>
-            <p class="assess-desc">
-              {{ i18n.desc }}
-            </p>
-            <div class="button-box">
-              <el-form
-                ref="ruleRef"
-                :model="query"
-                :rules="rules"
-                hide-required-asterisk
-              >
-                <el-form-item :label="i18n.learning.name" prop="learning_rate">
-                  <el-input
-                    v-model="query.learning_rate"
-                    :placeholder="i18n.learning.placeholder"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item :label="i18n.momentum.name" prop="momentum">
-                  <el-input
-                    v-model="query.momentum"
-                    :placeholder="i18n.momentum.placeholder"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item :label="i18n.batch.name" prop="batch">
-                  <el-input
-                    v-model="query.batch_size"
-                    :placeholder="i18n.batch.placeholder"
-                  ></el-input>
-                </el-form-item>
-              </el-form>
+            <div class="assess-head">
+              <p class="assess-title">{{ i18n.title }}</p>
+              <div class="tab-container">
+                <span
+                  :class="showContent ? 'active' : ''"
+                  @click="handleChangeClick"
+                  >自动评估</span
+                >
+                <p
+                  :class="showContent1 ? 'active' : ''"
+                  @click="handleChangeClick1"
+                >
+                  自定义评估
+                </p>
+              </div>
+            </div>
+            <!-- 自动评估 -->
+            <div v-if="showContent">
+              <p class="assess-desc">
+                {{ i18n.desc }}
+              </p>
+              <div class="button-box">
+                <el-form
+                  ref="ruleRef"
+                  :model="query"
+                  :rules="rules"
+                  hide-required-asterisk
+                >
+                  <el-form-item
+                    :label="i18n.learning.name"
+                    prop="learning_rate"
+                  >
+                    <el-input
+                      v-model="query.learning_rate"
+                      :placeholder="i18n.learning.placeholder"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item :label="i18n.momentum.name" prop="momentum">
+                    <el-input
+                      v-model="query.momentum"
+                      :placeholder="i18n.momentum.placeholder"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item :label="i18n.batch.name" prop="batch">
+                    <el-input
+                      v-model="query.batch_size"
+                      :placeholder="i18n.batch.placeholder"
+                    ></el-input>
+                  </el-form-item>
+                </el-form>
+
+                <div class="info-btn">
+                  <o-button
+                    v-if="showEvaBtn"
+                    type="primary"
+                    @click="saveSetting"
+                    >自动评估</o-button
+                  >
+                  <o-button
+                    v-if="isDisabled"
+                    disabled
+                    type="primary"
+                    @click="saveSetting"
+                    >自动评估</o-button
+                  >
+                  <o-button
+                    v-if="showAnaButton"
+                    disabled
+                    type="primary"
+                    @click="saveSetting"
+                    >自动评估中...</o-button
+                  >
+                  <o-button v-if="showGoButton" type="primary" @click="goToPage"
+                    >查看报告</o-button
+                  >
+                </div>
+              </div>
+            </div>
+            <div v-if="showContent1">
+              <!-- 无Aim代码 -->
+              <div v-if="false" class="no-aim">
+                <p>
+                  <o-icon><icon-warning></icon-warning></o-icon>
+                </p>
+                <p class="no-aim-middle">
+                  当前暂时不能进行自定义评估，你需要在训练代码中添加Aim代码，详情请参考
+                </p>
+                <p class="no-aim-bottom">添加评估代码</p>
+              </div>
+              <!-- 有Aim代码 -->
+              <div class="have-aim">
+                <p>
+                  该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
+                </p>
+                <el-form>
+                  <el-form-item label="repo">
+                    <el-input placeholder="train/db/"></el-input>
+                  </el-form-item>
+                </el-form>
+                <o-button type="primary" @click="goAimPage">开始评估</o-button>
+              </div>
             </div>
           </li>
         </ul>
-      </div>
-
-      <div class="info-btn">
-        <o-button v-if="showEvaBtn" type="primary" @click="saveSetting"
-          >自动评估</o-button
-        >
-        <o-button v-if="isDisabled" disabled type="primary" @click="saveSetting"
-          >自动评估</o-button
-        >
-        <o-button
-          v-if="showAnaButton"
-          disabled
-          type="primary"
-          @click="saveSetting"
-          >自动评估中...</o-button
-        >
-        <o-button v-if="showGoButton" type="primary" @click="goToPage"
-          >查看报告</o-button
-        >
       </div>
     </div>
   </div>
@@ -423,7 +507,7 @@ watch(
   .info-btn {
     align-self: end;
     margin-top: 37px;
-    padding-right: 50px;
+    // padding-right: 50px;
   }
 }
 .train-log {
@@ -490,6 +574,57 @@ watch(
     &-info {
       .assess-box {
         margin-top: 48px;
+        width: 510px;
+        .no-aim {
+          font-size: 14px;
+          text-align: center;
+          margin-top: 63px;
+          &-middle {
+            color: #999;
+            margin: 16px 0;
+          }
+          &-bottom {
+            color: #0d8dff;
+          }
+          .o-icon {
+            font-size: 40px;
+          }
+        }
+        .have-aim {
+          margin-top: 63px;
+          display: flex;
+          flex-direction: column;
+          p {
+            color: #999;
+            font-size: 14px;
+          }
+          .o-button {
+            align-self: flex-end;
+            margin-top: 48px;
+          }
+        }
+        .assess-head {
+          display: flex;
+          justify-content: space-between;
+
+          .tab-container {
+            display: flex;
+            font-size: 12px;
+            color: #555;
+            line-height: 38px;
+            .active {
+              color: #0d8dff;
+              border-bottom: 1px solid #0d8dff;
+            }
+            p {
+              cursor: pointer;
+            }
+            span {
+              cursor: pointer;
+              margin-right: 16px;
+            }
+          }
+        }
         .button-box {
           display: flex;
           flex-direction: column;
@@ -512,6 +647,7 @@ watch(
           font-weight: normal;
         }
         .assess-desc {
+          width: 510px;
           margin-top: 16px;
           font-size: 14px;
           color: #999;

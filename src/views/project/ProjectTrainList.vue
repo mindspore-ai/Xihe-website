@@ -39,6 +39,7 @@ const projectId = detailData.value.id;
 const trainData = ref([]);
 const listId = ref();
 const stopId = ref();
+const resetId = ref();
 const showTip = ref(false);
 const describe = ref('');
 const i18n = {
@@ -72,6 +73,7 @@ function getTrainList() {
       timer = setInterval(() => {
         socket.send(JSON.stringify({ pk: detailData.value.id }));
       }, 1000);
+    } else {
     }
   });
 }
@@ -133,7 +135,7 @@ function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
     if (res.status === 200) {
       getTrainList();
-      closeConn();
+      // socket.close();
       clearInterval(timer);
       showStop.value = false;
     }
@@ -163,7 +165,9 @@ function showStopClick(val, id) {
 
 // 重建
 const showReset = ref(false);
-function showResetClick() {
+function showResetClick(val) {
+  console.log(val);
+  resetId.value = val;
   showReset.value = true;
 }
 
@@ -175,8 +179,7 @@ function resetClick(val) {
       console.log(res);
       if (res.status === 200) {
         showReset.value = false;
-        // getTrainList();
-        window.location.reload();
+        getTrainList();
       }
     });
   }
@@ -215,22 +218,22 @@ socket.onmessage = function (event) {
 
   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
     clearInterval(timer);
-    setTimeout(closeConn(), 10000);
+    // setTimeout(socket.close(), 10000);
   }
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function () {
-//   // console.log('服务器主动断开');
-// };
+socket.onclose = function () {
+  console.log('服务器主动断开');
+};
 
-function closeConn() {
-  socket.close(); // 向服务端发送断开连接的请求
-}
+// function closeConn() {
+//   socket.close(); // 向服务端发送断开连接的请求
+// }
 
 // 页面刷新
 function reloadPage() {
-  closeConn();
+  socket.close();
 }
 
 onMounted(() => {
@@ -238,7 +241,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  closeConn();
+  socket.close();
   clearInterval(timer);
 });
 </script>
@@ -251,7 +254,7 @@ onUnmounted(() => {
       </o-button>
     </div>
     <el-table v-if="trainData.length" :data="trainData" style="width: 100%">
-      <el-table-column label="训练名称/ID" width="180">
+      <el-table-column label="训练名称/ID" width="220">
         <template #default="scope">
           <div>
             <span class="train-name" @click="goTrainLog(scope.row.train_id)">{{
@@ -260,7 +263,7 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="128">
+      <el-table-column label="状态" width="178">
         <template #default="scope">
           <div class="status-box">
             <o-icon v-if="scope.row.status === 'Completed'"
@@ -279,7 +282,7 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="运行时长" width="125" prop="runtime">
+      <el-table-column label="运行时长" width="178" prop="runtime">
       </el-table-column>
       <el-table-column label="描述" width="618">
         <template #default="scope">
@@ -297,7 +300,7 @@ onUnmounted(() => {
           ></stop-train>
           <!-- 重建 -->
           <reset-train
-            :reset-id="scope.row.train_id"
+            :reset-id="resetId"
             :show-reset="showReset"
             @on-click="resetClick"
           ></reset-train>
@@ -335,7 +338,7 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column> -->
-      <el-table-column label="更新时间" prop="create_time" width="154">
+      <el-table-column label="更新时间" prop="create_time" width="214">
       </el-table-column>
     </el-table>
     <div v-else class="instance-box">

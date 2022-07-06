@@ -111,7 +111,6 @@ function getTrainLogData() {
   };
   getTrainLog(trainLogParams).then((res) => {
     if (res.status === 200) {
-      // console.log(res.data);
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
@@ -165,13 +164,6 @@ socket.onopen = function () {
       is_log: false,
     })
   );
-  // socket.send(
-  //   JSON.stringify({
-  //     pk: detailData.value.id,
-  //     train_id: route.params.trainId,
-  //     is_log: true,
-  //   })
-  // );
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
@@ -204,6 +196,7 @@ function closeConn() {
 function reloadPage() {
   closeConn();
 }
+
 // wss://xihe.test.osinfra.cn/wss/inference
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
 ws.onopen = function () { };
@@ -349,19 +342,18 @@ watch(
             <div class="info-list-title">规格</div>
             <div class="info-list-detail">{{ trainDetail.flavor }}</div>
           </li>
-          <li class="info-list">
+          <!-- <li class="info-list">
             <div class="info-list-title">输入参数文件</div>
             <div
-              @click="goJsonFile(trainDetail.config_path)"
               class="info-list-detail document"
+              @click="goJsonFile(trainDetail.config_path)"
             >
               {{ trainDetail.config_path }}
             </div>
-          </li>
+          </li> -->
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            &nbsp;
-            <div @click="goLogFile" class="info-list-detail document">
+            <div class="info-list-detail document" @click="goLogFile">
               {{ trainDetail.log_file }}
             </div>
           </li>
@@ -539,6 +531,13 @@ watch(
         color: #555;
         display: flex;
         align-items: center;
+        &-detail {
+          display: flex;
+          align-items: center;
+          .o-icon {
+            margin-right: 8px;
+          }
+        }
         &-title {
           width: 110px;
           font-size: 16px;

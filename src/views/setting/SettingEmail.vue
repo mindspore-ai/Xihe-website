@@ -214,7 +214,14 @@ const handleTimeChange2 = () => {
       <el-form-item
         v-if="userInfoStore.emailStatus && userInfoStore.email"
         prop="email_code2"
-        :rules="{ required: true, message: '必填项', trigger: 'blur' }"
+        :rules="[
+          { required: true, message: '必填项', trigger: 'blur' },
+          {
+            pattern: /^\d{4}$/,
+            message: '验证码有误',
+            trigger: 'blur',
+          },
+        ]"
       >
         <div>
           <div class="item item-text">当前邮箱认证</div>
@@ -239,7 +246,7 @@ const handleTimeChange2 = () => {
         :rules="[
           {
             pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-            message: '暂不支持中文字符',
+            message: '请输入正确的邮箱',
             trigger: 'blur',
           },
           { required: true, message: '必填项', trigger: 'blur' },
@@ -255,7 +262,14 @@ const handleTimeChange2 = () => {
       <el-form-item
         class="email_code"
         prop="email_code"
-        :rules="{ required: true, message: '必填项', trigger: 'blur' }"
+        :rules="[
+          { required: true, message: '必填项', trigger: 'blur' },
+          {
+            pattern: /^\d{4}$/,
+            message: '验证码有误',
+            trigger: 'blur',
+          },
+        ]"
       >
         <el-input
           v-model="ruleForm.email_code"

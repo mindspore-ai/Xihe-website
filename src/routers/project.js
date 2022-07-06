@@ -19,7 +19,7 @@ export default [
       const logingStore = useLoginStore();
       if (!logingStore.isLogined) {
         return {
-          name: 'home',
+          name: '404',
         };
       }
     },
@@ -34,7 +34,7 @@ export default [
       const logingStore = useLoginStore();
       if (!logingStore.isLogined) {
         return {
-          name: 'home',
+          name: '404',
         };
       }
     },
@@ -90,7 +90,7 @@ export default [
           const logingStore = useLoginStore();
           if (!logingStore.isLogined) {
             return {
-              name: 'home',
+              name: '404',
             };
           }
         },
@@ -108,7 +108,7 @@ export default [
           const logingStore = useLoginStore();
           if (!logingStore.isLogined) {
             return {
-              name: 'home',
+              name: '404',
             };
           }
         },

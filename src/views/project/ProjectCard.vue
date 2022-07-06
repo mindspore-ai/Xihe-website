@@ -357,36 +357,34 @@ function stop() {
   });
 }
 const socket = ref();
-if (detailData.value.sdk_name === 'Gradio') {
-  socket.value = new WebSocket(
-    'wss://xihebackend.test.osinfra.cn/wss/inference'
-  );
-  socket.value.onopen = function () {
+// if (detailData.value.sdk_name === 'Gradio') {
+socket.value = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
+socket.value.onopen = function () {
+  socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+  timer = setInterval(() => {
     socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-    timer = setInterval(() => {
-      socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-    }, 5000);
-  };
-  socket.value.onmessage = function (event) {
-    msg.value = JSON.parse(event.data).msg;
-    if (!!JSON.parse(event.data).data) {
-      clientSrc.value = JSON.parse(event.data).data.url;
+  }, 5000);
+};
+socket.value.onmessage = function (event) {
+  msg.value = JSON.parse(event.data).msg;
+  if (!!JSON.parse(event.data).data) {
+    clientSrc.value = JSON.parse(event.data).data.url;
+  }
+  if (detailData.value.is_owner) {
+    if (
+      JSON.parse(event.data).msg === '启动失败' ||
+      JSON.parse(event.data).msg === '文件收集失败' ||
+      JSON.parse(event.data).msg === '创建项目推理任务错误'
+    ) {
+      ElMessage({
+        type: 'error',
+        message: JSON.parse(event.data).msg,
+      });
+      stopInference(detailData.value.id).then((res) => {});
     }
-    if (detailData.value.is_owner) {
-      if (
-        JSON.parse(event.data).msg === '启动失败' ||
-        JSON.parse(event.data).msg === '文件收集失败' ||
-        JSON.parse(event.data).msg === '创建项目推理任务错误'
-      ) {
-        ElMessage({
-          type: 'error',
-          message: JSON.parse(event.data).msg,
-        });
-        stopInference(detailData.value.id).then((res) => {});
-      }
-    }
-  };
-}
+  }
+};
+// }
 function closeConn() {
   socket.value.close(); // 向服务端发送断开连接的请求
 }
@@ -419,7 +417,7 @@ onUnmounted(() => {
         >
       </div>
       <div v-else-if="detailData.is_owner" class="markdown-body">
-        <div v-highlight class="markdown-file" v-html="result2"></div>
+        <div class="markdown-file" v-html="result2"></div>
         <o-button
           v-if="detailData.is_owner"
           type="primary"

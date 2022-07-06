@@ -88,7 +88,7 @@ function keepPhone(formEl) {
         ruleForm.phone = '';
         ruleForm.code = '';
         isDisposed.value = false;
-        time.value = 60;
+        time.value = 0;
       } else {
         newQuery.new_mobile = ruleForm.phone;
         newQuery.new_mobile_code = ruleForm.code;
@@ -124,6 +124,7 @@ function keepPhone(formEl) {
 function resetForm(formEl) {
   if (!formEl) return;
   formEl.resetFields();
+  time.value = 0;
   togglePhoneDlg(false);
 }
 </script>
@@ -358,10 +359,8 @@ function resetForm(formEl) {
 }
 .setting-content {
   .o-dialog {
-    .o-dialog-wrap {
-      :deep(.o-dialog-body) {
-        padding-bottom: 0 !important;
-      }
+    :deep(&-body) {
+      padding-bottom: 0;
     }
   }
 }

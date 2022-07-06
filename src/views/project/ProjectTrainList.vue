@@ -395,9 +395,9 @@ onUnmounted(() => {
       color: #000000;
       line-height: 24px;
     }
-    .o-button {
-      padding: 12px !important;
-    }
+    // .o-button {
+    //   padding: 12px !important;
+    // }
   }
   .instance-box {
     width: 100%;

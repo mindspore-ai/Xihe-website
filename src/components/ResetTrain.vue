@@ -22,16 +22,16 @@ const prop = defineProps({
     default: '',
   },
 });
-const stopShow = ref();
-const emit = defineEmits(['on-click']);
+const stopShow = ref(false);
+const emit = defineEmits(['click']);
 
 function confirmReset() {
   stopShow.value = false;
-  emit('on-click', prop.resetId);
+  emit('click', prop.resetId);
 }
 
 function concelClick() {
-  emit('on-click', 1);
+  emit('click', 1);
 }
 
 watch(

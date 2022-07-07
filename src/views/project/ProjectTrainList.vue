@@ -37,10 +37,10 @@ const detailData = computed(() => {
 });
 const projectId = detailData.value.id;
 const trainData = ref([]);
-const listId = ref();
-const stopId = ref();
-const resetId = ref();
-const showTip = ref(false);
+const listId = ref(null);
+const trainId = ref(null);
+const resetedId = ref(null);
+const isShowTip = ref(false);
 const describe = ref('');
 const i18n = {
   describe1:
@@ -66,9 +66,7 @@ let timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
-    // console.log(res.data.data);
     trainData.value = res.data.data;
-    // console.log(trainData.value.findIndex((item) => item.status === 'Running'));
     if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
       timer = setInterval(() => {
         socket.send(JSON.stringify({ pk: detailData.value.id }));
@@ -83,11 +81,11 @@ getTrainList();
 function goSelectFile() {
   if (trainData.value.length === 5) {
     describe.value = i18n.describe2;
-    showTip.value = true;
+    isShowTip.value = true;
     // 判断每一项的status是否为Running,如果有，则不能创建训练实例
   } else if (trainData.value.some((item) => item.status === 'Running')) {
     describe.value = i18n.describe1;
-    showTip.value = true;
+    isShowTip.value = true;
   } else {
     router.push({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
@@ -99,9 +97,9 @@ function goSelectFile() {
 }
 function toggleDelDlg(flag) {
   if (flag === undefined) {
-    showTip.value = !showTip.value;
+    isShowTip.value = !isShowTip.value;
   } else {
-    showTip.value = flag;
+    isShowTip.value = flag;
   }
 }
 
@@ -135,7 +133,6 @@ function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
     if (res.status === 200) {
       getTrainList();
-      // socket.close();
       clearInterval(timer);
       showStop.value = false;
     }
@@ -146,12 +143,12 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopTrainList(stopId.value);
+    stopTrainList(trainId.value);
   }
 }
 
 function showStopClick(val, id) {
-  stopId.value = id;
+  trainId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
@@ -166,8 +163,7 @@ function showStopClick(val, id) {
 // 重建
 const showReset = ref(false);
 function showResetClick(val) {
-  // console.log(val);
-  resetId.value = val;
+  resetedId.value = val;
   showReset.value = true;
 }
 
@@ -176,7 +172,6 @@ function resetClick(val) {
     showReset.value = false;
   } else {
     rebuildTrain(projectId, val).then((res) => {
-      // console.log(res);
       if (res.status === 200) {
         showReset.value = false;
         getTrainList();
@@ -213,19 +208,18 @@ socket.onopen = function () {
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到服务器的消息');
+  // console.log('收到服务器的消息');
   trainData.value = JSON.parse(event.data).data;
 
   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
     clearInterval(timer);
-    // setTimeout(socket.close(), 10000);
   }
 };
 
 // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function () {
-  console.log('服务器主动断开');
-};
+// socket.onclose = function () {
+//   console.log('服务器主动断开');
+// };
 
 // function closeConn() {
 //   socket.close(); // 向服务端发送断开连接的请求
@@ -290,19 +284,19 @@ onUnmounted(() => {
           <delete-train
             :list-id="listId"
             :show-del="showDel"
-            @on-click="delClick"
+            @click="delClick"
           ></delete-train>
           <!-- 终止 -->
           <stop-train
-            :train-id="scope.row.train_id"
+            :train-id="trainId"
             :show-stop="showStop"
-            @on-click="quitClick"
+            @click="quitClick"
           ></stop-train>
           <!-- 重建 -->
           <reset-train
-            :reset-id="resetId"
+            :reset-id="resetedId"
             :show-reset="showReset"
-            @on-click="resetClick"
+            @click="resetClick"
           ></reset-train>
           <div class="describe">
             {{ scope.row.description }}
@@ -346,7 +340,7 @@ onUnmounted(() => {
       <p>暂无训练实例</p>
     </div>
     <!-- 如已有正在训练中的实例，弹窗提示 -->
-    <o-dialog :show="showTip" @close-click="toggleDelDlg(false)">
+    <o-dialog :show="isShowTip" @close-click="toggleDelDlg(false)">
       <template #head>
         <div
           class="dlg-title"
@@ -375,7 +369,7 @@ onUnmounted(() => {
             paddingBottom: '46px',
           }"
         >
-          <o-button type="primary" @click="showTip = false">{{
+          <o-button type="primary" @click="isShowTip = false">{{
             i18n.confirm
           }}</o-button>
         </div>

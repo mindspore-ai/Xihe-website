@@ -22,16 +22,16 @@ const prop = defineProps({
   },
 });
 
-const stopShow = ref();
-const emit = defineEmits(['on-click']);
+const stopShow = ref(false);
+const emit = defineEmits(['click']);
 
 function confirmStop() {
   stopShow.value = false;
-  emit('on-click', prop.trainId);
+  emit('click', prop.trainId);
 }
 
 function concelClick() {
-  emit('on-click', 1);
+  emit('click', 1);
 }
 
 watch(

@@ -23,13 +23,13 @@ const prop = defineProps({
 });
 const id = ref();
 const isShow = ref();
-const emit = defineEmits(['on-click']);
+const emit = defineEmits(['click']);
 
 function confirmDel() {
-  emit('on-click', id.value);
+  emit('click', id.value);
 }
 function concelClick() {
-  emit('on-click', 2);
+  emit('click', 2);
 }
 
 watch(

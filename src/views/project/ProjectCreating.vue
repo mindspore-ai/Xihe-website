@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import { getModelTags, setNewProject } from '@/api/api-project.js';
 
@@ -14,7 +14,6 @@ import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfo = useUserInfoStore();
 const router = useRouter();
-const route = useRoute();
 
 const i18n = {
   create: '新建项目',
@@ -43,7 +42,7 @@ const proList = reactive({
   is_private: null,
 });
 
-const ruleFormRef = ref();
+const ruleFormRef = ref(null);
 const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -70,9 +69,9 @@ const rules = reactive({
 });
 
 const nameList = ref([]);
-const projects_photo = ref([]);
-const train_sdk = ref([]);
-const infer_sdk = ref([]);
+const projectPhotos = ref([]);
+const trainSdk = ref([]);
+const inferSdk = ref([]);
 const licenses = ref([]);
 
 nameList.value.push(userInfo.userName);
@@ -95,7 +94,7 @@ const submitClick = async () => {
 
 function selectImgClick(item) {
   proList.photo = item.id;
-  projects_photo.value.forEach((single) => {
+  projectPhotos.value.forEach((single) => {
     single.is_active = false;
   });
   item.is_active = true;
@@ -128,17 +127,17 @@ function setProject() {
 }
 
 getModelTags().then((res) => {
-  projects_photo.value = res.data.projects_photo;
-  projects_photo.value.forEach((item) => {
+  projectPhotos.value = res.data.projects_photo;
+  projectPhotos.value.forEach((item) => {
     item.is_active = false;
   });
-  projects_photo.value[0].is_active = true;
+  projectPhotos.value[0].is_active = true;
   licenses.value = res.data.licenses;
-  train_sdk.value = res.data.train_sdk;
-  infer_sdk.value = res.data.infer_sdk;
+  trainSdk.value = res.data.train_sdk;
+  inferSdk.value = res.data.infer_sdk;
 
-  proList.infer_sdk = infer_sdk.value[0].id;
-  proList.train_sdk = train_sdk.value[0].id;
+  proList.infer_sdk = inferSdk.value[0].id;
+  proList.train_sdk = trainSdk.value[0].id;
   proList.licenses = licenses.value[0].name;
   proList.is_private = 'Public';
 });
@@ -227,7 +226,7 @@ onMounted(() => {});
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
           <el-form-item :label="i18n.pro_img" class="item-img">
-            <div v-for="item in projects_photo" :key="item.id" class="image">
+            <div v-for="item in projectPhotos" :key="item.id" class="image">
               <div
                 class="img-modal"
                 :class="item.is_active ? 'select_active' : ''"
@@ -277,7 +276,7 @@ onMounted(() => {});
           <el-form-item :label="i18n.infer_sdk">
             <el-select v-model="proList.infer_sdk">
               <el-option
-                v-for="item in infer_sdk"
+                v-for="item in inferSdk"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -293,7 +292,7 @@ onMounted(() => {});
           <el-form-item :label="i18n.train_sdk">
             <el-select v-model="proList.train_sdk">
               <el-option
-                v-for="item in train_sdk"
+                v-for="item in trainSdk"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"

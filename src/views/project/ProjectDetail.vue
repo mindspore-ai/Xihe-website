@@ -185,7 +185,7 @@ const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
 const isForkShow = ref();
-let timer = null;
+// let timer = null;
 // 详情数据
 function getDetailData() {
   try {

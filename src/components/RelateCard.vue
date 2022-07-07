@@ -43,7 +43,7 @@ function concelClick() {
   emit('concel');
 }
 
-const delRelate = ref();
+const delRelate = ref(null);
 
 watch(
   () => props.deleteRelate,

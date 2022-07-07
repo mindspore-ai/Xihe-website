@@ -65,6 +65,7 @@ const classNames = computed(() => {
     `o-button-type-${props.type}`,
     `o-button-status-${props.status}`,
     props.disabled && 'is-disabled',
+    props.animation && 'animation',
   ].join(' ');
 });
 </script>

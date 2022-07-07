@@ -8,19 +8,17 @@ import AppFooter from '@/components/AppFooter.vue';
 
 import { getBaseInfo } from './api/api-shared';
 import { useBaseData } from '@/stores';
-// const filterData = useFilterData();
+
 const baseData = useBaseData();
 const route = useRoute();
 
-// getModelTags().then((res) => {
-//   filterData.setFilterData(res.data);
-// });
 getBaseInfo().then((res) => {
   baseData.setBaseData(res);
   localStorage.setItem('base', JSON.stringify(res));
 });
+
 const showFooter = computed(() => {
-  return !(route.name === 'home');
+  return !(route.path === '/');
 });
 
 const header = ref(null);

@@ -95,7 +95,6 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  console.log(to);
   // 设置语言
   const langStore = useLangStore();
   langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';

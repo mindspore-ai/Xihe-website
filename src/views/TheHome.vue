@@ -8,7 +8,6 @@ import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
-import hoemVideo from '@/assets/videos/home.mp4';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
@@ -17,6 +16,8 @@ import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 // BScroll.use(MouseWheel);
 
 const router = useRouter();
+const hoemVideo =
+  'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 
 const homeIns = ref(null);
 const homeTitle = '羲和AI开发平台';

@@ -30,7 +30,8 @@ const isDisabled1 = ref(false);
 const showAnaButton1 = ref(false);
 const showGoButton1 = ref(false);
 const evaluateUrl = ref('');
-
+const showContent = ref(true);
+const showContent1 = ref(false);
 const ruleRef = ref(null);
 
 const route = useRoute();
@@ -178,7 +179,6 @@ socket.onmessage = function (event) {
     form.desc = event.data.substring(4);
   } else {
     trainDetail.value = JSON.parse(event.data).data;
-    // console.log('收到服务器消息--日志');
     if (trainDetail.value.status !== 'Running') {
       isDisabled.value = false;
       showEvaBtn.value = true;
@@ -188,11 +188,6 @@ socket.onmessage = function (event) {
     }
   }
 };
-
-// // 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function () {
-//   // console.log('主动断开');
-// };
 
 function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
@@ -206,8 +201,6 @@ function reloadPage() {
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
 
 ws.onmessage = function (event) {
-  console.log(event.data);
-  console.log(JSON.parse(event.data));
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
@@ -225,17 +218,12 @@ ws.onmessage = function (event) {
   } else {
     showEvaBtn.value = true;
     showAnaButton.value = false;
-    ElMessage({
-      type: 'error',
-      message: JSON.parse(event.data).msg,
-    });
   }
 };
 
 // 自动评估
 function saveSetting() {
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
-    console.log(res.status);
     if (res.status === 200) {
       showEvaBtn.value = false;
       showAnaButton.value = true;
@@ -245,10 +233,8 @@ function saveSetting() {
     }
   });
 }
-// const showEvaBtn1 = ref(true);
-// const isDisabled1 = ref(false);
-// const showAnaButton1 = ref(false);
-// const showGoButton1 = ref(false);
+
+// 自定义评估
 function handleAssessment() {
   showEvaBtn1.value = false;
   isDisabled1.value = true;
@@ -257,7 +243,6 @@ function handleAssessment() {
   };
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
-      console.log(res);
       if (res.status === 200) {
         isDisabled1.value = false;
         showAnaButton1.value = true;
@@ -297,6 +282,23 @@ function goLogFile() {
   );
 }
 
+function handleChangeClick() {
+  if (showContent.value) {
+    return;
+  } else {
+    showContent.value = true;
+    showContent1.value = false;
+  }
+}
+function handleChangeClick1() {
+  if (showContent1.value) {
+    return;
+  } else {
+    showContent.value = false;
+    showContent1.value = true;
+  }
+}
+
 onMounted(() => {
   window.addEventListener('beforeunload', () => reloadPage());
 });
@@ -317,24 +319,6 @@ watch(
     });
   }
 );
-const showContent = ref(true);
-const showContent1 = ref(false);
-function handleChangeClick() {
-  if (showContent.value) {
-    return;
-  } else {
-    showContent.value = true;
-    showContent1.value = false;
-  }
-}
-function handleChangeClick1() {
-  if (showContent1.value) {
-    return;
-  } else {
-    showContent.value = false;
-    showContent1.value = true;
-  }
-}
 </script>
 <template>
   <div class="train-log">

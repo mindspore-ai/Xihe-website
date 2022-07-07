@@ -66,9 +66,9 @@ let timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
-    console.log(res.data.data);
+    // console.log(res.data.data);
     trainData.value = res.data.data;
-    console.log(trainData.value.findIndex((item) => item.status === 'Running'));
+    // console.log(trainData.value.findIndex((item) => item.status === 'Running'));
     if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
       timer = setInterval(() => {
         socket.send(JSON.stringify({ pk: detailData.value.id }));
@@ -166,7 +166,7 @@ function showStopClick(val, id) {
 // 重建
 const showReset = ref(false);
 function showResetClick(val) {
-  console.log(val);
+  // console.log(val);
   resetId.value = val;
   showReset.value = true;
 }
@@ -176,7 +176,7 @@ function resetClick(val) {
     showReset.value = false;
   } else {
     rebuildTrain(projectId, val).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         showReset.value = false;
         getTrainList();

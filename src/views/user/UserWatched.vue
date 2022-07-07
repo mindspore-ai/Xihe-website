@@ -103,7 +103,7 @@ function getWatched(userId, follow) {
         follow.isFollow = !follow.isFollow;
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

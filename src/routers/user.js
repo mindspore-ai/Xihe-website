@@ -60,12 +60,16 @@ export default [
             vistorInfoStore.email = email;
             vistorInfoStore.emailStatus = is_active;
           } else {
-            return { name: 'home' };
+            return {
+              name: '404',
+            };
           }
           return true;
         } catch (err) {
           console.error('获取用户信息失败：', err);
-          return { name: 'home' };
+          return {
+            name: '404',
+          };
         }
       }
     },
@@ -132,7 +136,7 @@ export default [
       const logingStore = useLoginStore();
       if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
         return {
-          name: 'home',
+          name: '404',
         };
       }
     },

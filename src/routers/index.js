@@ -9,14 +9,9 @@ import dataset from './dataset';
 import project from './project';
 
 export const routes = [
-  {
-    path: '/',
-    redirect: '/home',
-  },
   // 主页
   {
-    path: '/home',
-    name: 'home',
+    path: '/',
     component: () => {
       return import('@/views/TheHome.vue');
     },
@@ -78,8 +73,8 @@ export const routes = [
   ...project,
   // 404页面
   {
-    path: '/notfound',
-    name: 'notfound',
+    path: '/404',
+    name: '404',
     component: () => {
       return import('@/views/TheNotfound.vue');
     },
@@ -87,7 +82,7 @@ export const routes = [
   // 其他页面跳转至404
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/notfound',
+    redirect: '/404',
   },
 ];
 
@@ -100,6 +95,7 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
+  console.log(to);
   // 设置语言
   const langStore = useLangStore();
   langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
@@ -114,7 +110,7 @@ router.beforeEach(async (to, from) => {
 
   // 如已退出返回首页
   if (
-    to.name === 'home' &&
+    to.path === '/' &&
     (loginStore.isLoginNot || loginStore.isLoginFailed) &&
     from.path !== '/'
   ) {
@@ -123,15 +119,14 @@ router.beforeEach(async (to, from) => {
 
   // 白名单中路由可直接进入
   const whiteList = [
-    'home',
     'models',
     'datasets',
     'projects',
     'privacy',
     'legal',
-    'notfound',
+    '404',
   ];
-  if (whiteList.indexOf(to.name) !== -1) {
+  if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {
     doLogin();
     return true;
   }
@@ -144,7 +139,7 @@ router.beforeEach(async (to, from) => {
     if (userInfoStore.userName === to.params.user) {
       return true;
     } else {
-      return { name: 'notfound' };
+      return { name: '404' };
     }
   }
 

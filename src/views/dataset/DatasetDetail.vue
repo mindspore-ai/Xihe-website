@@ -141,7 +141,7 @@ function getDetailData() {
         headTags.value = [...modelTags.value];
         getTagList();
       } else {
-        router.push('/notfound');
+        router.push('/404');
       }
     });
   } catch (error) {

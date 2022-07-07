@@ -114,7 +114,7 @@ const loginedDropdownItems = [
     label: '退出',
     action: () => {
       logout();
-      router.push('/home');
+      router.push('/');
     },
   },
 ];
@@ -138,7 +138,7 @@ watch(
 function handleLogoClick() {
   emptyValue();
   activeNavItem.value = '';
-  return router.push({ name: 'home' });
+  return router.push('/');
 }
 
 // 点击导航

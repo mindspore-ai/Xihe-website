@@ -54,10 +54,6 @@ const i18n = {
 .pro-card {
   cursor: pointer;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-  &:hover {
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-  }
-
   .o-icon {
     margin-right: 2px;
   }

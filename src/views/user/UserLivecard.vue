@@ -82,8 +82,8 @@ const i18n = {
   background-color: #fff;
   transition: all 0.3s;
   overflow: hidden;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: pointer;
+  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   .o-icon {
     margin-right: 4px;
   }

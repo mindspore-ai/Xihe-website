@@ -98,8 +98,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
@@ -351,8 +351,7 @@ function getTagList() {
 
 function handleTabClick(item) {
   router.push(
-    `/models/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/models/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -807,7 +806,7 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
-    min-height: calc(100vh - 400px);
+    min-height: calc(100vh - 455px);
     background-color: #f5f6f8;
     padding: 35px 0 64px;
   }

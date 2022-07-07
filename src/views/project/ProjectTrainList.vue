@@ -37,15 +37,15 @@ const detailData = computed(() => {
 });
 const projectId = detailData.value.id;
 const trainData = ref([]);
-const listId = ref(null);
-const trainId = ref(null);
-const resetedId = ref(null);
-const isShowTip = ref(false);
-const describe = ref('');
+const listId = ref();
+const stopId = ref();
+const resetId = ref();
+const tips = ref(false);
+const description = ref('');
 const i18n = {
-  describe1:
+  description1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
-  describe2:
+  description2:
     '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
   confirm: '确定',
 };
@@ -80,12 +80,12 @@ getTrainList();
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   if (trainData.value.length === 5) {
-    describe.value = i18n.describe2;
-    isShowTip.value = true;
+    description.value = i18n.description2;
+    tips.value = true;
     // 判断每一项的status是否为Running,如果有，则不能创建训练实例
   } else if (trainData.value.some((item) => item.status === 'Running')) {
-    describe.value = i18n.describe1;
-    isShowTip.value = true;
+    description.value = i18n.description1;
+    tips.value = true;
   } else {
     router.push({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
@@ -97,9 +97,9 @@ function goSelectFile() {
 }
 function toggleDelDlg(flag) {
   if (flag === undefined) {
-    isShowTip.value = !isShowTip.value;
+    tips.value = !tips.value;
   } else {
-    isShowTip.value = flag;
+    tips.value = flag;
   }
 }
 
@@ -298,7 +298,7 @@ onUnmounted(() => {
             :show-reset="showReset"
             @click="resetClick"
           ></reset-train>
-          <div class="describe">
+          <div class="description">
             {{ scope.row.description }}
             <div class="hide-box">
               <div class="tools-box">
@@ -340,7 +340,7 @@ onUnmounted(() => {
       <p>暂无训练实例</p>
     </div>
     <!-- 如已有正在训练中的实例，弹窗提示 -->
-    <o-dialog :show="isShowTip" @close-click="toggleDelDlg(false)">
+    <o-dialog :show="tips" @close-click="toggleDelDlg(false)">
       <template #head>
         <div
           class="dlg-title"
@@ -358,7 +358,7 @@ onUnmounted(() => {
           width: '640px',
         }"
       >
-        {{ describe }}
+        {{ description }}
       </div>
       <template #foot>
         <div
@@ -369,7 +369,7 @@ onUnmounted(() => {
             paddingBottom: '46px',
           }"
         >
-          <o-button type="primary" @click="isShowTip = false">{{
+          <o-button type="primary" @click="tips = false">{{
             i18n.confirm
           }}</o-button>
         </div>
@@ -424,7 +424,7 @@ onUnmounted(() => {
     .el-table__row {
       height: 56px;
 
-      .describe {
+      .description {
         display: flex;
         justify-content: space-between;
         align-items: center;

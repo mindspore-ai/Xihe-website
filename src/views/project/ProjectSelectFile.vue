@@ -195,7 +195,7 @@ getDetailData();
             @click="confirmCreating"
             >创建</o-button
           >
-          <o-button v-else class="confim" type="secondary">创建</o-button>
+          <o-button v-else class="confim2" disabled>创建</o-button>
         </div>
       </div>
     </div>
@@ -205,15 +205,13 @@ getDetailData();
 <style lang="scss" scoped>
 .selectfile {
   max-width: 100%;
-  // height: 100%;
   min-height: calc(100vh - 200px);
   margin-top: 80px;
-  // margin-bottom: 49px;
   background-color: #f5f6f8;
   &-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 130px 64px;
+    padding: 50px 90px 64px;
     margin: 0 auto;
     .selectfile-back {
       font-size: 16px;
@@ -300,6 +298,11 @@ getDetailData();
         justify-content: center;
         margin-top: 48px;
         margin-bottom: 32px;
+        .confim2 {
+          background: #cee8ff;
+          color: #fff;
+          border: none;
+        }
       }
     }
   }

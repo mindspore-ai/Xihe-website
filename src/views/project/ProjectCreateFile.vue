@@ -44,7 +44,6 @@ const selectData = reactive({
   com2: '',
   com3: '',
 });
-// window.xxx = form;
 const optionData = reactive({
   com1: [
     { value: 'A', name: 'MindSpore', content: 'MPI' },
@@ -436,11 +435,9 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <template #>
-                      <div>
-                        输入数据配置：在您的算法代码中需要解析的输入参数，比如预训练模型的路径，训练数据集的路径等。
-                      </div>
-                    </template>
+                    <div>
+                      输入数据配置：在您的算法代码中需要解析的输入参数，比如预训练模型的路径，训练数据集的路径等。
+                    </div>
                   </el-popover>
                 </div>
                 <el-form-item>
@@ -465,11 +462,9 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <template #>
-                      <div>
-                        在您的算法代码中除了输入、输出和日志参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
-                      </div>
-                    </template>
+                    <div>
+                      在您的算法代码中除了输入、输出和日志参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
+                    </div>
                   </el-popover>
                 </div>
                 <el-form-item>
@@ -543,6 +538,7 @@ const rules = reactive({
                     placement="bottom-start"
                     :width="372"
                     trigger="hover"
+                    visible
                     :teleported="false"
                   >
                     <template #reference>
@@ -550,11 +546,9 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <template #>
-                      <div>
-                        输出数据配置：在您的算法代码中需要解析的输出参数，比如保存预训练模型的路径等。
-                      </div>
-                    </template>
+                    <div>
+                      输出数据配置：在您的算法代码中需要解析的输出参数，比如保存预训练模型的路径等。
+                    </div>
                   </el-popover>
                 </div>
                 <el-form-item>
@@ -604,7 +598,7 @@ const rules = reactive({
   .createfile-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 130px 64px;
+    padding: 50px 90px 64px;
     margin: 0 auto;
     .createfile-back {
       font-size: 16px;

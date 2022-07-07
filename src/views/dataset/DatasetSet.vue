@@ -373,6 +373,7 @@ function toggleDelDlg(flag) {
   display: flex;
   justify-content: center;
   background-color: #fff;
+  min-height: calc(100vh - 554px);
   .setting-main {
     max-width: 600px;
     margin-bottom: 40px;

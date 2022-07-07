@@ -2,19 +2,19 @@
 import IconSearcherror from '~icons/app/search-error';
 </script>
 <template>
-  <div class="notFound">
-    <div class="notFound-wrap">
-      <o-icon class="notFound-icon"
+  <div class="not-found">
+    <div class="not-found-wrap">
+      <o-icon class="not-found-icon"
         ><icon-searcherror></icon-searcherror
       ></o-icon>
-      <div class="notFound-tip">你所访问的页面不存在！</div>
+      <div class="not-found-tip">你所访问的页面不存在！</div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.notFound {
-  min-height: 100vh;
+.not-found {
+  min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
   display: flex;
   justify-content: center;
@@ -23,10 +23,10 @@ import IconSearcherror from '~icons/app/search-error';
     display: flex;
     flex-direction: column;
     align-items: center;
-    .notFound-icon {
+    .not-found-icon {
       font-size: 300px;
     }
-    .notFound-tip {
+    .not-found-tip {
       height: 28px;
       font-size: 18px;
       color: #555555;

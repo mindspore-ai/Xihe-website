@@ -125,8 +125,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
@@ -231,7 +231,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
@@ -239,8 +239,7 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -1122,20 +1121,18 @@ $theme: #0d8dff;
     .label-box {
       display: flex;
       flex-wrap: wrap;
-      margin: 8px 0 16px;
+      margin: 8px 0;
       font-size: 14px;
       .label-item {
-        align-self: center;
-        height: 28px;
-        line-height: 28px;
-        padding: 0 12px;
-        margin-right: 16px;
+        cursor: pointer;
+        padding: 3px 6px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
         color: #555;
         border: 1px solid #dbedff;
         background-color: #f3f9ff;
         border-radius: 8px;
-        margin-bottom: 16px;
-        cursor: pointer;
       }
       .label-add-item {
         height: 28px;
@@ -1198,7 +1195,7 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
-    min-height: calc(100vh - 400px);
+    min-height: calc(100vh - 455px);
     background-color: #f5f6f8;
     padding: 35px 0 64px;
   }

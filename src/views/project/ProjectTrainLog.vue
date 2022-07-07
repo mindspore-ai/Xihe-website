@@ -25,6 +25,10 @@ const showEvaBtn = ref(true);
 const isDisabled = ref(false);
 const showAnaButton = ref(false);
 const showGoButton = ref(false);
+const showEvaBtn1 = ref(true);
+const isDisabled1 = ref(false);
+const showAnaButton1 = ref(false);
+const showGoButton1 = ref(false);
 const evaluateUrl = ref('');
 
 const ruleRef = ref(null);
@@ -101,7 +105,8 @@ const detailData = computed(() => {
 });
 // 训练日志详情数据
 const trainDetail = ref({});
-
+const repoContent = ref('');
+let timer2 = null;
 let timer = null;
 let timer1 = null;
 // 获得训练日志页面数据
@@ -178,7 +183,7 @@ socket.onmessage = function (event) {
       isDisabled.value = false;
       showEvaBtn.value = true;
       clearInterval(timer);
-      setTimeout(closeConn(), 10000);
+      // setTimeout(closeConn(), 10000);
       setTimeout(clearInterval(timer1), 10000);
     }
   }
@@ -193,16 +198,16 @@ function closeConn() {
   socket.close(); // 向服务端发送断开连接的请求
 }
 
-// // 页面刷新
+// 页面刷新
 function reloadPage() {
   closeConn();
 }
 
-// wss://xihe.test.osinfra.cn/wss/inference
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
-// ws.onopen = function () { };
 
 ws.onmessage = function (event) {
+  console.log(event.data);
+  console.log(JSON.parse(event.data));
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
@@ -213,7 +218,10 @@ ws.onmessage = function (event) {
     });
     showAnaButton.value = false;
     showGoButton.value = true;
+    showAnaButton1.value = false;
+    showGoButton1.value = true;
     evaluateUrl.value = JSON.parse(event.data).data.url;
+    clearInterval(timer2);
   } else {
     showEvaBtn.value = true;
     showAnaButton.value = false;
@@ -226,8 +234,6 @@ ws.onmessage = function (event) {
 
 // 自动评估
 function saveSetting() {
-  // ruleRef.value.validate((valid) => {
-  // if (valid) {
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
     console.log(res.status);
     if (res.status === 200) {
@@ -238,23 +244,51 @@ function saveSetting() {
       }, 10000);
     }
   });
-  // } else {
-  //   console.log('验证不过');
-  // }
-  // });
+}
+// const showEvaBtn1 = ref(true);
+// const isDisabled1 = ref(false);
+// const showAnaButton1 = ref(false);
+// const showGoButton1 = ref(false);
+function handleAssessment() {
+  showEvaBtn1.value = false;
+  isDisabled1.value = true;
+  let params = {
+    db_path: repoContent.value,
+  };
+  autoEvaluate(params, detailData.value.id, route.params.trainId).then(
+    (res) => {
+      console.log(res);
+      if (res.status === 200) {
+        isDisabled1.value = false;
+        showAnaButton1.value = true;
+        timer2 = setInterval(() => {
+          ws.send(
+            JSON.stringify({
+              pk: detailData.value.id,
+              train_id: route.params.trainId,
+              is_cust: true,
+            })
+          );
+        }, 10000);
+      }
+    }
+  );
+}
+
+//跳转到Aim嵌入页面
+function goAimPage() {
+  router.push({
+    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
+    query: {
+      url: evaluateUrl.value,
+    },
+  });
 }
 
 // 跳到评估页面
 function goToPage() {
   window.open(`${evaluateUrl.value}`);
 }
-
-// config.json详情
-// function goJsonFile(file) {
-//   router.push(
-//     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${file}`
-//   );
-// }
 
 // 日志详情
 function goLogFile() {
@@ -271,6 +305,7 @@ onUnmounted(() => {
   closeConn();
   clearInterval(timer);
   clearInterval(timer1);
+  clearInterval(timer2);
 });
 
 watch(
@@ -299,16 +334,6 @@ function handleChangeClick1() {
     showContent.value = false;
     showContent1.value = true;
   }
-}
-
-//跳转到Aim嵌入页面
-function goAimPage() {
-  // console.log(
-  //   `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
-  // );
-  router.push(
-    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`
-  );
 }
 </script>
 <template>
@@ -464,7 +489,7 @@ function goAimPage() {
             </div>
             <div v-if="showContent1">
               <!-- 无Aim代码 -->
-              <div v-if="false" class="no-aim">
+              <div v-if="trainDetail.cust_visualize" class="no-aim">
                 <p>
                   <o-icon><icon-warning></icon-warning></o-icon>
                 </p>
@@ -474,16 +499,38 @@ function goAimPage() {
                 <p class="no-aim-bottom">添加评估代码</p>
               </div>
               <!-- 有Aim代码 -->
-              <div class="have-aim">
+              <div v-if="true" class="have-aim">
                 <p>
                   该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
                 </p>
                 <el-form>
                   <el-form-item label="repo">
-                    <el-input placeholder="train/db/"></el-input>
+                    <el-input
+                      v-model="repoContent"
+                      placeholder="train/db/"
+                    ></el-input>
                   </el-form-item>
                 </el-form>
-                <o-button type="primary" @click="goAimPage">开始评估</o-button>
+                <div class="info-btn">
+                  <o-button
+                    v-if="showEvaBtn1"
+                    type="primary"
+                    @click="handleAssessment"
+                    >自动评估</o-button
+                  >
+                  <o-button v-if="isDisabled1" disabled type="primary"
+                    >自动评估</o-button
+                  >
+                  <o-button v-if="showAnaButton1" disabled type="primary"
+                    >自动评估中...</o-button
+                  >
+                  <o-button
+                    v-if="showGoButton1"
+                    type="primary"
+                    @click="goAimPage"
+                    >查看报告</o-button
+                  >
+                </div>
               </div>
             </div>
           </li>

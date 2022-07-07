@@ -23,14 +23,14 @@ const prop = defineProps({
   //   },
 });
 
-const isShow = ref();
-const emit = defineEmits(['comfirm', 'concel']);
+const isShow = ref(false);
+const emit = defineEmits(['confirm', 'cancel']);
 
 function confirmDel() {
-  emit('comfirm');
+  emit('confirm');
 }
-function concelClick() {
-  emit('concel');
+function cancelClick() {
+  emit('cancel');
 }
 
 watch(
@@ -70,7 +70,7 @@ watch(
           paddingBottom: '56px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="concelClick">{{
+        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
           deleteCondition.cancel
         }}</o-button>
         <o-button type="primary" @click="confirmDel">{{

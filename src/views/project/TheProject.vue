@@ -111,8 +111,6 @@ const showTags = ref(false);
 const radioList = ref({});
 const keyWord = ref('');
 
-// const paginationShow = ref(true);
-
 const queryData = reactive({
   page: 1,
   size: 12,
@@ -251,7 +249,7 @@ function sortTagClick(index, index2) {
       moreSortTags.value[index].task_list[index2].isActive = true;
     });
   }
-  tagsSearch(moreSortTags.value);
+  searchTags(moreSortTags.value);
 }
 function clearSortItem(index) {
   moreSortTags.value[index].haveActive = false;
@@ -259,10 +257,10 @@ function clearSortItem(index) {
     item.isActive = false;
     item.isSelected = false;
   });
-  tagsSearch(moreSortTags.value);
+  searchTags(moreSortTags.value);
 }
 // 二级标签查询
-function tagsSearch(date) {
+function searchTags(date) {
   let taskId = [];
   date.forEach((item) => {
     item.task_list.forEach((it) => {

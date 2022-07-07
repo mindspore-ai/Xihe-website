@@ -54,7 +54,7 @@ const i18n = {
     newName: '新项目名',
     placeholder: '请输入项目名',
     describe: '你可重命名项目，并转移你的项目至组织。',
-    btnText: '确定',
+    btnText: '保存更改',
   },
   covers: {
     title: '项目封面',
@@ -112,16 +112,37 @@ function selectImgClick(item) {
   });
   item.is_active = true;
 }
-function confirmAmend() {
+// function confirmAmend() {
+//   let query = {
+//     id: detailData.id,
+//     photo: photoId.value,
+//   };
+//   modifyProject(query).then((res) => {
+//     if (res.status === 200) {
+//       ElMessage({
+//         type: 'success',
+//         message: '仓库信息更新成功',
+//       });
+//     }
+//   });
+// }
+
+function confirmPrivate() {
   let query = {
-    id: detailData.id,
+    is_private: visibleValue.value,
     photo: photoId.value,
+    id: detailData.id,
   };
   modifyProject(query).then((res) => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
-        message: '仓库信息更新成功',
+        message: res.msg,
+      });
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
       });
     }
   });
@@ -180,25 +201,7 @@ async function confirmRename(formEl) {
     }
   });
 }
-function confirmPrivate() {
-  let query = {
-    is_private: visibleValue.value,
-    id: detailData.id,
-  };
-  modifyProject(query).then((res) => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    }
-  });
-}
+
 function confirmDel() {
   deleteProject(detailData.id).then((res) => {
     if (res.status === 200) {
@@ -236,8 +239,27 @@ function toggleDelDlg(flag) {
         <p class="setting-tip">
           {{ i18n.visible.options[visibleIndex].describe }}
         </p>
-        <o-button @click="confirmPrivate">{{ i18n.visible.btnText }}</o-button>
-        <div class="setting-title">{{ i18n.rename.title }}</div>
+        <!-- 封面 -->
+        <h4 class="setting-title">{{ i18n.covers.title }}</h4>
+        <div class="photo_container">
+          <div v-for="item in photos" :key="item.id" class="container-single">
+            <div
+              class="img-modal"
+              :class="item.is_active ? 'select_active' : ''"
+              @click="selectImgClick(item)"
+            ></div>
+            <img :src="item.url" alt="" />
+          </div>
+        </div>
+        <!-- <o-button @click="confirmAmend">{{ i18n.visible.btnText }}</o-button> -->
+        <o-button style="margin-bottom: 40px" @click="confirmPrivate">{{
+          i18n.visible.btnText
+        }}</o-button>
+
+        <div class="setting-title">
+          {{ i18n.rename.title }}
+          <el-divider />
+        </div>
         <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
         <o-select
           :select-data="organizationAdminList"
@@ -311,26 +333,18 @@ function toggleDelDlg(flag) {
         <o-input v-model="newName" :placeholder="i18n.rename.placeholder">
         </o-input> -->
         <p class="setting-tip">{{ i18n.rename.describe }}</p>
-        <o-button @click="confirmRename(queryRef)">{{
-          i18n.rename.btnText
-        }}</o-button>
-        <!-- 封面 -->
-        <h4 class="setting-title">{{ i18n.covers.title }}</h4>
-        <div class="photo_container">
-          <div v-for="item in photos" :key="item.id" class="container-single">
-            <div
-              class="img-modal"
-              :class="item.is_active ? 'select_active' : ''"
-              @click="selectImgClick(item)"
-            ></div>
-            <img :src="item.url" alt="" />
-          </div>
-        </div>
-        <o-button @click="confirmAmend">{{ i18n.visible.btnText }}</o-button>
+        <o-button
+          style="margin-bottom: 40px"
+          @click="confirmRename(queryRef)"
+          >{{ i18n.rename.btnText }}</o-button
+        >
 
-        <h4 class="setting-title">{{ i18n.delete.title }}</h4>
+        <h4 class="setting-title">
+          {{ i18n.delete.title }}
+          <el-divider />
+        </h4>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button  status="error" class="delete-btn" @click="showDel = true">{{
+        <o-button status="error" class="delete-btn" @click="showDel = true">{{
           i18n.delete.btnText
         }}</o-button>
       </div>
@@ -422,7 +436,7 @@ function toggleDelDlg(flag) {
   justify-content: center;
   background-color: #fff;
   .setting-main {
-    max-width: 600px;
+    max-width: 756px;
     margin-bottom: 40px;
     width: 100%;
     .photo_container {
@@ -501,12 +515,20 @@ function toggleDelDlg(flag) {
         }
       }
     }
+
     .setting-title {
       margin: 40px 0 16px;
-      font-size: 18px;
+      font-size: 24px;
       font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
+      font-weight: normal;
       color: #000000;
       line-height: 24px;
+      position: relative;
+      :deep .el-divider {
+        position: absolute;
+        top: -65px;
+        left: -40px;
+      }
     }
     .setting-tip {
       margin: 8px 0 16px;

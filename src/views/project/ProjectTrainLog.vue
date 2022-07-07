@@ -25,9 +25,9 @@ const showEvaBtn = ref(true);
 const isDisabled = ref(false);
 const showAnaButton = ref(false);
 const showGoButton = ref(false);
-const evaluateUrl = ref();
+const evaluateUrl = ref('');
 
-const ruleRef = ref();
+const ruleRef = ref(null);
 
 const route = useRoute();
 const router = useRouter();
@@ -66,8 +66,8 @@ const rules = reactive({
     //   trigger: 'blur',
     // },
   ],
-  batch_size: [
-    { required: true, message: '必填项', trigger: 'blur' },
+  batch: [
+    // { required: true, message: '必填项', trigger: 'blur' },
     // {
     //   pattern: /^\[((\d+\,)+\d+)*\]$/,
     //   message: '格式不正确',
@@ -99,7 +99,6 @@ beforeEnter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// console.log(detailData.value);
 // 训练日志详情数据
 const trainDetail = ref({});
 
@@ -112,7 +111,6 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    // console.log(res.data);
     if (res.status === 200) {
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
@@ -231,6 +229,7 @@ function saveSetting() {
   // ruleRef.value.validate((valid) => {
   // if (valid) {
   autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
+    console.log(res.status);
     if (res.status === 200) {
       showEvaBtn.value = false;
       showAnaButton.value = true;

@@ -20,7 +20,11 @@ import OAlert from '@/components/hooks/useAlert';
 const app = createApp(App);
 
 app.directive('highlight', (el) => {
-  hljs.configure({ useBR: true });
+  hljs.configure({
+    useBR: true,
+    // TODO:防范XSS注入攻击
+    ignoreUnescapedHTML: true,
+  });
   let blocks = el.querySelectorAll('pre code');
   blocks.forEach((block) => {
     hljs.highlightElement(block);

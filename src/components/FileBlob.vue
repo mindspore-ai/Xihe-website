@@ -44,11 +44,11 @@ const path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
 }/${routerParams.contents.join('/')}`;
 
 const i18n = {
-  text1: '查看源代码',
-  text2: '复制',
-  text3: '编辑',
-  text4: '删除',
-  text5: '下载',
+  viewRawCode: '查看源代码',
+  copy: '复制',
+  edit: '编辑',
+  delete: '删除',
+  download: '下载',
 };
 const showBlob = ref(false);
 const suffix = ref('');
@@ -68,7 +68,7 @@ let reopt = {
   data: null,
 };
 
-function preview(objkey) {
+function previewFile(objkey) {
   getDownLoadToken({ objkey }).then((res) => {
     reopt.url = res.data.signedUrl;
     reopt.responseType = 'blob';
@@ -129,13 +129,13 @@ findFile(path).then((res) => {
       : (suffix.value = 'py');
     if (fileData.value.size < 524288) {
       showBlob.value = true;
-      preview(fileData.value.path);
+      previewFile(fileData.value.path);
     }
   }
 });
 
 function goRaw(blob) {
-  const blobs = new Blob([blob]);
+  const blobs = new Blob([blob], { type: 'text/plain;charset=utf-8' });
   let href = window.URL.createObjectURL(blobs);
   window.open(href);
 }
@@ -206,7 +206,7 @@ watch(
             @click="goRaw(rawData)"
           >
             <o-icon><icon-check></icon-check></o-icon
-            ><span class="text">{{ i18n.text1 }}</span>
+            ><span class="text">{{ i18n.viewRawCode }}</span>
           </div>
           <div
             v-if="showBlob"
@@ -214,7 +214,7 @@ watch(
             @click="copyText(rawData)"
           >
             <o-icon><icon-copy></icon-copy></o-icon
-            ><span class="text">{{ i18n.text2 }}</span>
+            ><span class="text">{{ i18n.copy }}</span>
           </div>
           <div
             v-if="detailData.is_owner && showBlob"
@@ -222,7 +222,7 @@ watch(
             @click="goEditor"
           >
             <o-icon><icon-editing></icon-editing></o-icon
-            ><span class="text">{{ i18n.text3 }}</span>
+            ><span class="text">{{ i18n.edit }}</span>
           </div>
           <div
             v-if="detailData.is_owner"
@@ -230,14 +230,14 @@ watch(
             @click="headleDelFile(fileData.path)"
           >
             <o-icon><icon-delete></icon-delete></o-icon
-            ><span class="text">{{ i18n.text4 }}</span>
+            ><span class="text">{{ i18n.delete }}</span>
           </div>
           <div
             class="file-operation-item"
             @click="downloadFile(fileData.path, fileData.name, detailData.id)"
           >
             <o-icon><icon-download></icon-download></o-icon
-            ><span class="text">{{ i18n.text5 }}</span>
+            ><span class="text">{{ i18n.download }}</span>
           </div>
         </div>
       </div>

@@ -567,7 +567,7 @@ function goTrain(path) {
 <template>
   <div v-if="detailData && detailData.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head warp">
+    <div class="card-head wrap">
       <div class="head-top">
         <div>
           <div class="card-head-1">
@@ -666,7 +666,7 @@ function goTrain(path) {
     </div>
     <div v-if="detailData.id" class="model-detail-body">
       <router-view
-        class="warp"
+        class="wrap"
         :detail-data="detailData"
         @on-click="getDetailData()"
       ></router-view>
@@ -1031,7 +1031,7 @@ $theme: #0d8dff;
   justify-content: center;
   margin: 48px 0 14px 0;
 }
-.warp {
+.wrap {
   margin: 0 auto;
   padding: 0 16px;
   max-width: 1440px;

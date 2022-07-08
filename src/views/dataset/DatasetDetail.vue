@@ -436,7 +436,7 @@ watch(
 <template>
   <div v-if="detailData && detailData.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head warp">
+    <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
           <img :src="detailData.owner_name.avatar_url" alt="" />
@@ -482,7 +482,7 @@ watch(
       </el-tabs>
     </div>
     <div v-if="detailData.id" class="model-detail-body">
-      <router-view class="warp"></router-view>
+      <router-view class="wrap"></router-view>
     </div>
     <div class="tags-box">
       <el-dialog v-model="isTagShow" width="804px" :show-close="false">
@@ -714,7 +714,7 @@ $theme: #0d8dff;
   justify-content: center;
   margin-top: 48px;
 }
-.warp {
+.wrap {
   margin: 0 auto;
   padding: 0 16px;
   max-width: 1472px;

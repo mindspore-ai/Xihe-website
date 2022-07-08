@@ -2,6 +2,8 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+// import ODialog from '@/components/ODialog.vue';
+
 import IconModel from '~icons/app/model-blue';
 import IconDataset from '~icons/app/dataset-blue';
 import IconProject from '~icons/app/project-tree';
@@ -12,11 +14,18 @@ import IconAddFile from '~icons/app/add-file';
 import IconFileVisited from '~icons/app/other-file';
 import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
+import IconRemove from '~icons/app/remove';
 
-import { downloadFile, findFile, createFolder } from '@/api/api-obs';
+import {
+  downloadFile,
+  findFile,
+  createFolder,
+  deleteFolder,
+} from '@/api/api-obs';
 import { changeByte } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -35,6 +44,7 @@ const isAuthentic = computed(() => {
 
 let routerParams = router.currentRoute.value.params;
 let contents = routerParams.contents;
+// const showDel = false;
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -52,6 +62,13 @@ const i18n = {
   download: '下载',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
   emptyVisited: '该用户还未上传任何文件',
+  delete: {
+    title: '删除模型',
+    description: '确定删除吗',
+    btnText: '删除',
+    cancel: '取消',
+    confirm: '确认',
+  },
 };
 
 let queryRef = ref(null);
@@ -95,7 +112,13 @@ function getDetailData(path) {
     console.error(error);
   }
 }
-
+// function toggleDelDlg(flag) {
+//   if (flag === undefined) {
+//     showDel.value = !showDel.value;
+//   } else {
+//     showDel.value = flag;
+//   }
+// }
 function getFilesByPath() {
   routerParams = router.currentRoute.value.params;
   contents = routerParams.contents;
@@ -177,9 +200,38 @@ function creatFolter(formEl) {
     }
   });
 }
-function cancelCreat() {
+function cancelCreate() {
   useFileData().setShowFolder(false);
   query.folderName = '';
+}
+function deleteFolderClick(folderName, isFolder) {
+  let path = '';
+  if (contents && contents.length) {
+    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
+      routerParams.name
+    }/${contents.join('/')}/${folderName}`;
+  } else {
+    // 根目录下
+    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${folderName}`;
+  }
+  if (isFolder) {
+    path = `${path}/`;
+  }
+  deleteFolder(path).then((res) => {
+    if (res.status === 200) {
+      getFilesByPath();
+      ElMessage({
+        type: 'success',
+        message: res.msg,
+      });
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+      });
+    }
+    console.log(res);
+  });
 }
 watch(
   () => route.fullPath,
@@ -256,7 +308,7 @@ watch(
               <o-icon @click="creatFolter(queryRef)">
                 <icon-circle-check></icon-circle-check>
               </o-icon>
-              <o-icon @click="cancelCreat">
+              <o-icon @click="cancelCreate">
                 <icon-circle-close></icon-circle-close>
               </o-icon>
             </div>
@@ -272,6 +324,7 @@ watch(
           <tr
             v-for="item in filesList"
             :key="item.download_path"
+            :class="{ 'folder-item': item.is_folder }"
             class="tree-table-item"
           >
             <td class="tree-table-item-name" @click="goBlob(item)">
@@ -294,6 +347,15 @@ watch(
             <td class="tree-table-item-from">
               <div class="inner-box">
                 <span>{{ item.description }}</span>
+                <div
+                  class="delete-folder"
+                  @click="deleteFolderClick(item.name, item.is_folder)"
+                >
+                  <o-icon @click="creatFolter(queryRef)">
+                    <icon-remove></icon-remove>
+                  </o-icon>
+                  <span>删除</span>
+                </div>
               </div>
             </td>
             <td class="tree-table-item-time">
@@ -332,6 +394,38 @@ watch(
       </p>
     </div>
   </div>
+  <!-- <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 30px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      {{ i18n.delete.description }}
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '56px',
+        }"
+      >
+        <o-button
+          :style="{ marginRight: '24px' }"
+          @click="toggleDelDlg(false)"
+          >{{ i18n.delete.cancel }}</o-button
+        >
+        <o-button type="primary" @click="deleteFolderClick">{{
+          i18n.delete.confirm
+        }}</o-button>
+      </div>
+    </template>
+  </o-dialog> -->
 </template>
 
 <style lang="scss" scoped>
@@ -367,6 +461,7 @@ watch(
       &-describe {
         padding-left: 6px;
         color: #555;
+        line-height: 20px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -389,6 +484,13 @@ watch(
     }
     tr {
       height: 56px;
+      transition: all 0.3s;
+      &:hover {
+        background: #f7f8fa;
+        .delete-folder {
+          display: flex;
+        }
+      }
       .el-form {
         display: flex;
         justify-content: center;
@@ -437,12 +539,41 @@ watch(
         }
       }
     }
+    .folder-item {
+      &:hover {
+        .delete-folder {
+          display: flex;
+        }
+      }
+    }
     &-item {
       &-name {
         cursor: pointer;
         &:hover {
           color: #33b3ff;
           text-decoration: underline;
+        }
+      }
+      &-from {
+        color: #555;
+        .inner-box {
+          justify-content: space-between;
+          .delete-folder {
+            display: none;
+            cursor: pointer;
+            padding-right: 50px;
+            flex-direction: column;
+            color: #33b3ff;
+            justify-content: center;
+            align-items: center;
+            .o-icon {
+              font-size: 16px;
+            }
+            span {
+              padding-top: 5px;
+              font-size: 12px;
+            }
+          }
         }
       }
       &-time {

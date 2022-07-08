@@ -34,7 +34,7 @@ const bannerLabel = computed(() => {
 
 <template>
   <div class="creating-banner">
-    <div class="warp">
+    <div class="wrap">
       <div>
         <div class="title">{{ i18n[bannerLabel].new }}</div>
         <div class="introduce">{{ i18n[bannerLabel].introduce }}</div>
@@ -53,7 +53,7 @@ const bannerLabel = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.warp {
+.wrap {
   max-width: 1472px;
 }
 .creating-banner {
@@ -63,7 +63,7 @@ const bannerLabel = computed(() => {
   background-size: cover;
   background-image: url('@/assets/imgs/banner-head.png');
 
-  .warp {
+  .wrap {
     display: flex;
     justify-content: space-between;
     padding: 42px 16px;

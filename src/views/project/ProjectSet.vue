@@ -454,7 +454,7 @@ function toggleDelDlg(flag) {
           top: -2px;
           width: 157px;
           height: 90px;
-          z-index: 100;
+          z-index: 5;
           background-color: rgba(165, 213, 255, 0.5);
           display: none;
         }

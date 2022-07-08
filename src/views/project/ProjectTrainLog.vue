@@ -34,6 +34,12 @@ const showContent = ref(true);
 const showContent1 = ref(false);
 const ruleRef = ref(null);
 
+const trainDetail = ref({});
+const repoContent = ref('');
+let timer2 = null;
+let timer = null;
+let timer1 = null;
+
 const route = useRoute();
 const router = useRouter();
 
@@ -92,6 +98,7 @@ const userInfoStore = useUserInfoStore();
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
+
 // 判断是否是自己的项目，不是则返回首页
 function beforeEnter() {
   if (!isAuthentic.value) {
@@ -104,12 +111,7 @@ beforeEnter();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// 训练日志详情数据
-const trainDetail = ref({});
-const repoContent = ref('');
-let timer2 = null;
-let timer = null;
-let timer1 = null;
+
 // 获得训练日志页面数据
 function getTrainLogData() {
   const trainLogParams = {
@@ -117,7 +119,9 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
+    console.log(res.data);
     if (res.status === 200) {
+      repoContent.value = res.data.data.db_path;
       form.desc = res.data.data.log.content;
       form.name = res.data.data.insance_name;
       trainDetail.value = res.data.data;
@@ -132,6 +136,9 @@ function getTrainLogData() {
 
       if (trainDetail.value.status === 'Running') {
         isDisabled.value = true;
+        isDisabled1.value = true;
+        showEvaBtn1.value = false;
+
         showEvaBtn.value = false;
         timer = setInterval(() => {
           socket.send(
@@ -157,7 +164,7 @@ function getTrainLogData() {
   });
 }
 getTrainLogData();
-// wss://xihe.test.osinfra.cn/wss/inference
+
 const socket = new WebSocket(
   'wss://xihebackend.test.osinfra.cn/wss/train_task'
 );
@@ -182,6 +189,7 @@ socket.onmessage = function (event) {
     if (trainDetail.value.status !== 'Running') {
       isDisabled.value = false;
       showEvaBtn.value = true;
+      showEvaBtn1.value = true;
       clearInterval(timer);
       // setTimeout(closeConn(), 10000);
       setTimeout(clearInterval(timer1), 10000);
@@ -260,7 +268,12 @@ function handleAssessment() {
   );
 }
 
-//跳转到Aim嵌入页面
+// 添加评估代码
+function addAssessCode() {
+  router.push();
+}
+
+// 跳转到Aim嵌入页面
 function goAimPage() {
   router.push({
     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
@@ -449,21 +462,21 @@ watch(
                     v-if="showEvaBtn"
                     type="primary"
                     @click="saveSetting"
-                    >自动评估</o-button
+                    >开始评估</o-button
                   >
                   <o-button
                     v-if="isDisabled"
                     disabled
                     type="primary"
                     @click="saveSetting"
-                    >自动评估</o-button
+                    >开始评估</o-button
                   >
                   <o-button
                     v-if="showAnaButton"
                     disabled
                     type="primary"
                     @click="saveSetting"
-                    >自动评估中...</o-button
+                    >评估中...</o-button
                   >
                   <o-button v-if="showGoButton" type="primary" @click="goToPage"
                     >查看报告</o-button
@@ -473,17 +486,17 @@ watch(
             </div>
             <div v-if="showContent1">
               <!-- 无Aim代码 -->
-              <div v-if="trainDetail.cust_visualize" class="no-aim">
+              <div v-if="!trainDetail.db_path" class="no-aim">
                 <p>
                   <o-icon><icon-warning></icon-warning></o-icon>
                 </p>
                 <p class="no-aim-middle">
                   当前暂时不能进行自定义评估，你需要在训练代码中添加Aim代码，详情请参考
                 </p>
-                <p class="no-aim-bottom">添加评估代码</p>
+                <p class="no-aim-bottom" @click="addAssessCode">添加评估代码</p>
               </div>
               <!-- 有Aim代码 -->
-              <div v-if="true" class="have-aim">
+              <div v-if="trainDetail.db_path" class="have-aim">
                 <p>
                   该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
                 </p>
@@ -500,13 +513,13 @@ watch(
                     v-if="showEvaBtn1"
                     type="primary"
                     @click="handleAssessment"
-                    >自动评估</o-button
+                    >开始评估</o-button
                   >
                   <o-button v-if="isDisabled1" disabled type="primary"
-                    >自动评估</o-button
+                    >开始评估</o-button
                   >
                   <o-button v-if="showAnaButton1" disabled type="primary"
-                    >自动评估中...</o-button
+                    >评估中...</o-button
                   >
                   <o-button
                     v-if="showGoButton1"
@@ -581,7 +594,6 @@ watch(
           border-radius: 3px;
           box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
           background: #ffffff;
-          // background:transparent;
         }
       }
     }
@@ -610,13 +622,14 @@ watch(
           }
           &-bottom {
             color: #0d8dff;
+            cursor: pointer;
           }
           .o-icon {
             font-size: 40px;
           }
         }
         .have-aim {
-          margin-top: 63px;
+          margin-top: 16px;
           display: flex;
           flex-direction: column;
           p {

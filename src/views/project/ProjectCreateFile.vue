@@ -40,9 +40,9 @@ const form = reactive({
 });
 // 三级联动数据
 const selectData = reactive({
-  com1: '',
-  com2: '',
-  com3: '',
+  com1: 'MindSpore',
+  com2: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
+  com3: 'GPU:1*NVIDIA-V100(32GB)|CPU:8核 64GB 3200 GB',
 });
 const optionData = reactive({
   com1: [
@@ -270,13 +270,13 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  frameworks: [
-    {
-      required: true,
-      message: '必填项',
-      trigger: 'blur',
-    },
-  ],
+  // frameworks: [
+  //   {
+  //     required: true,
+  //     message: '必填项',
+  //     trigger: 'blur',
+  //   },
+  // ],
   log_url: [
     {
       required: true,
@@ -285,13 +285,13 @@ const rules = reactive({
     },
     { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
   ],
-  train_instance_type: [
-    {
-      required: true,
-      message: '必填项',
-      trigger: 'blur',
-    },
-  ],
+  // train_instance_type: [
+  //   {
+  //     required: true,
+  //     message: '必填项',
+  //     trigger: 'blur',
+  //   },
+  // ],
 });
 // function checkCodeDir() {
 //   //校验路径是否以/结尾
@@ -428,7 +428,7 @@ const rules = reactive({
                     placement="bottom-start"
                     :width="372"
                     trigger="hover"
-                    :teleported="false"
+                    :teleported="true"
                   >
                     <template #reference>
                       <o-icon style="font-size: 18px"
@@ -455,7 +455,7 @@ const rules = reactive({
                     placement="bottom-start"
                     :width="372"
                     trigger="hover"
-                    :teleported="false"
+                    :teleported="true"
                   >
                     <template #reference>
                       <o-icon style="font-size: 18px"
@@ -538,8 +538,7 @@ const rules = reactive({
                     placement="bottom-start"
                     :width="372"
                     trigger="hover"
-                    visible
-                    :teleported="false"
+                    :teleported="true"
                   >
                     <template #reference>
                       <o-icon style="font-size: 18px"
@@ -662,9 +661,10 @@ const rules = reactive({
         }
         .createfile-form-left {
           .createfile-form-item {
+            position: relative;
             .item-title {
               position: absolute;
-              transform: translateY(40%);
+              transform: translateY(50%);
               display: flex;
               align-items: center;
               .item-title-text {

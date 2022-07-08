@@ -44,8 +44,15 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
+  try {
+    JSON.parse(params);
+  } catch (e) {
+    console.log(e);
+    ElMessage.error('请输入正确的JSON格式');
+    return;
+  }
   createTrainProject(params, route.query.id).then((res) => {
-    // console.log(res);
+    console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',

@@ -804,7 +804,7 @@ $theme: #0d8dff;
           cursor: pointer;
           position: absolute;
           right: 0px;
-          bottom: 10px;
+          bottom: 14px;
           display: flex;
           &:hover {
             color: #0d8dff;
@@ -830,7 +830,7 @@ $theme: #0d8dff;
         line-height: 28px;
         position: absolute;
         right: 0px;
-        bottom: 6px;
+        bottom: 14px;
         display: flex;
         cursor: pointer;
         span {

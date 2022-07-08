@@ -141,7 +141,7 @@ getModelTags().then((res) => {
   proList.licenses = licenses.value[0].name;
   proList.is_private = 'Public';
 });
-onMounted(() => {});
+onMounted(() => { });
 </script>
 
 <template>
@@ -202,21 +202,19 @@ onMounted(() => {});
               <template #reference>
                 <o-icon><icon-popver></icon-popver></o-icon>
               </template>
-              <template #>
-                <div>- 仓库名目前只支持英文</div>
-                <div>
-                  - 仓库名名称不能以英文句号(<span class="remind">.</span
-                  >)开头或结尾，且不能包含以下字符<span class="remind"
-                    >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
-                  >
-                </div>
-                <div>
-                  -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-                    class="remind"
-                    >不能超过1000字符</span
-                  >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
-                </div>
-              </template>
+              <div>- 仓库名目前只支持英文</div>
+              <div>
+                - 仓库名名称不能以英文句号(<span class="remind">.</span
+                >)开头或结尾，且不能包含以下字符<span class="remind"
+                  >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                >
+              </div>
+              <div>
+                -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
+                  class="remind"
+                  >不能超过1000字符</span
+                >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
+              </div>
             </el-popover>
           </el-form-item>
         </div>
@@ -318,11 +316,11 @@ onMounted(() => {});
             </div>
           </el-form-item>
         </div>
-        <el-form-item>
-          <o-button type="primary" class="obuton" @click="submitClick"
-            >保存</o-button
-          >
-        </el-form-item>
+        <div class="obuton">
+          <!-- <el-form-item> -->
+          <o-button type="primary" @click="submitClick">保存</o-button>
+          <!-- </el-form-item> -->
+        </div>
       </el-form>
     </div>
   </div>
@@ -375,6 +373,7 @@ onMounted(() => {});
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
   padding-bottom: 40px;
+  height: calc(100vh - 580px);
 
   .el-form {
     width: 520px;
@@ -465,12 +464,14 @@ onMounted(() => {});
       .el-select {
         width: 400px;
       }
-      .obuton {
-        width: 144px;
-        height: 48px;
-        margin-left: 128px;
-        margin-top: 24px;
-      }
+    }
+    .obuton {
+      // width: 144px;
+      // height: 48px;
+      // margin-left: 128px;
+      // margin-top: 24px;
+      display: flex;
+      justify-content: center;
     }
     .view {
       display: flex;

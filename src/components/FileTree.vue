@@ -353,7 +353,7 @@ watch(
   }
 }
 .tree {
-  min-height: calc(100vh - 400px);
+  // min-height: calc(100vh - 400px);
   &-head {
     // display: block;
     padding: 12px 24px;
@@ -496,7 +496,7 @@ watch(
   }
 }
 .empty-own {
-  min-height: calc(100vh - 400px);
+  min-height: calc(100vh - 618px);
   display: flex;
   flex-direction: column;
   align-items: center;

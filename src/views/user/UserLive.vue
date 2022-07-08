@@ -4,8 +4,8 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { getUserLive } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/live-empty.png';
-import OProjectcard from '@/components/OProjectcard.vue';
-import OLivecard from '@/components/OLivecard.vue';
+import projectcard from '@/views/user/UserProjectcard.vue';
+import livecard from '@/views/user/UserLivecard.vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 
@@ -123,18 +123,18 @@ getCount();
               item.time.substring(0, 10)
             }}</span>
           </div>
-          <o-projectcard
+          <projectcard
             v-if="item.type.includes('项目')"
             :card-data="item"
             class="card-list-item-content"
             @click="goDetail(item)"
-          ></o-projectcard>
-          <o-livecard
+          ></projectcard>
+          <livecard
             v-else
             :card-data="item"
-            class="card-list-item-content"
+            class="card-list-item-content2"
             @click="goDetail(item)"
-          ></o-livecard>
+          ></livecard>
         </div>
       </div>
       <div v-else class="empty">
@@ -184,8 +184,11 @@ getCount();
           margin-left: 24px;
         }
       }
-      &-content {
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      .card-list-item-content2 {
+        // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        &:hover {
+          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        }
       }
     }
   }
@@ -197,8 +200,6 @@ getCount();
     display: flex;
     justify-content: center;
     align-items: center;
-    // height: 100%;
-    // width: 100%;
     flex-direction: column;
     .empty-img {
       width: 280px;

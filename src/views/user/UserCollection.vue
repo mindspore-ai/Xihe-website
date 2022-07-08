@@ -4,8 +4,8 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { getUserCollection } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/live-empty.png';
-import OProjectcard from '@/components/OProjectcard.vue';
-import OLivecard from '@/components/OLivecard.vue';
+import projectcard from '@/views/user/UserProjectcard.vue';
+import livecard from '@/views/user/UserLivecard.vue';
 
 import { useUserInfoStore, useVistorInfoStore } from '@/stores';
 
@@ -84,65 +84,69 @@ function toTop() {
 </script>
 <template>
   <div class="user-collection">
-    <div v-if="collectionData.length" class="collection-list">
-      <div
-        v-for="item in collectionData.slice(
-          (queryData.page - 1) * queryData.size,
-          queryData.page * queryData.size
-        )"
-        :key="item.id"
-        class="collection-list-item"
-      >
-        <div class="collection-list-item-title">
-          <img src="@/assets/icons/lovingHeart.png" />
-          <span> 收藏了一个</span>
-          <span>
-            {{
-              item.type.includes('模型')
-                ? '模型'
-                : item.type.includes('数据集')
-                ? '数据集'
-                : '项目'
-            }}
-          </span>
-          <span class="item-title-time">{{ item.time.substring(0, 10) }}</span>
+    <div class="user-collection-wrap">
+      <div v-if="collectionData.length" class="collection-list">
+        <div
+          v-for="item in collectionData.slice(
+            (queryData.page - 1) * queryData.size,
+            queryData.page * queryData.size
+          )"
+          :key="item.id"
+          class="collection-list-item"
+        >
+          <div class="collection-list-item-title">
+            <img src="@/assets/icons/lovingHeart.png" />
+            <span> 收藏了一个</span>
+            <span>
+              {{
+                item.type.includes('模型')
+                  ? '模型'
+                  : item.type.includes('数据集')
+                  ? '数据集'
+                  : '项目'
+              }}
+            </span>
+            <span class="item-title-time">{{
+              item.time.substring(0, 10)
+            }}</span>
+          </div>
+          <projectcard
+            v-if="item.type.includes('项目')"
+            :card-data="item"
+            class="collection-list-item-content"
+            @click="goDetail(item)"
+          ></projectcard>
+          <livecard
+            v-else
+            :card-data="item"
+            class="collection-list-item-content2"
+            @click="goDetail(item)"
+          ></livecard>
         </div>
-        <o-projectcard
-          v-if="item.type.includes('项目')"
-          :card-data="item"
-          class="collection-list-item-content"
-          @click="goDetail(item)"
-        ></o-projectcard>
-        <o-livecard
-          v-else
-          :card-data="item"
-          class="collection-list-item-content"
-          @click="goDetail(item)"
-        ></o-livecard>
       </div>
+      <!-- <div v-else class="empty-wrap"> -->
+      <div v-else class="empty">
+        <img class="empty-img" :src="emptyImg" />
+        <p class="empty-text">{{ i18n.emptyText }}</p>
+      </div>
+      <!-- </div> -->
     </div>
-    <!-- <div v-else class="empty-wrap"> -->
-    <div v-else class="empty">
-      <img class="empty-img" :src="emptyImg" />
-      <p class="empty-text">{{ i18n.emptyText }}</p>
+    <div v-if="collectionCount > 6" class="pagination">
+      <el-pagination
+        :page-sizes="[6, 12, 18]"
+        :current-page="queryData.page"
+        :page-size="queryData.size"
+        :total="collectionCount"
+        :layout="layout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
     </div>
-    <!-- </div> -->
-  </div>
-  <div v-if="collectionCount > 6" class="pagination">
-    <el-pagination
-      :page-sizes="[6, 12, 18]"
-      :current-page="queryData.page"
-      :page-size="queryData.size"
-      :total="collectionCount"
-      :layout="layout"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.user-collection {
+.user-collection-wrap {
   height: 100%;
   .collection-list {
     width: 100%;
@@ -166,8 +170,11 @@ function toTop() {
           margin-left: 24px;
         }
       }
-      &-content {
+      &-content2 {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        &:hover {
+          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        }
       }
     }
   }

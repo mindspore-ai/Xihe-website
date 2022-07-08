@@ -296,14 +296,15 @@ function create(formEl) {
   }
 
   .creating-box {
-    padding-top: 24px;
+    padding-top: 48px;
     margin: 0 auto;
     max-width: 1440px;
     background: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 48px;
+    padding-bottom: 67px;
+    min-height: calc(100vh - 580px);
 
     .des {
       // .el-textarea {
@@ -378,9 +379,9 @@ function create(formEl) {
         }
       }
     }
-    .o-button {
-      width: 150px;
-    }
+    // .o-button {
+    //   width: 150px;
+    // }
     .el-form-item {
       .el-form-item__cotent {
         .el-form-item__error {

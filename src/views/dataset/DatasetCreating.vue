@@ -324,7 +324,7 @@ function create(formEl) {
     }
     .item {
       :deep(.el-popover.el-popper) {
-        box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+        // box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
         padding: 16px 16px 16px 16px;
         font-size: 12px;
         line-height: 16px;

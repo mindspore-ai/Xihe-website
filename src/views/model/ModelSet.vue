@@ -92,7 +92,7 @@ function getVisiableSelect(value) {
 async function confirmRename(formEl) {
   if (!formEl) return;
   if (!query.name.trim()) {
-    return false
+    return false;
   }
   formEl.validate((valid) => {
     if (valid) {
@@ -199,7 +199,7 @@ function toggleDelDlg(flag) {
           {{ i18n.visible.options[visibleIndex].describe }}
         </p>
         <o-button @click="confirmPrivate">{{ i18n.visible.btnText }}</o-button>
-        <div class="setting-title">{{ i18n.rename.title }}</div>
+        <div class="setting-title">{{ i18n.rename.title }} <el-divider /></div>
         <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
         <o-select
           :select-data="organizationAdminList"
@@ -272,7 +272,7 @@ function toggleDelDlg(flag) {
         <o-button @click="confirmRename(queryRef)">{{
           i18n.rename.btnText
         }}</o-button>
-        <h4 class="setting-title">{{ i18n.delete.title }}</h4>
+        <h4 class="setting-title">{{ i18n.delete.title }} <el-divider /></h4>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
         <o-button class="delete-btn" status="error" @click="showDel = true">{{
           i18n.delete.btnText
@@ -426,11 +426,20 @@ function toggleDelDlg(flag) {
       }
     }
     .setting-title {
-      margin: 40px 0 16px;
+      margin: 80px 0 16px;
       font-size: 18px;
       font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
       color: #000000;
       line-height: 24px;
+      position: relative;
+      :deep .el-divider {
+        position: absolute;
+        top: -65px;
+        left: -40px;
+      }
+      &:first-child {
+        margin-top: 40px;
+      }
     }
     .setting-tip {
       margin: 8px 0 16px;

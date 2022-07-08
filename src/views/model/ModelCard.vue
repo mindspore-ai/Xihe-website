@@ -408,9 +408,10 @@ watch(
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    // justify-content: center;
     font-size: 14px;
     .upload-readme-img {
+      margin-top: 200px;
       .o-icon {
         display: block;
       }

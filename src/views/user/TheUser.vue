@@ -164,6 +164,7 @@ const renderNav = computed(() => {
         return !item.isPrivate;
       });
 });
+
 watch(
   () => {
     return route.name;
@@ -171,8 +172,12 @@ watch(
   (val) => {
     marginBottom.value = 0;
     banner.value = val;
-    const name = val.substring(4) || 'lives';
-    activeNavItem.value = name.toLowerCase();
+    if (val && /^user/g.test(val)) {
+      const name = val.substring(4) || 'lives';
+      activeNavItem.value = name.toLowerCase();
+    } else {
+      activeNavItem.value = '';
+    }
   },
   { immediate: true }
 );

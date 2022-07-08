@@ -12,6 +12,7 @@ export const routes = [
   // 主页
   {
     path: '/',
+    alias: '/home',
     component: () => {
       return import('@/views/TheHome.vue');
     },

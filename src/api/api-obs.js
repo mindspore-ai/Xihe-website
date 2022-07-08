@@ -150,6 +150,14 @@ export function findFile(path) {
   });
 }
 
+// 删除文件夹
+export function deleteFolder(path) {
+  const url = `/api/base/find/?path=${path}`;
+  return request.delete(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
 // 文件夹/文件改名
 export function fileRename(params) {
   const url = `/api/base/rename/`;

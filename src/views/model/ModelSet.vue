@@ -183,7 +183,7 @@ function toggleDelDlg(flag) {
 }
 </script>
 <template>
-  <div class="setting-warp">
+  <div class="setting-wrap">
     <div class="setting-inner">
       <div class="setting-main">
         <div class="setting-title">{{ i18n.visible.title }}</div>

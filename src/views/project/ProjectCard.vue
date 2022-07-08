@@ -648,6 +648,7 @@ onUnmounted(() => {
     align-items: center;
     // justify-content: center;
     font-size: 14px;
+    max-height: 700px;
     .upload-readme-img {
       margin-top: 200px;
       .o-icon {

@@ -408,7 +408,7 @@ onUnmounted(() => {
 <template>
   <div class="model-page">
     <div class="model-head">
-      <div class="warp">
+      <div class="wrap">
         <div class="banner-left">
           <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">{{ i18n.head.introduce }}</div>
@@ -421,7 +421,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="model-body warp">
+    <div class="model-body wrap">
       <!-- 标签二级(全部) -->
       <div v-show="showDetail" class="condition">
         <p class="getback" @click="backCondition">
@@ -640,7 +640,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
-.warp {
+.wrap {
   margin: 0 auto;
   padding: 50px 16px 136px 16px;
   max-width: 1472px;
@@ -651,7 +651,7 @@ $theme: #0d8dff;
     padding-top: 80px;
     background-size: cover;
     background-image: url('@/assets/imgs/banner-head.png');
-    .warp {
+    .wrap {
       display: flex;
       justify-content: space-between;
       padding: 42px 16px;

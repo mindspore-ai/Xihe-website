@@ -304,6 +304,7 @@ watch(
       .text {
         padding-right: 12px;
         font-size: 14px;
+        line-height: 20px;
       }
       .o-icon {
         display: inline-block;
@@ -312,7 +313,7 @@ watch(
       }
     }
     .blank {
-      padding: 16px;
+      padding: 16px 40px;
       overflow: auto;
       min-height: calc(100vh - 400px);
       background-color: #ffffff;

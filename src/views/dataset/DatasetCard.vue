@@ -41,7 +41,12 @@ const i18n = {
   uploadTime: '上传时间',
   relatedItem: '相关项目',
   editor: '编辑',
-  uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
+  uploadReadMe: [
+    '当前无数据集卡片，点击',
+    '新建README.md文件',
+    '或',
+    '上传README.md文件',
+  ],
   emptyVisited: '无数据集卡片',
 };
 // 获取README文件

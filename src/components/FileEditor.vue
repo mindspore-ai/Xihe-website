@@ -47,8 +47,8 @@ const prop = defineProps({
     default: '',
   },
 });
-const describe = ref('');
 let fileData = reactive({});
+const description = ref('');
 let reopt = {
   method: 'get',
   url: null,
@@ -94,7 +94,7 @@ async function upLoadObs() {
       file,
       path,
       isEdit: true,
-      description: describe.value || `edit ${fileData.name}`,
+      description: description.value || `edit ${fileData.name}`,
     },
     null,
     function () {
@@ -110,6 +110,7 @@ async function upLoadObs() {
 findFile(path).then((res) => {
   if (res.status && res.data && res.data.children.length) {
     fileData = res.data.children[0];
+    description.value = `edit ${fileData.name}`
     downLoad(fileData.path);
   }
 });
@@ -167,7 +168,7 @@ function pathClick(index) {
         <span>{{ i18n.modelUpload.addDescribe }}</span>
       </div>
       <o-input
-        v-model="describe"
+        v-model="description"
         size="fill"
         :placeholder="i18n.modelUpload.placeholder"
       ></o-input>

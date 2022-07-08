@@ -1,5 +1,7 @@
 <script setup>
 import OButton from '@/components/OButton.vue';
+import ODialog from '@/components/ODialog.vue';
+import IconNecessary from '~icons/app/necessary.svg';
 
 import { reactive, ref } from 'vue';
 import { useUserInfoStore } from '@/stores';
@@ -64,7 +66,7 @@ function keepEmail2() {
     email: userInfoStore.email,
     email_code: ruleForm.email_code2,
   };
-
+  debugger;
   keepUserEmail(qurey)
     .then((res) => {
       if (res.status === 200) {
@@ -176,6 +178,82 @@ const handleTimeChange2 = () => {
     }, 1000);
   }
 };
+//更换邮箱
+function togglePhoneDlg(flag) {
+  if (flag === undefined) {
+    showPhoneDlg.value = !showPhoneDlg.value;
+  } else {
+    showPhoneDlg.value = flag;
+  }
+}
+const showPhoneDlg = ref(false);
+const reRuleForm = reactive({
+  email: '',
+  code: '',
+});
+const reRuleFormRef = ref(null);
+let qureyData = reactive({
+  old_email: '',
+  old_email_code: '',
+  new_email: '',
+  new_email_code: '',
+});
+function resetForm(formEl) {
+  if (!formEl) return;
+  formEl.resetFields();
+  time.value = 0;
+  qureyData.old_email = '';
+  togglePhoneDlg(false);
+}
+function reSetEmail(formEl) {
+  if (!formEl) return;
+  formEl.validateField('email', (vaild) => {
+    if (vaild) {
+      setUserEmail({ email: reRuleForm.email, scene }).then((res) => {
+        isDisposed.value = true;
+        handleTimeChange();
+        // regular.value = false;
+      });
+    }
+  });
+}
+function reKeepEmail(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      if (!qureyData.old_email) {
+        qureyData.old_email = reRuleForm.email;
+        qureyData.old_email_code = reRuleForm.code;
+        reRuleForm.email = '';
+        reRuleForm.code = '';
+        isDisposed.value = false;
+        time.value = 0;
+      } else {
+        qureyData.new_email = reRuleForm.email;
+        qureyData.new_email_code = reRuleForm.code;
+        changeUserEmail(qureyData)
+          .then((res) => {
+            if (res.status === 200) {
+              ElMessage({
+                type: 'success',
+                message: '修改成功',
+              });
+
+              userInfoStore.email = res.data.mobile;
+            } else {
+              ElMessage({
+                type: 'error',
+                message: res.msg,
+              });
+            }
+          })
+          .catch((err) => {
+            ElMessage({ type: 'error', message: err.msg });
+          });
+      }
+    }
+  });
+}
 </script>
 
 <template>
@@ -185,7 +263,11 @@ const handleTimeChange2 = () => {
       此邮箱为用户名登录账户，此邮箱将会接收账号相关的通知以及在密码重置中使用
     </p>
   </div>
-  <div v-if="!userInfoStore.emailStatus" class="setting-box">
+  <!-- 邮箱激活 -->
+  <div
+    v-if="userInfoStore.email && !userInfoStore.emailStatus"
+    class="setting-box"
+  >
     <div class="activation-tip">
       <o-icon><icon-activation></icon-activation></o-icon>
       <span class="font">该邮箱还未激活，点击获取验证码激活</span>
@@ -201,17 +283,16 @@ const handleTimeChange2 = () => {
           isDisposed2 ? `${time2}s后重新获取` : '获取验证码'
         }}</OButton>
       </div>
-      <OButton class="setting-btn" @click="keepEmail2">保存更改</OButton>
+      <OButton class="setting-btn" @click="keepEmail2">激活</OButton>
     </div>
   </div>
-  <div v-if="userInfoStore.emailStatus" class="setting-box">
-    <p class="setting-title">
-      {{ userInfoStore.email ? '更改' : '添加' }}主要电子邮件地址
-    </p>
+  <!-- 邮箱添加 -->
+  <div v-if="!userInfoStore.email" class="setting-box add">
+    <p class="setting-title">添加主要电子邮件地址</p>
 
     <el-form ref="ruleFormRef" class="setting-content" :model="ruleForm">
       <!-- 换绑邮箱新增 -->
-      <el-form-item
+      <!-- <el-form-item
         v-if="userInfoStore.emailStatus && userInfoStore.email"
         prop="email_code2"
         :rules="[
@@ -239,7 +320,7 @@ const handleTimeChange2 = () => {
           </div>
           <div class="item item-text">新邮箱认证</div>
         </div>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 添加邮箱 -->
       <el-form-item
         prop="email"
@@ -288,6 +369,76 @@ const handleTimeChange2 = () => {
       >
     </el-form>
   </div>
+  <!-- 邮箱更换 -->
+  <div
+    v-if="userInfoStore.email && userInfoStore.emailStatus"
+    class="setting-box"
+  >
+    <o-button class="setting-btn" @click="togglePhoneDlg(true)"
+      >更换邮箱</o-button
+    >
+    <o-dialog :show="showPhoneDlg">
+      <template #head>
+        <p class="dlg-title">更换邮箱地址</p>
+      </template>
+      <el-form ref="reRuleFormRef" :model="reRuleForm">
+        <el-form-item
+          prop="email"
+          :rules="[
+            {
+              pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+              message: '请输入正确的邮箱',
+              trigger: 'blur',
+            },
+            { required: true, message: '必填项', trigger: 'blur' },
+          ]"
+        >
+          <div class="requirement">
+            <icon-necessary></icon-necessary><span>邮箱地址</span>
+          </div>
+          <el-input
+            v-model="reRuleForm.email"
+            :placeholder="
+              !qureyData.old_email ? '请输入当前邮箱' : '请输入新邮箱'
+            "
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          prop="code"
+          :rules="[
+            { required: true, message: '必填项', trigger: 'blur' },
+            {
+              pattern: /^\d{4}$/,
+              message: '验证码有误',
+              trigger: 'blur',
+            },
+          ]"
+        >
+          <div class="requirement">
+            <icon-necessary></icon-necessary><span>验证码</span>
+          </div>
+          <div class="code">
+            <el-input
+              v-model="reRuleForm.code"
+              placeholder="请输入邮箱验证码"
+            ></el-input
+            ><o-button
+              :disabled="isDisposed"
+              size="small"
+              @click="reSetEmail(reRuleFormRef)"
+              >{{ isDisposed ? `${time}s` : '获取验证码' }}</o-button
+            >
+          </div>
+        </el-form-item>
+      </el-form>
+      <div class="btn">
+        <o-button @click="resetForm(reRuleFormRef)">取消</o-button>
+        <o-button type="primary" @click="reKeepEmail(reRuleFormRef)">{{
+          !qureyData.old_email ? `下一步` : '确认'
+        }}</o-button>
+      </div>
+    </o-dialog>
+  </div>
   <!-- <div class="setting-box">
     <p class="setting-title">备份电子邮箱</p>
     <div class="setting-content">
@@ -305,6 +456,46 @@ const handleTimeChange2 = () => {
 </template>
 
 <style lang="scss" scoped>
+.add {
+  .el-form {
+    width: 400px;
+  }
+}
+.o-dialog {
+  &-head {
+    .dlg-title {
+      text-align: center;
+      font-size: 24px;
+    }
+  }
+  .btn {
+    display: flex;
+    justify-content: center;
+    .o-button {
+      margin: 30px 12px 0;
+    }
+  }
+}
+
+.el-form {
+  width: 520px;
+  .el-form-item {
+    :deep(.el-form-item__content) {
+      justify-content: space-between;
+      .code {
+        width: 400px;
+        .el-input {
+          width: 240px;
+        }
+        .o-button {
+          margin-left: 8px;
+          min-width: 152px;
+        }
+      }
+    }
+  }
+}
+
 .email-admin {
   width: 800px;
   height: 108px;

@@ -207,8 +207,16 @@ function reloadPage() {
 }
 
 const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
+// ws.onopen = function () {
+//   console.log('服务器已连接');
+// };
+
+ws.onclose = function () {
+  clearInterval(timer2);
+};
 
 ws.onmessage = function (event) {
+  // console.log('收到消息');
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'

@@ -1,12 +1,12 @@
 {
-  "name": "test",
+  "name": "xihe-website",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "prepare": "husky install",
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src"
+    "lint": "eslint 'src/**/*.{js,ts,vue,jsx,tsx}'"
   },
   "dependencies": {
     "@authing/native-js-ui-components": "^3.1.3",

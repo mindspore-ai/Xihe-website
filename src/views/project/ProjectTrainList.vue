@@ -54,13 +54,13 @@ const i18n = {
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
-// 判断是否是自己的项目，不是则返回首页
-function beforeEnter() {
+// 进入页面判断是否是自己的项目，不是则返回首页
+function goHome() {
   if (!isAuthentic.value) {
     router.push('/');
   }
 }
-beforeEnter();
+goHome();
 
 let timer = null;
 // 获取训练列表

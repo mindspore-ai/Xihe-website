@@ -8,9 +8,9 @@ import RelateCard from '@/components/RelateCard.vue';
 import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
 import NoRelate from '@/components/NoRelate.vue';
 
-import IconTime from '~icons/app/time';
-import IconDownload from '~icons/app/download';
-import IconHeart from '~icons/app/heart';
+// import IconTime from '~icons/app/time';
+// import IconDownload from '~icons/app/download';
+// import IconHeart from '~icons/app/heart';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';
 
@@ -78,7 +78,7 @@ function getReadMeFile() {
   }
 }
 
-function goEditor() {
+function handleEditor() {
   pushParams.contents = ['README.md'];
   router.push({
     name: 'datasetFileEditor',
@@ -98,10 +98,10 @@ function emptyClick(ind) {
     });
   }
 }
-function goDetailClick(val) {
+function handleDetailClick(val) {
   router.push(`/models/${val.owner_name.name}/${val.name}`);
 }
-function goProjectClick(val) {
+function handleProjectClick(val) {
   router.push(`/projects/${val.owner_name.name}/${val.name}`);
 }
 // 文本监听
@@ -132,7 +132,7 @@ watch(
   <div v-if="detailData.id" class="model-card">
     <div v-if="codeString" class="markdown-body">
       <div v-highlight class="markdown-file" v-html="result"></div>
-      <o-button v-if="detailData.is_owner" @click="goEditor">{{
+      <o-button v-if="detailData.is_owner" @click="handleEditor">{{
         i18n.editor
       }}</o-button>
     </div>
@@ -180,7 +180,7 @@ watch(
           <relate-card
             :detail-data="detailData"
             :name="'relate_models_list'"
-            @jump="goDetailClick"
+            @jump="handleDetailClick"
           ></relate-card>
         </div>
       </div>
@@ -198,7 +198,7 @@ watch(
           v-else
           :detail-data="detailData"
           :name="'relate_projects_list'"
-          @jump="goProjectClick"
+          @jump="handleProjectClick"
         ></project-relate-card>
       </div>
     </div>

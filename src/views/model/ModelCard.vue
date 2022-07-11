@@ -417,7 +417,7 @@ watch(
     font-size: 14px;
     max-height: 700px;
     .upload-readme-img {
-      margin-top: 200px;
+      margin-top: 205px;
       .o-icon {
         display: block;
       }

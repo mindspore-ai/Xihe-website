@@ -619,7 +619,7 @@ onUnmounted(() => {
               card-type="dataset"
               @click="goDetail(item.owner_name.name, item.name)"
             ></o-card>
-            <div v-if="modelCount > 0" class="pagination">
+            <div v-if="modelCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[10, 20, 50]"
                 :current-page="query.page"

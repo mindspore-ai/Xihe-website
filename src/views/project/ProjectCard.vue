@@ -374,11 +374,11 @@ socket.value.onmessage = function (event) {
     if (
       JSON.parse(event.data).msg === '启动失败' ||
       JSON.parse(event.data).msg === '文件收集失败' ||
-      JSON.parse(event.data).msg === '创建项目推理任务错误'
+      JSON.parse(event.data).msg === '任务已销毁'
     ) {
       ElMessage({
         type: 'error',
-        message: JSON.parse(event.data).msg,
+        message: JSON.parse(event.data).msg + '，请重新启动',
       });
       stopInference(detailData.value.id).then((res) => {});
     }
@@ -392,6 +392,18 @@ onUnmounted(() => {
   closeConn();
   clearInterval(timer);
 });
+// let ht = setInterval(getHeight, 100);
+
+// function getHeight() {
+//   if (document.readyState === 'complete') {
+//     let height = document.body.scrollHeight + 'px';
+//     // console.log(height);
+
+//     $('parentdiv', window.parent.document).css('height', height);
+
+//     window.clearInterval(ht);
+//   }
+// }
 </script>
 <template>
   <div v-if="detailData" class="model-card">
@@ -410,7 +422,7 @@ onUnmounted(() => {
       <div v-else-if="msg === '启动中'" class="markdown-body">
         <div class="loading">
           <img src="@/assets/gifs/loading.gif" alt="" />
-          <p>启动中,请耐心等待</p>
+          <p>启动大约需要5分钟,请耐心等待</p>
         </div>
         <o-button v-if="detailData.is_owner" status="error" @click="stop"
           >停止</o-button
@@ -610,8 +622,42 @@ onUnmounted(() => {
   min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   .markdown-body {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: #d8d8d8;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+      box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+      background: #ffffff;
+      // background:transparent;
+    }
     iframe {
-      padding-top: 25px;
+      padding-top: 64px; //内容在按钮下16px
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background-color: #d8d8d8;
+        background-clip: content-box;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 3px;
+        box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+        background: #ffffff;
+        // background:transparent;
+      }
     }
     .markdown-file {
       padding-right: 40px;
@@ -650,7 +696,7 @@ onUnmounted(() => {
     font-size: 14px;
     max-height: 700px;
     .upload-readme-img {
-      margin-top: 200px;
+      margin-top: 205px;
       .o-icon {
         display: block;
       }

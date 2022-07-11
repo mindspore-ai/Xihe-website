@@ -37,9 +37,9 @@ const detailData = computed(() => {
 });
 const projectId = detailData.value.id;
 const trainData = ref([]);
-const listId = ref();
-const stopId = ref();
-const resetId = ref();
+const listId = ref(null);
+const trainId = ref(null);
+const resetedId = ref(null);
 const tips = ref(false);
 const description = ref('');
 const i18n = {

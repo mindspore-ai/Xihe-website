@@ -232,7 +232,7 @@ watch(
     // justify-content: center;
     font-size: 14px;
     .upload-readme-img {
-      margin-top: 200px;
+      margin-top: 205px;
       .o-icon {
         display: block;
       }

@@ -425,7 +425,10 @@ watch(
     return useUserInfoStore().token;
   },
   (token) => {
-    if (token && token !== preToken) {
+    // if (token && token !== preToken) {
+    //   getDetailData();
+    // }
+    if (token) {
       getDetailData();
     }
   }

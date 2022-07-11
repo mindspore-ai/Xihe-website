@@ -78,7 +78,23 @@ function keepPhone(formEl) {
       let query = { mobile: ruleForm.phone, sms_code: ruleForm.code };
       if (!userInfoStore.phone) {
         keepUserPhone(query)
-          .then((res) => {})
+          .then((res) => {
+            if (res.status === 200) {
+              ElMessage({
+                type: 'success',
+                message: res.msg,
+              });
+              togglePhoneDlg(false);
+              userInfoStore.phone = res.data.mobile;
+              phoneExhibition.value =
+                res.data.slice(0, 3) + '****' + res.data.slice(7);
+            } else {
+              ElMessage({
+                type: 'error',
+                message: res.msg,
+              });
+            }
+          })
           .catch((err) => {
             ElMessage({ type: 'error', message: err.msg });
           });

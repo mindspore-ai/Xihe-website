@@ -44,13 +44,13 @@ function goTrain() {
 function confirmCreating() {
   // let params = { config_path: filePath.value };
   let params = codeString.value;
-  try {
-    JSON.parse(params);
-  } catch (e) {
-    console.log(e);
-    ElMessage.error('请输入正确的JSON格式');
-    return;
-  }
+  // try {
+  //   JSON.parse(params);
+  // } catch (e) {
+  //   console.log(e);
+  //   ElMessage.error('请输入正确的JSON格式');
+  //   return;
+  // }
   createTrainProject(params, route.query.id).then((res) => {
     console.log(res);
     if (res.status === 200) {
@@ -179,6 +179,7 @@ getDetailData();
             v-model="filePath"
             class="file-select-int"
             placeholder="直接输入json文件名读取"
+            @keyup.enter="findFileByPath"
           >
           </el-input>
           <o-button class="file-select-btn" @click="findFileByPath"

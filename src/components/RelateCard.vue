@@ -29,7 +29,7 @@ const props = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(['delete', 'jump', 'concel']);
+const emit = defineEmits(['delete', 'jump', 'cancel']);
 
 function removeItemClick(item) {
   emit('delete', [item, props.name]);
@@ -39,8 +39,8 @@ function goDetailClick(item) {
   emit('jump', item);
 }
 
-function concelClick() {
-  emit('concel');
+function cancelClick() {
+  emit('cancel');
 }
 
 const delRelate = ref(null);
@@ -56,7 +56,7 @@ watch(
   <div>
     <delete-relate
       :del-relate="delRelate"
-      @concel="concelClick"
+      @cancel="cancelClick"
     ></delete-relate>
     <div
       v-for="item in detailData[name]"

@@ -28,7 +28,7 @@ const emit = defineEmits(['click']);
 function confirmDel() {
   emit('click', id.value);
 }
-function concelClick() {
+function cancelClick() {
   emit('click', 2);
 }
 
@@ -75,7 +75,7 @@ watch(
           paddingBottom: '56px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="concelClick">{{
+        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
           deleteCondition.cancel
         }}</o-button>
         <o-button type="primary" @click="confirmDel">{{

@@ -306,7 +306,7 @@ function confirmBtn() {
 }
 
 // 取消
-function concelBtn() {
+function cancelBtn() {
   isTagShow.value = false;
 }
 function getTagList() {
@@ -536,7 +536,7 @@ watch(
             </el-tab-pane>
           </el-tabs>
           <div class="btn-box">
-            <o-button style="margin-right: 24px" @click="concelBtn"
+            <o-button style="margin-right: 24px" @click="cancelBtn"
               >取消</o-button
             >
             <o-button type="primary" @click="confirmBtn">确定</o-button>

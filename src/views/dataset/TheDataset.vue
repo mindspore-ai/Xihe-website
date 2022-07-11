@@ -269,7 +269,7 @@ function sortTagClick(index, index2) {
       moreSortTags.value[index].task_list[index2].isActive = true;
     });
   }
-  tagsSearch(moreSortTags.value);
+  handleTagSearch(moreSortTags.value);
 }
 function clearSortItem(index) {
   moreSortTags.value[index].haveActive = false;
@@ -277,11 +277,11 @@ function clearSortItem(index) {
     item.isActive = false;
     item.isSelected = false;
   });
-  tagsSearch(moreSortTags.value);
+  handleTagSearch(moreSortTags.value);
 }
 
 // 二级标签查询
-function tagsSearch(date) {
+function handleTagSearch(date) {
   let taskId = [];
   date.forEach((item) => {
     item.task_list.forEach((it) => {

@@ -92,8 +92,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -152,8 +152,7 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/datasets/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/datasets/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -331,7 +330,7 @@ function confirmBtn() {
 }
 
 // 取消
-function concelBtn() {
+function cancelBtn() {
   isTagShow.value = false;
 }
 
@@ -554,7 +553,7 @@ watch(
             </el-tab-pane>
           </el-tabs>
           <div class="btn-box">
-            <o-button style="margin-right: 24px" @click="concelBtn"
+            <o-button style="margin-right: 24px" @click="cancelBtn"
               >取消</o-button
             >
             <o-button type="primary" @click="confirmBtn">确定</o-button>

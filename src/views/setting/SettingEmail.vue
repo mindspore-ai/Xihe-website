@@ -66,18 +66,19 @@ function keepEmail2() {
     email: userInfoStore.email,
     email_code: ruleForm.email_code2,
   };
-  debugger;
   keepUserEmail(qurey)
     .then((res) => {
+      // console.log('res', res);
       if (res.status === 200) {
         userInfoStore.emailStatus = true;
-        email_code = null;
+        ruleForm.email_code = null;
         time2.value = 0;
         ElMessage({
           type: 'success',
           message: '激活成功',
         });
       } else {
+        // console.log('error', res);
         ElMessage({
           type: 'error',
           message: '',
@@ -85,7 +86,8 @@ function keepEmail2() {
       }
     })
     .catch((err) => {
-      ElMessage({ type: 'error', message: err.msg });
+      // console.log('err', err);
+      ElMessage({ type: 'error', message: err.ReferenceError });
     });
 }
 // function judge() {

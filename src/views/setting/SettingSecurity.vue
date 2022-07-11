@@ -243,9 +243,9 @@ function resetForm(formEl) {
               <o-button class="cancel-btn" @click="resetForm(ruleFormRef)"
                 >取消</o-button
               >
-              <o-button class="comfilm-btn" @click="keepPhone(ruleFormRef)"
-                >确认</o-button
-              >
+              <o-button class="comfilm-btn" @click="keepPhone(ruleFormRef)">{{
+                !newQuery.old_mobile && userInfoStore.phone ? '下一步' : '确认'
+              }}</o-button>
             </div>
           </div>
         </div>

@@ -230,7 +230,7 @@ function confirmClick() {
 }
 
 const deleteRelate = ref(false);
-function concelClick() {
+function cancelClick() {
   deleteRelate.value = false;
 }
 
@@ -456,14 +456,14 @@ function toggleDelDlg(flag) {
             :name="'relate_infer_datasets_list'"
             @delete="deleteClick"
             @jump="goDetasetClick"
-            @concel="concelClick"
+            @cancel="cancelClick"
           ></relate-card>
         </div>
       </div>
       <!-- 删除相关弹框 -->
       <!-- <delete-relate
         :delete-relate="deleteRelate"
-        @concel="concelClick"
+        @cancel="cancelClick"
       ></delete-relate> -->
       <!-- 添加模型 -->
       <div class="related-project">

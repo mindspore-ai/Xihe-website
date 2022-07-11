@@ -30,7 +30,7 @@ function confirmStop() {
   emit('click', prop.trainId);
 }
 
-function concelClick() {
+function cancelClick() {
   emit('click', 1);
 }
 
@@ -71,7 +71,7 @@ watch(
           paddingBottom: '56px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="concelClick">{{
+        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
           deleteCondition.cancel
         }}</o-button>
         <o-button type="primary" @click="confirmStop">{{

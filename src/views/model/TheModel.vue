@@ -213,7 +213,7 @@ function clearItem(index) {
         item.isActive = false;
         item.isSelected = false;
       });
-      tagsSearch(renderCondition.value[index].condition);
+      handleTagSearch(renderCondition.value[index].condition);
     }
   });
   goSearch(renderCondition.value);
@@ -305,7 +305,7 @@ function sortTagClick(index, index2) {
     renderCondition.value[0].condition[index].isActive = true;
     renderCondition.value[0].condition[index].isSelected = false;
   }
-  tagsSearch(renderCondition.value[0].condition);
+  handleTagSearch(renderCondition.value[0].condition);
 }
 
 function clearSortItem(index) {
@@ -314,10 +314,10 @@ function clearSortItem(index) {
     item.isActive = false;
     item.isSelected = false;
   });
-  tagsSearch(moreSortTags.value);
+  handleTagSearch(moreSortTags.value);
 }
 // 二级标签查询
-function tagsSearch(date) {
+function handleTagSearch(date) {
   let taskId = [];
   date.forEach((item) => {
     item.task_list.forEach((it) => {

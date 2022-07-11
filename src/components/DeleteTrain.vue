@@ -21,8 +21,8 @@ const prop = defineProps({
     default: '',
   },
 });
-const id = ref();
-const isShow = ref();
+const id = ref(null);
+const isShow = ref(false);
 const emit = defineEmits(['click']);
 
 function confirmDel() {

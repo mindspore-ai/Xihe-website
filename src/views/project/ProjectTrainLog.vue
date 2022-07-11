@@ -25,24 +25,27 @@ const showEvaBtn = ref(true);
 const isDisabled = ref(false);
 const showAnaButton = ref(false);
 const showGoButton = ref(false);
+
 const showEvaBtn1 = ref(true);
 const isDisabled1 = ref(false);
 const showAnaButton1 = ref(false);
 const showGoButton1 = ref(false);
 const evaluateUrl = ref('');
+
 const showContent = ref(true);
 const showContent1 = ref(false);
 const ruleRef = ref(null);
 
 const trainDetail = ref({});
 const repoContent = ref('');
-let timer2 = null;
+
 let timer = null;
 let timer1 = null;
+let timer2 = null;
+let timer3 = null;
 
 const route = useRoute();
 const router = useRouter();
-
 const i18n = {
   title: '评估',
   desc: '训练日志可视化，请按顺序输入超参数范围，目前只支持LossMonitor, 详情请参考文档，更多的参数评估请选用自定义评估',
@@ -119,7 +122,6 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    console.log(res.data);
     if (res.status === 200) {
       repoContent.value = res.data.data.db_path;
       form.desc = res.data.data.log.content;
@@ -216,7 +218,7 @@ ws.onclose = function () {
 };
 
 ws.onmessage = function (event) {
-  // console.log('收到消息');
+  console.log(event);
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
@@ -227,13 +229,17 @@ ws.onmessage = function (event) {
     });
     showAnaButton.value = false;
     showGoButton.value = true;
+
     showAnaButton1.value = false;
     showGoButton1.value = true;
+
     evaluateUrl.value = JSON.parse(event.data).data.url;
+
     clearInterval(timer2);
+    clearInterval(timer3);
   } else {
-    showEvaBtn.value = true;
-    showAnaButton.value = false;
+    // showEvaBtn.value = true;
+    // showAnaButton.value = false;
   }
 };
 
@@ -243,7 +249,7 @@ function saveSetting() {
     if (res.status === 200) {
       showEvaBtn.value = false;
       showAnaButton.value = true;
-      setTimeout(() => {
+      timer3 = setInterval(() => {
         ws.send(JSON.stringify({ pk: detailData.value.id }));
       }, 10000);
     }
@@ -293,7 +299,13 @@ function goAimPage() {
 
 // 跳到评估页面
 function goToPage() {
-  window.open(`${evaluateUrl.value}`);
+  // window.open(`${evaluateUrl.value}`);
+  router.push({
+    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
+    query: {
+      url: evaluateUrl.value,
+    },
+  });
 }
 
 // 日志详情

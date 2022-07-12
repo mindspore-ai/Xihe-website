@@ -61,34 +61,43 @@ function setEmail2() {
     regular.value = false;
   });
 }
-function keepEmail2() {
+const FormRef = ref(null);
+const Form = reactive({
+  email_code: '',
+});
+function keepEmail2(formEl) {
   let qurey = {
     email: userInfoStore.email,
-    email_code: ruleForm.email_code2,
+    email_code: Form.email_code,
   };
-  keepUserEmail(qurey)
-    .then((res) => {
-      // console.log('res', res);
-      if (res.status === 200) {
-        userInfoStore.emailStatus = true;
-        ruleForm.email_code = null;
-        time2.value = 0;
-        ElMessage({
-          type: 'success',
-          message: '激活成功',
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      keepUserEmail(qurey)
+        .then((res) => {
+          // console.log('res', res);
+          if (res.status === 200) {
+            userInfoStore.emailStatus = true;
+            ruleForm.email_code = null;
+            time2.value = 0;
+            ElMessage({
+              type: 'success',
+              message: '激活成功',
+            });
+          } else {
+            // console.log('error', res);
+            ElMessage({
+              type: 'error',
+              message: res.msg,
+            });
+          }
+        })
+        .catch((err) => {
+          // console.log('err', err);
+          ElMessage({ type: 'error', message: err.ReferenceError });
         });
-      } else {
-        // console.log('error', res);
-        ElMessage({
-          type: 'error',
-          message: '',
-        });
-      }
-    })
-    .catch((err) => {
-      // console.log('err', err);
-      ElMessage({ type: 'error', message: err.ReferenceError });
-    });
+    }
+  });
 }
 // function judge() {
 //   const reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
@@ -268,25 +277,36 @@ function reKeepEmail(formEl) {
   <!-- 邮箱激活 -->
   <div
     v-if="userInfoStore.email && !userInfoStore.emailStatus"
-    class="setting-box"
+    class="setting-box add"
   >
     <div class="activation-tip">
       <o-icon><icon-activation></icon-activation></o-icon>
       <span class="font">该邮箱还未激活，点击获取验证码激活</span>
     </div>
-    <div class="setting-content">
-      <div class="email_code">
+    <el-form ref="FormRef" :model="Form" class="setting-content">
+      <el-form-item
+        class="email_code"
+        prop="email_code"
+        :rules="[
+          { required: true, message: '必填项', trigger: 'blur' },
+          {
+            pattern: /^\d{4}$/,
+            message: '验证码有误',
+            trigger: 'blur',
+          },
+        ]"
+      >
         <el-input
-          v-model="ruleForm.email_code2"
+          v-model="Form.email_code"
           class="input"
           placeholder="请输入邮件中的验证码"
         ></el-input
         ><OButton class="setting-btn" size="small" @click="setEmail2">{{
-          isDisposed2 ? `${time2}s后重新获取` : '获取验证码'
+          isDisposed2 ? `${time2}s` : '获取验证码'
         }}</OButton>
-      </div>
-      <OButton class="setting-btn" @click="keepEmail2">激活</OButton>
-    </div>
+      </el-form-item>
+      <OButton class="setting-btn" @click="keepEmail2(FormRef)">激活</OButton>
+    </el-form>
   </div>
   <!-- 邮箱添加 -->
   <div v-if="!userInfoStore.email" class="setting-box add">

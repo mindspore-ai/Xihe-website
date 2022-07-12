@@ -194,12 +194,10 @@ function goTrainLog(trainId) {
 //   router.push(
 //     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
 //   );
-// }
+// }wss://xihe.test.osinfra.cn/wss/...
 
 // wss://xihe.test.osinfra.cn/wss/train_task
-const socket = new WebSocket(
-  'wss://xihebackend.test.osinfra.cn/wss/train_task'
-);
+const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
   // console.log('服务器已连接');

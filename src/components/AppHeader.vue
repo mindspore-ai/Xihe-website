@@ -6,7 +6,7 @@ import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo.png';
 import { goAuthorize, logout } from '@/shared/login';
-// import { escapeHtml } from '@/shared/utils';
+import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
 import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -198,41 +198,41 @@ function emptyValue() {
   show.value = true;
 }
 // 关键词高亮
-// function changeColor(modelName, keyword) {
-//   let val = modelName + '';
-//   if (val.indexOf(keyword) !== -1 && keyword) {
-//     // 搜索数据结果含有输入框值的下标
-//     let indexes = val.indexOf(keyword);
-//     // 截取index前、后的字符串
-//     let str = val.substring(0, indexes);
-//     let str2 = val.substring(indexes + keyword.length);
-//     // 转义匹配关键词前后的html标签
-//     escapeHtml(str);
-//     escapeHtml(str2);
-//     const Reg = new RegExp(keyword, 'ig');
-//     return (
-//       escapeHtml(str) +
-//       keyword.replace(
-//         Reg,
-//         '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
-//       ) +
-//       escapeHtml(str2)
-//     );
-//   }
-// }
-// 关键词高亮
 function changeColor(modelName, keyword) {
   let val = modelName + '';
   if (val.indexOf(keyword) !== -1 && keyword) {
+    // 搜索数据结果含有输入框值的下标
+    let indexes = val.indexOf(keyword);
+    // 截取index前、后的字符串
+    let str = val.substring(0, indexes);
+    let str2 = val.substring(indexes + keyword.length);
+    // 转义匹配关键词前后的html标签
+    escapeHtml(str);
+    escapeHtml(str2);
     const Reg = new RegExp(keyword, 'ig');
-    return val.replace(
-      Reg,
-      '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
+    return (
+      escapeHtml(str) +
+      keyword.replace(
+        Reg,
+        '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
+      ) +
+      escapeHtml(str2)
     );
-  } else {
-    return val;
   }
 }
+// 关键词高亮
+// function changeColor(modelName, keyword) {
+//   let val = modelName + '';
+//   if (val.indexOf(keyword) !== -1 && keyword) {
+//     const Reg = new RegExp(keyword, 'ig');
+//     return val.replace(
+//       Reg,
+//       '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
+//     );
+//   } else {
+//     return val;
+//   }
+// }
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {

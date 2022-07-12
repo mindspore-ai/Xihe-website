@@ -25,15 +25,15 @@ const form = reactive({
   job_name: '',
   code_dir: '',
   frameworks: {
-    framework_type: '',
-    framework_version: '',
+    framework_type: 'MPI',
+    framework_version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
   },
   log_url: '',
   inputs: '',
   hypeparameters: '',
   SDK: 'ModelArts',
   boot_file: '',
-  train_instance_type: '',
+  train_instance_type: 'modelarts.p3.large.public',
   job_description: '',
   outputs: '',
   env_variables: '',
@@ -113,7 +113,7 @@ const optionData = reactive({
 function change1(val) {
   if (val) {
     let a = optionData.com1.find((item) => {
-      return item.value == val;
+      return item.value === val;
     });
     form.frameworks.framework_type = a.content;
     selectData.com2 = optionData.com2[val][0].value; //根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
@@ -128,13 +128,13 @@ function change2() {
   let val = selectData.com2;
   if (val) {
     let b = optionData.com2[selectData.com1].find((item) => {
-      return item.value == val;
+      return item.value === val;
     });
     form.frameworks.framework_version = b.content;
 
     selectData.com3 = optionData.com3[val][0].value;
     let c = optionData.com3[selectData.com2].find((item) => {
-      return item.value == selectData.com3;
+      return item.value === selectData.com3;
     });
     form.train_instance_type = c.content;
   } else {
@@ -142,13 +142,13 @@ function change2() {
   }
 }
 
-// 判断是否是自己的项目，不是则返回首页
-function beforeEnter() {
+// 进入页面判断是否是自己的项目，不是则返回首页
+function goHome() {
   if (!isAuthentic.value) {
     router.push('/');
   }
 }
-beforeEnter();
+goHome();
 // 返回训练页面
 function goTrain() {
   router.push({
@@ -187,10 +187,15 @@ function confirmCreating(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       let inputs = {},
-        outputs = {};
+        outputs = {},
+        hypeparameters = {},
+        env_variables = {};
+      // console.log(typeof form.hypeparameters);
       try {
         inputs = JSON.parse(form.inputs);
         outputs = JSON.parse(form.outputs);
+        hypeparameters = JSON.parse(form.hypeparameters);
+        env_variables = JSON.parse(form.env_variables);
       } catch (e) {
         console.error(e);
       }
@@ -203,13 +208,13 @@ function confirmCreating(formEl) {
         },
         log_url: form.log_url,
         inputs: inputs,
-        hypeparameters: form.hypeparameters,
+        hypeparameters: hypeparameters,
         SDK: form.SDK,
         boot_file: form.boot_file,
         train_instance_type: form.train_instance_type,
         job_description: form.job_description,
         outputs: outputs,
-        env_variables: form.env_variables,
+        env_variables: env_variables,
       };
       // params.inputs = inputs;
       // params.outputs = outputs;
@@ -229,6 +234,7 @@ function confirmCreating(formEl) {
           ElMessage({
             type: 'error',
             message: res.msg,
+            duration: 5000,
             center: true,
           });
         }
@@ -239,6 +245,35 @@ function confirmCreating(formEl) {
     }
   });
 }
+
+// 校验输入框里的内容是否为json格式
+const checkJson = (rule, value, callback) => {
+  if (value === '') {
+    callback();
+  } else {
+    try {
+      JSON.parse(value);
+      callback();
+    } catch (e) {
+      callback(new Error('请输入正确的json格式内容'));
+    }
+  }
+};
+
+const checkBootfile = (rule, value, callback) => {
+  if (value === '') {
+    callback();
+  } else {
+    // 以.分割为数组，正则判断数组的第一个元素只含有数字，字母，下划线
+    let arr = value.split('.');
+    if (arr[0].match(/^[a-zA-Z0-9_]+$/) && arr[1] === 'py') {
+      callback();
+    } else {
+      callback(new Error('启动文件名只能包含数字，字母，下划线，且为.py文件'));
+    }
+  }
+};
+
 const rules = reactive({
   job_name: [
     {
@@ -269,6 +304,7 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
+    { validator: checkBootfile, trigger: 'blur' },
   ],
   // frameworks: [
   //   {
@@ -289,6 +325,30 @@ const rules = reactive({
   //   {
   //     required: true,
   //     message: '必填项',
+  //     trigger: 'blur',
+  //   },
+  // ],
+  inputs: [
+    {
+      validator: checkJson,
+      trigger: 'blur',
+    },
+  ],
+  outputs: [
+    {
+      validator: checkJson,
+      trigger: 'blur',
+    },
+  ],
+  // hypeparameters: [
+  //   {
+  //     validator: checkJson,
+  //     trigger: 'blur',
+  //   },
+  // ],
+  // env_variables: [
+  //   {
+  //     validator: checkJson,
   //     trigger: 'blur',
   //   },
   // ],
@@ -335,7 +395,7 @@ const rules = reactive({
         </div>
         <div class="createfile-content-tip">
           你可以通过表单方式创建训练实例，若你是第一次创建训练实例，系统会默认在train/config.json下生成配置文件。详情参考
-          <a href="#" style="color: #0d8dff">表单方式创建训练实例</a>
+          <a href="#" style="color: #0d8dff">表单方式-创建训练实例</a>
         </div>
         <div class="createfile-form-wrap">
           <el-form
@@ -440,7 +500,7 @@ const rules = reactive({
                     </div>
                   </el-popover>
                 </div>
-                <el-form-item>
+                <el-form-item prop="inputs">
                   <el-input
                     v-model="form.inputs"
                     type="textarea"
@@ -471,7 +531,7 @@ const rules = reactive({
                   <el-input
                     v-model="form.hypeparameters"
                     type="textarea"
-                    placeholder="请输入内容，格式为{'':'',},为json格式"
+                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
               </div>
@@ -550,7 +610,7 @@ const rules = reactive({
                     </div>
                   </el-popover>
                 </div>
-                <el-form-item>
+                <el-form-item prop="outputs">
                   <el-input
                     v-model="form.outputs"
                     type="textarea"
@@ -566,7 +626,7 @@ const rules = reactive({
                   <el-input
                     v-model="form.env_variables"
                     type="textarea"
-                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
+                    placeholder="请输入内容，格式为{'':''},为json格式"
                   />
                 </el-form-item>
               </div>
@@ -576,11 +636,21 @@ const rules = reactive({
 
         <div class="createfile-content-action">
           <o-button
+            v-if="
+              form.job_name &&
+              form.code_dir &&
+              form.frameworks &&
+              form.log_url &&
+              form.SDK &&
+              form.train_instance_type &&
+              form.boot_file
+            "
             class="confim"
             type="primary"
             @click="confirmCreating(queryRef)"
             >创建</o-button
           >
+          <o-button v-else class="confim2" disabled>创建</o-button>
         </div>
       </div>
     </div>
@@ -664,7 +734,7 @@ const rules = reactive({
             position: relative;
             .item-title {
               position: absolute;
-              transform: translateY(50%);
+              transform: translateY(38%);
               display: flex;
               align-items: center;
               .item-title-text {
@@ -681,7 +751,7 @@ const rules = reactive({
           .createfile-form-item {
             .item-title {
               position: absolute;
-              transform: translateY(40%);
+              transform: translateY(38%);
               display: flex;
               align-items: center;
               .item-title-text {
@@ -697,6 +767,11 @@ const rules = reactive({
         justify-content: center;
         margin-top: 48px;
         margin-bottom: 32px;
+        .confim2 {
+          background: #cee8ff;
+          color: #fff;
+          border: none;
+        }
       }
     }
   }

@@ -102,13 +102,13 @@ const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
 
-// 判断是否是自己的项目，不是则返回首页
-function beforeEnter() {
+// 进入页面判断是否是自己的项目，不是则返回首页
+function goHome() {
   if (!isAuthentic.value) {
     router.push('/');
   }
 }
-beforeEnter();
+goHome();
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -167,9 +167,7 @@ function getTrainLogData() {
 }
 getTrainLogData();
 
-const socket = new WebSocket(
-  'wss://xihebackend.test.osinfra.cn/wss/train_task'
-);
+const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
 
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
@@ -208,7 +206,7 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/logvisual');
+const ws = new WebSocket('wss://xihe.test.osinfra.cn/wss/logvisual');
 // ws.onopen = function () {
 //   console.log('服务器已连接');
 // };
@@ -218,7 +216,6 @@ ws.onclose = function () {
 };
 
 ws.onmessage = function (event) {
-  console.log(event);
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
@@ -277,6 +274,7 @@ function handleAssessment() {
             })
           );
         }, 10000);
+      } else {
       }
     }
   );

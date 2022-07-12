@@ -358,7 +358,7 @@ function stop() {
 }
 const socket = ref();
 // if (detailData.value.sdk_name === 'Gradio') {
-socket.value = new WebSocket('wss://xihebackend.test.osinfra.cn/wss/inference');
+socket.value = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
 socket.value.onopen = function () {
   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {

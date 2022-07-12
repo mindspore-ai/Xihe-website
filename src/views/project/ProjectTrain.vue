@@ -120,19 +120,22 @@ function confirmAdd() {
   let params = {};
   let paramsArr = addSearch.value.split('/');
 
-  if (addSearch.value.split('').indexOf('/') == -1 || addSearch.value == '/') {
+  if (
+    addSearch.value.split('').indexOf('/') === -1 ||
+    addSearch.value === '/'
+  ) {
     ElMessage({
       type: 'error',
       message: '请按照(拥有者/模型名)格式输入',
     });
     return;
-  } else if (paramsArr[0] == '') {
+  } else if (paramsArr[0] === '') {
     ElMessage({
       type: 'error',
       message: '请输入用户名',
     });
     return;
-  } else if (paramsArr[1] == '') {
+  } else if (paramsArr[1] === '') {
     ElMessage({
       type: 'error',
       message: '请输入数据集名',
@@ -185,19 +188,22 @@ function confirmClick() {
   }
   let params = {};
   let paramsArr = addSearch.value.split('/');
-  if (addSearch.value.split('').indexOf('/') == -1 || addSearch.value == '/') {
+  if (
+    addSearch.value.split('').indexOf('/') === -1 ||
+    addSearch.value === '/'
+  ) {
     ElMessage({
       type: 'error',
       message: '请按照(拥有者/模型名)格式输入',
     });
     return;
-  } else if (paramsArr[0] == '') {
+  } else if (paramsArr[0] === '') {
     ElMessage({
       type: 'error',
       message: '请输入用户名',
     });
     return;
-  } else if (paramsArr[1] == '') {
+  } else if (paramsArr[1] === '') {
     ElMessage({
       type: 'error',
       message: '请输入模型名',

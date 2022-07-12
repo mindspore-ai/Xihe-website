@@ -54,13 +54,13 @@ const i18n = {
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
-// 判断是否是自己的项目，不是则返回首页
-function beforeEnter() {
+// 进入页面判断是否是自己的项目，不是则返回首页
+function goHome() {
   if (!isAuthentic.value) {
     router.push('/');
   }
 }
-beforeEnter();
+goHome();
 
 let timer = null;
 // 获取训练列表
@@ -194,12 +194,10 @@ function goTrainLog(trainId) {
 //   router.push(
 //     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
 //   );
-// }
+// }wss://xihe.test.osinfra.cn/wss/...
 
 // wss://xihe.test.osinfra.cn/wss/train_task
-const socket = new WebSocket(
-  'wss://xihebackend.test.osinfra.cn/wss/train_task'
-);
+const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
   // console.log('服务器已连接');
@@ -299,7 +297,9 @@ onUnmounted(() => {
             @click="resetClick"
           ></reset-train>
           <div class="description">
-            {{ scope.row.description }}
+            <div class="description-content">
+              {{ scope.row.description }}
+            </div>
             <div class="hide-box">
               <div class="tools-box">
                 <div
@@ -428,8 +428,12 @@ onUnmounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        .description-content {
+          flex: 1;
+        }
         .hide-box {
           display: none;
+          width: 150px;
         }
         .tools-box {
           display: flex;

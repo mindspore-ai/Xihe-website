@@ -92,8 +92,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -152,7 +152,8 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/datasets/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/datasets/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -166,7 +167,7 @@ function tagClick(it, key) {
         item.isSelected = false;
       });
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -174,7 +175,7 @@ function tagClick(it, key) {
       renderList.value[key].forEach((item) => {
         if (item.isActive === true) {
           headTags.value.forEach((tag, index) => {
-            if (item.name == tag.name) {
+            if (item.name === tag.name) {
               headTags.value.splice(index, 1);
             }
           });
@@ -192,7 +193,7 @@ function tagClick(it, key) {
       headTags.value.push(it);
     } else {
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -212,17 +213,17 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    if (key == 'task') {
+    if (key === 'task') {
       renderList.value[key].forEach((item) => {
         item.task_list.forEach((it) => {
-          if (it.name == tag.name) {
+          if (it.name === tag.name) {
             it.isActive = false;
           }
         });
       });
     } else {
       renderList.value[key].forEach((item) => {
-        if (item.name == tag.name) {
+        if (item.name === tag.name) {
           item.isActive = false;
         }
       });
@@ -236,7 +237,7 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    if (menuitem == 'task') {
+    if (menuitem === 'task') {
       renderList.value[menuitem].forEach((mit) => {
         mit.task_list.map((it) => {
           it.isActive = false;
@@ -276,7 +277,7 @@ function digClick() {
 // 确认
 function confirmBtn() {
   dialogList.menuList.forEach((menu) => {
-    if (menu.key == 'task') {
+    if (menu.key === 'task') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
@@ -293,7 +294,7 @@ function confirmBtn() {
         });
       });
       // TODO: 修改, 情况重复;
-    } else if (menu.key == 'licenses') {
+    } else if (menu.key === 'licenses') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         if (item.isActive) {
@@ -339,7 +340,7 @@ function getTagList() {
     renderList.value = res.data;
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key == 'task') {
+      if (key === 'task') {
         renderList.value[key].map((item) => {
           item.task_list.map((it) => {
             it.isActive = false;
@@ -354,10 +355,10 @@ function getTagList() {
 
     modelTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        if (menuitem == 'task') {
+        if (menuitem === 'task') {
           renderList.value[menuitem].map((mit) => {
             mit.task_list.map((it) => {
-              if (it.name == item.name) {
+              if (it.name === item.name) {
                 it.isActive = true;
               }
             });
@@ -376,7 +377,7 @@ function getTagList() {
           });
         } else {
           renderList.value[menuitem].map((it) => {
-            if (it.name == item.name) {
+            if (it.name === item.name) {
               it.isActive = true;
             }
           });
@@ -403,7 +404,7 @@ watch(
     return route.params.name;
   },
   () => {
-    if (route.name == 'datasetCard') {
+    if (route.name === 'datasetCard') {
       getDetailData();
     }
   }
@@ -583,16 +584,24 @@ $theme: #0d8dff;
     width: 188px;
     display: flex;
     align-items: center;
+    padding-left: 20px;
     .head-title {
       margin-right: 16px;
       font-size: 18px;
       line-height: 24px;
+      min-width: 72px;
     }
     .head-delete {
       font-size: 12px;
       line-height: 18px;
-      margin-right: 52px;
+      // margin-right: 52px;
+      display: flex;
+      align-items: center;
       cursor: pointer;
+      .o-icon {
+        margin-right: 6px;
+        align-self: center;
+      }
     }
   }
 
@@ -825,7 +834,7 @@ $theme: #0d8dff;
 
   .el-tabs__item {
     height: 48px;
-    font-size: 16px;
+    // font-size: 16px;
     color: #555555;
     font-weight: normal;
     line-height: 48px;

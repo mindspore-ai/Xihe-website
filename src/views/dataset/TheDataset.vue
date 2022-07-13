@@ -180,10 +180,10 @@ function goSearch(render) {
     time = 0;
     item.condition.forEach((value) => {
       if (value.isActive) {
-        if (item.title.key == 'task') {
+        if (item.title.key === 'task') {
           taskCate.push(value.id);
           query.task_cate = taskCate.join(',');
-        } else if (item.title.key == 'tags') {
+        } else if (item.title.key === 'tags') {
           tagLists.push(value.id);
           query.tags = tagLists.join(',');
         } else {
@@ -196,7 +196,7 @@ function goSearch(render) {
     if (time === item.condition.length) {
       query[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key == 'task') {
+      if (item.title.key === 'task') {
         query['task_cate'] = null;
       }
     }

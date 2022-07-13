@@ -190,14 +190,13 @@ function confirmCreating(formEl) {
         outputs = {},
         hypeparameters = {},
         env_variables = {};
-      // console.log(typeof form.hypeparameters);
       try {
         inputs = JSON.parse(form.inputs);
         outputs = JSON.parse(form.outputs);
         hypeparameters = JSON.parse(form.hypeparameters);
         env_variables = JSON.parse(form.env_variables);
       } catch (e) {
-        console.error(e);
+        // console.error(e);
       }
       let params = {
         job_name: form.job_name,
@@ -219,6 +218,7 @@ function confirmCreating(formEl) {
       // params.inputs = inputs;
       // params.outputs = outputs;
       createTrainProject(params, route.query.id).then((res) => {
+        // console.log(res);
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -240,7 +240,7 @@ function confirmCreating(formEl) {
         }
       });
     } else {
-      console.error('error submit!');
+      // console.error('error submit!');
       return false;
     }
   });
@@ -264,7 +264,7 @@ const checkBootfile = (rule, value, callback) => {
   if (value === '') {
     callback();
   } else {
-    // 以.分割为数组，正则判断数组的第一个元素只含有数字，字母，下划线
+    // 判断数组的第一个元素只含有数字，字母，下划线
     let arr = value.split('.');
     if (arr[0].match(/^[a-zA-Z0-9_]+$/) && arr[1] === 'py') {
       callback();
@@ -281,7 +281,11 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    { max: 8, message: '名称不可以大于8个字符', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9_]{0,8}$/,
+      message: '请输入一个1-8位且只包含大小写字母、数字、下划线的名称',
+      trigger: 'blur',
+    },
   ],
   SDK: [
     {
@@ -353,28 +357,6 @@ const rules = reactive({
   //   },
   // ],
 });
-// function checkCodeDir() {
-//   //校验路径是否以/结尾
-//   let reg = /\/$/;
-//   if (!reg.test(form.code_dir)) {
-//     ElMessage({
-//       type: 'error',
-//       message: '代码目录为文件夹格式，末尾必须带/，请重新输入',
-//       center: true,
-//     });
-//   }
-// }
-// function checkLogUrl() {
-//   //校验路径是否以/结尾
-//   let reg = /\/$/;
-//   if (!reg.test(form.log_url)) {
-//     ElMessage({
-//       type: 'error',
-//       message: '日志路径为文件夹格式，末尾必须带/，请重新输入',
-//       center: true,
-//     });
-//   }
-// }
 </script>
 <template>
   <div class="createfile">
@@ -422,13 +404,10 @@ const rules = reactive({
                   <icon-necessary></icon-necessary><span>代码目录</span>
                 </div>
 
-                <el-form-item
-                  placeholder="请输入末尾带/的文件夹格式目录"
-                  prop="code_dir"
-                >
+                <el-form-item prop="code_dir">
                   <el-input
                     v-model="form.code_dir"
-                    placeholder="请输入末尾带/的文件夹格式目录"
+                    placeholder="请输入训练代码目录"
                   />
                 </el-form-item>
               </div>

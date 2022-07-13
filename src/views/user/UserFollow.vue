@@ -154,7 +154,7 @@ function toTop() {
           </div>
         </div>
         <div
-          v-if="userInfoStore.nickName !== fans.name"
+          v-if="userInfoStore.id !== fans.id"
           class="list-item-right"
           @click="getFollow(userInfoStore.id, fans)"
         >

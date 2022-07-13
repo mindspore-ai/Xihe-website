@@ -557,7 +557,7 @@ function toggleDelDlg(flag) {
       </template>
     </el-dialog>
 
-    <!-- 如已有正在训练中的实例，弹窗提示 -->
+    <!-- 如已有正在训练中的实例或者训练实例已有5个，弹窗提示 -->
     <o-dialog :show="showTip" @close-click="toggleDelDlg(false)">
       <template #head>
         <div

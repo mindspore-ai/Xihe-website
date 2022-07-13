@@ -357,7 +357,7 @@ function goSearch(render) {
     if (time === item.condition.length) {
       queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key == 'task') {
+      if (item.title.key === 'task') {
         queryData['task_cate'] = null;
       }
     }

@@ -230,7 +230,6 @@ function deleteFolderClick(folderName, isFolder) {
         message: res.msg,
       });
     }
-    console.log(res);
   });
 }
 watch(
@@ -349,6 +348,7 @@ watch(
                 <span>{{ item.description }}</span>
                 <div
                   class="delete-folder"
+                  :class="{ 'is-visitor': !detailData.is_owner }"
                   @click="deleteFolderClick(item.name, item.is_folder)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
@@ -394,6 +394,7 @@ watch(
       </p>
     </div>
   </div>
+  <!-- TODO:弹窗提醒 -->
   <!-- <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
     <div
       class="dlg-body"
@@ -489,6 +490,9 @@ watch(
         background: #f7f8fa;
         .delete-folder {
           display: flex;
+        }
+        .is-visitor {
+          display: none;
         }
       }
       .el-form {

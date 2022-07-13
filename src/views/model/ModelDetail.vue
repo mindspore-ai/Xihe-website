@@ -98,8 +98,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
@@ -173,7 +173,7 @@ function tagClick(it, key) {
         item.isSelected = false;
       });
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -181,7 +181,7 @@ function tagClick(it, key) {
       renderList.value[key].forEach((item) => {
         if (item.isActive === true) {
           headTags.value.forEach((tag, index) => {
-            if (item.name == tag.name) {
+            if (item.name === tag.name) {
               headTags.value.splice(index, 1);
             }
           });
@@ -199,7 +199,7 @@ function tagClick(it, key) {
       headTags.value.push(it);
     } else {
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -218,17 +218,17 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    if (key == 'task') {
+    if (key === 'task') {
       renderList.value[key].forEach((item) => {
         item.task_list.forEach((it) => {
-          if (it.name == tag.name) {
+          if (it.name === tag.name) {
             it.isActive = false;
           }
         });
       });
     } else {
       renderList.value[key].forEach((item) => {
-        if (item.name == tag.name) {
+        if (item.name === tag.name) {
           item.isActive = false;
         }
       });
@@ -242,7 +242,7 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    if (menuitem == 'task') {
+    if (menuitem === 'task') {
       renderList.value[menuitem].forEach((mit) => {
         mit.task_list.map((it) => {
           it.isActive = false;
@@ -271,7 +271,7 @@ function deleteModelTags() {
 // 确认
 function confirmBtn() {
   dialogList.menuList.forEach((menu) => {
-    if (menu.key == 'task') {
+    if (menu.key === 'task') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
@@ -315,7 +315,7 @@ function getTagList() {
     localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key == 'task') {
+      if (key === 'task') {
         renderList.value[key].forEach((item) => {
           item.task_list.forEach((it) => {
             it.isActive = false;
@@ -329,17 +329,17 @@ function getTagList() {
     });
     modelTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        if (menuitem == 'task') {
+        if (menuitem === 'task') {
           renderList.value[menuitem].forEach((mit) => {
             mit.task_list.map((it) => {
-              if (it.name == item.name) {
+              if (it.name === item.name) {
                 it.isActive = true;
               }
             });
           });
         } else {
           renderList.value[menuitem].forEach((it) => {
-            if (it.name == item.name) {
+            if (it.name === item.name) {
               it.isActive = true;
             }
           });
@@ -351,7 +351,8 @@ function getTagList() {
 
 function handleTabClick(item) {
   router.push(
-    `/models/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/models/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -384,7 +385,7 @@ watch(
     return route.params.name;
   },
   () => {
-    if (route.name == 'modelCard') {
+    if (route.name === 'modelCard') {
       getDetailData();
     }
   }
@@ -557,9 +558,6 @@ $theme: #0d8dff;
   opacity: 0;
 }
 .tags-box {
-  :deep .el-dialog {
-    // --el-dialog-margin-top: 20vh;
-  }
   .dialog-head {
     display: flex;
     align-items: center;

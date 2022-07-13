@@ -139,7 +139,7 @@ watch(props, () => {
     </div>
     <div v-else-if="projectCount === 0 && !boo" class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />
-      <p @click="setNewClick">无项目</p>
+      <p @click="setNewClick">该用户暂未创建任何项目</p>
     </div>
     <div v-else class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />

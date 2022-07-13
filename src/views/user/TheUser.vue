@@ -32,7 +32,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
-console.log(userInfo.value.userName);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距

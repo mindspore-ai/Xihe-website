@@ -80,8 +80,8 @@ const rules = reactive({
     //   trigger: 'blur',
     // },
   ],
-  batch: [
-    // { required: true, message: '必填项', trigger: 'blur' },
+  batch_size: [
+    { required: true, message: '必填项', trigger: 'blur' },
     // {
     //   pattern: /^\[((\d+\,)+\d+)*\]$/,
     //   message: '格式不正确',
@@ -169,7 +169,7 @@ getTrainLogData();
 
 const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
 
-// // 创建好连接之后自动触发（ 服务端执行self.accept() )
+// 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
   socket.send(
     JSON.stringify({
@@ -242,13 +242,32 @@ ws.onmessage = function (event) {
 
 // 自动评估
 function saveSetting() {
-  autoEvaluate(query, detailData.value.id, route.params.trainId).then((res) => {
-    if (res.status === 200) {
-      showEvaBtn.value = false;
-      showAnaButton.value = true;
-      timer3 = setInterval(() => {
-        ws.send(JSON.stringify({ pk: detailData.value.id }));
-      }, 10000);
+  ruleRef.value.validate((valid) => {
+    if (valid) {
+      autoEvaluate(query, detailData.value.id, route.params.trainId).then(
+        (res) => {
+          if (
+            res.data.status === 200 &&
+            res.data.msg === '创建日志可视化成功'
+          ) {
+            showEvaBtn.value = false;
+            showAnaButton.value = true;
+            timer3 = setInterval(() => {
+              ws.send(JSON.stringify({ pk: detailData.value.id }));
+            }, 10000);
+          } else if (res.data.status === -1) {
+            ElMessage({
+              type: 'error',
+              message: res.data.msg,
+            });
+          }
+        }
+      );
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '请按要求输入信息',
+      });
     }
   });
 }
@@ -467,7 +486,7 @@ watch(
                       :placeholder="i18n.momentum.placeholder"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item :label="i18n.batch.name" prop="batch">
+                  <el-form-item :label="i18n.batch.name" prop="batch_size">
                     <el-input
                       v-model="query.batch_size"
                       :placeholder="i18n.batch.placeholder"
@@ -693,7 +712,7 @@ watch(
             white-space: nowrap;
             transform: translateY(-50%);
             top: 50%;
-            left: calc(100% + -40px);
+            left: calc(100% + 10px);
           }
         }
         .assess-title {

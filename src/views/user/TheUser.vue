@@ -32,6 +32,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : vistorInfoStore;
 });
+console.log(userInfo.value.userName);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -189,11 +190,13 @@ const showTool = computed(() => {
 });
 
 function handleNavClick(item) {
-  router.push(
-    item.id === 'lives'
-      ? `/${userInfo.value.userName}`
-      : `/${userInfo.value.userName}/${item.id}`
-  );
+  router.push({
+    path:
+      item.id === 'lives'
+        ? `/${userInfo.value.userName}`
+        : `/${userInfo.value.userName}/${item.id}`,
+    query: { userName: userInfo.value.userName },
+  });
 }
 
 function dropdownClick(item) {

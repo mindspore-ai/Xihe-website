@@ -9,10 +9,12 @@ import IconHeart from '~icons/app/heart';
 import OIcon from '@/components/OIcon.vue';
 
 import { getProjectData } from '@/api/api-project';
+import { useUserInfoStore } from '@/stores';
 
+const userInfoStore = useUserInfoStore();
 const route = useRoute();
 const router = useRouter();
-
+let boo = userInfoStore.userName === route.query.userName;
 const projectCount = ref(0);
 const projectData = ref([]);
 
@@ -134,6 +136,10 @@ watch(props, () => {
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
+    </div>
+    <div v-else-if="projectCount === 0 && !boo" class="empty-status">
+      <img src="@/assets/imgs/project-empty.png" alt="" />
+      <p @click="setNewClick">无项目</p>
     </div>
     <div v-else class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />

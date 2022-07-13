@@ -216,7 +216,6 @@ ws.onclose = function () {
 };
 
 ws.onmessage = function (event) {
-  console.log(event);
   if (
     JSON.parse(event.data).status === 200 &&
     JSON.parse(event.data).msg === '运行中'
@@ -275,6 +274,7 @@ function handleAssessment() {
             })
           );
         }, 10000);
+      } else {
       }
     }
   );

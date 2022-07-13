@@ -297,7 +297,9 @@ onUnmounted(() => {
             @click="resetClick"
           ></reset-train>
           <div class="description">
-            {{ scope.row.description }}
+            <div class="description-content">
+              {{ scope.row.description }}
+            </div>
             <div class="hide-box">
               <div class="tools-box">
                 <div
@@ -426,8 +428,12 @@ onUnmounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        .description-content {
+          flex: 1;
+        }
         .hide-box {
           display: none;
+          width: 150px;
         }
         .tools-box {
           display: flex;

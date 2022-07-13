@@ -122,6 +122,7 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
+    console.log(res);
     if (res.status === 200) {
       repoContent.value = res.data.data.db_path;
       form.desc = res.data.data.log.content;
@@ -140,7 +141,6 @@ function getTrainLogData() {
         isDisabled.value = true;
         isDisabled1.value = true;
         showEvaBtn1.value = false;
-
         showEvaBtn.value = false;
         timer = setInterval(() => {
           socket.send(
@@ -234,6 +234,18 @@ ws.onmessage = function (event) {
 
     clearInterval(timer2);
     clearInterval(timer3);
+  } else if (
+    JSON.parse(event.data).status === -1 &&
+    JSON.parse(event.data).msg === '启动失败'
+  ) {
+    ElMessage({
+      type: 'error',
+      message: JSON.parse(event.data).msg,
+    });
+    showEvaBtn.value = true;
+    showAnaButton.value = false;
+    clearInterval(timer2);
+    clearInterval(timer3);
   } else {
     // showEvaBtn.value = true;
     // showAnaButton.value = false;
@@ -252,6 +264,7 @@ function saveSetting() {
           ) {
             showEvaBtn.value = false;
             showAnaButton.value = true;
+            ws.send(JSON.stringify({ pk: detailData.value.id }));
             timer3 = setInterval(() => {
               ws.send(JSON.stringify({ pk: detailData.value.id }));
             }, 10000);
@@ -264,10 +277,10 @@ function saveSetting() {
         }
       );
     } else {
-      ElMessage({
-        type: 'error',
-        message: '请按要求输入信息',
-      });
+      // ElMessage({
+      //   type: 'error',
+      //   message: '请按要求输入信息',
+      // });
     }
   });
 }
@@ -378,7 +391,8 @@ watch(
         <el-input v-model="form.name" disabled> </el-input>
       </div>
       <div class="train-log-desc">
-        <el-input id="txt" v-model="form.desc" type="textarea" />
+        <el-input id="txt" v-model="form.desc" type="textarea" readonly />
+        <img v-if="!form.desc" src="@/assets/gifs/loading.gif" alt="" />
       </div>
     </div>
     <div class="train-log-detail">
@@ -594,7 +608,7 @@ watch(
   background-color: #fff;
   &-form {
     width: 55%;
-    padding-bottom: 55px;
+    // padding-bottom: 55px;
     .train-log-name {
       span {
         margin-right: 8px;
@@ -604,7 +618,7 @@ watch(
     }
     .train-log-desc {
       width: 100%;
-      height: 100%;
+      height: 750px;
       .el-textarea {
         width: 100% !important;
         height: 100%;

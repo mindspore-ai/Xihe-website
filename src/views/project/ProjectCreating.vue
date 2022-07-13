@@ -113,19 +113,30 @@ function setProject() {
       newList.licenses = [item.id];
     }
   });
-
   setNewProject(newList).then((res) => {
     if (res.status === 200) {
       router.push(`/projects/${userInfo.userName}/${proList.name}`);
-    } else if (res.data.non_field_errors[0].indexOf('唯一集合') !== -1) {
+    } else if (
+      res.data.name &&
+      res.data.name[0] === '项目名必须是3-20位数字、字母、下划线组成'
+    ) {
+      ElMessage({
+        type: 'error',
+        message: res.data.name[0],
+      });
+    } else if (
+      res.data.non_field_errors &&
+      res.data.non_field_errors[0] ===
+        '字段 name, owner_id, owner_type 必须能构成唯一集合。'
+    ) {
       ElMessage({
         type: 'error',
         message: '项目名已存在',
       });
+    } else {
     }
   });
 }
-
 getModelTags().then((res) => {
   projectPhotos.value = res.data.projects_photo;
   projectPhotos.value.forEach((item) => {
@@ -191,6 +202,24 @@ onMounted(() => {});
             <el-input
               v-model="proList.name"
               :placeholder="i18n.input_proName"
+              :rules="[
+                { required: true, message: '必填项', trigger: 'blur' },
+                {
+                  pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
+                  message: '暂不支持中文字符，且长度需大于3个字符',
+                  trigger: 'blur',
+                },
+                {
+                  pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
+                  message: '格式不正确',
+                  trigger: 'blur',
+                },
+                {
+                  pattern: /^[^.].*[^.]$/,
+                  message: '格式不正确',
+                  trigger: 'blur',
+                },
+              ]"
             ></el-input>
             <el-popover
               placement="bottom-start"
@@ -318,7 +347,9 @@ onMounted(() => {});
         </div>
         <div class="obuton">
           <!-- <el-form-item> -->
-          <o-button type="primary" @click="submitClick">保存</o-button>
+          <o-button style="margin-top: 22px" type="primary" @click="submitClick"
+            >保存</o-button
+          >
           <!-- </el-form-item> -->
         </div>
       </el-form>

@@ -171,10 +171,10 @@ function creatFolter(formEl) {
   if (contents && contents.length) {
     path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
       routerParams.name
-    }/${contents.join('/')}/${query.folderName}/.keep`;
+    }/${contents.join('/')}/${query.folderName}/`;
   } else {
     // 根目录下
-    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${query.folderName}/.keep`;
+    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${query.folderName}/`;
   }
 
   formEl.validate((valid) => {
@@ -313,9 +313,9 @@ watch(
             </div>
           </td>
           <td>
-            <div class="tip">
+            <!-- <div class="tip">
               提示: 暂不不支持空文件夾，创建文件夹后会生成空的 .keep 文件
-            </div>
+            </div> -->
           </td>
           <td class="tree-head-right"></td>
         </tr>
@@ -540,13 +540,6 @@ watch(
         padding-left: 36px;
         span:nth-child(1) {
           flex-shrink: 0;
-        }
-      }
-    }
-    .folder-item {
-      &:hover {
-        .delete-folder {
-          display: flex;
         }
       }
     }

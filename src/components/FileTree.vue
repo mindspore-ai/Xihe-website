@@ -77,7 +77,8 @@ const rules = reactive({
     { required: true, message: '禁止为空', trigger: 'blur' },
     {
       pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -._]{1,120}$/,
-      message: '格式不正确',
+      message:
+        '禁止包含以下字符：“?”、“、”、“╲”、“/”、“*”、““”、“”“、“<”、“>”、“|”',
       trigger: 'blur',
     },
   ],
@@ -156,14 +157,15 @@ function goBlob(item) {
   } else {
     targetRoute = `${prop.moduleName}File`;
   }
-  router.push({
+  return {
     name: targetRoute,
     params: {
       user: routerParams.user,
       name: routerParams.name,
       contents,
     },
-  });
+  };
+  // router.push();
 }
 function creatFolter(formEl) {
   if (!formEl) return;
@@ -293,7 +295,7 @@ watch(
                 <el-form-item class="form-item" prop="folderName">
                   <div class="model-name tip-text">
                     <el-input
-                      v-model="query.folderName"
+                      v-model.trim="query.folderName"
                       class="name-input"
                       placeholder="新建文件夹"
                     ></el-input>
@@ -326,12 +328,12 @@ watch(
             :class="{ 'folder-item': item.is_folder }"
             class="tree-table-item"
           >
-            <td class="tree-table-item-name" @click="goBlob(item)">
-              <div class="inner-box">
+            <td class="tree-table-item-name">
+              <router-link :to="goBlob(item)" class="inner-box">
                 <o-icon v-if="!item.is_folder"><icon-file></icon-file> </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
                 <span>{{ item.name }}</span>
-              </div>
+              </router-link>
             </td>
             <td
               class="tree-table-item-download"
@@ -441,8 +443,7 @@ watch(
         white-space: nowrap;
         padding-right: 400px;
         bottom: 0;
-        left: calc(100% + 123px);
-        background-color: #fff;
+        left: calc(100% + 150px);
       }
     }
   }
@@ -454,7 +455,7 @@ watch(
     padding: 12px 24px;
     width: 100%;
     font-size: 14px;
-    background-color: #e5e8f0;
+    background-color: #e5e8f0 !important;
     &-left {
       display: flex;
       align-items: center;
@@ -546,9 +547,12 @@ watch(
     &-item {
       &-name {
         cursor: pointer;
-        &:hover {
-          color: #33b3ff;
-          text-decoration: underline;
+        .inner-box {
+          color: #555;
+          &:hover {
+            color: #33b3ff;
+            text-decoration: underline;
+          }
         }
       }
       &-from {

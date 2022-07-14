@@ -83,6 +83,10 @@
         }
     }
 
+    .el-select .el-input .el-select__caret {
+        color: #000;
+    }
+
     .el-select .select-trigger .el-input.is-focus .el-input__wrapper {
         box-shadow: none !important;
     }

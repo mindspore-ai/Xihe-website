@@ -200,7 +200,11 @@ function handleNavClick(item) {
 }
 
 function dropdownClick(item) {
-  queryData.order = item.value;
+  if (item.value === 'update_time') {
+    queryData.order = '-' + item.value;
+  } else {
+    queryData.order = item.value;
+  }
 }
 function createNew(item) {
   router.push(`/new/${item.id}`);

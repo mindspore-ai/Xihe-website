@@ -72,8 +72,8 @@ let dialogList = {
 
   menuList: [
     { tab: '应用分类', key: 'task' },
-    { tab: '项目类型', key: 'infer_sdk' },
-    { tab: '训练平台', key: 'train_sdk' },
+    // { tab: '项目类型', key: 'infer_sdk' },
+    // { tab: '训练平台', key: 'train_sdk' },
     { tab: '协议', key: 'licenses' },
     { tab: '其他', key: 'tags' },
   ],

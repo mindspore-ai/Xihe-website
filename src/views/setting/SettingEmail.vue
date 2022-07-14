@@ -45,7 +45,7 @@ function setEmail(formEl) {
   if (!formEl) return;
   formEl.validateField('email', (vaild) => {
     if (vaild) {
-      setUserEmail({ email: ruleForm.email, scene }).then((res) => {
+      setUserEmail({ email: ruleForm.email, scene }).then(() => {
         isDisposed.value = true;
         handleTimeChange();
         regular.value = false;
@@ -55,7 +55,7 @@ function setEmail(formEl) {
 }
 //激活邮箱
 function setEmail2() {
-  setUserEmail({ email: userInfoStore.email, scene }).then((res) => {
+  setUserEmail({ email: userInfoStore.email, scene }).then(() => {
     isDisposed2.value = true;
     handleTimeChange2();
     regular.value = false;
@@ -220,7 +220,7 @@ function reSetEmail(formEl) {
   if (!formEl) return;
   formEl.validateField('email', (vaild) => {
     if (vaild) {
-      setUserEmail({ email: reRuleForm.email, scene }).then((res) => {
+      setUserEmail({ email: reRuleForm.email, scene }).then(() => {
         isDisposed.value = true;
         handleTimeChange();
         // regular.value = false;
@@ -399,7 +399,7 @@ function reKeepEmail(formEl) {
     <o-button class="setting-btn" @click="togglePhoneDlg(true)"
       >更换邮箱</o-button
     >
-    <o-dialog :show="showPhoneDlg">
+    <o-dialog :show="showPhoneDlg" :close="false">
       <template #head>
         <p class="dlg-title">更换邮箱地址</p>
       </template>

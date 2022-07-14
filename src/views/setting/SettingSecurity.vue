@@ -43,7 +43,7 @@ function setPhone(formEl) {
   if (!formEl) return;
   formEl.validateField('phone', (vaild) => {
     if (vaild) {
-      setUserPhone(ruleForm.phone).then((res) => {
+      setUserPhone(ruleForm.phone).then(() => {
         isDisposed.value = true;
         handleTimeChange();
       });
@@ -132,7 +132,7 @@ function keepPhone(formEl) {
           });
       }
     } else {
-      console.error('error submit!');
+      // console.error('error submit!');
       return false;
     }
   });
@@ -178,7 +178,11 @@ function resetForm(formEl) {
       <OButton class="setting-btn" @click="togglePhoneDlg(true)"
         >{{ userInfoStore.phone ? '更换' : '绑定' }}手机号码</OButton
       >
-      <ODialog :show="showPhoneDlg" @close-click="togglePhoneDlg(false)">
+      <ODialog
+        :show="showPhoneDlg"
+        :close="false"
+        @close-click="togglePhoneDlg(false)"
+      >
         <template #head>
           <p class="dlg-title">
             {{ userInfoStore.phone ? '更换' : '绑定' }}手机号码
@@ -304,8 +308,8 @@ function resetForm(formEl) {
       }
     }
 
-    .setting-input {
-    }
+    // .setting-input {
+    // }
     .setting-tip {
       margin-top: 8px;
       font-size: 14px;

@@ -7,10 +7,10 @@ import emptyImg from '@/assets/imgs/live-empty.png';
 import projectcard from '@/views/user/UserProjectcard.vue';
 import livecard from '@/views/user/UserLivecard.vue';
 
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -32,7 +32,7 @@ const isAuthentic = computed(() => {
 });
 // 当前用户信息
 const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 
 const emit = defineEmits(['getlivecount', 'domChange']);

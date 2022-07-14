@@ -83,7 +83,7 @@ export const useUserInfoStore = defineStore('userInfo', {
 });
 
 // 访客信息
-export const useVistorInfoStore = defineStore('vistorInfo', {
+export const useVisitorInfoStore = defineStore('visitorInfo', {
   state: () => {
     return {
       id: null, // id

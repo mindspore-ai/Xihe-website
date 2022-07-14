@@ -9,12 +9,12 @@ import IconStar from '~icons/app/Star';
 
 import OButton from '@/components/OButton.vue';
 
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { getUserDig2 } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
 
 const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
 // 是否是访客
@@ -24,7 +24,7 @@ const isAuthentic = computed(() => {
 
 // 当前用户信息
 const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 /*TODO:暂无接口
 let i18n = {

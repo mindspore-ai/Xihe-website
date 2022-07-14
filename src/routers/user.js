@@ -1,6 +1,6 @@
 import { queryUserInfo } from '@/api/api-user';
 import { LOGIN_STATUS } from '@/shared/login';
-import { useLoginStore, useUserInfoStore, useVistorInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 export default [
   // 个人中心
@@ -22,7 +22,7 @@ export default [
             userName: name,
           });
           if (res.status === 200 && res.data && res.data.length) {
-            const vistorInfo = res.data[0];
+            const visitorInfo = res.data[0];
             const {
               id,
               username: userName,
@@ -40,25 +40,25 @@ export default [
                 nickname: nickName,
               },
               user_email: { email, is_active },
-            } = vistorInfo;
+            } = visitorInfo;
 
-            const vistorInfoStore = useVistorInfoStore();
-            vistorInfoStore.id = id;
-            vistorInfoStore.userName = userName;
-            vistorInfoStore.avatar = avatar_url;
-            vistorInfoStore.description = description;
-            vistorInfoStore.nickName = nickName;
-            vistorInfoStore.gitee = gitee;
-            vistorInfoStore.github = github;
-            vistorInfoStore.fansList = fansList;
-            vistorInfoStore.followList = followList;
-            vistorInfoStore.modelDiggList = modelDiggList;
-            vistorInfoStore.datasetDiggList = datasetDiggList;
-            vistorInfoStore.organizationList = organizationList;
-            vistorInfoStore.organizationAdminList = organizationAdminList;
+            const visitorInfoStore = useVisitorInfoStore();
+            visitorInfoStore.id = id;
+            visitorInfoStore.userName = userName;
+            visitorInfoStore.avatar = avatar_url;
+            visitorInfoStore.description = description;
+            visitorInfoStore.nickName = nickName;
+            visitorInfoStore.gitee = gitee;
+            visitorInfoStore.github = github;
+            visitorInfoStore.fansList = fansList;
+            visitorInfoStore.followList = followList;
+            visitorInfoStore.modelDiggList = modelDiggList;
+            visitorInfoStore.datasetDiggList = datasetDiggList;
+            visitorInfoStore.organizationList = organizationList;
+            visitorInfoStore.organizationAdminList = organizationAdminList;
 
-            vistorInfoStore.email = email;
-            vistorInfoStore.emailStatus = is_active;
+            visitorInfoStore.email = email;
+            visitorInfoStore.emailStatus = is_active;
           } else {
             return {
               name: '404',

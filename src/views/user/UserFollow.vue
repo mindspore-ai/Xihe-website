@@ -7,11 +7,11 @@ import IconStar from '~icons/app/Star';
 
 import OButton from '@/components/OButton.vue';
 
-import { useUserInfoStore, useVistorInfoStore } from '@/stores';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { getUserDig } from '@/api/api-user';
 
 const userInfoStore = useUserInfoStore();
-const vistorInfoStore = useVistorInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 // const router = useRouter();
 
@@ -21,7 +21,7 @@ const isAuthentic = computed(() => {
 });
 // 当前用户信息
 const userInfo = computed(() => {
-  return isAuthentic.value ? userInfoStore : vistorInfoStore;
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 let queryData = reactive({
   search: null,

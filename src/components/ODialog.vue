@@ -105,7 +105,7 @@ function onCloseClick() {
     }
   }
   &-head {
-    padding: 40px 80px 16px;
+    padding: 40px 64px 16px;
     font-size: 24px;
     line-height: 32px;
     text-align: left;
@@ -116,7 +116,7 @@ function onCloseClick() {
   }
 
   &-body {
-    padding: 24px 80px;
+    padding: 24px 64px;
     font-size: 14px;
     line-height: 22px;
     @media screen and (max-width: 1023px) {
@@ -125,7 +125,7 @@ function onCloseClick() {
   }
 
   &-foot {
-    padding: 24px 80px;
+    padding: 24px 64px;
     font-size: 16px;
     line-height: 24px;
     @media screen and (max-width: 1023px) {

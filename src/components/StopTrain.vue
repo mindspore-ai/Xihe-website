@@ -36,7 +36,7 @@ function cancelClick() {
 
 watch(
   () => prop.showStop,
-  (newValue, oldValue) => {
+  (newValue) => {
     stopShow.value = newValue;
   }
 );

@@ -23,7 +23,7 @@ const i18n = {
 };
 </script>
 <template>
-  <div class="pro-card">
+  <div class="project-card">
     <div class="card-top">
       <img :src="cardData.photo" alt="" />
       <p class="title">{{ cardData.name }}</p>
@@ -51,7 +51,7 @@ const i18n = {
 </template>
 
 <style lang="scss" scoped>
-.pro-card {
+.project-card {
   cursor: pointer;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   .o-icon {

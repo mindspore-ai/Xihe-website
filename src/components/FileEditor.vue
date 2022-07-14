@@ -110,7 +110,7 @@ async function upLoadObs() {
 findFile(path).then((res) => {
   if (res.status && res.data && res.data.children.length) {
     fileData = res.data.children[0];
-    description.value = `edit ${fileData.name}`
+    description.value = `edit ${fileData.name}`;
     downLoad(fileData.path);
   }
 });

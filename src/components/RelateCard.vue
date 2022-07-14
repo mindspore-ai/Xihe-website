@@ -47,7 +47,7 @@ const delRelate = ref(null);
 
 watch(
   () => props.deleteRelate,
-  (newValue, oldValue) => {
+  (newValue) => {
     delRelate.value = newValue;
   }
 );

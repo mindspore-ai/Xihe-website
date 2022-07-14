@@ -23,11 +23,11 @@ function onClick(e) {
 <template>
   <div class="digg-content">
     <div
-      @click="onClick"
       :class="[
         { 'un-digged': isDigged === false },
         { 'is-digged': isDigged === true },
       ]"
+      @click="onClick"
     >
       <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
       <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>

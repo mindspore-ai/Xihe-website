@@ -44,8 +44,8 @@ function onPoint(keys) {
       v-model="isSelect"
       class="m-2"
       :placeholder="placeholder"
-      @change="onChange"
       :deprecated="false"
+      @change="onChange"
     >
       <el-option
         v-for="(item, index) in selectData"

@@ -254,7 +254,7 @@ function tagClick(it, key) {
         item.isSelected = false;
       });
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -262,7 +262,7 @@ function tagClick(it, key) {
       renderList.value[key].forEach((item) => {
         if (item.isActive) {
           headTags.value.forEach((tag, index) => {
-            if (item.name == tag.name) {
+            if (item.name === tag.name) {
               headTags.value.splice(index, 1);
             }
           });
@@ -280,7 +280,7 @@ function tagClick(it, key) {
       headTags.value.push(it);
     } else {
       headTags.value.forEach((item, index) => {
-        if (item.name == it.name) {
+        if (item.name === it.name) {
           headTags.value.splice(index, 1);
         }
       });
@@ -314,17 +314,17 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    if (key == 'task') {
+    if (key === 'task') {
       renderList.value[key].forEach((item) => {
         item.task_list.forEach((it) => {
-          if (it.name == tag.name) {
+          if (it.name === tag.name) {
             it.isActive = false;
           }
         });
       });
     } else {
       renderList.value[key].forEach((item) => {
-        if (item.name == tag.name) {
+        if (item.name === tag.name) {
           item.isActive = false;
         }
       });
@@ -338,7 +338,7 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    if (menuitem == 'task') {
+    if (menuitem === 'task') {
       renderList.value[menuitem].forEach((mit) => {
         mit.task_list.map((it) => {
           it.isActive = false;
@@ -355,7 +355,7 @@ function deleteModelTags() {
 // 确认
 function confirmBtn() {
   dialogList.menuList.forEach((menu) => {
-    if (menu.key == 'task') {
+    if (menu.key === 'task') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         item.task_list.forEach((it) => {
@@ -370,14 +370,14 @@ function confirmBtn() {
           }
         });
       });
-    } else if (menu.key == 'tags') {
+    } else if (menu.key === 'tags') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
-        if (item.isActive == true) {
+        if (item.isActive === true) {
           queryDate[menu.key].push(item.id);
         }
       });
-    } else if (menu.key == 'licenses') {
+    } else if (menu.key === 'licenses') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {
         if (item.isActive) {
@@ -418,7 +418,7 @@ function getAllTags() {
 
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key == 'task') {
+      if (key === 'task') {
         renderList.value[key].forEach((item) => {
           item.task_list.forEach((it) => {
             it.isActive = false;
@@ -523,10 +523,10 @@ watch(
     return [route.params.name, router.currentRoute];
   },
   () => {
-    if (route.name == 'projectCard') {
+    if (route.name === 'projectCard') {
       getDetailData();
     } else if (
-      router.currentRoute.value.path ==
+      router.currentRoute.value.path ===
       `/projects/${userInfoStore.userName}/${forkForm.storeName}`
     ) {
       getDetailData();

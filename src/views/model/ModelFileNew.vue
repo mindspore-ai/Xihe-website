@@ -62,9 +62,8 @@ async function upLoadObs(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let path = `xihe-obj/models/${
-        route.params.user
-      }/${currentContents}${query.fileName.trim()}`;
+      let path = `xihe-obj/models/${route.params.user
+        }/${currentContents}${query.fileName.trim()}`;
       let blob = new Blob([query.textValue], {
         type: 'text/plain;charset=utf-8',
       });
@@ -147,15 +146,13 @@ function pathClick() {
             <template #reference>
               <o-icon><icon-poppver></icon-poppver></o-icon>
             </template>
-            <template #>
-              <div>- 输入/可以将文件创建到新文件夹下</div>
-              <div>
-                - 文件名称不能以(<span class="remind">/</span
-                >)开头或结尾，且不能包含以下字符<span class="remind"
-                  >>&nbsp;:&nbsp;:&nbsp;*?'&lt;&gt;|</span
-                >
-              </div>
-            </template>
+            <div>- 输入/可以将文件创建到新文件夹下</div>
+            <div>
+              - 文件名称不能以(<span class="remind">/</span
+              >)开头或结尾，且不能包含以下字符<span class="remind"
+                >>&nbsp;:&nbsp;:&nbsp;*?'&lt;&gt;|</span
+              >
+            </div>
           </el-popover>
         </el-form-item>
         <el-form-item class="fill">

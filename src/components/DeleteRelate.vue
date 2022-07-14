@@ -35,7 +35,7 @@ function cancelClick() {
 
 watch(
   () => prop.delRelate,
-  (newValue, oldValue) => {
+  (newValue) => {
     isShow.value = newValue;
   }
 );

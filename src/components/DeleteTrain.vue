@@ -34,13 +34,13 @@ function cancelClick() {
 
 watch(
   () => prop.showDel,
-  (oldValue, newValue) => {
+  (oldValue) => {
     isShow.value = oldValue;
   }
 );
 watch(
   () => prop.listId,
-  (newValue, oldValue) => {
+  (newValue) => {
     id.value = newValue;
   }
 );
@@ -122,5 +122,4 @@ watch(
     </o-dialog> -->
   <!-- </div> -->
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

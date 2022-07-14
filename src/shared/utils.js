@@ -55,7 +55,7 @@ export const strSize = (str, charset) => {
 // 实现HTML标签转义
 export const escapeHtml = function escapeHtml(html) {
   let temp = document.createElement('div');
-  temp.textContent != null
+  temp.textContent !== null
     ? (temp.textContent = html)
     : (temp.innerText = html);
   let output = temp.innerHTML;

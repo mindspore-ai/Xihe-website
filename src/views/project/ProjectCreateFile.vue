@@ -180,8 +180,26 @@ function goSelectFile() {
     },
   });
 }
+
+function verify(node, code, message) {
+  return new Promise((resolve, reject) => {
+    node.validateField(code, (valid) => {
+      if (!valid) {
+        ElMessage({
+          type: 'error',
+          message,
+          duration: 4000,
+          center: true,
+        });
+        reject('未通过');
+      } else {
+        resolve();
+      }
+    });
+  });
+}
 // 确认创建训练实例
-function confirmCreating(formEl) {
+async function confirmCreating(formEl) {
   // 如果表单为空，返回
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -240,10 +258,47 @@ function confirmCreating(formEl) {
         }
       });
     } else {
-      // console.error('error submit!');
       return false;
     }
   });
+  // 判断训练名称是否校验通过，如果没通过弹出提示框
+  // formEl.validateField('job_name', (valid) => {
+  //   if (!valid) {
+  //     ElMessage({
+  //       type: 'error',
+  //       message: '请输入一个1-8位且只包含大小写字母、数字、下划线的名称',
+  //       duration: 4000,
+  //       center: true,
+  //     });
+  //   }
+  // });
+  // // 判断代码目录是否校验通过，如果没通过弹出提示框
+  // formEl.validateField('code_dir', (valid) => {
+  //   if (!valid) {
+  //     ElMessage({
+  //       type: 'error',
+  //       message: '代码目录为文件夹格式，末尾必须带/，请重新输入',
+  //       duration: 4000,
+  //       center: true,
+  //     });
+  //   }
+  // });
+  await verify(
+    formEl,
+    'job_name',
+    '训练名称为1-8位且只包含大小写字母、数字、下划线格式,请重新输入'
+  );
+  await verify(
+    formEl,
+    'code_dir',
+    '代码目录为文件夹格式，末尾必须带/，请重新输入'
+  );
+  await verify(
+    formEl,
+    'boot_file',
+    '启动文件名只能包含数字，字母，下划线，且为.py文件,请重新输入'
+  );
+  await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
 }
 
 // 校验输入框里的内容是否为json格式
@@ -476,6 +531,18 @@ const rules = reactive({
                     </template>
                     <div>
                       输入数据配置：在您的算法代码中需要解析的输入参数，比如预训练模型的路径，训练数据集的路径等。
+                      <br />格式为：
+                      <div style="color: red">
+                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"input_url":
+                        &lt;解析参数对应的值1&gt;, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name":&lt;解析参数名称1&gt;
+                        <br />&nbsp;&nbsp;},{
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"input_url":
+                        &lt;解析参数对应的值2&gt;,
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                        &lt;解析参数名称2&gt; <br />}, ... ]
+                      </div>
+                      注意{}末尾不能有逗号
                     </div>
                   </el-popover>
                 </div>
@@ -586,6 +653,18 @@ const rules = reactive({
                     </template>
                     <div>
                       输出数据配置：在您的算法代码中需要解析的输出参数，比如保存预训练模型的路径等。
+                      <br />格式为：
+                      <div style="color: red">
+                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"output_dir":
+                        &lt;解析参数对应的值1&gt;, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"name":&lt;解析参数名称1&gt;
+                        <br />&nbsp;&nbsp;},{
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"output_dir":
+                        &lt;解析参数对应的值2&gt;,
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                        &lt;解析参数名称2&gt; <br />}, ... ]
+                      </div>
+                      注意{}末尾不能有逗号
                     </div>
                   </el-popover>
                 </div>

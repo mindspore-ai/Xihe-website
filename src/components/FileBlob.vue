@@ -313,7 +313,7 @@ watch(
       }
     }
     .blank {
-      padding: 16px 40px;
+      padding: 16px 40px 40px;
       overflow: auto;
       min-height: calc(100vh - 400px);
       background-color: #ffffff;

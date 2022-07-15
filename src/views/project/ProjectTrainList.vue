@@ -15,7 +15,7 @@ import IconInstance from '~icons/app/train-instance';
 import warningImg from '@/assets/icons/warning.png';
 
 import DeleteTrain from '@/components/DeleteTrain.vue';
-import StopTrain from '@/components/StopTrain.vue';
+// import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
 import { useRouter, useRoute } from 'vue-router';

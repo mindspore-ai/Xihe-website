@@ -124,7 +124,6 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       repoContent.value = res.data.data.db_path;
       form.desc = res.data.data.log.content;
@@ -621,6 +620,14 @@ watch(
     .train-log-desc {
       width: 100%;
       height: 750px;
+      position: relative;
+      img {
+        width: 60px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
       .el-textarea {
         width: 100% !important;
         height: 100%;

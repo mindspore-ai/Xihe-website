@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
@@ -14,7 +14,12 @@ import { useUserInfoStore } from '@/stores';
 const userInfoStore = useUserInfoStore();
 const route = useRoute();
 const router = useRouter();
-let boo = userInfoStore.userName === route.query.userName;
+// let bool = userInfoStore.userName === route.query.userName;
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+
 const projectCount = ref(0);
 const projectData = ref([]);
 
@@ -60,6 +65,7 @@ function getUserProject() {
       projectData.value = res.results.data;
     } else {
       projectData.value = [];
+      projectCount.value = res.count;
     }
   });
 }
@@ -74,6 +80,11 @@ function setNewClick() {
     path: `/new/projects`,
   });
 }
+watch(props, () => {
+  query.search = props.queryData.keyWord;
+  query.order = props.queryData.order;
+  query.page = 1;
+});
 watch(
   query,
   () => {
@@ -84,15 +95,10 @@ watch(
     immediate: true,
   }
 );
-watch(props, () => {
-  query.search = props.queryData.keyWord;
-  query.order = props.queryData.order;
-  query.page = 1;
-});
 </script>
 <template>
   <div>
-    <div v-if="projectCount > 0" class="project-card">
+    <div v-if="projectCount" class="project-card">
       <div class="card-list">
         <div
           v-for="item in projectData"
@@ -137,13 +143,16 @@ watch(props, () => {
         ></el-pagination>
       </div>
     </div>
-    <div v-else-if="projectCount === 0 && !boo" class="empty-status">
+
+    <!-- <div v-else-if="projectCount === 0 && !bool" class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />
       <p @click="setNewClick">该用户暂未创建任何项目</p>
-    </div>
+    </div> -->
+
     <div v-else class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />
-      <p @click="setNewClick">暂未创建项目，点击创建项目</p>
+      <p v-if="isAuthentic" @click="setNewClick">无匹配项目</p>
+      <p v-else>该用户暂未创建任何模型</p>
     </div>
   </div>
 </template>
@@ -200,7 +209,7 @@ watch(props, () => {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 100;
+        z-index: 5;
       }
       .dig {
         position: absolute;

@@ -557,6 +557,7 @@ onUnmounted(() => {
       :title="i18n.addDataset"
       width="30%"
       destroy-on-close
+      :show-close="false"
       center
     >
       <el-form>
@@ -582,6 +583,7 @@ onUnmounted(() => {
       :title="i18n.addModel"
       width="30%"
       destroy-on-close
+      :show-close="false"
       center
     >
       <el-form>

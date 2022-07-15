@@ -92,7 +92,7 @@ function create(formEl) {
         <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
           >个人主页</el-breadcrumb-item
         >
-        <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
+        <el-breadcrumb-item class="set-new">新建模型</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)">{{
         i18n.homePage

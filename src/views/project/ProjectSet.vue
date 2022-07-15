@@ -63,8 +63,8 @@ const i18n = {
     title: '删除项目',
     describe:
       '此操作将会删除与项目相关的所有资源，且此操作不可逆，请谨慎确认是否要删除此项目。',
-    describe1:
-      '此操作将会删除与项目相关的所有资源，且此操作不可逆，请谨慎确认是否要删除此项目！',
+    describe1: '此删除不可逆，确认删除吗？',
+    describe2: '删除成功，你可再次创建新项目，点击确定回到个人主页。',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
@@ -206,7 +206,7 @@ function confirmPrivate() {
 //     }
 //   });
 // }
-
+// 删除成功，你可再次创建新模型，点击确定回到个人主页。
 function confirmDel() {
   deleteProject(detailData.id).then((res) => {
     if (res.status === 200) {
@@ -351,7 +351,11 @@ function toggleDelDlg(flag) {
           i18n.delete.btnText
         }}</o-button>
       </div>
-      <o-dialog :show="showDel" @close-click="toggleDelDlg(false)">
+      <o-dialog
+        :show="showDel"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
         <template #head>
           <div
             class="dlg-title"
@@ -391,7 +395,11 @@ function toggleDelDlg(flag) {
           </div>
         </template>
       </o-dialog>
-      <o-dialog :show="showConfirm" @close-click="toggleDelDlg(false)">
+      <o-dialog
+        :show="showConfirm"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
         <template #head>
           <div
             class="dlg-title"

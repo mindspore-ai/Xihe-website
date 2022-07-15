@@ -19,6 +19,7 @@ const isAuthentic = computed(() => {
 
 const i18n = {
   emptyText: '暂未创建模型，点击创建模型立即创建',
+  searchEmpty: '无匹配模型',
   visitorEmpty: '该用户暂未创建任何模型',
 };
 
@@ -117,8 +118,13 @@ watch(props, () => {
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />
-    <p v-if="isAuthentic" class="empty-text">{{ i18n.emptyText }}</p>
-    <p v-else class="empty-text">{{ i18n.visitorEmpty }}</p>
+    <p v-if="isAuthentic && !queryData.keyWord" class="empty-text">
+      {{ i18n.emptyText }}
+    </p>
+    <p v-else-if="!isAuthentic && !queryData.keyWord" class="empty-text">
+      {{ i18n.visitorEmpty }}
+    </p>
+    <p v-else class="empty-text">{{ i18n.searchEmpty }}</p>
   </div>
 </template>
 

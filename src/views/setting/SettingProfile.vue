@@ -61,7 +61,7 @@ function toggleDelDlg(flag) {
 function saveData() {
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    nickname: nickName.value ? nickName.value.trim() : userInfoStore.userName,
+    nickname: nickName.value || userInfoStore.avatar,
     description: userDescription.value || userInfoStore.description,
     avatar: checkedAvatar.value,
   }).then((res) => {
@@ -230,6 +230,7 @@ function handleCurrentChange(val) {
       height: 106px;
       background: #f7f8fa;
       border: 1px solid #dfe1e8;
+      cursor: pointer;
       img {
         width: 100%;
       }

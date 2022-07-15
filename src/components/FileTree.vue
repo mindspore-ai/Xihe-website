@@ -314,11 +314,7 @@ watch(
               </o-icon>
             </div>
           </td>
-          <td>
-            <!-- <div class="tip">
-              提示: 暂不不支持空文件夾，创建文件夹后会生成空的 .keep 文件
-            </div> -->
-          </td>
+          <td></td>
           <td class="tree-head-right"></td>
         </tr>
         <template v-if="filesList.length">
@@ -449,7 +445,6 @@ watch(
   }
 }
 .tree {
-  // min-height: calc(100vh - 400px);
   &-head {
     // display: block;
     padding: 12px 24px;

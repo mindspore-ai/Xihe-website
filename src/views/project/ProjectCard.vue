@@ -59,7 +59,7 @@ const i18n = {
   editor: '编辑',
   uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
   emptyVisited: '无项目卡片',
-  emptystart: '无启动项目',
+  emptystart: '暂未启动项目',
 };
 
 const isShow = ref(false);
@@ -343,42 +343,50 @@ findFile(
     canStart.value = true;
   }
 });
+
 //判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
+const hasPrefix = computed(() => {
+  return msg.value === '启动中' ? true : false;
+});
 const clientSrc = ref('');
 let timer = null;
 // 启动推理
 function start() {
-  startInference(detailData.value.id).then((res) => {
+  startInference(detailData.value.id).then(() => {
     msg.value = '启动中';
     // socket.send(JSON.stringify({ pk: detailData.value.id }));
   });
 }
+
 //停止推理
 function stop() {
-  stopInference(detailData.value.id).then((res) => {
+  stopInference(detailData.value.id).then(() => {
     socket.value.send(JSON.stringify({ pk: detailData.value.id }));
     // closeConn();
     // clearInterval(timer);
     msg.value = '';
   });
 }
-const socket = ref();
-// if (detailData.value.sdk_name === 'Gradio') {
-socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
-socket.value.onopen = function () {
-  socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-  timer = setInterval(() => {
+const socket = ref(null);
+if (detailData.value.sdk_name === 'Gradio') {
+  socket.value = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
+  socket.value.onopen = function () {
     socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-  }, 5000);
-};
-socket.value.onmessage = function (event) {
-  msg.value = JSON.parse(event.data).msg;
-  if (!!JSON.parse(event.data).data) {
-    clientSrc.value = JSON.parse(event.data).data.url;
-  }
-  if (detailData.value.is_owner) {
+    timer = setInterval(() => {
+      socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+    }, 10000);
+  };
+  const frequency = ref(0);
+  socket.value.onmessage = function (event) {
+    ++frequency.value;
+
+    msg.value = JSON.parse(event.data).msg;
+    if (!!JSON.parse(event.data).data) {
+      clientSrc.value = JSON.parse(event.data).data.url;
+    }
+    // if (detailData.value.is_owner) {
     if (
       JSON.parse(event.data).msg === '启动失败' ||
       JSON.parse(event.data).msg === '文件收集失败' ||
@@ -388,13 +396,22 @@ socket.value.onmessage = function (event) {
         type: 'error',
         message: JSON.parse(event.data).msg + '，请重新启动',
       });
-      stopInference(detailData.value.id).then((res) => {});
+      stopInference(detailData.value.id).then(() => {});
+    } else if (
+      detailData.value.status_name === '运行中' &&
+      JSON.parse(event.data).msg === '未启动' &&
+      frequency.value === 1 &&
+      !detailData.value.is_owner
+    ) {
+      start();
     }
-  }
-};
-// }
+    // }
+  };
+}
 function closeConn() {
-  socket.value.close(); // 向服务端发送断开连接的请求
+  if (socket.value) {
+    socket.value.close(); // 向服务端发送断开连接的请求
+  }
 }
 onUnmounted(() => {
   closeConn();
@@ -422,6 +439,7 @@ onUnmounted(() => {
           width="100%"
           height="100%"
           frameborder="0"
+          :style="{ height: hasPrefix ? '100%' : '800px' }"
         ></iframe>
         <o-button v-if="detailData.is_owner" status="error" @click="stop"
           >停止</o-button
@@ -438,11 +456,7 @@ onUnmounted(() => {
       </div>
       <div v-else-if="detailData.is_owner" class="markdown-body">
         <div class="markdown-file" v-html="result2"></div>
-        <o-button
-          v-if="detailData.is_owner"
-          type="primary"
-          :disabled="!canStart"
-          @click="start"
+        <o-button type="primary" :disabled="!canStart" @click="start"
           >启动</o-button
         >
       </div>
@@ -630,42 +644,9 @@ onUnmounted(() => {
   min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   .markdown-body {
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background-color: #d8d8d8;
-      background-clip: content-box;
-    }
-
-    &::-webkit-scrollbar-track {
-      border-radius: 3px;
-      box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-      background: #ffffff;
-      // background:transparent;
-    }
     iframe {
       padding-top: 64px; //内容在按钮下16px
-      &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: 3px;
-        background-color: #d8d8d8;
-        background-clip: content-box;
-      }
-
-      &::-webkit-scrollbar-track {
-        border-radius: 3px;
-        box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-        background: #ffffff;
-        // background:transparent;
-      }
+      height: 666px;
     }
     .markdown-file {
       padding-right: 40px;

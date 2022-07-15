@@ -543,6 +543,8 @@ watch(
       activeName.value = 'tree';
     } else if (route.meta.index === 1) {
       activeName.value = 'train';
+    } else if (route.meta.index === 3) {
+      activeName.value = 'settings';
     }
   }
 );

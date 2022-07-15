@@ -1,17 +1,23 @@
 <script setup>
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import { getDatasetData } from '@/api/api-dataset';
+import { useUserInfoStore } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
 
+const userInfoStore = useUserInfoStore();
 const i18n = {
   emptyText: '暂未创建数据集，点击创建数据集立即创建',
+  visitorEmpty: '该用户暂未创建任何数据集',
 };
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
 const props = defineProps({
   queryData: {
     type: Object,
@@ -102,7 +108,8 @@ watch(props, () => {
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />
-    <p class="empty-text">{{ i18n.emptyText }}</p>
+    <p v-if="isAuthentic" class="empty-text">{{ i18n.emptyText }}</p>
+    <p v-else class="empty-text">{{ i18n.visitorEmpty }}</p>
   </div>
 </template>
 

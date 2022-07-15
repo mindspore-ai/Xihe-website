@@ -1,8 +1,14 @@
 .markdown-file {
-  padding-top: 48px;
+  padding-top: 70px;
   padding-bottom: 48px;
+  li {
+    list-style: inherit;
+  }
   .hljs-keyword {
     color: #0099ff;
+  }
+  .hljs-literal {
+    color: #d88;
   }
   img:not(.emoji) {
     max-width: 100%;
@@ -124,6 +130,7 @@
     // min-height: calc(100% - 20px);
     border-radius: 3px;
     color: inherit;
+    background-color: #e9f0f8;
   }
 
   // code {
@@ -135,7 +142,7 @@
     line-height: 1.7em;
     overflow: auto;
     padding: 6px 10px;
-    border-left: 5px solid #0099ff;
+    // border-left: 5px solid #0099ff;
   }
 
   pre > code {

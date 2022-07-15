@@ -312,13 +312,14 @@ watch(
         font-size: 24px;
       }
     }
-    .blank {
-      padding: 16px 40px 40px;
+    :deep(.blank) {
+      padding: 16px 20px 40px;
       overflow: auto;
       min-height: calc(100vh - 400px);
       background-color: #ffffff;
       pre {
         height: 100%;
+        background-color: #ffffff;
       }
     }
     .big-file {

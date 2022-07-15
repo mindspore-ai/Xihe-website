@@ -704,7 +704,7 @@ onMounted(() => {
           </div>
 
           <!-- 无项目显示 -->
-          <div v-if="projectCount == 0" class="empty-status">
+          <div v-if="projectCount === 0" class="empty-status">
             <img src="@/assets/imgs/project-empty.png" alt="" />
             <p @click="setNewClick">未搜索到相关项目</p>
           </div>

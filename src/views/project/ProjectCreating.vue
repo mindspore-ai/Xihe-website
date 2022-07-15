@@ -81,6 +81,7 @@ const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
     if (valid) {
       setProject();
+      console.log(proList);
     } else {
       ElMessage({
         type: 'error',
@@ -104,9 +105,9 @@ function selectImgClick(item) {
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
   if (newList.is_private === '"Public"') {
-    newList.is_private = true;
-  } else {
     newList.is_private = false;
+  } else {
+    newList.is_private = true;
   }
   licenses.value.forEach((item) => {
     if (item.name === newList.licenses) {

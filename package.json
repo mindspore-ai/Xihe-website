@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "vite",
-    "build:dev": "vite  --mode dev",
+    "build:dev": "vite build --mode dev",
     "build": "vite build",
     "lint": "eslint \"src/**/*.{js,ts,vue,jsx,tsx}\""
   },

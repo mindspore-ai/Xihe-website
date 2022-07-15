@@ -25,6 +25,8 @@ import {
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 const userInfo = useUserInfoStore();
 
 const router = useRouter();
@@ -364,7 +366,7 @@ function stop() {
 }
 const socket = ref();
 // if (detailData.value.sdk_name === 'Gradio') {
-socket.value = new WebSocket('wss://xihe.test.osinfra.cn/wss/inference');
+socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
 socket.value.onopen = function () {
   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
   timer = setInterval(() => {

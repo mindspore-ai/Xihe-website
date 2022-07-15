@@ -27,6 +27,8 @@ import {
   rebuildTrain,
 } from '@/api/api-project';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
@@ -197,7 +199,7 @@ function goTrainLog(trainId) {
 // }wss://xihe.test.osinfra.cn/wss/...
 
 // wss://xihe.test.osinfra.cn/wss/train_task
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
+const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
   // console.log('服务器已连接');

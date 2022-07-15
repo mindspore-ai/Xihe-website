@@ -21,6 +21,8 @@ import IconWarning from '~icons/app/warning';
 
 import { ElMessage } from 'element-plus';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 const showEvaBtn = ref(true);
 const isDisabled = ref(false);
 const showAnaButton = ref(false);
@@ -167,7 +169,7 @@ function getTrainLogData() {
 }
 getTrainLogData();
 
-const socket = new WebSocket('wss://xihe.test.osinfra.cn/wss/train_task');
+const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
@@ -206,7 +208,7 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket('wss://xihe.test.osinfra.cn/wss/logvisual');
+const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
 // ws.onopen = function () {
 //   console.log('服务器已连接');
 // };

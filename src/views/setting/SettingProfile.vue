@@ -230,6 +230,7 @@ function handleCurrentChange(val) {
       height: 106px;
       background: #f7f8fa;
       border: 1px solid #dfe1e8;
+      cursor: pointer;
       img {
         width: 100%;
       }

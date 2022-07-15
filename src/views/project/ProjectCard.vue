@@ -26,7 +26,6 @@ import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
-console.log(DOMAIN);
 
 const userInfo = useUserInfoStore();
 

@@ -3,7 +3,6 @@ import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-// import IconPlus from '~icons/app/plus';
 import IconRebuild from '~icons/app/rebuild';
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
@@ -15,7 +14,7 @@ import IconInstance from '~icons/app/train-instance';
 import warningImg from '@/assets/icons/warning.png';
 
 import DeleteTrain from '@/components/DeleteTrain.vue';
-// import StopTrain from '@/components/StopTrain.vue';
+import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
 import { useRouter, useRoute } from 'vue-router';
@@ -97,6 +96,7 @@ function goSelectFile() {
     });
   }
 }
+
 function toggleDelDlg(flag) {
   if (flag === undefined) {
     tips.value = !tips.value;
@@ -191,13 +191,6 @@ function goTrainLog(trainId) {
   });
 }
 
-// 参数文件详情跳转
-// function goDateDetail(path) {
-//   router.push(
-//     `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/blob/${path}`
-//   );
-// }wss://xihe.test.osinfra.cn/wss/...
-
 // wss://xihe.test.osinfra.cn/wss/train_task
 const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
@@ -281,23 +274,23 @@ onUnmounted(() => {
       <el-table-column label="描述" width="618">
         <template #default="scope">
           <!-- 删除 -->
-          <delete-train
+          <DeleteTrain
             :list-id="listId"
             :show-del="showDel"
             @click="delClick"
-          ></delete-train>
+          />
           <!-- 终止 -->
-          <stop-train
+          <StopTrain
             :train-id="trainId"
             :show-stop="showStop"
             @click="quitClick"
-          ></stop-train>
+          />
           <!-- 重建 -->
-          <reset-train
+          <ResetTrain
             :reset-id="resetedId"
             :show-reset="showReset"
             @click="resetClick"
-          ></reset-train>
+          />
           <div class="description">
             <div class="description-content">
               {{ scope.row.description }}

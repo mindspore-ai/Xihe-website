@@ -14,6 +14,7 @@ const userInfoStore = useUserInfoStore();
 const i18n = {
   emptyText: '暂未创建数据集，点击创建数据集立即创建',
   visitorEmpty: '该用户暂未创建任何数据集',
+  searchEmpty: '无匹配数据集',
 };
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -108,8 +109,13 @@ watch(props, () => {
   </div>
   <div v-else class="empty">
     <img class="empty-img" :src="emptyImg" />
-    <p v-if="isAuthentic" class="empty-text">{{ i18n.emptyText }}</p>
-    <p v-else class="empty-text">{{ i18n.visitorEmpty }}</p>
+    <p v-if="isAuthentic && !queryData.keyWord" class="empty-text">
+      {{ i18n.emptyText }}
+    </p>
+    <p v-else-if="!isAuthentic && !queryData.keyWord" class="empty-text">
+      {{ i18n.visitorEmpty }}
+    </p>
+    <p v-else class="empty-text">{{ i18n.searchEmpty }}</p>
   </div>
 </template>
 

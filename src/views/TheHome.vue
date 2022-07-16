@@ -144,7 +144,7 @@ onUnmounted(() => {
     <!-- <div class="home-slide">2</div> -->
     <!-- <div class="home-slide">3</div> -->
     <!-- </div> -->
-    <div v-if="!loginStore.isLogined" class="home-extend">
+    <div class="home-extend">
       <div class="mouse">
         <img :src="slideImg" alt="" />
         <p>{{ i18n.mouse }}</p>
@@ -287,7 +287,7 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <footer v-if="!loginStore.isLogined" class="app-footer">
+    <footer class="app-footer">
       <app-footer></app-footer>
     </footer>
   </div>
@@ -381,7 +381,7 @@ a {
   &-extend {
     display: flex;
     justify-content: center;
-    padding: 16px;
+    padding: 0 16px;
     &-box {
       max-width: 1440px;
       width: 100%;

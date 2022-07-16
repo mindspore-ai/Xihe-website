@@ -381,7 +381,7 @@ a {
   &-extend {
     display: flex;
     justify-content: center;
-    padding: 16px;
+    padding: 0 16px;
     &-box {
       max-width: 1440px;
       width: 100%;

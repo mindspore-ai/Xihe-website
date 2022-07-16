@@ -64,7 +64,12 @@ const i18n = {
   relatedItem: '相关模型',
   addModel: '添加相关模型',
   editor: '编辑',
-  uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
+  uploadReadMe: [
+    '当前无训练文件，点击',
+    '新建README.md文件',
+    '或',
+    '上传README.md文件',
+  ],
   emptyVisited: '无训练内容',
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
@@ -633,8 +638,8 @@ function toggleDelDlg(flag) {
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
-    display: flex;
-    flex-direction: row-reverse;
+    // display: flex;
+    // flex-direction: row-reverse;
     position: relative;
     .createtrain-btn {
       // width: 120px;
@@ -660,6 +665,7 @@ function toggleDelDlg(flag) {
       align-items: center;
       justify-content: center;
       font-size: 14px;
+      max-height: 700px;
       .instance-box {
         width: 100%;
         // min-height: calc(100vh - 450px);
@@ -677,6 +683,7 @@ function toggleDelDlg(flag) {
         }
       }
       .upload-readme-img {
+        margin-top: 205px;
         .o-icon {
           display: block;
         }

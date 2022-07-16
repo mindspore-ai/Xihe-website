@@ -47,18 +47,24 @@ const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-      message: '暂不支持中文字符，且长度需大于3个字符',
+      pattern: /^[^\u4e00-\u9fa5]{3,64}$/g,
+      message: '暂不支持中文字符，且长度为3-64个字符',
       trigger: 'blur',
     },
     {
-      pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-      message: '格式不正确',
+      // 不能含有:*?\<>|等特殊字符
+      pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
+      message: '不能含有:/\*?<>|等特殊字符',
       trigger: 'blur',
     },
     {
       pattern: /^[^.].*[^.]$/,
-      message: '格式不正确',
+      message: '不能以.开头或结尾',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^(?!.*(-)\1+).*$/,
+      message: '不能连续两个及以上中划线',
       trigger: 'blur',
     },
   ],
@@ -128,7 +134,7 @@ function setProject() {
     } else if (
       res.data.non_field_errors &&
       res.data.non_field_errors[0] ===
-        '字段 name, owner_id, owner_type 必须能构成唯一集合。'
+      '字段 name, owner_id, owner_type 必须能构成唯一集合。'
     ) {
       ElMessage({
         type: 'error',
@@ -153,7 +159,7 @@ getModelTags().then((res) => {
   proList.licenses = licenses.value[0].name;
   proList.is_private = 'Public';
 });
-onMounted(() => {});
+onMounted(() => { });
 </script>
 
 <template>
@@ -348,7 +354,7 @@ onMounted(() => {});
         </div>
         <div class="obuton">
           <!-- <el-form-item> -->
-          <o-button style="margin-top: 22px" type="primary" @click="submitClick"
+          <o-button style="margin-top: 48px" type="primary" @click="submitClick"
             >保存</o-button
           >
           <!-- </el-form-item> -->
@@ -404,7 +410,7 @@ onMounted(() => {});
   background: #ffffff;
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
-  padding-bottom: 40px;
+  padding-bottom: 48px;
   height: calc(100vh - 580px);
 
   .el-form {
@@ -507,6 +513,7 @@ onMounted(() => {});
     }
     .view {
       display: flex;
+      margin-bottom: 0px;
       :deep .el-form-item__label {
         height: 128px !important;
         padding-top: 6px;

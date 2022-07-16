@@ -126,6 +126,7 @@ async function confirmRename(formEl) {
                   name: query.name,
                 },
               });
+              routerParams.name = query.name;
             });
           } else {
             ElMessage({
@@ -223,19 +224,25 @@ function toggleDelDlg(flag) {
             class="item"
             prop="name"
             :rules="[
+              { required: true, message: '必填项', trigger: 'blur' },
               {
-                pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-                message: '暂不支持中文字符，且长度需大于3个字符',
+                pattern: /^[^\u4e00-\u9fa5]{3,64}$/g,
+                message: '暂不支持中文字符，且长度为3-64个字符',
                 trigger: 'blur',
               },
               {
-                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-                message: '格式不正确',
+                pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
+                message: '不能含有:/\*?<>|等特殊字符',
                 trigger: 'blur',
               },
               {
-                pattern: /^[^.]*[^.]$/,
-                message: '格式不正确',
+                pattern: /^[^.].*[^.]$/,
+                message: '不能以.开头或结尾',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^(?!.*(-)\1+).*$/,
+                message: '不能连续两个及以上中划线',
                 trigger: 'blur',
               },
             ]"
@@ -254,21 +261,19 @@ function toggleDelDlg(flag) {
               <template #reference>
                 <o-icon><icon-poppver></icon-poppver></o-icon>
               </template>
-              <template #>
-                <div>- 仓库名目前只支持英文</div>
-                <div>
-                  - 仓库名名称不能以英文句号(<span class="remind">.</span
-                  >)开头或结尾，且不能包含以下字符<span class="remind"
-                    >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
-                  >
-                </div>
-                <div>
-                  -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-                    class="remind"
-                    >不能超过1000字符</span
-                  >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
-                </div>
-              </template>
+              <div>- 仓库名目前只支持英文</div>
+              <div>
+                - 仓库名名称不能以英文句号(<span class="remind">.</span
+                >)开头或结尾，且不能包含以下字符<span class="remind"
+                  >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                >
+              </div>
+              <div>
+                -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
+                  class="remind"
+                  >不能超过1000字符</span
+                >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
+              </div>
             </el-popover>
           </el-form-item>
         </el-form>

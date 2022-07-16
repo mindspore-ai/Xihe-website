@@ -52,7 +52,7 @@ function confirmCreating() {
   //   return;
   // }
   createTrainProject(params, route.query.id).then((res) => {
-    console.log(res);
+    // console.log(res);
     if (res.status === 200) {
       ElMessage({
         type: 'success',

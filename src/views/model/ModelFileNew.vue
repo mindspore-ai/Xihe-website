@@ -62,8 +62,9 @@ async function upLoadObs(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let path = `xihe-obj/models/${route.params.user
-        }/${currentContents}${query.fileName.trim()}`;
+      let path = `xihe-obj/models/${
+        route.params.user
+      }/${currentContents}${query.fileName.trim()}`;
       let blob = new Blob([query.textValue], {
         type: 'text/plain;charset=utf-8',
       });

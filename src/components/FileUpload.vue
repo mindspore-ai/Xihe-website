@@ -82,8 +82,10 @@ const fileList = ref([]);
 
 function onChange() {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+  description.value = `upload ${fileList.value[0].name}`;
 }
 function beforeUpload(rawFile) {
+  console.log(rawFile);
   if (rawFile.size / 1024 / 1024 / 1024 > 5) {
     ElMessage.warning('文件过大，文件不得超过5GB，请重新选择文件。');
     return false;

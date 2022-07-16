@@ -19,6 +19,7 @@ import {
   addModel,
   modifyModelAdd,
   startInference,
+  startInference2,
   stopInference,
   getGuide,
 } from '@/api/api-project';
@@ -340,14 +341,6 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
-//判断是否有app.py
-findFile(
-  `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
-).then((res) => {
-  if (res.status === 200) {
-    canStart.value = true;
-  }
-});
 
 //判断显示哪一个页面
 const canStart = ref(false);
@@ -359,8 +352,16 @@ const clientSrc = ref('');
 let timer = null;
 // 启动推理
 function start() {
-  startInference(detailData.value.id).then(() => {
-    msg.value = '启动中';
+  startInference(detailData.value.id).then((res) => {
+    console.log(res);
+    if (res.data.status === 200) msg.value = '启动中';
+    // socket.send(JSON.stringify({ pk: detailData.value.id }));
+  });
+}
+function start2() {
+  startInference2(detailData.value.id).then((res) => {
+    console.log(res);
+    if (res.data.status === 200) msg.value = '启动中';
     // socket.send(JSON.stringify({ pk: detailData.value.id }));
   });
 }
@@ -375,44 +376,70 @@ function stop() {
   });
 }
 const socket = ref(null);
-if (detailData.value.sdk_name === 'Gradio') {
-  socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
-  socket.value.onopen = function () {
-    socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-    timer = setInterval(() => {
-      socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-    }, 10000);
-  };
-  const frequency = ref(0);
-  socket.value.onmessage = function (event) {
-    ++frequency.value;
 
-    msg.value = JSON.parse(event.data).msg;
-    if (!!JSON.parse(event.data).data) {
-      clientSrc.value = JSON.parse(event.data).data.url;
+//判断是否有app.py
+
+findFile(
+  `xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`
+).then((res) => {
+  if (res.status === 200) {
+    canStart.value = true;
+
+    if (detailData.value.sdk_name === 'Gradio' && canStart.value) {
+      socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
+      if (detailData.value.is_owner) {
+        socket.value.onopen = function () {
+          socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+          timer = setInterval(() => {
+            socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+          }, 10000);
+        };
+      } else {
+        socket.value.onopen = function () {
+          socket.value.send(
+            JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+          );
+          timer = setInterval(() => {
+            socket.value.send(
+              JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+            );
+          }, 10000);
+        };
+      }
+
+      const frequency = ref(0);
+      socket.value.onmessage = function (event) {
+        ++frequency.value;
+
+        msg.value = JSON.parse(event.data).msg;
+        if (!!JSON.parse(event.data).data) {
+          clientSrc.value = JSON.parse(event.data).data.url;
+        }
+        // if (detailData.value.is_owner) {
+        if (
+          JSON.parse(event.data).msg === '启动失败' ||
+          JSON.parse(event.data).msg === '文件收集失败' ||
+          JSON.parse(event.data).msg === '任务已销毁'
+        ) {
+          ElMessage({
+            type: 'error',
+            message: JSON.parse(event.data).msg + '，请重新启动',
+          });
+          stopInference(detailData.value.id).then(() => {});
+        } else if (
+          detailData.value.status_name === '可运行' &&
+          JSON.parse(event.data).msg === '未启动' &&
+          frequency.value === 1 &&
+          !detailData.value.is_owner
+        ) {
+          start();
+        }
+        // }
+      };
     }
-    // if (detailData.value.is_owner) {
-    if (
-      JSON.parse(event.data).msg === '启动失败' ||
-      JSON.parse(event.data).msg === '文件收集失败' ||
-      JSON.parse(event.data).msg === '任务已销毁'
-    ) {
-      ElMessage({
-        type: 'error',
-        message: JSON.parse(event.data).msg + '，请重新启动',
-      });
-      stopInference(detailData.value.id).then(() => {});
-    } else if (
-      detailData.value.status_name === '运行中' &&
-      JSON.parse(event.data).msg === '未启动' &&
-      frequency.value === 1 &&
-      !detailData.value.is_owner
-    ) {
-      start();
-    }
-    // }
-  };
-}
+  }
+});
+
 function closeConn() {
   if (socket.value) {
     socket.value.close(); // 向服务端发送断开连接的请求
@@ -461,7 +488,7 @@ onUnmounted(() => {
       </div>
       <div v-else-if="detailData.is_owner" class="markdown-body">
         <div class="markdown-file" v-html="result2"></div>
-        <o-button type="primary" :disabled="!canStart" @click="start"
+        <o-button type="primary" :disabled="!canStart" @click="start2"
           >启动</o-button
         >
       </div>

@@ -520,7 +520,9 @@ a {
       &:hover {
         cursor: pointer;
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-        color: #000000 !important;
+        .o-icon {
+          transform: translate(3px);
+        }
       }
     }
   }

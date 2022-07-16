@@ -120,7 +120,7 @@ function getDetailData() {
           licenses_list,
           // libraries_list,
           task_list,
-          // tags_list,
+          tags_list,
           // device_target_list,
           files_list,
         } = detailData.value;
@@ -129,7 +129,7 @@ function getDetailData() {
         modelTags.value = [
           ...licenses_list,
           ...task_list,
-          // ...tags_list,
+          ...tags_list,
           // ...libraries_list,
           // ...device_target_list,
           ...files_list,
@@ -294,6 +294,13 @@ function confirmBtn() {
         });
       });
       // TODO: 修改, 情况重复;
+    } else if (menu.key === 'tags') {
+      queryDate[menu.key] = [];
+      renderList.value[menu.key].forEach((item) => {
+        if (item.isActive === true) {
+          queryDate[menu.key].push(item.id);
+        }
+      });
     } else if (menu.key === 'licenses') {
       queryDate[menu.key] = [];
       renderList.value[menu.key].forEach((item) => {

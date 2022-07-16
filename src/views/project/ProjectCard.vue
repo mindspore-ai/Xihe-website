@@ -57,7 +57,12 @@ const i18n = {
   relatedItem: '相关模型',
   addModel: '添加相关模型',
   editor: '编辑',
-  uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
+  uploadReadMe: [
+    '当前无项目文件，点击',
+    '新建README.md文件',
+    '或',
+    '上传README.md文件',
+  ],
   emptyVisited: '无项目卡片',
   emptystart: '暂未启动项目',
 };

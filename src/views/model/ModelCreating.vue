@@ -131,18 +131,23 @@ function create(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-            message: '暂不支持中文字符，且长度需大于3个字符',
+            pattern: /^[^\u4e00-\u9fa5]{3,64}$/g,
+            message: '暂不支持中文字符，且长度为3-64个字符',
             trigger: 'blur',
           },
           {
-            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-            message: '格式不正确',
+            pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
+            message: '不能含有:/\*?<>|等特殊字符',
             trigger: 'blur',
           },
           {
             pattern: /^[^.].*[^.]$/,
-            message: '格式不正确',
+            message: '不能以.开头或结尾',
+            trigger: 'blur',
+          },
+          {
+            pattern: /^(?!.*(-)\1+).*$/,
+            message: '不能连续两个及以上中划线',
             trigger: 'blur',
           },
         ]"
@@ -290,7 +295,7 @@ function create(formEl) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 67px;
+    padding-bottom: 48px;
     min-height: calc(100vh - 580px);
 
     .des {
@@ -345,23 +350,27 @@ function create(formEl) {
       }
       .radio {
         width: 400px;
-        height: 96px;
+        // height: 96px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        position: relative;
-
+        // position: relative;
+        .el-radio.el-radio--large {
+          height: 32px;
+        }
         .explain1 {
           color: #999999;
           font-size: 14px;
-          position: absolute;
-          top: 27px;
+          padding-left: 22px;
+          // position: absolute;
+          // top: 27px;
         }
         .explain2 {
           color: #999999;
           font-size: 14px;
-          position: absolute;
-          top: 79px;
+          padding-left: 22px;
+          // position: absolute;
+          // top: 79px;
         }
       }
     }
@@ -416,7 +425,7 @@ function create(formEl) {
     }
   }
   .o-button {
-    margin-top: 55px;
+    margin-top: 48px;
   }
 }
 </style>

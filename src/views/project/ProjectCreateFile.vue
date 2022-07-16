@@ -261,28 +261,6 @@ async function confirmCreating(formEl) {
       return false;
     }
   });
-  // 判断训练名称是否校验通过，如果没通过弹出提示框
-  // formEl.validateField('job_name', (valid) => {
-  //   if (!valid) {
-  //     ElMessage({
-  //       type: 'error',
-  //       message: '请输入一个1-8位且只包含大小写字母、数字、下划线的名称',
-  //       duration: 4000,
-  //       center: true,
-  //     });
-  //   }
-  // });
-  // // 判断代码目录是否校验通过，如果没通过弹出提示框
-  // formEl.validateField('code_dir', (valid) => {
-  //   if (!valid) {
-  //     ElMessage({
-  //       type: 'error',
-  //       message: '代码目录为文件夹格式，末尾必须带/，请重新输入',
-  //       duration: 4000,
-  //       center: true,
-  //     });
-  //   }
-  // });
   await verify(
     formEl,
     'job_name',
@@ -412,6 +390,12 @@ const rules = reactive({
   //   },
   // ],
 });
+// let intText = [{ input_url: '' }, { name: '' }];
+// function inputFocus() {
+//   // 输入框自动嵌入intText内容
+//   const inputEl = document.getElementById('inputs');
+//   inputEl.value = JSON.stringify(intText);
+// }
 </script>
 <template>
   <div class="createfile">
@@ -548,9 +532,11 @@ const rules = reactive({
                 </div>
                 <el-form-item prop="inputs">
                   <el-input
+                    id="inputs"
                     v-model="form.inputs"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
+                    @focus="inputFocus"
                   />
                 </el-form-item>
               </div>

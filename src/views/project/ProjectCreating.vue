@@ -87,7 +87,7 @@ const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
     if (valid) {
       setProject();
-      console.log(proList);
+      // console.log(proList);
     } else {
       ElMessage({
         type: 'error',
@@ -110,7 +110,8 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  if (newList.is_private === '"Public"') {
+  // console.log('1111', newList);
+  if (newList.is_private === 'Public') {
     newList.is_private = false;
   } else {
     newList.is_private = true;
@@ -134,7 +135,7 @@ function setProject() {
     } else if (
       res.data.non_field_errors &&
       res.data.non_field_errors[0] ===
-      '字段 name, owner_id, owner_type 必须能构成唯一集合。'
+        '字段 name, owner_id, owner_type 必须能构成唯一集合。'
     ) {
       ElMessage({
         type: 'error',
@@ -159,7 +160,7 @@ getModelTags().then((res) => {
   proList.licenses = licenses.value[0].name;
   proList.is_private = 'Public';
 });
-onMounted(() => { });
+onMounted(() => {});
 </script>
 
 <template>

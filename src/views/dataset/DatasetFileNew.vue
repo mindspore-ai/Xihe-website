@@ -148,21 +148,19 @@ function pathClick() {
             <template #reference>
               <o-icon><icon-poppver></icon-poppver></o-icon>
             </template>
-            <template #>
-              <div>- 输入/可以将文件创建到新文件夹下</div>
-              <div>
-                - 文件名称不能以(<span class="remind">/</span
-                >)开头或结尾，且不能包含以下字符<span class="remind"
-                  >>&nbsp;:&nbsp;:&nbsp;*?'&lt;&gt;|</span
-                >
-              </div>
-              <!-- <div>
+            <div>- 输入/可以将文件创建到新文件夹下</div>
+            <div>
+              - 文件名称不能以(<span class="remind">/</span
+              >)开头或结尾，且不能包含以下字符<span class="remind"
+                >>&nbsp;:&nbsp;:&nbsp;*?'&lt;&gt;|</span
+              >
+            </div>
+            <!-- <div>
                 -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
                   class="remind"
                   >不能超过1000字符</span
                 >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
               </div> -->
-            </template>
           </el-popover>
           <!-- <span class="name-input-text">{{ i18n.modelUpload.inputText }}</span> -->
         </el-form-item>

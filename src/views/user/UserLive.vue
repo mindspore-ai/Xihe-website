@@ -88,8 +88,8 @@ getCount();
 </script>
 
 <template>
-  <div>
-    <div class="user-live">
+  <div class="user-live">
+    <div class="user-live-wrap">
       <div v-if="liveData.length" class="card-list">
         <div
           v-for="item in liveData.slice(
@@ -158,63 +158,65 @@ getCount();
 
 <style lang="scss" scoped>
 .user-live {
-  height: 100%;
-  .card-list {
-    width: 100%;
-    &-item {
-      & + .card-list-item {
-        margin-top: 30px;
-      }
-
+  .user-live-wrap {
+    height: 100%;
+    .card-list {
       width: 100%;
-      &-title {
-        font-size: 18px;
-        color: #000;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        img {
-          width: 24px;
-          margin-right: 8px;
+      &-item {
+        & + .card-list-item {
+          margin-top: 30px;
         }
-        .item-title-time {
-          font-size: 16px;
-          line-height: 18px;
-          color: #555;
-          margin-left: 24px;
+
+        width: 100%;
+        &-title {
+          font-size: 18px;
+          color: #000;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          img {
+            width: 24px;
+            margin-right: 8px;
+          }
+          .item-title-time {
+            font-size: 16px;
+            line-height: 18px;
+            color: #555;
+            margin-left: 24px;
+          }
         }
-      }
-      .card-list-item-content2 {
-        // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-        &:hover {
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        .card-list-item-content2 {
+          // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          &:hover {
+            box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          }
         }
       }
     }
+    .empty {
+      position: absolute;
+      top: calc(50% + 48px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      .empty-img {
+        width: 280px;
+        height: 206px;
+      }
+      .empty-text {
+        margin-top: 24px;
+        font-size: 18px;
+        color: #555555ff;
+      }
+    }
   }
-  .empty {
-    position: absolute;
-    top: calc(50% + 48px);
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .pagination {
+    margin-top: 40px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    .empty-img {
-      width: 280px;
-      height: 206px;
-    }
-    .empty-text {
-      margin-top: 24px;
-      font-size: 18px;
-      color: #555555ff;
-    }
   }
-}
-.pagination {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
 }
 </style>

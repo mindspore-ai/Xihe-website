@@ -127,7 +127,7 @@ function toTop() {
           >个人主页</el-breadcrumb-item
         >
         <el-breadcrumb-item
-          >/ {{ isAuthentic ? '我' : userInfo.userName }}的粉丝({{
+          >/ {{ isAuthentic ? '我' : userInfo.userName }}的粉丝 ({{
             userInfo.fansCount
           }})</el-breadcrumb-item
         >

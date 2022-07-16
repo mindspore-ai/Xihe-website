@@ -285,6 +285,18 @@ export function startInference(params) {
       return e;
     });
 }
+export function startInference2(params) {
+  // const { projectId } = params;
+  const url = `/api/projects/${params}/inference/infertask/`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
 
 /**
  * 终止项目推理

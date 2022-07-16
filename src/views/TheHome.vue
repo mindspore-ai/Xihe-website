@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 // import MouseWheel from '@better-scroll/mouse-wheel';
 
 import OButton from '@/components/OButton.vue';
+import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import homePageImg from '@/assets/imgs/home-page.png';
@@ -17,7 +18,7 @@ import models2 from '@/assets/imgs/models2.png';
 import models3 from '@/assets/imgs/models3.png';
 import models4 from '@/assets/imgs/models4.png';
 import datasetPageImg from '@/assets/imgs/dataset-page.png';
-import slideImg from '@/assets/imgs/dataset-page.png';
+import slideImg from '@/assets/imgs/slide.png';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
@@ -30,10 +31,11 @@ const hoemVideo =
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 
 const homeIns = ref(null);
-const homeTitle = '羲和AI开发平台';
-const homeDesc = 'You think MindSpore is hard ? Try this !';
+const homeTitle = '昇思羲和AI开发平台';
+const homeDesc = 'The Best AI Platform For MindSpore';
 const quickStartLabel = '快速开始';
 const i18n = {
+  mouse: '滑动鼠标探索更多',
   home: {
     title: '个人主页',
     introduce: '在个人主页开启探索、创建、收藏羲和项目、模型、数据集之旅；',
@@ -78,6 +80,9 @@ function handleBtnClick() {
   } else {
     router.push(`/${userInfo.userName}`);
   }
+}
+function handleBtnClick2() {
+  router.push('https://xihe.mindspore.cn/datasets');
 }
 
 onMounted(() => {
@@ -138,6 +143,10 @@ onUnmounted(() => {
     <!-- <div class="home-slide">3</div> -->
     <!-- </div> -->
     <div v-if="!loginStore.isLogined" class="home-extend">
+      <div class="mouse">
+        <img :src="slideImg" alt="" />
+        <p>{{ i18n.mouse }}</p>
+      </div>
       <div class="home-extend-box">
         <div class="home-extend-home">
           <div class="left">
@@ -153,7 +162,10 @@ onUnmounted(() => {
           <img class="right" :src="homePageImg" alt="" />
         </div>
         <div class="home-extend-project">
-          <div class="gradio card">
+          <a
+            class="gradio card"
+            href="https://xihe.mindspore.cn/projects/wesley/lenet5_demo"
+          >
             <div class="gradio-header">
               <img :src="digitRecognition" alt="" />
             </div>
@@ -166,8 +178,11 @@ onUnmounted(() => {
             <div class="gradio-footer">
               <div class="task">Mnist</div>
             </div>
-          </div>
-          <div class="gradio card">
+          </a>
+          <a
+            class="gradio card"
+            href="https://xihe.mindspore.cn/projects/wesley/lstm_demo"
+          >
             <div class="gradio-header">
               <img :src="imageRcognition" alt="" />
             </div>
@@ -180,8 +195,11 @@ onUnmounted(() => {
             <div class="gradio-footer">
               <div class="task">CV</div>
             </div>
-          </div>
-          <div class="gradio card">
+          </a>
+          <a
+            class="gradio card"
+            href="https://xihe.mindspore.cn/projects/wesley/resnet50_demo"
+          >
             <div class="gradio-header">
               <img :src="emtionalNalysis" alt="" />
             </div>
@@ -194,23 +212,23 @@ onUnmounted(() => {
             <div class="gradio-footer">
               <div class="task">NLP</div>
             </div>
-          </div>
-          <div class="more card">
+          </a>
+          <a class="more card" href="https://xihe.mindspore.cn/projects">
             <p class="more-title">{{ i18n.project.title }}</p>
             <p class="more-introduce">{{ i18n.project.introduce }}</p>
             <p class="more-footer">
               {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
-          </div>
+          </a>
         </div>
         <div class="home-extend-model">
-          <div class="more card">
+          <a class="more card" href="https://xihe.mindspore.cn/models">
             <p class="more-title">{{ i18n.model.title }}</p>
             <p class="more-introduce">{{ i18n.model.introduce }}</p>
             <p class="more-footer">
               {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
-          </div>
+          </a>
           <div class="models card">
             <img :src="models1" alt="" />
             <p class="models-type">
@@ -257,7 +275,7 @@ onUnmounted(() => {
           <div class="right">
             <p class="home-title">{{ i18n.dataset.title }}</p>
             <p class="home-introduce">{{ i18n.dataset.introduce }}</p>
-            <OButton animation class="home-btn" @click="handleBtnClick">
+            <OButton animation class="home-btn" @click="handleBtnClick2">
               {{ i18n.dataset.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -267,12 +285,34 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+    <footer v-if="!loginStore.isLogined" class="app-footer">
+      <app-footer></app-footer>
+    </footer>
   </div>
 </template>
 
 <style lang="scss" scoped>
+a {
+  color: #000000;
+}
 .home-extend {
   background-color: #f5f6f8;
+  position: relative;
+  .mouse {
+    position: absolute;
+    top: -141px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 44px;
+    }
+    p {
+      color: #ffffff;
+      margin-top: 13px;
+    }
+  }
 }
 .home {
   position: relative;
@@ -478,6 +518,7 @@ onUnmounted(() => {
       &:hover {
         cursor: pointer;
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        color: #000000 !important;
       }
     }
   }

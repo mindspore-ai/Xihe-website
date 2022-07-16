@@ -395,18 +395,20 @@ function toggleDelDlg(flag) {
           right: codeString ? '184px' : '40px',
         }"
       >
-        <o-button type="primary" @click="goSelectFile">
+        <o-button type="primary" loading @click="goSelectFile">
           {{ i18n.createTrain }}</o-button
         >
       </div>
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
-        <o-button v-if="detailData.is_owner" @click="goEditor">{{
-          i18n.editor
-        }}</o-button>
+        <o-button
+          v-if="detailData.is_owner"
+          style="margin-right: 40px"
+          @click="goEditor"
+          >{{ i18n.editor }}</o-button
+        >
       </div>
       <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
-
         <div class="upload-readme-img">
           <o-icon> <icon-add-file></icon-add-file> </o-icon>
         </div>

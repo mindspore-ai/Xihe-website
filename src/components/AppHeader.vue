@@ -6,7 +6,7 @@ import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo.png';
 import { goAuthorize, logout } from '@/shared/login';
-import { escapeHtml } from '@/shared/utils';
+// import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
 import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -27,7 +27,7 @@ const userInfoStore = useUserInfoStore();
 const show = ref(true);
 const keyword = ref('');
 const queryData = ref([]);
-// 模糊搜索结果数据
+// 搜索结果数据
 const modelCount = ref();
 const datasetCount = ref();
 const projectCount = ref();
@@ -197,42 +197,31 @@ function emptyValue() {
   keyword.value = '';
   show.value = true;
 }
-// 关键词高亮
-function changeColor(modelName, keyword) {
-  let val = modelName + '';
-  if (val.indexOf(keyword) !== -1 && keyword) {
-    // 搜索数据结果含有输入框值的下标
-    let indexes = val.indexOf(keyword);
-    // 截取index前、后的字符串
-    let str = val.substring(0, indexes);
-    let str2 = val.substring(indexes + keyword.length);
-    // 转义匹配关键词前后的html标签
-    escapeHtml(str);
-    escapeHtml(str2);
-    const Reg = new RegExp(keyword, 'ig');
-    return (
-      escapeHtml(str) +
-      keyword.replace(
-        Reg,
-        '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
-      ) +
-      escapeHtml(str2)
-    );
-  }
+// 高亮函数
+function heightLight(str, keyword) {
+  const reg = new RegExp(keyword, 'ig');
+  return str.replace(reg, (val) => {
+    return `<span style="color:#000;font-weight:bold">${val}</span>`;
+  });
 }
-// 关键词高亮
-// function changeColor(modelName, keyword) {
-//   let val = modelName + '';
-//   if (val.indexOf(keyword) !== -1 && keyword) {
-//     const Reg = new RegExp(keyword, 'ig');
-//     return val.replace(
-//       Reg,
-//       '<span style="color:#000;font-weight:bold">' + keyword + '</span>'
-//     );
-//   } else {
-//     return val;
-//   }
-// }
+// 模型搜索结果
+const modelResult = computed(() => {
+  return modelData.value.map((item) => {
+    return heightLight(item.name, keyword.value);
+  });
+});
+// 数据集搜索结果
+const datasetResult = computed(() => {
+  return datasetData.value.map((item) => {
+    return heightLight(item.name, keyword.value);
+  });
+});
+// 项目搜索结果
+const projectResult = computed(() => {
+  return projectData.value.map((item) => {
+    return heightLight(item.name, keyword.value);
+  });
+});
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
@@ -277,25 +266,31 @@ function getProject(keyword) {
 }
 
 // 跳转到模型、数据集、项目的详情页
-function goModelDetail(user, name) {
+function goModelDetail(index, name) {
+  // console.log(modelData.value[index], name);
+  // 解析name的html标签，获得里面的内容
+  const str = name.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/models/${user}/${name}`,
+    path: `/models/${modelData.value[index].owner_name.name}/${str}`,
   });
   emptyValue();
 }
-function goDatasetDetail(user, name) {
+function goDatasetDetail(index, name) {
+  const str = name.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/datasets/${user}/${name}`,
+    path: `/datasets/${datasetData.value[index].owner_name.name}/${str}`,
   });
   emptyValue();
 }
-function goProjectDetail(user, name) {
+function goProjectDetail(index, name) {
+  const str = name.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/projects/${user}/${name}`,
+    path: `/projects/${projectData.value[index].owner_name.name}/${str}`,
   });
   emptyValue();
 }
-function hideInput() {
+// 无输入时，输入框失去焦点收起输入框
+function handleBlur() {
   if (!keyword.value) {
     emptyValue();
   }
@@ -323,15 +318,9 @@ function hideInput() {
             v-model="keyword"
             placeholder="请输入关键词"
             class="search-input"
-            @blur="hideInput"
+            @blur="handleBlur"
             @keyup.enter="goFirstResult"
           ></o-input>
-          <!-- <o-input
-            v-else
-            v-model="keyword"
-            placeholder="请输入关键词"
-            class="search-input"
-          ></o-input> -->
         </div>
         <!-- 搜索结果展示 -->
         <div class="search-wrap">
@@ -352,13 +341,13 @@ function hideInput() {
               <div class="result-items-item">
                 <ul>
                   <li
-                    v-for="(model, index) in modelData"
+                    v-for="(model, index) in modelResult"
                     v-show="index < 3"
-                    :key="model.id"
+                    :key="index"
                     class="result-item-list"
                     :class="{ 'model-list': index == 0 }"
-                    @click="goModelDetail(model.owner_name.name, model.name)"
-                    v-html="changeColor(model.name, keyword)"
+                    @click="goModelDetail(index, model)"
+                    v-html="model"
                   ></li>
                 </ul>
               </div>
@@ -376,14 +365,12 @@ function hideInput() {
               <div class="result-items-item">
                 <ul ref="nodeList">
                   <li
-                    v-for="(dataset, index) in datasetData"
+                    v-for="(dataset, index) in datasetResult"
                     v-show="index < 3"
-                    :key="dataset.id"
+                    :key="index"
                     class="result-item-list"
-                    @click="
-                      goDatasetDetail(dataset.owner_name.name, dataset.name)
-                    "
-                    v-html="changeColor(dataset.name, keyword)"
+                    @click="goDatasetDetail(index, dataset)"
+                    v-html="dataset"
                   ></li>
                 </ul>
               </div>
@@ -401,14 +388,12 @@ function hideInput() {
               <div class="result-items-item">
                 <ul>
                   <li
-                    v-for="(project, index) in projectData"
+                    v-for="(project, index) in projectResult"
                     v-show="index < 3"
-                    :key="project.id"
+                    :key="index"
                     class="result-item-list"
-                    @click="
-                      goProjectDetail(project.owner_name.name, project.name)
-                    "
-                    v-html="changeColor(project.name, keyword)"
+                    @click="goProjectDetail(index, project)"
+                    v-html="project"
                   ></li>
                 </ul>
               </div>
@@ -756,7 +741,7 @@ function hideInput() {
         box-sizing: border-box;
         background-color: #eaebed;
         opacity: 0.98;
-        &-items {
+        .search-result-items {
           .result-items-title {
             font-size: 12px;
             color: #555;
@@ -766,10 +751,9 @@ function hideInput() {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
             .search-result-num {
               display: flex;
-              cursor: pointer;
-              // align-items: center;
               .right-icon {
                 font-size: 16px;
                 vertical-align: middle;

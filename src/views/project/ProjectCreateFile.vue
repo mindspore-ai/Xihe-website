@@ -390,12 +390,6 @@ const rules = reactive({
   //   },
   // ],
 });
-// let intText = [{ input_url: '' }, { name: '' }];
-// function inputFocus() {
-//   // 输入框自动嵌入intText内容
-//   const inputEl = document.getElementById('inputs');
-//   inputEl.value = JSON.stringify(intText);
-// }
 </script>
 <template>
   <div class="createfile">
@@ -536,7 +530,6 @@ const rules = reactive({
                     v-model="form.inputs"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
-                    @focus="inputFocus"
                   />
                 </el-form-item>
               </div>
@@ -556,6 +549,18 @@ const rules = reactive({
                     </template>
                     <div>
                       在您的算法代码中除了输入、输出和日志参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
+                      <br />格式为：
+                      <div style="color: red">
+                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                        &lt;解析参数对应的值1&gt;, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"value":&lt;解析参数名称1&gt;
+                        <br />&nbsp;&nbsp;},{
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                        &lt;解析参数对应的值2&gt;,
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
+                        &lt;解析参数名称2&gt; <br />}, ... ]
+                      </div>
+                      注意{}末尾不能有逗号
                     </div>
                   </el-popover>
                 </div>
@@ -664,7 +669,30 @@ const rules = reactive({
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
-                  <span>环境变量</span>
+                  <span class="item-title-text">环境变量</span>
+                  <el-popover
+                    placement="bottom-start"
+                    :width="372"
+                    trigger="hover"
+                    :teleported="true"
+                  >
+                    <template #reference>
+                      <o-icon style="font-size: 18px"
+                        ><icon-poppver></icon-poppver
+                      ></o-icon>
+                    </template>
+                    <div>
+                      格式为：
+                      <div style="color: red">
+                        { <br />&nbsp;&nbsp;&nbsp;&nbsp;"环境变量1":
+                        &lt;"环境变量值1"&gt;, <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"环境变量n":&lt;"环境变量值n"&gt;
+                        <br />&nbsp;&nbsp;}
+                      </div>
+                      注意{}末尾不能有逗号,且只能是双引号
+                    </div>
+                  </el-popover>
                 </div>
                 <el-form-item>
                   <el-input
@@ -691,6 +719,7 @@ const rules = reactive({
             "
             class="confim"
             type="primary"
+            loading
             @click="confirmCreating(queryRef)"
             >创建</o-button
           >
@@ -783,7 +812,7 @@ const rules = reactive({
               align-items: center;
               .item-title-text {
                 vertical-align: middle;
-                margin-right: 8px;
+                margin-right: 4px;
               }
               // .o-icon .el-tooltip__trigger{
               //   font-size: 30px;
@@ -800,7 +829,7 @@ const rules = reactive({
               align-items: center;
               .item-title-text {
                 vertical-align: middle;
-                margin-right: 8px;
+                margin-right: 4px;
               }
             }
           }

@@ -562,7 +562,6 @@ watch(
 
 function goTrain(path) {
   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
-  // router.push(path);
 }
 </script>
 

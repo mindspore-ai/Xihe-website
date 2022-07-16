@@ -26,6 +26,8 @@ import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 // BScroll.use(Slide);
 // BScroll.use(MouseWheel);
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 const router = useRouter();
 const hoemVideo =
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
@@ -82,7 +84,7 @@ function handleBtnClick() {
   }
 }
 function handleBtnClick2() {
-  router.push('https://xihe.mindspore.cn/datasets');
+  router.push(`https://${DOMAIN}/datasets`);
 }
 
 onMounted(() => {
@@ -164,7 +166,7 @@ onUnmounted(() => {
         <div class="home-extend-project">
           <a
             class="gradio card"
-            href="https://xihe.mindspore.cn/projects/wesley/lenet5_demo"
+            :href="`https://${DOMAIN}/projects/wesley/lenet5_demo`"
           >
             <div class="gradio-header">
               <img :src="digitRecognition" alt="" />
@@ -181,7 +183,7 @@ onUnmounted(() => {
           </a>
           <a
             class="gradio card"
-            href="https://xihe.mindspore.cn/projects/wesley/lstm_demo"
+            :href="`https://${DOMAIN}/projects/drizzlezyk/ResNet50`"
           >
             <div class="gradio-header">
               <img :src="imageRcognition" alt="" />
@@ -198,7 +200,7 @@ onUnmounted(() => {
           </a>
           <a
             class="gradio card"
-            href="https://xihe.mindspore.cn/projects/wesley/resnet50_demo"
+            :href="`https://${DOMAIN}/projects/wesley/lstm_demo`"
           >
             <div class="gradio-header">
               <img :src="emtionalNalysis" alt="" />
@@ -213,7 +215,7 @@ onUnmounted(() => {
               <div class="task">NLP</div>
             </div>
           </a>
-          <a class="more card" href="https://xihe.mindspore.cn/projects">
+          <a class="more card" :href="`https://${DOMAIN}/projects`">
             <p class="more-title">{{ i18n.project.title }}</p>
             <p class="more-introduce">{{ i18n.project.introduce }}</p>
             <p class="more-footer">
@@ -222,7 +224,7 @@ onUnmounted(() => {
           </a>
         </div>
         <div class="home-extend-model">
-          <a class="more card" href="https://xihe.mindspore.cn/models">
+          <a class="more card" :href="`https://${DOMAIN}/models`">
             <p class="more-title">{{ i18n.model.title }}</p>
             <p class="more-introduce">{{ i18n.model.introduce }}</p>
             <p class="more-footer">

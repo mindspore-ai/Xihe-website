@@ -19,6 +19,11 @@ const router = useRouter();
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
+const i18n = {
+  emptyText: '暂未创建项目，点击创建项目立即创建',
+  searchEmpty: '无匹配项目',
+  visitorEmpty: '该用户暂未创建任何项目',
+};
 
 const projectCount = ref(0);
 const projectData = ref([]);
@@ -151,8 +156,19 @@ watch(
 
     <div v-else class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />
-      <p v-if="isAuthentic" @click="setNewClick">无匹配项目</p>
-      <p v-else>该用户暂未创建任何模型</p>
+      <!-- <p v-if="isAuthentic" @click="setNewClick">无匹配项目</p>
+      <p v-else>该用户暂未创建任何模型</p> -->
+      <p
+        v-if="isAuthentic && !queryData.keyWord"
+        class="empty-text"
+        @click="setNewClick"
+      >
+        {{ i18n.emptyText }}
+      </p>
+      <p v-else-if="!isAuthentic && !queryData.keyWord" class="empty-text">
+        {{ i18n.visitorEmpty }}
+      </p>
+      <p v-else class="empty-text">{{ i18n.searchEmpty }}</p>
     </div>
   </div>
 </template>

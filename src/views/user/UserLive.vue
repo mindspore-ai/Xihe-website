@@ -4,6 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { getUserLive } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/live-empty.png';
+import lovingHeartImg from '@/assets/icons/lovingHeart.png';
+import creatingImg from '@/assets/icons/creating.png';
+
 import projectcard from '@/views/user/UserProjectcard.vue';
 import livecard from '@/views/user/UserLivecard.vue';
 
@@ -100,11 +103,8 @@ getCount();
           class="card-list-item"
         >
           <div class="card-list-item-title">
-            <img
-              v-if="item.type.includes('点赞')"
-              src="@/assets/icons/lovingHeart.png"
-            />
-            <img v-else src="@/assets/icons/creating.png" />
+            <img v-if="item.type.includes('点赞')" :src="lovingHeartImg" />
+            <img v-else :src="creatingImg" />
             <span>
               {{
                 item.type.includes('点赞') ? '收藏了一个' : '创建了一个'

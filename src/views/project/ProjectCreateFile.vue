@@ -180,7 +180,7 @@ function goSelectFile() {
     },
   });
 }
-
+// 按顺序校验表单数据是否校验通过
 function verify(node, code, message) {
   return new Promise((resolve, reject) => {
     node.validateField(code, (valid) => {
@@ -390,6 +390,12 @@ const rules = reactive({
   //   },
   // ],
 });
+// let intText = [{ input_url: '' }, { name: '' }];
+// function inputFocus() {
+//   // 输入框自动嵌入intText内容
+//   const inputEl = document.getElementById('inputs');
+//   inputEl.value = JSON.stringify(intText);
+// }
 </script>
 <template>
   <div class="createfile">
@@ -530,6 +536,7 @@ const rules = reactive({
                     v-model="form.inputs"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
+                    @focus="inputFocus"
                   />
                 </el-form-item>
               </div>

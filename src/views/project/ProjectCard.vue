@@ -350,17 +350,16 @@ const hasPrefix = computed(() => {
 });
 const clientSrc = ref('');
 let timer = null;
-// 启动推理
+// 游客启动推理
 function start() {
   startInference(detailData.value.id).then((res) => {
-    console.log(res);
     if (res.data.status === 200) msg.value = '启动中';
     // socket.send(JSON.stringify({ pk: detailData.value.id }));
   });
 }
+//拥有者启动推理
 function start2() {
   startInference2(detailData.value.id).then((res) => {
-    console.log(res);
     if (res.data.status === 200) msg.value = '启动中';
     // socket.send(JSON.stringify({ pk: detailData.value.id }));
   });

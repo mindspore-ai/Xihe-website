@@ -207,10 +207,12 @@ export async function handleUpload(params, progressCallback, successCallback) {
               Key: path,
               SourceFile: file,
               ProgressCallback: progressCallback || null,
-              Metadata: { description },
+              Metadata: {
+                description,
+              },
+              ContentDisposition: 'attachment', // 文件直接下载
             },
             function (err, result) {
-              console.error(err);
               if (err) {
                 ElMessage({
                   type: 'error',

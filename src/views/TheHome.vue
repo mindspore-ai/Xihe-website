@@ -40,7 +40,7 @@ const i18n = {
   mouse: '滑动鼠标探索更多',
   home: {
     title: '个人主页',
-    introduce: '在个人主页开启探索、创建、收藏羲和项目、模型、数据集之旅；',
+    introduce: '在个人主页开启探索、创建、收藏羲和项目、模型、数据集之旅。',
   },
   project: {
     title: '项目',
@@ -295,9 +295,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 a {
-  color: #000000;
+  color: #555555;
 }
 .home-extend {
+  color: #555555;
   background-color: #f5f6f8;
   position: relative;
   .mouse {
@@ -518,6 +519,10 @@ a {
       }
     }
     .card {
+      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      .o-icon {
+        transition: all 0.2s linear;
+      }
       &:hover {
         cursor: pointer;
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);

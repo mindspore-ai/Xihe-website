@@ -5,6 +5,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo.png';
+import projectImg from '@/assets/icons/project.png';
+import modelImg from '@/assets/icons/model.png';
+import datasetImg from '@/assets/icons/dataset.png';
 import { goAuthorize, logout } from '@/shared/login';
 // import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
@@ -228,16 +231,16 @@ const firstData = computed(() => {
   return modelData.value.length !== 0
     ? modelData.value[0]
     : datasetData.value.length !== 0
-    ? datasetData.value[0]
-    : projectData.value[0];
+      ? datasetData.value[0]
+      : projectData.value[0];
 });
 // 获得当回车时需要跳转的路径
 const pathName = computed(() => {
   return modelData.value.length !== 0
     ? 'models'
     : datasetData.value.length !== 0
-    ? 'datasets'
-    : 'projects';
+      ? 'datasets'
+      : 'projects';
 });
 // 回车以第一条数据跳转页面
 function goFirstResult() {
@@ -328,56 +331,12 @@ function handleBlur() {
             v-show="modelCount || datasetCount || projectCount"
             class="search-result"
           >
-            <div v-show="modelData.length" class="search-result-items">
-              <div class="result-items-title" @click="getModel(keyword)">
-                <div class="items-title-name">模型</div>
-                <div class="search-result-num">
-                  <span class="related-result"
-                    >查看{{ modelCount }}个相关模型</span
-                  >
-                  <o-icon class="right-icon"><icon-arrow-right /> </o-icon>
-                </div>
-              </div>
-              <div class="result-items-item">
-                <ul>
-                  <li
-                    v-for="(model, index) in modelResult"
-                    v-show="index < 3"
-                    :key="index"
-                    class="result-item-list"
-                    :class="{ 'model-list': index == 0 }"
-                    @click="goModelDetail(index, model)"
-                    v-html="model"
-                  ></li>
-                </ul>
-              </div>
-            </div>
-            <div v-show="datasetData.length" class="search-result-items">
-              <div class="result-items-title" @click="getDataset(keyword)">
-                <div class="items-title-name">数据集</div>
-                <div class="search-result-num">
-                  <span class="related-result"
-                    >查看{{ datasetCount }}个相关数据集</span
-                  >
-                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
-                </div>
-              </div>
-              <div class="result-items-item">
-                <ul ref="nodeList">
-                  <li
-                    v-for="(dataset, index) in datasetResult"
-                    v-show="index < 3"
-                    :key="index"
-                    class="result-item-list"
-                    @click="goDatasetDetail(index, dataset)"
-                    v-html="dataset"
-                  ></li>
-                </ul>
-              </div>
-            </div>
             <div v-show="projectData.length" class="search-result-items">
               <div class="result-items-title" @click="getProject(keyword)">
-                <div class="items-title-name">项目</div>
+                <div class="items-title-name">
+                  <img :src="projectImg" alt="" />
+                  <span>项目</span>
+                </div>
                 <div class="search-result-num">
                   <span class="related-result"
                     >查看{{ projectCount }}个相关项目</span
@@ -394,6 +353,58 @@ function handleBlur() {
                     class="result-item-list"
                     @click="goProjectDetail(index, project)"
                     v-html="project"
+                  ></li>
+                </ul>
+              </div>
+            </div>
+            <div v-show="modelData.length" class="search-result-items">
+              <div class="result-items-title" @click="getModel(keyword)">
+                <div class="items-title-name">
+                  <img :src="modelImg" alt="" />
+                  <span>模型</span>
+                </div>
+                <div class="search-result-num">
+                  <span class="related-result"
+                    >查看{{ modelCount }}个相关模型</span
+                  >
+                  <o-icon class="right-icon"><icon-arrow-right /> </o-icon>
+                </div>
+              </div>
+              <div class="result-items-item">
+                <ul>
+                  <li
+                    v-for="(model, index) in modelResult"
+                    v-show="index < 3"
+                    :key="index"
+                    class="result-item-list"
+                    @click="goModelDetail(index, model)"
+                    v-html="model"
+                  ></li>
+                </ul>
+              </div>
+            </div>
+            <div v-show="datasetData.length" class="search-result-items">
+              <div class="result-items-title" @click="getDataset(keyword)">
+                <div class="items-title-name">
+                  <img :src="datasetImg" alt="" />
+                  <span>数据集</span>
+                </div>
+                <div class="search-result-num">
+                  <span class="related-result"
+                    >查看{{ datasetCount }}个相关数据集</span
+                  >
+                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
+                </div>
+              </div>
+              <div class="result-items-item">
+                <ul ref="nodeList">
+                  <li
+                    v-for="(dataset, index) in datasetResult"
+                    v-show="index < 3"
+                    :key="index"
+                    class="result-item-list"
+                    @click="goDatasetDetail(index, dataset)"
+                    v-html="dataset"
                   ></li>
                 </ul>
               </div>
@@ -527,39 +538,52 @@ function handleBlur() {
         position: absolute;
         top: 58px;
         box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
 
         .search-result {
           width: 100%;
           overflow: hidden;
-          box-sizing: border-box;
-          background-color: #eaebed;
-          opacity: 0.98;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(5px);
           &-items {
             .result-items-title {
               font-size: 12px;
               color: #555;
               font-weight: 500;
-              padding: 15px 32px 6px;
-              border-bottom: 1px solid #e5e5e5;
+              line-height: 38px;
+              background: linear-gradient(
+                90deg,
+                rgba(127, 120, 195, 0.05) 0%,
+                rgba(255, 255, 255, 0.05) 100%
+              );
+              backdrop-filter: blur(5px);
+              padding: 0px 32px;
               display: flex;
               justify-content: space-between;
               align-items: center;
               // &:hover {
               //   background-color: #e5e5e5;
               // }
+              .items-title-name {
+                display: flex;
+                align-items: center;
+                span {
+                  margin-left: 6px;
+                }
+              }
               .search-result-num {
                 display: flex;
+                align-items: center;
                 cursor: pointer;
                 .right-icon {
                   font-size: 16px;
                   vertical-align: middle;
                   margin-left: 6px;
-                  // cursor: pointer;
                 }
               }
             }
             .result-items-item {
-              // color: #555;
               &:hover {
                 .model-list {
                   background-color: inherit;
@@ -569,16 +593,15 @@ function handleBlur() {
                 height: 38px;
                 line-height: 38px;
                 font-size: 14px;
+                font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
                 color: #555;
                 padding: 0 32px;
                 cursor: pointer;
 
                 &:hover {
-                  background-color: #e5e5e5;
+                  background: rgba(13, 141, 255, 0.1);
+                  backdrop-filter: blur(5px);
                 }
-              }
-              .model-list {
-                background-color: #e5e5e5;
               }
             }
           }
@@ -665,135 +688,6 @@ function handleBlur() {
             }
           }
         }
-      }
-    }
-  }
-}
-.vice-header {
-  display: flex;
-  align-items: center;
-  max-width: 1472px;
-  margin: 0 auto;
-  height: 100%;
-  padding: 0 16px;
-  position: relative;
-
-  .header-logo {
-    height: 32px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    img {
-      cursor: pointer;
-      vertical-align: top;
-      height: 100%;
-      width: 100%;
-    }
-  }
-  .search-header {
-    // width: calc(100% - 86px);
-    width: 48%;
-    height: 100%;
-    display: flex;
-    margin: 0 auto;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    .header-input {
-      width: 100%;
-      position: relative;
-      .search-icon {
-        font-size: 24px;
-        color: #979797;
-        position: absolute;
-        top: 6px;
-      }
-      .empty-icon {
-        font-size: 24px;
-        color: #979797;
-        position: absolute;
-        top: 6px;
-        right: 0;
-        cursor: pointer;
-      }
-      .search-input {
-        max-width: 100%;
-        color: #999;
-        font-size: 14px;
-        border: none;
-        border-bottom: 1px solid #999;
-        padding-left: 30px;
-      }
-    }
-
-    .search-wrap {
-      width: 100%;
-      margin: 0 auto;
-      position: absolute;
-      top: 80px;
-      box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
-
-      .search-result {
-        width: 100%;
-        overflow: hidden;
-        box-sizing: border-box;
-        background-color: #eaebed;
-        opacity: 0.98;
-        .search-result-items {
-          .result-items-title {
-            font-size: 12px;
-            color: #555;
-            font-weight: 500;
-            padding: 15px 32px 6px;
-            border-bottom: 1px solid #e5e5e5;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            .search-result-num {
-              display: flex;
-              .right-icon {
-                font-size: 16px;
-                vertical-align: middle;
-                margin-left: 6px;
-              }
-            }
-          }
-          .result-items-item {
-            // color: #555;
-            &:hover {
-              .model-list {
-                background-color: inherit;
-              }
-            }
-            .result-item-list {
-              height: 38px;
-              line-height: 38px;
-              font-size: 14px;
-              color: #555;
-              padding: 0 32px;
-              cursor: pointer;
-
-              &:hover {
-                background-color: #e5e5e5;
-              }
-            }
-            .model-list {
-              background-color: #e5e5e5;
-            }
-          }
-        }
-      }
-      .no-result {
-        width: 100%;
-        font-size: 12px;
-        font-weight: 900;
-        color: #555;
-        background-color: #fff;
-        padding: 15px 32px;
-        box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
       }
     }
   }

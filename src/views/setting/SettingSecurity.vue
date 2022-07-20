@@ -104,7 +104,7 @@ function keepPhone(formEl) {
         ruleForm.phone = '';
         ruleForm.code = '';
         isDisposed.value = false;
-        time.value = 0;
+        time.value < 60 ? 0 : 60;
       } else {
         newQuery.new_mobile = ruleForm.phone;
         newQuery.new_mobile_code = ruleForm.code;
@@ -277,6 +277,7 @@ function resetForm(formEl) {
 <style lang="scss" scoped>
 .el-form {
   width: 520px;
+  margin: 0 50px;
   :deep(.el-form-item__content) {
     display: flex;
     justify-content: space-between;
@@ -386,6 +387,9 @@ function resetForm(formEl) {
 }
 .setting-content {
   .o-dialog {
+    .el-form {
+      margin: 0 30px;
+    }
     :deep(&-body) {
       padding-bottom: 0;
     }

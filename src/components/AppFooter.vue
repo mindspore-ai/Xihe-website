@@ -43,7 +43,7 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
     display: flex;
     align-items: center;
     height: 64px;
-    cursor: pointer;
+    // cursor: pointer;
     img {
       vertical-align: top;
       height: 100%;

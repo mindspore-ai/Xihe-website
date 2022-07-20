@@ -18,7 +18,7 @@ getBaseInfo().then((res) => {
 });
 
 const showFooter = computed(() => {
-  return !(route.path === '/');
+  return !(route.path === '/' || route.path === '/home');
 });
 
 const header = ref(null);

@@ -443,7 +443,7 @@ if (detailData.value.is_owner) {
               closeConn(); //断开连接
               ElMessage({
                 type: 'error',
-                message: JSON.parse(event.data).msg + '，请检查文件后重试',
+                message: '程序错误，请检查文件后重试',
               });
             } else if (JSON.parse(event.data).msg === '任务已销毁') {
               stopInference(detailData.value.id); //删除任务

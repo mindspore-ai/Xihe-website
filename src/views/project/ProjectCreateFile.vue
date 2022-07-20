@@ -2,10 +2,10 @@
 import { ref, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
-import { ElMessage } from 'element-plus';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 
+import { ElMessage } from 'element-plus';
 import { createTrainProject, getProjectData } from '@/api/api-project';
 
 import { useUserInfoStore } from '@/stores';
@@ -18,8 +18,9 @@ const isAuthentic = computed(() => {
 });
 const route = useRoute();
 const router = useRouter();
-let queryRef = ref(null);
+const queryRef = ref(null);
 const detailData = ref({});
+// const isloading = ref(true);
 
 const form = reactive({
   job_name: '',
@@ -390,12 +391,6 @@ const rules = reactive({
   //   },
   // ],
 });
-// let intText = [{ input_url: '' }, { name: '' }];
-// function inputFocus() {
-//   // 输入框自动嵌入intText内容
-//   const inputEl = document.getElementById('inputs');
-//   inputEl.value = JSON.stringify(intText);
-// }
 </script>
 <template>
   <div class="createfile">
@@ -536,7 +531,6 @@ const rules = reactive({
                     v-model="form.inputs"
                     type="textarea"
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
-                    @focus="inputFocus"
                   />
                 </el-form-item>
               </div>

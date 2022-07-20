@@ -237,14 +237,15 @@ function reKeepEmail(formEl) {
         qureyData.old_email_code = reRuleForm.code;
         reRuleForm.email = '';
         reRuleForm.code = '';
-        isDisposed.value = false;
-        time.value = 0;
+        // isDisposed.value = false;
+        time.value < 60 ? 0 : 60;
       } else {
         qureyData.new_email = reRuleForm.email;
         qureyData.new_email_code = reRuleForm.code;
         changeUserEmail(qureyData)
           .then((res) => {
             if (res.status === 200) {
+              togglePhoneDlg(false);
               ElMessage({
                 type: 'success',
                 message: '修改成功',
@@ -252,6 +253,7 @@ function reKeepEmail(formEl) {
 
               userInfoStore.email = res.data.mobile;
             } else {
+              togglePhoneDlg(false);
               ElMessage({
                 type: 'error',
                 message: res.msg,
@@ -484,6 +486,9 @@ function reKeepEmail(formEl) {
   }
 }
 .o-dialog {
+  :deep(.el-form) {
+    margin: 0 30px;
+  }
   &-head {
     .dlg-title {
       text-align: center;
@@ -501,6 +506,7 @@ function reKeepEmail(formEl) {
 
 .el-form {
   width: 520px;
+  margin: 0 50px;
   .el-form-item {
     :deep(.el-form-item__content) {
       justify-content: space-between;
@@ -513,6 +519,9 @@ function reKeepEmail(formEl) {
           margin-left: 8px;
           min-width: 152px;
         }
+      }
+      .el-form-item__error {
+        left: calc(100% + 15px);
       }
     }
   }

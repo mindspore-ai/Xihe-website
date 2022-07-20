@@ -254,9 +254,9 @@ watch(
       <col width="120px" />
       <col width="670px" />
       <col width="200px" />
-      <tbody>
+      <tbody style="100%">
         <tr class="tree-head">
-          <td class="tree-head-left">
+          <td colspan="3">
             <div class="inner-box">
               <o-icon>
                 <icon-model v-if="moduleName === 'model'"></icon-model>
@@ -274,8 +274,8 @@ watch(
               >
             </div>
           </td>
-          <td></td>
-          <td></td>
+          <!-- <td></td> -->
+          <!-- <td></td> -->
           <td class="tree-head-right">
             <div class="inner-box">
               {{ i18n.uploadTime }}
@@ -466,6 +466,7 @@ watch(
     }
     &-right {
       padding-right: 70px;
+      height: 56px;
     }
   }
   &-table {
@@ -534,6 +535,7 @@ watch(
       }
       td:first-child {
         padding-left: 36px;
+        padding-right: 36px;
         span:nth-child(1) {
           flex-shrink: 0;
         }

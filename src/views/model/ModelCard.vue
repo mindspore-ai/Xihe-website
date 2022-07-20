@@ -14,7 +14,7 @@ import NoRelate from '@/components/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-// import ImgModel from '@/assets/icons/model.png';
+// import ImgModel from '@/assets/icons/model2.png';
 import { addDataset, modifyProjectAdd } from '@/api/api-model';
 import { downloadObs, findFile } from '@/api/api-obs';
 import { useFileData, useUserInfoStore } from '@/stores';

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { getUserCollection } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/live-empty.png';
+import lovingHeartImg from '@/assets/icons/lovingHeart.png';
 import projectcard from '@/views/user/UserProjectcard.vue';
 import livecard from '@/views/user/UserLivecard.vue';
 
@@ -95,7 +96,7 @@ function toTop() {
           class="collection-list-item"
         >
           <div class="collection-list-item-title">
-            <img src="@/assets/icons/lovingHeart.png" />
+            <img :src="lovingHeartImg" />
             <span> 收藏了一个</span>
             <span>
               {{

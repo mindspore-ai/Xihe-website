@@ -389,7 +389,7 @@ function toggleDelDlg(flag) {
   <div class="project-train">
     <div class="project-train-file">
       <div
-        v-if="userInfo.userName === detailData.owner_name.name"
+        v-show="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
         :style="{
           right: codeString ? '184px' : '40px',
@@ -402,7 +402,7 @@ function toggleDelDlg(flag) {
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
         <o-button
-          v-if="detailData.is_owner"
+          v-show="detailData.is_owner"
           style="margin-right: 40px"
           @click="goEditor"
           >{{ i18n.editor }}</o-button
@@ -561,7 +561,7 @@ function toggleDelDlg(flag) {
     </el-dialog>
 
     <!-- 如已有正在训练中的实例或者训练实例已有5个，弹窗提示 -->
-    <o-dialog :show="showTip" @close-click="toggleDelDlg(false)">
+    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
       <template #head>
         <div
           class="dlg-title"

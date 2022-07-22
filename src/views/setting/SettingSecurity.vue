@@ -37,7 +37,7 @@ try {
       phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
     }
   });
-} catch {}
+} catch { }
 //获取验证码
 function setPhone(formEl) {
   if (!formEl) return;
@@ -232,7 +232,7 @@ function resetForm(formEl) {
               :rules="[
                 { required: true, message: '必填项', trigger: 'blur' },
                 {
-                  pattern: /^\d{6}$/,
+                  pattern: /^\d{4}$/,
                   message: '验证码有误',
                   trigger: 'blur',
                 },

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <script setup>
 import { ref, reactive, watch, computed, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -9,7 +10,7 @@ import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
 import { goAuthorize, logout } from '@/shared/login';
-// import { escapeHtml } from '@/shared/utils';
+import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
 import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -186,12 +187,15 @@ function getSearch() {
 watch(
   keyword,
   () => {
-    if (keyword.value) {
-      debounceSearch();
-    } else {
+    // 如果keyword的值为空，则清空搜索结果
+    if (keyword.value === '') {
+      // emptyValue();
       modelData.value = [];
       datasetData.value = [];
       projectData.value = [];
+      return;
+    } else {
+      debounceSearch();
     }
   },
   { immediate: true }
@@ -202,7 +206,9 @@ function emptyValue() {
 }
 // 高亮函数
 function heightLight(str, keyword) {
-  const reg = new RegExp(keyword, 'ig');
+  let kw = escapeHtml(keyword);
+  console.log('kw: ', kw);
+  const reg = new RegExp(kw, 'ig');
   return str.replace(reg, (val) => {
     return `<span style="color:#000;font-weight:bold">${val}</span>`;
   });
@@ -328,7 +334,7 @@ function handleBlur() {
         <!-- 搜索结果展示 -->
         <div class="search-wrap">
           <div
-            v-show="modelCount || datasetCount || projectCount"
+            v-if="modelCount || datasetCount || projectCount"
             class="search-result"
           >
             <div v-show="projectData.length" class="search-result-items">
@@ -568,6 +574,9 @@ function handleBlur() {
               .items-title-name {
                 display: flex;
                 align-items: center;
+                img {
+                  width: 14px;
+                }
                 span {
                   margin-left: 6px;
                 }
@@ -576,10 +585,17 @@ function handleBlur() {
                 display: flex;
                 align-items: center;
                 cursor: pointer;
+                margin-right: 4px;
+                &:hover {
+                  .right-icon {
+                    transform: translate(4px);
+                  }
+                }
                 .right-icon {
+                  transition: all 0.2s linear;
                   font-size: 16px;
                   vertical-align: middle;
-                  margin-left: 6px;
+                  margin-left: 4px;
                 }
               }
             }

@@ -104,7 +104,7 @@ function keepPhone(formEl) {
         ruleForm.phone = '';
         ruleForm.code = '';
         isDisposed.value = false;
-        time.value < 60 ? 0 : 60;
+        time.value = time.value < 60 ? 0 : 60;
       } else {
         newQuery.new_mobile = ruleForm.phone;
         newQuery.new_mobile_code = ruleForm.code;

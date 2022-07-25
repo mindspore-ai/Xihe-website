@@ -152,7 +152,7 @@ onUnmounted(() => {
       <div class="home-extend-box">
         <div class="home-extend-home">
           <div class="left">
-            <p class="home-title">{{ i18n.home.title }}</p>
+            <p class="home-title title">{{ i18n.home.title }}</p>
             <p class="home-introduce">{{ i18n.home.introduce }}</p>
             <OButton animation class="home-btn" @click="handleBtnClick">
               {{ quickStartLabel }}
@@ -171,7 +171,7 @@ onUnmounted(() => {
             <div class="gradio-header">
               <img :src="digitRecognition" alt="" />
             </div>
-            <div class="gradio-body">
+            <div class="gradio-body title">
               <p>{{ i18n.project.gradio1 }}</p>
               <p class="arrow">
                 <OIcon><IconArrowRight /></OIcon>
@@ -188,7 +188,7 @@ onUnmounted(() => {
             <div class="gradio-header">
               <img :src="imageRcognition" alt="" />
             </div>
-            <div class="gradio-body">
+            <div class="gradio-body title">
               <p>{{ i18n.project.gradio2 }}</p>
               <p class="arrow">
                 <OIcon><IconArrowRight /></OIcon>
@@ -205,7 +205,7 @@ onUnmounted(() => {
             <div class="gradio-header">
               <img :src="emtionalNalysis" alt="" />
             </div>
-            <div class="gradio-body">
+            <div class="gradio-body title">
               <p>{{ i18n.project.gradio3 }}</p>
               <p class="arrow">
                 <OIcon><IconArrowRight /></OIcon>
@@ -216,7 +216,7 @@ onUnmounted(() => {
             </div>
           </a>
           <a class="more card" :href="`https://${DOMAIN}/projects`">
-            <p class="more-title">{{ i18n.project.title }}</p>
+            <p class="more-title title">{{ i18n.project.title }}</p>
             <p class="more-introduce">{{ i18n.project.introduce }}</p>
             <p class="more-footer">
               {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
@@ -225,7 +225,7 @@ onUnmounted(() => {
         </div>
         <div class="home-extend-model">
           <a class="more card" :href="`https://${DOMAIN}/models`">
-            <p class="more-title">{{ i18n.model.title }}</p>
+            <p class="more-title title">{{ i18n.model.title }}</p>
             <p class="more-introduce">{{ i18n.model.introduce }}</p>
             <p class="more-footer">
               {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
@@ -233,7 +233,7 @@ onUnmounted(() => {
           </a>
           <div class="models card">
             <img :src="models1" alt="" />
-            <p class="models-type">
+            <p class="models-type title">
               {{ i18n.model.models1 }}<OIcon><IconArrowRight /></OIcon>
             </p>
             <p class="models-label">VGG16｜ResNet-101｜InceptionV4 …</p>
@@ -243,7 +243,7 @@ onUnmounted(() => {
           </div>
           <div class="models card">
             <img :src="models2" alt="" />
-            <p class="models-type">
+            <p class="models-type title">
               {{ i18n.model.models2 }}<OIcon><IconArrowRight /></OIcon>
             </p>
             <p class="models-label">YOLOv5｜SSD ｜MobileNet …</p>
@@ -253,7 +253,7 @@ onUnmounted(() => {
           </div>
           <div class="models card">
             <img :src="models3" alt="" />
-            <p class="models-type">
+            <p class="models-type title">
               {{ i18n.model.models3 }}<OIcon><IconArrowRight /></OIcon>
             </p>
             <p class="models-label">BERT｜GRU｜Transformer …</p>
@@ -263,7 +263,7 @@ onUnmounted(() => {
           </div>
           <div class="models card">
             <img :src="models4" alt="" />
-            <p class="models-type">
+            <p class="models-type title">
               {{ i18n.model.models4 }}<OIcon><IconArrowRight /></OIcon>
             </p>
             <p class="models-label">DeepFM｜Wide&Deep｜NCF …</p>
@@ -275,7 +275,7 @@ onUnmounted(() => {
         <div class="home-extend-dataset">
           <img class="left" :src="datasetPageImg" alt="" />
           <div class="right">
-            <p class="home-title">{{ i18n.dataset.title }}</p>
+            <p class="home-title title">{{ i18n.dataset.title }}</p>
             <p class="home-introduce">{{ i18n.dataset.introduce }}</p>
             <OButton animation class="home-btn" @click="handleBtnClick2">
               {{ i18n.dataset.quickStartLabel }}
@@ -296,6 +296,9 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 a {
   color: #555555;
+}
+.title {
+  color: #000000;
 }
 .home-extend {
   color: #555555;

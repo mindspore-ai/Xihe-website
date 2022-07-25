@@ -228,19 +228,19 @@ const projectResult = computed(() => {
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
-  return modelData.value.length !== 0
+  return projectData.value.length !== 0
+    ? projectData.value[0]
+    : modelData.value.length !== 0
     ? modelData.value[0]
-    : datasetData.value.length !== 0
-      ? datasetData.value[0]
-      : projectData.value[0];
+    : datasetData.value[0];
 });
 // 获得当回车时需要跳转的路径
 const pathName = computed(() => {
-  return modelData.value.length !== 0
+  return projectData.value.length !== 0
+    ? 'projects'
+    : modelData.value.length !== 0
     ? 'models'
-    : datasetData.value.length !== 0
-      ? 'datasets'
-      : 'projects';
+    : 'datasets';
 });
 // 回车以第一条数据跳转页面
 function goFirstResult() {
@@ -332,12 +332,12 @@ function handleBlur() {
             class="search-result"
           >
             <div v-show="projectData.length" class="search-result-items">
-              <div class="result-items-title" @click="getProject(keyword)">
+              <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="projectImg" alt="" />
                   <span>项目</span>
                 </div>
-                <div class="search-result-num">
+                <div class="search-result-num" @click="getProject(keyword)">
                   <span class="related-result"
                     >查看{{ projectCount }}个相关项目</span
                   >
@@ -358,12 +358,12 @@ function handleBlur() {
               </div>
             </div>
             <div v-show="modelData.length" class="search-result-items">
-              <div class="result-items-title" @click="getModel(keyword)">
+              <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="modelImg" alt="" />
                   <span>模型</span>
                 </div>
-                <div class="search-result-num">
+                <div class="search-result-num" @click="getModel(keyword)">
                   <span class="related-result"
                     >查看{{ modelCount }}个相关模型</span
                   >
@@ -384,12 +384,12 @@ function handleBlur() {
               </div>
             </div>
             <div v-show="datasetData.length" class="search-result-items">
-              <div class="result-items-title" @click="getDataset(keyword)">
+              <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="datasetImg" alt="" />
                   <span>数据集</span>
                 </div>
-                <div class="search-result-num">
+                <div class="search-result-num" @click="getDataset(keyword)">
                   <span class="related-result"
                     >查看{{ datasetCount }}个相关数据集</span
                   >

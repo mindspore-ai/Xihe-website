@@ -2,6 +2,7 @@
 import { ref, watch, computed, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Markdown from 'markdown-it';
+import markdownItAnchor from 'markdown-it-anchor';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -34,7 +35,13 @@ const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 
+const slugify = (s) =>
+  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 const mkit = new Markdown({ html: true });
+mkit.use(markdownItAnchor, {
+  level: 1,
+  slugify,
+});
 const codeString = ref('');
 const codeString2 = ref('');
 const result = ref();

@@ -30,6 +30,7 @@ const userInfoStore = useUserInfoStore();
 const i18n = {
   visible: {
     title: '仓库属性',
+    description: '更改描述',
     options: [
       {
         value: 'Private',
@@ -72,7 +73,8 @@ const i18n = {
 };
 
 const visibleOptions = reactive(i18n.visible.options);
-const visibleValue = ref('');
+const visibleValue = ref(detailData.is_private);
+const description = ref(detailData.description);
 // const newOwn = ref('');
 // const newName = ref('');
 const visibleIndex = ref(0);
@@ -137,9 +139,11 @@ function confirmPrivate() {
     is_private: visibleValue.value,
     photo: photoId.value,
     id: detailData.id,
+    description: description.value,
   };
   modifyProject(query).then((res) => {
     if (res.status === 200) {
+      description.value = res.data.description;
       ElMessage({
         type: 'success',
         message: res.msg,
@@ -257,6 +261,17 @@ function toggleDelDlg(flag) {
           </div>
         </div>
         <!-- <o-button @click="confirmAmend">{{ i18n.visible.btnText }}</o-button> -->
+        <!-- 新增更改描述 -->
+        <div class="setting-title description">
+          {{ i18n.visible.description }}
+        </div>
+        <el-input
+          v-model="description"
+          :rows="2"
+          type="textarea"
+          maxlength="100"
+          show-word-limit
+        />
         <o-button style="margin-bottom: 40px" @click="confirmPrivate">{{
           i18n.visible.btnText
         }}</o-button>
@@ -541,6 +556,17 @@ function toggleDelDlg(flag) {
         position: absolute;
         top: -65px;
         left: -40px;
+      }
+    }
+    .description {
+      margin-top: 24px;
+    }
+    .el-textarea {
+      display: block;
+      margin-bottom: 24px;
+      width: 532px !important;
+      :deep(.el-textarea__inner) {
+        height: 89px;
       }
     }
     .setting-tip {

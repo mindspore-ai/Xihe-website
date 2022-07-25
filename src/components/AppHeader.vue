@@ -54,6 +54,11 @@ const navItems = [
     href: '/models',
   },
   {
+    id: 'modelzoo',
+    label: '大模型',
+    href: '/modelzoo',
+  },
+  {
     id: 'datasets',
     label: '数据集',
     href: '/datasets',
@@ -129,7 +134,7 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^models|datasets|projects|teams/g.test(val)) {
+    if (/^models|datasets|projects|modelzoo|teams/g.test(val)) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';
@@ -207,7 +212,6 @@ function emptyValue() {
 // 高亮函数
 function heightLight(str, keyword) {
   let kw = escapeHtml(keyword);
-  console.log('kw: ', kw);
   const reg = new RegExp(kw, 'ig');
   return str.replace(reg, (val) => {
     return `<span style="color:#000;font-weight:bold">${val}</span>`;

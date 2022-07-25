@@ -5,6 +5,7 @@ import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
 
 import user from './user';
 import model from './model';
+import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
 
@@ -68,6 +69,8 @@ export const routes = [
   ...user,
   // 模型
   ...model,
+  // 大模型
+  ...modelzoo,
   // 数据集
   ...dataset,
   // 项目

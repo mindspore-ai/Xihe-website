@@ -359,11 +359,11 @@ function getModelTag() {
 }
 getModelTag();
 
-function goDetail(user, name) {
-  router.push({
-    path: `/projects/${user}/${name}`,
-  });
-}
+// function goDetail(user, name) {
+//   router.push({
+//     path: `/projects/${user}/${name}`,
+//   });
+// }
 
 function goSetNew() {
   if (loginStore.isLogined) {
@@ -656,39 +656,41 @@ onMounted(() => {
           </div>
 
           <div v-if="projectData" class="card-list">
-            <div
-              v-for="item in projectData"
-              :key="item.id"
-              class="pro-card"
-              @click="goDetail(item.owner_name.name, item.name)"
-            >
-              <div class="card-top">
-                <img :src="item.photo_url" alt="" />
-                <p class="title">{{ item.name }}</p>
-                <div class="dig">
-                  <o-icon> <icon-heart></icon-heart> </o-icon
-                  >{{ item.digg_count }}
+            <div v-for="item in projectData" :key="item.id" class="pro-card">
+              <!-- @click="goDetail(item.owner_name.name, item.name)" -->
+              <router-link
+                class="pro-card-link"
+                :to="{ path: `/projects/${item.owner_name.name}/${item.name}` }"
+              >
+                <div class="card-top">
+                  <img :src="item.photo_url" alt="" />
+                  <p class="title">{{ item.name }}</p>
+                  <div class="dig">
+                    <o-icon> <icon-heart></icon-heart> </o-icon
+                    >{{ item.digg_count }}
+                  </div>
+                  <div class="card-modal"></div>
                 </div>
-                <div class="card-modal"></div>
-              </div>
 
-              <div class="card-bottom">
-                <div class="info">
-                  <div class="info-avata">
-                    <img :src="item.owner_name.avatar_url" alt="" />
+                <div class="card-bottom">
+                  <div class="info">
+                    <div class="info-avata">
+                      <img :src="item.owner_name.avatar_url" alt="" />
+                    </div>
+                    <div class="info-name">
+                      {{ item.owner_name.name }}
+                    </div>
                   </div>
-                  <div class="info-name">
-                    {{ item.owner_name.name }}
+                  <div class="time">
+                    <o-icon>
+                      <icon-time></icon-time>
+                    </o-icon>
+                    {{ item.update_date_time.split(' ')[0] }}
                   </div>
                 </div>
-                <div class="time">
-                  <o-icon>
-                    <icon-time></icon-time>
-                  </o-icon>
-                  {{ item.update_date_time.split(' ')[0] }}
-                </div>
-              </div>
+              </router-link>
             </div>
+
             <!-- 分页 -->
             <div v-if="projectCount > 10" class="pagination">
               <el-pagination
@@ -989,82 +991,85 @@ $theme: #0d8dff;
           &:hover {
             box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
           }
-          .o-icon {
-            margin-right: 2px;
-          }
-          .card-top {
-            height: 169px;
-            position: relative;
-            color: #fff;
-            img {
-              width: 100%;
-              height: 100%;
+          .pro-card-link {
+            .o-icon {
+              margin-right: 2px;
             }
-            .title {
-              font-size: 18px;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              z-index: 1;
-            }
-            .dig {
-              position: absolute;
-              right: 16px;
-              top: 17px;
-              font-size: 12px;
-              display: flex;
-              align-items: center;
-              z-index: 1;
-              .o-icon {
-                font-size: 16px;
-                svg {
-                  fill: #fff;
+            .card-top {
+              height: 169px;
+              position: relative;
+              color: #fff;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+              .title {
+                font-size: 18px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1;
+              }
+              .dig {
+                position: absolute;
+                right: 16px;
+                top: 17px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                z-index: 1;
+                .o-icon {
+                  font-size: 16px;
+                  svg {
+                    fill: #fff;
+                  }
                 }
               }
-            }
-            .card-modal {
-              width: 100%;
-              height: 100%;
-              background: rgba(0, 0, 0, 0.3);
-              position: absolute;
-              top: 0;
-              left: 0;
-            }
-          }
-          .card-bottom {
-            height: 62px;
-            padding: 16px 24px 24px 24px;
-            display: flex;
-            justify-content: space-between;
-            line-height: 22px;
-            background-color: #fff;
-            .info {
-              flex: 1;
-              display: flex;
-              .info-avata img {
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                margin-right: 8px;
+              .card-modal {
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                position: absolute;
+                top: 0;
+                left: 0;
               }
-              .info-name {
+            }
+            .card-bottom {
+              height: 62px;
+              padding: 16px 24px 24px 24px;
+              display: flex;
+              justify-content: space-between;
+              line-height: 22px;
+              background-color: #fff;
+              .info {
                 flex: 1;
-                height: 22px;
-                font-size: 14px;
+                display: flex;
+                .info-avata img {
+                  width: 22px;
+                  height: 22px;
+                  border-radius: 50%;
+                  margin-right: 8px;
+                }
+                .info-name {
+                  flex: 1;
+                  height: 22px;
+                  font-size: 14px;
+                  color: #000;
+                }
               }
-            }
-            .time {
-              min-width: 76px;
-              font-size: 12px;
-              display: flex;
-              align-items: center;
-              color: #555;
-              .o-icon {
-                font-size: 16px;
-                margin-right: 4px;
-                svg {
-                  fill: #555;
+              .time {
+                min-width: 76px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                color: #555;
+                .o-icon {
+                  font-size: 16px;
+                  margin-right: 4px;
+                  svg {
+                    fill: #555;
+                  }
                 }
               }
             }

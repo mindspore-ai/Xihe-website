@@ -245,7 +245,7 @@ function cancelClick() {
   deleteRelate.value = false;
 }
 
-// 删除数据集
+// 删除数据集、模型
 function deleteClick(item) {
   // deleteRelate.value = true;
   let projectId = detailData.value.id;
@@ -396,8 +396,8 @@ function toggleDelDlg(flag) {
         }"
       >
         <o-button type="primary" loading @click="goSelectFile">
-          {{ i18n.createTrain }}</o-button
-        >
+          {{ i18n.createTrain }}
+        </o-button>
       </div>
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
@@ -502,7 +502,7 @@ function toggleDelDlg(flag) {
       </div>
     </div>
 
-    <!-- 添加数据集 -->
+    <!-- 添加数据集弹窗 -->
     <el-dialog
       v-model="isShow"
       :title="i18n.addDataset"
@@ -533,7 +533,7 @@ function toggleDelDlg(flag) {
         </span>
       </template>
     </el-dialog>
-    <!-- 添加模型 -->
+    <!-- 添加模型弹窗 -->
     <el-dialog
       v-model="isShow1"
       :title="i18n.addModel"

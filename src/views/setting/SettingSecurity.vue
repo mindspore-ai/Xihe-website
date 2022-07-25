@@ -104,7 +104,7 @@ function keepPhone(formEl) {
         ruleForm.phone = '';
         ruleForm.code = '';
         isDisposed.value = false;
-        time.value < 60 ? 0 : 60;
+        time.value = time.value < 60 ? 0 : 60;
       } else {
         newQuery.new_mobile = ruleForm.phone;
         newQuery.new_mobile_code = ruleForm.code;
@@ -232,7 +232,7 @@ function resetForm(formEl) {
               :rules="[
                 { required: true, message: '必填项', trigger: 'blur' },
                 {
-                  pattern: /^\d{4}$/,
+                  pattern: /^\d{6}$/,
                   message: '验证码有误',
                   trigger: 'blur',
                 },

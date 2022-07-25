@@ -238,7 +238,7 @@ function reKeepEmail(formEl) {
         reRuleForm.email = '';
         reRuleForm.code = '';
         // isDisposed.value = false;
-        time.value < 60 ? 0 : 60;
+        time.value = time.value < 60 ? 0 : 60;
       } else {
         qureyData.new_email = reRuleForm.email;
         qureyData.new_email_code = reRuleForm.code;
@@ -292,7 +292,7 @@ function reKeepEmail(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^\d{4}$/,
+            pattern: /^\d{6}$/,
             message: '验证码有误',
             trigger: 'blur',
           },
@@ -370,7 +370,7 @@ function reKeepEmail(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^\d{4}$/,
+            pattern: /^\d{6}$/,
             message: '验证码有误',
             trigger: 'blur',
           },
@@ -432,7 +432,7 @@ function reKeepEmail(formEl) {
           :rules="[
             { required: true, message: '必填项', trigger: 'blur' },
             {
-              pattern: /^\d{4}$/,
+              pattern: /^\d{6}$/,
               message: '验证码有误',
               trigger: 'blur',
             },

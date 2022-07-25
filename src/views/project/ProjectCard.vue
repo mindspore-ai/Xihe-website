@@ -480,11 +480,16 @@ if (detailData.value.is_owner) {
         if (JSON.parse(event.data).msg === '未启动') {
           start();
         } else if (JSON.parse(event.data).msg === '任务已销毁') {
-          stopInference(detailData.value.id); //删除任务
-          ElMessage({
-            type: 'error',
-            message: '当前任务已结束，正在准备重启',
-          });
+          stopInference(detailData.value.id).then((res) => {
+            if (res.data.status === 200) {
+              ElMessage({
+                type: 'error',
+                message: '当前任务已结束，正在准备重启',
+              });
+              start();
+              msg.value = '启动中';
+            }
+          }); //删除任务
         }
       }
     };

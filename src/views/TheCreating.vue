@@ -60,7 +60,7 @@ const bannerLabel = computed(() => {
 }
 .creating-banner {
   // width: 100%;
-  padding: 0 16px;
+  // padding: 0 16px;
   padding-top: 80px;
   background-size: cover;
   background-image: url('@/assets/imgs/banner-head.png');

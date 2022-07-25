@@ -123,6 +123,10 @@ function setProject() {
   });
   setNewProject(newList).then((res) => {
     if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '创建成功',
+      });
       router.push(`/projects/${userInfo.userName}/${proList.name}`);
     } else if (
       res.data.name &&
@@ -135,7 +139,7 @@ function setProject() {
     } else if (
       res.data.non_field_errors &&
       res.data.non_field_errors[0] ===
-      '字段 name, owner_id, owner_type 必须能构成唯一集合。'
+        '字段 name, owner_id, owner_type 必须能构成唯一集合。'
     ) {
       ElMessage({
         type: 'error',
@@ -160,7 +164,7 @@ getModelTags().then((res) => {
   proList.licenses = licenses.value[0].name;
   proList.is_private = 'Public';
 });
-onMounted(() => { });
+onMounted(() => {});
 </script>
 
 <template>
@@ -369,6 +373,7 @@ onMounted(() => { });
 .create {
   background: #f5f6f8;
   padding-bottom: 64px;
+  padding: 0 16px;
 }
 .link {
   padding: 24px 0;

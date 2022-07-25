@@ -453,7 +453,6 @@ const rules = reactive({
                   <el-select
                     v-model="selectData.com1"
                     placeholder="请选择"
-                    clearable
                     style="width: 30%; margin-right: 3%"
                     @change="change1"
                   >
@@ -467,7 +466,6 @@ const rules = reactive({
                   <el-select
                     v-model="selectData.com2"
                     placeholder="请选择"
-                    clearable
                     style="width: 67%"
                     @change="change2"
                   >
@@ -604,11 +602,7 @@ const rules = reactive({
                   <icon-necessary></icon-necessary><span>计算资源</span>
                 </div>
                 <el-form-item prop="train_instance_type">
-                  <el-select
-                    v-model="selectData.com3"
-                    placeholder="请选择"
-                    clearable
-                  >
+                  <el-select v-model="selectData.com3" placeholder="请选择">
                     <el-option
                       v-for="x in optionData.com3[selectData.com2]"
                       :key="x.value"

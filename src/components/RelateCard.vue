@@ -18,7 +18,7 @@ const i18n = {
 const props = defineProps({
   detailData: {
     type: Object,
-    default: {},
+    default: null,
   },
   name: {
     type: String,

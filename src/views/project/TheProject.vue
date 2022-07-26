@@ -41,7 +41,8 @@ let i18n = {
   head: {
     title: '项目',
     introduce:
-      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击参考文档。',
+      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击参考文档',
+    reference: '参考文档',
     btn: '新建项目',
     count: '总数',
   },
@@ -426,7 +427,15 @@ onMounted(() => {
       <div class="wrap">
         <div class="banner-left">
           <div class="title">{{ i18n.head.title }}</div>
-          <div class="introduce">{{ i18n.head.introduce }}</div>
+          <div class="introduce">
+            {{ i18n.head.introduce }}
+            <a
+              class="reference"
+              href="https://xihe-docs.mindspore.cn/zh/basics/project_ui/"
+              target="_blank"
+              >{{ i18n.head.reference }}</a
+            >
+          </div>
         </div>
         <div class="banner-right">
           <o-button type="primary" @click="goSetNew">{{
@@ -741,6 +750,9 @@ $theme: #0d8dff;
       }
       .introduce {
         font-size: 18px;
+        .reference {
+          color: #4dcdff;
+        }
       }
       .banner-right {
         display: flex;

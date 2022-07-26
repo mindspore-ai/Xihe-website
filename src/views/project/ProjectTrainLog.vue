@@ -530,9 +530,14 @@ watch(
                     @click="saveSetting"
                     >评估中...</o-button
                   >
-                  <o-button v-if="showGoButton" type="primary" @click="goToPage"
-                    >查看报告</o-button
-                  >
+                  <a :href="`${evaluateUrl}`" onclick="return false">
+                    <o-button
+                      v-if="showGoButton"
+                      type="primary"
+                      @click="goToPage"
+                      >查看报告</o-button
+                    >
+                  </a>
                 </div>
               </div>
             </div>
@@ -573,12 +578,20 @@ watch(
                   <o-button v-if="showAnaButton1" disabled type="primary"
                     >评估中...</o-button
                   >
-                  <o-button
+                  <!-- <o-button
                     v-if="showGoButton1"
                     type="primary"
                     @click="goAimPage"
                     >查看报告</o-button
-                  >
+                  > -->
+                  <a :href="`${evaluateUrl}`" onclick="return false">
+                    <o-button
+                      v-if="showGoButton1"
+                      type="primary"
+                      @click="goAimPage"
+                      >查看报告</o-button
+                    >
+                  </a>
                 </div>
               </div>
             </div>

@@ -29,7 +29,8 @@ let i18n = {
     title: '数据集',
     count: '总数',
     introduce:
-      '在数据集仓库中，你既可以下载公开的数据集，也可以上传合规的数据集，更详细的数据集介绍请参考文档。',
+      '在数据集仓库中，你既可以下载公开的数据集，也可以上传合规的数据集，更详细的数据集介绍请',
+    reference: '参考文档',
     btn: '新建数据集',
   },
   back: '返回上一级',
@@ -411,7 +412,15 @@ onUnmounted(() => {
       <div class="wrap">
         <div class="banner-left">
           <div class="title">{{ i18n.head.title }}</div>
-          <div class="introduce">{{ i18n.head.introduce }}</div>
+          <div class="introduce">
+            {{ i18n.head.introduce }}
+            <a
+              class="reference"
+              href="https://xihe-docs.mindspore.cn/zh/basics/dataset_ui/"
+              target="_blank"
+              >{{ i18n.head.reference }}</a
+            >
+          </div>
         </div>
         <div class="banner-right">
           <o-button type="primary" @click="goNewModel">{{
@@ -662,6 +671,9 @@ $theme: #0d8dff;
       }
       .introduce {
         font-size: 18px;
+        .reference {
+          color: #4dcdff;
+        }
       }
       .banner-right {
         display: flex;

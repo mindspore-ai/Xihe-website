@@ -312,7 +312,7 @@ function cancelBtn() {
 function getTagList() {
   getModelTags().then((res) => {
     renderList.value = res.data;
-    localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
+    // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
       if (key === 'task') {

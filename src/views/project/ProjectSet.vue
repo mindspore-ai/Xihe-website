@@ -81,7 +81,25 @@ const visibleIndex = ref(0);
 const showDel = ref(false);
 const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
 // const queryRef = ref(null);
-
+const photos = reactive([
+  {
+    id: 1,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg1.png',
+  },
+  {
+    id: 2,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg2.png',
+  },
+  {
+    id: 3,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg3.png',
+  },
+  {
+    id: 4,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg4.png',
+  },
+]);
+const photoId = ref(0);
 // let query = reactive({
 //   name: '',
 // });
@@ -102,10 +120,9 @@ function getVisiableSelect(value) {
     : (visibleValue.value = false);
 }
 
-const photos = ref([]);
-const photoId = ref(0);
-photos.value = JSON.parse(localStorage.getItem('photoList'));
-photos.value.forEach((item) => {
+// photos.value = JSON.parse(localStorage.getItem('photoList'));
+
+photos.forEach((item) => {
   item.is_active = false;
   if (item.url === detailData.photo_url) {
     photoId.value = item.id;
@@ -114,7 +131,7 @@ photos.value.forEach((item) => {
 
 function selectImgClick(item) {
   photoId.value = item.id;
-  photos.value.forEach((single) => {
+  photos.forEach((single) => {
     single.is_active = false;
   });
   item.is_active = true;

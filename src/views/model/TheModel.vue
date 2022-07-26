@@ -27,7 +27,8 @@ let i18n = {
   head: {
     title: '模型',
     introduce:
-      '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，详情请点击参考文档。',
+      '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，详情请点击',
+    reference: '参考文档',
     btn: '新建模型',
     count: '总数',
   },
@@ -503,7 +504,15 @@ onUnmounted(() => {
       <div class="wrap">
         <div class="banner-left">
           <div class="title">{{ i18n.head.title }}</div>
-          <div class="introduce">{{ i18n.head.introduce }}</div>
+          <div class="introduce">
+            {{ i18n.head.introduce }}
+            <a
+              class="reference"
+              href="https://xihe-docs.mindspore.cn/zh/basics/model_ui/"
+              target="_blank"
+              >{{ i18n.head.reference }}</a
+            >
+          </div>
         </div>
         <div class="banner-right">
           <o-button type="primary" @click="goNewModel">{{
@@ -716,6 +725,9 @@ $theme: #0d8dff;
       .introduce {
         padding-right: 24px;
         font-size: 18px;
+        .reference {
+          color: #4dcdff;
+        }
       }
       .banner-right {
         display: flex;

@@ -494,7 +494,6 @@ if (detailData.value.is_owner) {
                 message: '当前任务已结束，正在准备重启',
               });
               start();
-              msg.value = '启动中';
             }
           }); //删除任务
         }

@@ -824,6 +824,10 @@ $theme: #0d8dff;
     line-height: 48px;
     padding-bottom: 7px;
 
+    &:hover {
+      color: #0d8dff;
+    }
+
     &.is-active {
       color: #3d8df7;
     }

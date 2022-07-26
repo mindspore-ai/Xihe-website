@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <script setup>
-import { ref, reactive, watch, computed, nextTick } from 'vue';
+import { ref, reactive, watch, onUnmounted, computed, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { debounce } from 'lodash/function';
@@ -167,7 +167,12 @@ function showInput() {
   });
 }
 // 搜索防抖函数
-const debounceSearch = debounce(getSearch, 500);
+const debounceSearch = debounce(getSearch, 500, {
+  trailing: true,
+});
+onUnmounted(() => {
+  debounceSearch.cancel();
+});
 function getSearch() {
   query.name = keyword.value;
   try {
@@ -192,14 +197,7 @@ function getSearch() {
 watch(
   keyword,
   () => {
-    // 如果keyword的值为空，则清空搜索结果
-    if (keyword.value === '') {
-      // emptyValue();
-      modelData.value = [];
-      datasetData.value = [];
-      projectData.value = [];
-      return;
-    } else {
+    if (keyword.value) {
       debounceSearch();
     }
   },
@@ -338,7 +336,7 @@ function handleBlur() {
         <!-- 搜索结果展示 -->
         <div class="search-wrap">
           <div
-            v-if="modelCount || datasetCount || projectCount"
+            v-if="(modelCount || datasetCount || projectCount) && keyword"
             class="search-result"
           >
             <div v-show="projectData.length" class="search-result-items">
@@ -422,7 +420,12 @@ function handleBlur() {
           </div>
           <!-- 搜索无结果 -->
           <div
-            v-show="modelCount == 0 && datasetCount == 0 && projectCount == 0"
+            v-show="
+              modelCount == 0 &&
+              datasetCount == 0 &&
+              projectCount == 0 &&
+              keyword
+            "
           >
             <div class="no-result">找不到该关键词，请重新输入</div>
           </div>

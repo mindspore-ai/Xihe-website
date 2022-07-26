@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, watch } from 'vue';
+import { ref, onUnmounted, reactive, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
@@ -29,11 +29,6 @@ const loginStore = useLoginStore();
 //   return useFileData().fileStoreData;
 // });
 
-const debounceSearch = debounce(getProject, 500, {
-  leading: true,
-  trailing: false,
-});
-
 const route = useRoute();
 const router = useRouter();
 
@@ -41,7 +36,7 @@ let i18n = {
   head: {
     title: '项目',
     introduce:
-      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击参考文档',
+      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击',
     reference: '参考文档',
     btn: '新建项目',
     count: '总数',
@@ -123,7 +118,12 @@ const queryData = reactive({
   train_sdk: null,
   infer_sdk: null,
 });
-queryData.search = route.query.search;
+// queryData.search = route.query.search;
+
+const debounceSearch = debounce(getProject, 500, {
+  // leading: true,
+  trailing: true,
+});
 
 function moreClick() {
   showDetail.value = true;
@@ -320,6 +320,7 @@ function dropdownClick(item) {
 }
 
 function getProject() {
+  console.log(11111111);
   getProjectData(queryData).then((res) => {
     projectCount.value = res.count;
     if (projectCount.value / 10 < 8) {
@@ -416,7 +417,7 @@ watch(
   }
 );
 
-onMounted(() => {
+onUnmounted(() => {
   debounceSearch.cancel();
 });
 </script>

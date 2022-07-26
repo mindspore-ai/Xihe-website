@@ -125,8 +125,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
@@ -231,16 +231,22 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
 // const runingStatus = ref(false);
 
 function handleTabClick(item) {
+  if (
+    item.index === '1' &&
+    userInfoStore.userName === detailData.value.owner_name.name
+  ) {
+    console.log('item.index: ', item.index);
+    return;
+  }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -1175,10 +1181,17 @@ $theme: #0d8dff;
       .el-tabs {
         :deep(.el-tabs__nav) {
           display: flex;
-          .el-tabs__item:nth-child(3) {
-            display: flex;
-            align-items: center;
-            padding-bottom: 0;
+          // .el-tabs__item:nth-child(3) {
+          //   display: flex;
+          //   align-items: center;
+          //   padding-bottom: 0;
+          // }
+          .el-tabs__item {
+            &:hover {
+              .el-dropdown {
+                color: #3d8df7;
+              }
+            }
           }
           .is-active {
             p {
@@ -1215,6 +1228,9 @@ $theme: #0d8dff;
     font-weight: normal;
     line-height: 48px;
     padding-bottom: 7px;
+    &:hover {
+      color: #3d8df7;
+    }
 
     &.is-active {
       color: #3d8df7;

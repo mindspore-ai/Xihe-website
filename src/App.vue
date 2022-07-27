@@ -84,6 +84,7 @@ onUnmounted(() => {
 .app-body {
   min-width: 1280px;
   min-height: calc(100vh - 200px);
+  background: #f5f6f8;
 }
 
 .app-footer {

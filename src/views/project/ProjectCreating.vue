@@ -54,7 +54,7 @@ const rules = reactive({
     {
       // 不能含有:*?\<>|等特殊字符
       pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
-      message: '不能含有:/\*?<>|等特殊字符',
+      message: '不能含有:/*?<>|等特殊字符',
       trigger: 'blur',
     },
     {
@@ -110,7 +110,6 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  // console.log('1111', newList);
   if (newList.is_private === 'Public') {
     newList.is_private = false;
   } else {
@@ -150,6 +149,7 @@ function setProject() {
   });
 }
 getModelTags().then((res) => {
+  console.log(res.data.projects_photo);
   projectPhotos.value = res.data.projects_photo;
   projectPhotos.value.forEach((item) => {
     item.is_active = false;

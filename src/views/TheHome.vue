@@ -17,6 +17,9 @@ import models1 from '@/assets/imgs/models1.png';
 import models2 from '@/assets/imgs/models2.png';
 import models3 from '@/assets/imgs/models3.png';
 import models4 from '@/assets/imgs/models4.png';
+import modelzoo1 from '@/assets/imgs/modelzoo1.png';
+import modelzoo2 from '@/assets/imgs/modelzoo2.png';
+import modelzoo3 from '@/assets/imgs/modelzoo3.png';
 import datasetPageImg from '@/assets/imgs/dataset-page.png';
 import slideImg from '@/assets/imgs/slide.png';
 
@@ -33,7 +36,7 @@ const hoemVideo =
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 
 const homeIns = ref(null);
-const homeTitle = '昇思羲和AI开发平台';
+const homeTitle = '昇思大模型体验平台';
 const homeDesc = 'The Best AI Platform For MindSpore';
 const quickStartLabel = '快速开始';
 const i18n = {
@@ -50,6 +53,17 @@ const i18n = {
     gradio2: '图像识别',
     gradio3: '情感分析',
     more: '探索更多项目',
+  },
+  modelzoo: {
+    title: '大模型体验',
+    introduce: '在线体验预训练超大模型任务',
+    quickStartLabel: '立即体验',
+    modelzoo1: '紫东.太初',
+    introduce1: '全球首个三模态千亿参数大模型',
+    modelzoo2: '武大.Luojia',
+    introduce2: '全球首个遥感专用框架及最大遥感样本库',
+    modelzoo3: '鹏程.盘古',
+    introduce3: '业界首个千亿级参数中文自然语言处理大模型',
   },
   model: {
     title: '模型',
@@ -85,6 +99,9 @@ function handleBtnClick() {
 }
 function handleBtnClick2() {
   router.push(`https://${DOMAIN}/datasets`);
+}
+function handleBtnClick3() {
+  router.push(`https://${DOMAIN}/modelzoo`);
 }
 
 onMounted(() => {
@@ -222,6 +239,64 @@ onUnmounted(() => {
               {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
           </a>
+        </div>
+        <div class="home-extend-modelzoo">
+          <div class="modelzoo">
+            <div class="left">
+              <div class="modelzoo-title title">{{ i18n.modelzoo.title }}</div>
+              <div>{{ i18n.modelzoo.introduce }}</div>
+            </div>
+            <OButton animation class="right" @click="handleBtnClick3">
+              {{ i18n.modelzoo.quickStartLabel }}
+              <template #suffix>
+                <OIcon><IconArrowRight /></OIcon>
+              </template>
+            </OButton>
+          </div>
+          <div class="examples">
+            <a class="gradio card">
+              <div class="gradio-header">
+                <img :src="modelzoo1" alt="" />
+              </div>
+              <div class="gradio-body title">
+                <p>{{ i18n.modelzoo.modelzoo1 }}</p>
+                <p class="arrow">
+                  <OIcon><IconArrowRight /></OIcon>
+                </p>
+              </div>
+              <div class="gradio-footer">
+                <div class="task">{{ i18n.modelzoo.introduce1 }}</div>
+              </div>
+            </a>
+            <a class="gradio card">
+              <div class="gradio-header">
+                <img :src="modelzoo2" alt="" />
+              </div>
+              <div class="gradio-body title">
+                <p>{{ i18n.modelzoo.modelzoo2 }}</p>
+                <p class="arrow">
+                  <OIcon><IconArrowRight /></OIcon>
+                </p>
+              </div>
+              <div class="gradio-footer">
+                <div class="task">{{ i18n.modelzoo.introduce2 }}</div>
+              </div>
+            </a>
+            <a class="gradio card">
+              <div class="gradio-header">
+                <img :src="modelzoo3" alt="" />
+              </div>
+              <div class="gradio-body title">
+                <p>{{ i18n.modelzoo.modelzoo3 }}</p>
+                <p class="arrow">
+                  <OIcon><IconArrowRight /></OIcon>
+                </p>
+              </div>
+              <div class="gradio-footer">
+                <div class="task">{{ i18n.modelzoo.introduce3 }}</div>
+              </div>
+            </a>
+          </div>
         </div>
         <div class="home-extend-model">
           <a class="more card" :href="`https://${DOMAIN}/models`">
@@ -460,6 +535,55 @@ a {
             padding: 3px 8px;
             background: #efefef;
           }
+        }
+      }
+    }
+    &-modelzoo {
+      .modelzoo {
+        margin-top: 64px;
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        padding: 40px 80px 40px 40px;
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &-title {
+          font-size: 54px;
+          // margin-bottom: 16px;
+        }
+      }
+      .examples {
+        display: flex;
+
+        .gradio {
+          margin-top: 24px;
+          background-color: #ffffff;
+          // margin-right: 24px;
+          &-header {
+            background-color: #2e3959;
+            img {
+              width: 100%;
+            }
+          }
+          &-body {
+            margin: 24px 28px 0 24px;
+            padding-bottom: 16px;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            .arrow {
+              display: flex;
+              align-items: center;
+            }
+            border-bottom: 0.5px solid #555555;
+          }
+          &-footer {
+            margin: 23px 15px 24px 24px;
+            display: flex;
+          }
+        }
+        .gradio + .gradio {
+          margin-left: 24px;
         }
       }
     }

@@ -58,12 +58,15 @@ async function getUserToken(params) {
       saveUserAuth(token);
       // 去掉url中的code
       const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
-      if (window.history.replaceState) {
-        window.history.replaceState({}, '', newUrl);
-        await requestUserInfo();
-      } else {
-        window.location.href = newUrl;
-      }
+      window.location.href = newUrl;
+
+      // WARNING: 该方法会导致code无法清除
+      // if (window.history.replaceState) {
+      //   window.history.replaceState({}, '', newUrl);
+      //   await requestUserInfo();
+      // } else {
+      //   window.location.href = newUrl;
+      // }
     } else {
       saveUserAuth();
       // goAuthorize();

@@ -130,7 +130,6 @@ function afterLogined(userInfo) {
 
 // 登录
 export async function doLogin() {
-  debugger;
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {

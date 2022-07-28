@@ -4,7 +4,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import { router } from './routers';
 
-import '@authing/native-js-ui-components/lib/index.min.css';
+// import '@authing/native-js-ui-components/lib/index.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/dark.css';
 import 'element-plus/theme-chalk/el-loading.css';

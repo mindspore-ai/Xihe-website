@@ -165,7 +165,6 @@ function goBlob(item) {
       contents,
     },
   };
-  // router.push();
 }
 function creatFolter(formEl) {
   if (!formEl) return;

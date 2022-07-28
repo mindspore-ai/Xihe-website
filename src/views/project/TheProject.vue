@@ -10,6 +10,8 @@ import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
+import OEmpty from '@/components/OEmpty.vue';
+import emptyImg from '@/assets/imgs/model-empty.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
@@ -311,7 +313,6 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  // console.log(item);
   if (item.value === 'update_time') {
     queryData.order = '-' + item.value;
   } else {
@@ -320,7 +321,6 @@ function dropdownClick(item) {
 }
 
 function getProject() {
-  console.log(11111111);
   getProjectData(queryData).then((res) => {
     projectCount.value = res.count;
     if (projectCount.value / 10 < 8) {
@@ -714,12 +714,13 @@ onUnmounted(() => {
               ></el-pagination>
             </div>
           </div>
-
           <!-- 无项目显示 -->
-          <div v-if="projectCount === 0" class="empty-status">
-            <img src="@/assets/imgs/project-empty.png" alt="" />
-            <p @click="setNewClick">未搜索到相关项目</p>
-          </div>
+          <o-empty
+            v-if="projectCount === 0"
+            :img="emptyImg"
+            describe="无匹配项目"
+            class="empty-status"
+          ></o-empty>
         </div>
       </div>
     </div>
@@ -963,25 +964,9 @@ $theme: #0d8dff;
           }
         }
       }
-
       .empty-status {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        img {
-          width: 280px;
-          height: 206px;
-        }
-        p {
-          font-size: 18px;
-          color: rgba(85, 85, 85, 1);
-          margin-top: 24px;
-        }
+        padding: 110px 0 150px 0;
       }
-
       .card-list {
         display: grid;
         grid-template-columns: repeat(3, minmax(200px, 1fr));

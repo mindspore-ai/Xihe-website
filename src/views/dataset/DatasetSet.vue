@@ -470,7 +470,7 @@ function toggleDelDlg(flag) {
     .el-textarea {
       display: block;
       margin-bottom: 24px;
-      width: 656px !important;
+      width: 532px !important;
       :deep(.el-textarea__inner) {
         height: 89px;
       }

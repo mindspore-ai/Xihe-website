@@ -1,4 +1,5 @@
 <script setup>
+
 import ModelzooCard from '@/components/ModelzooCard.vue';
 
 let i18n = {
@@ -42,6 +43,7 @@ let i18n = {
     },
   ],
 };
+
 </script>
 <template>
   <div class="model-page">

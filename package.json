@@ -15,6 +15,7 @@
     "@better-scroll/mouse-wheel": "^2.4.2",
     "@better-scroll/slide": "^2.4.2",
     "@element-plus/icons-vue": "^1.1.4",
+    "authing-js-sdk": "^4.23.35",
     "axios": "^0.26.1",
     "element-plus": "^2.1.10",
     "highlight.js": "^11.5.1",

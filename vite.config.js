@@ -44,6 +44,7 @@ export default defineConfig({
   ],
   server: {
     https: true,
+    port: '9000',
     proxy: {
       '/api': {
         target: 'https://xihebackend.test.osinfra.cn/',

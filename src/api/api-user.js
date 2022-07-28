@@ -24,14 +24,32 @@ export function queryAppId() {
 }
 
 /**
- * 获取用户token以及用户信息
+ * 获取用户token
  * @returns
  */
-export async function queryAuthentication(params) {
-  const url = '/api/users/login/';
+export function queryUserToken(params) {
+  const url = '/api/users/token_bycode/';
   return request.post(url, params).then((res) => {
     return res.data;
   });
+}
+
+/**
+ * 获取用户idToken
+ * @returns
+ */
+export function queryUserIdToken(params) {
+  const { token } = params;
+  const url = '/api/users/idtoken_bytoken/';
+  return request
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**
@@ -39,24 +57,18 @@ export async function queryAuthentication(params) {
  * @returns
  */
 export async function queryUserInfo(params) {
-  const { id, token, userName } = params;
-  if (id) {
-    const url = `/api/users/${id}`;
-    if (token) {
-      return request
-        .get(url, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        });
-    } else {
-      return request.get(url).then((res) => {
+  const { token, userName } = params;
+  if (token) {
+    const url = `api/users/userinfo_bytoken/`;
+    return request
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
         return res.data;
       });
-    }
   } else if (userName) {
     const url = `/api/users/?username=${userName}`;
     return request.get(url).then((res) => {
@@ -64,17 +76,6 @@ export async function queryUserInfo(params) {
     });
   }
 }
-
-/**
- * 获取用户信息
- * @returns
- */
-// export async function queryUserInfo(params) {
-//   const url = `/api/users/${params.id}`;
-//   return request.get(url).then((res) => {
-//     return res.data;
-//   });
-// }
 
 /**
  * 获取用户模型信息

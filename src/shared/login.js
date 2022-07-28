@@ -58,7 +58,6 @@ async function getUserToken(params) {
       saveUserAuth(token);
       // 去掉url中的code
       const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
-      debugger;
       if (window.history.replaceState) {
         window.history.replaceState({}, '', newUrl);
         await requestUserInfo();
@@ -67,7 +66,7 @@ async function getUserToken(params) {
       }
     } else {
       saveUserAuth();
-      goAuthorize();
+      // goAuthorize();
     }
   } catch (error) {
     console.error('获取用户信息失败！');
@@ -126,7 +125,6 @@ function afterLogined(userInfo) {
 
 // 登录
 export async function doLogin() {
-  debugger;
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {

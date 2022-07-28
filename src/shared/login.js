@@ -68,10 +68,12 @@ async function getUserToken(params) {
       //   window.location.href = newUrl;
       // }
     } else {
+      setStatus(LOGIN_STATUS.FAILED);
       saveUserAuth();
       // goAuthorize();
     }
   } catch (error) {
+    setStatus(LOGIN_STATUS.FAILED);
     console.error('获取用户信息失败！');
   }
 }
@@ -128,6 +130,7 @@ function afterLogined(userInfo) {
 
 // 登录
 export async function doLogin() {
+  debugger;
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {
@@ -212,13 +215,11 @@ export async function requestUserInfo() {
       } else {
         logout();
         setStatus(LOGIN_STATUS.FAILED);
-        saveUserAuth();
         throw new Error(res.status + ' ' + res.msg);
       }
     } catch (err) {
       logout();
       setStatus(LOGIN_STATUS.FAILED);
-      saveUserAuth();
       console.error('获取用户信息失败：', err);
     }
   }
@@ -238,9 +239,11 @@ export async function goAuthorize() {
       const url = client.buildAuthorizeUrl();
       window.location.href = url;
     } else {
+      setStatus(LOGIN_STATUS.FAILED);
       console.error('获取登录信息失败！');
     }
   } catch (error) {
+    setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');
   }
 }

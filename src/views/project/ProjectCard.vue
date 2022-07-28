@@ -79,6 +79,8 @@ const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
 
+route.hash ? getReadMeFile() : '';
+
 function addRelateClick() {
   isShow.value = true;
 }
@@ -298,7 +300,7 @@ function getReadMeFile() {
 watch(
   () => route,
   () => {
-    if (route.name === 'projectCard') {
+    if (route.name === 'projectCard' && !route.hash) {
       codeString.value = '';
       getReadMeFile();
     }

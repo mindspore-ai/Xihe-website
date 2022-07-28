@@ -24,7 +24,7 @@ const userInfo = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
-
+route.hash ? getReadMeFile() : '';
 const slugify = (s) =>
   decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 const mkit = new Markdown({ html: true });
@@ -225,7 +225,7 @@ watch(
 watch(
   () => route,
   () => {
-    if (route.name === 'modelCard') {
+    if (route.name === 'modelCard' && !route.hash) {
       codeString.value = '';
       getReadMeFile();
     }

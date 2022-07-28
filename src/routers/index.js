@@ -125,6 +125,7 @@ router.beforeEach(async (to, from) => {
     'models',
     'datasets',
     'projects',
+    'modelzoo',
     'privacy',
     'legal',
     '404',

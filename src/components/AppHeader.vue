@@ -55,7 +55,7 @@ const navItems = [
   },
   {
     id: 'modelzoo',
-    label: '大模型',
+    label: '大模型体验',
     href: '/modelzoo',
   },
   {

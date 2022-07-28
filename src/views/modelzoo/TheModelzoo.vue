@@ -15,10 +15,10 @@ let i18n = {
   clear: '清除',
   cardLists: [
     {
-      title: '紫东太初',
+      title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
       url: '/img/modelzoo/modelzoo-taichu.png',
-      path: '/home',
+      path: '/modelzoo/taichu',
     },
     {
       title: '武大.Luojia',

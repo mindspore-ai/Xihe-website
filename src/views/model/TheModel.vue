@@ -939,7 +939,6 @@ $theme: #0d8dff;
         .pagination {
           display: flex;
           justify-content: center;
-          margin-top: 40px;
           position: absolute;
           bottom: -76px;
           left: 50%;

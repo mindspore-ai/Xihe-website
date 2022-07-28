@@ -16,6 +16,8 @@ import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
 import IconRemove from '~icons/app/remove';
 
+import warningImg from '@/assets/icons/warning.png';
+
 import {
   downloadFile,
   findFile,
@@ -44,7 +46,7 @@ const isAuthentic = computed(() => {
 
 let routerParams = router.currentRoute.value.params;
 let contents = routerParams.contents;
-// const showDel = false;
+const showDel = ref(false);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -64,13 +66,14 @@ const i18n = {
   emptyVisited: '该用户还未上传任何文件',
   delete: {
     title: '删除模型',
-    description: '确定删除吗',
+    description: '此操作不可逆确定删除',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
   },
 };
-
+const fileName = ref('');
+const isFolder = ref(false);
 let queryRef = ref(null);
 const rules = reactive({
   folderName: [
@@ -113,13 +116,19 @@ function getDetailData(path) {
     console.error(error);
   }
 }
-// function toggleDelDlg(flag) {
-//   if (flag === undefined) {
-//     showDel.value = !showDel.value;
-//   } else {
-//     showDel.value = flag;
-//   }
-// }
+function toggleDelDlg(flag, itemFileName, itemIsFolder) {
+  if (flag === undefined) {
+    showDel.value = !showDel.value;
+  } else if (flag === true) {
+    showDel.value = true;
+    fileName.value = itemFileName;
+    isFolder.value = itemIsFolder;
+  } else {
+    showDel.value = false;
+    fileName.value = '';
+    isFolder.value = false;
+  }
+}
 function getFilesByPath() {
   routerParams = router.currentRoute.value.params;
   contents = routerParams.contents;
@@ -165,7 +174,6 @@ function goBlob(item) {
       contents,
     },
   };
-  // router.push();
 }
 function creatFolter(formEl) {
   if (!formEl) return;
@@ -226,11 +234,13 @@ function deleteFolderClick(folderName, isFolder) {
         type: 'success',
         message: res.msg,
       });
+      showDel.value = false;
     } else {
       ElMessage({
         type: 'error',
         message: res.msg,
       });
+      showDel.value = false;
     }
   });
 }
@@ -324,7 +334,7 @@ watch(
             :class="{ 'folder-item': item.is_folder }"
             class="tree-table-item"
           >
-            <td class="tree-table-item-name">
+            <td class="tree-table-item-name" :title="item.name">
               <router-link :to="goBlob(item)" class="inner-box">
                 <o-icon v-if="!item.is_folder"><icon-file></icon-file> </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
@@ -334,20 +344,23 @@ watch(
             <td
               class="tree-table-item-download"
               width="10%"
-              @click="downloadFile(item.path, item.name, detailData.id)"
+              @click="
+                !item.is_folder &&
+                  downloadFile(item.path, item.name, detailData.id)
+              "
             >
               <div v-if="item.size" class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span class="size">{{ changeByte(item.size) }}</span>
               </div>
             </td>
-            <td class="tree-table-item-from">
+            <td class="tree-table-item-from" :title="item.description">
               <div class="inner-box">
                 <span>{{ item.description }}</span>
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !detailData.is_owner }"
-                  @click="deleteFolderClick(item.name, item.is_folder)"
+                  @click="toggleDelDlg(true, item.name, item.is_folder)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
                     <icon-remove></icon-remove>
@@ -393,17 +406,22 @@ watch(
     </div>
   </div>
   <!-- TODO:弹窗提醒 -->
-  <!-- <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
+  <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
+    <template #head>
+      <div class="dlg-title" :style="{ textAlign: 'center' }">
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
     <div
       class="dlg-body"
       :style="{
-        padding: '8px 0 30px',
+        padding: '8px 0 0',
         fontSize: '18px',
         textAlign: 'center',
         width: '640px',
       }"
     >
-      {{ i18n.delete.description }}
+      {{ i18n.delete.description }} {{ fileName }} 吗？
     </div>
     <template #foot>
       <div
@@ -419,12 +437,14 @@ watch(
           @click="toggleDelDlg(false)"
           >{{ i18n.delete.cancel }}</o-button
         >
-        <o-button type="primary" @click="deleteFolderClick">{{
-          i18n.delete.confirm
-        }}</o-button>
+        <o-button
+          type="primary"
+          @click="deleteFolderClick(fileName, isFolder)"
+          >{{ i18n.delete.confirm }}</o-button
+        >
       </div>
     </template>
-  </o-dialog> -->
+  </o-dialog>
 </template>
 
 <style lang="scss" scoped>

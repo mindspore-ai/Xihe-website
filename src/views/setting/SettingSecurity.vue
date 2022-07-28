@@ -37,7 +37,7 @@ try {
       phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
     }
   });
-} catch { }
+} catch {}
 //获取验证码
 function setPhone(formEl) {
   if (!formEl) return;

@@ -304,10 +304,7 @@ function toggleDelDlg(flag) {
         @close-click="toggleDelDlg(false)"
       >
         <template #head>
-          <div
-            class="dlg-title"
-            :style="{ textAlign: 'center', paddingTop: '40px' }"
-          >
+          <div class="dlg-title" :style="{ textAlign: 'center' }">
             <img :src="warningImg" alt="" />
           </div>
         </template>

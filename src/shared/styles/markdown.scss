@@ -1,6 +1,10 @@
 .markdown-file {
-  padding-top: 70px;
+  padding-top: 48px;
   padding-bottom: 48px;
+  // &>*:first-child {
+  //   margin-top: 0 !important;
+  // }
+  scroll-behavior: smooth;
   li {
     list-style: inherit;
   }
@@ -130,7 +134,7 @@
     // min-height: calc(100% - 20px);
     border-radius: 3px;
     color: inherit;
-    background-color: #e9f0f8;
+    background-color: #e9f0f8 !important;
   }
 
   // code {
@@ -182,8 +186,8 @@
   }
 
   blockquote {
-    border-left: 0.5em solid #eee;
-    padding: 0 0 0 2em;
+    border-left: 0.5em solid rgb(133, 133, 133);
+    padding: 0 0 0 1em;
     margin-left: 0;
   }
 
@@ -291,7 +295,6 @@
   input,
   select,
   textarea {
-    // font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 13px;
     font-weight: normal;
     line-height: normal;

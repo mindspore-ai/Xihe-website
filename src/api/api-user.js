@@ -59,7 +59,7 @@ export function queryUserIdToken(params) {
 export async function queryUserInfo(params) {
   const { token, userName } = params;
   if (token) {
-    const url = `api/users/userinfo_bytoken/`;
+    const url = `/api/users/userinfo_bytoken/`;
     return request
       .get(url, {
         headers: {

@@ -28,6 +28,26 @@
     color: #111111;
     font-weight: 400;
     margin-top: 1em;
+    &::before {
+      content: '';
+      display: block;
+      height: 80px;
+      margin-top: -80px;
+      visibility: hidden;
+    }
+    a {
+      color: inherit;
+      &:hover {
+        color: inherit;
+      }
+      &::before {
+        content: '';
+        display: block;
+        height: 80px;
+        margin-top: -80px;
+        visibility: hidden;
+      }
+    }
   }
 
   // h1,
@@ -449,6 +469,9 @@
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
+    p {
+      margin: 0;
+    }
     /*-webkit-box-shadow: 0 1px 1px #ccc;
         -moz-box-shadow: 0 1px 1px #ccc;
         box-shadow: 0 1px 1px #ccc;   */

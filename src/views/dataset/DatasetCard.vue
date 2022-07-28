@@ -21,7 +21,6 @@ import { useFileData } from '@/stores';
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
-
 const slugify = (s) =>
   decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 const mkit = new Markdown({ html: true });
@@ -56,6 +55,9 @@ const i18n = {
   ],
   emptyVisited: '无数据集卡片',
 };
+
+route.hash ? getReadMeFile() : '';
+
 // 获取README文件
 function getReadMeFile() {
   try {
@@ -124,7 +126,7 @@ watch(
 watch(
   () => route,
   () => {
-    if (route.name === 'datasetCard') {
+    if (route.name === 'datasetCard' && !route.hash) {
       codeString.value = '';
       getReadMeFile();
     }

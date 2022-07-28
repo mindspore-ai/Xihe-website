@@ -123,7 +123,6 @@ const loginedDropdownItems = [
     label: '退出',
     action: () => {
       logout();
-      router.push('/');
     },
   },
 ];

@@ -112,6 +112,25 @@ function enterLuoJiaSet() {
   padding: 80px 0 64px 0;
   .bread {
     margin: 40px 0;
+    .el-breadcrumb {
+      height: 21px;
+      line-height: 21px;
+      .el-breadcrumb__item {
+        :deep(.el-breadcrumb__inner.is-link) {
+          color: #555;
+          font-weight: 400;
+          &:hover {
+            color: #0d8dff;
+          }
+        }
+        :deep(.el-breadcrumb__separator.el-icon) {
+          color: #555;
+        }
+      }
+      :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+        color: #000;
+      }
+    }
   }
 }
 .luojia-title {

@@ -57,6 +57,7 @@ function jumpDetail() {
     transition: all 0.2s linear;
   }
   &:hover {
+    box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
     .o-icon {
       transform: translate(3px);
       transition: all 0.2s linear;

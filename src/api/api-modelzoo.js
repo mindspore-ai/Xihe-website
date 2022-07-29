@@ -17,7 +17,7 @@ function getHeaderConfig() {
  * @returns
  */
 export function uploadModelzooPic(params) {
-  const url = `/api/experience/taichu`;
+  const url = `/api/foundation/taichu_opt`;
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {

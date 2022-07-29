@@ -292,7 +292,7 @@ function reKeepEmail(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^\d{6}$/,
+            pattern: /^\d{4}$/,
             message: '验证码有误',
             trigger: 'blur',
           },
@@ -370,7 +370,7 @@ function reKeepEmail(formEl) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^\d{6}$/,
+            pattern: /^\d{4}$/,
             message: '验证码有误',
             trigger: 'blur',
           },
@@ -432,7 +432,7 @@ function reKeepEmail(formEl) {
           :rules="[
             { required: true, message: '必填项', trigger: 'blur' },
             {
-              pattern: /^\d{6}$/,
+              pattern: /^\d{4}$/,
               message: '验证码有误',
               trigger: 'blur',
             },

@@ -38,7 +38,6 @@ let queryRef = ref(null);
 
 let query = reactive({
   owner_id: userInfo.userName,
-  owner_type: [],
   name: '',
   is_private: 'false',
   description: '',
@@ -47,7 +46,6 @@ let query = reactive({
 
 try {
   owner.value = useUserInfoStore().owner;
-  query.owner_type = JSON.parse(localStorage.getItem('base')).models_type_id;
   getModelTags().then((res) => {
     licenses.value = res.data.licenses;
     query.licenses = licenses.value[0].id;

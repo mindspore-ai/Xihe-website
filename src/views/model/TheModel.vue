@@ -370,7 +370,6 @@ function dropdownClick(item) {
   queryData.order = item.value;
 }
 function getModel() {
-  console.log(22222);
   getModelData(queryData).then((res) => {
     modelCount.value = res.count;
     if (modelCount.value / queryData.size < 8) {

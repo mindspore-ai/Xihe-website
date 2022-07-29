@@ -2,6 +2,7 @@
 import { ref, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Markdown from 'markdown-it';
+import markdownItAnchor from 'markdown-it-anchor';
 
 import Files from '~icons/app/files';
 import IconCheck from '~icons/app/check';
@@ -30,8 +31,13 @@ const prop = defineProps({
 
 let detailData = reactive(useFileData().fileStoreData);
 const fileData = ref();
-
+const slugify = (s) =>
+  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 const mkit = new Markdown({ html: true });
+mkit.use(markdownItAnchor, {
+  level: 1,
+  slugify,
+});
 const codeString = ref('');
 const result = ref(mkit.render(codeString.value));
 const rawData = ref('');

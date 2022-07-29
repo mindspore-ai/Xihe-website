@@ -119,9 +119,6 @@ function getVisiableSelect(value) {
     ? (visibleValue.value = true)
     : (visibleValue.value = false);
 }
-
-// photos.value = JSON.parse(localStorage.getItem('photoList'));
-
 photos.forEach((item) => {
   item.is_active = false;
   if (item.url === detailData.photo_url) {

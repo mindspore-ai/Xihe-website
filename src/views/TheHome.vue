@@ -145,10 +145,10 @@ onUnmounted(() => {
     <div class="home-mask"></div>
 
     <div class="home-content">
-      <p class="home-desc" data-aos="slide-up">
+      <p class="home-desc" data-aos="slide-up" data-aos-once="true">
         {{ homeDesc }}
       </p>
-      <p class="home-title" data-aos="slide-up">
+      <p class="home-title" data-aos="slide-up" data-aos-once="true">
         {{ homeTitle }}
       </p>
       <OButton
@@ -157,6 +157,7 @@ onUnmounted(() => {
         class="home-btn"
         data-aos="slide-up"
         data-aos-delay="500"
+        data-aos-once="true"
         @click="handleBtnClick"
       >
         {{ quickStartLabel }}
@@ -178,9 +179,13 @@ onUnmounted(() => {
         <p>{{ i18n.mouse }}</p>
       </div>
       <div class="home-extend-box">
-        <div class="home-extend-home" data-aos="slide-up" data-aos-offset="200">
+        <div
+          class="home-extend-home"
+          data-aos="slide-up"
+          data-aos-duration="600"
+        >
           <div class="left">
-            <p class="home-title title">{{ i18n.home.title }}</p>
+            <p id="anchor" class="home-title title">{{ i18n.home.title }}</p>
             <p class="home-introduce">{{ i18n.home.introduce }}</p>
             <OButton
               animation
@@ -446,7 +451,7 @@ a {
     flex-direction: column;
     align-items: center;
     img {
-      width: 44px;
+      height: 44px;
     }
     p {
       color: #ffffff;

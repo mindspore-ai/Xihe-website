@@ -7,7 +7,7 @@ import markdownItAnchor from 'markdown-it-anchor';
 import { useUserInfoStore } from '@/stores';
 
 import IconPlus from '~icons/app/plus';
-import IconAddFile from '~icons/app/add-file';
+// import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/project';
 
 import RelateCard from '@/components/RelateCard.vue';
@@ -51,11 +51,11 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-const pushParams = {
-  user: routerParams.user,
-  name: routerParams.name,
-  contents: routerParams.contents,
-};
+// const pushParams = {
+//   user: routerParams.user,
+//   name: routerParams.name,
+//   contents: routerParams.contents,
+// };
 
 const i18n = {
   recentDownload: '近期下载量',
@@ -311,26 +311,26 @@ watch(
     immediate: true,
   }
 );
-function goEditor() {
-  pushParams.contents = ['README.md'];
-  router.push({
-    name: 'projectFileEditor',
-    params: pushParams,
-  });
-}
-function emptyClick(ind) {
-  if (ind === 1) {
-    router.push({
-      name: 'projectFileNew',
-      params: pushParams,
-    });
-  } else if (ind === 3) {
-    router.push({
-      name: 'projectFileUpload',
-      params: pushParams,
-    });
-  }
-}
+// function goEditor() {
+//   pushParams.contents = ['README.md'];
+//   router.push({
+//     name: 'projectFileEditor',
+//     params: pushParams,
+//   });
+// }
+// function emptyClick(ind) {
+//   if (ind === 1) {
+//     router.push({
+//       name: 'projectFileNew',
+//       params: pushParams,
+//     });
+//   } else if (ind === 3) {
+//     router.push({
+//       name: 'projectFileUpload',
+//       params: pushParams,
+//     });
+//   }
+// }
 
 function goDetailClick(val) {
   router.push(`/models/${val.owner_name.name}/${val.name}`);
@@ -352,8 +352,13 @@ watch(
   }
 );
 const failLog = ref('');
+const loading = ref(false);
 getLog(detailData.value.id).then((res) => {
-  failLog.value = res.data.data;
+  if (res.data.data) {
+    failLog.value = res.data.data.replace(/\n/g, '<br>');
+    failLog.value = `<span> ${failLog.value}</span>`;
+  }
+  loading.value = true;
 });
 //判断显示哪一个页面
 const canStart = ref(false);
@@ -383,6 +388,7 @@ function start2() {
     socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
     socket.value.onopen = function () {
       socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+      clearInterval(timer);
       timer = setInterval(() => {
         socket.value.send(JSON.stringify({ pk: detailData.value.id }));
       }, 10000);
@@ -394,6 +400,7 @@ function start2() {
     socket.value.onmessage = function (event) {
       msg.value = JSON.parse(event.data).msg;
       if (!!JSON.parse(event.data).data) {
+        failLog.value = '';
         clientSrc.value = JSON.parse(event.data).data.url;
         closeConn(); //断开连接
       } else {
@@ -401,7 +408,19 @@ function start2() {
           JSON.parse(event.data).msg === '启动失败' ||
           JSON.parse(event.data).msg === '文件收集失败'
         ) {
+          msg.value = '启动失败';
+          closeConn(); //断开连接
           stopInference(detailData.value.id); //删除任务
+          // if (failLog.value) {
+          loading.value = false;
+          getLog(detailData.value.id).then((res) => {
+            if (res.data.data) {
+              failLog.value = res.data.data.replace(/\n/g, '<br>');
+              failLog.value = `<span> ${failLog.value}</span>`;
+            }
+            loading.value = true;
+          });
+          // }
           ElMessage({
             type: 'error',
             message: JSON.parse(event.data).msg + '，请检查文件后重试',
@@ -440,6 +459,7 @@ if (detailData.value.is_owner) {
         socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
         socket.value.onopen = function () {
           socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+          clearInterval(timer);
           timer = setInterval(() => {
             socket.value.send(JSON.stringify({ pk: detailData.value.id }));
           }, 10000);
@@ -447,6 +467,7 @@ if (detailData.value.is_owner) {
         socket.value.onmessage = function (event) {
           msg.value = JSON.parse(event.data).msg;
           if (!!JSON.parse(event.data).data) {
+            failLog.value = '';
             clientSrc.value = JSON.parse(event.data).data.url;
             closeConn(); //断开连接
           } else {
@@ -454,9 +475,19 @@ if (detailData.value.is_owner) {
               JSON.parse(event.data).msg === '启动失败' ||
               JSON.parse(event.data).msg === '文件收集失败'
             ) {
-              stopInference(detailData.value.id); //删除任务
-              closeConn(); //断开连接
               msg.value = '启动失败';
+              closeConn(); //断开连接
+              stopInference(detailData.value.id); //删除任务
+              // if (failLog.value) {
+              loading.value = false;
+              getLog(detailData.value.id).then((res) => {
+                if (res.data.data) {
+                  failLog.value = res.data.data.replace(/\n/g, '<br>');
+                  failLog.value = `<span> ${failLog.value}</span>`;
+                }
+                loading.value = true;
+              });
+              // }
               ElMessage({
                 type: 'error',
                 message: '程序错误，请检查文件后重试',
@@ -468,7 +499,9 @@ if (detailData.value.is_owner) {
                 type: 'error',
                 message: '当前任务已结束，请重新启动',
               });
-            }
+            } //else if (JSON.parse(event.data).msg === '未启动') {
+            //closeConn(); //断开连接
+            // }
           }
         };
       }
@@ -481,6 +514,7 @@ if (detailData.value.is_owner) {
       socket.value.send(
         JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
       );
+      clearInterval(timer);
       timer = setInterval(() => {
         socket.value.send(
           JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
@@ -573,26 +607,8 @@ onUnmounted(() => {
 </script>
 <template>
   <div v-if="detailData" class="model-card">
-    <div v-if="detailData.sdk_name === 'Gradio'" class="left-data2">
-      <div
-        v-if="msg === ('未启动' || '启动失败') && !!failLog"
-        class="markdown-body"
-      >
-        <div class="fail">
-          <div class="fail-title">推理启动日志</div>
-          <div class="fail-body">
-            <div>
-              启动失败，推理启动日志如下，你可以根据推理日志的提示更改gradio相关文件，常见错误
-            </div>
-            <a href="">参考文档</a>
-          </div>
-          <div class="fail-log">{{ failLog }}</div>
-        </div>
-        <o-button v-if="detailData.is_owner" type="primary" @click="start2"
-          >重新启动</o-button
-        >
-      </div>
-      <div v-else-if="msg === '运行中'" class="markdown-body">
+    <div v-if="detailData.sdk_name === 'Gradio' && loading" class="left-data2">
+      <div v-if="msg === '运行中'" class="markdown-body">
         <iframe
           :src="clientSrc"
           width="100%"
@@ -613,6 +629,28 @@ onUnmounted(() => {
           >停止</o-button
         >
       </div>
+      <div
+        v-else-if="
+          (msg === '未启动' || '启动失败') && failLog && detailData.is_owner
+        "
+        class="markdown-body"
+      >
+        <div class="fail">
+          <div class="fail-title">推理启动日志</div>
+          <div class="fail-body">
+            <div>
+              启动失败，推理启动日志如下，你可以根据推理日志的提示更改gradio相关文件，常见错误
+            </div>
+            <a href="">参考文档</a>
+          </div>
+          <div class="fail-log">
+            <div v-html="failLog"></div>
+          </div>
+        </div>
+        <o-button v-if="detailData.is_owner" type="primary" @click="start2"
+          >重新启动</o-button
+        >
+      </div>
       <div v-else-if="detailData.is_owner" class="markdown-body">
         <div class="markdown-file" v-html="result2"></div>
         <o-button type="primary" :disabled="!canStart" @click="start2"
@@ -630,7 +668,7 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div v-else class="left-data1">
+    <!-- <div v-else class="left-data1">
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
         <o-button v-if="detailData.is_owner" @click="goEditor">{{
@@ -662,8 +700,8 @@ onUnmounted(() => {
           </p>
         </div>
       </div>
-    </div>
-    <div class="right-data">
+    </div> -->
+    <div v-if="loading" class="right-data">
       <div class="download-data">
         <h4 class="download-title">{{ i18n.recentDownload }}</h4>
         <span class="download-count">{{ detailData.download_count }}</span>
@@ -819,10 +857,14 @@ onUnmounted(() => {
         }
       }
       &-log {
+        max-width: 100%;
         margin-top: 16px;
         margin-right: 48px;
         padding: 24px;
         background-color: #e9f0f8;
+        font-size: 14px;
+        line-height: 22px;
+        word-break: break-all;
       }
     }
     iframe {
@@ -830,7 +872,7 @@ onUnmounted(() => {
       height: 666px;
     }
     .markdown-file {
-      padding-right: 40px;
+      padding-right: 48px;
     }
     position: relative;
     // margin-right: 40px;

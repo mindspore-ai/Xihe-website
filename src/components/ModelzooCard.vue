@@ -23,6 +23,10 @@ const prop = defineProps({
     type: String,
     default: '',
   },
+  openness: {
+    type: Boolean,
+    default: false,
+  },
 });
 function jumpDetail() {
   router.push(`${prop.path}`);
@@ -36,7 +40,8 @@ function jumpDetail() {
     <div class="card-bottom">
       <div class="card-bottom-title">
         <p>{{ prop.title }}</p>
-        <o-icon><icon-forward></icon-forward></o-icon>
+        <o-icon v-if="prop.openness"><icon-forward></icon-forward></o-icon>
+        <p v-else class="closed">敬请期待</p>
       </div>
       <div class="card-bottom-text">{{ prop.introduce }}</div>
     </div>
@@ -46,6 +51,16 @@ function jumpDetail() {
 .card {
   max-width: 464px;
   cursor: pointer;
+  .o-icon {
+    transform: translate(0);
+    transition: all 0.2s linear;
+  }
+  &:hover {
+    .o-icon {
+      transform: translate(3px);
+      transition: all 0.2s linear;
+    }
+  }
   .card-top {
     width: 100%;
     height: 270px;
@@ -53,6 +68,8 @@ function jumpDetail() {
     img {
       width: 100%;
       height: 100%;
+      transform: scale(1);
+      transition: all 0.2s linear;
       &:hover {
         transform: scale(1.05);
         transition: all 0.2s linear;
@@ -74,6 +91,11 @@ function jumpDetail() {
       align-items: center;
       padding: 24px 0;
       border-bottom: 1px solid #ccc;
+      .closed {
+        font-size: 16px;
+        color: #999999;
+        line-height: 24px;
+      }
     }
     &-text {
       padding: 24px 0;
@@ -83,12 +105,6 @@ function jumpDetail() {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-    .o-icon {
-      &:hover {
-        transform: translate(3px);
-        transition: all 0.2s linear;
-      }
     }
   }
 }

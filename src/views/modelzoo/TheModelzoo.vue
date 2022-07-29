@@ -1,11 +1,14 @@
 <script setup>
 import ModelzooCard from '@/components/ModelzooCard.vue';
+
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 
+import IconArrow from '~icons/app/arrow-blue';
+import OIcon from '@/components/OIcon.vue';
 let i18n = {
   head: {
     title: '大模型',
@@ -24,29 +27,38 @@ let i18n = {
       introduce: '全球首个三模态千亿参数大模型',
       url: taichu,
       path: '/modelzoo/taichu',
+      openness: true,
     },
     {
       title: '武大.Luojia',
       introduce: '全球首个遥感专用框架及最大遥感样本库',
       url: luojia,
+      path: '/modelzoo/luojia',
+      openness: true,
     },
     {
       title: '鹏程.盘古',
       introduce: '业界首个千亿级参数中文自然语言处理大模型',
       url: pangu,
+      openness: true,
     },
     {
       title: '鹏程.神农',
       introduce: '面向生物医学领域的人工智能平台',
       url: shenlong,
+      openness: true,
     },
     {
       title: '鹏程.大圣',
       introduce: '业界首个千亿参数规模机器视觉分析领域大模',
       url: dasheng,
+      openness: false,
     },
   ],
 };
+function goModelzoo() {
+  window.open('https://www.hiascend.com/software/modelzoo');
+}
 </script>
 <template>
   <div class="model-page">
@@ -60,15 +72,20 @@ let i18n = {
         </div>
       </div>
     </div>
-    <div class="wrap">
+    <div class="card-lists">
       <div v-for="item in i18n.cardLists" :key="item">
         <ModelzooCard
           :title="item.title"
           :introduce="item.introduce"
           :url="item.url"
           :path="item.path"
+          :openness="item.openness"
         />
       </div>
+    </div>
+    <div class="watch-more" @click="goModelzoo">
+      <span class="text">点击去往ModelZoo查看更多大模型</span>
+      <o-icon><icon-arrow></icon-arrow></o-icon>
     </div>
   </div>
 </template>
@@ -76,7 +93,6 @@ let i18n = {
 <style lang="scss" scoped>
 .model-page {
   // background-color: #f5f6f8;
-
   .model-head {
     padding-top: 80px;
     background-size: cover;
@@ -103,7 +119,36 @@ let i18n = {
       }
     }
   }
-  .wrap {
+  .watch-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1472px;
+    padding-bottom: 64px;
+    cursor: pointer;
+    &:hover {
+      .o-icon {
+        transform: translate(3px);
+        transition: all 0.2s linear;
+      }
+    }
+    .text {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 400;
+      color: #000000;
+      line-height: 22px;
+    }
+    .o-icon {
+      font-size: 16px;
+      height: 22px;
+      margin-left: 8px;
+      transform: translate(0px);
+      transition: all 0.2s linear;
+    }
+  }
+  .card-lists {
     margin: 0 auto;
     padding: 50px 16px 136px 16px;
     max-width: 1472px;
@@ -111,7 +156,7 @@ let i18n = {
     grid-template-columns: repeat(3, 1fr);
     row-gap: 24px;
     column-gap: 24px;
-    padding: 64px 16px;
+    padding: 64px 16px 24px 16px;
   }
 }
 </style>

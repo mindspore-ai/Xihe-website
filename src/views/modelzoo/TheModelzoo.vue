@@ -1,6 +1,10 @@
 <script setup>
-
 import ModelzooCard from '@/components/ModelzooCard.vue';
+import taichu from '@/assets/imgs/modelzoo/taichu.png';
+import luojia from '@/assets/imgs/modelzoo/Luojia.png';
+import pangu from '@/assets/imgs/modelzoo/pangu.png';
+import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
+import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 
 let i18n = {
   head: {
@@ -18,32 +22,31 @@ let i18n = {
     {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
-      url: '/img/modelzoo/modelzoo-taichu.png',
+      url: taichu,
       path: '/modelzoo/taichu',
     },
     {
       title: '武大.Luojia',
       introduce: '全球首个遥感专用框架及最大遥感样本库',
-      url: '/img/modelzoo/modelzoo-luojia.png',
+      url: luojia,
     },
     {
       title: '鹏程.盘古',
       introduce: '业界首个千亿级参数中文自然语言处理大模型',
-      url: '/img/modelzoo/modelzoo-pangu.png',
+      url: pangu,
     },
     {
       title: '鹏程.神农',
       introduce: '面向生物医学领域的人工智能平台',
-      url: '/img/modelzoo/modelzoo-shenlong.png',
+      url: shenlong,
     },
     {
       title: '鹏程.大圣',
       introduce: '业界首个千亿参数规模机器视觉分析领域大模',
-      url: '/img/modelzoo/modelzoo-dasheng.png',
+      url: dasheng,
     },
   ],
 };
-
 </script>
 <template>
   <div class="model-page">
@@ -71,11 +74,6 @@ let i18n = {
 </template>
 
 <style lang="scss" scoped>
-.wrap {
-  margin: 0 auto;
-  // padding: 50px 16px 136px 16px;
-  max-width: 1472px;
-}
 .model-page {
   // background-color: #f5f6f8;
 

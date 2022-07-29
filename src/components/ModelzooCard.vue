@@ -29,14 +29,14 @@ function jumpDetail() {
 }
 </script>
 <template>
-  <div class="card">
+  <div class="card" @click="jumpDetail">
     <div class="card-top">
       <img :src="prop.url" alt="" />
     </div>
     <div class="card-bottom">
       <div class="card-bottom-title">
         <p>{{ prop.title }}</p>
-        <o-icon @click="jumpDetail"><icon-forward></icon-forward></o-icon>
+        <o-icon><icon-forward></icon-forward></o-icon>
       </div>
       <div class="card-bottom-text">{{ prop.introduce }}</div>
     </div>
@@ -45,12 +45,18 @@ function jumpDetail() {
 <style lang="scss" scoped>
 .card {
   max-width: 464px;
+  cursor: pointer;
   .card-top {
     width: 100%;
     height: 270px;
+    overflow: hidden;
     img {
       width: 100%;
       height: 100%;
+      &:hover {
+        transform: scale(1.05);
+        transition: all 0.2s linear;
+      }
     }
   }
   .card-bottom {
@@ -79,9 +85,9 @@ function jumpDetail() {
       white-space: nowrap;
     }
     .o-icon {
-      cursor: pointer;
       &:hover {
-        transform: scale(1.2);
+        transform: translate(3px);
+        transition: all 0.2s linear;
       }
     }
   }

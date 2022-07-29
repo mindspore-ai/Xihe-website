@@ -92,11 +92,6 @@ function create(formEl) {
         >
         <el-breadcrumb-item class="set-new">新建模型</el-breadcrumb-item>
       </el-breadcrumb>
-      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)">{{
-        i18n.homePage
-      }}</span
-      ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.createPlaceholder }}</span> -->
     </div>
 
     <el-form ref="queryRef" class="creating-box" :model="query" prop="region">

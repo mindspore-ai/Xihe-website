@@ -121,7 +121,7 @@ let tabTitle = reactive([
   },
 ]);
 
-const activeName = ref(tabTitle[route.meta.index].path);
+const activeName = ref(tabTitle[route.meta.index].label);
 
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
@@ -550,13 +550,16 @@ watch(
     return route.name;
   },
   () => {
-    if (route.meta.index === 2) {
-      activeName.value = 'tree';
-    } else if (route.meta.index === 1) {
-      activeName.value = 'train';
-    } else if (route.meta.index === 3) {
-      activeName.value = 'settings';
+    if (Object.prototype.hasOwnProperty.call(route.meta, 'index')) {
+      activeName.value = tabTitle[route.meta.index].label;
     }
+    // if (route.meta.index === 2) {
+    //   activeName.value = 'tree';
+    // } else if (route.meta.index === 1) {
+    //   activeName.value = 'train';
+    // } else if (route.meta.index === 3) {
+    //   activeName.value = 'settings';
+    // }
   }
 );
 // 中途登录页面更新
@@ -632,14 +635,14 @@ function goTrain(path) {
               v-if="item.label !== '训练'"
               :key="item.id"
               :label="item.label"
-              :name="item.path"
+              :name="item.label"
             >
             </el-tab-pane>
             <el-tab-pane
               v-else
               :key="item.id"
               class="center-tab-pane"
-              :name="item.path"
+              :name="item.label"
             >
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">

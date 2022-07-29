@@ -11,6 +11,10 @@ import IconEditing from '~icons/app/editing';
 import IconDelete from '~icons/app/delete';
 import IconDownload from '~icons/app/download';
 
+import { changeByte } from '@/shared/utils';
+
+import warningImg from '@/assets/icons/warning.png';
+
 import {
   getDownLoadToken,
   downloadFileObs,
@@ -53,13 +57,21 @@ const i18n = {
   viewRawCode: '查看源代码',
   copy: '复制',
   edit: '编辑',
-  delete: '删除',
+  deleteIt: '删除',
   download: '下载',
+  delete: {
+    title: '删除模型',
+    description: '此操作不可逆，确定删除',
+    btnText: '删除',
+    cancel: '取消',
+    confirm: '确认',
+  },
 };
 const showBlob = ref(false);
 const suffix = ref('');
-const inputDom = ref();
-const rawBlob = ref();
+const inputDom = ref(null);
+const rawBlob = ref('');
+const showDel = ref(false);
 
 let reopt = {
   method: 'get',
@@ -83,12 +95,16 @@ function previewFile(objkey) {
       let reader = new FileReader();
       reader.readAsText(res, 'utf-8');
       reader.onload = function () {
-        rawData.value = reader.result;
-        // md文件不需加```
-        suffix.value === 'md'
-          ? (codeString.value = reader.result)
-          : (codeString.value =
-              '```' + suffix.value + ' \n' + reader.result + '\n```');
+        if (!reader.result.includes('�')) {
+          rawData.value = reader.result;
+          // md文件不需加```
+          suffix.value === 'md'
+            ? (codeString.value = reader.result)
+            : (codeString.value =
+                '```' + suffix.value + ' \n' + reader.result + '\n```');
+        } else {
+          showBlob.value = false;
+        }
       };
     });
   });
@@ -156,7 +172,13 @@ function copyText(textValue) {
     center: true,
   });
 }
-
+function toggleDelDlg(flag) {
+  if (flag === undefined) {
+    showDel.value = !showDel.value;
+  } else {
+    showDel.value = flag;
+  }
+}
 function pathClick(index) {
   // let routeParams = route.params.contents;
   // !!! 此处填写各自模块的组件！！！
@@ -233,10 +255,10 @@ watch(
           <div
             v-if="detailData.is_owner"
             class="file-operation-item"
-            @click="headleDelFile(fileData.path)"
+            @click="toggleDelDlg(true)"
           >
             <o-icon><icon-delete></icon-delete></o-icon
-            ><span class="text">{{ i18n.delete }}</span>
+            ><span class="text">{{ i18n.deleteIt }}</span>
           </div>
           <div
             class="file-operation-item"
@@ -254,13 +276,55 @@ watch(
         v-html="result"
       ></div>
       <div v-else class="big-file">
-        文件太大不支持展示但你仍然可以<span
+        文件太大或格式不支持展示但你仍然可以<span
           class="download"
           @click="downloadFile(fileData.path, fileData.name, detailData.id)"
-          >下载</span
-        >
+          >下载 </span
+        ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
       </div>
     </div>
+    <o-dialog
+      v-if="fileData"
+      :show="showDel"
+      :close="false"
+      @close-click="toggleDelDlg(false)"
+    >
+      <template #head>
+        <div class="dlg-title" :style="{ textAlign: 'center' }">
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          padding: '8px 0 12px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '640px',
+        }"
+      >
+        {{ i18n.delete.description }} {{ fileData.name }} 吗？
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '56px',
+          }"
+        >
+          <o-button
+            :style="{ marginRight: '24px' }"
+            @click="toggleDelDlg(false)"
+            >{{ i18n.delete.cancel }}</o-button
+          >
+          <o-button type="primary" @click="headleDelFile(fileData.path)">{{
+            i18n.delete.confirm
+          }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 
@@ -313,6 +377,7 @@ watch(
         line-height: 20px;
       }
       .o-icon {
+        color: #555;
         display: inline-block;
         padding: 12px;
         font-size: 24px;

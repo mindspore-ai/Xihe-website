@@ -740,6 +740,7 @@ $theme: #0d8dff;
 //   display: none;
 // }
 .model-detail {
+  background-color: #fff;
   .card-head-top {
     display: flex;
     align-items: center;

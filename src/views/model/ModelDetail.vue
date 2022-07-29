@@ -312,7 +312,6 @@ function cancelBtn() {
 function getTagList() {
   getModelTags().then((res) => {
     renderList.value = res.data;
-    // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
       if (key === 'task') {
@@ -710,6 +709,7 @@ $theme: #0d8dff;
   max-width: 1472px;
 }
 .model-detail {
+  background-color: #fff;
   .card-head-top {
     display: flex;
     align-items: center;

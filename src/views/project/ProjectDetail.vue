@@ -23,6 +23,9 @@ import {
   getUserDig,
   projectFork,
 } from '@/api/api-project';
+
+import { getBaseInfo } from '@/api/api-shared';
+
 onBeforeRouteLeave(() => {
   fileData.$reset();
 });
@@ -125,8 +128,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -231,7 +234,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -246,7 +249,8 @@ function handleTabClick(item) {
     return;
   }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -481,7 +485,7 @@ function copyText(textValue) {
 }
 
 function forkCreateClick() {
-  ruleFormRef.value.validate((valid) => {
+  ruleFormRef.value.validate(async (valid) => {
     if (valid) {
       forkShow.value = false;
       loadingShow.value = true;
@@ -490,8 +494,9 @@ function forkCreateClick() {
       params.name = forkForm.storeName;
       params.owner_id = userInfoStore.id;
       params.description = forkForm.describe;
-      params.owner_type = JSON.parse(localStorage.getItem('base')).user_type_id;
-
+      await getBaseInfo().then((res) => {
+        params.owner_type = res.user_type_id;
+      });
       forkShow.value = false;
       loadingShow.value = true;
       projectFork(params, projectId).then((res) => {
@@ -1050,6 +1055,7 @@ $theme: #0d8dff;
   opacity: 0;
 }
 .model-detail {
+  background-color: #fff;
   .card-head-top {
     display: flex;
     margin-bottom: 16px;

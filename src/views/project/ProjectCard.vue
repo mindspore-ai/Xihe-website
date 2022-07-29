@@ -857,6 +857,7 @@ onUnmounted(() => {
     color: #000;
     .download-data {
       .download-title {
+        margin-bottom: 8px;
         font-size: 16px;
         color: #555;
       }

@@ -6,16 +6,7 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-import { getBaseInfo } from './api/api-shared';
-import { useBaseData } from '@/stores';
-
-const baseData = useBaseData();
 const route = useRoute();
-
-getBaseInfo().then((res) => {
-  baseData.setBaseData(res);
-  localStorage.setItem('base', JSON.stringify(res));
-});
 
 const showFooter = computed(() => {
   return !(route.path === '/' || route.path === '/home');

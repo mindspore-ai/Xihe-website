@@ -18,12 +18,12 @@ import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
 import taichuCompanyImg from '@/assets/imgs/taichu/taichu-companyimg.png';
 const taichuvideo1 =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
-// const taichuvideo2 =
-//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2002.mp4';
-// const taichuvideo3 =
-//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2001.mp4';
-// const taichuvideo4 =
-//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2002.mp4';
+const taichuvideo2 =
+  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2002.mp4';
+const taichuvideo3 =
+  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2001.mp4';
+const taichuvideo4 =
+  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2002.mp4';
 const referencevideo =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E7%B4%AB%E4%B8%9C%E5%A4%AA%E5%88%9D.mp4';
 const instancevideo =
@@ -33,12 +33,37 @@ const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
 // 图片数组
-// const videoImgArr = []
-function playVideo() {
+const videoImgArr1 = [
+  {
+    id: 1,
+    src: taichuVideo1,
+    videoUrl: taichuvideo1,
+  },
+  {
+    id: 2,
+    src: taichuVideo3,
+    videoUrl: taichuvideo2,
+  },
+];
+const videoImgArr2 = [
+  {
+    id: 1,
+    src: taichuVideo2,
+    videoUrl: taichuvideo3,
+  },
+  {
+    id: 2,
+    src: taichuVideo2,
+    videoUrl: taichuvideo4,
+  },
+];
+function playVideo(videoUrl) {
+  // console.log(videoUrl);
   // 获得视频元素
   const video = document.getElementById('video');
-  console.log('video: ', video);
+  // console.log('video: ', video.src);
   showVideo.value = true;
+  video.src = videoUrl;
   video.play();
 }
 function toggleDialog() {
@@ -80,30 +105,30 @@ function closeInstanceVideo() {
 }
 </script>
 <template>
-  <div class="taichu">
-    <div class="taichu-intro">
-      <div class="taichu-intro-title">简述</div>
-      <p class="taichu-intro-info info1">
+  <div class="taichu-info">
+    <div class="taichu-info-intro">
+      <div class="taichu-info-intro-title">简述</div>
+      <p class="taichu-info-intro-info info1">
         紫东.太初是中科院自动化所与MindSpore社区联合打造的全球首个图、文、音三模态大模型。紫东.太初将文本
         + 视觉 + 语音
         各个模型高效协同，实现超强性能，在图文跨模态理解与生成性能上都能领先目前业界的SOTA模型，高效完成跨模态检测、视觉问答、语义描述等下游任务。此外，视频理解与描述的性能更是实现了全球第一，在今年的两个国际大赛中，ACM
         Multimedia（国际多媒体大会）
         和ICCV（国际计算机视觉大会）紫东太初都获得了第一名的成绩。
       </p>
-      <p class="taichu-intro-info">
+      <p class="taichu-info-intro-info">
         紫东.太初的发布将改变当前单一模型对应单一任务的人工智能研发范式，实现三模态图文音的统一语义表达，大幅提升文本、语音、图像和视频等领域的基础任务性能，并在多模态内容的理解、搜索、推荐和问答，语音识别和合成，人机交互和无人驾驶等商业应用中具有潜力巨大的市场价值。
       </p>
-      <div class="taichu-intro-body">
-        <div class="taichu-intro-body-title">
+      <div class="taichu-info-intro-body">
+        <div class="taichu-info-intro-body-title">
           全球首个三模态大模型“紫东.太初”——助力科研创新与应用孵化
         </div>
-        <div class="taichu-intro-body-img">
+        <div class="taichu-info-intro-body-img">
           <img
-            class="taichu-intro-body-img-left"
+            class="taichu-info-intro-body-img-left"
             :src="taichuEfficient"
             alt=""
           />
-          <div class="taichu-intro-body-img-right">
+          <div class="taichu-info-intro-body-img-right">
             <div class="img-text">
               <img :src="taichuEfficient1" alt="" />
               <img :src="taichuEfficient2" alt="" />
@@ -111,47 +136,57 @@ function closeInstanceVideo() {
               <p>以文搜图</p>
             </div>
             <div class="audio-video">
-              <div class="audio-video-img" @click="playVideo">
-                <img class="audio-video-img1" :src="taichuVideo1" alt="" />
+              <div
+                v-for="item in videoImgArr1"
+                :key="item.id"
+                class="audio-video-img"
+                @click="playVideo(item.videoUrl)"
+              >
+                <img class="audio-video-img1" :src="item.src" alt="" />
                 <img class="audio-video-img2" :src="taichuPlay" alt="" />
               </div>
-              <div class="audio-video-img" @click="playVideo">
+              <!-- <div class="audio-video-img" @click="playVideo">
                 <img class="audio-video-img1" :src="taichuVideo3" alt="" />
                 <img class="audio-video-img2" :src="taichuPlay" alt="" />
-              </div>
+              </div> -->
               <p>以图生音</p>
             </div>
             <div class="audio-video">
-              <div class="audio-video-img" @click="playVideo">
+              <div
+                v-for="item in videoImgArr2"
+                :key="item.id"
+                class="audio-video-img"
+                @click="playVideo(item.videoUrl)"
+              >
                 <img class="audio-video-img1" :src="taichuVideo2" alt="" />
                 <img class="audio-video-img2" :src="taichuPlay" alt="" />
               </div>
-              <div class="audio-video-img" @click="playVideo">
+              <!-- <div class="audio-video-img" @click="playVideo">
                 <img class="audio-video-img1" :src="taichuVideo2" alt="" />
                 <img class="audio-video-img2" :src="taichuPlay" alt="" />
-              </div>
+              </div> -->
               <p>以音生图</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="taichu-intro-img">
+      <div class="taichu-info-intro-img">
         <img :src="taichuLargeimg1" alt="" />
       </div>
     </div>
-    <div class="taichu-reference">
-      <div class="taichu-reference-title">参考设计——多模态对话虚拟人“小初”</div>
-      <p class="taichu-reference-info">
+    <div class="taichu-info-reference">
+      <div class="taichu-info-reference-title">参考设计——多模态对话虚拟人“小初”</div>
+      <p class="taichu-info-reference-info">
         自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
       </p>
-      <div class="taichu-reference-video">
-        <img class="taichu-reference-video-img1" :src="taichuVideo4" alt="" />
-        <div class="taichu-reference-video-img2">
+      <div class="taichu-info-reference-video">
+        <img class="taichu-info-reference-video-img1" :src="taichuVideo4" alt="" />
+        <div class="taichu-info-reference-video-img2">
           <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
           <div>紫东.太初</div>
           <p>全球首个三模态大模型</p>
         </div>
-        <div v-if="showReferenceVideo" class="taichu-reference-video-info">
+        <div v-if="showReferenceVideo" class="taichu-info-reference-video-info">
           <!-- <span class="close-btn" @click="closeReferenceVideo"> -->
           <!-- <img src="" alt=""> -->
           <img
@@ -170,17 +205,17 @@ function closeInstanceVideo() {
         </div>
       </div>
     </div>
-    <div class="taichu-instance">
-      <div class="taichu-instance-title">应用实例——千博手语教考一体机</div>
-      <p class="taichu-instance-info">
+    <div class="taichu-info-instance">
+      <div class="taichu-info-instance-title">应用实例——千博手语教考一体机</div>
+      <p class="taichu-info-instance-info">
         手语教考一体机：我国共有2700多万听障人士，他们面临沟通难、就业难等一系列问题，究其原因，主要是手语知识学习的挑战，这其中手语词汇匮乏、师资短缺、手语标准难统一是三大挑战
         。千博信息基于紫东.太初利用昇思MindSpore开发了手语多模态模型，开创性地实现手语动作与示意图片和文字的联动，让初学者更加方便的理解；基于手语多模态模型，利用昇腾AI基础软硬件平台开发了手语教考一体机，帮助学生随学随练随考，高效学习。
         <br />
         在解决手语师资短缺的同时，还能推动手语标准的推广。目前一体机已在湘潭特校等数十个学校陆续上线。
       </p>
-      <div class="taichu-instance-desc">
-        <div class="taichu-instance-desc-title">听障群体持续学习成为难题</div>
-        <div class="taichu-instance-desc-title2">
+      <div class="taichu-info-instance-desc">
+        <div class="taichu-info-instance-desc-title">听障群体持续学习成为难题</div>
+        <div class="taichu-info-instance-desc-title2">
           听障人士长期手语学习过程中的三大挑战
         </div>
         <ul class="taichu-instance-challenges">
@@ -250,11 +285,11 @@ function closeInstanceVideo() {
           </li>
         </ul>
       </div>
-      <div class="taichu-instance-AIdesc">
-        <div class="taichu-instance-AIdesc-title">
+      <div class="taichu-info-instance-AIdesc">
+        <div class="taichu-info-instance-AIdesc-title">
           AI赋能，让手语学习更简单、可持续
         </div>
-        <ul class="taichu-instance-AIdesc-title2">
+        <ul class="taichu-info-instance-AIdesc-title2">
           <li>
             <span>持续丰富手语词汇库</span>
             <img :src="taichuArrows" alt="" />
@@ -267,35 +302,33 @@ function closeInstanceVideo() {
             <span>持续丰富手语词汇库</span>
           </li>
         </ul>
-        <div class="taichu-instance-AIdesc-img">
+        <div class="taichu-info-instance-AIdesc-img">
           <img :src="taichuLargeimg2" alt="" />
         </div>
         <img
-          class="taichu-instance-AIdesc-companyimg"
+          class="taichu-info-instance-AIdesc-companyimg"
           :src="taichuCompanyImg"
           alt=""
         />
-        <div class="taichu-instance-AIdesc-video">
+        <div class="taichu-info-instance-AIdesc-video">
           <img
-            class="taichu-instance-AIdesc-video-img1"
+            class="taichu-info-instance-AIdesc-video-img1"
             :src="taichuVideo5"
             alt=""
           />
-          <div class="taichu-instance-AIdesc-video-img2">
+          <div class="taichu-info-instance-AIdesc-video-img2">
             <img :src="taichuPlay" alt="" @click="playInstanceVideo" />
           </div>
           <div
             v-if="showInstanceVideo"
-            class="taichu-instance-AIdesc-video-info"
+            class="taichu-info-instance-AIdesc-video-info"
           >
-            <!-- <span> -->
             <img
               class="close-btn"
-              @click="closeInstanceVideo"
               :src="taichuClose"
               alt=""
+              @click="closeInstanceVideo"
             />
-            <!-- </span> -->
             <video
               id="instanceVideo"
               controls="controls"
@@ -306,13 +339,12 @@ function closeInstanceVideo() {
         </div>
       </div>
     </div>
-    <o-dialog :show="showVideo" @close-click="toggleDialog">
+    <o-dialog :is-center="true" :show="showVideo" @close-click="toggleDialog">
       <video
         id="video"
         width="198"
         height="90"
         controls="controls"
-        :poster="taichuVideo1"
         :src="taichuvideo1"
         class="home-video"
       ></video>
@@ -321,18 +353,9 @@ function closeInstanceVideo() {
 </template>
 
 <style lang="scss" scoped>
-.o-dialog {
-  :deep(.o-dialog-wrap) {
-    position: relative;
-    top: 3%;
-  }
-  // video {
-  //   width: 100%;
-  //   height: 520px;
-  // }
-}
-.taichu {
+.taichu-info {
   padding: 40px 80px;
+  background-color: #fff;
   &-intro {
     &-title {
       height: 32px;
@@ -692,7 +715,7 @@ function closeInstanceVideo() {
       &-companyimg {
         display: block;
         width: 421px;
-        margin: 52px auto 84px;
+        margin: 52px auto 64px;
       }
       &-video {
         height: 707px;

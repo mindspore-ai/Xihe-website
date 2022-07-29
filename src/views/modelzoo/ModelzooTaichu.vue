@@ -40,10 +40,13 @@ watch(
 function handleNavClick(item) {
   router.push({ path: item.href });
 }
+function goTaichuMore() {
+  window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
+}
 </script>
 
 <template>
-  <div class="taichu-detail">
+  <div class="taichu">
     <div class="taichu-wrap">
       <div class="taichu-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -64,7 +67,12 @@ function handleNavClick(item) {
               业界首个三模态千亿参数大模型，支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
             </div>
             <div class="content-banner-right-btn">
-              <OButton type="primary" animation class="home-btn">
+              <OButton
+                type="primary"
+                animation
+                class="home-btn"
+                @click="goTaichuMore"
+              >
                 了解更多
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
@@ -91,7 +99,7 @@ function handleNavClick(item) {
 </template>
 
 <style lang="scss" scoped>
-.taichu-detail {
+.taichu {
   background-color: #f5f6f8;
   padding-top: 80px;
   // margin-top: 80px;
@@ -150,7 +158,7 @@ function handleNavClick(item) {
         }
       }
       .taichu-content-desc {
-        margin-top: 21px;
+        margin-top: 24px;
         background-color: #fff;
 
         &-tab {

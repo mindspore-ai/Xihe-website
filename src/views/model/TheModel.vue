@@ -714,9 +714,12 @@ $theme: #0d8dff;
     background-size: cover;
     background-image: url('@/assets/imgs/banner-head.png');
     .wrap {
+      padding: 50px 16px 136px 16px;
+      max-width: 1472px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      padding: 42px 16px;
+      // padding: 42px 16px;
       color: #fff;
       .title {
         padding-bottom: 8px;

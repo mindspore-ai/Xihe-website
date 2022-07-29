@@ -5,7 +5,8 @@ import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
+// import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
+import dasheng from '@/assets/imgs/modelzoo/dasheng1.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -41,6 +42,7 @@ let i18n = {
       introduce: '业界首个千亿级参数中文自然语言处理大模型',
       url: pangu,
       openness: true,
+      path: '/modelzoo/pangu',
     },
     {
       title: '鹏程.神农',
@@ -61,7 +63,7 @@ function goModelzoo() {
 }
 </script>
 <template>
-  <div class="model-page">
+  <div class="modelzoo">
     <div class="model-head">
       <div class="wrap">
         <div class="banner-left">
@@ -91,7 +93,12 @@ function goModelzoo() {
 </template>
 
 <style lang="scss" scoped>
-.model-page {
+.wrap {
+  margin: 0 auto;
+  padding: 50px 16px 136px 16px;
+  max-width: 1472px;
+}
+.modelzoo {
   // background-color: #f5f6f8;
   .model-head {
     padding-top: 80px;

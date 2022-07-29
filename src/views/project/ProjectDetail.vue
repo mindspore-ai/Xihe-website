@@ -121,19 +121,19 @@ let tabTitle = reactive([
   },
 ]);
 
-const activeName = ref(tabTitle[route.meta.index].label);
+const activeName = ref(tabTitle[route.meta.index].path);
 
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
-const trainSelect = [
+const trainSelect = reactive([
   {
     id: 1,
     label: '训练代码',
@@ -144,7 +144,7 @@ const trainSelect = [
     label: '训练列表',
     path: 'trainlist',
   },
-];
+]);
 
 const ruleFormRef = ref();
 const rules = reactive({
@@ -234,7 +234,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
@@ -249,8 +249,7 @@ function handleTabClick(item) {
     return;
   }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -550,16 +549,16 @@ watch(
     return route.name;
   },
   () => {
-    if (Object.prototype.hasOwnProperty.call(route.meta, 'index')) {
-      activeName.value = tabTitle[route.meta.index].label;
-    }
-    // if (route.meta.index === 2) {
-    //   activeName.value = 'tree';
-    // } else if (route.meta.index === 1) {
-    //   activeName.value = 'train';
-    // } else if (route.meta.index === 3) {
-    //   activeName.value = 'settings';
+    // if (Object.prototype.hasOwnProperty.call(route.meta, 'index')) {
+    //   activeName.value = tabTitle[route.meta.index].label;
     // }
+    if (route.meta.index === 2) {
+      activeName.value = 'tree';
+    } else if (route.meta.index === 1) {
+      activeName.value = 'train';
+    } else if (route.meta.index === 3) {
+      activeName.value = 'settings';
+    }
   }
 );
 // 中途登录页面更新
@@ -635,14 +634,15 @@ function goTrain(path) {
               v-if="item.label !== '训练'"
               :key="item.id"
               :label="item.label"
-              :name="item.label"
+              :name="item.path"
             >
             </el-tab-pane>
             <el-tab-pane
               v-else
               :key="item.id"
               class="center-tab-pane"
-              :name="item.label"
+              :name="item.path"
+              :disabled="userInfoStore.userName === detailData.owner_name.name"
             >
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">
@@ -1196,6 +1196,7 @@ $theme: #0d8dff;
           //   padding-bottom: 0;
           // }
           .el-tabs__item {
+              cursor: pointer;
             &:hover {
               .el-dropdown {
                 color: #3d8df7;

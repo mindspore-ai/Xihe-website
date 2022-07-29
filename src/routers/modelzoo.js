@@ -39,4 +39,11 @@ export default [
       return import('@/views/modelzoo/ModelzooLuojia.vue');
     },
   },
+  {
+    path: '/modelzoo/pangu',
+    name: 'pangu',
+    component: () => {
+      return import('@/views/modelzoo/ModelzooPangu.vue');
+    },
+  },
 ];

@@ -68,14 +68,14 @@ onUnmounted(() => {
 }
 
 .opaque {
-  z-index: 10;
+  z-index: 100;
   background-color: rgba(6, 11, 41, 1);
 }
 
 .app-body {
   min-width: 1280px;
   min-height: calc(100vh - 200px);
-  background: #f5f6f8;
+  // background: #f5f6f8;
 }
 
 .app-footer {

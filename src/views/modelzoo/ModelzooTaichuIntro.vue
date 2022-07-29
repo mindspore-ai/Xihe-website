@@ -1,4 +1,6 @@
 <script setup>
+import { ref, nextTick } from 'vue';
+
 import taichuEfficient from '@/assets/imgs/taichu/taichu-efficient.png';
 import taichuEfficient1 from '@/assets/imgs/taichu/taichu-efficient1.png';
 import taichuEfficient2 from '@/assets/imgs/taichu/taichu-efficient2.png';
@@ -6,9 +8,76 @@ import taichuEfficient3 from '@/assets/imgs/taichu/taichu-efficient3.png';
 import taichuLargeimg1 from '@/assets/imgs/taichu/taichu-largeimg1.png';
 import taichuLargeimg2 from '@/assets/imgs/taichu/taichu-largeimg2.png';
 import taichuArrows from '@/assets/imgs/taichu/taichu-arrows.png';
-// import taichuPlay from '@/assets/imgs/taichu/taichuplay.png';
+import taichuVideo1 from '@/assets/imgs/taichu/taichu-video1.png';
+import taichuVideo2 from '@/assets/imgs/taichu/taichu-video2.png';
+import taichuVideo3 from '@/assets/imgs/taichu/taichu-video3.png';
+import taichuVideo4 from '@/assets/imgs/taichu/taichu-video4.png';
+import taichuVideo5 from '@/assets/imgs/taichu/taichuvideo5.png';
+import taichuPlay from '@/assets/imgs/taichu/taichuplay.png';
+import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
+import taichuCompanyImg from '@/assets/imgs/taichu/taichu-companyimg.png';
 const taichuvideo1 =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
+// const taichuvideo2 =
+//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2002.mp4';
+// const taichuvideo3 =
+//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2001.mp4';
+// const taichuvideo4 =
+//   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2002.mp4';
+const referencevideo =
+  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E7%B4%AB%E4%B8%9C%E5%A4%AA%E5%88%9D.mp4';
+const instancevideo =
+  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%BA%94%E7%94%A8%E8%A7%86%E9%A2%91%E8%B0%83%E8%89%B2%E7%89%88-0614.mp4';
+// const videoSrc = ref('');
+const showVideo = ref(false);
+const showReferenceVideo = ref(false);
+const showInstanceVideo = ref(false);
+// 图片数组
+// const videoImgArr = []
+function playVideo() {
+  // 获得视频元素
+  const video = document.getElementById('video');
+  console.log('video: ', video);
+  showVideo.value = true;
+  video.play();
+}
+function toggleDialog() {
+  const video = document.getElementById('video');
+  showVideo.value = false;
+  // 结束视频
+  video.pause();
+  video.currentTime = 0;
+}
+// 播放参考设计部分的视频
+function playReferenceVideo() {
+  showReferenceVideo.value = true;
+  nextTick(() => {
+    const referenceVideo = document.getElementById('referenceVideo');
+    referenceVideo.play();
+  });
+}
+// 结束参考设计部分的视频
+function closeReferenceVideo() {
+  const referenceVideo = document.getElementById('referenceVideo');
+  referenceVideo.pause();
+  referenceVideo.currentTime = 0;
+  showReferenceVideo.value = false;
+}
+// 播放应用实例部分的视频
+function playInstanceVideo() {
+  showInstanceVideo.value = true;
+  nextTick(() => {
+    const instanceVideo = document.getElementById('instanceVideo');
+    instanceVideo.play();
+  });
+}
+// 结束应用实例部分的视频
+function closeInstanceVideo() {
+  const instanceVideo = document.getElementById('instanceVideo');
+  instanceVideo.pause();
+  instanceVideo.currentTime = 0;
+  showInstanceVideo.value = false;
+}
 </script>
 <template>
   <div class="taichu">
@@ -42,24 +111,26 @@ const taichuvideo1 =
               <p>以文搜图</p>
             </div>
             <div class="audio-video">
-              <video
-                width="198"
-                height="90"
-                autoplay="autoplay"
-                controls="controls"
-                :src="taichuvideo1"
-                class="home-video"
-              ></video>
+              <div class="audio-video-img" @click="playVideo">
+                <img class="audio-video-img1" :src="taichuVideo1" alt="" />
+                <img class="audio-video-img2" :src="taichuPlay" alt="" />
+              </div>
+              <div class="audio-video-img" @click="playVideo">
+                <img class="audio-video-img1" :src="taichuVideo3" alt="" />
+                <img class="audio-video-img2" :src="taichuPlay" alt="" />
+              </div>
+              <p>以图生音</p>
             </div>
             <div class="audio-video">
-              <video
-                width="198"
-                height="90"
-                autoplay="autoplay"
-                controls="controls"
-                :src="taichuvideo1"
-                class="home-video"
-              ></video>
+              <div class="audio-video-img" @click="playVideo">
+                <img class="audio-video-img1" :src="taichuVideo2" alt="" />
+                <img class="audio-video-img2" :src="taichuPlay" alt="" />
+              </div>
+              <div class="audio-video-img" @click="playVideo">
+                <img class="audio-video-img1" :src="taichuVideo2" alt="" />
+                <img class="audio-video-img2" :src="taichuPlay" alt="" />
+              </div>
+              <p>以音生图</p>
             </div>
           </div>
         </div>
@@ -73,7 +144,31 @@ const taichuvideo1 =
       <p class="taichu-reference-info">
         自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
       </p>
-      <div class="taichu-reference-video"></div>
+      <div class="taichu-reference-video">
+        <img class="taichu-reference-video-img1" :src="taichuVideo4" alt="" />
+        <div class="taichu-reference-video-img2">
+          <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
+          <div>紫东.太初</div>
+          <p>全球首个三模态大模型</p>
+        </div>
+        <div v-if="showReferenceVideo" class="taichu-reference-video-info">
+          <!-- <span class="close-btn" @click="closeReferenceVideo"> -->
+          <!-- <img src="" alt=""> -->
+          <img
+            class="close-btn"
+            :src="taichuClose"
+            alt=""
+            @click="closeReferenceVideo"
+          />
+          <!-- </span> -->
+          <video
+            id="referenceVideo"
+            controls="controls"
+            :src="referencevideo"
+            class="reference-video"
+          ></video>
+        </div>
+      </div>
     </div>
     <div class="taichu-instance">
       <div class="taichu-instance-title">应用实例——千博手语教考一体机</div>
@@ -175,12 +270,67 @@ const taichuvideo1 =
         <div class="taichu-instance-AIdesc-img">
           <img :src="taichuLargeimg2" alt="" />
         </div>
+        <img
+          class="taichu-instance-AIdesc-companyimg"
+          :src="taichuCompanyImg"
+          alt=""
+        />
+        <div class="taichu-instance-AIdesc-video">
+          <img
+            class="taichu-instance-AIdesc-video-img1"
+            :src="taichuVideo5"
+            alt=""
+          />
+          <div class="taichu-instance-AIdesc-video-img2">
+            <img :src="taichuPlay" alt="" @click="playInstanceVideo" />
+          </div>
+          <div
+            v-if="showInstanceVideo"
+            class="taichu-instance-AIdesc-video-info"
+          >
+            <!-- <span> -->
+            <img
+              class="close-btn"
+              @click="closeInstanceVideo"
+              :src="taichuClose"
+              alt=""
+            />
+            <!-- </span> -->
+            <video
+              id="instanceVideo"
+              controls="controls"
+              :src="instancevideo"
+              class="instance-video"
+            ></video>
+          </div>
+        </div>
       </div>
     </div>
+    <o-dialog :show="showVideo" @close-click="toggleDialog">
+      <video
+        id="video"
+        width="198"
+        height="90"
+        controls="controls"
+        :poster="taichuVideo1"
+        :src="taichuvideo1"
+        class="home-video"
+      ></video>
+    </o-dialog>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.o-dialog {
+  :deep(.o-dialog-wrap) {
+    position: relative;
+    top: 3%;
+  }
+  // video {
+  //   width: 100%;
+  //   height: 520px;
+  // }
+}
 .taichu {
   padding: 40px 80px;
   &-intro {
@@ -241,7 +391,33 @@ const taichuvideo1 =
             width: 198px;
             height: 90px;
             margin-left: 24px;
-            // background-color: blue;
+            &-img {
+              width: 100%;
+              margin-bottom: 24px;
+              position: relative;
+              cursor: pointer;
+              img {
+                width: 100%;
+              }
+              .audio-video-img2 {
+                width: 36px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1;
+              }
+            }
+            // video {
+            //   margin-bottom: 17px;
+            // }
+            p {
+              height: 14px;
+              line-height: 14px;
+              font-size: 12px;
+              color: #000000;
+              text-align: center;
+            }
           }
         }
       }
@@ -269,9 +445,62 @@ const taichuvideo1 =
       margin: 10px 0 24px;
     }
     &-video {
-      width: 100%;
+      // width: 100%;
       height: 707px;
       background-color: #bfa;
+      position: relative;
+      &-img1 {
+        width: 100%;
+        height: 100%;
+      }
+      &-img2 {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9;
+        cursor: pointer;
+        div {
+          height: 28px;
+          font-size: 20px;
+          color: #ffffff;
+          line-height: 28px;
+          margin-top: 16px;
+          margin-bottom: 6px;
+        }
+        p {
+          height: 22px;
+          font-size: 14px;
+          color: #ffffff;
+          line-height: 22px;
+        }
+      }
+      &-info {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        .close-btn {
+          height: 100px;
+          position: absolute;
+          right: 16px;
+          top: 16px;
+          width: 22px;
+          height: 22px;
+          z-index: 99;
+          color: #fff;
+          cursor: pointer;
+        }
+        video {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
   &-instance {
@@ -460,7 +689,67 @@ const taichuvideo1 =
           border-bottom: 1px solid #eee;
         }
       }
+      &-companyimg {
+        display: block;
+        width: 421px;
+        margin: 52px auto 84px;
+      }
+      &-video {
+        height: 707px;
+        background-color: #bfa;
+        position: relative;
+        &-img1 {
+          width: 100%;
+          height: 100%;
+        }
+        &-img2 {
+          width: 100%;
+          text-align: center;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 9;
+          cursor: pointer;
+        }
+        &-info {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          position: absolute;
+          z-index: 10;
+          top: 0;
+          left: 0;
+          .close-btn {
+            // height: 100px;
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 22px;
+            height: 22px;
+            z-index: 99;
+            color: #fff;
+            cursor: pointer;
+          }
+          video {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
     }
+  }
+}
+.o-dialog {
+  video {
+    width: 100%;
+    height: 520px;
+  }
+}
+.o-dialog {
+  :deep(.o-dialog-wrap) {
+    position: relative;
+    top: 0% !important;
   }
 }
 </style>

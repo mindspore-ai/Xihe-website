@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
@@ -28,9 +28,7 @@ watch(
     return route.name;
   },
   (val) => {
-    // console.log('val: ', val);
     if (/^taichuIntroduction|taichuTest/g.test(val)) {
-      console.log(/^taichuIntroduction|taichuTest/g.test(val));
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';
@@ -98,7 +96,7 @@ function handleNavClick(item) {
   padding-top: 80px;
   // margin-top: 80px;
   .taichu-wrap {
-    padding: 42px 16px;
+    padding: 42px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
     .taichu-bread {

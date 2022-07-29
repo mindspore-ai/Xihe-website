@@ -50,6 +50,7 @@ function jumpDetail() {
 <style lang="scss" scoped>
 .card {
   max-width: 464px;
+  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: pointer;
   .o-icon {
     transform: translate(0);

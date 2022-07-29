@@ -7,7 +7,7 @@ export default [
       return import('@/views/modelzoo/TheModelzoo.vue');
     },
   },
-  // 紫东太初
+  // 紫东.太初
   {
     path: '/modelzoo/taichu',
     name: 'taichu',
@@ -30,5 +30,13 @@ export default [
         },
       },
     ],
+  },
+  // 武大.Luojia
+  {
+    path: '/modelzoo/luojia',
+    name: 'luojia',
+    component: () => {
+      return import('@/views/modelzoo/ModelzooLuojia.vue');
+    },
   },
 ];

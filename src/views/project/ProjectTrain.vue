@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Markdown from 'markdown-it';
+import markdownItAnchor from 'markdown-it-anchor';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -45,7 +46,13 @@ const showTip = ref(false);
 // 左侧显示文件内容
 const result = ref();
 const codeString = ref('');
+const slugify = (s) =>
+  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 const mkit = new Markdown({ html: true });
+mkit.use(markdownItAnchor, {
+  level: 1,
+  slugify,
+});
 let routerParams = router.currentRoute.value.params;
 let README = '';
 const pushParams = {
@@ -80,6 +87,8 @@ const i18n = {
 const describe = ref('');
 
 const trainListData = ref([]);
+route.hash ? getReadMeFile() : '';
+
 // 获取训练列表数据
 function getTrainList() {
   trainList(detailData.value.id).then((res) => {
@@ -324,7 +333,7 @@ function getReadMeFile() {
 watch(
   () => route,
   () => {
-    if (route.name === 'projectTrain') {
+    if (route.name === 'projectTrain' && !route.hash) {
       codeString.value = '';
       getReadMeFile();
     }

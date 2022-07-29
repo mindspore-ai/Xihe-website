@@ -85,7 +85,7 @@ let tabTitle = reactive([
     isPrivate: true,
   },
 ]);
-const activeName = ref(tabTitle[route.meta.index].path);
+const activeName = ref(tabTitle[route.meta.index].label);
 
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
@@ -421,8 +421,8 @@ watch(
     return route.name;
   },
   () => {
-    if (route.meta.index === 1) {
-      activeName.value = 'tree';
+    if (Object.prototype.hasOwnProperty.call(route.meta, 'index')) {
+      activeName.value = tabTitle[route.meta.index].label;
     }
   }
 );
@@ -485,7 +485,7 @@ watch(
           v-for="item in renderNav"
           :key="item.id"
           :label="item.label"
-          :name="item.path"
+          :name="item.label"
         >
         </el-tab-pane>
       </el-tabs>

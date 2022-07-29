@@ -85,7 +85,6 @@ function onChange() {
   description.value = `upload ${fileList.value[0].name}`;
 }
 function beforeUpload(rawFile) {
-  console.log(rawFile);
   if (rawFile.size / 1024 / 1024 / 1024 > 5) {
     ElMessage.warning('文件过大，文件不得超过5GB，请重新选择文件。');
     return false;
@@ -226,6 +225,9 @@ onMounted(() => {
         transition: all 0.3s;
         &:hover {
           border-color: #0d8dff;
+        }
+        .el-icon--upload-success {
+          display: none;
         }
       }
     }

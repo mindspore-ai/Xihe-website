@@ -66,7 +66,7 @@ const i18n = {
   emptyVisited: '该用户还未上传任何文件',
   delete: {
     title: '删除模型',
-    description: '此操作不可逆确定删除',
+    description: '此操作不可逆，确定删除',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
@@ -415,7 +415,7 @@ watch(
     <div
       class="dlg-body"
       :style="{
-        padding: '8px 0 0',
+        padding: '8px 0 12px',
         fontSize: '18px',
         textAlign: 'center',
         width: '640px',

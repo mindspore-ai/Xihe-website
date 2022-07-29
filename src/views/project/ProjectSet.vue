@@ -396,7 +396,7 @@ function toggleDelDlg(flag) {
         <div
           class="dlg-body"
           :style="{
-            padding: '8px 0 30px',
+            padding: '8px 0 12px',
             fontSize: '18px',
             textAlign: 'center',
             width: '640px',
@@ -560,8 +560,7 @@ function toggleDelDlg(flag) {
 
     .setting-title {
       margin: 40px 0 16px;
-      font-size: 24px;
-      font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
+      font-size: 18px;
       font-weight: normal;
       color: #000000;
       line-height: 24px;
@@ -584,6 +583,7 @@ function toggleDelDlg(flag) {
       }
     }
     .setting-tip {
+      font-size: 14px;
       margin: 8px 0 16px;
       color: #999999;
     }

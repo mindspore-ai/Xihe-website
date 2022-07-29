@@ -59,9 +59,17 @@ function toggleDelDlg(flag) {
   }
 }
 function saveData() {
+  if (!nickName.value) {
+    ElMessage({
+      type: 'error',
+      message: '昵称不能为空',
+      center: true,
+    });
+    return;
+  }
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    nickname: nickName.value || userInfoStore.avatar,
+    nickname: nickName.value,
     description: userDescription.value || userInfoStore.description,
     avatar: checkedAvatar.value,
   }).then((res) => {
@@ -100,7 +108,7 @@ function handleCurrentChange(val) {
   <div class="setting-box">
     <p class="setting-title">昵称</p>
     <el-input
-      v-model="nickName"
+      v-model.trim="nickName"
       placeholder="请输入您的昵称"
       class="setting-input"
     ></el-input>

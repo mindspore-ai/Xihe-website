@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 // import BScroll from '@better-scroll/core';
 // import Slide from '@better-scroll/slide';
 // import MouseWheel from '@better-scroll/mouse-wheel';
@@ -21,13 +23,16 @@ import modelzoo1 from '@/assets/imgs/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/modelzoo2.png';
 import modelzoo3 from '@/assets/imgs/modelzoo3.png';
 import datasetPageImg from '@/assets/imgs/dataset-page.png';
-import slideImg from '@/assets/imgs/slide.png';
+import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 
 // BScroll.use(Slide);
 // BScroll.use(MouseWheel);
+AOS.init({
+  duration: 1200,
+});
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -140,12 +145,18 @@ onUnmounted(() => {
     <div class="home-mask"></div>
 
     <div class="home-content">
-      <p class="home-desc">{{ homeDesc }}</p>
-      <p class="home-title">{{ homeTitle }}</p>
+      <p class="home-desc" data-aos="slide-up">
+        {{ homeDesc }}
+      </p>
+      <p class="home-title" data-aos="slide-up">
+        {{ homeTitle }}
+      </p>
       <OButton
         type="primary"
         animation
         class="home-btn"
+        data-aos="slide-up"
+        data-aos-delay="500"
         @click="handleBtnClick"
       >
         {{ quickStartLabel }}
@@ -167,11 +178,18 @@ onUnmounted(() => {
         <p>{{ i18n.mouse }}</p>
       </div>
       <div class="home-extend-box">
-        <div class="home-extend-home">
+        <div class="home-extend-home" data-aos="slide-up" data-aos-offset="200">
           <div class="left">
             <p class="home-title title">{{ i18n.home.title }}</p>
             <p class="home-introduce">{{ i18n.home.introduce }}</p>
-            <OButton animation class="home-btn" @click="handleBtnClick">
+            <OButton
+              animation
+              class="home-btn"
+              data-aos="slide-up"
+              data-aos-delay="500"
+              data-aos-duration="600"
+              @click="handleBtnClick"
+            >
               {{ quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -180,7 +198,11 @@ onUnmounted(() => {
           </div>
           <img class="right" :src="homePageImg" alt="" />
         </div>
-        <div class="home-extend-project">
+        <div
+          class="home-extend-project"
+          data-aos="slide-up"
+          data-aos-offset="400"
+        >
           <a
             class="gradio card"
             :href="`https://${DOMAIN}/projects/wesley/lenet5_demo`"
@@ -235,18 +257,34 @@ onUnmounted(() => {
           <a class="more card" :href="`https://${DOMAIN}/projects`">
             <p class="more-title title">{{ i18n.project.title }}</p>
             <p class="more-introduce">{{ i18n.project.introduce }}</p>
-            <p class="more-footer">
+            <p
+              class="more-footer"
+              data-aos="slide-up"
+              data-aos-offset="200"
+              data-aos-delay="500"
+            >
               {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
           </a>
         </div>
-        <div class="home-extend-modelzoo">
+        <div
+          class="home-extend-modelzoo"
+          data-aos="slide-up"
+          data-aos-offset="600"
+        >
           <div class="modelzoo">
             <div class="left">
               <div class="modelzoo-title title">{{ i18n.modelzoo.title }}</div>
               <div>{{ i18n.modelzoo.introduce }}</div>
             </div>
-            <OButton animation class="right" @click="handleBtnClick3">
+            <OButton
+              animation
+              class="right"
+              data-aos="slide-up"
+              data-aos-offset="200"
+              data-aos-delay="500"
+              @click="handleBtnClick3"
+            >
               {{ i18n.modelzoo.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -298,11 +336,20 @@ onUnmounted(() => {
             </a>
           </div>
         </div>
-        <div class="home-extend-model">
+        <div
+          class="home-extend-model"
+          data-aos="slide-up"
+          data-aos-offset="800"
+        >
           <a class="more card" :href="`https://${DOMAIN}/models`">
             <p class="more-title title">{{ i18n.model.title }}</p>
             <p class="more-introduce">{{ i18n.model.introduce }}</p>
-            <p class="more-footer">
+            <p
+              class="more-footer"
+              data-aos="slide-up"
+              data-aos-offset="200"
+              data-aos-delay="500"
+            >
               {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
           </a>
@@ -347,12 +394,23 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div class="home-extend-dataset">
+        <div
+          class="home-extend-dataset"
+          data-aos="slide-up"
+          data-aos-offset="800"
+        >
           <img class="left" :src="datasetPageImg" alt="" />
           <div class="right">
             <p class="home-title title">{{ i18n.dataset.title }}</p>
             <p class="home-introduce">{{ i18n.dataset.introduce }}</p>
-            <OButton animation class="home-btn" @click="handleBtnClick2">
+            <OButton
+              animation
+              class="home-btn"
+              data-aos="slide-up"
+              data-aos-offset="800"
+              data-aos-delay="500"
+              @click="handleBtnClick2"
+            >
               {{ i18n.dataset.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -374,6 +432,7 @@ a {
 }
 .title {
   color: #000000;
+  margin-bottom: 16px;
 }
 .home-extend {
   color: #555555;
@@ -495,6 +554,7 @@ a {
       .left {
         .home-title {
           font-size: 54px;
+          margin-bottom: 16px;
         }
         .home-introduce {
           font-size: 16px;
@@ -638,6 +698,7 @@ a {
       .right {
         .home-title {
           font-size: 54px;
+          margin-bottom: 16px;
         }
         .home-introduce {
           font-size: 16px;
@@ -646,13 +707,22 @@ a {
       }
     }
     .card {
+      .gradio-header {
+        overflow: hidden;
+      }
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
       .o-icon {
+        transition: all 0.2s linear;
+      }
+      img {
         transition: all 0.2s linear;
       }
       &:hover {
         cursor: pointer;
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        img {
+          transform: scale(1.1);
+        }
         .o-icon {
           transform: translate(3px);
         }

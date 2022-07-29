@@ -314,6 +314,22 @@ export function stopInference(params) {
       return e;
     });
 }
+/**
+ * 项目推理日志
+ * @returns
+ */
+export function getLog(pk) {
+  // const { projectId } = params;
+  const url = `/api/projects/${pk}/inference/errorlog/`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
 
 /**
  * 获取用户指引

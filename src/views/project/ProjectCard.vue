@@ -23,6 +23,7 @@ import {
   startInference2,
   stopInference,
   getGuide,
+  getLog,
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -350,7 +351,10 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
-
+const failLog = ref('');
+getLog(detailData.value.id).then((res) => {
+  failLog.value = res.data.data;
+});
 //判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
@@ -370,7 +374,9 @@ function start() {
 function start2() {
   if (socket.value) {
     startInference2(detailData.value.id).then((res) => {
-      if (res.data.status === 200) msg.value = '启动中';
+      if (res.data.status === 200) {
+        msg.value = '启动中';
+      }
       // socket.send(JSON.stringify({ pk: detailData.value.id }));
     });
   } else {
@@ -450,6 +456,7 @@ if (detailData.value.is_owner) {
             ) {
               stopInference(detailData.value.id); //删除任务
               closeConn(); //断开连接
+              msg.value = '启动失败';
               ElMessage({
                 type: 'error',
                 message: '程序错误，请检查文件后重试',
@@ -567,7 +574,25 @@ onUnmounted(() => {
 <template>
   <div v-if="detailData" class="model-card">
     <div v-if="detailData.sdk_name === 'Gradio'" class="left-data2">
-      <div v-if="msg === '运行中'" class="markdown-body">
+      <div
+        v-if="msg === ('未启动' || '启动失败') && !!failLog"
+        class="markdown-body"
+      >
+        <div class="fail">
+          <div class="fail-title">推理启动日志</div>
+          <div class="fail-body">
+            <div>
+              启动失败，推理启动日志如下，你可以根据推理日志的提示更改gradio相关文件，常见错误
+            </div>
+            <a href="">参考文档</a>
+          </div>
+          <div class="fail-log">{{ failLog }}</div>
+        </div>
+        <o-button v-if="detailData.is_owner" type="primary" @click="start2"
+          >重新启动</o-button
+        >
+      </div>
+      <div v-else-if="msg === '运行中'" class="markdown-body">
         <iframe
           :src="clientSrc"
           width="100%"
@@ -780,6 +805,26 @@ onUnmounted(() => {
   min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   .markdown-body {
+    .fail {
+      &-title {
+        padding-top: 64px; //内容在按钮下16px
+        font-size: 24px;
+      }
+      &-body {
+        margin-top: 16px;
+        display: flex;
+        font-size: 14px;
+        a {
+          color: #0d8dff;
+        }
+      }
+      &-log {
+        margin-top: 16px;
+        margin-right: 48px;
+        padding: 24px;
+        background-color: #e9f0f8;
+      }
+    }
     iframe {
       padding-top: 64px; //内容在按钮下16px
       height: 666px;
@@ -794,8 +839,9 @@ onUnmounted(() => {
     height: 100%;
     .o-button {
       position: absolute;
-      top: 0px;
-      right: 40px;
+      top: 0;
+      right: 0;
+      margin-right: 48px;
     }
     .loading {
       display: flex;

@@ -51,7 +51,6 @@ function submitUpload() {
   loading.value = true;
 
   formData.append('file', fileList.value[fileList.value.length - 1].raw);
-  console.log(formData);
   try {
     uploadModelzooPic(formData).then((res) => {
       if (res.data) {
@@ -79,7 +78,6 @@ function handleChange(val) {
     activeIndex.value = -1;
     imageUrl.value = URL.createObjectURL(val.raw);
   }
-  console.log(val);
 }
 
 function selectImage(item) {
@@ -221,6 +219,7 @@ function selectImage(item) {
           img {
             border: 1px solid #a0d2ff;
             height: 100%;
+            object-fit: fill;
           }
         }
       }

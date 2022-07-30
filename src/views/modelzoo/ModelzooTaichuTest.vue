@@ -1,5 +1,4 @@
 <script setup>
-import axios from 'axios';
 import { request } from '@/shared/axios';
 import { ref } from 'vue';
 import IconUpload from '~icons/app/modelzoo-upload';
@@ -42,19 +41,23 @@ const imgLists = [
 
 const activeIndex = ref(-1);
 const analysis = ref('');
+const loading = ref(false);
+
 let formData = new FormData();
 
 function submitUpload() {
   analysis.value = '';
-  console.log(fileList.value);
+  loading.value = true;
 
   formData.append('file', fileList.value[fileList.value.length - 1].raw);
+  console.log(formData);
   try {
     uploadModelzooPic(formData).then((res) => {
-      console.log(res);
       if (res.data) {
         analysis.value = res.data.inference_result.instances.image[0];
+        loading.value = false;
       } else {
+        loading.value = false;
       }
     });
   } catch (e) {
@@ -63,17 +66,14 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  console.log(val);
   formData.delete('file');
   formData = new FormData();
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
-  console.log(fileList.value);
 }
 
 function selectImage(item) {
-  console.log(item);
   formData.delete('file');
   formData = new FormData();
   imageUrl.value = item;
@@ -102,7 +102,12 @@ function selectImage(item) {
         </p>
       </div>
       <div class="experience-btn">
-        <o-button type="primary" @click="submitUpload">开始推理</o-button>
+        <o-button v-if="!loading" type="primary" @click="submitUpload"
+          >开始推理</o-button
+        >
+        <o-button v-else type="primary" disabled @click="submitUpload"
+          >开始推理</o-button
+        >
       </div>
     </div>
     <div class="caption-bottom">
@@ -145,6 +150,7 @@ function selectImage(item) {
           <span class="head">Caption:</span>
           <span class="main">&nbsp;{{ analysis }}</span>
         </div>
+        <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
         <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
       </div>
     </div>
@@ -268,6 +274,7 @@ function selectImage(item) {
       width: 464px;
       padding: 16px 24px;
       background-color: #fff;
+      position: relative;
       .result {
         font-size: 18px;
         font-weight: 400;
@@ -275,6 +282,15 @@ function selectImage(item) {
         line-height: 25px;
         margin-bottom: 24px;
       }
+
+      img {
+        width: 60px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
       .result-text {
         font-size: 14px;
         font-weight: 400;

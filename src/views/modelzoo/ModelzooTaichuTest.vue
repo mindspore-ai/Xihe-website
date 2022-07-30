@@ -3,6 +3,7 @@ import { request } from '@/shared/axios';
 import { ref } from 'vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import { uploadModelzooPic } from '@/api/api-modelzoo';
+import { ElMessage } from 'element-plus';
 
 // import { ElMessage } from 'element-plus';
 
@@ -66,11 +67,19 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  formData.delete('file');
-  formData = new FormData();
-  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
-  activeIndex.value = -1;
-  imageUrl.value = URL.createObjectURL(val.raw);
+  if (val.size > 204800) {
+    return ElMessage({
+      type: 'warning',
+      message: '图片大小超出限制',
+    });
+  } else {
+    formData.delete('file');
+    formData = new FormData();
+    fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+    activeIndex.value = -1;
+    imageUrl.value = URL.createObjectURL(val.raw);
+  }
+  console.log(val);
 }
 
 function selectImage(item) {
@@ -127,7 +136,7 @@ function selectImage(item) {
           <div v-else class="empty-status">
             <o-icon><icon-upload></icon-upload></o-icon>
             <p class="upload-tip">
-              拖拽图片到此处上传(图片格式仅为png/jepg/jpg)
+              拖拽图片(jpg/jepg/png)到此处上传,且大小不超过200KB
             </p>
           </div>
         </el-upload>
@@ -140,7 +149,7 @@ function selectImage(item) {
             @click="selectImage(item.url, index)"
           >
             <!-- <div class="modal"></div> -->
-            <img :src="item.url" />
+            <img draggable="false" :src="item.url" />
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@ function jumpDetail() {
 }
 </script>
 <template>
-  <div class="card" @click="jumpDetail">
+  <div :class="openness ? 'card' : 'card-closed'" @click="jumpDetail">
     <div class="card-top">
       <img class="cover" :src="prop.url" alt="" />
     </div>
@@ -56,7 +56,6 @@ function jumpDetail() {
     transform: translate(0);
     transition: all 0.2s linear;
   }
-
   .card-top {
     width: 100%;
     height: 270px;
@@ -108,6 +107,57 @@ function jumpDetail() {
     .cover {
       transform: scale(1.05);
       transition: all 0.2s linear;
+    }
+  }
+}
+.card-closed {
+  max-width: 464px;
+  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  cursor: pointer;
+  .o-icon {
+    transform: translate(0);
+    transition: all 0.2s linear;
+  }
+  .card-top {
+    width: 100%;
+    height: 270px;
+    overflow: hidden;
+    .cover {
+      width: 100%;
+      height: 100%;
+      transform: scale(1);
+      transition: all 0.2s linear;
+    }
+  }
+  .card-bottom {
+    width: 100%;
+    height: 156px;
+    padding: 0 40px;
+    background-color: rgba(255, 255, 255, 0.95);
+    &-title {
+      font-size: 24px;
+      font-weight: normal;
+      color: #000000;
+      line-height: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid #ccc;
+      .closed {
+        font-size: 16px;
+        color: #999999;
+        line-height: 24px;
+      }
+    }
+    &-text {
+      padding: 24px 0;
+      font-size: 16px;
+      color: #555555;
+      line-height: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

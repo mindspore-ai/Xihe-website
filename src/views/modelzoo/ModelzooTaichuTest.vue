@@ -85,6 +85,13 @@ function selectImage() {
   // imageUrl.value = val.url;
   // fileList.value.push(val);
 }
+function beforeUpload(rawFile) {
+  if (rawFile.size / 1024 / 1024 / 1024 > 1) {
+    ElMessage.warning('文件过大，文件不得超过5GB，请重新选择文件。');
+    return false;
+  }
+  return true;
+}
 </script>
 <template>
   <div class="model-page">
@@ -104,14 +111,15 @@ function selectImage() {
       <div class="caption-bottom-left">
         <el-upload
           drag
+          action=""
           :multiple="false"
-          action="#"
           accept=".png,.jpeg,.jpg"
           list-type="picture"
           :file-list="fileList"
           :auto-upload="false"
           :show-file-list="false"
           :on-change="handleChange"
+          :before-upload="beforeUpload"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <div v-else class="empty-status">

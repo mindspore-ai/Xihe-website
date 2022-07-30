@@ -1,16 +1,14 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-// import BScroll from '@better-scroll/core';
-// import Slide from '@better-scroll/slide';
-// import MouseWheel from '@better-scroll/mouse-wheel';
 
 import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import homeBanner from '@/assets/imgs/home-banner.png';
 import homePageImg from '@/assets/imgs/home-page.png';
 import digitRecognition from '@/assets/imgs/digit-recognition.png';
 import imageRcognition from '@/assets/imgs/image-rcognition.png';
@@ -28,11 +26,7 @@ import slideImg from '@/assets/gifs/slide.gif';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 
-// BScroll.use(Slide);
-// BScroll.use(MouseWheel);
-AOS.init({
-  duration: 1200,
-});
+AOS.init();
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -46,7 +40,7 @@ const homeDesc = 'The Best AI Platform For MindSpore';
 const quickStartLabel = '快速开始';
 const i18n = {
   mouse: '滑动鼠标探索更多',
-  home: {
+  page: {
     title: '个人主页',
     introduce: '在个人主页开启探索、创建、收藏羲和项目、模型、数据集之旅。',
   },
@@ -90,8 +84,6 @@ const i18n = {
 const loginStore = useLoginStore();
 const userInfo = useUserInfoStore();
 
-// let scroller = ref(null);
-
 function handleBtnClick() {
   const status = loginStore.loginStatus;
   if (status === LOGIN_STATUS.DOING) {
@@ -108,91 +100,84 @@ function handleBtnClick2() {
 function handleBtnClick3() {
   router.push(`https://${DOMAIN}/modelzoo`);
 }
-
-onMounted(() => {
-  // scroller.value = new BScroll(homeIns.value, {
-  //   scrollX: false,
-  //   scrollY: true,
-  //   slide: {
-  //     threshold: 0.1,
-  //     autoplay: false,
-  //     loop: false,
-  //     easing: 'ease',
-  //     speed: 800,
-  //   },
-  //   mouseWheel: { discreteTime: 100 },
-  //   momentum: false,
-  //   bounce: false,
-  //   stopPropagation: true,
-  // });
-});
-
-onUnmounted(() => {
-  // scroller.value && scroller.value.destroy();
-});
 </script>
 
 <template>
   <div ref="homeIns" class="home">
-    <video
-      muted
-      autoplay
-      loop
-      playsinline
-      :src="hoemVideo"
-      class="home-video"
-    ></video>
-    <div class="home-mask"></div>
+    <!-- 首屏-->
+    <div class="home-portal">
+      <video
+        :poster="homeBanner"
+        :src="hoemVideo"
+        class="home-portal-video"
+        autoplay
+        loop
+        muted
+        controlslist="nodownload nofullscreen"
+        x5-playsinline="true"
+        playsinline="true"
+        webkit-playsinline="true"
+      ></video>
+      <div class="home-portal-mask"></div>
+
+      <div class="home-portal-content">
+        <p
+          class="portal-content-desc"
+          data-aos="slide-up"
+          data-aos-duration="800"
+          data-aos-once="false"
+        >
+          {{ homeDesc }}
+        </p>
+        <p
+          class="portal-content-title"
+          data-aos="slide-up"
+          data-aos-duration="1200"
+          data-aos-once="false"
+        >
+          {{ homeTitle }}
+        </p>
+        <OButton
+          type="primary"
+          animation
+          class="portal-content-btn"
+          data-aos="slide-up"
+          data-aos-offset="200"
+          data-aos-duration="1600"
+          data-aos-once="false"
+          @click="handleBtnClick"
+        >
+          {{ quickStartLabel }}
+          <template #suffix>
+            <OIcon><IconArrowRight /></OIcon>
+          </template>
+        </OButton>
+        <div class="watching-more">
+          <img :src="slideImg" alt="" />
+          <p>{{ i18n.mouse }}</p>
+        </div>
+      </div>
+    </div>
 
     <div class="home-content">
-      <p class="home-desc" data-aos="slide-up" data-aos-once="true">
-        {{ homeDesc }}
-      </p>
-      <p class="home-title" data-aos="slide-up" data-aos-once="true">
-        {{ homeTitle }}
-      </p>
-      <OButton
-        type="primary"
-        animation
-        class="home-btn"
-        data-aos="slide-up"
-        data-aos-delay="500"
-        data-aos-once="true"
-        @click="handleBtnClick"
-      >
-        {{ quickStartLabel }}
-        <template #suffix>
-          <OIcon><IconArrowRight /></OIcon>
-        </template>
-      </OButton>
-    </div>
-    <!-- <div class="home-content"> -->
-    <!-- <div class="home-slide"> -->
-
-    <!-- </div> -->
-    <!-- <div class="home-slide">2</div> -->
-    <!-- <div class="home-slide">3</div> -->
-    <!-- </div> -->
-    <div class="home-extend">
-      <div class="mouse">
-        <img :src="slideImg" alt="" />
-        <p>{{ i18n.mouse }}</p>
-      </div>
-      <div class="home-extend-box">
+      <div class="wrapper">
+        <!-- 个人主页 -->
         <div
-          class="home-extend-home"
+          class="content-page"
           data-aos="slide-up"
-          data-aos-duration="600"
+          data-aos-duration="1200"
+          data-aos-offset="-121"
+          data-aos-once="false"
         >
-          <div class="left">
-            <p id="anchor" class="home-title title">{{ i18n.home.title }}</p>
-            <p class="home-introduce">{{ i18n.home.introduce }}</p>
+          <div class="page-left">
+            <p class="page-title">{{ i18n.page.title }}</p>
+            <p class="page-descr">{{ i18n.page.introduce }}</p>
             <OButton
               animation
-              class="home-btn"
+              class="page-entry"
               data-aos="slide-up"
-              data-aos-delay="500"
-              data-aos-duration="600"
+              data-aos-offset="200"
+              data-aos-duration="1600"
               @click="handleBtnClick"
             >
               {{ quickStartLabel }}
@@ -201,93 +186,84 @@ onUnmounted(() => {
               </template>
             </OButton>
           </div>
-          <img class="right" :src="homePageImg" alt="" />
+          <img class="page-right" :src="homePageImg" alt="" />
         </div>
-        <div
-          class="home-extend-project"
-          data-aos="slide-up"
-          data-aos-offset="400"
-        >
+        <!-- 项目-->
+        <div class="content-project">
           <a
-            class="gradio card"
+            class="project-card"
             :href="`https://${DOMAIN}/projects/wesley/lenet5_demo`"
           >
-            <div class="gradio-header">
+            <div class="card-header">
               <img :src="digitRecognition" alt="" />
             </div>
-            <div class="gradio-body title">
-              <p>{{ i18n.project.gradio1 }}</p>
-              <p class="arrow">
+            <div class="card-body">
+              <div class="project-title">
+                <p>{{ i18n.project.gradio1 }}</p>
                 <OIcon><IconArrowRight /></OIcon>
-              </p>
-            </div>
-            <div class="gradio-footer">
-              <div class="task">Mnist</div>
+              </div>
+              <div class="project-tag">Mnist</div>
             </div>
           </a>
           <a
-            class="gradio card"
+            class="project-card"
             :href="`https://${DOMAIN}/projects/drizzlezyk/ResNet50`"
           >
-            <div class="gradio-header">
+            <div class="card-header">
               <img :src="imageRcognition" alt="" />
             </div>
-            <div class="gradio-body title">
-              <p>{{ i18n.project.gradio2 }}</p>
-              <p class="arrow">
+            <div class="card-body">
+              <div class="project-title">
+                <p>{{ i18n.project.gradio2 }}</p>
                 <OIcon><IconArrowRight /></OIcon>
-              </p>
-            </div>
-            <div class="gradio-footer">
-              <div class="task">CV</div>
+              </div>
+              <div class="project-tag">CV</div>
             </div>
           </a>
           <a
-            class="gradio card"
+            class="project-card"
             :href="`https://${DOMAIN}/projects/wesley/lstm_demo`"
           >
-            <div class="gradio-header">
+            <div class="card-header">
               <img :src="emtionalNalysis" alt="" />
             </div>
-            <div class="gradio-body title">
-              <p>{{ i18n.project.gradio3 }}</p>
-              <p class="arrow">
+            <div class="card-body">
+              <div class="project-title">
+                <p>{{ i18n.project.gradio3 }}</p>
                 <OIcon><IconArrowRight /></OIcon>
-              </p>
-            </div>
-            <div class="gradio-footer">
-              <div class="task">NLP</div>
+              </div>
+              <div class="project-tag">NLP</div>
             </div>
           </a>
-          <a class="more card" :href="`https://${DOMAIN}/projects`">
-            <p class="more-title title">{{ i18n.project.title }}</p>
-            <p class="more-introduce">{{ i18n.project.introduce }}</p>
-            <p
-              class="more-footer"
-              data-aos="slide-up"
-              data-aos-offset="200"
-              data-aos-delay="500"
-            >
+          <a class="project-entry" :href="`https://${DOMAIN}/projects`">
+            <div class="entry-header">
+              <p class="entry-title">{{ i18n.project.title }}</p>
+              <p class="entry-desc">{{ i18n.project.introduce }}</p>
+            </div>
+            <p class="entry-body">
               {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
           </a>
         </div>
+
+        <!-- modelzoo -->
         <div
-          class="home-extend-modelzoo"
-          data-aos="slide-up"
-          data-aos-offset="600"
+          class="content-modelzoo"
+          data-aos-duration="1200"
+          data-aos-offset="200"
+          data-aos-once="false"
         >
-          <div class="modelzoo">
-            <div class="left">
-              <div class="modelzoo-title title">{{ i18n.modelzoo.title }}</div>
-              <div>{{ i18n.modelzoo.introduce }}</div>
+          <div class="modelzoo-entry">
+            <div class="entry-left">
+              <p class="entry-title">{{ i18n.modelzoo.title }}</p>
+              <p class="entry-desc">{{ i18n.modelzoo.introduce }}</p>
             </div>
             <OButton
               animation
               class="right"
               data-aos="slide-up"
               data-aos-offset="200"
-              data-aos-delay="500"
+              data-aos-duration="1600"
               @click="handleBtnClick3"
             >
               {{ i18n.modelzoo.quickStartLabel }}
@@ -296,124 +272,134 @@ onUnmounted(() => {
               </template>
             </OButton>
           </div>
-          <div class="examples">
-            <a class="gradio card">
-              <div class="gradio-header">
+          <div class="modelzoo-card-list">
+            <a class="modelzoo-card">
+              <div class="card-header">
                 <img :src="modelzoo1" alt="" />
               </div>
-              <div class="gradio-body title">
-                <p>{{ i18n.modelzoo.modelzoo1 }}</p>
-                <p class="arrow">
+              <div class="card-body">
+                <div class="modelzoo-title">
+                  <p>{{ i18n.modelzoo.modelzoo1 }}</p>
                   <OIcon><IconArrowRight /></OIcon>
-                </p>
-              </div>
-              <div class="gradio-footer">
-                <div class="task">{{ i18n.modelzoo.introduce1 }}</div>
+                </div>
+                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce1 }}</div>
               </div>
             </a>
-            <a class="gradio card">
-              <div class="gradio-header">
+            <a class="modelzoo-card">
+              <div class="card-header">
                 <img :src="modelzoo2" alt="" />
               </div>
-              <div class="gradio-body title">
-                <p>{{ i18n.modelzoo.modelzoo2 }}</p>
-                <p class="arrow">
+              <div class="card-body">
+                <div class="modelzoo-title">
+                  <p>{{ i18n.modelzoo.modelzoo2 }}</p>
                   <OIcon><IconArrowRight /></OIcon>
-                </p>
-              </div>
-              <div class="gradio-footer">
-                <div class="task">{{ i18n.modelzoo.introduce2 }}</div>
+                </div>
+                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce2 }}</div>
               </div>
             </a>
-            <a class="gradio card">
-              <div class="gradio-header">
+            <a class="modelzoo-card">
+              <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>
-              <div class="gradio-body title">
-                <p>{{ i18n.modelzoo.modelzoo3 }}</p>
-                <p class="arrow">
+              <div class="card-body">
+                <div class="modelzoo-title">
+                  <p>{{ i18n.modelzoo.modelzoo3 }}</p>
                   <OIcon><IconArrowRight /></OIcon>
-                </p>
-              </div>
-              <div class="gradio-footer">
-                <div class="task">{{ i18n.modelzoo.introduce3 }}</div>
+                </div>
+                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
               </div>
             </a>
           </div>
         </div>
+
+        <!-- 模型 -->
         <div
-          class="home-extend-model"
-          data-aos="slide-up"
-          data-aos-offset="800"
+          class="content-model"
+          data-aos-duration="1200"
+          data-aos-offset="-121"
+          data-aos-once="false"
         >
-          <a class="more card" :href="`https://${DOMAIN}/models`">
-            <p class="more-title title">{{ i18n.model.title }}</p>
-            <p class="more-introduce">{{ i18n.model.introduce }}</p>
-            <p
-              class="more-footer"
-              data-aos="slide-up"
-              data-aos-offset="200"
-              data-aos-delay="500"
-            >
+          <div class="model-card">
+            <div class="card-header">
+              <img :src="models1" alt="" />
+            </div>
+            <div class="card-body">
+              <div class="model-title">
+                <p>{{ i18n.model.models1 }}</p>
+                <OIcon><IconArrowRight /></OIcon>
+              </div>
+              <p class="model-label">VGG16｜ResNet-101｜InceptionV4 …</p>
+              <div class="model-tag">CV</div>
+            </div>
+          </div>
+          <div class="model-card">
+            <div class="card-header">
+              <img :src="models2" alt="" />
+            </div>
+            <div class="card-body">
+              <div class="model-title">
+                <p>{{ i18n.model.models2 }}</p>
+                <OIcon><IconArrowRight /></OIcon>
+              </div>
+              <p class="model-label">YOLOv5｜SSD ｜MobileNet …</p>
+              <div class="model-tag">CV</div>
+            </div>
+          </div>
+          <div class="model-card">
+            <div class="card-header">
+              <img :src="models3" alt="" />
+            </div>
+            <div class="card-body">
+              <div class="model-title">
+                <p>{{ i18n.model.models3 }}</p>
+                <OIcon><IconArrowRight /></OIcon>
+              </div>
+              <p class="model-label">BERT｜GRU｜Transformer …</p>
+              <div class="model-tag">NLP</div>
+            </div>
+          </div>
+          <div class="model-card">
+            <div class="card-header">
+              <img :src="models4" alt="" />
+            </div>
+            <div class="card-body">
+              <div class="model-title">
+                <p>{{ i18n.model.models4 }}</p>
+                <OIcon><IconArrowRight /></OIcon>
+              </div>
+              <p class="model-label">DeepFM｜Wide&Deep｜NCF …</p>
+              <div class="model-tag">Recommendation</div>
+            </div>
+          </div>
+          <a class="model-entry" :href="`https://${DOMAIN}/models`">
+            <div class="entry-header">
+              <p class="entry-title">{{ i18n.model.title }}</p>
+              <p class="entry-desc">{{ i18n.model.introduce }}</p>
+            </div>
+            <p class="entry-body">
               {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
             </p>
           </a>
-          <div class="models card">
-            <img :src="models1" alt="" />
-            <p class="models-type title">
-              {{ i18n.model.models1 }}<OIcon><IconArrowRight /></OIcon>
-            </p>
-            <p class="models-label">VGG16｜ResNet-101｜InceptionV4 …</p>
-            <div class="models-footer">
-              <div class="task">CV</div>
-            </div>
-          </div>
-          <div class="models card">
-            <img :src="models2" alt="" />
-            <p class="models-type title">
-              {{ i18n.model.models2 }}<OIcon><IconArrowRight /></OIcon>
-            </p>
-            <p class="models-label">YOLOv5｜SSD ｜MobileNet …</p>
-            <div class="models-footer">
-              <div class="task">CV</div>
-            </div>
-          </div>
-          <div class="models card">
-            <img :src="models3" alt="" />
-            <p class="models-type title">
-              {{ i18n.model.models3 }}<OIcon><IconArrowRight /></OIcon>
-            </p>
-            <p class="models-label">BERT｜GRU｜Transformer …</p>
-            <div class="models-footer">
-              <div class="task">NLP</div>
-            </div>
-          </div>
-          <div class="models card">
-            <img :src="models4" alt="" />
-            <p class="models-type title">
-              {{ i18n.model.models4 }}<OIcon><IconArrowRight /></OIcon>
-            </p>
-            <p class="models-label">DeepFM｜Wide&Deep｜NCF …</p>
-            <div class="models-footer">
-              <div class="task">Recommendation</div>
-            </div>
-          </div>
         </div>
+
+        <!-- 数据集 -->
         <div
-          class="home-extend-dataset"
+          class="content-dataset"
           data-aos="slide-up"
-          data-aos-offset="800"
+          data-aos-duration="800"
+          data-aos-offset="-800"
+          data-aos-once="false"
         >
-          <img class="left" :src="datasetPageImg" alt="" />
-          <div class="right">
-            <p class="home-title title">{{ i18n.dataset.title }}</p>
-            <p class="home-introduce">{{ i18n.dataset.introduce }}</p>
+          <img class="dataset-left" :src="datasetPageImg" alt="" />
+          <div class="dataset-right">
+            <p class="dataset-title">{{ i18n.dataset.title }}</p>
+            <p class="dataset-desc">{{ i18n.dataset.introduce }}</p>
             <OButton
               animation
-              class="home-btn"
+              class="dataset-entry"
               data-aos="slide-up"
-              data-aos-offset="800"
-              data-aos-delay="500"
+              data-aos-offset="200"
+              data-aos-duration="1600"
               @click="handleBtnClick2"
             >
               {{ i18n.dataset.quickStartLabel }}
@@ -432,322 +418,511 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-a {
-  color: #555555;
-}
-.title {
-  color: #000000;
-  margin-bottom: 16px;
-}
-.home-extend {
-  color: #555555;
-  background-color: #f5f6f8;
-  position: relative;
-  .mouse {
-    position: absolute;
-    top: -141px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    img {
-      height: 44px;
-    }
-    p {
-      color: #ffffff;
-      margin-top: 13px;
-    }
-  }
+.o-icon {
+  transition: all 0.2s linear;
 }
 .home {
   position: relative;
   width: 100%;
-  height: 100vh;
-  background-color: #0f1927;
-
-  &-video {
-    position: absolute;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    object-fit: cover;
+  .home-portal {
     height: 100vh;
-    pointer-events: none;
-  }
+    background-color: #0f1927;
 
-  .home-mask {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba($color: #000000, $alpha: 0.35);
-    pointer-events: none;
-  }
-
-  &-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 80px;
-    color: #ffffff;
-    overflow-y: hidden;
-    z-index: 2;
-
-    .home-desc {
-      font-size: 44px;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 52px;
-    }
-
-    .home-title {
-      height: 45px;
-      font-size: 32px;
-      font-weight: 400;
-      color: #ffffff;
-      line-height: 45px;
-      margin-top: 20px;
-    }
-
-    .home-btn {
-      margin-top: 45px;
-    }
-  }
-  &-extend {
-    display: flex;
-    justify-content: center;
-    padding: 0 16px;
-    &-box {
-      max-width: 1440px;
+    &-video {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: 0;
       width: 100%;
-      .more {
-        background-color: #ffffff;
-        width: 537px;
-        &-title {
-          margin: 40px 16px 16px 40px;
-          font-size: 54px;
-        }
-        &-introduce {
-          margin: 0 40px;
-          font-size: 16px;
-        }
-        &-footer {
-          margin: 114px 40px 40px;
-          display: flex;
-          align-items: center;
-          .o-icon {
-            margin-left: 8px;
-            color: #5eb3ff;
-            font-weight: 500;
-          }
-        }
-      }
+      object-fit: cover;
+      height: 100vh;
+      pointer-events: none;
     }
-    &-home {
-      margin: 128px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .left {
-        .home-title {
-          font-size: 54px;
-          margin-bottom: 16px;
-        }
-        .home-introduce {
-          font-size: 16px;
-          margin-bottom: 48px;
-        }
-      }
-      .right {
-        width: 879px;
-      }
-    }
-    &-project {
-      display: flex;
-      .gradio {
-        background-color: #ffffff;
-        margin-right: 24px;
-        &-header {
-          background-color: #2e3959;
-          img {
-            width: 277px;
-          }
-        }
-        &-body {
-          margin: 24px 28px 0 24px;
-          padding-bottom: 16px;
-          font-size: 24px;
-          display: flex;
-          justify-content: space-between;
-          .arrow {
-            display: flex;
-            align-items: center;
-          }
-          border-bottom: 0.5px solid #555555;
-        }
-        &-footer {
-          margin: 15px 15px 24px 24px;
-          display: flex;
-          .task {
-            padding: 3px 8px;
-            background: #efefef;
-          }
-        }
-      }
-    }
-    &-modelzoo {
-      .modelzoo {
-        margin-top: 64px;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-        padding: 40px 80px 40px 40px;
-        background-color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        &-title {
-          font-size: 54px;
-          // margin-bottom: 16px;
-        }
-      }
-      .examples {
-        display: flex;
 
-        .gradio {
-          margin-top: 24px;
-          background-color: #ffffff;
-          // margin-right: 24px;
-          &-header {
-            background-color: #2e3959;
+    &-banner {
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      object-fit: cover;
+      height: 100vh;
+      pointer-events: none;
+    }
+
+    &-mask {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba($color: #000000, $alpha: 0.35);
+      pointer-events: none;
+    }
+
+    &-content {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 80px;
+      color: #ffffff;
+      overflow-y: hidden;
+      z-index: 3;
+
+      .portal-content-desc {
+        font-size: 44px;
+        font-weight: bold;
+        color: #ffffff;
+        line-height: 52px;
+      }
+
+      .portal-content-title {
+        height: 45px;
+        font-size: 32px;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 45px;
+        margin-top: 20px;
+      }
+
+      .portal-content-btn {
+        margin-top: 45px;
+      }
+
+      .watching-more {
+        position: absolute;
+        bottom: 62px;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+          height: 40px;
+          object-fit: fill;
+        }
+        p {
+          color: #ffffff;
+          margin-top: 13px;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+        }
+      }
+    }
+  }
+
+  .home-content {
+    width: 100%;
+
+    background-color: #f5f6f8;
+    .wrapper {
+      max-width: 1472px;
+      margin: 0 auto;
+      padding: 120px 16px 128px;
+
+      .content-page {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .page-left {
+          .page-title {
+            font-size: 54px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 76px;
+          }
+          .page-desc {
+            font-size: 16px;
+            font-weight: normal;
+            color: #555555;
+            line-height: 24px;
+            margin-top: 16px;
+          }
+
+          .page-entry {
+            margin-top: 48px;
+          }
+        }
+        .page-right {
+          max-width: 784px;
+          margin-left: 50px;
+        }
+      }
+
+      .content-project {
+        display: flex;
+        margin-top: 120px;
+        .project-card {
+          max-width: 277px;
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          margin-right: 24px;
+          cursor: pointer;
+
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+            .card-header {
+              img {
+                transform: scale(1.1);
+              }
+            }
+            .o-icon {
+              transform: translate(4px);
+            }
+          }
+          .card-header {
+            width: 100%;
+            overflow: hidden;
+
             img {
+              transition: all 0.2s linear;
               width: 100%;
             }
           }
-          &-body {
-            margin: 24px 28px 0 24px;
-            padding-bottom: 16px;
-            font-size: 24px;
-            display: flex;
-            justify-content: space-between;
-            .arrow {
+
+          .card-body {
+            padding: 24px 28px 24px 24px;
+            .project-title {
+              position: relative;
+              font-size: 24px;
+              color: #000000;
+              line-height: 36px;
               display: flex;
+              justify-content: space-between;
               align-items: center;
+
+              &::after {
+                position: absolute;
+                content: '';
+                bottom: -16px;
+                height: 1px;
+                width: 100%;
+                background-color: #555555;
+              }
             }
-            border-bottom: 0.5px solid #555555;
+
+            .project-tag {
+              display: inline-block;
+              margin-top: 32px;
+              height: 20px;
+              background: #efefef;
+              padding: 3px 8px;
+              font-size: 12px;
+              font-weight: normal;
+              color: #555555;
+              line-height: 14px;
+            }
           }
-          &-footer {
-            margin: 23px 15px 24px 24px;
-            display: flex;
-          }
         }
-        .gradio + .gradio {
-          margin-left: 24px;
-        }
-      }
-    }
-    &-model {
-      margin-top: 64px;
-      display: flex;
-      .more {
-        width: 448px;
-        &-footer {
-          margin-top: 50px;
-        }
-      }
-      .models {
-        margin-left: 24px;
-        background-color: #ffffff;
-        img {
-          width: 80px;
-          margin: 48px 72px 24px;
-        }
-        &-type {
-          margin: 0 28px 0 23px;
-          padding-bottom: 16px;
-          border-bottom: 0.5px solid #555555;
+
+        .project-entry {
           display: flex;
-          align-items: center;
+          flex-direction: column;
           justify-content: space-between;
-          font-size: 20px;
-        }
-        &-label {
-          margin: 15px 24px 16px;
-          width: 176px;
-          color: #555555;
-        }
-        &-footer {
-          margin: 15px 15px 24px 24px;
-          display: flex;
-          .task {
-            padding: 3px 8px;
-            background: #efefef;
+          padding: 40px;
+          flex-shrink: 1.1;
+          min-height: 356px;
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+            .o-icon {
+              transform: translate(4px);
+            }
+          }
+
+          .entry-header {
+            .entry-title {
+              font-size: 54px;
+              font-weight: 400;
+              color: #000000;
+              line-height: 76px;
+            }
+            .entry-desc {
+              height: 48px;
+              font-size: 16px;
+              font-weight: 400;
+              color: #555555;
+              line-height: 24px;
+            }
+          }
+
+          .entry-body {
+            display: flex;
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
+            align-items: center;
+
+            .o-icon {
+              font-size: 16px;
+              margin-left: 8px;
+              color: #3d8df7;
+            }
           }
         }
       }
-    }
-    &-dataset {
-      margin: 128px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .left {
-        width: 879px;
-      }
-      .right {
-        .home-title {
-          font-size: 54px;
-          margin-bottom: 16px;
+
+      .content-modelzoo {
+        margin-top: 64px;
+        .modelzoo-entry {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 40px;
+          background: #ffffff;
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+
+            .o-icon {
+              transform: translate(4px);
+            }
+          }
+          .entry-title {
+            font-size: 54px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 76px;
+          }
+
+          .entry-desc {
+            margin-top: 16px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #555555;
+            line-height: 24px;
+          }
         }
-        .home-introduce {
-          font-size: 16px;
-          margin-bottom: 48px;
+
+        .modelzoo-card-list {
+          margin-top: 24px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          column-gap: 24px;
+
+          .modelzoo-card {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+            width: 100%;
+            cursor: pointer;
+
+            &:hover {
+              box-shadow: 0 6px 18px #0d8dff24;
+              .card-header {
+                overflow: hidden;
+                img {
+                  transform: scale(1.1);
+                }
+              }
+              .o-icon {
+                transform: translate(4px);
+              }
+            }
+            .card-header {
+              overflow: hidden;
+
+              img {
+                transition: all 0.2s linear;
+                width: 100%;
+              }
+            }
+
+            .card-body {
+              padding: 24px 28px 24px 24px;
+              .modelzoo-title {
+                position: relative;
+                font-size: 24px;
+                color: #000000;
+                line-height: 36px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &::after {
+                  position: absolute;
+                  content: '';
+                  bottom: -16px;
+                  height: 1px;
+                  width: 100%;
+                  background-color: #555555;
+                }
+              }
+
+              .modelzoo-desc {
+                display: inline-block;
+                margin-top: 48px;
+                font-size: 16px;
+                font-weight: normal;
+                color: #555555;
+                line-height: 24px;
+              }
+            }
+          }
         }
       }
-    }
-    .card {
-      .gradio-header {
-        overflow: hidden;
-      }
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-      .o-icon {
-        transition: all 0.2s linear;
-      }
-      img {
-        transition: all 0.2s linear;
-      }
-      &:hover {
-        cursor: pointer;
-        box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-        img {
-          transform: scale(1.1);
+
+      .content-model {
+        margin-top: 64px;
+        // display: grid;
+        // grid-template-columns: repeat(6, 1fr);
+        // column-gap: 24px;
+        display: flex;
+        .model-card {
+          margin-right: 24px;
+          padding: 24px 28px 24px 24px;
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          cursor: pointer;
+
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+
+            .o-icon {
+              transform: translate(4px);
+            }
+          }
+          .card-header {
+            display: flex;
+            justify-content: center;
+            img {
+              max-width: 80px;
+            }
+          }
+          .card-body {
+            margin-top: 50px;
+            .model-title {
+              position: relative;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              font-size: 20px;
+              font-weight: normal;
+              color: #000000;
+              line-height: 28px;
+
+              &::after {
+                position: absolute;
+                content: '';
+                bottom: -16px;
+                height: 1px;
+                width: 100%;
+                background-color: #555555;
+              }
+            }
+
+            .model-label {
+              margin-top: 32px;
+              font-size: 14px;
+              font-weight: normal;
+              color: #555555;
+              line-height: 22px;
+            }
+
+            .model-tag {
+              display: inline-block;
+              margin-top: 16px;
+              height: 20px;
+              background: #efefef;
+              padding: 3px 8px;
+              font-size: 12px;
+              font-weight: normal;
+              color: #555555;
+              line-height: 14px;
+            }
+          }
         }
-        .o-icon {
-          transform: translate(3px);
+
+        .model-entry {
+          // grid-column: 5 / 7;
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          max-width: 448px;
+          display: flex;
+          flex-shrink: 3;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 40px;
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+
+            .o-icon {
+              transform: translate(4px);
+            }
+          }
+
+          .entry-header {
+            .entry-title {
+              font-size: 54px;
+              font-weight: 400;
+              color: #000000;
+              line-height: 76px;
+            }
+            .entry-desc {
+              font-size: 16px;
+              font-weight: 400;
+              color: #555555;
+              line-height: 24px;
+            }
+          }
+
+          .entry-body {
+            display: flex;
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
+            align-items: center;
+
+            .o-icon {
+              font-size: 16px;
+              margin-left: 8px;
+              color: #3d8df7;
+            }
+          }
+        }
+      }
+
+      .content-dataset {
+        margin-top: 128px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .dataset-left {
+          max-width: 791px;
+        }
+        .dataset-right {
+          margin-left: 50px;
+          .dataset-title {
+            font-size: 54px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 76px;
+          }
+          .dataset-desc {
+            font-size: 16px;
+            font-weight: normal;
+            color: #555555;
+            line-height: 24px;
+            margin-top: 16px;
+          }
+
+          .dataset-entry {
+            margin-top: 48px;
+          }
         }
       }
     }
   }
-  // &-content {
-  //   height: 100%;
-  // }
-  // &-slide {
-  //   display: flex;
-  //   flex-direction: column;
-  //   justify-content: center;
-  //   align-items: center;
-  //   font-size: 80px;
-  //   color: #ffffff;
-  //   height: 100%;
-  //   background-image: url(../assets/home.png);
-  //   background-size: cover;
-  //   background-repeat: no-repeat;
-  // }
 }
 </style>

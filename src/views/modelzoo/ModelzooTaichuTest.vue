@@ -52,7 +52,7 @@ const formData = new FormData();
 
 function submitUpload() {
   analysis.value = '';
-  console.log(fileList.value);
+  // console.log(fileList.value);
   if (fileList.value[fileList.value.length - 1].raw) {
     formData.append('file', fileList.value[fileList.value.length - 1].raw);
   } else {
@@ -60,7 +60,7 @@ function submitUpload() {
   }
 
   uploadModelzooPic(formData).then((res) => {
-    console.log(res);
+    // console.log(res);
     if (res.data) {
       analysis.value = res.data.inference_result.instances.image[0];
     } else {
@@ -69,10 +69,10 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  console.log(val);
+  // console.log(val);
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
-  console.log(fileList.value);
+  // console.log(fileList.value);
 }
 
 function selectImage() {

@@ -39,11 +39,20 @@ export default [
       return import('@/views/modelzoo/ModelzooLuojia.vue');
     },
   },
+  // 鹏程.盘古
   {
     path: '/modelzoo/pangu',
     name: 'pangu',
     component: () => {
       return import('@/views/modelzoo/ModelzooPangu.vue');
+    },
+  },
+  // 鹏程.神农
+  {
+    path: '/modelzoo/shennong',
+    name: 'shennong',
+    component: () => {
+      return import('@/views/modelzoo/ModelzooShennong.vue');
     },
   },
 ];

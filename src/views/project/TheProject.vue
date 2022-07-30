@@ -600,7 +600,7 @@ onUnmounted(() => {
           </div>
         </div>
         <!-- 其他 -->
-        <div
+        <!-- <div
           v-for="(item, index) in otherCondition"
           :key="item.title"
           class="condition-item"
@@ -628,7 +628,7 @@ onUnmounted(() => {
               <o-icon class="icon-x"><icon-x></icon-x></o-icon>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="card-box">

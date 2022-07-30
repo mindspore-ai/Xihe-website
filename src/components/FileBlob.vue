@@ -95,7 +95,14 @@ function previewFile(objkey) {
       let reader = new FileReader();
       reader.readAsText(res, 'utf-8');
       reader.onload = function () {
-        if (!reader.result.includes('�')) {
+        if (
+          suffix.value === 'md' ||
+          suffix.value === 'json' ||
+          suffix.value === 'py' ||
+          suffix.value === 'txt' ||
+          suffix.value === 'log' ||
+          !reader.result.includes('�')
+        ) {
           rawData.value = reader.result;
           // md文件不需加```
           suffix.value === 'md'

@@ -43,7 +43,7 @@ const i18n = {
   page: {
     title: '个人主页',
     introduce:
-      '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅。',
+      '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅',
   },
   project: {
     title: '项目',

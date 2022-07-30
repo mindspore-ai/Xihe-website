@@ -223,7 +223,7 @@ function selectImage(item, index) {
           height: 414px;
           border: none;
           border-radius: 0;
-          padding: 24px 40px 0 40px;
+          padding: 24px 40px 24px 40px;
           display: flex;
           align-items: center;
           justify-content: center;

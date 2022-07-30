@@ -401,7 +401,7 @@ function toggleDelDlg(flag) {
         v-show="userInfo.userName === detailData.owner_name.name"
         class="createtrain-btn"
         :style="{
-          right: codeString ? '184px' : '40px',
+          right: codeString ? '192px' : '48px',
         }"
       >
         <o-button type="primary" loading @click="goSelectFile">
@@ -410,12 +410,9 @@ function toggleDelDlg(flag) {
       </div>
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
-        <o-button
-          v-show="detailData.is_owner"
-          style="margin-right: 40px"
-          @click="goEditor"
-          >{{ i18n.editor }}</o-button
-        >
+        <o-button v-show="detailData.is_owner" @click="goEditor">{{
+          i18n.editor
+        }}</o-button>
       </div>
       <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
         <div class="upload-readme-img">
@@ -617,8 +614,6 @@ function toggleDelDlg(flag) {
     padding-top: 40px;
     padding-bottom: 40px;
     font-size: 24px;
-    font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
-    font-weight: normal;
     color: #000000;
     line-height: 32px;
   }
@@ -647,6 +642,7 @@ function toggleDelDlg(flag) {
   &-file {
     font-size: 14px;
     margin-right: 40px;
+    padding-right: 48px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
     // display: flex;
@@ -656,7 +652,7 @@ function toggleDelDlg(flag) {
       // width: 120px;
       // height: 48px;
       position: absolute;
-      right: 184px;
+      right: 192px;
       z-index: 1;
     }
     .markdown-body {

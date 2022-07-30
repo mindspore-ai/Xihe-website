@@ -171,7 +171,7 @@ function handleBtnClick3() {
         >
           <div class="page-left">
             <p class="page-title">{{ i18n.page.title }}</p>
-            <p class="page-descr">{{ i18n.page.introduce }}</p>
+            <p class="page-desc">{{ i18n.page.introduce }}</p>
             <OButton
               animation
               class="page-entry"
@@ -561,6 +561,7 @@ function handleBtnClick3() {
         margin-top: 120px;
         .project-card {
           max-width: 277px;
+          flex-basis: 277px;
           background: rgba(255, 255, 255, 0.95);
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           margin-right: 24px;
@@ -627,7 +628,7 @@ function handleBtnClick3() {
           flex-direction: column;
           justify-content: space-between;
           padding: 40px;
-          flex-shrink: 1.1;
+          flex-shrink: 3;
           min-height: 356px;
           background: rgba(255, 255, 255, 0.95);
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
@@ -778,6 +779,7 @@ function handleBtnClick3() {
         // column-gap: 24px;
         display: flex;
         .model-card {
+          flex-basis: 224px;
           margin-right: 24px;
           padding: 24px 28px 24px 24px;
           background: rgba(255, 255, 255, 0.95);
@@ -848,7 +850,7 @@ function handleBtnClick3() {
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           max-width: 448px;
           display: flex;
-          flex-shrink: 3;
+          flex-shrink: 4;
           flex-direction: column;
           justify-content: space-between;
           padding: 40px;

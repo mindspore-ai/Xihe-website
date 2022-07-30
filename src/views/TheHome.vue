@@ -42,8 +42,7 @@ const i18n = {
   mouse: '滑动鼠标探索更多',
   page: {
     title: '个人主页',
-    introduce:
-      '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅',
+    introduce: '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅',
   },
   project: {
     title: '项目',
@@ -168,7 +167,7 @@ function handleBtnClick3() {
           data-aos="slide-up"
           data-aos-duration="1200"
           data-aos-offset="-121"
-          data-aos-once="false"
+          data-aos-once="true"
         >
           <div class="page-left">
             <p class="page-title">{{ i18n.page.title }}</p>
@@ -252,7 +251,7 @@ function handleBtnClick3() {
           class="content-modelzoo"
           data-aos-duration="1200"
           data-aos-offset="200"
-          data-aos-once="false"
+          data-aos-once="true"
         >
           <div class="modelzoo-entry">
             <div class="entry-left">
@@ -324,7 +323,7 @@ function handleBtnClick3() {
           class="content-model"
           data-aos-duration="1200"
           data-aos-offset="-121"
-          data-aos-once="false"
+          data-aos-once="true"
         >
           <a
             class="model-card"
@@ -407,7 +406,7 @@ function handleBtnClick3() {
           data-aos="slide-up"
           data-aos-duration="800"
           data-aos-offset="-800"
-          data-aos-once="false"
+          data-aos-once="true"
         >
           <div class="dataset-right">
             <p class="dataset-title">{{ i18n.dataset.title }}</p>

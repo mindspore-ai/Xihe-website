@@ -9,6 +9,7 @@ function getHeaderConfig() {
     headers: {
       Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
     },
+    timeout: 50000,
   };
   return headersConfig;
 }

@@ -149,7 +149,6 @@ function goModelzoo() {
     }
     .o-icon {
       font-size: 16px;
-      height: 22px;
       margin-left: 8px;
       transform: translate(0px);
       transition: all 0.2s linear;

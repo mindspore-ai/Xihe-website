@@ -42,12 +42,13 @@ const i18n = {
   mouse: '滑动鼠标探索更多',
   page: {
     title: '个人主页',
-    introduce: '在个人主页开启探索、创建、收藏羲和项目、模型、数据集之旅。',
+    introduce:
+      '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅。',
   },
   project: {
     title: '项目',
     introduce:
-      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击参考文档。',
+      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间',
     gradio1: '手写数字识别',
     gradio2: '图像识别',
     gradio3: '情感分析',
@@ -67,7 +68,7 @@ const i18n = {
   model: {
     title: '模型',
     introduce:
-      '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，详情请点击参考文档。',
+      '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件',
     models1: '图像分类',
     models2: '目标检测',
     models3: '自然语言处理',
@@ -76,7 +77,7 @@ const i18n = {
   },
   dataset: {
     title: '数据集',
-    introduce: '包含主流数据集，用户也可上传合规数据集，详情请点击参考文档。',
+    introduce: '包含主流数据集，用户也可上传合规数据集，详情请点击文档',
     quickStartLabel: '更多数据集',
   },
 };
@@ -273,7 +274,10 @@ function handleBtnClick3() {
             </OButton>
           </div>
           <div class="modelzoo-card-list">
-            <a class="modelzoo-card">
+            <a
+              class="modelzoo-card"
+              :href="`https://${DOMAIN}/modelzoo/taichu`"
+            >
               <div class="card-header">
                 <img :src="modelzoo1" alt="" />
               </div>
@@ -285,7 +289,10 @@ function handleBtnClick3() {
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce1 }}</div>
               </div>
             </a>
-            <a class="modelzoo-card">
+            <a
+              class="modelzoo-card"
+              :href="`https://${DOMAIN}/modelzoo/luojia`"
+            >
               <div class="card-header">
                 <img :src="modelzoo2" alt="" />
               </div>
@@ -297,7 +304,7 @@ function handleBtnClick3() {
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce2 }}</div>
               </div>
             </a>
-            <a class="modelzoo-card">
+            <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
               <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>
@@ -319,7 +326,10 @@ function handleBtnClick3() {
           data-aos-offset="-121"
           data-aos-once="false"
         >
-          <div class="model-card">
+          <a
+            class="model-card"
+            href="https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10"
+          >
             <div class="card-header">
               <img :src="models1" alt="" />
             </div>
@@ -331,8 +341,11 @@ function handleBtnClick3() {
               <p class="model-label">VGG16｜ResNet-101｜InceptionV4 …</p>
               <div class="model-tag">CV</div>
             </div>
-          </div>
-          <div class="model-card">
+          </a>
+          <a
+            class="model-card"
+            href="https://xihe.mindspore.cn/models/MindSpore/yolov5shape640"
+          >
             <div class="card-header">
               <img :src="models2" alt="" />
             </div>
@@ -344,8 +357,11 @@ function handleBtnClick3() {
               <p class="model-label">YOLOv5｜SSD ｜MobileNet …</p>
               <div class="model-tag">CV</div>
             </div>
-          </div>
-          <div class="model-card">
+          </a>
+          <a
+            class="model-card"
+            href="https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128"
+          >
             <div class="card-header">
               <img :src="models3" alt="" />
             </div>
@@ -357,8 +373,11 @@ function handleBtnClick3() {
               <p class="model-label">BERT｜GRU｜Transformer …</p>
               <div class="model-tag">NLP</div>
             </div>
-          </div>
-          <div class="model-card">
+          </a>
+          <a
+            class="model-card"
+            href="https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo"
+          >
             <div class="card-header">
               <img :src="models4" alt="" />
             </div>
@@ -370,7 +389,7 @@ function handleBtnClick3() {
               <p class="model-label">DeepFM｜Wide&Deep｜NCF …</p>
               <div class="model-tag">Recommendation</div>
             </div>
-          </div>
+          </a>
           <a class="model-entry" :href="`https://${DOMAIN}/models`">
             <div class="entry-header">
               <p class="entry-title">{{ i18n.model.title }}</p>
@@ -390,7 +409,6 @@ function handleBtnClick3() {
           data-aos-offset="-800"
           data-aos-once="false"
         >
-          <img class="dataset-left" :src="datasetPageImg" alt="" />
           <div class="dataset-right">
             <p class="dataset-title">{{ i18n.dataset.title }}</p>
             <p class="dataset-desc">{{ i18n.dataset.introduce }}</p>
@@ -408,6 +426,7 @@ function handleBtnClick3() {
               </template>
             </OButton>
           </div>
+          <img class="dataset-left" :src="datasetPageImg" alt="" />
         </div>
       </div>
     </div>

@@ -153,7 +153,7 @@ function closeShennongVideo() {
             font-size: 14px;
             color: #555555;
             line-height: 22px;
-            margin-bottom: 24px;
+            margin-bottom: 54px;
           }
         }
       }

@@ -219,7 +219,6 @@ function selectImage(item) {
           border-radius: 0;
           padding: 24px 40px 0 40px;
           img {
-            // width: 100%;
             border: 1px solid #a0d2ff;
             height: 100%;
           }

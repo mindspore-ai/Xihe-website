@@ -1,96 +1,94 @@
 <script setup>
+import axios from 'axios';
+import { request } from '@/shared/axios';
 import { ref } from 'vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import { uploadModelzooPic } from '@/api/api-modelzoo';
 
-import img1 from '@/assets/imgs/taichu/example-1.png';
-import img2 from '@/assets/imgs/taichu/example-2.png';
-import img3 from '@/assets/imgs/taichu/example-3.png';
-import img4 from '@/assets/imgs/taichu/example-4.png';
-import img5 from '@/assets/imgs/taichu/example-5.png';
-import img6 from '@/assets/imgs/taichu/example-6.png';
-import img7 from '@/assets/imgs/taichu/example-7.png';
-
-import { ElMessage } from 'element-plus';
+// import { ElMessage } from 'element-plus';
 
 const imageUrl = ref('');
 const fileList = ref([]);
 const imgLists = [
   {
     id: 0,
-    url: img1,
+    url: '/imgs/taichu-example-1.png',
   },
   {
     id: 1,
-    url: img2,
+    url: '/imgs/taichu-example-2.png',
   },
   {
     id: 2,
-    url: img3,
+    url: '/imgs/taichu-example-3.png',
   },
   {
     id: 3,
-    url: img4,
+    url: '/imgs/taichu-example-4.png',
   },
   {
     id: 4,
-    url: img5,
+    url: '/imgs/taichu-example-5.png',
   },
   {
     id: 5,
-    url: img6,
+    url: '/imgs/taichu-example-6.png',
   },
   {
     id: 6,
-    url: img7,
+    url: '/imgs/taichu-example-7.png',
   },
 ];
 
 const activeIndex = ref(-1);
 const analysis = ref('');
-const formData = new FormData();
+let formData = new FormData();
 
 function submitUpload() {
   analysis.value = '';
-  // console.log(fileList.value);
-  if (fileList.value[fileList.value.length - 1].raw) {
-    formData.append('file', fileList.value[fileList.value.length - 1].raw);
-  } else {
-    formData.append('file', fileList.value[fileList.value.length - 1]);
-  }
+  console.log(fileList.value);
 
-  uploadModelzooPic(formData).then((res) => {
-    // console.log(res);
-    if (res.data) {
-      analysis.value = res.data.inference_result.instances.image[0];
-    } else {
-    }
-  });
+  formData.append('file', fileList.value[fileList.value.length - 1].raw);
+  try {
+    uploadModelzooPic(formData).then((res) => {
+      console.log(res);
+      if (res.data) {
+        analysis.value = res.data.inference_result.instances.image[0];
+      } else {
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 function handleChange(val) {
-  // console.log(val);
+  console.log(val);
+  formData.delete('file');
+  formData = new FormData();
+  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
   // console.log(fileList.value);
 }
 
-function selectImage() {
-  ElMessage({
-    type: 'warning',
-    message: '请将示例图片拖拽到上方区域',
-  });
-  // console.log(val);
-  // activeIndex.value = i;
-  // imageUrl.value = val.url;
-  // fileList.value.push(val);
-}
-function beforeUpload(rawFile) {
-  if (rawFile.size / 1024 / 1024 / 1024 > 1) {
-    ElMessage.warning('文件过大，文件不得超过5GB，请重新选择文件。');
-    return false;
-  }
-  return true;
+function selectImage(item) {
+  console.log(item);
+  formData.delete('file');
+  formData = new FormData();
+  imageUrl.value = item;
+  request
+    .get(item, {
+      responseType: 'blob',
+    })
+    .then((res) => {
+      let file = new File([res.data], 'img', {
+        type: 'image/png',
+        lastModified: Date.now(),
+      });
+      fileList.value = [];
+      fileList.value[0] = { raw: file }; // formData.append('blob', file);
+    });
 }
 </script>
 <template>
@@ -119,7 +117,6 @@ function beforeUpload(rawFile) {
           :auto-upload="false"
           :show-file-list="false"
           :on-change="handleChange"
-          :before-upload="beforeUpload"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <div v-else class="empty-status">
@@ -135,7 +132,7 @@ function beforeUpload(rawFile) {
             :key="item"
             class="img-list-item"
             :class="item.id === activeIndex ? 'active' : ''"
-            @click="selectImage(item, index)"
+            @click="selectImage(item.url, index)"
           >
             <!-- <div class="modal"></div> -->
             <img :src="item.url" />

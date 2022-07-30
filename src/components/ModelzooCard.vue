@@ -35,7 +35,7 @@ function jumpDetail() {
 <template>
   <div class="card" @click="jumpDetail">
     <div class="card-top">
-      <img :src="prop.url" alt="" />
+      <img class="cover" :src="prop.url" alt="" />
     </div>
     <div class="card-bottom">
       <div class="card-bottom-title">
@@ -56,26 +56,16 @@ function jumpDetail() {
     transform: translate(0);
     transition: all 0.2s linear;
   }
-  &:hover {
-    box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
-    .o-icon {
-      transform: translate(3px);
-      transition: all 0.2s linear;
-    }
-  }
+
   .card-top {
     width: 100%;
     height: 270px;
     overflow: hidden;
-    img {
+    .cover {
       width: 100%;
       height: 100%;
       transform: scale(1);
       transition: all 0.2s linear;
-      &:hover {
-        transform: scale(1.05);
-        transition: all 0.2s linear;
-      }
     }
   }
   .card-bottom {
@@ -107,6 +97,17 @@ function jumpDetail() {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+  }
+  &:hover {
+    box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
+    .o-icon {
+      transform: translate(3px);
+      transition: all 0.2s linear;
+    }
+    .cover {
+      transform: scale(1.05);
+      transition: all 0.2s linear;
     }
   }
 }

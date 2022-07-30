@@ -639,9 +639,8 @@ onUnmounted(() => {
           <div class="fail-title">推理启动日志</div>
           <div class="fail-body">
             <div>
-              启动失败，推理启动日志如下，你可以根据推理日志的提示更改gradio相关文件，常见错误
+              启动失败，推理启动日志如下，你可以根据推理日志的提示更改gradio相关文件
             </div>
-            <a href="">参考文档</a>
           </div>
           <div class="fail-log">
             <div v-html="failLog"></div>

@@ -59,7 +59,7 @@ function goTaichuMore() {
       <div class="taichu-content">
         <div class="taichu-content-banner">
           <div class="content-banner-left">
-            <img :src="taichuBanner" alt="" />
+            <img draggable="false" :src="taichuBanner" alt="" />
           </div>
           <div class="content-banner-right">
             <div class="content-banner-right-title">紫东.太初</div>

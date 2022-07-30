@@ -3,51 +3,87 @@ import { ref } from 'vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import { uploadModelzooPic } from '@/api/api-modelzoo';
 
+import img1 from '@/assets/imgs/taichu/example-1.png';
+import img2 from '@/assets/imgs/taichu/example-2.png';
+import img3 from '@/assets/imgs/taichu/example-3.png';
+import img4 from '@/assets/imgs/taichu/example-4.png';
+import img5 from '@/assets/imgs/taichu/example-5.png';
+import img6 from '@/assets/imgs/taichu/example-6.png';
+import img7 from '@/assets/imgs/taichu/example-7.png';
+
+import { ElMessage } from 'element-plus';
+
 const imageUrl = ref('');
 const fileList = ref([]);
 const imgLists = [
   {
     id: 0,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img1,
   },
   {
     id: 1,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img2,
   },
   {
     id: 2,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img3,
   },
   {
     id: 3,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img4,
   },
   {
     id: 4,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img5,
   },
   {
     id: 5,
-    url: 'https://t7.baidu.com/it/u=1517419723,1472324058&fm=193&f=GIF',
+    url: img6,
   },
-  { id: 6, url: 'https://t7.baidu.com/it/u=877418396,3745118611&fm=193&f=GIF' },
+  {
+    id: 6,
+    url: img7,
+  },
 ];
 
 const activeIndex = ref(-1);
+const analysis = ref('');
+const formData = new FormData();
 
 function submitUpload() {
-  // console.log(fileList.value);
-  uploadModelzooPic({ file: fileList.value[0].raw });
+  analysis.value = '';
+  console.log(fileList.value);
+  if (fileList.value[fileList.value.length - 1].raw) {
+    formData.append('file', fileList.value[fileList.value.length - 1].raw);
+  } else {
+    formData.append('file', fileList.value[fileList.value.length - 1]);
+  }
+
+  uploadModelzooPic(formData).then((res) => {
+    console.log(res);
+    if (res.data) {
+      analysis.value = res.data.inference_result.instances.image[0];
+    } else {
+    }
+  });
 }
+
 function handleChange(val) {
+  console.log(val);
   activeIndex.value = -1;
-  // console.log(val);
-  // console.log(URL.createObjectURL(val.raw));
   imageUrl.value = URL.createObjectURL(val.raw);
+  console.log(fileList.value);
 }
-function selectImage(val, i) {
-  activeIndex.value = i;
-  imageUrl.value = val;
+
+function selectImage() {
+  ElMessage({
+    type: 'warning',
+    message: '请将示例图片拖拽到上方区域',
+  });
+  // console.log(val);
+  // activeIndex.value = i;
+  // imageUrl.value = val.url;
+  // fileList.value.push(val);
 }
 </script>
 <template>
@@ -70,6 +106,7 @@ function selectImage(val, i) {
           drag
           :multiple="false"
           action="#"
+          accept=".png,.jpeg,.jpg"
           list-type="picture"
           :file-list="fileList"
           :auto-upload="false"
@@ -79,7 +116,9 @@ function selectImage(val, i) {
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <div v-else class="empty-status">
             <o-icon><icon-upload></icon-upload></o-icon>
-            <p class="upload-tip">拖拽图片到此处上传</p>
+            <p class="upload-tip">
+              拖拽图片到此处上传(图片格式仅为png/jepg/jpg)
+            </p>
           </div>
         </el-upload>
         <div class="img-list">
@@ -88,22 +127,24 @@ function selectImage(val, i) {
             :key="item"
             class="img-list-item"
             :class="item.id === activeIndex ? 'active' : ''"
-            @click="selectImage(item.url, index)"
+            @click="selectImage(item, index)"
           >
-            <div class="modal"></div>
+            <!-- <div class="modal"></div> -->
             <img :src="item.url" />
           </div>
         </div>
       </div>
       <div class="caption-bottom-right">
         <p class="result">分析结果</p>
-        <p class="result-text">
-          是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟是一只小小小鸟
-        </p>
+        <div v-if="analysis" class="result-text">
+          <span class="head">Caption:</span>
+          <span class="main">&nbsp;{{ analysis }}</span>
+        </div>
+        <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
       </div>
     </div>
     <!-- 视觉回答 -->
-    <div class="caption-top">
+    <!-- <div class="caption-top">
       <div>
         <p class="experience-title">视觉问答</p>
         <p class="experience-text">
@@ -113,7 +154,7 @@ function selectImage(val, i) {
       <div class="experience-btn">
         <o-button type="primary" @click="submitUpload">开始推理</o-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -140,13 +181,14 @@ function selectImage(val, i) {
 }
 .model-page {
   background-color: #f5f6f8;
-
+  min-width: 1440px;
   .caption-bottom {
     height: 560px;
     display: flex;
     .caption-bottom-left {
       background-color: #f5f6f8;
       flex: 1;
+      width: 952px;
       margin-right: 24px;
       :deep(.el-upload) {
         width: 100%;
@@ -195,7 +237,6 @@ function selectImage(val, i) {
           height: 106px;
           position: relative;
           cursor: pointer;
-
           img {
             width: 100%;
             height: 100%;
@@ -223,10 +264,10 @@ function selectImage(val, i) {
       padding: 16px 24px;
       background-color: #fff;
       .result {
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 400;
         color: #000000;
-        line-height: 20px;
+        line-height: 25px;
         margin-bottom: 24px;
       }
       .result-text {
@@ -234,6 +275,19 @@ function selectImage(val, i) {
         font-weight: 400;
         color: #555555;
         line-height: 20px;
+        .head {
+          font-size: 16px;
+          font-weight: 500;
+          color: #0d8dff;
+          line-height: 24px;
+          margin-bottom: 8px;
+        }
+        .main {
+          font-size: 14px;
+          font-weight: 400;
+          color: #555555;
+          line-height: 20px;
+        }
       }
     }
   }

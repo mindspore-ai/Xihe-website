@@ -41,13 +41,14 @@ let i18n = {
       title: '鹏程.盘古',
       introduce: '业界首个千亿级参数中文自然语言处理大模型',
       url: pangu,
-      openness: true,
       path: '/modelzoo/pangu',
+      openness: true,
     },
     {
       title: '鹏程.神农',
       introduce: '面向生物医学领域的人工智能平台',
       url: shenlong,
+      path: '/modelzoo/shennong',
       openness: true,
     },
     {

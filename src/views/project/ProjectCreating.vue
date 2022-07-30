@@ -149,7 +149,7 @@ function setProject() {
   });
 }
 getModelTags().then((res) => {
-  console.log(res.data.projects_photo);
+  // console.log(res.data.projects_photo);
   projectPhotos.value = res.data.projects_photo;
   projectPhotos.value.forEach((item) => {
     item.is_active = false;

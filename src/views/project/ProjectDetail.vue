@@ -247,7 +247,6 @@ function handleTabClick(item) {
     item.index === '1' &&
     userInfoStore.userName === detailData.value.owner_name.name
   ) {
-    console.log('item.index: ', item.index);
     return;
   }
   router.push(

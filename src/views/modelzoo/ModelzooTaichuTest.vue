@@ -69,7 +69,7 @@ function handleChange(val) {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
-  console.log(fileList.value);
+  // console.log(fileList.value);
 }
 
 function selectImage(item) {

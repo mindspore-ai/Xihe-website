@@ -175,12 +175,18 @@ function closeInstanceVideo() {
       </div>
     </div>
     <div class="taichu-info-reference">
-      <div class="taichu-info-reference-title">参考设计——多模态对话虚拟人“小初”</div>
+      <div class="taichu-info-reference-title">
+        参考设计——多模态对话虚拟人“小初”
+      </div>
       <p class="taichu-info-reference-info">
         自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
       </p>
       <div class="taichu-info-reference-video">
-        <img class="taichu-info-reference-video-img1" :src="taichuVideo4" alt="" />
+        <img
+          class="taichu-info-reference-video-img1"
+          :src="taichuVideo4"
+          alt=""
+        />
         <div class="taichu-info-reference-video-img2">
           <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
           <div>紫东.太初</div>
@@ -214,7 +220,9 @@ function closeInstanceVideo() {
         在解决手语师资短缺的同时，还能推动手语标准的推广。目前一体机已在湘潭特校等数十个学校陆续上线。
       </p>
       <div class="taichu-info-instance-desc">
-        <div class="taichu-info-instance-desc-title">听障群体持续学习成为难题</div>
+        <div class="taichu-info-instance-desc-title">
+          听障群体持续学习成为难题
+        </div>
         <div class="taichu-info-instance-desc-title2">
           听障人士长期手语学习过程中的三大挑战
         </div>
@@ -468,7 +476,7 @@ function closeInstanceVideo() {
       margin: 10px 0 24px;
     }
     &-video {
-      // width: 100%;
+      width: 100%;
       height: 707px;
       background-color: #bfa;
       position: relative;
@@ -718,6 +726,7 @@ function closeInstanceVideo() {
         margin: 52px auto 64px;
       }
       &-video {
+        // width: 100%;
         height: 707px;
         background-color: #bfa;
         position: relative;
@@ -744,7 +753,6 @@ function closeInstanceVideo() {
           top: 0;
           left: 0;
           .close-btn {
-            // height: 100px;
             position: absolute;
             right: 16px;
             top: 16px;
@@ -767,12 +775,6 @@ function closeInstanceVideo() {
   video {
     width: 100%;
     height: 520px;
-  }
-}
-.o-dialog {
-  :deep(.o-dialog-wrap) {
-    position: relative;
-    top: 0% !important;
   }
 }
 </style>

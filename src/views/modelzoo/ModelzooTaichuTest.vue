@@ -47,31 +47,35 @@ const loading = ref(false);
 let formData = new FormData();
 
 function submitUpload() {
-  analysis.value = '';
-  loading.value = true;
+  if (fileList.value.length === 1) {
+    analysis.value = '';
+    loading.value = true;
 
-  formData.append('file', fileList.value[fileList.value.length - 1].raw);
-  try {
-    uploadModelzooPic(formData).then((res) => {
-      if (res.data) {
-        analysis.value = res.data.inference_result.instances.image[0];
-        loading.value = false;
-      } else {
-        loading.value = false;
-      }
-    });
-  } catch (e) {
-    console.error(e);
+    formData.append('file', fileList.value[fileList.value.length - 1].raw);
+    try {
+      uploadModelzooPic(formData).then((res) => {
+        if (res.data) {
+          analysis.value = res.data.inference_result.instances.image[0];
+          loading.value = false;
+        } else {
+          loading.value = false;
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
 function handleChange(val) {
   if (val.size > 204800) {
+    fileList.value.pop();
     return ElMessage({
       type: 'warning',
       message: '图片大小超出限制',
     });
   } else {
+    analysis.value = '';
     formData.delete('file');
     formData = new FormData();
     fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
@@ -80,22 +84,26 @@ function handleChange(val) {
   }
 }
 
-function selectImage(item) {
-  formData.delete('file');
-  formData = new FormData();
-  imageUrl.value = item;
-  request
-    .get(item, {
-      responseType: 'blob',
-    })
-    .then((res) => {
-      let file = new File([res.data], 'img', {
-        type: 'image/png',
-        lastModified: Date.now(),
+function selectImage(item, index) {
+  activeIndex.value = index;
+  if (imageUrl.value !== item) {
+    analysis.value = '';
+    formData.delete('file');
+    formData = new FormData();
+    imageUrl.value = item;
+    request
+      .get(item, {
+        responseType: 'blob',
+      })
+      .then((res) => {
+        let file = new File([res.data], 'img', {
+          type: 'image/png',
+          lastModified: Date.now(),
+        });
+        fileList.value = [];
+        fileList.value[0] = { raw: file }; // formData.append('blob', file);
       });
-      fileList.value = [];
-      fileList.value[0] = { raw: file }; // formData.append('blob', file);
-    });
+  }
 }
 </script>
 <template>
@@ -199,14 +207,14 @@ function selectImage(item) {
 }
 .model-page {
   background-color: #f5f6f8;
-  min-width: 1440px;
+  max-width: 1440px;
   .caption-bottom {
     height: 560px;
     display: flex;
     .caption-bottom-left {
       background-color: #f5f6f8;
       flex: 1;
-      width: 952px;
+      width: 70%;
       margin-right: 24px;
       :deep(.el-upload) {
         width: 100%;
@@ -216,9 +224,13 @@ function selectImage(item) {
           border: none;
           border-radius: 0;
           padding: 24px 40px 0 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           img {
             border: 1px solid #a0d2ff;
-            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
             object-fit: fill;
           }
         }
@@ -278,7 +290,7 @@ function selectImage(item) {
       }
     }
     .caption-bottom-right {
-      width: 464px;
+      width: calc(30% - 24px);
       padding: 16px 24px;
       background-color: #fff;
       position: relative;

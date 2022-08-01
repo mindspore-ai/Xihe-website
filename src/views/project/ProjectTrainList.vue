@@ -182,14 +182,14 @@ function resetClick(val) {
   }
 }
 
-// function goTrainLog(trainId) {
-//   router.push({
-//     name: 'projectTrainLog',
-//     params: {
-//       trainId: trainId,
-//     },
-//   });
-// }
+function goTrainLog(trainId) {
+  router.push({
+    name: 'projectTrainLog',
+    params: {
+      trainId: trainId,
+    },
+  });
+}
 
 // wss://xihe.test.osinfra.cn/wss/train_task
 const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
@@ -244,17 +244,17 @@ onUnmounted(() => {
       <el-table-column label="训练名称/ID" width="220">
         <template #default="scope">
           <div>
-            <!-- <span class="train-name" @click="goTrainLog(scope.row.train_id)">{{
+            <span class="train-name" @click="goTrainLog(scope.row.train_id)">{{
               scope.row.instance_name
-            }}</span> -->
-            <router-link
+            }}</span>
+            <!-- <router-link
               class="train-name"
               :to="{
                 name: 'projectTrainLog',
                 params: { trainId: scope.row.train_id },
               }"
-              >{{ scope.row.instance_name }}</router-link
-            >
+              >{{ scope.row.train_id }}</router-link
+            > -->
           </div>
         </template>
       </el-table-column>

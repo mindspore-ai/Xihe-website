@@ -1,7 +1,9 @@
 <script setup>
 import { request } from '@/shared/axios';
 import { ref } from 'vue';
+
 import IconUpload from '~icons/app/modelzoo-upload';
+
 import { uploadModelzooPic } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
@@ -72,7 +74,7 @@ function handleChange(val) {
     fileList.value.pop();
     return ElMessage({
       type: 'warning',
-      message: '图片大小超出限制',
+      message: '图片大小不应超过200K',
     });
   } else {
     analysis.value = '';
@@ -142,7 +144,7 @@ function selectImage(item, index) {
           <div v-else class="empty-status">
             <o-icon><icon-upload></icon-upload></o-icon>
             <p class="upload-tip">
-              拖拽图片(jpg/jepg/png)到此处上传,且大小不超过200KB
+              拖拽图片(jpg/jepg/png)到此处上传,且<span>大小不超过200KB</span>
             </p>
           </div>
         </el-upload>
@@ -244,11 +246,17 @@ function selectImage(item, index) {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        .o-icon {
+          color: #cfe8ff;
+        }
         .upload-tip {
           font-size: 14px;
-          color: #999999;
+          color: #0d8dff;
           line-height: 22px;
           margin-top: 8px;
+          span {
+            color: #e4160f;
+          }
         }
       }
       .img-list {

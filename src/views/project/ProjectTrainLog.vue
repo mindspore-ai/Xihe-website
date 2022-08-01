@@ -68,6 +68,11 @@ const query = reactive({
 const rules = reactive({
   learning_rate: [
     { required: true, message: '必填项', trigger: 'blur' },
+    {
+      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
+      message: '请输入例如[0.01, 0.02, 0.03]的字段',
+      trigger: 'blur',
+    },
     // {
     //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
     //   message: '格式不正确',
@@ -76,6 +81,11 @@ const rules = reactive({
   ],
   momentum: [
     { required: true, message: '必填项', trigger: 'blur' },
+    {
+      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
+      message: '请输入例如[0.9, 0.99]的字段',
+      trigger: 'blur',
+    },
     // {
     //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
     //   message: '格式不正确',
@@ -84,6 +94,11 @@ const rules = reactive({
   ],
   batch_size: [
     { required: true, message: '必填项', trigger: 'blur' },
+    {
+      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
+      message: '请输入例如[32,64]的字段',
+      trigger: 'blur',
+    },
     // {
     //   pattern: /^\[((\d+\,)+\d+)*\]$/,
     //   message: '格式不正确',
@@ -609,7 +624,7 @@ watch(
   justify-content: space-between;
   .info-btn {
     align-self: end;
-    margin-top: 37px;
+    margin-top: 30px;
     // padding-right: 50px;
   }
 }
@@ -766,10 +781,20 @@ watch(
           font-weight: normal;
         }
         :deep .el-form-item {
-          margin-top: 16px;
+          margin-top: 35px;
+          // margin-top: 16px;
+          &:first-child {
+            margin-top: 16px;
+          }
           .el-form-item__label {
             width: 110px;
             text-align: left;
+          }
+          .el-form-item__content {
+            .el-form-item__error {
+              top: 50px;
+              left: 0;
+            }
           }
         }
       }

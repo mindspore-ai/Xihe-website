@@ -219,6 +219,7 @@ function getDetailData() {
 
         if (detailData.value.sdk_name !== 'Gradio') {
           tabTitle[0].label = '项目卡片';
+          activeName.value = '项目卡片';
         }
 
         digCount.value = detailData.value.digg_count;

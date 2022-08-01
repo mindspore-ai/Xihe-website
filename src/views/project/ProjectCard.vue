@@ -7,7 +7,7 @@ import markdownItAnchor from 'markdown-it-anchor';
 import { useUserInfoStore } from '@/stores';
 
 import IconPlus from '~icons/app/plus';
-// import IconAddFile from '~icons/app/add-file';
+import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/project';
 
 import RelateCard from '@/components/RelateCard.vue';
@@ -51,11 +51,11 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// const pushParams = {
-//   user: routerParams.user,
-//   name: routerParams.name,
-//   contents: routerParams.contents,
-// };
+const pushParams = {
+  user: routerParams.user,
+  name: routerParams.name,
+  contents: routerParams.contents,
+};
 
 const i18n = {
   recentDownload: '近期下载量',
@@ -311,26 +311,26 @@ watch(
     immediate: true,
   }
 );
-// function goEditor() {
-//   pushParams.contents = ['README.md'];
-//   router.push({
-//     name: 'projectFileEditor',
-//     params: pushParams,
-//   });
-// }
-// function emptyClick(ind) {
-//   if (ind === 1) {
-//     router.push({
-//       name: 'projectFileNew',
-//       params: pushParams,
-//     });
-//   } else if (ind === 3) {
-//     router.push({
-//       name: 'projectFileUpload',
-//       params: pushParams,
-//     });
-//   }
-// }
+function goEditor() {
+  pushParams.contents = ['README.md'];
+  router.push({
+    name: 'projectFileEditor',
+    params: pushParams,
+  });
+}
+function emptyClick(ind) {
+  if (ind === 1) {
+    router.push({
+      name: 'projectFileNew',
+      params: pushParams,
+    });
+  } else if (ind === 3) {
+    router.push({
+      name: 'projectFileUpload',
+      params: pushParams,
+    });
+  }
+}
 
 function goDetailClick(val) {
   router.push(`/models/${val.owner_name.name}/${val.name}`);
@@ -667,7 +667,7 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <!-- <div v-else class="left-data1">
+    <div v-else class="left-data1">
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
         <o-button v-if="detailData.is_owner" @click="goEditor">{{
@@ -699,7 +699,7 @@ onUnmounted(() => {
           </p>
         </div>
       </div>
-    </div> -->
+    </div>
     <div v-if="loading" class="right-data">
       <div class="download-data">
         <h4 class="download-title">{{ i18n.recentDownload }}</h4>

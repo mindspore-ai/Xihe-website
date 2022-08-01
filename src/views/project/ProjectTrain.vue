@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Markdown from 'markdown-it';
-import markdownItAnchor from 'markdown-it-anchor';
+
+import { handleMarkdown } from '@/shared/markdown';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -46,13 +46,9 @@ const showTip = ref(false);
 // 左侧显示文件内容
 const result = ref();
 const codeString = ref('');
-const slugify = (s) =>
-  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
-const mkit = new Markdown({ html: true });
-mkit.use(markdownItAnchor, {
-  level: 1,
-  slugify,
-});
+
+const mkit = handleMarkdown();
+
 let routerParams = router.currentRoute.value.params;
 let README = '';
 const pushParams = {

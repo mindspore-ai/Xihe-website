@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import Markdown from 'markdown-it';
-import markdownItAnchor from 'markdown-it-anchor';
+
+import { handleMarkdown } from '@/shared/markdown';
 
 import OButton from '@/components/OButton.vue';
 import RelateCard from '@/components/RelateCard.vue';
@@ -21,13 +21,9 @@ import { useFileData } from '@/stores';
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
-const slugify = (s) =>
-  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
-const mkit = new Markdown({ html: true });
-mkit.use(markdownItAnchor, {
-  level: 1,
-  slugify,
-});
+
+const mkit = handleMarkdown();
+
 const codeString = ref('');
 const result = ref();
 let README = '';

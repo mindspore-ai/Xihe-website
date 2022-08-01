@@ -1,37 +1,26 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import Markdown from 'markdown-it';
-import markdownItAnchor from 'markdown-it-anchor';
 
 import OButton from '@/components/OButton.vue';
 import RelateCard from '@/components/RelateCard.vue';
 import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
 import NoRelate from '@/components/NoRelate.vue';
 
-// import IconTime from '~icons/app/time';
-// import IconDownload from '~icons/app/download';
-// import IconHeart from '~icons/app/heart';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-// import ImgModel from '@/assets/icons/model2.png';
 import { addDataset, modifyProjectAdd } from '@/api/api-model';
 import { downloadObs, findFile } from '@/api/api-obs';
 import { useFileData, useUserInfoStore } from '@/stores';
+import { handleMarkdown } from '@/shared/markdown';
 
 const userInfo = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 route.hash ? getReadMeFile() : '';
-const slugify = (s) =>
-  decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
-const mkit = new Markdown({ html: true });
-mkit.use(markdownItAnchor, {
-  level: 1,
-  slugify,
-});
+const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();

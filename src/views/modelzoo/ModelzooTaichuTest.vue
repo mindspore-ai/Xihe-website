@@ -1,6 +1,6 @@
 <script setup>
 import { request } from '@/shared/axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
 
@@ -24,10 +24,10 @@ const imgLists = [
     id: 2,
     url: '/imgs/taichu-example-3.png',
   },
-  {
-    id: 3,
-    url: '/imgs/taichu-example-4.png',
-  },
+  // {
+  //   id: 3,
+  //   url: '/imgs/taichu-example-4.png',
+  // },
   {
     id: 4,
     url: '/imgs/taichu-example-5.png',
@@ -107,6 +107,12 @@ function selectImage(item, index) {
       });
   }
 }
+
+function customUpload() {
+  document.querySelector('.caption-bottom-left .el-upload__input').click();
+}
+
+onMounted(() => {});
 </script>
 <template>
   <div class="model-page">
@@ -129,25 +135,28 @@ function selectImage(item, index) {
     </div>
     <div class="caption-bottom">
       <div class="caption-bottom-left">
-        <el-upload
-          drag
-          action=""
-          :multiple="false"
-          accept=".png,.jpeg,.jpg"
-          list-type="picture"
-          :file-list="fileList"
-          :auto-upload="false"
-          :show-file-list="false"
-          :on-change="handleChange"
-        >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <div v-else class="empty-status">
-            <o-icon><icon-upload></icon-upload></o-icon>
-            <p class="upload-tip">
-              拖拽图片(jpg/jepg/png)到此处上传,且<span>大小不超过200KB</span>
-            </p>
-          </div>
-        </el-upload>
+        <div>
+          <el-upload
+            drag
+            action=""
+            :multiple="false"
+            accept=".png,.jpeg,.jpg"
+            list-type="picture"
+            :file-list="fileList"
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleChange"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <div v-else class="empty-status">
+              <o-icon><icon-upload></icon-upload></o-icon>
+              <p class="upload-tip">
+                拖拽图片(jpg/jepg/png)到此处上传,且<span>大小不超过200KB</span>
+              </p>
+            </div>
+          </el-upload>
+        </div>
+
         <div class="img-list">
           <div
             v-for="(item, index) in imgLists"
@@ -159,8 +168,13 @@ function selectImage(item, index) {
             <!-- <div class="modal"></div> -->
             <img draggable="false" :src="item.url" />
           </div>
+          <div class="img-list-item custom" @click="customUpload">
+            <o-icon><icon-upload></icon-upload></o-icon>
+            <p>自定义图片</p>
+          </div>
         </div>
       </div>
+
       <div class="caption-bottom-right">
         <p class="result">分析结果</p>
         <div v-if="analysis" class="result-text">
@@ -171,6 +185,7 @@ function selectImage(item, index) {
         <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
       </div>
     </div>
+
     <!-- 视觉回答 -->
     <!-- <div class="caption-top">
       <div>
@@ -247,15 +262,15 @@ function selectImage(item, index) {
         justify-content: center;
         align-items: center;
         .o-icon {
-          color: #cfe8ff;
+          color: #ccc;
         }
         .upload-tip {
           font-size: 14px;
-          color: #0d8dff;
+          color: #ccc;
           line-height: 22px;
           margin-top: 8px;
           span {
-            color: #e4160f;
+            color: #0d8dff;
           }
         }
       }
@@ -268,6 +283,20 @@ function selectImage(item, index) {
           border: 1px solid #a0d2ff;
           .modal {
             display: block;
+          }
+        }
+        .custom {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: #0d8dff;
+          background-color: #e7f4ff;
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-top: 8px;
           }
         }
         &-item {

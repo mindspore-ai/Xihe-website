@@ -222,7 +222,7 @@ function handleBtnClick3() {
           </a>
           <a
             class="project-card"
-            :href="`https://${DOMAIN}/projects/wesley/lstm_demo`"
+            :href="`https://${DOMAIN}/projects/drizzlezyk/LSTM`"
           >
             <div class="card-header">
               <img :src="emtionalNalysis" alt="" />

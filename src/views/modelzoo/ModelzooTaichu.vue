@@ -133,6 +133,7 @@ function goTaichuMore() {
       .taichu-content-banner {
         padding: 80px;
         background-color: #fff;
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
         .content-banner-left {
           margin-right: 40px;

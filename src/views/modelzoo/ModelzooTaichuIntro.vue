@@ -376,8 +376,8 @@ function closeInstanceVideo() {
         display: flex;
         justify-content: space-between;
         .diagram-left {
-          width: 213px;
-          margin-right: 166px;
+          max-width: 213px;
+          // margin-right: 166px;
         }
         .diagram-right {
           display: flex;

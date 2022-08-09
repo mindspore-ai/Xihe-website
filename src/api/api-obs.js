@@ -167,7 +167,7 @@ export function fileRename(params) {
 }
 export function addDownloadRecord(id, module) {
   const url = `/api/${module}/${id}/download`;
-  return request.post(url).then((res) => {
+  return request.post(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

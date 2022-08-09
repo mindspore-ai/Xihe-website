@@ -58,10 +58,8 @@ const videoImgArr2 = [
   },
 ];
 function playVideo(videoUrl) {
-  // console.log(videoUrl);
   // 获得视频元素
   const video = document.getElementById('video');
-  // console.log('video: ', video.src);
   showVideo.value = true;
   video.src = videoUrl;
   video.play();

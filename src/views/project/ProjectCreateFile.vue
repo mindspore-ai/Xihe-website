@@ -237,7 +237,6 @@ async function confirmCreating(formEl) {
       // params.inputs = inputs;
       // params.outputs = outputs;
       createTrainProject(params, route.query.id).then((res) => {
-        // console.log(res);
         if (res.status === 200) {
           ElMessage({
             type: 'success',

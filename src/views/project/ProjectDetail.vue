@@ -130,8 +130,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 // 训练选项
@@ -237,7 +237,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 getDetailData();
 
@@ -251,8 +251,7 @@ function handleTabClick(item) {
     return;
   }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${
-      tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -582,9 +581,9 @@ watch(
   }
 );
 
-function goTrain(path) {
-  router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
-}
+// function goTrain(path) {
+//   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
+// }
 </script>
 
 <template>
@@ -675,9 +674,13 @@ function goTrain(path) {
                       <el-dropdown-item
                         v-for="menu in trainSelect"
                         :key="menu.id"
-                        @click="goTrain(menu.path)"
                       >
-                        {{ menu.label }}
+                        <router-link
+                          :to="{
+                            path: `/projects/${route.params.user}/${route.params.name}/${menu.path}`,
+                          }"
+                          >{{ menu.label }}</router-link
+                        >
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
@@ -1264,6 +1267,17 @@ $theme: #0d8dff;
 
   .el-tabs__nav-wrap::after {
     display: none;
+  }
+}
+// 训练下拉菜单样式
+.el-popper {
+  .el-dropdown-menu {
+    a {
+      color: #000;
+      &:hover {
+        color: $theme;
+      }
+    }
   }
 }
 </style>

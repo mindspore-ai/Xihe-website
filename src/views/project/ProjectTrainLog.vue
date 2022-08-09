@@ -329,9 +329,9 @@ function handleAssessment() {
 }
 
 // 添加评估代码
-function addAssessCode() {
-  router.push();
-}
+// function addAssessCode() {
+//   router.push();
+// }
 
 // 跳转到Aim嵌入页面
 function goAimPage() {
@@ -346,12 +346,20 @@ function goAimPage() {
 // 跳到评估页面
 function goToPage() {
   // window.open(`${evaluateUrl.value}`);
-  router.push({
+  // router.push({
+  //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
+  //   query: {
+  //     url: evaluateUrl.value,
+  //   },
+  // });
+  // 点击在新页签打开
+  let routerData = router.resolve({
     path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
     },
   });
+  window.open(routerData.href, '_blank');
 }
 
 // 日志详情
@@ -545,14 +553,11 @@ watch(
                     @click="saveSetting"
                     >评估中...</o-button
                   >
-                  <a :href="`${evaluateUrl}`" onclick="return false">
-                    <o-button
-                      v-if="showGoButton"
-                      type="primary"
-                      @click="goToPage"
-                      >查看报告</o-button
-                    >
-                  </a>
+                  <!-- <a :href="`${evaluateUrl}`" onclick="return false"> -->
+                  <o-button v-if="showGoButton" type="primary" @click="goToPage"
+                    >查看报告</o-button
+                  >
+                  <!-- </a> -->
                 </div>
               </div>
             </div>

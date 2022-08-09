@@ -1150,7 +1150,10 @@ $theme: #0d8dff;
       font-size: 14px;
       .label-item {
         cursor: pointer;
-        padding: 3px 6px;
+        display: flex;
+        align-items: center;
+        padding: 0px 12px;
+        height: 28px;
         margin-right: 8px;
         margin-bottom: 8px;
         font-size: 14px;
@@ -1161,7 +1164,6 @@ $theme: #0d8dff;
       }
       .label-add-item {
         height: 28px;
-        line-height: 28px;
         padding: 0px 12px;
         background: #f7f8fa;
         border-radius: 8px;

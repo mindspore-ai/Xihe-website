@@ -1,6 +1,5 @@
 import { request } from '@/shared/axios';
 import { useUserInfoStore } from '@/stores';
-// import { addDownloadRecord } from '@/api/api-model';
 
 function getUserInfo() {
   return useUserInfoStore();
@@ -63,40 +62,6 @@ export function delFileObs(reopt) {
  */
 export function downloadFileObs(reopt) {
   return request(reopt).then((res) => {
-    return res.data;
-  });
-}
-
-/**
- * 删除模型文件（表）
- * @returns
- */
-export function deleteModelData(id) {
-  const url = `/api/base/files/${id}`;
-  return request.delete(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-
-/**
- * 新增文件（表）
- * @returns
- */
-export function newFileData(params) {
-  const url = '/api/base/files/';
-  params = JSON.stringify(params);
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-/**
- * 编辑文件（表）
- * @returns
- */
-export function editFileData(params) {
-  const url = `/api/base/files/${params.id}`;
-  params = JSON.stringify(params);
-  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

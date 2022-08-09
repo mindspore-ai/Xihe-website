@@ -284,8 +284,6 @@ watch(
               >
             </div>
           </td>
-          <!-- <td></td> -->
-          <!-- <td></td> -->
           <td class="tree-head-right">
             <div class="inner-box">
               {{ i18n.uploadTime }}
@@ -301,13 +299,15 @@ watch(
                 :rules="rules"
                 :model="query"
                 prop="region"
+                @submit.prevent
               >
                 <el-form-item class="form-item" prop="folderName">
                   <div class="model-name tip-text">
                     <el-input
                       v-model.trim="query.folderName"
-                      class="name-input"
                       placeholder="新建文件夹"
+                      class="name-input"
+                      @keyup.enter="creatFolter(queryRef)"
                     ></el-input>
                   </div>
                 </el-form-item>

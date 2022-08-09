@@ -20,10 +20,10 @@ const imgLists = [
     id: 1,
     url: '/imgs/taichu-example-2.png',
   },
-  {
-    id: 2,
-    url: '/imgs/taichu-example-3.png',
-  },
+  // {
+  //   id: 2,
+  //   url: '/imgs/taichu-example-3.png',
+  // },
   // {
   //   id: 3,
   //   url: '/imgs/taichu-example-4.png',

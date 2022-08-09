@@ -777,9 +777,12 @@ $theme: #0d8dff;
       flex-wrap: wrap;
       .label-item {
         cursor: pointer;
-        padding: 3px 6px;
+        display: flex;
+        align-items: center;
+        height: 28px;
         margin-right: 8px;
         margin-bottom: 8px;
+        padding: 0px 12px;
         font-size: 14px;
         color: #555;
         border: 1px solid #dbedff;
@@ -787,14 +790,13 @@ $theme: #0d8dff;
         border-radius: 8px;
       }
       .label-add-item {
+        display: flex;
+        align-items: center;
         height: 28px;
-        line-height: 28px;
         padding: 0px 12px;
         background: #f7f8fa;
         border-radius: 8px;
         border: 1px solid #999999;
-        display: flex;
-        align-items: center;
         cursor: pointer;
         .o-icon {
           margin-right: 4px;

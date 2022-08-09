@@ -229,6 +229,7 @@ function toggleDelDlg(flag) {
           class="creating-box"
           :model="query"
           prop="region"
+          @submit.prevent
         >
           <p class="setting-tip">{{ i18n.rename.newName }}</p>
           <el-form-item

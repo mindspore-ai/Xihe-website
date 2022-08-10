@@ -102,12 +102,20 @@ function goSelectFile() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({
+    // 点击在新页签打开
+    let routerData = router.resolve({
       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
       query: {
         id: detailData.value.id,
       },
     });
+    window.open(routerData.href, '_blank');
+    // router.push({
+    //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+    //   query: {
+    //     id: detailData.value.id,
+    //   },
+    // });
   }
 }
 

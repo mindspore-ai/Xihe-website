@@ -162,8 +162,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-        return !item.isPrivate;
-      });
+      return !item.isPrivate;
+    });
 });
 
 watch(
@@ -207,7 +207,12 @@ function dropdownClick(item) {
   }
 }
 function createNew(item) {
-  router.push(`/new/${item.id}`);
+  // router.push(`/new/${item.id}`);
+  // 点击在新页签打开
+  let routerData = router.resolve({
+    path: `/new/${item.id}`,
+  });
+  window.open(routerData.href, '_blank');
 }
 
 function goSetting() {

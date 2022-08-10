@@ -348,9 +348,14 @@ function getModelTag() {
 getModelTag();
 
 function goDetail(user, name) {
-  router.push({
+  // router.push({
+  //   path: `/datasets/${user}/${name}`,
+  // });
+  // 点击在新页签打开
+  let routerData = router.resolve({
     path: `/datasets/${user}/${name}`,
   });
+  window.open(routerData.href, '_blank');
 }
 
 const layout = ref('sizes, prev, pager, next, jumper');

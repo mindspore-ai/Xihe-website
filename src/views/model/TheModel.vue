@@ -446,9 +446,14 @@ function handleCurrentChange(val) {
   document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
-  router.push({
+  // router.push({
+  //   path: `/models/${user}/${name}`,
+  // });
+  // 点击在新页签打开
+  let routerData = router.resolve({
     path: `/models/${user}/${name}`,
   });
+  window.open(routerData.href, '_blank');
 }
 function goNewModel() {
   if (userInfoStore.id) {

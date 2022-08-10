@@ -307,7 +307,7 @@ function create(formEl) {
     flex-direction: column;
     align-items: center;
     padding-bottom: 48px;
-    min-height: calc(100vh - 580px);
+    min-height: calc(100vh - 558px);
 
     .des {
       // .el-textarea {

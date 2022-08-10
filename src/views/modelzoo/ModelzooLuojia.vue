@@ -20,7 +20,7 @@ function enterLuoJiaSet() {
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
             >大模型</el-breadcrumb-item
           >
-          <el-breadcrumb-item>武汉.Luojia</el-breadcrumb-item>
+          <el-breadcrumb-item>武汉.LuoJia</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="luojia-title">

@@ -372,8 +372,8 @@ onMounted(() => {});
 <style lang="scss" scoped>
 .create {
   background: #f5f6f8;
-  padding-bottom: 64px;
   padding: 0 16px;
+  padding-bottom: 64px;
 }
 .link {
   padding: 24px 0;
@@ -417,7 +417,7 @@ onMounted(() => {});
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
   padding-bottom: 48px;
-  height: calc(100vh - 580px);
+  height: calc(100vh - 558px);
 
   .el-form {
     width: 520px;

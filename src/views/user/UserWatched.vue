@@ -83,7 +83,6 @@ watch(
   }
 );
 
-// console.log(currentFollowList.value)
 // 取消关注or取消点赞
 function getWatched(userId, follow) {
   if (!userInfoStore.id) {

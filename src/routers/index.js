@@ -8,6 +8,7 @@ import model from './model';
 import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
+import competition from './competition';
 
 export const routes = [
   // 主页
@@ -75,6 +76,8 @@ export const routes = [
   ...dataset,
   // 项目
   ...project,
+  // 比赛
+  ...competition,
   // 404页面
   {
     path: '/404',

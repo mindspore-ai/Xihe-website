@@ -154,20 +154,20 @@ function clearItem1(index) {
   queryData['task_cate'] = null;
 }
 
-function othersClick(index, index2) {
-  otherCondition.value[index].haveActive = true;
-  // 高亮
-  otherCondition.value[index].condition[index2].isActive =
-    !otherCondition.value[index].condition[index2].isActive;
-  goSearch(otherCondition.value);
-}
-function clearItem3(index) {
-  otherCondition.value[index].haveActive = false;
-  otherCondition.value[index].condition.forEach((item) => {
-    item.isActive = false;
-  });
-  queryData[otherCondition.value[index].title.key] = null;
-}
+// function othersClick(index, index2) {
+//   otherCondition.value[index].haveActive = true;
+//   // 高亮
+//   otherCondition.value[index].condition[index2].isActive =
+//     !otherCondition.value[index].condition[index2].isActive;
+//   goSearch(otherCondition.value);
+// }
+// function clearItem3(index) {
+//   otherCondition.value[index].haveActive = false;
+//   otherCondition.value[index].condition.forEach((item) => {
+//     item.isActive = false;
+//   });
+//   queryData[otherCondition.value[index].title.key] = null;
+// }
 
 // 单选(sdk,状态，协议)
 function conditionClick(index, index2) {

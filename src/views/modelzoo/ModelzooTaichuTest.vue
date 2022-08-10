@@ -14,32 +14,32 @@ const fileList = ref([]);
 const imgLists = [
   {
     id: 0,
-    url: '/imgs/taichu-example-1.png',
+    url: '/imgs/taichu-example-1.jpg',
   },
   {
     id: 1,
-    url: '/imgs/taichu-example-2.png',
+    url: '/imgs/taichu-example-2.jpg',
   },
-  // {
-  //   id: 2,
-  //   url: '/imgs/taichu-example-3.png',
-  // },
-  // {
-  //   id: 3,
-  //   url: '/imgs/taichu-example-4.png',
-  // },
+  {
+    id: 2,
+    url: '/imgs/taichu-example-3.jpg',
+  },
+  {
+    id: 3,
+    url: '/imgs/taichu-example-4.jpg',
+  },
   {
     id: 4,
-    url: '/imgs/taichu-example-5.png',
+    url: '/imgs/taichu-example-5.jpg',
   },
   {
     id: 5,
-    url: '/imgs/taichu-example-6.png',
+    url: '/imgs/taichu-example-6.jpg',
   },
-  {
-    id: 6,
-    url: '/imgs/taichu-example-7.png',
-  },
+  // {
+  //   id: 6,
+  //   url: '/imgs/taichu-example-7.png',
+  // },
 ];
 
 const activeIndex = ref(-1);

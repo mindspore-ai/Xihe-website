@@ -33,34 +33,36 @@ const handleClick = (tab, event) => {
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
         <el-tab-pane label="全部" name="first">
           <div class="competition-card">
-            <div class="left">
-              <div class="card-head">
-                <div class="card-head-title">
-                  第三届全国高校绿色计算创新大赛
+            <div class="competition-box">
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    第三届全国高校绿色计算创新大赛
+                  </div>
+                  <div class="card-head-state" :class="state">火热进行中</div>
                 </div>
-                <div class="card-head-state" :class="state">火热进行中</div>
+                <div class="card-body">
+                  大赛以“AI赋能视界”为主题，分为“华为・昇腾杯”AI+行人重识别、“华为・昇腾杯”AI+遥感影像、AI+无线通信三个赛道，在8月-10月面向全球开放报名参赛。
+                  初赛和复赛期间，优秀队伍可获得华为云资源支持；在昇腾开发者社区可以获得相关样例模型、开发者文档、技术支持等资源；基于昇腾的算法模型，决赛成绩可获得加分。
+                  大赛立足于国际视野，营造人工智能创新创…
+                </div>
+                <div class="card-footer">举办方:绿色计算产业联盟</div>
               </div>
-              <div class="card-body">
-                大赛以“AI赋能视界”为主题，分为“华为・昇腾杯”AI+行人重识别、“华为・昇腾杯”AI+遥感影像、AI+无线通信三个赛道，在8月-10月面向全球开放报名参赛。
-                初赛和复赛期间，优秀队伍可获得华为云资源支持；在昇腾开发者社区可以获得相关样例模型、开发者文档、技术支持等资源；基于昇腾的算法模型，决赛成绩可获得加分。
-                大赛立足于国际视野，营造人工智能创新创…
+              <div class="right">
+                <div class="right-bonus">
+                  <div class="number">奖金：800，000</div>
+                  <div class="time">赛期:2020/6/15-2020/9/11</div>
+                </div>
               </div>
-              <div class="card-footer">举办方:绿色计算产业联盟</div>
             </div>
-            <div class="right">
-              <div class="right-bonus">
-                <div class="number">奖金：800，000</div>
-                <div class="time">赛期:2020/6/15-2020/9/11</div>
-              </div>
-              <div class="right-immediate">
-                <OButton type="primary" animation>
-                  立即报名
-                  <template #suffix>
-                    <OIcon><IconArrowRight /></OIcon>
-                  </template>
-                </OButton>
-                <div class="number">报名人数：302</div>
-              </div>
+            <div class="right-immediate">
+              <OButton type="primary" animation>
+                立即报名
+                <template #suffix>
+                  <OIcon><IconArrowRight /></OIcon>
+                </template>
+              </OButton>
+              <div class="number">报名人数：302</div>
             </div>
           </div>
         </el-tab-pane>
@@ -132,76 +134,84 @@ const handleClick = (tab, event) => {
       .el-tabs__content {
         .competition-card {
           background-color: #ffffff;
-          padding: 40px 48px 24px 40px;
           display: flex;
+          align-items: center;
+          font-size: 14px;
           margin-bottom: 24px;
-          .left {
-            .card-head {
-              display: flex;
-              align-items: center;
-              &-title {
-                font-size: 24px;
-              }
-              &-state {
-                font-size: 12px;
-                height: 20px;
-                line-height: 20px;
-                margin-left: 15px;
-                padding: 0 8px;
-              }
-              .will-do {
-                color: #ffffff;
-                background-color: #6189ff;
-              }
-              .doing {
-                color: #ffffff;
-                background-color: #ff7f0d;
-              }
-              .done {
-                color: #555555;
-                background-color: #efefef;
-              }
-            }
-            .card-body {
-              margin-top: 16px;
-              color: #555555;
-              line-height: 22px;
-            }
-            .card-footer {
-              color: #555555;
-              line-height: 22px;
-              margin-top: 16px;
-            }
-          }
-          .right {
-            display: flex;
-            align-items: center;
 
-            &-bonus {
-              white-space: nowrap;
-              margin: 0 48px;
-              .number {
-                color: #6189ff;
-                font-size: 24px;
-                line-height: 28px;
-                text-align: center;
+          .competition-box {
+            padding: 40px 0 24px 40px;
+            display: flex;
+            border-right: 1px solid #e4e5e7;
+            .left {
+              .card-head {
+                display: flex;
+                align-items: center;
+                &-title {
+                  font-size: 24px;
+                }
+                &-state {
+                  font-size: 12px;
+                  height: 20px;
+                  line-height: 20px;
+                  margin-left: 15px;
+                  padding: 0 8px;
+                }
+                .will-do {
+                  color: #ffffff;
+                  background-color: #6189ff;
+                }
+                .doing {
+                  color: #ffffff;
+                  background-color: #ff7f0d;
+                }
+                .done {
+                  color: #555555;
+                  background-color: #efefef;
+                }
               }
-              .time {
-                line-height: 24px;
-                padding: 12px 40px;
-                color: #555555;
-                margin-top: 24px;
-                background-color: #f4faff;
-              }
-            }
-            &-immediate {
-              margin-left: 48px;
-              .number {
+              .card-body {
+                margin-top: 16px;
                 color: #555555;
                 line-height: 22px;
-                text-align: center;
+              }
+              .card-footer {
+                color: #555555;
+                line-height: 22px;
                 margin-top: 16px;
               }
+            }
+            .right {
+              display: flex;
+              align-items: center;
+
+              &-bonus {
+                white-space: nowrap;
+                margin: 0 48px;
+                .number {
+                  color: #6189ff;
+                  font-size: 24px;
+                  line-height: 28px;
+                  text-align: center;
+                }
+                .time {
+                  line-height: 24px;
+                  padding: 12px 40px;
+                  color: #555555;
+                  margin-top: 24px;
+                  background-color: #f4faff;
+                }
+              }
+            }
+          }
+          .right-immediate {
+            margin-left: 48px;
+            margin-right: 48px;
+            .number {
+              color: #555555;
+              line-height: 22px;
+              text-align: center;
+              margin-top: 16px;
             }
           }
         }

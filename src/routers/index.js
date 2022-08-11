@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { doLogin, goAuthorize } from '@/shared/login';
+import { queryUserInfo } from '@/api/api-user';
 import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
 
 import user from './user';
@@ -8,7 +9,6 @@ import model from './model';
 import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
-import { queryUserInfo } from '@/api/api-user';
 
 export const routes = [
   // 主页

@@ -58,6 +58,7 @@ export const useUserInfoStore = defineStore('userInfo', {
       phone: null,
       email: null,
       emailStatus: false, // 邮箱状态
+      bonus: 0, //积分
     };
   },
   getters: {

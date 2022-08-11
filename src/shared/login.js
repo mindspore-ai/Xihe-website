@@ -100,6 +100,7 @@ function afterLogined(userInfo) {
       nickname: nickName,
     },
     user_email: { email, is_active },
+    bonus = 0,
   } = userInfo;
 
   if (!id || !token) {
@@ -129,6 +130,7 @@ function afterLogined(userInfo) {
 
   userInfoStore.email = email;
   userInfoStore.emailStatus = is_active;
+  userInfoStore.bonus = bonus;
 }
 
 // 登录

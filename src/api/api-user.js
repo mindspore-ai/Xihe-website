@@ -28,7 +28,7 @@ export function queryAppId() {
  * @returns
  */
 export function queryUserToken(params) {
-  const url = '/api/users/token_bycode/';
+  const url = '/server/login/';
   return request.post(url, params).then((res) => {
     return res.data;
   });

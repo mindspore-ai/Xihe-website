@@ -7,6 +7,9 @@ import {
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
+const APP_ID = '62679fdacb2577b0daf17669';
+const APP_HOST = 'https://xihe-ai.authing.cn';
+
 // 登录事件
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: 'show-login',
@@ -60,6 +63,7 @@ async function getUserToken(params) {
       const { token = '' } = res.data;
       saveUserAuth(token);
       // 去掉url中的code
+      debugger;
       const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
       window.location.href = newUrl;
 
@@ -140,7 +144,7 @@ export async function doLogin() {
   if (query.code && query.state) {
     await getUserToken({
       code: query.code,
-      origin: `${window.location.href}`,
+      // origin: `${window.location.href}`,
     });
   } else if (token) {
     await requestUserInfo();
@@ -233,20 +237,20 @@ export async function requestUserInfo() {
 // authing认证
 export async function goAuthorize() {
   try {
-    const res = await queryAppId();
-    if (res.status === 200) {
-      const client = new AuthenticationClient({
-        appId: res.data.appid,
-        appHost: res.data.apphost,
-        redirectUri: `${window.location.href}`,
-      });
-      // 构造 OIDC 授权登录 URL
-      const url = client.buildAuthorizeUrl();
-      window.location.href = url;
-    } else {
-      setStatus(LOGIN_STATUS.FAILED);
-      console.error('获取登录信息失败！');
-    }
+    // const res = await queryAppId();
+    // if (res.status === 200) {
+    const client = new AuthenticationClient({
+      appId: APP_ID,
+      appHost: APP_HOST,
+      redirectUri: `${window.location.href}`,
+    });
+    // 构造 OIDC 授权登录 URL
+    const url = client.buildAuthorizeUrl();
+    window.location.href = url;
+    // } else {
+    //   setStatus(LOGIN_STATUS.FAILED);
+    //   console.error('获取登录信息失败！');
+    // }
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

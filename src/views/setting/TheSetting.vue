@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
 import IconEmail from '~icons/app/email';
-import IconUser from '~icons/app/user';
+import IconInvitation from '~icons/app/invitation';
 
 import ringImg from '@/assets/icons/ring.png';
 
@@ -34,7 +34,7 @@ const settingItems = [
   {
     id: 'invitation',
     label: '我的邀请',
-    icon: IconUser,
+    icon: IconInvitation,
   },
 ];
 

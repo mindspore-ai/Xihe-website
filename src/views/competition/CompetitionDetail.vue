@@ -2,74 +2,75 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
-import ONav from '@/components/ONav.vue';
+// import ONav from '@/components/ONav.vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-const router = useRouter();
+// const router = useRouter();
 const route = useRoute();
 
-const activeNavItem = ref('');
+// const activeNavItem = ref('');
 const state = ref('doing'); //比赛状态：will-do，doing，done
 
-const navItems = [
-  {
-    id: 'introduction',
-    label: '介绍',
-    href: 'introduction', //待修改
-  },
-  {
-    id: 'dataset',
-    label: '数据集',
-    href: 'dataset',
-  },
-  {
-    id: 'result',
-    label: '结果提交',
-    href: 'result',
-  },
-  {
-    id: 'team',
-    label: '我的团队',
-    href: 'team',
-  },
-  {
-    id: 'leaderboard',
-    label: '排行榜',
-    href: 'leaderboard',
-  },
-  {
-    id: 'discussion',
-    label: '讨论',
-    href: 'discussion',
-  },
-  {
-    id: 'agreement',
-    label: '协议',
-    href: 'agreement',
-  },
-];
+// const navItems = [
+//   {
+//     id: 'introduction',
+//     label: '介绍',
+//     href: 'introduction', //待修改
+//   },
+//   {
+//     id: 'dataset',
+//     label: '数据集',
+//     href: 'dataset',
+//   },
+//   {
+//     id: 'result',
+//     label: '结果提交',
+//     href: 'result',
+//   },
+//   {
+//     id: 'team',
+//     label: '我的团队',
+//     href: 'team',
+//   },
+//   {
+//     id: 'leaderboard',
+//     label: '排行榜',
+//     href: 'leaderboard',
+//   },
+//   {
+//     id: 'discussion',
+//     label: '讨论',
+//     href: 'discussion',
+//   },
+//   {
+//     id: 'agreement',
+//     label: '协议',
+//     href: 'agreement',
+//   },
+// ];
 watch(
   () => {
     return route.name;
   },
   (val) => {
-    if (
-      /^introduction|dataset|result|team|leaderboard|discussion|agreement/g.test(
-        val
-      )
-    ) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
+    console.log('val: ', val);
+    // if (
+    //   /^introduction|dataset|result|team|leaderboard|discussion|agreement/g.test(
+    //     val
+    //   )
+    // ) {
+    //   activeNavItem.value = val;
+    // } else {
+    //   activeNavItem.value = '';
+    // }
   },
   { immediate: true }
 );
-// 点击导航
-function handleNavClick(item) {
-  router.push(`/competition/222/${item.href}`);
-}
+// // 点击导航
+// function handleNavClick(item) {
+//   router.push(`/competition/222/0/${item.href}`);
+// }
 </script>
 
 <template>
@@ -120,16 +121,7 @@ function handleNavClick(item) {
           </div>
         </div>
         <div class="competition-desc">
-          <div class="competition-desc-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div>
-          <div class="competition-desc-info">
-            <router-view></router-view>
-          </div>
+          <router-view></router-view>
         </div>
       </div>
     </div>
@@ -255,19 +247,19 @@ function handleNavClick(item) {
         margin-top: 24px;
         background-color: #fff;
 
-        &-tab {
-          height: 48px;
-          background-color: #fbfbfb;
-          :deep(.o-nav) {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 0 auto;
-            .nav-item {
-              color: #555;
-            }
-          }
-        }
+        // &-tab {
+        //   height: 48px;
+        //   background-color: #fbfbfb;
+        //   :deep(.o-nav) {
+        //     width: 100%;
+        //     display: flex;
+        //     justify-content: center;
+        //     margin: 0 auto;
+        //     .nav-item {
+        //       color: #555;
+        //     }
+        //   }
+        // }
       }
     }
   }

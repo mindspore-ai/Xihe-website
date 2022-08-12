@@ -28,8 +28,8 @@ export function queryAppId() {
  * @returns
  */
 export function queryUserToken(params) {
-  const url = '/server/login/';
-  return request.post(url, params).then((res) => {
+  const url = `/server/login/?code=${params.code}`;
+  return request.get(url).then((res) => {
     return res.data;
   });
 }

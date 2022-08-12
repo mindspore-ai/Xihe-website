@@ -53,6 +53,8 @@ function submitUpload() {
     analysis.value = '';
     loading.value = true;
 
+    formData.delete('file');
+    formData = new FormData();
     formData.append('file', fileList.value[fileList.value.length - 1].raw);
     try {
       uploadModelzooPic(formData).then((res) => {
@@ -125,10 +127,11 @@ onMounted(() => {});
         </p>
       </div>
       <div class="experience-btn">
-        <o-button v-if="!loading" type="primary" @click="submitUpload"
-          >开始推理</o-button
-        >
-        <o-button v-else type="primary" disabled @click="submitUpload"
+        <o-button
+          v-if="!loading"
+          type="primary"
+          :class="loading ? disabled : ''"
+          @click="submitUpload"
           >开始推理</o-button
         >
       </div>

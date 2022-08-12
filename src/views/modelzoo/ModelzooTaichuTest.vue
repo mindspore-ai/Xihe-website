@@ -127,11 +127,7 @@ onMounted(() => {});
         </p>
       </div>
       <div class="experience-btn">
-        <o-button
-          v-if="!loading"
-          type="primary"
-          :class="loading ? disabled : ''"
-          @click="submitUpload"
+        <o-button type="primary" :disabled="loading" @click="submitUpload"
           >开始推理</o-button
         >
       </div>

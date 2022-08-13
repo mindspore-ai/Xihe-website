@@ -245,7 +245,9 @@ export async function goAuthorize() {
       redirectUri: `${window.location.href}`,
     });
     // 构造 OIDC 授权登录 URL
-    const url = client.buildAuthorizeUrl();
+    const url = client.buildAuthorizeUrl({
+      scope: 'openid profile email phone address username',
+    });
     window.location.href = url;
     // } else {
     //   setStatus(LOGIN_STATUS.FAILED);

@@ -1,26 +1,15 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
 
 function getHeaderConfig() {
-  let headersConfig = {
-    headers: {
-      Authorization: useUserInfoStore().token
-        ? `Bearer ${useUserInfoStore().token}`
-        : '',
-    },
-  };
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
-}
-
-/**
- * 获取应用Id
- * @returns
- */
-export function queryAppId() {
-  const url = '/api/users/appid/';
-  return request.get(url).then((res) => {
-    return res.data;
-  });
 }
 
 /**
@@ -32,6 +21,25 @@ export function queryUserToken(params) {
   return request.get(url).then((res) => {
     return res.data;
   });
+}
+
+/**
+ * 获取用户信息
+ * @returns
+ */
+export async function queryUserInfo(params) {
+  const { token, userName } = params;
+  if (token) {
+    const url = `/server/user`;
+    return request.get(url, getHeaderConfig()).then((res) => {
+      return res.data;
+    });
+  } else if (userName) {
+    const url = `/server/user?account=${userName}`;
+    return request.get(url).then((res) => {
+      return res.data;
+    });
+  }
 }
 
 /**
@@ -50,31 +58,6 @@ export function queryUserIdToken(params) {
     .then((res) => {
       return res.data;
     });
-}
-
-/**
- * 获取用户信息
- * @returns
- */
-export async function queryUserInfo(params) {
-  const { token, userName } = params;
-  if (token) {
-    const url = `/api/users/userinfo_bytoken/`;
-    return request
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        return res.data;
-      });
-  } else if (userName) {
-    const url = `/api/users/?username=${userName}`;
-    return request.get(url).then((res) => {
-      return res.data;
-    });
-  }
 }
 
 /**

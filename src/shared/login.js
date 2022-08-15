@@ -1,5 +1,4 @@
 import {
-  queryAppId,
   queryUserInfo,
   queryUserToken,
   queryUserIdToken,
@@ -26,7 +25,7 @@ export const LOGIN_STATUS = {
   DONE: 2,
 };
 
-const LOGIN_KEYS = {
+export const LOGIN_KEYS = {
   USER_TOKEN: '_XIHE_U_T_',
 };
 
@@ -58,28 +57,21 @@ async function getUserToken(params) {
     params.invited = localStorage.getItem('XIHE_INVITED');
   }
   try {
-    const res = await queryUserToken(params);
-    if (res.status === 200) {
-      const { token = '' } = res.data;
-      saveUserAuth(token);
-      // 去掉url中的code
-      debugger;
-      const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
-      window.location.href = newUrl;
+    await queryUserToken(params);
+    // 去掉url中的code
+    const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
+    window.location.href = newUrl;
 
-      // WARNING: 该方法会导致code无法清除
-      // if (window.history.replaceState) {
-      //   window.history.replaceState({}, '', newUrl);
-      //   await requestUserInfo();
-      // } else {
-      //   window.location.href = newUrl;
-      // }
-    } else {
-      setStatus(LOGIN_STATUS.FAILED);
-      saveUserAuth();
-      // goAuthorize();
-    }
+    // WARNING: 该方法会导致code无法清除
+    // if (window.history.replaceState) {
+    //   window.history.replaceState({}, '', newUrl);
+    //   await requestUserInfo();
+    // } else {
+    //   window.location.href = newUrl;
+    // }
   } catch (error) {
+    const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
+    window.location.href = newUrl;
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取用户信息失败！');
   }
@@ -88,52 +80,31 @@ async function getUserToken(params) {
 function afterLogined(userInfo) {
   const {
     id,
-    token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-    username: userName,
-    fans_list: fansList,
-    follow_list: followList,
-    models_digg_list: modelDiggList,
-    datasets_digg_list: datasetDiggList,
-    organization_list: organizationList,
-    organization_admin_list: organizationAdminList,
-    user_detail: {
-      avatar_url: avatar,
-      description,
-      gitee,
-      github,
-      nickname: nickName,
-    },
-    user_email: { email, is_active },
+    account: userName,
+    bio: description,
+    avatar_id: avatar,
+    email,
+    follower_count: fansCount,
+    following_count: followingCount,
     bonus = 0,
   } = userInfo;
 
-  if (!id || !token) {
+  if (!id) {
     setStatus(LOGIN_STATUS.FAILED);
     saveUserAuth();
     return console.error('用户信息不正确！');
   }
 
-  saveUserAuth(token);
   setStatus(LOGIN_STATUS.DONE);
 
   const userInfoStore = useUserInfoStore();
   userInfoStore.id = id;
-  userInfoStore.token = token;
   userInfoStore.userName = userName;
-  userInfoStore.avatar = avatar;
   userInfoStore.description = description;
-  userInfoStore.nickName = nickName;
-  userInfoStore.gitee = gitee;
-  userInfoStore.github = github;
-  userInfoStore.fansList = fansList;
-  userInfoStore.followList = followList;
-  userInfoStore.modelDiggList = modelDiggList;
-  userInfoStore.datasetDiggList = datasetDiggList;
-  userInfoStore.organizationList = organizationList;
-  userInfoStore.organizationAdminList = organizationAdminList;
-
+  userInfoStore.avatar = avatar;
   userInfoStore.email = email;
-  userInfoStore.emailStatus = is_active;
+  userInfoStore.fansCount = fansCount;
+  userInfoStore.followingCount = followingCount;
   userInfoStore.bonus = bonus;
 }
 
@@ -142,10 +113,7 @@ export async function doLogin() {
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {
-    await getUserToken({
-      code: query.code,
-      // origin: `${window.location.href}`,
-    });
+    await getUserToken({ code: query.code });
   } else if (token) {
     await requestUserInfo();
   }
@@ -173,17 +141,15 @@ export function getUserAuth() {
 // 退出
 export async function logout() {
   try {
-    const res = await queryAppId();
     if (res.status === 200) {
-      const { appid: appId, apphost: appHost } = res.data;
       const { token } = getUserAuth();
       const idTokenRes = await queryUserIdToken({ token });
       const { id_token: idToken } = idTokenRes.data;
       const redirectUri = window.location.origin;
       if (idTokenRes.status === 200) {
         const client = new AuthenticationClient({
-          appId,
-          appHost,
+          appId: APP_ID,
+          appHost: APP_HOST,
           redirectUri,
           idToken,
         });
@@ -218,13 +184,12 @@ export async function requestUserInfo() {
       const res = await queryUserInfo({
         token,
       });
-
-      if (res.status === 200 && res.data) {
+      if (res.data) {
         afterLogined(res.data);
       } else {
         logout();
         setStatus(LOGIN_STATUS.FAILED);
-        throw new Error(res.status + ' ' + res.msg);
+        console.error('获取用户信息失败：', err);
       }
     } catch (err) {
       logout();
@@ -237,8 +202,6 @@ export async function requestUserInfo() {
 // authing认证
 export async function goAuthorize() {
   try {
-    // const res = await queryAppId();
-    // if (res.status === 200) {
     const client = new AuthenticationClient({
       appId: APP_ID,
       appHost: APP_HOST,
@@ -249,10 +212,6 @@ export async function goAuthorize() {
       scope: 'openid profile email phone address username',
     });
     window.location.href = url;
-    // } else {
-    //   setStatus(LOGIN_STATUS.FAILED);
-    //   console.error('获取登录信息失败！');
-    // }
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

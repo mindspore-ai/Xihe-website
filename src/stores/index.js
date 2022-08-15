@@ -95,38 +95,46 @@ export const useUserInfoStore = defineStore('userInfo', {
 export const useVisitorInfoStore = defineStore('visitorInfo', {
   state: () => {
     return {
+      // id: null, // id
+      // userName: '', // userName
+      // avatar: '', // 头像
+      // description: '', // 个人描述
+      // nickName: '', // 昵称
+      // gitee: '', // gitee账号
+      // github: '', // github账号
+      // fansList: [], // 粉丝列表
+      // followList: [], // 关注列表
+      // modelDiggList: [], // 模型点赞信息列表
+      // datasetDiggList: [], // 数据集点赞信息列表
+      // organizationList: [], // 组织列表
+      // email: null,
+      // emailStatus: false, // 邮箱状态
       id: null, // id
-      userName: '', // userName
-      avatar: '', // 头像
-      description: '', // 个人描述
-      nickName: '', // 昵称
-      gitee: '', // gitee账号
-      github: '', // github账号
-      fansList: [], // 粉丝列表
-      followList: [], // 关注列表
-      modelDiggList: [], // 模型点赞信息列表
-      datasetDiggList: [], // 数据集点赞信息列表
-      organizationList: [], // 组织列表
-      email: null,
-      emailStatus: false, // 邮箱状态
+      userName: '', // 用户名
+      description: '', //个人描述
+      avatar: '', //头像
+      email: '', // 邮箱
+      fansCount: 0, // 粉丝数量
+      followingCount: 0, // 关注数量
+      isFollower: false,
     };
   },
   getters: {
-    fansCount() {
-      return this.fansList.length;
-    },
-    followCount() {
-      return this.followList.length;
-    },
-    modelDiggCount() {
-      return this.modelDiggList.length;
-    },
-    datasetDiggCount() {
-      return this.datasetDiggList.length;
-    },
-    organizationCount() {
-      return this.organizationList.length;
-    },
+    // fansCount() {
+    //   return this.fansList.length;
+    // },
+    // followCount() {
+    //   return this.followList.length;
+    // },
+    // modelDiggCount() {
+    //   return this.modelDiggList.length;
+    // },
+    // datasetDiggCount() {
+    //   return this.datasetDiggList.length;
+    // },
+    // organizationCount() {
+    //   return this.organizationList.length;
+    // },
   },
 });
 

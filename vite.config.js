@@ -51,7 +51,7 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/server': {
-        target: 'http://xihe2.test.osinfra.cn/',
+        target: 'https://xihe2.test.osinfra.cn/',
         changeOrigin: true,
       },
     },

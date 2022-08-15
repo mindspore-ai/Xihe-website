@@ -22,7 +22,7 @@ export default [
             userName: name,
           });
           if (res.data) {
-            const visitorInfo = res.data[0];
+            const visitorInfo = res.data;
             const {
               id,
               account: userName,

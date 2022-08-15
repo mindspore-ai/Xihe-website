@@ -47,17 +47,10 @@ export async function queryUserInfo(params) {
  * @returns
  */
 export function queryUserIdToken(params) {
-  const { token } = params;
-  const url = '/api/users/idtoken_bytoken/';
-  return request
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      return res.data;
-    });
+  const url = `/server/login/${params.userName}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**

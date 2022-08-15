@@ -1,0 +1,117 @@
+<!-- eslint-disable prettier/prettier -->
+<script setup>
+import firstImg from '@/assets/imgs/first.png';
+import secondImg from '@/assets/imgs/second.png';
+import thirdImg from '@/assets/imgs/third.png';
+const tableData = [
+  {
+    date: '1',
+    name: 'Tom',
+    address: 'No. 189',
+  },
+  {
+    date: '2',
+    name: 'Tom',
+    address: 'No. 189',
+  },
+  {
+    date: '3',
+    name: 'Tomnnnnnnnnnnnnnnnnnn',
+    address: 'No. 189',
+  },
+  {
+    date: '4',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+];
+</script>
+<template>
+  <div class="rank-page">
+    <div class="rank-header">排行榜</div>
+    <div class="rank-body">
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column prop="date" label="排名">
+          <template #default="scope">
+            <img v-if="scope.$index === 0" :src="firstImg" alt="" />
+            <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
+            <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
+            <div v-else class="num">{{ '0' + (scope.$index + 1) }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="参赛团队" />
+        <el-table-column prop="address" label="分数" />
+        <el-table-column prop="address" label="提交时间" width="160" />
+        <template #append> 222 </template>
+      </el-table>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.rank-page {
+  img {
+    width: 59px;
+  }
+  .rank-header {
+    margin-top: 40px;
+    background-image: url(@/assets/imgs/rank-bg.png);
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+    padding: 24px;
+  }
+  .rank-body {
+    :deep(.el-table__inner-wrapper) {
+      th {
+        color: #000000;
+      }
+      color: #555555;
+      .el-table_1_column_1 {
+        padding-left: 40px !important;
+      }
+      .el-table__header {
+        font-size: 18px;
+        line-height: 26px;
+        .cell {
+          margin: 24px 0;
+        }
+      }
+      .el-table__cell {
+        padding: 0;
+        .cell {
+          padding: 0;
+        }
+      }
+      .el-table__body {
+        font-size: 16px;
+        line-height: 24px;
+        .el-table_1_column_1 {
+          font-size: 28px;
+        }
+        .el-table_1_column_3 {
+          color: #ff7f0d;
+        }
+      }
+      .cell {
+        margin: 8px 0;
+        .num {
+          margin: 22px 12px;
+          // margin-left: 12px;
+        }
+      }
+      .el-table__append-wrapper {
+        text-align: center;
+        margin-top: 27px;
+        margin-bottom: 40px;
+      }
+    }
+  }
+}
+</style>

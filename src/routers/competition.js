@@ -30,7 +30,7 @@ export default [
             path: 'introduction',
             name: 'introduction1',
             component: () => {
-              return import('@/views/competition/CompetitionDataset.vue');
+              return import('@/views/competition/CompetitionIntroduction.vue');
             },
           },
           // 数据集
@@ -62,7 +62,7 @@ export default [
             path: 'leaderboard',
             name: 'leaderboard',
             component: () => {
-              return import('@/views/competition/CompetitionLeaderboard.vue');
+              return import('@/views/competition/ComRank.vue');
             },
           },
           // 讨论

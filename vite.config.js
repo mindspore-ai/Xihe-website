@@ -50,6 +50,10 @@ export default defineConfig({
         target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,
       },
+      '/server': {
+        target: 'http://xihe2.test.osinfra.cn/',
+        changeOrigin: true,
+      },
     },
   },
 });

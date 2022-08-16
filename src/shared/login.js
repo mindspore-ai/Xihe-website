@@ -58,6 +58,7 @@ async function getUserToken(params) {
   }
   try {
     await queryUserToken(params);
+    debugger;
     // 去掉url中的code
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
     window.location.href = newUrl;
@@ -113,7 +114,6 @@ export async function doLogin() {
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {
-    debugger;
     await getUserToken({ code: query.code });
   } else if (token) {
     await requestUserInfo();

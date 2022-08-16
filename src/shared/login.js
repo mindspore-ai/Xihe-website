@@ -113,6 +113,7 @@ export async function doLogin() {
   const query = getUrlParam();
   const { token } = getUserAuth();
   if (query.code && query.state) {
+    debugger;
     await getUserToken({ code: query.code });
   } else if (token) {
     await requestUserInfo();

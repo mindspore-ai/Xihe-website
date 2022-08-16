@@ -1,76 +1,42 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { goAuthorize } from '@/shared/login';
+import { useUserInfoStore } from '@/stores';
+
+const userInfoStore = useUserInfoStore();
 import OButton from '@/components/OButton.vue';
 // import ONav from '@/components/ONav.vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-// const router = useRouter();
 const route = useRoute();
+const router = useRouter();
 
 // const activeNavItem = ref('');
 const state = ref('doing'); //比赛状态：will-do，doing，done
+// 立即报名
+function goApplication() {
+  // 如果没有登录，先登录
+  // if (!userInfoStore.id) {
+  //   goAuthorize();
+  // }
+  // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
+  if (!userInfoStore.id) {
+    goAuthorize().then(() => {
+      router.push({
+        path: `/competition/222/1/introduction`,
+      });
+      console.log(11111);
+    });
+  } else {
+    router.push({
+      path: `/competition/222/1/introduction`,
+    });
+    console.log(22222222);
+  }
+}
 
-// const navItems = [
-//   {
-//     id: 'introduction',
-//     label: '介绍',
-//     href: 'introduction', //待修改
-//   },
-//   {
-//     id: 'dataset',
-//     label: '数据集',
-//     href: 'dataset',
-//   },
-//   {
-//     id: 'result',
-//     label: '结果提交',
-//     href: 'result',
-//   },
-//   {
-//     id: 'team',
-//     label: '我的团队',
-//     href: 'team',
-//   },
-//   {
-//     id: 'leaderboard',
-//     label: '排行榜',
-//     href: 'leaderboard',
-//   },
-//   {
-//     id: 'discussion',
-//     label: '讨论',
-//     href: 'discussion',
-//   },
-//   {
-//     id: 'agreement',
-//     label: '协议',
-//     href: 'agreement',
-//   },
-// ];
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    console.log('val: ', val);
-    // if (
-    //   /^introduction|dataset|result|team|leaderboard|discussion|agreement/g.test(
-    //     val
-    //   )
-    // ) {
-    //   activeNavItem.value = val;
-    // } else {
-    //   activeNavItem.value = '';
-    // }
-  },
-  { immediate: true }
-);
-// // 点击导航
-// function handleNavClick(item) {
-//   router.push(`/competition/222/0/${item.href}`);
-// }
 </script>
 
 <template>
@@ -111,11 +77,8 @@ watch(
             </div>
           </div>
           <div class="right-immediate">
-            <OButton type="primary" animation>
+            <OButton type="primary" animation @click="goApplication">
               立即报名
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
             </OButton>
             <div class="number">报名人数：302</div>
           </div>
@@ -133,6 +96,7 @@ watch(
   background-color: #f5f6f8;
   padding-top: 80px;
   // margin-top: 80px;
+  min-height: calc(100vh - 200px);
   .competition-wrap {
     padding: 42px 16px 64px;
     margin: 0 auto;

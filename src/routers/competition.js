@@ -15,15 +15,16 @@ export default [
     component: () => {
       return import('@/views/competition/CompetitionDetail.vue');
     },
-    // redirect: '/competition/222/0/introduction',
+    redirect: '/competition/222/0/introduction',
     children: [
+      // 详情导航部分
       {
         path: '0',
         name: 'introduction0',
         component: () => {
           return import('@/views/competition/CompetitionOption.vue');
         },
-        // redirect: '/competition/222/0/introduction',
+        redirect: '/competition/222/0/introduction',
         children: [
           // 介绍
           {
@@ -83,18 +84,19 @@ export default [
           },
         ],
       },
+      // 报名
       {
         path: '1',
-        name: 'introduction2',
+        name: 'introduction1',
         component: () => {
-          return import('@/views/competition/CompetitionRegister.vue');
+          return import('@/views/competition/CompetitionPlan.vue'); //待修改
         },
         redirect: '/competition/222/1/introduction',
         children: [
-          // 介绍
+          // 报名流程
           {
             path: 'introduction',
-            name: 'introduction3',
+            name: 'register',
             component: () => {
               return import('@/views/competition/CompetitionRegister.vue');
             },

@@ -6,8 +6,8 @@ import {
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
-const APP_ID = '62679fdacb2577b0daf17669';
-const APP_HOST = 'https://xihe-ai.authing.cn';
+const APP_ID = '62f463c917a9cd81591e0be1';
+const APP_HOST = 'https://xihe-test2-cz.authing.cn';
 
 // 登录事件
 export const LOGIN_EVENTS = {

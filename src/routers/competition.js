@@ -28,7 +28,7 @@ export default [
           // 介绍
           {
             path: 'introduction',
-            name: 'introduction1',
+            name: 'introduction',
             component: () => {
               return import('@/views/competition/CompetitionIntroduction.vue');
             },

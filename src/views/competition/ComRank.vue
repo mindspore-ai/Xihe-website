@@ -35,7 +35,7 @@ const tableData = [
   <div class="rank-page">
     <div class="rank-header">排行榜</div>
     <div class="rank-body">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData">
         <el-table-column prop="date" label="排名">
           <template #default="scope">
             <img v-if="scope.$index === 0" :src="firstImg" alt="" />
@@ -45,7 +45,11 @@ const tableData = [
           </template>
         </el-table-column>
         <el-table-column prop="name" label="参赛团队" />
-        <el-table-column prop="address" label="分数" />
+        <el-table-column label="分数">
+          <template #default="scope">
+            <div class="score">{{ tableData[scope.$index].address }}</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="address" label="提交时间" width="160" />
         <template #append> 222 </template>
       </el-table>
@@ -55,6 +59,7 @@ const tableData = [
 
 <style lang="scss" scoped>
 .rank-page {
+  max-width: 1472px;
   img {
     width: 59px;
   }
@@ -68,14 +73,12 @@ const tableData = [
     padding: 24px;
   }
   .rank-body {
+    margin-left: 40px;
     :deep(.el-table__inner-wrapper) {
       th {
         color: #000000;
       }
       color: #555555;
-      .el-table_1_column_1 {
-        padding-left: 40px !important;
-      }
       .el-table__header {
         font-size: 18px;
         line-height: 26px;
@@ -89,27 +92,35 @@ const tableData = [
           padding: 0;
         }
       }
+      // .el-table_1_column_1 {
+      //   padding-left: 40px !important;
+      // }
       .el-table__body {
         font-size: 16px;
         line-height: 24px;
-        .el-table_1_column_1 {
-          font-size: 28px;
-        }
-        .el-table_1_column_3 {
-          color: #ff7f0d;
-        }
+        // .el-table_1_column_1 {
+        //   font-size: 28px;
+        // }
+        // .el-table_1_column_3 {
+        //   color: #ff7f0d;
+        // }
       }
       .cell {
         margin: 8px 0;
         .num {
           margin: 22px 12px;
           // margin-left: 12px;
+          font-size: 28px;
+        }
+        .score {
+          color: #ff7f0d;
         }
       }
       .el-table__append-wrapper {
         text-align: center;
         margin-top: 27px;
         margin-bottom: 40px;
+        margin-right: 40px;
       }
     }
   }

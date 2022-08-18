@@ -1,9 +1,12 @@
 <script setup>
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
+import { ElMessage } from 'element-plus';
 
+const router = useRouter();
 const i18n = {
   declaration: '法律声明',
   agree: '已阅读并同意该声明',
@@ -25,6 +28,11 @@ const i18n = {
   company: '公司',
   description: '描述',
   save: '保存',
+  success: '报名成功，祝贺您取得好成绩！',
+  joinTeam:
+    '您还未加入团队，您可以选择建立团队或加入团队，您也可以选择个人参赛。',
+  personal: '个人参赛',
+  team: '团队参赛',
 };
 const active = ref(1);
 const textarea = ref('');
@@ -71,17 +79,27 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  location: [
+  // location: [
+  //   {
+  //     required: true,
+  //     message: '必填项',
+  //     trigger: 'blur',
+  //   },
+  // ],
+  email: [
     {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
-  ],
-  email: [
     {
-      required: true,
-      message: '必填项',
+      // 请输入正确的邮箱
+      // 邮箱验证
+
+      pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+      pattern:
+        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{3,4}$/,
+      message: '请输入正确的邮箱',
       trigger: 'blur',
     },
   ],
@@ -89,6 +107,12 @@ const rules = reactive({
     {
       required: true,
       message: '必填项',
+      trigger: 'blur',
+    },
+    {
+      // 请输入正确的手机号
+      pattern: /^1[3456789]\d{9}$/,
+      message: '请输入正确的手机号',
       trigger: 'blur',
     },
   ],
@@ -113,11 +137,26 @@ function save(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       // TODO:提交报名表
-
+      active.value++;
+      ElMessage({
+        type: 'success',
+        message: '报名成功！',
+      });
     } else {
       console.error('error submit!');
       return false;
     }
+  });
+}
+// 点击个人参赛进入比赛介绍页
+function goCompetitionIntro() {
+  // 跳转到比赛介绍页
+  router.push({
+    name: 'introduction',
+    params: {
+      // id: route.params.id,
+      id: 222,
+    },
   });
 }
 </script>
@@ -178,11 +217,35 @@ function save(formEl) {
               placeholder="请输入用户名"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="location">
+          <el-form-item prop="location" class="city">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
             </div>
-            <el-input v-model="query.location" placeholder="请输入"></el-input>
+            <!-- <el-select
+              v-model="selectProv"
+              placeholder="请选择省份"
+              @change="getProv($event)"
+            >
+              <el-option
+                v-for="item in provs"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <el-select
+              v-if="selectProv != ''"
+              v-model="selectCity"
+              placeholder="请选择城市"
+              @change="getCity($event)"
+            >
+              <el-option
+                v-for="item in citys"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select> -->
           </el-form-item>
           <el-form-item prop="email">
             <div class="requirement">
@@ -207,7 +270,7 @@ function save(formEl) {
               <icon-necessary></icon-necessary><span>{{ i18n.identity }}</span>
             </div>
             <div class="identity-option">
-              <el-radio-group v-model="radio">
+              <el-radio-group v-model="radio" class="ml-4">
                 <el-radio :label="3" @click="changeRole(1)">{{
                   i18n.student
                 }}</el-radio>
@@ -221,6 +284,7 @@ function save(formEl) {
                   i18n.other
                 }}</el-radio>
               </el-radio-group>
+              <!-- 学生 -->
               <div v-show="role === 1" class="student">
                 <div class="organization">
                   <span class="requirement">
@@ -310,13 +374,25 @@ function save(formEl) {
       </div>
     </div>
     <!-- 报名成功 -->
-    <div v-if="active === 3" class="declaration">333</div>
+    <div v-if="active === 3" class="application-result">
+      <div class="title">
+        {{ i18n.success }}
+      </div>
+      <div class="tips">{{ i18n.joinTeam }}</div>
+      <div class="btn">
+        <o-button type="primary" @click="goCompetitionIntro">{{
+          i18n.personal
+        }}</o-button>
+        <o-button type="primary">{{ i18n.team }}</o-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .application-page {
   padding: 48px 40px 40px;
+  // 法律声明
   .declaration {
     &-title {
       height: 32px;
@@ -356,6 +432,7 @@ function save(formEl) {
       justify-content: center;
     }
   }
+  //报名表
   .application {
     padding-top: 67px;
     // padding-bottom: 40px;
@@ -375,7 +452,6 @@ function save(formEl) {
       }
       :deep(.el-input) {
         width: 100% !important;
-        width: 1000px !important;
         // margin-left: 45px;
         .el-input__wrapper {
           padding-left: 40px;
@@ -410,10 +486,13 @@ function save(formEl) {
               left: calc(100% + -142px);
             }
           }
-          // 最后一个元素
+          // 身份item
           &:last-child {
             .el-form-item__content {
               align-items: flex-start;
+              .el-input__wrapper {
+                background-color: #fff;
+              }
             }
             .student,
             .teacher,
@@ -447,12 +526,43 @@ function save(formEl) {
             }
           }
         }
+        // 所在地二级联动样式
+        .city {
+          .el-form-item__content {
+            .el-select {
+              width: 196px;
+              margin-right: 8px;
+            }
+          }
+        }
       }
     }
     .nextBtn {
       display: flex;
       justify-content: center;
       margin-top: 12px;
+    }
+  }
+  // 报名成功
+  .application-result {
+    margin: 80px 300px 40px;
+    text-align: center;
+    .title {
+      height: 32px;
+      line-height: 32px;
+      font-size: 24px;
+      color: #000000;
+    }
+    .tips {
+      line-height: 32px;
+      font-size: 14px;
+      color: #555;
+      margin: 16px 0 40px;
+    }
+    .btn {
+      .o-button {
+        margin-right: 24px;
+      }
     }
   }
 }
@@ -516,5 +626,18 @@ function save(formEl) {
       }
     }
   }
+}
+// 单选按钮样式
+:deep(.el-radio__inner) {
+  width: 18px;
+  height: 18px;
+  background: transparent !important;
+  box-sizing: border-box;
+  border: 2px solid #999;
+}
+:deep(.el-radio__inner::after) {
+  background: #0d8dff;
+  width: 10px;
+  height: 10px;
 }
 </style>

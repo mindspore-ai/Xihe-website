@@ -95,6 +95,7 @@ function handleNavClick(item) {
   top: 180px;
   font-size: 90px;
   height: 48px;
+  background-color: #fbfbfb;
   .o-nav {
     width: 100%;
     display: flex;

@@ -1,16 +1,17 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 import OButton from '@/components/OButton.vue';
 // import ONav from '@/components/ONav.vue';
-import IconArrowRight from '~icons/app/arrow-right.svg';
+// import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-const route = useRoute();
+// const route = useRoute();
 const router = useRouter();
 
 // const activeNavItem = ref('');

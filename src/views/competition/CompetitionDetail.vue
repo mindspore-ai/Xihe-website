@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore } from '@/stores';
@@ -15,6 +15,7 @@ const router = useRouter();
 
 // const activeNavItem = ref('');
 const state = ref('doing'); //比赛状态：will-do，doing，done
+const aaa = ref(false);
 // 立即报名
 function goApplication() {
   // 如果没有登录，先登录
@@ -36,7 +37,26 @@ function goApplication() {
     console.log(22222222);
   }
 }
+onMounted(() => {
+  let card = document.querySelector('.competition-card');
+  let parent = document.querySelector('competition-bread');
 
+  let top1 = card.offsetTop;
+  // let top2 = parent.offsetTop;
+
+  window.addEventListener('scroll', function () {
+    // console.log(top1, window.pageYOffset);
+    if (window.pageYOffset > top1) {
+      card.classList.add('fixed');
+    }
+    if (
+      window.pageYOffset < top1 &&
+      Array.from(card.classList).indexOf('fixed') > -1
+    ) {
+      card.classList.remove('fixed');
+    }
+  });
+});
 </script>
 
 <template>
@@ -53,7 +73,7 @@ function goApplication() {
         </el-breadcrumb>
       </div>
       <div class="competition-content">
-        <div class="competition-card">
+        <div class="competition-card fixed">
           <div class="competition-box">
             <div class="left">
               <div class="card-head">
@@ -76,7 +96,7 @@ function goApplication() {
               </div>
             </div>
           </div>
-          <div class="right-immediate">
+          <div v-if="aaa" class="right-immediate">
             <OButton type="primary" animation @click="goApplication">
               立即报名
             </OButton>
@@ -97,6 +117,7 @@ function goApplication() {
   padding-top: 80px;
   // margin-top: 80px;
   min-height: calc(100vh - 200px);
+
   .competition-wrap {
     padding: 42px 16px 64px;
     margin: 0 auto;
@@ -124,6 +145,30 @@ function goApplication() {
       }
     }
     .competition-content {
+      scroll-behavior: smooth;
+      .fixed {
+        position: fixed;
+        z-index: 1000;
+        top: 80px;
+        width: 100%;
+        max-width: 1440px;
+        .competition-box {
+          justify-content: space-between;
+          width: 100%;
+        }
+        .card-body {
+          display: none;
+        }
+        .card-footer {
+          display: none;
+        }
+        .number {
+          display: none;
+        }
+        .time {
+          margin: 0 !important;
+        }
+      }
       .competition-card {
         background-color: #ffffff;
         display: flex;
@@ -134,6 +179,7 @@ function goApplication() {
         .competition-box {
           padding: 40px 0 24px 40px;
           display: flex;
+
           border-right: 1px solid #e4e5e7;
           .left {
             .card-head {
@@ -212,6 +258,7 @@ function goApplication() {
         background-color: #fff;
 
         // &-tab {
+
         //   height: 48px;
         //   background-color: #fbfbfb;
         //   :deep(.o-nav) {

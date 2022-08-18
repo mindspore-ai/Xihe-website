@@ -1,5 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
+import IconArrowDown from '~icons/app/arrow-down.svg';
+
 import firstImg from '@/assets/imgs/first.png';
 import secondImg from '@/assets/imgs/second.png';
 import thirdImg from '@/assets/imgs/third.png';
@@ -29,6 +31,66 @@ const tableData = [
     name: 'Tom',
     address: '2022.08.21 12:33',
   },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
+  {
+    date: '5',
+    name: 'Tom',
+    address: '2022.08.21 12:33',
+  },
 ];
 </script>
 <template>
@@ -41,7 +103,10 @@ const tableData = [
             <img v-if="scope.$index === 0" :src="firstImg" alt="" />
             <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
             <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
-            <div v-else class="num">{{ '0' + (scope.$index + 1) }}</div>
+            <div v-else-if="scope.$index < 9" class="num">
+              {{ '0' + (scope.$index + 1) }}
+            </div>
+            <div v-else class="num">{{ scope.$index + 1 }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="参赛团队" />
@@ -51,7 +116,9 @@ const tableData = [
           </template>
         </el-table-column>
         <el-table-column prop="address" label="提交时间" width="160" />
-        <template #append> 222 </template>
+        <template #append>
+          查看全部<OIcon><IconArrowDown /></OIcon>
+        </template>
       </el-table>
     </div>
   </div>
@@ -73,6 +140,9 @@ const tableData = [
     padding: 24px;
   }
   .rank-body {
+    :deep(.el-table--fit) {
+      --el-table-fixed-box-shadow: none;
+    }
     margin-left: 40px;
     :deep(.el-table__inner-wrapper) {
       th {
@@ -84,6 +154,9 @@ const tableData = [
         line-height: 26px;
         .cell {
           margin: 24px 0;
+        }
+        tr {
+          --el-table-fixed-box-shadow: none;
         }
       }
       .el-table__cell {
@@ -117,10 +190,21 @@ const tableData = [
         }
       }
       .el-table__append-wrapper {
-        text-align: center;
+        // text-align: center;
         margin-top: 27px;
         margin-bottom: 40px;
         margin-right: 40px;
+        font-size: 14px;
+        color: #40c4ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        .o-icon {
+          font-size: 24px;
+          color: #0d8dff;
+          margin-left: 8px;
+        }
       }
     }
   }

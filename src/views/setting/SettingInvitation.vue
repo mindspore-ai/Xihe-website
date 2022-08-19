@@ -5,6 +5,14 @@ import { useUserInfoStore } from '@/stores';
 
 import successIcon from '@/assets/icons/success.png';
 
+import firstImg from '@/assets/imgs/first.png';
+import secondImg from '@/assets/imgs/second.png';
+import thirdImg from '@/assets/imgs/third.png';
+
+import { getRank } from '@/api/api-user';
+
+const tableData = ref([]);
+
 const { toClipboard } = useClipboard();
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -30,6 +38,11 @@ const handleCopy = async () => {
 const toggleDlg = (flag) => {
   showDlg.value = flag;
 };
+getRank().then((res) => {
+  console.log(res.data.user_invited);
+  tableData.value = res.data.user_invited;
+  console.log(tableData);
+});
 </script>
 
 <template>
@@ -73,6 +86,38 @@ const toggleDlg = (flag) => {
       >
     </div>
   </ODialog>
+  <div class="rank-header">邀请人数排行榜</div>
+  <div class="rank-body">
+    <el-table :data="tableData">
+      <el-table-column prop="date" width="120">
+        <template #default="scope">
+          <img v-if="scope.$index === 0" :src="firstImg" alt="" />
+          <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
+          <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
+          <div v-else-if="scope.$index < 9" class="num">
+            {{ '0' + (scope.$index + 1) }}
+          </div>
+          <div v-else class="num">{{ scope.$index + 1 }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="name">
+        <template #default="scope">
+          <div class="user">
+            <img :src="tableData[scope.$index].avatar_url" alt="" />
+            <span>{{ tableData[scope.$index].username }} </span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column width="90">
+        <template #default="scope">
+          <div class="score">
+            <span>{{ tableData[scope.$index].bonus / 10 }} </span
+            ><span class="man">人</span>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -131,6 +176,120 @@ const toggleDlg = (flag) => {
     color: #555555;
     line-height: 28px;
     margin-bottom: 60px;
+  }
+}
+.rank-header {
+  margin-top: 40px;
+  background-image: url(@/assets/imgs/rank-bg.png);
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 32px;
+  text-align: center;
+  padding: 24px;
+  width: 532px;
+}
+.rank-body {
+  width: 532px;
+  img {
+    width: 41px;
+  }
+  :deep(.el-table__header-wrapper) {
+    display: none;
+  }
+  :deep(.el-table--fit) {
+    --el-table-fixed-box-shadow: none;
+  }
+  // margin-left: 40px;
+  :deep(.el-table__inner-wrapper) {
+    th {
+      color: #000000;
+    }
+    color: #555555;
+    .el-table__header {
+      font-size: 18px;
+      line-height: 26px;
+      .cell {
+        margin: 24px 0;
+      }
+      tr {
+        --el-table-fixed-box-shadow: none;
+      }
+    }
+    .el-table__cell {
+      padding: 0;
+      .cell {
+        padding: 0;
+      }
+    }
+    // .el-table_1_column_1 {
+    //   padding-left: 40px !important;
+    // }
+    .el-table__body {
+      font-size: 16px;
+      line-height: 24px;
+      // .el-table_1_column_1 {
+      //   font-size: 28px;
+      // }
+      // .el-table_1_column_3 {
+      //   color: #ff7f0d;
+      // }
+      .el-table__row:first-child {
+        background: linear-gradient(to right, #fff, #fffbef);
+        border: none;
+        box-shadow: none;
+      }
+      .el-table__row:nth-child(2) {
+        background: linear-gradient(to right, #fff, #fafcfc);
+      }
+      .el-table__row:nth-child(3) {
+        background: linear-gradient(to right, #fff, #fffaf6);
+      }
+    }
+    .cell {
+      margin: 20px 0;
+      .num {
+        margin: 4px 40px;
+        // margin-left: 12px;
+        font-size: 28px;
+        line-height: 36px;
+      }
+      img {
+        margin-left: 40px;
+      }
+      .score {
+        color: #ff7f0d;
+        font-size: 24px;
+        vertical-align: sub;
+        .man {
+          font-size: 14px;
+        }
+      }
+      .user {
+        color: #555555;
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 15px;
+        }
+      }
+    }
+    .el-table__append-wrapper {
+      // text-align: center;
+      margin-top: 27px;
+      margin-bottom: 40px;
+      margin-right: 40px;
+      font-size: 14px;
+      color: #40c4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      .o-icon {
+        font-size: 24px;
+        color: #0d8dff;
+        margin-left: 8px;
+      }
+    }
   }
 }
 </style>

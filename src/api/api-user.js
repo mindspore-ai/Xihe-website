@@ -216,3 +216,13 @@ export function getUserCollection(id) {
     return res.data;
   });
 }
+/**
+ * 排行榜
+ * @returns
+ */
+export function getRank() {
+  const url = `/api/base/statistics/`;
+  return request.put(url).then((res) => {
+    return res.data;
+  });
+}

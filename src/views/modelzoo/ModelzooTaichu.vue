@@ -44,7 +44,7 @@ function handleNavClick(item) {
     ElMessage({
       type: 'warning',
       message:
-        '亲爱的用户，很抱歉，暂时无法给您提供体验。因市政要求，计算机中心下午开始强制限电断电，大模型推理相关资源不可用，预计8月26日恢复。',
+        '亲爱的用户，很抱歉，暂时无法进行在线体验。因市政要求，计算机中心于8月22日开始强制限电断电，大模型推理相关资源不可用，预计8月26日恢复。',
     });
   } else {
     router.push({ path: item.href });

@@ -63,7 +63,7 @@ export default [
             path: 'leaderboard',
             name: 'leaderboard',
             component: () => {
-              return import('@/views/competition/ComRank.vue');
+              return import('@/views/competition/CompetitionRank.vue');
             },
           },
           // 讨论

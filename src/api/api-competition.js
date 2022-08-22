@@ -18,8 +18,25 @@ function getHeaderConfig() {
  * 获取比赛信息
  * @returns
  */
-export function getFiles(id) {
-  const url = `/api/competitions/competitions/${id}`;
+export function getCompetition(id) {
+  if (id) {
+    const url = `/api/competitions/competitions/${id}`;
+    return request.get(url).then((res) => {
+      return res.data;
+    });
+  } else {
+    const url = `/api/competitions/competitions/`;
+    return request.get(url).then((res) => {
+      return res.data;
+    });
+  }
+}
+/**
+ * 获取排行榜信息
+ * @returns
+ */
+export function getFile(id) {
+  const url = `/api/base/files/${id}`;
   return request.get(url).then((res) => {
     return res.data;
   });

@@ -1,97 +1,18 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
+import { ref } from 'vue';
+
 import IconArrowDown from '~icons/app/arrow-down.svg';
 
 import firstImg from '@/assets/imgs/first.png';
 import secondImg from '@/assets/imgs/second.png';
 import thirdImg from '@/assets/imgs/third.png';
-const tableData = [
-  {
-    date: '1',
-    name: 'Tom',
-    address: 'No. 189',
-  },
-  {
-    date: '2',
-    name: 'Tom',
-    address: 'No. 189',
-  },
-  {
-    date: '3',
-    name: 'Tomnnnnnnnnnnnnnnnnnn',
-    address: 'No. 189',
-  },
-  {
-    date: '4',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-  {
-    date: '5',
-    name: 'Tom',
-    address: '2022.08.21 12:33',
-  },
-];
+
+
+
+const tableData = ref();
+
+
 </script>
 <template>
   <div class="rank-page">
@@ -115,8 +36,8 @@ const tableData = [
             <div class="score">{{ tableData[scope.$index].address }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="提交时间" width="160" />
-        <template #append>
+        <el-table-column prop="address" label="提交时间" width="210" />
+        <template v-if="tableData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
         </template>
       </el-table>
@@ -143,7 +64,7 @@ const tableData = [
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;
     }
-    margin-left: 40px;
+    // margin-left: 40px;
     :deep(.el-table__inner-wrapper) {
       th {
         color: #000000;
@@ -153,7 +74,7 @@ const tableData = [
         font-size: 18px;
         line-height: 26px;
         .cell {
-          margin: 24px 0;
+          margin: 24px 40px;
         }
         tr {
           --el-table-fixed-box-shadow: none;
@@ -177,9 +98,20 @@ const tableData = [
         // .el-table_1_column_3 {
         //   color: #ff7f0d;
         // }
+        .el-table__row:first-child {
+          background: linear-gradient(to right, #fff, #fffbef);
+          border: none;
+          box-shadow: none;
+        }
+        .el-table__row:nth-child(2) {
+          background: linear-gradient(to right, #fff, #fafcfc);
+        }
+        .el-table__row:nth-child(3) {
+          background: linear-gradient(to right, #fff, #fffaf6);
+        }
       }
       .cell {
-        margin: 8px 0;
+        margin: 8px 40px;
         .num {
           margin: 22px 12px;
           // margin-left: 12px;

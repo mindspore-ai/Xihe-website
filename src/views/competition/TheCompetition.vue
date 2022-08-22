@@ -5,12 +5,30 @@ import OButton from '@/components/OButton.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
+import { getCompetition } from '@/api/api-competition';
+
 const activeName = ref('first');
 const state = ref('doing'); //比赛状态：will-do，doing，done
 
 const handleClick = (tab, event) => {
   console.log(tab, event);
 };
+const tableData = ref();
+function getCompetitions() {
+  getCompetition()
+    .then((res) => {
+      console.log(res);
+      tableData.value = res.data;
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+getCompetitions();
+function goDetail(id) {
+  console.log(id);
+}
 </script>
 <template>
   <div class="competition-page">
@@ -32,7 +50,11 @@ const handleClick = (tab, event) => {
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
         <el-tab-pane label="全部" name="first">
-          <div class="competition-card">
+          <div
+            v-for="item in tableData"
+            :key="item.id"
+            class="competition-card"
+          >
             <div class="competition-box">
               <div class="left">
                 <div class="card-head">
@@ -56,7 +78,7 @@ const handleClick = (tab, event) => {
               </div>
             </div>
             <div class="right-immediate">
-              <OButton type="primary" animation>
+              <OButton type="primary" animation @click="goDetail(item.id)">
                 立即报名
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>

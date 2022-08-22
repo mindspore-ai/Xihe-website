@@ -7,6 +7,7 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
+
 const router = useRouter();
 const route = useRoute();
 
@@ -38,7 +39,16 @@ watch(
 );
 // 点击导航
 function handleNavClick(item) {
-  router.push({ path: item.href });
+  // router.push({ path: item.href });
+  if (item.label === '在线体验') {
+    ElMessage({
+      type: 'warning',
+      message:
+        '亲爱的用户，很抱歉，暂时无法给您提供体验。因市政要求，计算机中心下午开始强制限电断电，大模型推理相关资源不可用，预计8月26日恢复。',
+    });
+  } else {
+    router.push({ path: item.href });
+  }
 }
 function goTaichuMore() {
   window.open('https://gitee.com/mindspore/omni-perception-pretrainer');

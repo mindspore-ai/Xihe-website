@@ -11,9 +11,9 @@ import { ElMessage } from 'element-plus';
 
 // import { ElMessage } from 'element-plus';
 
-const inferUrl = ref(
-  'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg'
-);
+// const inferUrl = ref(
+//   'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg'
+// );
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -207,7 +207,7 @@ onMounted(() => {});
               src="@/assets/gifs/loading.gif"
               alt=""
             />
-            <img class="result-img" :src="inferUrl" />
+            <!-- <img class="result-img" :src="inferUrl" /> -->
             <a @click="downLoadPicture">
               <o-icon><icon-download></icon-download></o-icon
             ></a>

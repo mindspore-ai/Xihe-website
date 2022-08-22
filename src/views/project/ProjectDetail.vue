@@ -130,8 +130,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -237,7 +237,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -251,7 +251,8 @@ function handleTabClick(item) {
     return;
   }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }

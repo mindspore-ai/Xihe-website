@@ -92,8 +92,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -152,7 +152,8 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/datasets/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/datasets/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }

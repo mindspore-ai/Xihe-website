@@ -61,10 +61,14 @@ if (props.cardType === 'model') {
       <div class="portrait">
         <img :src="cardData.owner_name.avatar_url" alt="" />
       </div>
-      <div v-if="cardData.owner_name" class="nickname">
+      <div
+        v-if="cardData.owner_name"
+        :title="cardData.owner_name.name"
+        class="nickname"
+      >
         {{ cardData.owner_name.name }}
       </div>
-      <div class="model-name">/{{ cardData.name }}</div>
+      <div :title="cardData.name" class="model-name">/{{ cardData.name }}</div>
     </div>
     <div class="label-box">
       <div v-for="label in labelList" :key="label.id" class="label-item">
@@ -127,6 +131,7 @@ if (props.cardType === 'model') {
     border-bottom: 1px solid #def1e8;
     .portrait {
       margin-right: 8px;
+      flex-shrink: 0;
       width: 24px;
       height: 24px;
       border-radius: 50%;
@@ -135,6 +140,16 @@ if (props.cardType === 'model') {
       img {
         width: 100%;
       }
+    }
+    .nickname {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .model-name {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
   .label-box {

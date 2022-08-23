@@ -9,22 +9,21 @@ export default [
   },
   // 比赛详情
   {
-    // path: '/competitiondetail',
     path: '/competition/:id',
     name: 'competitionDetail',
     component: () => {
       return import('@/views/competition/CompetitionDetail.vue');
     },
-    redirect: '/competition/222/0/introduction',
+    redirect: { name: 'introduction' },
     children: [
       // 详情导航部分
       {
         path: '0',
-        name: 'introduction0',
+        name: 'option',
         component: () => {
           return import('@/views/competition/CompetitionOption.vue');
         },
-        redirect: '/competition/222/0/introduction',
+        redirect: { name: 'introduction' },
         children: [
           // 介绍
           {
@@ -84,16 +83,16 @@ export default [
           },
         ],
       },
-      // 报名
+      // 报名流程
       {
         path: '1',
-        name: 'introduction1',
+        name: 'process',
         component: () => {
-          return import('@/views/competition/CompetitionPlan.vue'); //待修改
+          return import('@/views/competition/CompetitionProcess.vue'); //待修改
         },
-        redirect: '/competition/222/1/introduction',
+        redirect: { name: 'register' },
         children: [
-          // 报名流程
+          // 法律声明，报名表，报名成功
           {
             path: 'introduction',
             name: 'register',

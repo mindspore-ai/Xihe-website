@@ -1,11 +1,14 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { getCompetition } from '@/api/api-competition';
+
+const router = useRouter();
 
 const activeName = ref('first');
 const state = ref('doing'); //比赛状态：will-do，doing，done
@@ -17,17 +20,20 @@ const tableData = ref();
 function getCompetitions() {
   getCompetition()
     .then((res) => {
-      console.log(res);
       tableData.value = res.data;
-      console.log(res);
     })
     .catch((err) => {
       console.log(err);
     });
 }
 getCompetitions();
+// 跳转到比赛详情页
 function goDetail(id) {
-  console.log(id);
+  router.push({
+    name: 'competitionDetail',
+    params: { id: id },
+  });
+  // router.push(`/competition/${id}`)
 }
 </script>
 <template>

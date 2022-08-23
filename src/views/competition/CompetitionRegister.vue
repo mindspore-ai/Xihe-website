@@ -1,19 +1,31 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useUserInfoStore } from '@/stores';
+
+import { goCompetition } from '@/api/api-competition';
+import { getAreaData } from '@/api/api-competition';
+import { createTeam } from '@/api/api-competition';
+
+// import { request } from '@/shared/axios';
+
 import OButton from '@/components/OButton.vue';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
+
 import { ElMessage } from 'element-plus';
 
+const route = useRoute();
 const router = useRouter();
+const userInfoStore = useUserInfoStore();
+
 const i18n = {
   declaration: '法律声明',
   agree: '已阅读并同意该声明',
   next: '下一步',
   application: '报名表',
   name: '姓名',
-  usename: '用户名',
+  username: '用户名',
   location: '所在地',
   email: '邮箱',
   phone: '手机号',
@@ -38,6 +50,7 @@ const active = ref(1);
 const textarea = ref('');
 const agree = ref(false);
 const input = ref('');
+const is_individual = ref(true)
 const stepData = ref([
   { title: '登录/注册' },
   { title: '法律声明' },
@@ -46,23 +59,20 @@ const stepData = ref([
 ]);
 
 const queryRef = ref(null);
-const radio = ref(3);
 const role = ref(1);
+const areaData = ref([]);
+let province = [];
+let citys = [];
 const query = reactive({
   name: '',
-  usename: '',
-  location: '',
+  username: userInfoStore.userName,
+  loc_province: '',
+  loc_city: '',
   email: '',
   phone: '',
-  identity: [
-    {
-      schoolname: '',
-      specialty: '',
-      industry: '',
-      company: '',
-      description: '',
-    },
-  ],
+  identity_type: 1,
+  identityDetail1: '',
+  identityDetail2: '',
 });
 const rules = reactive({
   name: [
@@ -72,7 +82,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  usename: [
+  username: [
     {
       required: true,
       message: '必填项',
@@ -92,16 +102,11 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    {
-      // 请输入正确的邮箱
-      // 邮箱验证
-
-      pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-      pattern:
-        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{3,4}$/,
-      message: '请输入正确的邮箱',
-      trigger: 'blur',
-    },
+    // {
+    //   pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+    //   message: '请输入正确的邮箱',
+    //   trigger: 'blur',
+    // },
   ],
   phone: [
     {
@@ -109,14 +114,21 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    {
-      // 请输入正确的手机号
-      pattern: /^1[3456789]\d{9}$/,
-      message: '请输入正确的手机号',
-      trigger: 'blur',
-    },
+    // {
+    //   // 请输入正确的手机号
+    //   pattern: /^1[3456789]\d{9}$/,
+    //   message: '请输入正确的手机号',
+    //   trigger: 'blur',
+    // },
   ],
-  identity: [
+  // identity: [
+  //   {
+  //     required: true,
+  //     message: '必填项',
+  //     trigger: 'blur',
+  //   },
+  // ],
+  identityDetail1: [
     {
       required: true,
       message: '必填项',
@@ -124,24 +136,56 @@ const rules = reactive({
     },
   ],
 });
+// 获取城市数据
+function getArea() {
+  getAreaData().then((res) => {
+    areaData.value = res.data;
+  });
+}
+
 function goNext() {
   active.value++;
+  getArea();
 }
 // 切换身份
 function changeRole(item) {
   role.value = item;
+  query.identity_type = item;
 }
 // 保存报名
-function save(formEl) {
+function saveInfo(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
       // TODO:提交报名表
-      active.value++;
-      ElMessage({
-        type: 'success',
-        message: '报名成功！',
+      // 表单的数据
+      let params1 = {
+        name: query.name,
+        loc_province: query.loc_province,
+        email: query.email,
+        phone: query.phone,
+        identity_type: query.identity_type,
+        detail1: query.identityDetail1,
+        detail2: query.identityDetail2,
+      };
+      let params2 = {
+        name: query.username,
+        relate_competition: route.params.id,
+        is_individual: true,
+      };
+      goCompetition(params1).then((res) => {
+        // console.log('res: ', res);
       });
+      createTeam(params2).then((res) => {
+        // console.log('res222: ', res);
+        is_individual.value = res.data.is_individual;
+      });
+      // console.log('params: ', params);
+      active.value++;
+      // ElMessage({
+      //   type: 'success',
+      //   message: '报名成功！',
+      // });
     } else {
       console.error('error submit!');
       return false;
@@ -150,14 +194,41 @@ function save(formEl) {
 }
 // 点击个人参赛进入比赛介绍页
 function goCompetitionIntro() {
-  // 跳转到比赛介绍页
   router.push({
     name: 'introduction',
     params: {
-      // id: route.params.id,
-      id: 222,
+      id: route.params.id,
     },
   });
+}
+// 团队tab页
+function goTeam() {
+  router.push({
+    name: 'team',
+    params: {
+      id: route.params.id,
+    },
+  });
+}
+
+// 获得省份数据
+for (let key in areaData.value['86']) {
+  province.push({
+    label: areaData.value['86'][key],
+    value: key,
+  });
+  console.log(province);
+}
+
+function handleProvince(province) {
+  // 440000
+  for (let city in areaData[province]) {
+    citys.push({
+      label: areaData[province][city],
+      value: city,
+    });
+  }
+  return citys;
 }
 </script>
 <template>
@@ -201,53 +272,61 @@ function goCompetitionIntro() {
         </div>
       </div>
       <div class="application-form">
-        <el-form ref="queryRef" :model="query" :rules="rules">
-          <el-form-item prop="name">
+        <el-form ref="queryRef" :model="query">
+          <el-form-item prop="name" :rules="rules.name">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.name }}</span>
             </div>
             <el-input v-model="query.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
-          <el-form-item prop="usename">
+          <el-form-item prop="username" :rules="rules.username">
             <div class="requirement">
-              <icon-necessary></icon-necessary><span>{{ i18n.usename }}</span>
+              <icon-necessary></icon-necessary><span>{{ i18n.username }}</span>
             </div>
             <el-input
-              v-model="query.usename"
+              v-model="query.username"
               placeholder="请输入用户名"
+              disabled
             ></el-input>
           </el-form-item>
-          <el-form-item prop="location" class="city">
+          <!-- 选择城市TODO: :rules="-->
+          <el-form-item class="city">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
             </div>
-            <!-- <el-select
-              v-model="selectProv"
-              placeholder="请选择省份"
-              @change="getProv($event)"
-            >
-              <el-option
-                v-for="item in provs"
-                :label="item.label"
-                :value="item.value"
+            <el-form-item class="location">
+              <el-select
+                v-model="query.loc_province"
+                placeholder="请选择省份"
+                @change="handleProvince($event)"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              v-if="selectProv != ''"
-              v-model="selectCity"
-              placeholder="请选择城市"
-              @change="getCity($event)"
-            >
-              <el-option
-                v-for="item in citys"
-                :label="item.label"
-                :value="item.value"
+                <el-option
+                  v-for="(item, index) in province"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item class="location">
+              <el-select
+                v-model="query.loc_city"
+                placeholder="请选择城市"
+                @change="getCity($event)"
               >
-              </el-option>
-            </el-select> -->
+                <el-option
+                  v-for="(item, index) in citys"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
           </el-form-item>
-          <el-form-item prop="email">
+          <!-- 邮箱 -->
+          <el-form-item prop="email" :rules="rules.email">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.email }}</span>
             </div>
@@ -256,7 +335,8 @@ function goCompetitionIntro() {
               placeholder="请输入常用邮箱"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="phone">
+          <!-- 手机号 -->
+          <el-form-item prop="phone" :rules="rules.phone">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.phone }}</span>
             </div>
@@ -265,115 +345,138 @@ function goCompetitionIntro() {
               placeholder="方便和您联系"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="identity">
+          <!-- 身份 -->
+          <el-form-item>
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.identity }}</span>
             </div>
             <div class="identity-option">
-              <el-radio-group v-model="radio" class="ml-4">
-                <el-radio :label="3" @click="changeRole(1)">{{
+              <el-radio-group v-model="query.identity_type" class="ml-4">
+                <el-radio :label="1" @click="changeRole(1)">{{
                   i18n.student
                 }}</el-radio>
-                <el-radio :label="6" @click="changeRole(2)">{{
+                <el-radio :label="2" @click="changeRole(2)">{{
                   i18n.teacher
                 }}</el-radio>
-                <el-radio :label="9" @click="changeRole(3)">{{
+                <el-radio :label="3" @click="changeRole(3)">{{
                   i18n.developer
                 }}</el-radio>
-                <el-radio :label="12" @click="changeRole(4)">{{
+                <el-radio :label="4" @click="changeRole(4)">{{
                   i18n.other
                 }}</el-radio>
               </el-radio-group>
               <!-- 学生 -->
               <div v-show="role === 1" class="student">
-                <div class="organization">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.schoolname }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.schoolname"
-                    placeholder="请输入所在学校名称"
-                  ></el-input>
-                </div>
-                <div class="specialty">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.specialty }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.specialty"
-                    placeholder="请输入所属专业"
-                  ></el-input>
-                </div>
+                <!-- TODO::rules所有的 -->
+                <el-form-item
+                  prop="identityDetail1"
+                  :rules="rules.identityDetail1"
+                >
+                  <div class="organization">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.schoolname }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail1"
+                      placeholder="请输入所在学校名称"
+                      required="required"
+                    ></el-input>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="identityDetail2">
+                  <div class="specialty">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.specialty }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail2"
+                      placeholder="请输入所属专业"
+                    ></el-input>
+                  </div>
+                </el-form-item>
               </div>
+              <!-- 教师 -->
               <div v-show="role === 2" class="teacher">
-                <div class="organization">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.schoolname }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.schoolname"
-                    placeholder="请输入所在学校名称"
-                  ></el-input>
-                </div>
-                <div class="specialty">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.specialty }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.specialty"
-                    placeholder="请输入所属专业"
-                  ></el-input>
-                </div>
+                <el-form-item prop="identityDetail1">
+                  <div class="organization">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.schoolname }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail1"
+                      placeholder="请输入所在学校名称"
+                    ></el-input>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="identityDetail2">
+                  <div class="specialty">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.specialty }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail2"
+                      placeholder="请输入所属专业"
+                    ></el-input>
+                  </div>
+                </el-form-item>
               </div>
+              <!-- 开发者 -->
               <div v-show="role === 3" class="developer">
-                <div class="organization">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.industry }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.industry"
-                    placeholder="请输入所属行业"
-                  ></el-input>
-                </div>
-                <div class="specialty">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.company }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.company"
-                    placeholder="请输入公司名称"
-                  ></el-input>
-                </div>
+                <el-form-item prop="identityDetail1">
+                  <div class="organization">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.industry }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail1"
+                      placeholder="请输入所属行业"
+                    ></el-input>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="identityDetail2">
+                  <div class="specialty">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.company }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail2"
+                      placeholder="请输入公司名称"
+                    ></el-input>
+                  </div>
+                </el-form-item>
               </div>
+              <!-- 其他 -->
               <div v-show="role === 4" class="other">
-                <div class="desc">
-                  <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.description }}</span>
-                  </span>
-                  <el-input
-                    v-model="query.identity.description"
-                    placeholder="请描述您的身份"
-                  ></el-input>
-                </div>
+                <el-form-item prop="identityDetail1">
+                  <div class="desc">
+                    <span class="requirement">
+                      <icon-necessary></icon-necessary
+                      ><span>{{ i18n.description }}</span>
+                    </span>
+                    <el-input
+                      v-model="query.identityDetail1"
+                      placeholder="请描述您的身份"
+                    ></el-input>
+                  </div>
+                </el-form-item>
               </div>
             </div>
           </el-form-item>
         </el-form>
       </div>
       <div class="nextBtn">
-        <o-button type="primary" @click="save(queryRef)">{{
+        <o-button type="primary" @click="saveInfo(queryRef)">{{
           i18n.save
         }}</o-button>
       </div>
     </div>
-    <!-- 报名成功 -->
+    <!-- 报名成功页 -->
     <div v-if="active === 3" class="application-result">
       <div class="title">
         {{ i18n.success }}
@@ -383,7 +486,7 @@ function goCompetitionIntro() {
         <o-button type="primary" @click="goCompetitionIntro">{{
           i18n.personal
         }}</o-button>
-        <o-button type="primary">{{ i18n.team }}</o-button>
+        <o-button type="primary" @click="goTeam">{{ i18n.team }}</o-button>
       </div>
     </div>
   </div>
@@ -502,14 +605,17 @@ function goCompetitionIntro() {
               background: #f5f6f8;
               margin-top: 25px;
               padding: 24px;
-              .organization {
-                margin-bottom: 17px;
-                display: flex;
-                justify-content: space-between;
-              }
-              .specialty {
-                display: flex;
-                justify-content: space-between;
+              .el-form-item {
+                margin-bottom: 0px;
+                .organization {
+                  margin-bottom: 17px;
+                  display: flex;
+                  justify-content: space-between;
+                }
+                .specialty {
+                  display: flex;
+                  justify-content: space-between;
+                }
               }
             }
             .other {
@@ -528,10 +634,13 @@ function goCompetitionIntro() {
         }
         // 所在地二级联动样式
         .city {
-          .el-form-item__content {
-            .el-select {
-              width: 196px;
-              margin-right: 8px;
+          .location {
+            margin-bottom: 0px;
+            .el-form-item__content {
+              .el-select {
+                width: 196px;
+                margin-right: 8px;
+              }
             }
           }
         }

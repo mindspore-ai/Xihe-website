@@ -1,13 +1,24 @@
 <script setup>
 import { reactive, ref } from 'vue';
 
+import { useRoute, useRouter } from 'vue-router';
+
+import { createTeam } from '@/api/api-competition';
+// import { getTeamInfo } from '@/api/api-competition';
+import { joinTeam } from '@/api/api-competition';
+import { getTeamInfoByName } from '@/api/api-competition';
+
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 import IconGroup from '~icons/app/group.svg';
 import IconCancel from '~icons/app/cancel.svg';
 import IconDelivery from '~icons/app/delivery.svg';
+import IconTips from '~icons/app/tips.svg';
+
 // import IconCancelBlue from '~icons/app/cancelBlue.svg';
 // import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
+const route = useRoute();
+const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamName: '团队名',
@@ -16,7 +27,7 @@ const i18n = {
 };
 const activeName = ref('first');
 const queryRef = ref(null);
-const show = ref(false); //TODO:
+const is_individual = ref(true); //TODO:是否是个人参赛
 const form1 = reactive({
   teamName: '',
 });
@@ -72,11 +83,42 @@ const rules2 = reactive({
   ],
 });
 function handleClick() {
-
+}
+// 获取团队信息
+// function getTeamData() {
+//   let params = { id: route.params.id };
+//   getTeamInfo(params).then((res) => {
+//     console.log('www', res.data);
+//   });
+// }
+// getTeamData();
+// 创建团队
+function fountTeam() {
+  let params = {
+    name: form1.teamName,
+    relate_competition: route.params.id,
+    is_individual: false,
+  };
+  createTeam(params).then((res) => {
+    // TODO:is_individual.value
+    is_individual.value = res.data.is_individual;
+  });
+}
+// 加入团队:TODO:团队id???
+async function addTeam() {
+  // 通过团队名获取团队信息
+  let teamId = null;
+  getTeamInfoByName({ name: form2.teamName }).then((res) => {
+    console.log('团队信息', res.data);
+    teamId = res.data[0].id;
+  });
+  await joinTeam({ id: teamId }).then((res) => {
+    console.log('团队信息', res);
+  });
 }
 </script>
 <template>
-  <div v-if="show" class="noteam-page">
+  <div v-if="is_individual" class="noteam-page">
     <div class="title">
       {{ i18n.title }}
     </div>
@@ -88,7 +130,7 @@ function handleClick() {
               <icon-necessary></icon-necessary><span>{{ i18n.teamName }}</span>
               <el-popover
                 placement="bottom-start"
-                :width="372"
+                :width="260"
                 trigger="hover"
                 :teleported="true"
               >
@@ -107,7 +149,9 @@ function handleClick() {
               ></el-input>
             </el-form-item>
             <!-- TODO:逻辑交互未写 -->
-            <o-button type="primary">{{ i18n.createTeam }}</o-button>
+            <o-button type="primary" @click="fountTeam">{{
+              i18n.createTeam
+            }}</o-button>
           </el-form>
         </div>
       </el-tab-pane>
@@ -137,13 +181,15 @@ function handleClick() {
               ></el-input>
             </el-form-item>
             <!-- TODO:逻辑交互未写 -->
-            <o-button type="primary">{{ i18n.joinTeam }}</o-button>
+            <o-button type="primary" @click="addTeam">{{
+              i18n.joinTeam
+            }}</o-button>
           </el-form>
         </div>
       </el-tab-pane>
     </el-tabs>
   </div>
-  <div class="haveteam-page">
+  <div v-else class="haveteam-page">
     <div class="header">
       <div class="header-title">
         <div class="text">我创建的团队：啊对对对队</div>

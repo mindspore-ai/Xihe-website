@@ -1,41 +1,40 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
+import { getCompetition } from '@/api/api-competition';
+import { getGroupid } from '@/api/api-competition';
 
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 import OButton from '@/components/OButton.vue';
-// import ONav from '@/components/ONav.vue';
-// import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-// const route = useRoute();
+const route = useRoute();
 const router = useRouter();
 
-// const activeNavItem = ref('');
 const state = ref('doing'); //比赛状态：will-do，doing，done
-const aaa = ref(false);
+const competitionData = ref([]);
+// 用户团队id
+const groupId = ref(null);
+const show = ref(true); //TODO:
 // 立即报名
 function goApplication() {
-  // 如果没有登录，先登录
-  // if (!userInfoStore.id) {
-  //   goAuthorize();
-  // }
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
   if (!userInfoStore.id) {
-    goAuthorize().then(() => {
-      router.push({
-        path: `/competition/222/1/introduction`,
-      });
-      console.log(11111);
-    });
+    goAuthorize();
+    // goAuthorize().then(() => {
+    //   router.push({
+    //     path: `/competition/222/1/introduction`,
+    //   });
+    // });
   } else {
+    show.value = false;
     router.push({
-      path: `/competition/222/1/introduction`,
+      path: `/competition/${competitionData.value.id}/1/introduction`,
     });
-    console.log(22222222);
   }
 }
 onMounted(() => {
@@ -58,6 +57,25 @@ onMounted(() => {
     }
   });
 });
+// 获取比赛详情
+function getDetailData() {
+  try {
+    getCompetition({ id: route.params.id }).then((res) => {
+      if (res.status === 200) {
+        competitionData.value = res.data;
+        // console.log('res.data: ', res.data);
+      }
+    });
+    getGroupid({ id: route.params.id }).then((res) => {
+      if (res.status === 200) {
+        groupId.value = res.group_id;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+getDetailData();
 </script>
 
 <template>
@@ -79,28 +97,31 @@ onMounted(() => {
             <div class="left">
               <div class="card-head">
                 <div class="card-head-title">
-                  第三届全国高校绿色计算创新大赛
+                  {{ competitionData.name }}
                 </div>
-                <div class="card-head-state" :class="state">火热进行中</div>
+                <div
+                  v-if="competitionData.status_name === '进行中'"
+                  class="card-head-state"
+                  :class="state"
+                >
+                  火热进行中
+                </div>
               </div>
-              <div class="card-body">
-                大赛以“AI赋能视界”为主题，分为“华为・昇腾杯”AI+行人重识别、“华为・昇腾杯”AI+遥感影像、AI+无线通信三个赛道，在8月-10月面向全球开放报名参赛。
-                初赛和复赛期间，优秀队伍可获得华为云资源支持；在昇腾开发者社区可以获得相关样例模型、开发者文档、技术支持等资源；基于昇腾的算法模型，决赛成绩可获得加分。
-                大赛立足于国际视野，营造人工智能创新创…
-              </div>
+              <div class="card-body">{{ competitionData.description }}</div>
               <div class="card-footer">举办方:绿色计算产业联盟</div>
             </div>
             <div class="right">
               <div class="right-bonus">
-                <div class="number">奖金：800，000</div>
-                <div class="time">赛期:2020/6/15-2020/9/11</div>
+                <div class="number">奖金：{{ competitionData.bonus }}</div>
+                <div class="time">赛期:{{ competitionData.during }}</div>
               </div>
             </div>
           </div>
-          <div v-if="aaa" class="right-immediate">
+          <div v-if="groupId === null && show === true" class="right-immediate">
             <OButton type="primary" animation @click="goApplication">
               立即报名
             </OButton>
+            <!--TODO:  -->
             <div class="number">报名人数：302</div>
           </div>
         </div>

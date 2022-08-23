@@ -6,8 +6,9 @@ import ONav from '@/components/ONav.vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-const router = useRouter();
 const route = useRoute();
+console.log('route444444: ', route);
+const router = useRouter();
 
 const activeNavItem = ref('');
 const state = ref('doing'); //比赛状态：will-do，doing，done
@@ -68,7 +69,7 @@ watch(
 );
 // 点击导航
 function handleNavClick(item) {
-  router.push(`/competition/222/0/${item.href}`);
+  router.push(`/competition/${route.params.id}/0/${item.href}`);
 }
 </script>
 <template>

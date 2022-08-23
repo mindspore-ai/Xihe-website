@@ -222,7 +222,7 @@ export function getUserCollection(id) {
  */
 export function getRank() {
   const url = `/api/base/statistics/`;
-  return request.put(url).then((res) => {
+  return request.put(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

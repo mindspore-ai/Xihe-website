@@ -64,6 +64,11 @@ const navItems = [
     href: '/datasets',
   },
   {
+    id: 'leaderboard',
+    label: '排行榜',
+    href: '/leaderboard',
+  },
+  {
     id: 'docs',
     label: '文档',
     href: 'https://xihe-docs.mindspore.cn/',
@@ -133,7 +138,7 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^models|datasets|projects|modelzoo|teams/g.test(val)) {
+    if (/^models|datasets|projects|modelzoo|leaderboard|teams/g.test(val)) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';

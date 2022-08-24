@@ -105,7 +105,7 @@ function goUserPage() {
           <h2>{{ detailTitle }}</h2>
           <div v-if="showInvitationTip" class="invatation-tip">
             <img :src="ringImg" />
-            邀请好友注册，赢万元大奖
+            邀请好友注册，赢大奖，<a href="/leaderboard">点击查看排行</a>
           </div>
         </div>
         <router-view></router-view>
@@ -130,6 +130,9 @@ function goUserPage() {
     width: 16px;
     height: 16px;
     margin-right: 16px;
+  }
+  a{
+    color: #3d8df7;
   }
 }
 .setting {

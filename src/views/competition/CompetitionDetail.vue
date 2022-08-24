@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -31,15 +31,26 @@ function goApplication() {
     //   });
     // });
   } else {
-    show.value = false;
+    // show.value = false;
     router.push({
       path: `/competition/${competitionData.value.id}/1/introduction`,
     });
   }
 }
+watch(
+  () => route.name,
+  () => {
+    if (route.name === 'register') {
+      show.value = false;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 onMounted(() => {
   let card = document.querySelector('.competition-card');
-  let parent = document.querySelector('competition-bread');
+  // let parent = document.querySelector('competition-bread');
 
   let top1 = card.offsetTop;
   // let top2 = parent.offsetTop;
@@ -57,6 +68,7 @@ onMounted(() => {
     }
   });
 });
+
 // 获取比赛详情
 function getDetailData() {
   try {
@@ -66,6 +78,7 @@ function getDetailData() {
         // console.log('res.data: ', res.data);
       }
     });
+    // 获得团队id，判断是否报名
     getGroupid({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         groupId.value = res.group_id;
@@ -107,7 +120,10 @@ getDetailData();
                   火热进行中
                 </div>
               </div>
-              <div class="card-body">{{ competitionData.description }}</div>
+              <!-- <div class="card-body">{{ competitionData.description }}</div> -->
+              <div class="card-body">
+                本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的架构迁移到鲲鹏架构的工程实践能力，积累的开发和人才数据将在脱敏后提供给学术机构和相关企业，实现产教共赢。
+              </div>
               <div class="card-footer">举办方:绿色计算产业联盟</div>
             </div>
             <div class="right">
@@ -117,7 +133,7 @@ getDetailData();
               </div>
             </div>
           </div>
-          <div v-if="groupId === null && show === true" class="right-immediate">
+          <div v-if="groupId === null && show" class="right-immediate">
             <OButton type="primary" animation @click="goApplication">
               立即报名
             </OButton>

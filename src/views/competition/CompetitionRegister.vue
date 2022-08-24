@@ -50,7 +50,8 @@ const active = ref(1);
 const textarea = ref('');
 const agree = ref(false);
 const input = ref('');
-const is_individual = ref(true)
+const is_individual = ref(true); //是否个人参赛
+const teamData = ref([])
 const stepData = ref([
   { title: '登录/注册' },
   { title: '法律声明' },
@@ -61,8 +62,8 @@ const stepData = ref([
 const queryRef = ref(null);
 const role = ref(1);
 const areaData = ref([]);
-let province = [];
-let citys = [];
+let province = ref([]);
+let citys = ref([]);
 const query = reactive({
   name: '',
   username: userInfoStore.userName,
@@ -89,24 +90,26 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  // location: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
+  location: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
   email: [
     {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-    //   message: '请输入正确的邮箱',
-    //   trigger: 'blur',
-    // },
+    {
+      // 邮箱的正则
+
+      pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+      message: '请输入正确的邮箱',
+      trigger: 'blur',
+    },
   ],
   phone: [
     {
@@ -114,12 +117,12 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    // {
-    //   // 请输入正确的手机号
-    //   pattern: /^1[3456789]\d{9}$/,
-    //   message: '请输入正确的手机号',
-    //   trigger: 'blur',
-    // },
+    {
+      // 请输入正确的手机号
+      pattern: /^1[3456789]\d{9}$/,
+      message: '请输入正确的手机号',
+      trigger: 'blur',
+    },
   ],
   // identity: [
   //   {
@@ -140,6 +143,15 @@ const rules = reactive({
 function getArea() {
   getAreaData().then((res) => {
     areaData.value = res.data;
+    // 获得省份数据
+    for (let key in areaData.value['86']) {
+      province.value.push({
+        label: areaData.value['86'][key],
+        value: key,
+      });
+    }
+    console.log('province.value: ', province.value);
+
   });
 }
 
@@ -162,6 +174,7 @@ function saveInfo(formEl) {
       let params1 = {
         name: query.name,
         loc_province: query.loc_province,
+        loc_city: query.loc_city,
         email: query.email,
         phone: query.phone,
         identity_type: query.identity_type,
@@ -173,19 +186,26 @@ function saveInfo(formEl) {
         relate_competition: route.params.id,
         is_individual: true,
       };
-      goCompetition(params1).then((res) => {
-        // console.log('res: ', res);
-      });
-      createTeam(params2).then((res) => {
-        // console.log('res222: ', res);
-        is_individual.value = res.data.is_individual;
-      });
-      // console.log('params: ', params);
-      active.value++;
-      // ElMessage({
-      //   type: 'success',
-      //   message: '报名成功！',
-      // });
+      createTeam(params2)
+        .then((res) => {
+          console.log('新建团队信息（个人）: ', res);
+          teamData.value = res.data;
+          // is_individual.value = res.data.is_individual;
+
+        })
+        .finally(() => {
+          goCompetition(params1).then((res) => {
+            console.log('params1: ', params1);
+            // console.log('报名用户信息: ', res);
+            if (res.status === 200) {
+              active.value++;
+              ElMessage({
+                type: 'success',
+                message: '报名成功！',
+              });
+            }
+          });
+        });
     } else {
       console.error('error submit!');
       return false;
@@ -211,24 +231,19 @@ function goTeam() {
   });
 }
 
-// 获得省份数据
-for (let key in areaData.value['86']) {
-  province.push({
-    label: areaData.value['86'][key],
-    value: key,
-  });
-  console.log(province);
-}
-
 function handleProvince(province) {
-  // 440000
-  for (let city in areaData[province]) {
-    citys.push({
-      label: areaData[province][city],
+  citys.value = [];
+  Object.keys(areaData.value[province]).forEach((city) => {
+    citys.value.push({
+      label: areaData.value[province][city],
       value: city,
     });
-  }
-  return citys;
+  });
+  query.loc_city = citys.value[0];
+  // if (citys.value.length === 1) {
+  // } else {
+  //   query.loc_city = ''
+  // }
 }
 </script>
 <template>
@@ -298,11 +313,11 @@ function handleProvince(province) {
               <el-select
                 v-model="query.loc_province"
                 placeholder="请选择省份"
-                @change="handleProvince($event)"
+                @change="handleProvince"
               >
                 <el-option
-                  v-for="(item, index) in province"
-                  :key="index"
+                  v-for="item in province"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -310,14 +325,10 @@ function handleProvince(province) {
               </el-select>
             </el-form-item>
             <el-form-item class="location">
-              <el-select
-                v-model="query.loc_city"
-                placeholder="请选择城市"
-                @change="getCity($event)"
-              >
+              <el-select v-model="query.loc_city" placeholder="请选择城市">
                 <el-option
-                  v-for="(item, index) in citys"
-                  :key="index"
+                  v-for="item in citys"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 >

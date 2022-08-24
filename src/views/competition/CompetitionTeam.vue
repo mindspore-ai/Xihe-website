@@ -2,11 +2,7 @@
 import { reactive, ref } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
-
-import { createTeam } from '@/api/api-competition';
-// import { getTeamInfo } from '@/api/api-competition';
-import { joinTeam } from '@/api/api-competition';
-import { getTeamInfoByName } from '@/api/api-competition';
+import { useUserInfoStore } from '@/stores';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
@@ -15,6 +11,16 @@ import IconCancel from '~icons/app/cancel.svg';
 import IconDelivery from '~icons/app/delivery.svg';
 import IconTips from '~icons/app/tips.svg';
 
+import { ElMessage } from 'element-plus';
+
+import { createTeam } from '@/api/api-competition';
+import { getTeamInfo } from '@/api/api-competition';
+import { joinTeam } from '@/api/api-competition';
+import { getTeamInfoByName } from '@/api/api-competition';
+
+const userInfoStore = useUserInfoStore();
+
+console.log(userInfoStore.userName);
 // import IconCancelBlue from '~icons/app/cancelBlue.svg';
 // import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
 const route = useRoute();
@@ -28,6 +34,7 @@ const i18n = {
 const activeName = ref('first');
 const queryRef = ref(null);
 const is_individual = ref(true); //TODO:是否是个人参赛
+const teamData = ref([]); //创建团队后的团队信息
 const form1 = reactive({
   teamName: '',
 });
@@ -85,13 +92,13 @@ const rules2 = reactive({
 function handleClick() {
 }
 // 获取团队信息
-// function getTeamData() {
-//   let params = { id: route.params.id };
-//   getTeamInfo(params).then((res) => {
-//     console.log('www', res.data);
-//   });
-// }
-// getTeamData();
+function getTeamData() {
+  let params = { id: route.params.id };
+  getTeamInfo(params).then((res) => {
+    console.log('www', res);
+  });
+}
+getTeamData();
 // 创建团队
 function fountTeam() {
   let params = {
@@ -101,20 +108,39 @@ function fountTeam() {
   };
   createTeam(params).then((res) => {
     // TODO:is_individual.value
-    is_individual.value = res.data.is_individual;
+    // console.log('res.data', res.data);
+    teamData.value = res.data;
+    console.log('teamData.value: ', teamData.value);
+    is_individual.value = teamData.value.is_individual;
   });
 }
-// 加入团队:TODO:团队id???
+// 加入团队
 async function addTeam() {
   // 通过团队名获取团队信息
   let teamId = null;
-  getTeamInfoByName({ name: form2.teamName }).then((res) => {
-    console.log('团队信息', res.data);
-    teamId = res.data[0].id;
+  await getTeamInfoByName({ name: form2.teamName }).then((res) => {
+    if (res.status === 200) {
+      console.log('团队信息', res.data);
+      teamId = res.data[0].id;
+    }
   });
-  await joinTeam({ id: teamId }).then((res) => {
-    console.log('团队信息', res);
-  });
+  // 加入团队
+  if (teamId) {
+    joinTeam({ id: teamId }).then((res) => {
+      if (res.status === 200) {
+        // TODO:变成团队参赛
+        console.log('加入团队', res);
+      } else if (res.status === -1) {
+        console.log(1111111111);
+        ElMessage({
+          type: 'warning',
+          message: '您已经在该团队中',
+        });
+      }
+    });
+  } else {
+    console.log(6666666);
+  }
 }
 </script>
 <template>
@@ -192,7 +218,12 @@ async function addTeam() {
   <div v-else class="haveteam-page">
     <div class="header">
       <div class="header-title">
-        <div class="text">我创建的团队：啊对对对队</div>
+        <div class="text">
+          我<span v-if="userInfoStore.userName === teamData.leader_name.name"
+            >创建</span
+          >
+          <span v-else>加入</span>的团队：{{ teamData.name }}
+        </div>
         <el-input readonly placeholder="一个团队最多有3名成员" />
       </div>
       <div class="header-button">
@@ -208,7 +239,12 @@ async function addTeam() {
         </template>
       </el-table-column>
       <el-table-column prop="address" label="邮箱" />
-      <el-table-column prop="address" label="操作" width="300">
+      <el-table-column
+        v-if="userInfoStore.userName === teamData.leader_name.name"
+        prop="address"
+        label="操作"
+        width="300"
+      >
         <!-- TODO: -->
         <template #default="scope">
           <div class="delete">

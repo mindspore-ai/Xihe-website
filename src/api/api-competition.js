@@ -76,9 +76,9 @@ export function createTeam(params) {
  * @returns
  */
 export function getTeamInfo(params) {
-  // console.log('params: ', params);
+  console.log('params: ', params);
   const url = `/api/competitions/groups/${params.id}`;
-  return request.get(url, params, getHeaderConfig()).then((res) => {
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -95,7 +95,7 @@ export function getTeamInfoByName(params) {
  */
 export function joinTeam(params) {
   console.log('params: ', params);
-  const url = `/api/competitions/groups/${params.id}`;
+  const url = `/api/competitions/join_group/${params.id}`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

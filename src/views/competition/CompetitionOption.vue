@@ -7,7 +7,6 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 const route = useRoute();
-console.log('route444444: ', route);
 const router = useRouter();
 
 const activeNavItem = ref('');

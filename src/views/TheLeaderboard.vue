@@ -47,6 +47,13 @@ function goSetNew() {
     goAuthorize();
   }
 }
+function goModels() {
+  if (loginStore.isLogined) {
+    router.push('/models');
+  } else {
+    goAuthorize();
+  }
+}
 function goInvited() {
   if (loginStore.isLogined) {
     router.push('/settings/invitation');
@@ -166,8 +173,8 @@ function goInvited() {
             </el-table>
           </div>
         </div>
-        <div class="link" href="/models" @click="goSetNew">
-          立即创建项目<OIcon><IconArrowRight /></OIcon>
+        <div class="link" @click="goModels">
+          浏览模型并下载<OIcon><IconArrowRight /></OIcon>
         </div>
       </el-tab-pane>
       <el-tab-pane label="创建项目排行榜" name="third">
@@ -219,9 +226,9 @@ function goInvited() {
             </el-table>
           </div>
         </div>
-        <a class="link" href="/models">
-          浏览模型并下载<OIcon><IconArrowRight /></OIcon>
-        </a>
+        <div class="link" @click="goSetNew">
+          立即创建项目<OIcon><IconArrowRight /></OIcon>
+        </div>
       </el-tab-pane>
     </el-tabs>
   </div>

@@ -8,7 +8,8 @@ import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
-import homeBanner from '@/assets/imgs/home-banner.png';
+import homeBanner2 from '@/assets/imgs/home-banner2.png';
+// import homeBanner3 from '@/assets/imgs/home-banner3.png';
 import homePageImg from '@/assets/imgs/home-page.png';
 import digitRecognition from '@/assets/imgs/digit-recognition.png';
 import imageRcognition from '@/assets/imgs/image-rcognition.png';
@@ -21,7 +22,7 @@ import modelzoo1 from '@/assets/imgs/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/modelzoo2.png';
 import modelzoo3 from '@/assets/imgs/modelzoo3.png';
 import datasetPageImg from '@/assets/imgs/dataset-page.png';
-import slideImg from '@/assets/gifs/slide.gif';
+// import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
@@ -31,12 +32,12 @@ AOS.init();
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const router = useRouter();
-const hoemVideo =
-  'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
+// const hoemVideo =
+//   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 
 const homeIns = ref(null);
-const homeTitle = '昇思大模型体验平台';
-const homeDesc = 'The Best AI Platform For MindSpore';
+// const homeTitle = '昇思大模型体验平台';
+// const homeDesc = 'The Best AI Platform For MindSpore';
 const quickStartLabel = '快速开始';
 const i18n = {
   mouse: '滑动鼠标探索更多',
@@ -84,6 +85,14 @@ const i18n = {
 const loginStore = useLoginStore();
 const userInfo = useUserInfoStore();
 
+// const photosHeight = ref();
+// const photo = ref();
+// onMounted(() => {
+//   setTimeout(() => {
+//     photosHeight.value = photo.value.clientHeight + 'px';
+//   }, 50);
+// });
+
 function handleBtnClick() {
   const status = loginStore.loginStatus;
   if (status === LOGIN_STATUS.DOING) {
@@ -92,6 +101,16 @@ function handleBtnClick() {
     goAuthorize();
   } else {
     router.push(`/${userInfo.userName}`);
+  }
+}
+function goInvited() {
+  const status = loginStore.loginStatus;
+  if (status === LOGIN_STATUS.DOING) {
+    return;
+  } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
+    goAuthorize();
+  } else {
+    router.push(`/settings/invitation`);
   }
 }
 function handleBtnClick2() {
@@ -105,7 +124,7 @@ function handleBtnClick3() {
 <template>
   <div ref="homeIns" class="home">
     <!-- 首屏-->
-    <div class="home-portal">
+    <!-- <div class="home-portal">
       <video
         :poster="homeBanner"
         :src="hoemVideo"
@@ -157,7 +176,18 @@ function handleBtnClick3() {
           <p>{{ i18n.mouse }}</p>
         </div>
       </div>
-    </div>
+    </div> -->
+    <!-- 轮播图 -->
+    <el-carousel trigger="click" height="480px">
+      <el-carousel-item>
+        <div class="photo1 cursor" @click="goInvited"></div>
+      </el-carousel-item>
+      <el-carousel-item>
+        <div class="photo">
+          <img :src="homeBanner2" alt="" />
+        </div>
+      </el-carousel-item>
+    </el-carousel>
 
     <div class="home-content">
       <div class="wrapper">
@@ -442,108 +472,136 @@ function handleBtnClick3() {
 .home {
   position: relative;
   width: 100%;
-  .home-portal {
-    height: 100vh;
-    background-color: #0f1927;
+  // .home-portal {
+  //   height: 100vh;
+  //   background-color: #0f1927;
 
-    &-video {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      object-fit: cover;
-      height: 100vh;
-      pointer-events: none;
+  //   &-video {
+  //     position: absolute;
+  //     z-index: 1;
+  //     top: 0;
+  //     left: 0;
+  //     right: 0;
+  //     width: 100%;
+  //     object-fit: cover;
+  //     height: 100vh;
+  //     pointer-events: none;
+  //   }
+
+  //   &-banner {
+  //     position: absolute;
+  //     z-index: 0;
+  //     top: 0;
+  //     left: 0;
+  //     right: 0;
+  //     width: 100%;
+  //     object-fit: cover;
+  //     height: 100vh;
+  //     pointer-events: none;
+  //   }
+
+  //   &-mask {
+  //     position: absolute;
+  //     z-index: 2;
+  //     top: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     height: 100vh;
+  //     background-color: rgba($color: #000000, $alpha: 0.35);
+  //     pointer-events: none;
+  //   }
+
+  //   &-content {
+  //     width: 100%;
+  //     height: 100%;
+  //     position: relative;
+  //     display: flex;
+  //     flex-direction: column;
+  //     justify-content: center;
+  //     align-items: center;
+  //     font-size: 80px;
+  //     color: #ffffff;
+  //     overflow-y: hidden;
+  //     z-index: 3;
+
+  //     .portal-content-desc {
+  //       font-size: 44px;
+  //       font-weight: bold;
+  //       color: #ffffff;
+  //       line-height: 52px;
+  //     }
+
+  //     .portal-content-title {
+  //       height: 45px;
+  //       font-size: 32px;
+  //       font-weight: 400;
+  //       color: #ffffff;
+  //       line-height: 45px;
+  //       margin-top: 20px;
+  //     }
+
+  //     .portal-content-btn {
+  //       margin-top: 45px;
+  //     }
+
+  //     .watching-more {
+  //       position: absolute;
+  //       bottom: 62px;
+  //       z-index: 2;
+  //       display: flex;
+  //       flex-direction: column;
+  //       align-items: center;
+  //       img {
+  //         height: 40px;
+  //         object-fit: fill;
+  //       }
+  //       p {
+  //         color: #ffffff;
+  //         margin-top: 13px;
+  //         font-size: 14px;
+  //         font-weight: 400;
+  //         line-height: 22px;
+  //       }
+  //     }
+  //   }
+  // }
+  .el-carousel {
+    margin-top: 80px;
+    @media screen and (max-width: 1920px) {
+      img {
+        height: 480px;
+      }
     }
-
-    &-banner {
-      position: absolute;
-      z-index: 0;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      object-fit: cover;
-      height: 100vh;
-      pointer-events: none;
+    @media screen and (min-width: 1920px) {
+      img {
+        width: 100%;
+      }
     }
-
-    &-mask {
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background-color: rgba($color: #000000, $alpha: 0.35);
-      pointer-events: none;
-    }
-
-    &-content {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .photo {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
-      font-size: 80px;
-      color: #ffffff;
-      overflow-y: hidden;
-      z-index: 3;
-
-      .portal-content-desc {
-        font-size: 44px;
-        font-weight: bold;
-        color: #ffffff;
-        line-height: 52px;
-      }
-
-      .portal-content-title {
-        height: 45px;
-        font-size: 32px;
-        font-weight: 400;
-        color: #ffffff;
-        line-height: 45px;
-        margin-top: 20px;
-      }
-
-      .portal-content-btn {
-        margin-top: 45px;
-      }
-
-      .watching-more {
-        position: absolute;
-        bottom: 62px;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        img {
-          height: 40px;
-          object-fit: fill;
-        }
-        p {
-          color: #ffffff;
-          margin-top: 13px;
-          font-size: 14px;
-          font-weight: 400;
-          line-height: 22px;
-        }
-      }
+    }
+    .photo1 {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 480px;
+      background: url(@/assets/imgs/home-banner3.png);
+      background-size: cover;
+      background-position: 50%;
+    }
+    .cursor {
+      cursor: pointer;
     }
   }
 
   .home-content {
     width: 100%;
-
     background-color: #f5f6f8;
     .wrapper {
       max-width: 1472px;
       margin: 0 auto;
-      padding: 120px 16px 128px;
+      padding: 60px 16px 128px;
 
       .content-page {
         display: flex;

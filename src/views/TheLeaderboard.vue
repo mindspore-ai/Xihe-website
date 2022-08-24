@@ -79,9 +79,11 @@ function goInvited() {
         <div class="tips">
           <div class="tips-left">
             <img :src="ringImg" alt="" />
-            邀请新用户成功注册，邀请最多新用户的前三名老用户，赠送价值 5000
-            元、3000 元、1000 元京东卡
-            <!-- ，<a href="">查看活动详情</a> -->
+            邀请新用户成功注册可赢取丰厚大奖 ，<a
+              href="https://bbs.huaweicloud.com/forum/thread-0202967064771520008-1-1.html"
+              target="blank"
+              >点击查看活动详情</a
+            >
           </div>
           <div v-if="you_count1 !== null" class="tips-right">
             我的邀请人数：<span>{{ you_count1 }}</span>
@@ -128,8 +130,11 @@ function goInvited() {
         <div class="tips">
           <div class="tips-left">
             <img :src="ringImg" alt="" />
-            下载模型最多用户，前三位赠送价值 3000 元、2000 元、1000 元京东卡
-            <!-- ，<a href="">查看活动详情</a> -->
+            下载模型可赢取丰厚大奖，<a
+              href="https://bbs.huaweicloud.com/forum/thread-0202967064771520008-1-1.html"
+              target="blank"
+              >点击查看活动详情</a
+            >
           </div>
           <div v-if="you_count2 !== null" class="tips-right">
             我的下载数量：<span>{{ you_count2 }}</span>
@@ -181,8 +186,11 @@ function goInvited() {
         <div class="tips">
           <div class="tips-left">
             <img :src="ringImg" alt="" />
-            创建可运行项目最多的前三位赠送 2000 元、1000 元 、500 元的算力
-            <!-- ，<a href="">查看活动详情</a> -->
+            创建可运行项目赢取丰厚大奖 ，<a
+              href="https://bbs.huaweicloud.com/forum/thread-0202967064771520008-1-1.html"
+              target="blank"
+              >点击查看活动详情</a
+            >
           </div>
           <div v-if="you_count3 !== null" class="tips-right">
             我的创建数量：<span>{{ you_count3 }}</span>

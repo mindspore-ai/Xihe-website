@@ -9,18 +9,24 @@ import IconPoppver from '~icons/app/popover.svg';
 import IconGroup from '~icons/app/group.svg';
 import IconCancel from '~icons/app/cancel.svg';
 import IconDelivery from '~icons/app/delivery.svg';
+import warningImg from '@/assets/icons/warning.png';
 import IconTips from '~icons/app/tips.svg';
+import ODialog from '@/components/ODialog.vue';
+import OButton from '@/components/OButton.vue';
 
 import { ElMessage } from 'element-plus';
 
-import { createTeam } from '@/api/api-competition';
-import { getTeamInfo } from '@/api/api-competition';
+// import { createTeam } from '@/api/api-competition';
+import { revampTeam } from '@/api/api-competition';
+// import { getTeamInfo } from '@/api/api-competition';
 import { joinTeam } from '@/api/api-competition';
-import { getTeamInfoByName } from '@/api/api-competition';
+// import { getTeamInfoByName } from '@/api/api-competition';
+import { getTeamInfoById } from '@/api/api-competition';
+import { getGroupid } from '@/api/api-competition';
+import { deleteTeam } from '@/api/api-competition';
 
 const userInfoStore = useUserInfoStore();
 
-console.log(userInfoStore.userName);
 // import IconCancelBlue from '~icons/app/cancelBlue.svg';
 // import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
 const route = useRoute();
@@ -28,37 +34,39 @@ const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamName: '团队名',
+  newTeamName: '新团队名',
   createTeam: '创建团队',
+  editTeamName: '编辑团队名',
   joinTeam: '加入团队',
+  edit: '编辑',
+  delete: {
+    describe1: '确定删除这个团队吗？',
+    btnText: '删除',
+    cancel: '取消',
+    confirm: '确认',
+  },
 };
 const activeName = ref('first');
-const queryRef = ref(null);
-const is_individual = ref(true); //TODO:是否是个人参赛
+const queryRef1 = ref(null);
+const queryRef2 = ref(null);
+const queryRef3 = ref(null);
+let is_individual = ref(true); //TODO:是否是个人参赛
 const teamData = ref([]); //创建团队后的团队信息
+const teamMemberData = ref([]); //创建团队后的团队成员信息
+let groupId = ref(null);
+const showDel = ref(false);
+const showEdit = ref(false);
+const form3 = reactive({
+  teamName: '',
+});
+
+
 const form1 = reactive({
   teamName: '',
 });
 const form2 = reactive({
   teamName: '',
 });
-// 团队成员数据
-const tableData = [
-  {
-    date: '1',
-    name: 'Tom',
-    address: 'No. 189',
-  },
-  {
-    date: '2',
-    name: 'Tom',
-    address: 'No. 189',
-  },
-  {
-    date: '3',
-    name: 'Tomnnnnnnnnnnnnnnnnnn',
-    address: 'No. 189',
-  },
-];
 const rules1 = reactive({
   teamName: [
     {
@@ -89,41 +97,76 @@ const rules2 = reactive({
     },
   ],
 });
+const rules3 = reactive({
+  teamName: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+    {
+      // 只支持中英文，不超过20个字符
+      pattern: /^[a-zA-Z\u4e00-\u9fa5]{1,20}$/,
+      message: '团队名支持中英文，不超过20个字符',
+      trigger: 'blur',
+    },
+  ],
+});
 function handleClick() {
 }
-// 获取团队信息
-function getTeamData() {
-  let params = { id: route.params.id };
-  getTeamInfo(params).then((res) => {
-    console.log('www', res);
+//进入页面通过团队名获取团队信息,,,有错误
+/* function getTeamData() {
+  let params = { name: userInfoStore.userName };
+  getTeamInfoByName(params.name).then((res) => {
+    console.log('进入页面时的团队信息', res);
+    // 一进入页面初始值
+    is_individual.value = res.data[0].is_individual;
+
   });
 }
-getTeamData();
-// 创建团队
+getTeamData(); */
+
+// 进入页面获得is_individual值，判断是否个人参赛
+async function getIndividual() {
+  // 获得团队id，判断是否报名
+  let params = { id: route.params.id };
+  let res1 = await getGroupid(params.id);
+  if (res1.status === 200) {
+    groupId = res1.group_id;
+  }
+  // 通过团队id获得团队信息
+  let res2 = await getTeamInfoById(groupId);
+  if (res2.status === 200) {
+    // console.log('result', res2);
+    is_individual.value = res2.data.is_individual;
+    // console.log('初始请求', is_individual.value);
+  }
+}
+getIndividual();
+// 点击创建团队（修改团队）
 function fountTeam() {
   let params = {
     name: form1.teamName,
-    relate_competition: route.params.id,
     is_individual: false,
   };
-  createTeam(params).then((res) => {
-    // TODO:is_individual.value
-    // console.log('res.data', res.data);
-    teamData.value = res.data;
-    console.log('teamData.value: ', teamData.value);
-    is_individual.value = teamData.value.is_individual;
-  });
-}
-// 加入团队
-async function addTeam() {
-  // 通过团队名获取团队信息
-  let teamId = null;
-  await getTeamInfoByName({ name: form2.teamName }).then((res) => {
+  // 修改团队
+  revampTeam(params, groupId).then((res) => {
     if (res.status === 200) {
-      console.log('团队信息', res.data);
-      teamId = res.data[0].id;
+      teamData.value = res.data;
+      // console.log('创建团队后团队信息: ', teamData.value);
+      teamMemberData.value = res.data.members_order_list;
+      // console.log('团队成员信息: ', teamMemberData.value);
+      is_individual.value = false;
     }
   });
+}
+
+// 点击加入团队TODO:
+async function addTeam() {
+  // 删除原来的团队
+
+  const res = await deleteTeam(groupId);
+  console.log('res00000: ', res);
   // 加入团队
   if (teamId) {
     joinTeam({ id: teamId }).then((res) => {
@@ -131,7 +174,6 @@ async function addTeam() {
         // TODO:变成团队参赛
         console.log('加入团队', res);
       } else if (res.status === -1) {
-        console.log(1111111111);
         ElMessage({
           type: 'warning',
           message: '您已经在该团队中',
@@ -140,6 +182,87 @@ async function addTeam() {
     });
   } else {
     console.log(6666666);
+  }
+}
+
+// 删除成员TODO:
+function deleteMember(id) {
+  console.log('id: ', id);
+}
+// 删除团队,弹窗删除
+/* function handleTeam() {
+  console.log('teamData.value.id: ', teamData.value.id);
+  deleteTeam(teamData.value.id).then((res) => {
+    console.log('res: ', res);
+    if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '团队删除成功！',
+      });
+      router.push({
+        name: 'introduction',
+        params: {
+          id: route.params.id,//比赛id
+        },
+      });
+    }
+  });
+} */
+
+// 删除团队
+function confirmDel() {
+  deleteTeam(teamData.value.id).then((res) => {
+    console.log('res: ', res);
+    if (res.status === 200) {
+      showDel.value = false;
+      ElMessage({
+        type: 'success',
+        message: '团队删除成功！',
+      });
+      router.push({
+        name: 'introduction',
+        params: {
+          id: route.params.id, //比赛id
+        },
+      });
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+      });
+    }
+  });
+}
+function toggleDelDlg(flag) {
+  if (flag === undefined) {
+    showDel.value = !showDel.value;
+  } else {
+    showDel.value = flag;
+  }
+}
+
+// 编辑团队名
+function confirmEdit() {
+  let params = {
+    name: form3.teamName,
+  };
+  revampTeam(params, groupId).then((res) => {
+    if (res.status === 200) {
+      teamData.value = res.data;
+      showEdit.value = false;
+      form3.teamName = '';
+      ElMessage({
+        type: 'success',
+        message: '团队名修改成功！',
+      });
+    }
+  });
+}
+function toggleEditDlg(flag) {
+  if (flag === undefined) {
+    showEdit.value = !showEdit.value;
+  } else {
+    showEdit.value = flag;
   }
 }
 </script>
@@ -151,7 +274,7 @@ async function addTeam() {
     <el-tabs v-model="activeName" class="team-tabs" @tab-click="handleClick">
       <el-tab-pane label="创建团队" name="first">
         <div class="creating">
-          <el-form ref="queryRef" :model="form1" :rules="rules1">
+          <el-form ref="queryRef1" :model="form1" :rules="rules1">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.teamName }}</span>
               <el-popover
@@ -174,7 +297,6 @@ async function addTeam() {
                 placeholder="请输入团队名"
               ></el-input>
             </el-form-item>
-            <!-- TODO:逻辑交互未写 -->
             <o-button type="primary" @click="fountTeam">{{
               i18n.createTeam
             }}</o-button>
@@ -183,7 +305,7 @@ async function addTeam() {
       </el-tab-pane>
       <el-tab-pane label="加入团队" name="second">
         <div class="join">
-          <el-form ref="queryRef" :model="form2" :rules="rules2">
+          <el-form ref="queryRef2" :model="form2" :rules="rules2">
             <div class="requirement">
               <icon-necessary></icon-necessary><span>{{ i18n.teamName }}</span>
               <el-popover
@@ -206,7 +328,6 @@ async function addTeam() {
                 placeholder="请输入团队名"
               ></el-input>
             </el-form-item>
-            <!-- TODO:逻辑交互未写 -->
             <o-button type="primary" @click="addTeam">{{
               i18n.joinTeam
             }}</o-button>
@@ -224,30 +345,38 @@ async function addTeam() {
           >
           <span v-else>加入</span>的团队：{{ teamData.name }}
         </div>
-        <el-input readonly placeholder="一个团队最多有3名成员" />
+        <div class="tips">
+          <div class="tipsIcon">
+            <icon-tips></icon-tips>
+          </div>
+          <el-input readonly placeholder="一个团队最多有3名成员" />
+        </div>
       </div>
       <div class="header-button">
-        <OButton size="small">删除</OButton>
-        <OButton type="primary" size="small">编辑</OButton>
+        <OButton size="small" @click="showDel = true">{{
+          i18n.delete.btnText
+        }}</OButton>
+        <OButton type="primary" size="small" @click="showEdit = true">{{
+          i18n.edit
+        }}</OButton>
       </div>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="teamMemberData" style="width: 100%">
       <el-table-column prop="name" width="400">
         <template #header>
           <o-icon><icon-group></icon-group></o-icon>
           <span>团队成员</span>
         </template>
       </el-table-column>
-      <el-table-column prop="address" label="邮箱" />
+      <el-table-column prop="email" label="邮箱" />
       <el-table-column
         v-if="userInfoStore.userName === teamData.leader_name.name"
         prop="address"
         label="操作"
         width="300"
       >
-        <!-- TODO: -->
         <template #default="scope">
-          <div class="delete">
+          <div class="delete" @click="deleteMember(scope.row.id)">
             <o-icon><icon-cancel></icon-cancel></o-icon>
             <span>移除</span>
           </div>
@@ -259,6 +388,107 @@ async function addTeam() {
       </el-table-column>
     </el-table>
   </div>
+  <!-- 删除团队弹窗 -->
+  <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
+    <template #head>
+      <div
+        class="dlg-title"
+        :style="{ textAlign: 'center', paddingTop: '40px' }"
+      >
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 12px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      {{ i18n.delete.describe1 }}
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '56px',
+        }"
+      >
+        <o-button
+          :style="{ marginRight: '24px' }"
+          @click="toggleDelDlg(false)"
+          >{{ i18n.delete.cancel }}</o-button
+        >
+        <o-button type="primary" @click="confirmDel">{{
+          i18n.delete.confirm
+        }}</o-button>
+      </div>
+    </template>
+  </o-dialog>
+  <!-- 编辑团队名弹窗 -->
+  <!-- :show="showEdit"  -->
+  <o-dialog :show="showEdit" :close="false" @close-click="toggleEditDlg(false)">
+    <template #head>
+      <div
+        class="dlg-title"
+        :style="{ textAlign: 'center', paddingTop: '8px', color: '#000' }"
+      >
+        {{ i18n.editTeamName }}
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 12px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      <el-form
+        ref="queryRef3"
+        :style="{ display: 'flex', justifyContent: 'center', align: 'center' }"
+        :model="form3"
+        :rules="rules3"
+      >
+        <div
+          class="requirement"
+          :style="{ lineHeight: '36px', marginRight: '55px' }"
+        >
+          <icon-necessary></icon-necessary><span>{{ i18n.newTeamName }}</span>
+        </div>
+        <el-form-item :style="{ marginBottom: '0px' }" prop="teamName">
+          <el-input
+            v-model="form3.teamName"
+            placeholder="请输入新的团队名"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '24px',
+        }"
+      >
+        <o-button
+          :style="{ marginRight: '24px' }"
+          @click="toggleEditDlg(false)"
+          >{{ i18n.delete.cancel }}</o-button
+        >
+        <o-button type="primary" @click="confirmEdit">{{
+          i18n.delete.confirm
+        }}</o-button>
+      </div>
+    </template>
+  </o-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -334,6 +564,17 @@ async function addTeam() {
       align-items: center;
       .text {
         margin-right: 40px;
+      }
+      .tips {
+        display: flex;
+        align-items: center;
+        position: relative;
+        .tipsIcon {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          left: 16px;
+        }
       }
       :deep(.el-input) {
         width: 220px;

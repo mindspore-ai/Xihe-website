@@ -45,8 +45,8 @@ export function getFile(id) {
  * 获取用户所在团队id（是否报名）
  * @returns
  */
-export function getGroupid(params) {
-  const url = `/api/competitions/user_group_id/${params.id}`;
+export function getGroupid(id) {
+  const url = `/api/competitions/user_group_id/${id}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -72,6 +72,16 @@ export function createTeam(params) {
   });
 }
 /**
+ * 修改团队信息(点击创建团队，修改团队名)
+ * @returns
+ */
+export function revampTeam(params, id) {
+  const url = `/api/competitions/groups/${id}`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
  * 获取团队信息
  * @returns
  */
@@ -82,10 +92,17 @@ export function getTeamInfo(params) {
     return res.data;
   });
 }
-export function getTeamInfoByName(params) {
-  // console.log('params: ', params);
-  const url = `/api/competitions/groups/?name=${params.name}`;
-  return request.get(url, params, getHeaderConfig()).then((res) => {
+// 通过团队名获取团队信息
+export function getTeamInfoByName(name) {
+  const url = `/api/competitions/groups/?name=${name}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+// 通过比赛id获取团队信息
+export function getTeamInfoById(id) {
+  const url = `/api/competitions/groups/${id}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -97,6 +114,16 @@ export function joinTeam(params) {
   console.log('params: ', params);
   const url = `/api/competitions/join_group/${params.id}`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 删除团队
+ * @returns
+ */
+export function deleteTeam(id) {
+  const url = `/api/competitions/groups/${id}`;
+  return request.delete(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

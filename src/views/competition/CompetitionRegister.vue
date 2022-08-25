@@ -50,8 +50,8 @@ const active = ref(1);
 const textarea = ref('');
 const agree = ref(false);
 const input = ref('');
-const is_individual = ref(true); //是否个人参赛
-const teamData = ref([])
+// const is_individual = ref(true); //是否个人参赛
+const teamData = ref([]);
 const stepData = ref([
   { title: '登录/注册' },
   { title: '法律声明' },
@@ -104,8 +104,6 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      // 邮箱的正则
-
       pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
       message: '请输入正确的邮箱',
       trigger: 'blur',
@@ -138,6 +136,13 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
+  identityDetail2: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
 });
 // 获取城市数据
 function getArea() {
@@ -150,7 +155,7 @@ function getArea() {
         value: key,
       });
     }
-    console.log('province.value: ', province.value);
+    // console.log('province.value: ', province.value);
 
   });
 }
@@ -188,15 +193,22 @@ function saveInfo(formEl) {
       };
       createTeam(params2)
         .then((res) => {
-          console.log('新建团队信息（个人）: ', res);
-          teamData.value = res.data;
-          // is_individual.value = res.data.is_individual;
-
+          // console.log('新建团队信息（个人）: ', res);
+          if (res.status === 200) {
+            teamData.value = res.data;
+            // is_individual.value = res.data.is_individual;
+          }
         })
         .finally(() => {
+          // console.log('province: ', province.value);
+          province.value.some((val) => {
+            if (val.value === params1.loc_province) {
+              params1.loc_province = val.label;
+              return true;
+            }
+          });
+          // console.log('表单数据: ', params1);
           goCompetition(params1).then((res) => {
-            console.log('params1: ', params1);
-            // console.log('报名用户信息: ', res);
             if (res.status === 200) {
               active.value++;
               ElMessage({
@@ -212,12 +224,13 @@ function saveInfo(formEl) {
     }
   });
 }
+
 // 点击个人参赛进入比赛介绍页
 function goCompetitionIntro() {
   router.push({
     name: 'introduction',
     params: {
-      id: route.params.id,
+      id: route.params.id,//比赛id
     },
   });
 }
@@ -233,13 +246,22 @@ function goTeam() {
 
 function handleProvince(province) {
   citys.value = [];
-  Object.keys(areaData.value[province]).forEach((city) => {
-    citys.value.push({
-      label: areaData.value[province][city],
-      value: city,
-    });
-  });
-  query.loc_city = citys.value[0];
+  let obj = areaData.value[province]
+  for (let k in obj) {
+    citys.value.push(obj[k])
+  }
+
+  // Object.keys(areaData.value[province]).forEach((city) => {
+  //   console.log(city)
+  //   citys.value.push({
+  //     label: areaData.value[province][city],
+  //     value: city,
+  //   });
+  // });
+
+
+  // console.log('citys城市信息: ', citys);
+  query.loc_city = citys.value[0].label;
   // if (citys.value.length === 1) {
   // } else {
   //   query.loc_city = ''
@@ -275,7 +297,6 @@ function handleProvince(province) {
     <!-- 报名表 -->
     <div v-if="active === 2" class="application">
       <div class="application-title">
-        <!-- 报名表页面刷新有问题 -->
         <div class="text">{{ i18n.application }}</div>
         <el-input
           v-model="input"
@@ -301,7 +322,7 @@ function handleProvince(province) {
             <el-input
               v-model="query.username"
               placeholder="请输入用户名"
-              disabled
+              readonly
             ></el-input>
           </el-form-item>
           <!-- 选择城市TODO: :rules="-->
@@ -328,9 +349,9 @@ function handleProvince(province) {
               <el-select v-model="query.loc_city" placeholder="请选择城市">
                 <el-option
                   v-for="item in citys"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
                 </el-option>
               </el-select>
@@ -395,7 +416,10 @@ function handleProvince(province) {
                     ></el-input>
                   </div>
                 </el-form-item>
-                <el-form-item prop="identityDetail2">
+                <el-form-item
+                  prop="identityDetail2"
+                  :rules="rules.identityDetail2"
+                >
                   <div class="specialty">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -410,7 +434,10 @@ function handleProvince(province) {
               </div>
               <!-- 教师 -->
               <div v-show="role === 2" class="teacher">
-                <el-form-item prop="identityDetail1">
+                <el-form-item
+                  prop="identityDetail1"
+                  :rules="rules.identityDetail1"
+                >
                   <div class="organization">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -422,7 +449,10 @@ function handleProvince(province) {
                     ></el-input>
                   </div>
                 </el-form-item>
-                <el-form-item prop="identityDetail2">
+                <el-form-item
+                  prop="identityDetail2"
+                  :rules="rules.identityDetail2"
+                >
                   <div class="specialty">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -437,7 +467,10 @@ function handleProvince(province) {
               </div>
               <!-- 开发者 -->
               <div v-show="role === 3" class="developer">
-                <el-form-item prop="identityDetail1">
+                <el-form-item
+                  prop="identityDetail1"
+                  :rules="rules.identityDetail1"
+                >
                   <div class="organization">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -449,7 +482,10 @@ function handleProvince(province) {
                     ></el-input>
                   </div>
                 </el-form-item>
-                <el-form-item prop="identityDetail2">
+                <el-form-item
+                  prop="identityDetail2"
+                  :rules="rules.identityDetail2"
+                >
                   <div class="specialty">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -464,7 +500,10 @@ function handleProvince(province) {
               </div>
               <!-- 其他 -->
               <div v-show="role === 4" class="other">
-                <el-form-item prop="identityDetail1">
+                <el-form-item
+                  prop="identityDetail1"
+                  :rules="rules.identityDetail1"
+                >
                   <div class="desc">
                     <span class="requirement">
                       <icon-necessary></icon-necessary
@@ -612,20 +651,26 @@ function handleProvince(province) {
             .teacher,
             .developer,
             .other {
-              height: 137px;
+              // height: 137px;
               background: #f5f6f8;
               margin-top: 25px;
               padding: 24px;
               .el-form-item {
                 margin-bottom: 0px;
                 .organization {
-                  margin-bottom: 17px;
+                  margin-bottom: 28px;
                   display: flex;
                   justify-content: space-between;
                 }
                 .specialty {
+                  margin-bottom: 20px;
                   display: flex;
                   justify-content: space-between;
+                }
+                .el-form-item__error {
+                  position: absolute;
+                  left: calc(100% - 380px);
+                  top: 46px;
                 }
               }
             }

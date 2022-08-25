@@ -1,3 +1,6 @@
+// import { useLoginStore } from '@/stores';
+// import { LOGIN_STATUS } from '@/shared/login';
+
 export default [
   // 比赛
   {
@@ -56,6 +59,14 @@ export default [
             component: () => {
               return import('@/views/competition/CompetitionTeam.vue');
             },
+            /* beforeEnter: async () => {
+              const logingStore = useLoginStore();
+              if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+                return {
+                  name: '404',
+                };
+              }
+            }, */
           },
           // 排行榜
           {

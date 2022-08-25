@@ -70,16 +70,17 @@ onMounted(() => {
 });
 
 // 获取比赛详情
-function getDetailData() {
+async function getDetailData() {
   try {
-    getCompetition({ id: route.params.id }).then((res) => {
+    await getCompetition({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         competitionData.value = res.data;
         // console.log('res.data: ', res.data);
       }
     });
     // 获得团队id，判断是否报名
-    getGroupid({ id: route.params.id }).then((res) => {
+    let params = { id: route.params.id };
+    await getGroupid(params.id).then((res) => {
       if (res.status === 200) {
         groupId.value = res.group_id;
       }

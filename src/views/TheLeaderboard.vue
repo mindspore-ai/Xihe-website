@@ -61,6 +61,10 @@ function goInvited() {
     goAuthorize();
   }
 }
+function goUserPage(vel) {
+  // console.log(vel);
+  router.push(`/${vel}`);
+}
 </script>
 <template>
   <div class="modelzoo">
@@ -105,7 +109,10 @@ function goInvited() {
               </el-table-column>
               <el-table-column prop="username" label="用户名">
                 <template #default="scope">
-                  <div class="user">
+                  <div
+                    class="user"
+                    @click="goUserPage(tableData1[scope.$index].username)"
+                  >
                     <img :src="tableData1[scope.$index].avatar_url" alt="" />
                     <span>{{ tableData1[scope.$index].username }} </span>
                   </div>
@@ -156,7 +163,12 @@ function goInvited() {
               </el-table-column>
               <el-table-column prop="username" label="用户名">
                 <template #default="scope">
-                  <div class="user">
+                  <div
+                    class="user"
+                    @click="
+                      goUserPage(tableData2[scope.$index].user_detail.username)
+                    "
+                  >
                     <img
                       :src="tableData2[scope.$index].user_detail.avatar_url"
                       alt=""
@@ -212,7 +224,12 @@ function goInvited() {
               </el-table-column>
               <el-table-column prop="username" label="用户名">
                 <template #default="scope">
-                  <div class="user">
+                  <div
+                    class="user"
+                    @click="
+                      goUserPage(tableData3[scope.$index].user_detail.username)
+                    "
+                  >
                     <img
                       :src="tableData3[scope.$index].user_detail.avatar_url"
                       alt=""
@@ -405,6 +422,7 @@ function goInvited() {
               }
             }
             .user {
+              cursor: pointer;
               color: #555555;
               display: flex;
               align-items: center;

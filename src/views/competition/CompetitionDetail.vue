@@ -25,22 +25,21 @@ function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
   if (!userInfoStore.id) {
     goAuthorize();
-    // goAuthorize().then(() => {
-    //   router.push({
-    //     path: `/competition/222/1/introduction`,
-    //   });
-    // });
   } else {
     // show.value = false;
     router.push({
-      path: `/competition/${competitionData.value.id}/1/introduction`,
+      path: `/competition/${competitionData.value.id}/1/statement`,
     });
   }
 }
 watch(
   () => route.name,
   () => {
-    if (route.name === 'register') {
+    if (
+      route.name === 'statement' ||
+      route.name === 'application' ||
+      route.name === 'success'
+    ) {
       show.value = false;
     }
   },

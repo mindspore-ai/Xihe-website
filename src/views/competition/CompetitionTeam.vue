@@ -60,7 +60,6 @@ const form3 = reactive({
   teamName: '',
 });
 
-
 const form1 = reactive({
   teamName: '',
 });
@@ -112,8 +111,7 @@ const rules3 = reactive({
     },
   ],
 });
-function handleClick() {
-}
+function handleClick() {}
 //进入页面通过团队名获取团队信息,,,有错误
 /* function getTeamData() {
   let params = { name: userInfoStore.userName };

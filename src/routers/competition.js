@@ -97,18 +97,34 @@ export default [
       // 报名流程
       {
         path: '1',
-        name: 'process',
+        name: 'register',
         component: () => {
-          return import('@/views/competition/CompetitionProcess.vue'); //待修改
+          return import('@/views/competition/CompetitionRegister.vue'); //待修改
         },
-        redirect: { name: 'register' },
+        redirect: { name: 'statement' },
         children: [
-          // 法律声明，报名表，报名成功
+          // 法律声明
           {
-            path: 'introduction',
-            name: 'register',
+            path: 'statement',
+            name: 'statement',
             component: () => {
-              return import('@/views/competition/CompetitionRegister.vue');
+              return import('@/views/competition/CompetitionStatement.vue');
+            },
+          },
+          // 报名表
+          {
+            path: 'application',
+            name: 'application',
+            component: () => {
+              return import('@/views/competition/CompetitionApplication.vue');
+            },
+          },
+          // 报名成功
+          {
+            path: 'success',
+            name: 'success',
+            component: () => {
+              return import('@/views/competition/CompetitionSuccess.vue');
             },
           },
         ],

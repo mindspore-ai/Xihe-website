@@ -1,26 +1,80 @@
 <script setup>
+import { ref } from 'vue';
 import OButton from '@/components/OButton.vue';
+
+const textarea = ref('');
+const agree = ref(false);
+// const active = ref(1);
+const i18n = {
+  statement: '法律声明',
+  agree: '已阅读并同意该声明',
+  next: '下一步',
+};
+
+const emit = defineEmits(['handleStep']);
+function goNextStep() {
+  emit('handleStep');
+}
 </script>
 <template>
-  <div class="dataset-page">
-    <div class="header">
-      <div>datasetname</div>
-      <o-button size="small">下载数据集</o-button>
+  <!-- 法律声明 -->
+  <div class="statement">
+    <div class="statement-title">{{ i18n.statement }}</div>
+    <el-input id="txt" v-model="textarea" type="textarea" readonly />
+    <div class="isAgree">
+      <input v-model="agree" type="checkbox" />
+      <span @click="agree = !agree">{{ i18n.agree }}</span>
+    </div>
+    <div class="nextBtn">
+      <o-button v-if="!agree" disabled type="secondary">{{
+        i18n.next
+      }}</o-button>
+      <o-button v-else type="primary" @click="goNextStep">{{
+        i18n.next
+      }}</o-button>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.dataset-page {
-  .header {
-    margin-top: 36px;
-    font-size: 36px;
-    line-height: 48px;
-    display: flex;
-    justify-content: space-between;
-    .o-button {
-      margin-top: 8px;
+// 法律声明
+.statement {
+  &-title {
+    height: 32px;
+    line-height: 32px;
+    font-size: 24px;
+    color: #000000;
+    margin: 48px 0 24px;
+  }
+  :deep(.el-textarea) {
+    width: 100% !important;
+    height: 100%;
+    .el-textarea__inner {
+      min-height: 500px !important;
+      // min-height: 865px !important;
+      height: 100%;
     }
+  }
+  .isAgree {
+    margin: 25px 0 40px;
+    line-height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    input {
+      width: 16px;
+      height: 16px;
+    }
+    span {
+      font-size: 14px;
+      margin-left: 8px;
+      color: #000;
+      cursor: pointer;
+    }
+  }
+  .nextBtn {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

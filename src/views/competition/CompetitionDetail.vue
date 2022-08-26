@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -19,7 +19,7 @@ const state = ref('doing'); //比赛状态：will-do，doing，done
 const competitionData = ref([]);
 // 用户团队id
 const groupId = ref(null);
-const show = ref(true); //TODO:
+const show = ref(true);
 // 立即报名
 function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
@@ -74,7 +74,7 @@ async function getDetailData() {
     await getCompetition({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         competitionData.value = res.data;
-        // console.log('res.data: ', res.data);
+        console.log('比赛详情: ', competitionData.value);
       }
     });
     // 获得团队id，判断是否报名
@@ -82,6 +82,7 @@ async function getDetailData() {
     await getGroupid(params.id).then((res) => {
       if (res.status === 200) {
         groupId.value = res.group_id;
+        console.log('groupId.value: ', groupId.value);
       }
     });
   } catch (error) {
@@ -122,7 +123,7 @@ getDetailData();
               </div>
               <!-- <div class="card-body">{{ competitionData.description }}</div> -->
               <div class="card-body">
-                本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的架构迁移到鲲鹏架构的工程实践能力，积累的开发和人才数据将在脱敏后提供给学术机构和相关企业，实现产教共赢。
+                {{ competitionData.description }}
               </div>
               <div class="card-footer">举办方:绿色计算产业联盟</div>
             </div>

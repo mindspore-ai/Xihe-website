@@ -1,17 +1,23 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import OButton from '@/components/OButton.vue';
 import ONav from '@/components/ONav.vue';
-import IconArrowRight from '~icons/app/arrow-right.svg';
 
-import { ArrowRight } from '@element-plus/icons-vue';
 const route = useRoute();
 const router = useRouter();
 
 const activeNavItem = ref('');
-const state = ref('doing'); //比赛状态：will-do，doing，done
 
+// const props = defineProps({
+//   teamId: {
+//     type: String,
+//     default: () => {
+//       return '';
+//     },
+//   },
+// });
+
+// console.log(props.teamId);
 const navItems = [
   {
     id: 'introduction',

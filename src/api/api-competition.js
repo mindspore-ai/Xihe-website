@@ -86,7 +86,6 @@ export function revampTeam(params, id) {
  * @returns
  */
 export function getTeamInfo(params) {
-  // console.log('params: ', params);
   const url = `/api/competitions/groups/${params.id}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
@@ -111,9 +110,8 @@ export function getTeamInfoById(id) {
  * @returns
  */
 export function joinTeam(params) {
-  console.log('params: ', params);
   const url = `/api/competitions/join_group/${params.id}`;
-  return request.post(url, getHeaderConfig()).then((res) => {
+  return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -128,14 +126,40 @@ export function deleteTeam(id) {
   });
 }
 /**
+ * 退出团队
+ * @returns
+ */
+export function quitTeam(params) {
+  const url = `/api/competitions/leave_group/${params.id}`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 移除团队成员
+ * @returns
+ */
+export function removeMember(params, id) {
+  const url = `/api/competitions/groups/${id}`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 移交队长
+ * @returns
+ */
+export function transferCaptain(params) {
+  const url = `/api/competitions/groups/${params.id}`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
  * 获取城市数据
  * @returns
  */
 export function getAreaData() {
-  // const url = `/api/competitions/user_competition_info/`;
-  // return request.post(url, params, getHeaderConfig()).then((res) => {
-  //   return res.data;
-  // });
   return request.get('/public/data.json').then((res) => {
     return res;
   });

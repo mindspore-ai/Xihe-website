@@ -66,11 +66,6 @@ watch(
   :deep(.el-steps) {
     padding-right: 80px;
     .is-center {
-      // .el-step__line {
-      //   border-top: 2px dashed #ccd1de;
-      //   height: 0;
-      //   background-color: transparent;
-      // }
       &:nth-child(3) {
         .el-step__head {
           .el-step__line {
@@ -81,9 +76,6 @@ watch(
         }
       }
       .el-step__head {
-        // background-color: red !important;
-        // .is-finish {
-        // }
         .el-step__line {
           border-top: 2px dashed #ccd1de;
           height: 0;

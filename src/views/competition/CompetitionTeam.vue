@@ -4,6 +4,20 @@ import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore } from '@/stores';
 
+// import { createTeam } from '@/api/api-competition';
+import { revampTeam } from '@/api/api-competition';
+// import { getTeamInfo } from '@/api/api-competition';
+import { joinTeam } from '@/api/api-competition';
+import { getTeamInfoByName } from '@/api/api-competition';
+import { getTeamInfoById } from '@/api/api-competition';
+import { getGroupid } from '@/api/api-competition';
+import { deleteTeam } from '@/api/api-competition';
+import { quitTeam } from '@/api/api-competition';
+import { removeMember } from '@/api/api-competition';
+import { transferCaptain } from '@/api/api-competition';
+
+import { ElMessage } from 'element-plus';
+
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 import IconGroup from '~icons/app/group.svg';
@@ -14,19 +28,7 @@ import IconTips from '~icons/app/tips.svg';
 import ODialog from '@/components/ODialog.vue';
 import OButton from '@/components/OButton.vue';
 
-import { ElMessage } from 'element-plus';
-
-// import { createTeam } from '@/api/api-competition';
-import { revampTeam } from '@/api/api-competition';
-// import { getTeamInfo } from '@/api/api-competition';
-import { joinTeam } from '@/api/api-competition';
-import { getTeamInfoByName } from '@/api/api-competition';
-import { getTeamInfoById } from '@/api/api-competition';
-import { getGroupid } from '@/api/api-competition';
-import { deleteTeam } from '@/api/api-competition';
-
 const userInfoStore = useUserInfoStore();
-
 // import IconCancelBlue from '~icons/app/cancelBlue.svg';
 // import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
 const route = useRoute();
@@ -38,6 +40,7 @@ const i18n = {
   createTeam: '创建团队',
   editTeamName: '编辑团队名',
   joinTeam: '加入团队',
+  quit: '退出',
   edit: '编辑',
   delete: {
     describe1: '确定删除这个团队吗？',
@@ -111,34 +114,23 @@ const rules3 = reactive({
   ],
 });
 function handleClick() { }
-//进入页面通过团队名获取团队信息,,,有错误
-/* function getTeamData() {
-  let params = { name: userInfoStore.userName };
-  getTeamInfoByName(params.name).then((res) => {
-    console.log('进入页面时的团队信息', res);
-    // 一进入页面初始值
-    is_individual.value = res.data[0].is_individual;
-
-  });
-}
-getTeamData(); */
-
+// const a = inject('groupId');
+// console.log('a: ', a);
 // 进入页面获得is_individual值，判断是否个人参赛
 async function getIndividual() {
   // 获得团队id，判断是否报名
   let params = { id: route.params.id };
   let res1 = await getGroupid(params.id);
   if (res1.status === 200) {
+    // TODO:可接收父组件的groupId值
     groupId = res1.group_id;
   }
   // 通过团队id获得团队信息
   let res2 = await getTeamInfoById(groupId);
   if (res2.status === 200) {
-    // console.log('result', res2);
     teamData.value = res2.data;
     teamMemberData.value = res2.data.members_order_list;
     is_individual.value = res2.data.is_individual;
-    // console.log('初始请求', is_individual.value);
   }
 }
 getIndividual();
@@ -152,73 +144,97 @@ function fountTeam() {
   revampTeam(params, groupId).then((res) => {
     if (res.status === 200) {
       teamData.value = res.data;
-      // console.log('创建团队后团队信息: ', teamData.value);
       teamMemberData.value = res.data.members_order_list;
-      // console.log('团队成员信息: ', teamMemberData.value);
       is_individual.value = false;
     }
   });
 }
 
-// 点击加入团队TODO:
+// 点击加入团队
 async function addTeam() {
   // 删除原来的团队
-  const res = await deleteTeam(groupId);
-  console.log('res00000: ', res);
+  await deleteTeam(groupId);
   // 通过团队名获取团队信息和团队id
   let params = { name: form2.teamName };
-  getTeamInfoByName(params.name).then((res) => {
-    console.log('加入团队后的团队信息', res);
-    teamData.value = res.data[0];
-    teamMemberData.value = res.data[0].members_order_list;
-    groupId = res.data[0].id;
-    is_individual.value = res.data[0].is_individual; //false
-  });
+  let res2 = await getTeamInfoByName(params.name);
+  console.log('通过团队名获取的团队信息: ', res2);
+  if (res2.status === 200) {
+    teamData.value = res2.data[0];
+    teamMemberData.value = res2.data[0].members_order_list;
+    groupId = res2.data[0].id;
+  } else {
+    // TODO:
+    console.log('团队名不存在');
+  }
   // 加入团队
-  if (teamData.value.length) {
+  if (teamData.value) {
     joinTeam({ id: groupId }).then((res) => {
       if (res.status === 200) {
-        // TODO:变成团队参赛
-        console.log('加入团队成功', res);
-      } else if (res.status === -1) {
+        // is_individual.value = false;
+        window.location.reload();
         ElMessage({
-          type: 'warning',
-          message: '该团队不存在',
+          type: 'success',
+          message: '加入团队成功!',
         });
       }
     });
-  } else {
-    console.log(6666666);
   }
 }
-// 删除成员TODO:
-function deleteMember(id) {
-  console.log('id: ', id);
+// 移除成员
+function deleteMember(memberId) {
+  const memberIds = teamMemberData.value.map((item) => {
+    return item.id;
+  });
+  let index = memberIds.indexOf(memberId);
+  memberIds.splice(index, 1);
+  let params = { members: memberIds };
+  removeMember(params, teamData.value.id).then((res) => {
+    teamMemberData.value = res.data.members_order_list;
+    ElMessage({
+      type: 'success',
+      message: '移除成功！',
+    });
+  });
 }
-// 删除团队,弹窗删除
-/* function handleTeam() {
-  console.log('teamData.value.id: ', teamData.value.id);
-  deleteTeam(teamData.value.id).then((res) => {
-    console.log('res: ', res);
+
+// 移交队长
+function handleCaptain(memberId) {
+  let params = {
+    id: teamData.value.id,
+    leader: memberId,
+  };
+  transferCaptain(params).then((res) => {
+    teamData.value = res.data;
+    teamMemberData.value = res.data.members_order_list;
+    ElMessage({
+      type: 'success',
+      message: '移交队长成功！',
+    });
+  });
+}
+
+// 退出团队
+function handleQuitTeam(groupId) {
+  let params = { id: groupId };
+  quitTeam(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
-        message: '团队删除成功！',
+        message: '退出团队成功！',
       });
       router.push({
         name: 'introduction',
         params: {
-          id: route.params.id,//比赛id
+          id: route.params.id,
         },
       });
     }
   });
-} */
+}
 
 // 删除团队
 function confirmDel() {
   deleteTeam(teamData.value.id).then((res) => {
-    console.log('res: ', res);
     if (res.status === 200) {
       showDel.value = false;
       ElMessage({
@@ -346,22 +362,39 @@ function toggleEditDlg(flag) {
     <div class="header">
       <div class="header-title">
         <div class="text">
-          我<span>创建</span> <span>加入</span>的团队：{{ teamData.name }}
+          我<span v-if="userInfoStore.userName == teamData.leader_name.name"
+            >创建</span
+          >
+          <span v-else>加入</span>的团队：{{ teamData.name }}
         </div>
-        <div class="tips">
+        <div
+          v-if="userInfoStore.userName == teamData.leader_name.name"
+          class="tips"
+        >
           <div class="tipsIcon">
             <icon-tips></icon-tips>
           </div>
           <el-input readonly placeholder="一个团队最多有3名成员" />
         </div>
       </div>
-      <div class="header-button">
-        <OButton size="small" @click="showDel = true">{{
+      <div
+        v-if="userInfoStore.userName == teamData.leader_name.name"
+        class="header-button"
+      >
+        <OButton class="delete" size="small" @click="showDel = true">{{
           i18n.delete.btnText
         }}</OButton>
         <OButton type="primary" size="small" @click="showEdit = true">{{
           i18n.edit
         }}</OButton>
+      </div>
+      <div v-else class="quit-button">
+        <OButton
+          type="primary"
+          size="small"
+          @click="handleQuitTeam(teamData.id)"
+          >{{ i18n.quit }}</OButton
+        >
       </div>
     </div>
     <el-table :data="teamMemberData" style="width: 100%">
@@ -370,17 +403,35 @@ function toggleEditDlg(flag) {
           <o-icon><icon-group></icon-group></o-icon>
           <span>团队成员</span>
         </template>
+        <template #default="scope">
+          <div style="display: flex; align-items: center">
+            <span>{{ scope.row.name }}</span>
+            <span v-if="teamData.leader_name.name === scope.row.name"
+              >(队长)</span
+            >
+          </div>
+        </template>
       </el-table-column>
       <el-table-column prop="email" label="邮箱" />
-      <el-table-column prop="address" label="操作" width="300">
+      <el-table-column
+        v-if="userInfoStore.userName == teamData.leader_name.name"
+        prop="address"
+        label="操作"
+        width="300"
+      >
         <template #default="scope">
-          <div class="delete" @click="deleteMember(scope.row.id)">
-            <o-icon><icon-cancel></icon-cancel></o-icon>
-            <span>移除</span>
-          </div>
-          <div class="delivery">
-            <o-icon><icon-delivery></icon-delivery></o-icon>
-            <span>移交队长</span>
+          <div
+            v-if="teamData.leader_name.name !== scope.row.name"
+            class="operate"
+          >
+            <div class="delete" @click="deleteMember(scope.row.id)">
+              <o-icon><icon-cancel></icon-cancel></o-icon>
+              <span>移除</span>
+            </div>
+            <div class="delivery" @click="handleCaptain(scope.row.id)">
+              <o-icon><icon-delivery></icon-delivery></o-icon>
+              <span>移交队长</span>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -583,10 +634,10 @@ function toggleEditDlg(flag) {
       }
     }
     &-button {
-      .o-button {
-        &:last-child {
-          margin-left: 10px;
-        }
+      .delete {
+        // &:first-child {
+        margin-right: 10px;
+        // }
       }
       // width: 400px;
       // display: flex;
@@ -631,25 +682,29 @@ function toggleEditDlg(flag) {
           }
           .cell {
             padding: 16px 24px;
-            .delete {
+            .operate {
               display: flex;
               align-items: center;
-              cursor: pointer;
-              margin-right: 24px;
-              .o-icon {
-                display: inline-block;
+              .delete {
                 display: flex;
                 align-items: center;
+                cursor: pointer;
+                margin-right: 24px;
+                .o-icon {
+                  display: inline-block;
+                  display: flex;
+                  align-items: center;
+                }
               }
-            }
-            .delivery {
-              display: flex;
-              align-items: center;
-              cursor: pointer;
-              .o-icon {
-                display: inline-block;
+              .delivery {
                 display: flex;
                 align-items: center;
+                cursor: pointer;
+                .o-icon {
+                  display: inline-block;
+                  display: flex;
+                  align-items: center;
+                }
               }
             }
           }

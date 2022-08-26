@@ -163,7 +163,6 @@ const emit = defineEmits(['handleStep']);
 function saveInfo(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
-    console.log('valid: ', valid);
     if (valid) {
       // TODO:提交报名表
       // 表单的数据
@@ -186,7 +185,6 @@ function saveInfo(formEl) {
         relate_competition: route.params.id,
         is_individual: true,
       };
-      console.log('params1', params1);
       createTeam(params2)
         .then((res) => {
           // console.log('新建团队信息（个人）: ', res);

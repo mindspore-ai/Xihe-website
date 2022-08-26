@@ -17,7 +17,6 @@ const stepData = ref([
 // 处理跳转法律声明，报名表，报名成功页
 function handleNextStep() {
   active.value++;
-  // console.log('active.value: ', active.value);
   if (active.value === 1) {
     router.push({
       name: 'statement',

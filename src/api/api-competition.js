@@ -86,7 +86,7 @@ export function revampTeam(params, id) {
  * @returns
  */
 export function getTeamInfo(params) {
-  console.log('params: ', params);
+  // console.log('params: ', params);
   const url = `/api/competitions/groups/${params.id}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
@@ -113,7 +113,7 @@ export function getTeamInfoById(id) {
 export function joinTeam(params) {
   console.log('params: ', params);
   const url = `/api/competitions/join_group/${params.id}`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
+  return request.post(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

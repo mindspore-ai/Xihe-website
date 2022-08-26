@@ -20,7 +20,7 @@ import { ElMessage } from 'element-plus';
 import { revampTeam } from '@/api/api-competition';
 // import { getTeamInfo } from '@/api/api-competition';
 import { joinTeam } from '@/api/api-competition';
-// import { getTeamInfoByName } from '@/api/api-competition';
+import { getTeamInfoByName } from '@/api/api-competition';
 import { getTeamInfoById } from '@/api/api-competition';
 import { getGroupid } from '@/api/api-competition';
 import { deleteTeam } from '@/api/api-competition';
@@ -50,20 +50,19 @@ const activeName = ref('first');
 const queryRef1 = ref(null);
 const queryRef2 = ref(null);
 const queryRef3 = ref(null);
-let is_individual = ref(true); //TODO:是否是个人参赛
 const teamData = ref([]); //创建团队后的团队信息
 const teamMemberData = ref([]); //创建团队后的团队成员信息
-let groupId = ref(null);
 const showDel = ref(false);
 const showEdit = ref(false);
-const form3 = reactive({
-  teamName: '',
-});
-
+const is_individual = ref(true); //TODO:是否是个人参赛
+let groupId = ref(null);
 const form1 = reactive({
   teamName: '',
 });
 const form2 = reactive({
+  teamName: '',
+});
+const form3 = reactive({
   teamName: '',
 });
 const rules1 = reactive({
@@ -111,7 +110,7 @@ const rules3 = reactive({
     },
   ],
 });
-function handleClick() {}
+function handleClick() { }
 //进入页面通过团队名获取团队信息,,,有错误
 /* function getTeamData() {
   let params = { name: userInfoStore.userName };
@@ -136,6 +135,8 @@ async function getIndividual() {
   let res2 = await getTeamInfoById(groupId);
   if (res2.status === 200) {
     // console.log('result', res2);
+    teamData.value = res2.data;
+    teamMemberData.value = res2.data.members_order_list;
     is_individual.value = res2.data.is_individual;
     // console.log('初始请求', is_individual.value);
   }
@@ -162,19 +163,27 @@ function fountTeam() {
 // 点击加入团队TODO:
 async function addTeam() {
   // 删除原来的团队
-
   const res = await deleteTeam(groupId);
   console.log('res00000: ', res);
+  // 通过团队名获取团队信息和团队id
+  let params = { name: form2.teamName };
+  getTeamInfoByName(params.name).then((res) => {
+    console.log('加入团队后的团队信息', res);
+    teamData.value = res.data[0];
+    teamMemberData.value = res.data[0].members_order_list;
+    groupId = res.data[0].id;
+    is_individual.value = res.data[0].is_individual; //false
+  });
   // 加入团队
-  if (teamId) {
-    joinTeam({ id: teamId }).then((res) => {
+  if (teamData.value.length) {
+    joinTeam({ id: groupId }).then((res) => {
       if (res.status === 200) {
         // TODO:变成团队参赛
-        console.log('加入团队', res);
+        console.log('加入团队成功', res);
       } else if (res.status === -1) {
         ElMessage({
           type: 'warning',
-          message: '您已经在该团队中',
+          message: '该团队不存在',
         });
       }
     });
@@ -182,7 +191,6 @@ async function addTeam() {
     console.log(6666666);
   }
 }
-
 // 删除成员TODO:
 function deleteMember(id) {
   console.log('id: ', id);
@@ -338,10 +346,7 @@ function toggleEditDlg(flag) {
     <div class="header">
       <div class="header-title">
         <div class="text">
-          我<span v-if="userInfoStore.userName === teamData.leader_name.name"
-            >创建</span
-          >
-          <span v-else>加入</span>的团队：{{ teamData.name }}
+          我<span>创建</span> <span>加入</span>的团队：{{ teamData.name }}
         </div>
         <div class="tips">
           <div class="tipsIcon">
@@ -367,12 +372,7 @@ function toggleEditDlg(flag) {
         </template>
       </el-table-column>
       <el-table-column prop="email" label="邮箱" />
-      <el-table-column
-        v-if="userInfoStore.userName === teamData.leader_name.name"
-        prop="address"
-        label="操作"
-        width="300"
-      >
+      <el-table-column prop="address" label="操作" width="300">
         <template #default="scope">
           <div class="delete" @click="deleteMember(scope.row.id)">
             <o-icon><icon-cancel></icon-cancel></o-icon>

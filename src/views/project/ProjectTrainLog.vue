@@ -187,6 +187,7 @@ const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
+  console.log('connected');
   socket.send(
     JSON.stringify({
       pk: detailData.value.id,
@@ -196,8 +197,13 @@ socket.onopen = function () {
   );
 };
 
+socket.onclose = function () {
+  console.log('closed');
+};
+
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
+  console.log(event);
   if (event.data.substring(0, 3) === 'log') {
     form.desc = event.data.substring(4);
   } else {

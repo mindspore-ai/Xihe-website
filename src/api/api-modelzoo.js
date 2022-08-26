@@ -36,7 +36,7 @@ export function uploadModelzooPic(params) {
 export function getInferencePicture(params) {
   const url = `/api/foundation/taichu_opt`;
   return request
-    .post(url, params, getHeaderConfig())
+    .put(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })

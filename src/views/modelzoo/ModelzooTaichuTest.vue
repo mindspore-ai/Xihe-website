@@ -3,17 +3,13 @@ import { request } from '@/shared/axios';
 import { ref, onMounted } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
-import IconDownload from '~icons/app/download';
+// import IconDownload from '~icons/app/download';
 import OButton from '@/components/OButton.vue';
 
 import { uploadModelzooPic } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
 // import { ElMessage } from 'element-plus';
-
-// const inferUrl = ref(
-//   'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg'
-// );
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -47,12 +43,21 @@ const imgLists = [
   //   url: '/imgs/taichu-example-7.png',
   // },
 ];
+
+// const exampleList = reactive([
+//   { name: '一直可爱的猫坐在草坪上', isSelected: false },
+//   { name: '两个女生', isSelected: false },
+//   { name: '一架飞机', isSelected: false },
+//   { name: '一俩货车行驶在铁路上', isSelected: false },
+//   { name: '湖边落日', isSelected: false },
+//   { name: '汉堡和薯条', isSelected: false },
+// ]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
-const loading1 = ref(false);
-const inferenceText = ref('');
-const inputValue = ref(null);
+// const loading1 = ref(false);
+// const inferenceText = ref('');
+// const inputValue = ref(null);
 
 const getImage = (name) => {
   return new URL(`../../assets/imgs/taichu-test/${name}.jpg`, import.meta.url)
@@ -127,48 +132,73 @@ function customUpload() {
   document.querySelector('.caption-bottom-left .el-upload__input').click();
 }
 
-function resetInferText() {
-  inferenceText.value = '';
-  inputValue.value.focus();
-}
+// function resetInferText() {
+//   inferenceText.value = '';
+//   exampleList.forEach((item) => {
+//     item.isSelected = false;
+//   });
+//   inputValue.value.focus();
+// }
 
-function startRatiocnate() {
-  if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
-    console.log('中文');
-  } else {
-    ElMessage({
-      type: 'warning',
-      message: '请输入中文描述',
-    });
-  }
-}
+// function startRatiocnate() {
+//   if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
+//     console.log('中文');
+//     getInferencePicture({ content: inferenceText.value }).then((res) => {
+//       console.log(res);
+//     });
+//   } else {
+//     ElMessage({
+//       type: 'warning',
+//       message: '请输入中文描述',
+//     });
+//   }
+// }
 
-function downLoadPicture() {
-  let x = new XMLHttpRequest();
-  x.open(
-    'GET',
-    'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
-    true
-  );
-  x.responseType = 'blob';
-  x.onload = function () {
-    console.log(x.response);
-    const blobs = new Blob([x.response], { type: 'image/jpg' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'infer.jpg';
-    a.click();
-  };
-  x.send();
-}
+// function selectTag(val) {
+//   val.isSelected = !val.isSelected;
+//   exampleList.forEach((item) => {
+//     item.isSelected = false;
+//     val.isSelected = true;
+//     inferenceText.value = val.name;
+//   });
+// }
+
+// function handleTextChange() {
+//   exampleList.forEach((item) => {
+//     if (item.name === inferenceText.value) {
+//       item.isSelected = true;
+//     } else {
+//       item.isSelected = false;
+//     }
+//   });
+// }
+
+// function downLoadPicture() {
+//   let x = new XMLHttpRequest();
+//   x.open(
+//     'GET',
+//     'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
+//     true
+//   );
+//   x.responseType = 'blob';
+//   x.onload = function () {
+//     console.log(x.response);
+//     const blobs = new Blob([x.response], { type: 'image/jpg' });
+//     let url = window.URL.createObjectURL(blobs);
+//     let a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'infer.jpg';
+//     a.click();
+//   };
+//   x.send();
+// }
 
 onMounted(() => {});
 </script>
 <template>
   <div class="model-page">
     <!-- 以文生图 -->
-    <div class="text-to-img">
+    <!-- <div class="text-to-img">
       <div class="title">
         <span> 以文生图（Text-To-Image）</span><span class="new-tag">new</span>
       </div>
@@ -186,11 +216,26 @@ onMounted(() => {});
             :show-word-limit="true"
             placeholder="请用中文输入描述内容"
             class="text-area"
+            @input="handleTextChange"
           >
           </el-input>
+          <div class="example">
+            <p class="title">选择样例</p>
+            <div class="tags-box">
+              <p
+                v-for="item in exampleList"
+                :key="item.name"
+                :class="item.isSelected ? 'active' : ''"
+                @click="selectTag(item)"
+              >
+                {{ item.name }}
+              </p>
+            </div>
+          </div>
           <div class="btn-box">
-            <o-button @click="resetInferText">重新输入</o-button>
+            <o-button size="medium" @click="resetInferText">重新输入</o-button>
             <o-button
+              size="medium"
               type="primary"
               class="infer-button"
               @click="startRatiocnate"
@@ -207,14 +252,14 @@ onMounted(() => {});
               src="@/assets/gifs/loading.gif"
               alt=""
             />
-            <!-- <img class="result-img" :src="inferUrl" /> -->
+            <img class="result-img" :src="inferUrl" />
             <a @click="downLoadPicture">
               <o-icon><icon-download></icon-download></o-icon
             ></a>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Image Caption -->
     <div class="caption-top">
       <div>
@@ -265,7 +310,6 @@ onMounted(() => {});
             :class="item.id === activeIndex ? 'active' : ''"
             @click="selectImage(item.url, index)"
           >
-            <!-- <div class="modal"></div> -->
             <img draggable="false" :src="getImage(item.url)" />
           </div>
           <div class="img-list-item custom" @click="customUpload">
@@ -326,7 +370,7 @@ onMounted(() => {});
     display: flex;
     &-left {
       width: 464px;
-      height: 467px;
+      // height: 467px;
       background: #ffffff;
       margin-right: 25px;
       padding: 24px 24px 32px;
@@ -339,14 +383,45 @@ onMounted(() => {});
         line-height: 25px;
       }
       .text-area {
-        flex: 1;
-        margin: 28px 0;
+        height: 156px;
+        margin-top: 16px;
         :deep(.el-input__count) {
           right: -5px;
         }
         :deep(.el-textarea__inner) {
           height: 100%;
           width: 416px;
+        }
+      }
+      .example {
+        flex: 1;
+        padding: 28px 0;
+        .title {
+          font-size: 14px;
+          font-weight: 400;
+          color: #555555;
+          line-height: 20px;
+        }
+        .tags-box {
+          display: flex;
+          flex-wrap: wrap;
+          p {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: 1px solid #dbedff;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #000;
+            line-height: 17px;
+            margin-right: 16px;
+            cursor: pointer;
+            &:hover {
+              color: #0d8dff;
+            }
+          }
+          .active {
+            color: #0d8dff;
+          }
         }
       }
       .btn-box {
@@ -364,7 +439,7 @@ onMounted(() => {});
       padding: 24px;
       display: flex;
       flex-direction: column;
-      height: 467px;
+      // height: 467px;
       &-title {
         font-size: 18px;
         font-weight: 400;

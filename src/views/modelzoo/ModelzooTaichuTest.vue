@@ -1,12 +1,12 @@
 <script setup>
 import { request } from '@/shared/axios';
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
-import IconDownload from '~icons/app/download';
+// import IconDownload from '~icons/app/download';
 import OButton from '@/components/OButton.vue';
 
-import { uploadModelzooPic, getInferencePicture } from '@/api/api-modelzoo';
+import { uploadModelzooPic } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
 // import { ElMessage } from 'element-plus';
@@ -44,20 +44,20 @@ const imgLists = [
   // },
 ];
 
-const exampleList = reactive([
-  { name: '一直可爱的猫坐在草坪上', isSelected: false },
-  { name: '两个女生', isSelected: false },
-  { name: '一架飞机', isSelected: false },
-  { name: '一俩货车行驶在铁路上', isSelected: false },
-  { name: '湖边落日', isSelected: false },
-  { name: '汉堡和薯条', isSelected: false },
-]);
+// const exampleList = reactive([
+//   { name: '一直可爱的猫坐在草坪上', isSelected: false },
+//   { name: '两个女生', isSelected: false },
+//   { name: '一架飞机', isSelected: false },
+//   { name: '一俩货车行驶在铁路上', isSelected: false },
+//   { name: '湖边落日', isSelected: false },
+//   { name: '汉堡和薯条', isSelected: false },
+// ]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
-const loading1 = ref(false);
-const inferenceText = ref('');
-const inputValue = ref(null);
+// const loading1 = ref(false);
+// const inferenceText = ref('');
+// const inputValue = ref(null);
 
 const getImage = (name) => {
   return new URL(`../../assets/imgs/taichu-test/${name}.jpg`, import.meta.url)
@@ -132,73 +132,73 @@ function customUpload() {
   document.querySelector('.caption-bottom-left .el-upload__input').click();
 }
 
-function resetInferText() {
-  inferenceText.value = '';
-  exampleList.forEach((item) => {
-    item.isSelected = false;
-  });
-  inputValue.value.focus();
-}
+// function resetInferText() {
+//   inferenceText.value = '';
+//   exampleList.forEach((item) => {
+//     item.isSelected = false;
+//   });
+//   inputValue.value.focus();
+// }
 
-function startRatiocnate() {
-  if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
-    console.log('中文');
-    getInferencePicture({ content: inferenceText.value }).then((res) => {
-      console.log(res);
-    });
-  } else {
-    ElMessage({
-      type: 'warning',
-      message: '请输入中文描述',
-    });
-  }
-}
+// function startRatiocnate() {
+//   if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
+//     console.log('中文');
+//     getInferencePicture({ content: inferenceText.value }).then((res) => {
+//       console.log(res);
+//     });
+//   } else {
+//     ElMessage({
+//       type: 'warning',
+//       message: '请输入中文描述',
+//     });
+//   }
+// }
 
-function selectTag(val) {
-  val.isSelected = !val.isSelected;
-  exampleList.forEach((item) => {
-    item.isSelected = false;
-    val.isSelected = true;
-    inferenceText.value = val.name;
-  });
-}
+// function selectTag(val) {
+//   val.isSelected = !val.isSelected;
+//   exampleList.forEach((item) => {
+//     item.isSelected = false;
+//     val.isSelected = true;
+//     inferenceText.value = val.name;
+//   });
+// }
 
-function handleTextChange() {
-  exampleList.forEach((item) => {
-    if (item.name === inferenceText.value) {
-      item.isSelected = true;
-    } else {
-      item.isSelected = false;
-    }
-  });
-}
+// function handleTextChange() {
+//   exampleList.forEach((item) => {
+//     if (item.name === inferenceText.value) {
+//       item.isSelected = true;
+//     } else {
+//       item.isSelected = false;
+//     }
+//   });
+// }
 
-function downLoadPicture() {
-  let x = new XMLHttpRequest();
-  x.open(
-    'GET',
-    'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
-    true
-  );
-  x.responseType = 'blob';
-  x.onload = function () {
-    console.log(x.response);
-    const blobs = new Blob([x.response], { type: 'image/jpg' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'infer.jpg';
-    a.click();
-  };
-  x.send();
-}
+// function downLoadPicture() {
+//   let x = new XMLHttpRequest();
+//   x.open(
+//     'GET',
+//     'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
+//     true
+//   );
+//   x.responseType = 'blob';
+//   x.onload = function () {
+//     console.log(x.response);
+//     const blobs = new Blob([x.response], { type: 'image/jpg' });
+//     let url = window.URL.createObjectURL(blobs);
+//     let a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'infer.jpg';
+//     a.click();
+//   };
+//   x.send();
+// }
 
 onMounted(() => {});
 </script>
 <template>
   <div class="model-page">
     <!-- 以文生图 -->
-    <div class="text-to-img">
+    <!-- <div class="text-to-img">
       <div class="title">
         <span> 以文生图（Text-To-Image）</span><span class="new-tag">new</span>
       </div>
@@ -252,14 +252,14 @@ onMounted(() => {});
               src="@/assets/gifs/loading.gif"
               alt=""
             />
-            <!-- <img class="result-img" :src="inferUrl" /> -->
+            <img class="result-img" :src="inferUrl" />
             <a @click="downLoadPicture">
               <o-icon><icon-download></icon-download></o-icon
             ></a>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Image Caption -->
     <div class="caption-top">
       <div>
@@ -370,7 +370,7 @@ onMounted(() => {});
     display: flex;
     &-left {
       width: 464px;
-      height: 467px;
+      // height: 467px;
       background: #ffffff;
       margin-right: 25px;
       padding: 24px 24px 32px;
@@ -384,7 +384,7 @@ onMounted(() => {});
       }
       .text-area {
         height: 156px;
-        margin-top: 28px;
+        margin-top: 16px;
         :deep(.el-input__count) {
           right: -5px;
         }
@@ -439,7 +439,7 @@ onMounted(() => {});
       padding: 24px;
       display: flex;
       flex-direction: column;
-      height: 467px;
+      // height: 467px;
       &-title {
         font-size: 18px;
         font-weight: 400;

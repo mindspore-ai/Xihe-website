@@ -74,7 +74,7 @@ async function getDetailData() {
     await getCompetition({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         competitionData.value = res.data;
-        console.log('比赛详情: ', competitionData.value);
+        // console.log('比赛详情: ', competitionData.value);
       }
     });
     // 获得团队id，判断是否报名
@@ -82,7 +82,7 @@ async function getDetailData() {
     await getGroupid(params.id).then((res) => {
       if (res.status === 200) {
         groupId.value = res.group_id;
-        console.log('groupId.value: ', groupId.value);
+        // console.log('groupId.value: ', groupId.value);
       }
     });
   } catch (error) {
@@ -123,6 +123,7 @@ getDetailData();
               </div>
               <!-- <div class="card-body">{{ competitionData.description }}</div> -->
               <div class="card-body">
+                本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的
                 {{ competitionData.description }}
               </div>
               <div class="card-footer">举办方:绿色计算产业联盟</div>

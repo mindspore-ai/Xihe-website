@@ -46,6 +46,7 @@ export function getFile(id) {
  * @returns
  */
 export function getGroupid(id) {
+  // console.log('比赛id: ', id);
   const url = `/api/competitions/user_group_id/${id}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
@@ -100,6 +101,7 @@ export function getTeamInfoByName(name) {
 }
 // 通过比赛id获取团队信息
 export function getTeamInfoById(id) {
+  console.log('比赛id: ', id);
   const url = `/api/competitions/groups/${id}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;

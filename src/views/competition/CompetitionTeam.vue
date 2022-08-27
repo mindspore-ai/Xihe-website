@@ -58,7 +58,7 @@ const teamMemberData = ref([]); //创建团队后的团队成员信息
 const showDel = ref(false);
 const showEdit = ref(false);
 const is_individual = ref(true); //TODO:是否是个人参赛
-let groupId = ref(null);
+let teamId = ref(null);
 const form1 = reactive({
   teamName: '',
 });
@@ -114,24 +114,27 @@ const rules3 = reactive({
   ],
 });
 function handleClick() { }
-// const a = inject('groupId');
+// const a = inject('teamId');
 // console.log('a: ', a);
 // 进入页面获得is_individual值，判断是否个人参赛
+const loading = ref(false);
 async function getIndividual() {
   // 获得团队id，判断是否报名
   let params = { id: route.params.id };
   let res1 = await getGroupid(params.id);
   if (res1.status === 200) {
     // TODO:可接收父组件的groupId值
-    groupId = res1.group_id;
+    teamId = res1.group_id;
   }
   // 通过团队id获得团队信息
-  let res2 = await getTeamInfoById(groupId);
+  let res2 = await getTeamInfoById(teamId);
   if (res2.status === 200) {
     teamData.value = res2.data;
+    console.log('teamData.value: ', teamData.value);
     teamMemberData.value = res2.data.members_order_list;
     is_individual.value = res2.data.is_individual;
   }
+  loading.value = true;
 }
 getIndividual();
 // 点击创建团队（修改团队）
@@ -141,7 +144,7 @@ function fountTeam() {
     is_individual: false,
   };
   // 修改团队
-  revampTeam(params, groupId).then((res) => {
+  revampTeam(params, teamId).then((res) => {
     if (res.status === 200) {
       teamData.value = res.data;
       teamMemberData.value = res.data.members_order_list;
@@ -152,32 +155,35 @@ function fountTeam() {
 
 // 点击加入团队
 async function addTeam() {
-  // 删除原来的团队
-  await deleteTeam(groupId);
   // 通过团队名获取团队信息和团队id
+  let newTeamId = null; //输入的团队id
   let params = { name: form2.teamName };
-  let res2 = await getTeamInfoByName(params.name);
-  console.log('通过团队名获取的团队信息: ', res2);
-  if (res2.status === 200) {
-    teamData.value = res2.data[0];
-    teamMemberData.value = res2.data[0].members_order_list;
-    groupId = res2.data[0].id;
+  let res = await getTeamInfoByName(params.name);
+  if (res.status === 200 && res.data.length !== 0) {
+    newTeamId = res.data[0].id;
   } else {
-    // TODO:
-    console.log('团队名不存在');
-  }
-  // 加入团队
-  if (teamData.value) {
-    joinTeam({ id: groupId }).then((res) => {
-      if (res.status === 200) {
-        // is_individual.value = false;
-        window.location.reload();
-        ElMessage({
-          type: 'success',
-          message: '加入团队成功!',
-        });
-      }
+    ElMessage({
+      type: 'warning',
+      message: '团队不存在！',
     });
+    return;
+  }
+  // 删除原来的个人团队信息
+  await deleteTeam(teamData.value.id);
+  // 加入团队
+  if (res.data.length) {
+    // console.log('输入框团队id', newTeamId);
+    let res3 = await joinTeam({ id: newTeamId });
+    if (res3.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '加入团队成功!',
+      });
+      // is_individual.value = false;
+      window.location.reload();
+    }
+  } else {
+    return;
   }
 }
 // 移除成员
@@ -214,8 +220,8 @@ function handleCaptain(memberId) {
 }
 
 // 退出团队
-function handleQuitTeam(groupId) {
-  let params = { id: groupId };
+function handleQuitTeam(teamId) {
+  let params = { id: teamId };
   quitTeam(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -268,7 +274,7 @@ function confirmEdit() {
   let params = {
     name: form3.teamName,
   };
-  revampTeam(params, groupId).then((res) => {
+  revampTeam(params, teamId).then((res) => {
     if (res.status === 200) {
       teamData.value = res.data;
       showEdit.value = false;

@@ -17,7 +17,7 @@ const i18n = {
 // 点击个人参赛进入比赛介绍页
 function goCompetitionIntro() {
   router.push({
-    name: 'introduction',
+    name: 'option',
     params: {
       id: route.params.id, //比赛id
     },

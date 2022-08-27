@@ -15,7 +15,6 @@ import { useUserInfoStore } from '@/stores';
 const route = useRoute();
 const userInfoStore = useUserInfoStore();
 
-const input = ref('');
 const teamData = ref([]);
 const queryRef = ref(null);
 const role = ref(1);
@@ -25,6 +24,7 @@ let citys = ref([]);
 
 const i18n = {
   application: '报名表',
+  tips: '请确保录入信息真实有效，以确保填写成功后我们能联系到您',
   name: '姓名',
   username: '用户名',
   location: '所在地',
@@ -148,7 +148,6 @@ function getArea() {
     //     value: key,
     //   });
     // }
-    // console.log('province.value: ', province.value);
   });
 }
 getArea();
@@ -164,7 +163,7 @@ function saveInfo(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      // TODO:提交报名表
+      // 提交报名表
       // 表单的数据
       let params1 = {
         name: query.name,
@@ -187,21 +186,18 @@ function saveInfo(formEl) {
       };
       createTeam(params2)
         .then((res) => {
-          // console.log('新建团队信息（个人）: ', res);
           if (res.status === 200) {
             teamData.value = res.data;
             // is_individual.value = res.data.is_individual;
           }
         })
         .finally(() => {
-          // console.log('province: ', province.value);
           province.value.some((val) => {
             if (val.value === params1.loc_province) {
               params1.loc_province = val.label;
               return true;
             }
           });
-          // console.log('表单数据: ', params1);
           goCompetition(params1).then((res) => {
             if (res.status === 200) {
               emit('handleStep');
@@ -240,14 +236,10 @@ function handleProvince(province) {
   <!-- 报名表 -->
   <div class="application">
     <div class="application-title">
-      <div class="text">{{ i18n.application }}</div>
-      <el-input
-        v-model="input"
-        readonly
-        placeholder="请确保录入信息真实有效，以确保填写成功后我们能联系到您"
-      />
-      <div class="tipsIcon">
-        <icon-tips></icon-tips>
+      <span class="text">{{ i18n.application }}</span>
+      <div class="tips">
+        <icon-tips class="tipsIcon"></icon-tips>
+        <div class="tips-text">{{ i18n.tips }}</div>
       </div>
     </div>
     <div class="application-form">
@@ -268,7 +260,7 @@ function handleProvince(province) {
             readonly
           ></el-input>
         </el-form-item>
-        <!-- 选择城市TODO: :rules="-->
+        <!-- 选择城市-->
         <el-form-item class="city">
           <div class="requirement">
             <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
@@ -450,33 +442,41 @@ function handleProvince(province) {
 //报名表
 .application {
   padding-top: 67px;
-  // padding-bottom: 40px;
+  padding: 67px 144px 0;
   &-title {
-    font-size: 24px;
-    color: #000000;
-    margin-left: 11%;
-    margin-right: 11%;
-    padding-bottom: 24px;
-    margin-bottom: 24px;
+    line-height: 38px;
+    // margin-left: 11%;
+    // margin-right: 11%;
+    padding-bottom: 22px;
+    margin-bottom: 22px;
     border-bottom: 1px solid #d8d8d8;
-    position: relative;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     .text {
-      width: 124px;
+      font-size: 24px;
+      color: #000000;
+      margin-right: 4%;
     }
-    :deep(.el-input) {
-      width: 100% !important;
-      // margin-left: 45px;
-      .el-input__wrapper {
-        padding-left: 40px;
+    .tips {
+      display: flex;
+      align-items: center;
+      // width: calc(100% - 140px);
+      width: 87%;
+      position: relative;
+      background: rgba(13, 141, 255, 0.03);
+      border: 1px solid #d8d8d8;
+      .tipsIcon {
+        position: absolute;
+        left: 18px;
       }
-    }
-    .tipsIcon {
-      display: inline-block;
-      position: absolute;
-      top: 6%;
-      left: 13%;
+      .tips-text {
+        // width: 100%;
+        line-height: 38px;
+        color: #555555;
+        font-size: 14px;
+        padding-left: 48px;
+      }
     }
   }
   .el-divider .el-divider--horizontal {
@@ -520,12 +520,12 @@ function handleProvince(province) {
             .el-form-item {
               margin-bottom: 0px;
               .organization {
-                margin-bottom: 28px;
+                margin-bottom: 16px;
                 display: flex;
                 justify-content: space-between;
               }
               .specialty {
-                margin-bottom: 20px;
+                // margin-bottom: 20px;
                 display: flex;
                 justify-content: space-between;
               }

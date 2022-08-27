@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 // import { createTeam } from '@/api/api-competition';
 import { revampTeam } from '@/api/api-competition';
@@ -58,7 +58,7 @@ const teamMemberData = ref([]); //创建团队后的团队成员信息
 const showDel = ref(false);
 const showEdit = ref(false);
 const is_individual = ref(true); //TODO:是否是个人参赛
-let teamId = ref(null);
+const teamId = ref(null);
 const form1 = reactive({
   teamName: '',
 });
@@ -114,29 +114,34 @@ const rules3 = reactive({
   ],
 });
 function handleClick() { }
-// const a = inject('teamId');
-// console.log('a: ', a);
+const storeTeamId = computed(() => {
+  return useCompetitionData().teamId;
+});
+watch(
+  () => {
+    return storeTeamId.value;
+  },
+  (newVal) => {
+    if (newVal) {
+      getIndividual(newVal);
+    }
+  },
+  { immediate: true }
+);
+
 // 进入页面获得is_individual值，判断是否个人参赛
-const loading = ref(false);
-async function getIndividual() {
-  // 获得团队id，判断是否报名
-  let params = { id: route.params.id };
-  let res1 = await getGroupid(params.id);
-  if (res1.status === 200) {
-    // TODO:可接收父组件的groupId值
-    teamId = res1.group_id;
-  }
+async function getIndividual(id) {
+  console.log('团队id: ', id);
   // 通过团队id获得团队信息
-  let res2 = await getTeamInfoById(teamId);
+  let res2 = await getTeamInfoById(id);
+  console.log('res2: ', res2);
   if (res2.status === 200) {
     teamData.value = res2.data;
-    console.log('teamData.value: ', teamData.value);
     teamMemberData.value = res2.data.members_order_list;
     is_individual.value = res2.data.is_individual;
   }
-  loading.value = true;
 }
-getIndividual();
+
 // 点击创建团队（修改团队）
 function fountTeam() {
   let params = {
@@ -179,8 +184,11 @@ async function addTeam() {
         type: 'success',
         message: '加入团队成功!',
       });
+      setInterval(() => {
+        window.location.reload();
+      }, 500);
       // is_individual.value = false;
-      window.location.reload();
+
     }
   } else {
     return;
@@ -229,7 +237,7 @@ function handleQuitTeam(teamId) {
         message: '退出团队成功！',
       });
       router.push({
-        name: 'introduction',
+        name: 'option',
         params: {
           id: route.params.id,
         },

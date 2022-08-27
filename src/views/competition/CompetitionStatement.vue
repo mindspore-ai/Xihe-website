@@ -6,7 +6,7 @@ const textarea = ref('');
 const agree = ref(false);
 // const active = ref(1);
 const i18n = {
-  statement: '法律声明',
+  statement: '比赛协议',
   agree: '已阅读并同意该声明',
   next: '下一步',
 };
@@ -21,10 +21,6 @@ function goNextStep() {
   <div class="statement">
     <div class="statement-title">{{ i18n.statement }}</div>
     <el-input id="txt" v-model="textarea" type="textarea" readonly />
-    <div class="isAgree">
-      <input v-model="agree" type="checkbox" />
-      <span @click="agree = !agree">{{ i18n.agree }}</span>
-    </div>
     <div class="nextBtn">
       <o-button v-if="!agree" disabled type="secondary">{{
         i18n.next
@@ -32,6 +28,10 @@ function goNextStep() {
       <o-button v-else type="primary" @click="goNextStep">{{
         i18n.next
       }}</o-button>
+    </div>
+    <div class="isAgree">
+      <input v-model="agree" type="checkbox" />
+      <span @click="agree = !agree">{{ i18n.agree }}</span>
     </div>
   </div>
 </template>
@@ -56,7 +56,6 @@ function goNextStep() {
     }
   }
   .isAgree {
-    margin: 25px 0 40px;
     line-height: 22px;
     display: flex;
     justify-content: center;
@@ -73,6 +72,8 @@ function goNextStep() {
     }
   }
   .nextBtn {
+    margin-top: 40px;
+    margin-bottom: 17px;
     display: flex;
     justify-content: center;
   }

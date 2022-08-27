@@ -19,12 +19,15 @@ const userComData = useCompetitionData();
 const detailData = computed(() => {
   return userComData.competitionData;
 });
-console.log('1', detailData);
+const teamId = computed(() => {
+  return useCompetitionData().teamId;
+});
+// console.log('teamId: ', teamId);
 
 const state = ref('doing'); //比赛状态：will-do，doing，done
 const competitionData = ref([]);
 // 用户团队id
-const groupId = ref(null);
+// const teamId = ref(null);
 const show = ref(true);
 // 立即报名
 function goApplication() {
@@ -80,20 +83,21 @@ async function getDetailData() {
     await getCompetition({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         competitionData.value = res.data;
+        // console.log('比赛数据: ', competitionData.value);
         userComData.setCompetitionData(res.data);
       }
     });
     // 获得团队id，判断是否报名
     let params = { id: route.params.id };
+    // console.log('params: ', params);
     await getGroupid(params.id).then((res) => {
       if (res.status === 200) {
-        console.log('res.data: ', res.data);
-        groupId.value = res.group_id;
+        // teamId.value = res.group_id;
         userComData.setTeamId(res.group_id);
       }
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 getDetailData();
@@ -142,7 +146,7 @@ getDetailData();
               </div>
             </div>
           </div>
-          <div v-if="groupId === null && show" class="right-immediate">
+          <div v-if="teamId === null && show" class="right-immediate">
             <OButton type="primary" animation @click="goApplication">
               立即报名
             </OButton>

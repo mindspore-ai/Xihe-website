@@ -24,7 +24,9 @@ const detailData1 = computed(() => {
 const detailData2 = computed(() => {
   return useCompetitionData().teamId;
 });
-const userInfo = useUserInfoStore();
+  // console.log('团队id: ', detailData2);
+  // console.log('团队id: ', detailData2.value);
+const userInfo = useUserInfoStore(); 
 
 const route = useRoute();
 const router = useRouter();
@@ -49,7 +51,6 @@ function callback(transferredAmount, totalAmount) {
     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
   );
 }
-console.log('333', detailData2);
 async function upLoad(param) {
   // console.log(param);
   let path = `xihe-obj/competition/${detailData1.value.name}/${groupName.value}/${param.file.name}`;

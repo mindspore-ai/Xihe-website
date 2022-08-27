@@ -183,3 +183,20 @@ export const useFilterData = defineStore('filterInfo', {
     },
   },
 });
+// 比赛信息
+export const useCompetitionData = defineStore('competitionInfo', {
+  state: () => {
+    return {
+      competitionData: null,
+      teamId: null,
+    };
+  },
+  actions: {
+    setCompetitionData(data) {
+      this.competitionData = data;
+    },
+    setTeamId(data) {
+      this.teamId = data;
+    },
+  },
+});

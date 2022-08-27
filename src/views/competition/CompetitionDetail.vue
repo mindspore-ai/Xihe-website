@@ -1,12 +1,12 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
 import { getGroupid } from '@/api/api-competition';
 
 import { goAuthorize } from '@/shared/login';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 import OButton from '@/components/OButton.vue';
@@ -14,6 +14,12 @@ import OButton from '@/components/OButton.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 const route = useRoute();
 const router = useRouter();
+
+const userComData = useCompetitionData();
+const detailData = computed(() => {
+  return userComData.competitionData;
+});
+console.log('1', detailData);
 
 const state = ref('doing'); //比赛状态：will-do，doing，done
 const competitionData = ref([]);
@@ -55,7 +61,7 @@ onMounted(() => {
   // let top2 = parent.offsetTop;
 
   window.addEventListener('scroll', function () {
-    // console.log(top1, window.pageYOffset);
+    // console.log('11111', top1, window.pageYOffset);
     if (window.pageYOffset > top1) {
       card.classList.add('fixed');
     }
@@ -74,15 +80,16 @@ async function getDetailData() {
     await getCompetition({ id: route.params.id }).then((res) => {
       if (res.status === 200) {
         competitionData.value = res.data;
-        // console.log('比赛详情: ', competitionData.value);
+        userComData.setCompetitionData(res.data);
       }
     });
     // 获得团队id，判断是否报名
     let params = { id: route.params.id };
     await getGroupid(params.id).then((res) => {
       if (res.status === 200) {
+        console.log('res.data: ', res.data);
         groupId.value = res.group_id;
-        // console.log('groupId.value: ', groupId.value);
+        userComData.setTeamId(res.group_id);
       }
     });
   } catch (error) {
@@ -106,7 +113,7 @@ getDetailData();
         </el-breadcrumb>
       </div>
       <div class="competition-content">
-        <div class="competition-card fixed">
+        <div class="competition-card">
           <div class="competition-box">
             <div class="left">
               <div class="card-head">

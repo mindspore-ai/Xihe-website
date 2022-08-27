@@ -164,3 +164,28 @@ export function getAreaData() {
     return res;
   });
 }
+/**
+ * 添加项目（查询数据集信息）
+ * @returns
+ */
+export function addProject(params) {
+  const url = `/api/projects/?name=${params.name}&owner_name=${params.owner_name}`;
+  return request.get(url, params).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取介绍
+ * @returns
+ */
+export function getGuide() {
+  const url = `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/competition/rules.md`;
+  return request
+    .get(url)
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

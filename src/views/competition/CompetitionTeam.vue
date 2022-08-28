@@ -4,13 +4,10 @@ import { ref, reactive, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
-// import { createTeam } from '@/api/api-competition';
 import { revampTeam } from '@/api/api-competition';
-// import { getTeamInfo } from '@/api/api-competition';
 import { joinTeam } from '@/api/api-competition';
 import { getTeamInfoByName } from '@/api/api-competition';
 import { getTeamInfoById } from '@/api/api-competition';
-import { getGroupid } from '@/api/api-competition';
 import { deleteTeam } from '@/api/api-competition';
 import { quitTeam } from '@/api/api-competition';
 import { removeMember } from '@/api/api-competition';
@@ -57,8 +54,10 @@ const teamData = ref([]); //创建团队后的团队信息
 const teamMemberData = ref([]); //创建团队后的团队成员信息
 const showDel = ref(false);
 const showEdit = ref(false);
-const is_individual = ref(true); //TODO:是否是个人参赛
-const teamId = ref(null);
+const is_individual = ref(true);
+const show = ref(false);
+const userComData = useCompetitionData();
+
 const form1 = reactive({
   teamName: '',
 });
@@ -113,13 +112,14 @@ const rules3 = reactive({
     },
   ],
 });
-function handleClick() { }
-const storeTeamId = computed(() => {
+// 含个人参赛的团队Id和团队参赛的团队Id
+const teamId = computed(() => {
   return useCompetitionData().teamId;
 });
+function handleClick() {}
 watch(
   () => {
-    return storeTeamId.value;
+    return teamId.value;
   },
   (newVal) => {
     if (newVal) {
@@ -131,14 +131,14 @@ watch(
 
 // 进入页面获得is_individual值，判断是否个人参赛
 async function getIndividual(id) {
-  console.log('团队id: ', id);
   // 通过团队id获得团队信息
-  let res2 = await getTeamInfoById(id);
-  console.log('res2: ', res2);
-  if (res2.status === 200) {
-    teamData.value = res2.data;
-    teamMemberData.value = res2.data.members_order_list;
-    is_individual.value = res2.data.is_individual;
+  let res = await getTeamInfoById(id);
+  // console.log('res2: ', res2);
+  if (res.status === 200) {
+    teamData.value = res.data;
+    teamMemberData.value = res.data.members_order_list;
+    is_individual.value = res.data.is_individual;
+    show.value = true;
   }
 }
 
@@ -149,7 +149,8 @@ function fountTeam() {
     is_individual: false,
   };
   // 修改团队
-  revampTeam(params, teamId).then((res) => {
+  console.log('TeamId: ', teamId.value);
+  revampTeam(params, teamId.value).then((res) => {
     if (res.status === 200) {
       teamData.value = res.data;
       teamMemberData.value = res.data.members_order_list;
@@ -157,11 +158,10 @@ function fountTeam() {
     }
   });
 }
-
 // 点击加入团队
 async function addTeam() {
-  // 通过团队名获取团队信息和团队id
-  let newTeamId = null; //输入的团队id
+  // 通过团队名获取团队信息判断团队名是否存在
+  let newTeamId = null; //新加入的团队id
   let params = { name: form2.teamName };
   let res = await getTeamInfoByName(params.name);
   if (res.status === 200 && res.data.length !== 0) {
@@ -174,26 +174,19 @@ async function addTeam() {
     return;
   }
   // 删除原来的个人团队信息
-  await deleteTeam(teamData.value.id);
+  await deleteTeam(teamId.value);
   // 加入团队
-  if (res.data.length) {
-    // console.log('输入框团队id', newTeamId);
-    let res3 = await joinTeam({ id: newTeamId });
-    if (res3.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '加入团队成功!',
-      });
-      setInterval(() => {
-        window.location.reload();
-      }, 500);
-      // is_individual.value = false;
-
-    }
-  } else {
-    return;
+  let res3 = await joinTeam({ id: newTeamId });
+  if (res3.status === 200) {
+    ElMessage({
+      type: 'success',
+      message: '加入团队成功!',
+    });
+    userComData.setTeamId(newTeamId);
+    // is_individual.value = false;
   }
 }
+
 // 移除成员
 function deleteMember(memberId) {
   const memberIds = teamMemberData.value.map((item) => {
@@ -202,7 +195,7 @@ function deleteMember(memberId) {
   let index = memberIds.indexOf(memberId);
   memberIds.splice(index, 1);
   let params = { members: memberIds };
-  removeMember(params, teamData.value.id).then((res) => {
+  removeMember(params, teamId.value).then((res) => {
     teamMemberData.value = res.data.members_order_list;
     ElMessage({
       type: 'success',
@@ -213,31 +206,37 @@ function deleteMember(memberId) {
 
 // 移交队长
 function handleCaptain(memberId) {
+  console.log('memberId: ', memberId);
   let params = {
-    id: teamData.value.id,
+    id: teamId.value,
     leader: memberId,
   };
   transferCaptain(params).then((res) => {
-    teamData.value = res.data;
-    teamMemberData.value = res.data.members_order_list;
-    ElMessage({
-      type: 'success',
-      message: '移交队长成功！',
-    });
+    if (res.status === 200) {
+      teamData.value = res.data;
+      teamMemberData.value = res.data.members_order_list;
+      ElMessage({
+        type: 'success',
+        message: '移交队长成功！',
+      });
+    }
   });
 }
 
 // 退出团队
-function handleQuitTeam(teamId) {
-  let params = { id: teamId };
+function handleQuitTeam() {
+  console.log('teamId: ', teamId.value);
+  let params = { id: teamId.value };
+  console.log('params: ', params);
   quitTeam(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
         type: 'success',
         message: '退出团队成功！',
       });
+      userComData.setTeamId(null);
       router.push({
-        name: 'option',
+        name: 'introduction',
         params: {
           id: route.params.id,
         },
@@ -248,8 +247,9 @@ function handleQuitTeam(teamId) {
 
 // 删除团队
 function confirmDel() {
-  deleteTeam(teamData.value.id).then((res) => {
+  deleteTeam(teamId.value).then((res) => {
     if (res.status === 200) {
+      userComData.setTeamId(null);
       showDel.value = false;
       ElMessage({
         type: 'success',
@@ -276,13 +276,12 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
-
 // 编辑团队名
 function confirmEdit() {
   let params = {
     name: form3.teamName,
   };
-  revampTeam(params, teamId).then((res) => {
+  revampTeam(params, teamId.value).then((res) => {
     if (res.status === 200) {
       teamData.value = res.data;
       showEdit.value = false;
@@ -294,6 +293,7 @@ function confirmEdit() {
     }
   });
 }
+
 function toggleEditDlg(flag) {
   if (flag === undefined) {
     showEdit.value = !showEdit.value;
@@ -303,153 +303,154 @@ function toggleEditDlg(flag) {
 }
 </script>
 <template>
-  <div v-if="is_individual" class="noteam-page">
-    <div class="title">
-      {{ i18n.title }}
+  <div v-if="show">
+    <div v-if="is_individual" class="noteam-page">
+      <div class="title">
+        {{ i18n.title }}
+      </div>
+      <el-tabs v-model="activeName" class="team-tabs" @tab-click="handleClick">
+        <el-tab-pane label="创建团队" name="first">
+          <div class="creating">
+            <el-form ref="queryRef1" :model="form1" :rules="rules1">
+              <div class="requirement">
+                <icon-necessary></icon-necessary
+                ><span>{{ i18n.teamName }}</span>
+                <el-popover
+                  placement="bottom-start"
+                  :width="260"
+                  trigger="hover"
+                  :teleported="true"
+                >
+                  <template #reference>
+                    <o-icon style="font-size: 18px"
+                      ><icon-poppver></icon-poppver
+                    ></o-icon>
+                  </template>
+                  <div>团队名支持中英文，不超过20个字符</div>
+                </el-popover>
+              </div>
+              <el-form-item prop="teamName">
+                <el-input
+                  v-model="form1.teamName"
+                  placeholder="请输入团队名"
+                ></el-input>
+              </el-form-item>
+              <o-button type="primary" @click="fountTeam">{{
+                i18n.createTeam
+              }}</o-button>
+            </el-form>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="加入团队" name="second">
+          <div class="join">
+            <el-form ref="queryRef2" :model="form2" :rules="rules2">
+              <div class="requirement">
+                <icon-necessary></icon-necessary
+                ><span>{{ i18n.teamName }}</span>
+                <el-popover
+                  placement="bottom-start"
+                  :width="372"
+                  trigger="hover"
+                  :teleported="true"
+                >
+                  <template #reference>
+                    <o-icon style="font-size: 18px"
+                      ><icon-poppver></icon-poppver
+                    ></o-icon>
+                  </template>
+                  <div>团队名支持中英文，不超过20个字符</div>
+                </el-popover>
+              </div>
+              <el-form-item prop="teamName">
+                <el-input
+                  v-model="form2.teamName"
+                  placeholder="请输入团队名"
+                ></el-input>
+              </el-form-item>
+              <o-button type="primary" @click="addTeam">{{
+                i18n.joinTeam
+              }}</o-button>
+            </el-form>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
-    <el-tabs v-model="activeName" class="team-tabs" @tab-click="handleClick">
-      <el-tab-pane label="创建团队" name="first">
-        <div class="creating">
-          <el-form ref="queryRef1" :model="form1" :rules="rules1">
-            <div class="requirement">
-              <icon-necessary></icon-necessary><span>{{ i18n.teamName }}</span>
-              <el-popover
-                placement="bottom-start"
-                :width="260"
-                trigger="hover"
-                :teleported="true"
-              >
-                <template #reference>
-                  <o-icon style="font-size: 18px"
-                    ><icon-poppver></icon-poppver
-                  ></o-icon>
-                </template>
-                <div>团队名支持中英文，不超过20个字符</div>
-              </el-popover>
-            </div>
-            <el-form-item prop="teamName">
-              <el-input
-                v-model="form1.teamName"
-                placeholder="请输入团队名"
-              ></el-input>
-            </el-form-item>
-            <o-button type="primary" @click="fountTeam">{{
-              i18n.createTeam
-            }}</o-button>
-          </el-form>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="加入团队" name="second">
-        <div class="join">
-          <el-form ref="queryRef2" :model="form2" :rules="rules2">
-            <div class="requirement">
-              <icon-necessary></icon-necessary><span>{{ i18n.teamName }}</span>
-              <el-popover
-                placement="bottom-start"
-                :width="372"
-                trigger="hover"
-                :teleported="true"
-              >
-                <template #reference>
-                  <o-icon style="font-size: 18px"
-                    ><icon-poppver></icon-poppver
-                  ></o-icon>
-                </template>
-                <div>团队名支持中英文，不超过20个字符</div>
-              </el-popover>
-            </div>
-            <el-form-item prop="teamName">
-              <el-input
-                v-model="form2.teamName"
-                placeholder="请输入团队名"
-              ></el-input>
-            </el-form-item>
-            <o-button type="primary" @click="addTeam">{{
-              i18n.joinTeam
-            }}</o-button>
-          </el-form>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
-  <div v-else class="haveteam-page">
-    <div class="header">
-      <div class="header-title">
-        <div class="text">
-          我<span v-if="userInfoStore.userName == teamData.leader_name.name"
-            >创建</span
+    <div v-else class="haveteam-page">
+      <div class="header">
+        <div class="header-title">
+          <div class="text">
+            我<span v-if="userInfoStore.userName == teamData.leader_name.name"
+              >创建</span
+            >
+            <span v-else>加入</span>的团队：{{ teamData.name }}
+          </div>
+          <div
+            v-if="userInfoStore.userName == teamData.leader_name.name"
+            class="tips"
           >
-          <span v-else>加入</span>的团队：{{ teamData.name }}
+            <div class="tipsIcon">
+              <icon-tips></icon-tips>
+            </div>
+            <el-input readonly placeholder="一个团队最多有3名成员" />
+          </div>
         </div>
         <div
           v-if="userInfoStore.userName == teamData.leader_name.name"
-          class="tips"
+          class="header-button"
         >
-          <div class="tipsIcon">
-            <icon-tips></icon-tips>
-          </div>
-          <el-input readonly placeholder="一个团队最多有3名成员" />
+          <OButton class="delete" size="small" @click="showDel = true">{{
+            i18n.delete.btnText
+          }}</OButton>
+          <OButton type="primary" size="small" @click="showEdit = true">{{
+            i18n.edit
+          }}</OButton>
+        </div>
+        <div v-else class="quit-button">
+          <OButton type="primary" size="small" @click="handleQuitTeam()">{{
+            i18n.quit
+          }}</OButton>
         </div>
       </div>
-      <div
-        v-if="userInfoStore.userName == teamData.leader_name.name"
-        class="header-button"
-      >
-        <OButton class="delete" size="small" @click="showDel = true">{{
-          i18n.delete.btnText
-        }}</OButton>
-        <OButton type="primary" size="small" @click="showEdit = true">{{
-          i18n.edit
-        }}</OButton>
-      </div>
-      <div v-else class="quit-button">
-        <OButton
-          type="primary"
-          size="small"
-          @click="handleQuitTeam(teamData.id)"
-          >{{ i18n.quit }}</OButton
+      <el-table :data="teamMemberData" style="width: 100%">
+        <el-table-column prop="name" width="400">
+          <template #header>
+            <o-icon><icon-group></icon-group></o-icon>
+            <span>团队成员</span>
+          </template>
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span>{{ scope.row.name }}</span>
+              <span v-if="teamData.leader_name.name === scope.row.name"
+                >(队长)</span
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="email" label="邮箱" />
+        <el-table-column
+          v-if="userInfoStore.userName == teamData.leader_name.name"
+          prop="address"
+          label="操作"
+          width="300"
         >
-      </div>
-    </div>
-    <el-table :data="teamMemberData" style="width: 100%">
-      <el-table-column prop="name" width="400">
-        <template #header>
-          <o-icon><icon-group></icon-group></o-icon>
-          <span>团队成员</span>
-        </template>
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <span>{{ scope.row.name }}</span>
-            <span v-if="teamData.leader_name.name === scope.row.name"
-              >(队长)</span
+          <template #default="scope">
+            <div
+              v-if="teamData.leader_name.name !== scope.row.name"
+              class="operate"
             >
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="email" label="邮箱" />
-      <el-table-column
-        v-if="userInfoStore.userName == teamData.leader_name.name"
-        prop="address"
-        label="操作"
-        width="300"
-      >
-        <template #default="scope">
-          <div
-            v-if="teamData.leader_name.name !== scope.row.name"
-            class="operate"
-          >
-            <div class="delete" @click="deleteMember(scope.row.id)">
-              <o-icon><icon-cancel></icon-cancel></o-icon>
-              <span>移除</span>
+              <div class="delete" @click="deleteMember(scope.row.id)">
+                <o-icon><icon-cancel></icon-cancel></o-icon>
+                <span>移除</span>
+              </div>
+              <div class="delivery" @click="handleCaptain(scope.row.id)">
+                <o-icon><icon-delivery></icon-delivery></o-icon>
+                <span>移交队长</span>
+              </div>
             </div>
-            <div class="delivery" @click="handleCaptain(scope.row.id)">
-              <o-icon><icon-delivery></icon-delivery></o-icon>
-              <span>移交队长</span>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
   <!-- 删除团队弹窗 -->
   <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
@@ -493,7 +494,6 @@ function toggleEditDlg(flag) {
     </template>
   </o-dialog>
   <!-- 编辑团队名弹窗 -->
-  <!-- :show="showEdit"  -->
   <o-dialog :show="showEdit" :close="false" @close-click="toggleEditDlg(false)">
     <template #head>
       <div

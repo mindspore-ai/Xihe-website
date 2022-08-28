@@ -21,12 +21,7 @@ import {
 const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
 });
-const detailData2 = computed(() => {
-  return useCompetitionData().teamId;
-});
-  // console.log('团队id: ', detailData2);
-  // console.log('团队id: ', detailData2.value);
-const userInfo = useUserInfoStore(); 
+const userInfo = useUserInfoStore();
 
 const route = useRoute();
 const router = useRouter();

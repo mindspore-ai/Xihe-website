@@ -9,7 +9,7 @@ const router = useRouter();
 const active = ref(1);
 const stepData = ref([
   { title: '登录/注册' },
-  { title: '法律声明' },
+  { title: '比赛协议' },
   { title: '填写报名表' },
   { title: '报名成功' },
 ]);

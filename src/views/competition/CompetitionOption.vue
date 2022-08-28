@@ -11,19 +11,9 @@ const teamId = ref(null);
 
 const activeNavItem = ref('');
 
-// const props = defineProps({
-//   teamId: {
-//     type: String,
-//     default: () => {
-//       return '';
-//     },
-//   },
-// });
-
 const storeTeamId = computed(() => {
   return useCompetitionData().teamId;
 });
-// const teamId = ref(null);
 watch(
   () => {
     return storeTeamId.value;
@@ -83,8 +73,8 @@ const renderNav = computed(() => {
   return teamId.value
     ? navItems
     : navItems.filter((item) => {
-      return item.isIndividual;
-    });
+        return item.isIndividual;
+      });
 });
 
 watch(

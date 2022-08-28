@@ -29,6 +29,9 @@ const competitionData = ref([]);
 // 用户团队id
 // const teamId = ref(null);
 const show = ref(true);
+// console.log('show: ', show);
+const showDetail = ref(false);
+
 // 立即报名
 function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
@@ -56,7 +59,18 @@ watch(
     immediate: true,
   }
 );
-onMounted(() => {
+// 监听团队id
+// watch(
+//   () => {
+//     return teamId.value;
+//   },
+//   () => {
+//     getDetailData();
+//     console.log('详情页重新加载');
+//   }
+//   // { immediate: true }
+// );
+/* onMounted(() => {
   let card = document.querySelector('.competition-card');
   // let parent = document.querySelector('competition-bread');
 
@@ -75,27 +89,27 @@ onMounted(() => {
       card.classList.remove('fixed');
     }
   });
-});
+}); */
 
-// 获取比赛详情
+// 获取比赛信息、判断是否报名
 async function getDetailData() {
   try {
-    await getCompetition({ id: route.params.id }).then((res) => {
-      if (res.status === 200) {
-        competitionData.value = res.data;
-        // console.log('比赛数据: ', competitionData.value);
-        userComData.setCompetitionData(res.data);
-      }
-    });
-    // 获得团队id，判断是否报名
+    // 获取比赛信息
+    let res = await getCompetition({ id: route.params.id });
+    if (res.status === 200) {
+      competitionData.value = res.data;
+      // console.log('比赛数据: ', competitionData.value);
+      userComData.setCompetitionData(res.data);
+    }
+    // 获取团队id
     let params = { id: route.params.id };
     // console.log('params: ', params);
-    await getGroupid(params.id).then((res) => {
-      if (res.status === 200) {
-        // teamId.value = res.group_id;
-        userComData.setTeamId(res.group_id);
-      }
-    });
+    let res2 = await getGroupid(params.id);
+    if (res2.status === 200) {
+      // teamId.value = res2.group_id;
+      userComData.setTeamId(res2.group_id);
+      showDetail.value = true;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -104,58 +118,60 @@ getDetailData();
 </script>
 
 <template>
-  <div class="competition-detail">
-    <div class="competition-wrap">
-      <div class="competition-bread">
-        <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/competition' }"
-            >比赛</el-breadcrumb-item
-          >
-          <el-breadcrumb-item
-            >第三届全国高校绿色计算创新大赛</el-breadcrumb-item
-          >
-        </el-breadcrumb>
-      </div>
-      <div class="competition-content">
-        <div class="competition-card">
-          <div class="competition-box">
-            <div class="left">
-              <div class="card-head">
-                <div class="card-head-title">
-                  {{ competitionData.name }}
-                </div>
-                <div
-                  v-if="competitionData.status_name === '进行中'"
-                  class="card-head-state"
-                  :class="state"
-                >
-                  火热进行中
-                </div>
-              </div>
-              <!-- <div class="card-body">{{ competitionData.description }}</div> -->
-              <div class="card-body">
-                本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的
-                {{ competitionData.description }}
-              </div>
-              <div class="card-footer">举办方:绿色计算产业联盟</div>
-            </div>
-            <div class="right">
-              <div class="right-bonus">
-                <div class="number">奖金：{{ competitionData.bonus }}</div>
-                <div class="time">赛期:{{ competitionData.during }}</div>
-              </div>
-            </div>
-          </div>
-          <div v-if="teamId === null && show" class="right-immediate">
-            <OButton type="primary" animation @click="goApplication">
-              立即报名
-            </OButton>
-            <!--TODO:  -->
-            <div class="number">报名人数：302</div>
-          </div>
+  <div v-if="showDetail">
+    <div class="competition-detail">
+      <div class="competition-wrap">
+        <div class="competition-bread">
+          <el-breadcrumb :separator-icon="ArrowRight">
+            <el-breadcrumb-item :to="{ path: '/competition' }"
+              >比赛</el-breadcrumb-item
+            >
+            <el-breadcrumb-item
+              >第三届全国高校绿色计算创新大赛</el-breadcrumb-item
+            >
+          </el-breadcrumb>
         </div>
-        <div class="competition-desc">
-          <router-view></router-view>
+        <div class="competition-content">
+          <div class="competition-card">
+            <div class="competition-box">
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    {{ competitionData.name }}
+                  </div>
+                  <div
+                    v-if="competitionData.status_name === '进行中'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    火热进行中
+                  </div>
+                </div>
+                <!-- <div class="card-body">{{ competitionData.description }}</div> -->
+                <div class="card-body">
+                  本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的
+                  {{ competitionData.description }}
+                </div>
+                <div class="card-footer">举办方:绿色计算产业联盟</div>
+              </div>
+              <div class="right">
+                <div class="right-bonus">
+                  <div class="number">奖金：{{ competitionData.bonus }}</div>
+                  <div class="time">赛期:{{ competitionData.during }}</div>
+                </div>
+              </div>
+            </div>
+            <div v-if="teamId === null && show" class="right-immediate">
+              <OButton type="primary" animation @click="goApplication">
+                立即报名
+              </OButton>
+              <!--TODO:  -->
+              <div class="number">报名人数：302</div>
+            </div>
+          </div>
+          <div class="competition-desc">
+            <router-view></router-view>
+          </div>
         </div>
       </div>
     </div>

@@ -108,8 +108,8 @@ async function getDetailData() {
     if (res2.status === 200) {
       // teamId.value = res2.group_id;
       userComData.setTeamId(res2.group_id);
-      showDetail.value = true;
     }
+    showDetail.value = true;
   } catch (error) {
     console.error(error);
   }

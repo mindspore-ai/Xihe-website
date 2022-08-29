@@ -117,11 +117,10 @@ function handleNavClick(item) {
 <style lang="scss">
 .competition-desc {
   &-tab {
-    position: sticky;
-    z-index: 1000;
-    opacity: 1;
-    background: #fbfbfb;
-    top: 180px;
+    // position: sticky;
+    // z-index: 1000;
+    // opacity: 1;
+    // top: 180px;
     font-size: 90px;
     height: 48px;
     background-color: #fbfbfb;

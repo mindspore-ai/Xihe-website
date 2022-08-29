@@ -64,6 +64,11 @@ const navItems = [
     href: '/datasets',
   },
   {
+    id: 'competition',
+    label: '比赛',
+    href: '/competition',
+  },
+  {
     id: 'docs',
     label: '文档',
     href: 'https://xihe-docs.mindspore.cn/',

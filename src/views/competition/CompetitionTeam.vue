@@ -33,6 +33,7 @@ const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamName: '团队名',
+  tips: '一个团队最多有3名成员',
   newTeamName: '新团队名',
   createTeam: '创建团队',
   editTeamName: '编辑团队名',
@@ -148,9 +149,11 @@ function fountTeam() {
     name: form1.teamName,
     is_individual: false,
   };
+  console.log('params: ', params);
   // 修改团队
   console.log('TeamId: ', teamId.value);
   revampTeam(params, teamId.value).then((res) => {
+    console.log('res: ', res);
     if (res.status === 200) {
       teamData.value = res.data;
       teamMemberData.value = res.data.members_order_list;
@@ -225,9 +228,9 @@ function handleCaptain(memberId) {
 
 // 退出团队
 function handleQuitTeam() {
-  console.log('teamId: ', teamId.value);
+  // console.log('teamId: ', teamId.value);
   let params = { id: teamId.value };
-  console.log('params: ', params);
+  // console.log('params: ', params);
   quitTeam(params).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -303,7 +306,7 @@ function toggleEditDlg(flag) {
 }
 </script>
 <template>
-  <div v-if="show">
+  <div v-if="show" class="competitionTeam">
     <div v-if="is_individual" class="noteam-page">
       <div class="title">
         {{ i18n.title }}
@@ -334,10 +337,10 @@ function toggleEditDlg(flag) {
                   v-model="form1.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
+                <o-button type="primary" @click="fountTeam">{{
+                  i18n.createTeam
+                }}</o-button>
               </el-form-item>
-              <o-button type="primary" @click="fountTeam">{{
-                i18n.createTeam
-              }}</o-button>
             </el-form>
           </div>
         </el-tab-pane>
@@ -347,7 +350,7 @@ function toggleEditDlg(flag) {
               <div class="requirement">
                 <icon-necessary></icon-necessary
                 ><span>{{ i18n.teamName }}</span>
-                <el-popover
+                <!-- <el-popover
                   placement="bottom-start"
                   :width="372"
                   trigger="hover"
@@ -359,17 +362,17 @@ function toggleEditDlg(flag) {
                     ></o-icon>
                   </template>
                   <div>团队名支持中英文，不超过20个字符</div>
-                </el-popover>
+                </el-popover> -->
               </div>
               <el-form-item prop="teamName">
                 <el-input
                   v-model="form2.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
+                <o-button type="primary" @click="addTeam">{{
+                  i18n.joinTeam
+                }}</o-button>
               </el-form-item>
-              <o-button type="primary" @click="addTeam">{{
-                i18n.joinTeam
-              }}</o-button>
             </el-form>
           </div>
         </el-tab-pane>
@@ -388,10 +391,8 @@ function toggleEditDlg(flag) {
             v-if="userInfoStore.userName == teamData.leader_name.name"
             class="tips"
           >
-            <div class="tipsIcon">
-              <icon-tips></icon-tips>
-            </div>
-            <el-input readonly placeholder="一个团队最多有3名成员" />
+            <icon-tips class="tips-icon"></icon-tips>
+            <div class="tips-text">{{ i18n.tips }}</div>
           </div>
         </div>
         <div
@@ -412,7 +413,7 @@ function toggleEditDlg(flag) {
         </div>
       </div>
       <el-table :data="teamMemberData" style="width: 100%">
-        <el-table-column prop="name" width="400">
+        <el-table-column prop="name" width="300">
           <template #header>
             <o-icon><icon-group></icon-group></o-icon>
             <span>团队成员</span>
@@ -431,7 +432,7 @@ function toggleEditDlg(flag) {
           v-if="userInfoStore.userName == teamData.leader_name.name"
           prop="address"
           label="操作"
-          width="300"
+          width="350"
         >
           <template #default="scope">
             <div
@@ -555,169 +556,175 @@ function toggleEditDlg(flag) {
 </template>
 
 <style lang="scss" scoped>
-.noteam-page {
-  width: 640px;
-  margin: 0 auto;
-  padding: 48px 0 100px;
-  .title {
-    height: 32px;
-    line-height: 32px;
-    font-size: 24px;
-    color: #000000;
-    margin-bottom: 48px;
-  }
-  :deep(.el-tabs) {
-    .el-tabs__header {
-      margin-bottom: 24px;
-      .el-tabs__nav-wrap {
-        &::after {
-          height: 0px;
-        }
-        .el-tabs__active-bar {
-          height: 1px;
-        }
-      }
+.competitionTeam {
+  .noteam-page {
+    width: 640px;
+    margin: 0 auto;
+    padding: 48px 0 100px;
+    .title {
+      height: 32px;
+      line-height: 32px;
+      font-size: 24px;
+      color: #000000;
+      margin-bottom: 48px;
     }
-    .el-tabs__content {
-      .creating,
-      .join {
-        .el-form {
-          width: 100%;
-          margin-bottom: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .requirement {
-            span {
-              font-size: 14px;
-              color: #555;
-            }
-            .el-tooltip__trigger {
-              margin-left: 6px;
-              margin-right: 16px;
-            }
+    :deep(.el-tabs) {
+      .el-tabs__header {
+        margin-bottom: 24px;
+        .el-tabs__nav-wrap {
+          &::after {
+            height: 0px;
           }
-          .el-form-item {
-            margin-bottom: 0px;
-            .el-form-item__content {
-              .el-form-item__error {
-                position: absolute;
-                top: 45px;
-                left: 15px;
-              }
-            }
-          }
-          .o-button {
-            font-size: 14px;
-            padding: 5px 10px !important;
-            min-width: 80px;
+          .el-tabs__active-bar {
+            height: 1px;
           }
         }
       }
-    }
-  }
-}
-.haveteam-page {
-  padding: 60px 40px 64px;
-  .header {
-    display: flex;
-    justify-content: space-between;
-    &-title {
-      display: flex;
-      align-items: center;
-      .text {
-        margin-right: 40px;
-      }
-      .tips {
-        display: flex;
-        align-items: center;
-        position: relative;
-        .tipsIcon {
-          display: flex;
-          align-items: center;
-          position: absolute;
-          left: 16px;
-        }
-      }
-      :deep(.el-input) {
-        width: 220px;
-        .el-input__wrapper {
-          padding-left: 45px !important;
-          background: rgba(13, 141, 255, 0.03);
-        }
-      }
-    }
-    &-button {
-      .delete {
-        // &:first-child {
-        margin-right: 10px;
-        // }
-      }
-      // width: 400px;
-      // display: flex;
-      // justify-content: space-between;
-    }
-  }
-  :deep(.el-table) {
-    margin-top: 24px;
-    --el-table-header-bg-color: #e5e8f0;
-    --el-table-header-text-color: #555;
-    .el-table__inner-wrapper {
-      .el-table__cell {
-        padding: 0;
-        .cell {
-          display: flex;
-          // align-items: center;
-          .o-icon {
-            font-size: 16px;
-            line-height: 24px;
-            margin-right: 6px;
+      .el-tabs__content {
+        .creating,
+        .join {
+          .el-form {
+            width: 100%;
+            margin-bottom: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-          }
-        }
-      }
-      .el-table__header {
-        color: #000000;
-        .cell {
-          padding: 13px 24px;
-        }
-      }
-      .el-table__body {
-        .el-table__row {
-          &:hover {
-            .el-table_1_column_3 {
-              .cell {
-                // .delete {
-                color: #0d8dff;
-                // }
+            .requirement {
+              span {
+                font-size: 14px;
+                color: #555;
+              }
+              .el-tooltip__trigger {
+                margin-left: 6px;
+                margin-right: 16px;
               }
             }
-          }
-          .cell {
-            padding: 16px 24px;
-            .operate {
-              display: flex;
-              align-items: center;
-              .delete {
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                margin-right: 24px;
-                .o-icon {
-                  display: inline-block;
-                  display: flex;
-                  align-items: center;
+            .el-form-item {
+              margin-bottom: 0px;
+              .el-form-item__content {
+                .el-form-item__error {
+                  position: absolute;
+                  top: 45px;
+                  left: 15px;
                 }
               }
-              .delivery {
+              .o-button {
+                font-size: 14px;
+                padding: 5px 10px !important;
+                min-width: 80px;
+                margin-left: 8px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .haveteam-page {
+    padding: 60px 40px 64px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      &-title {
+        display: flex;
+        align-items: center;
+        .text {
+          margin-right: 40px;
+        }
+        .tips {
+          line-height: 38px;
+
+          display: flex;
+          align-items: center;
+          position: relative;
+          background: rgba(13, 141, 255, 0.03);
+          border: 1px solid #d8d8d8;
+          .tips-icon {
+            position: absolute;
+            left: 16px;
+          }
+          .tips-text {
+            color: #555555;
+            font-size: 14px;
+            padding-left: 48px;
+            padding-right: 24px;
+          }
+        }
+        :deep(.el-input) {
+          width: 220px;
+          .el-input__wrapper {
+            padding-left: 45px !important;
+            background: rgba(13, 141, 255, 0.03);
+          }
+        }
+      }
+      &-button {
+        .delete {
+          margin-right: 10px;
+        }
+      }
+    }
+    :deep(.el-table) {
+      margin-top: 24px;
+      --el-table-header-bg-color: #e5e8f0;
+      --el-table-header-text-color: #555;
+      .el-table__inner-wrapper {
+        .el-table__cell {
+          padding: 0;
+          .cell {
+            display: flex;
+            // align-items: center;
+            .o-icon {
+              font-size: 16px;
+              line-height: 24px;
+              margin-right: 6px;
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+        .el-table__header {
+          color: #000000;
+          .cell {
+            padding: 13px 24px;
+          }
+        }
+        .el-table__body {
+          .el-table__row {
+            &:hover {
+              .el-table_1_column_3 {
+                .cell {
+                  // .delete {
+                  color: #0d8dff;
+                  // }
+                }
+              }
+            }
+            .cell {
+              padding: 16px 24px;
+              .operate {
                 display: flex;
                 align-items: center;
-                cursor: pointer;
-                .o-icon {
-                  display: inline-block;
+                .delete {
                   display: flex;
                   align-items: center;
+                  cursor: pointer;
+                  margin-right: 24px;
+                  .o-icon {
+                    display: inline-block;
+                    display: flex;
+                    align-items: center;
+                  }
+                }
+                .delivery {
+                  display: flex;
+                  align-items: center;
+                  cursor: pointer;
+                  .o-icon {
+                    display: inline-block;
+                    display: flex;
+                    align-items: center;
+                  }
                 }
               }
             }

@@ -19,6 +19,7 @@ const teamData = ref([]);
 const queryRef = ref(null);
 const role = ref(1);
 const areaData = ref([]);
+const agree = ref(false);
 let province = ref([]);
 let citys = ref([]);
 
@@ -41,6 +42,8 @@ const i18n = {
   company: '公司',
   description: '描述',
   save: '保存',
+  agree: '已阅读并同意',
+  statement: '《昇思大模型体验平台隐私政策声明》',
 };
 const query = reactive({
   name: '',
@@ -133,21 +136,11 @@ function getArea() {
     areaData.value = res.data;
     // 获得省份数据
     Object.keys(areaData.value['86']).forEach((city) => {
-      // citys.value.push({
-      //   label: areaData.value[province][city],
-      //   value: city,
-      // });
       province.value.push({
         label: areaData.value['86'][city],
         value: city,
       });
     });
-    // for (let key in areaData.value['86']) {
-    //   province.value.push({
-    //     label: areaData.value['86'][key],
-    //     value: key,
-    //   });
-    // }
   });
 }
 getArea();
@@ -220,16 +213,6 @@ function handleProvince(province) {
     citys.value.push(areaData.value[province][city]);
   });
   query.loc_city = citys.value[0].label;
-  // let obj = areaData.value[province];
-  // for (let k in obj) {
-  //   citys.value.push(obj[k]);
-  // }
-
-  // console.log('citys城市信息: ', citys);
-  // if (citys.value.length === 1) {
-  // } else {
-  //   query.loc_city = ''
-  // }
 }
 </script>
 <template>
@@ -238,7 +221,7 @@ function handleProvince(province) {
     <div class="application-title">
       <span class="text">{{ i18n.application }}</span>
       <div class="tips">
-        <icon-tips class="tipsIcon"></icon-tips>
+        <icon-tips class="tips-icon"></icon-tips>
         <div class="tips-text">{{ i18n.tips }}</div>
       </div>
     </div>
@@ -261,7 +244,7 @@ function handleProvince(province) {
           ></el-input>
         </el-form-item>
         <!-- 选择城市-->
-        <el-form-item class="city">
+        <el-form-item class="city" required>
           <div class="requirement">
             <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
           </div>
@@ -431,9 +414,21 @@ function handleProvince(province) {
       </el-form>
     </div>
     <div class="nextBtn">
-      <o-button type="primary" @click="saveInfo(queryRef)">{{
+      <o-button v-if="!agree" disabled type="secondary">{{
         i18n.save
       }}</o-button>
+      <o-button v-else type="primary" @click="saveInfo(queryRef)">{{
+        i18n.save
+      }}</o-button>
+    </div>
+    <div class="isAgree">
+      <div class="isAgree-text" @click="agree = !agree">
+        <input v-model="agree" type="checkbox" class="input" />
+        <span>{{ i18n.agree }}</span>
+      </div>
+      <div class="statement">
+        <router-link to="">{{ i18n.statement }}</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -466,7 +461,7 @@ function handleProvince(province) {
       position: relative;
       background: rgba(13, 141, 255, 0.03);
       border: 1px solid #d8d8d8;
-      .tipsIcon {
+      .tips-icon {
         position: absolute;
         left: 18px;
       }
@@ -568,6 +563,26 @@ function handleProvince(province) {
     display: flex;
     justify-content: center;
     margin-top: 12px;
+  }
+  .isAgree {
+    font-size: 14px;
+    color: #000;
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    .isAgree-text {
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 8px;
+        cursor: pointer;
+      }
+    }
+    .statement {
+      a {
+        color: #0d8dff;
+      }
+    }
   }
 }
 // 单选按钮样式

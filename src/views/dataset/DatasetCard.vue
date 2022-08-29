@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -27,6 +27,8 @@ const mkit = handleMarkdown();
 const codeString = ref('');
 const result = ref();
 let README = '';
+const rightModel = ref(null);
+const licensesHeight = ref(0);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -35,7 +37,6 @@ const pushParams = {
   name: routerParams.name,
   contents: routerParams.contents,
 };
-
 const i18n = {
   recentDownload: '近期下载量',
   dataset: '相关模型',
@@ -109,6 +110,9 @@ function handleDetailClick(val) {
 function handleProjectClick(val) {
   router.push(`/projects/${val.owner_name.name}/${val.name}`);
 }
+onMounted(() => {
+  licensesHeight.value = `${rightModel.value.offsetHeight + 40}px`;
+});
 // 文本监听
 watch(
   () => codeString.value,
@@ -167,44 +171,46 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div class="download-data">
-        <h4 class="download-title">{{ i18n.recentDownload }}</h4>
-        <span class="download-count">{{ detailData.download_count }}</span>
-      </div>
-      <!-- 相关模型 -->
-      <div class="dataset-data">
-        <h4 class="title">{{ i18n.dataset }}</h4>
-        <div class="dataset-box">
+      <div ref="rightModel" class="right-inner">
+        <div class="download-data">
+          <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+          <span class="download-count">{{ detailData.download_count }}</span>
+        </div>
+        <!-- 相关模型 -->
+        <div class="dataset-data">
+          <h4 class="title">{{ i18n.dataset }}</h4>
+          <div class="dataset-box">
+            <no-relate
+              v-if="
+                !detailData.relate_models_list ||
+                detailData.relate_models_list.length === 0
+              "
+              relate-name="model"
+            ></no-relate>
+            <relate-card
+              :detail-data="detailData"
+              :name="'relate_models_list'"
+              @jump="handleDetailClick"
+            ></relate-card>
+          </div>
+        </div>
+        <!-- 相关项目 -->
+        <div class="related-project">
+          <div class="title">{{ i18n.relatedItem }}</div>
           <no-relate
             v-if="
-              !detailData.relate_models_list ||
-              detailData.relate_models_list.length === 0
+              !detailData.relate_projects_list ||
+              detailData.relate_projects_list.length === 0
             "
-            relate-name="model"
+            relate-name="project"
           ></no-relate>
-          <relate-card
+          <project-relate-card
+            v-else
             :detail-data="detailData"
-            :name="'relate_models_list'"
-            @jump="handleDetailClick"
-          ></relate-card>
+            :name="'relate_projects_list'"
+            @jump="handleProjectClick"
+          ></project-relate-card>
         </div>
-      </div>
-      <!-- 相关项目 -->
-      <div class="related-project">
-        <div class="title">{{ i18n.relatedItem }}</div>
-        <no-relate
-          v-if="
-            !detailData.relate_projects_list ||
-            detailData.relate_projects_list.length === 0
-          "
-          relate-name="project"
-        ></no-relate>
-        <project-relate-card
-          v-else
-          :detail-data="detailData"
-          :name="'relate_projects_list'"
-          @jump="handleProjectClick"
-        ></project-relate-card>
       </div>
     </div>
   </div>
@@ -221,8 +227,22 @@ watch(
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
-    .markdown-file {
+    :deep(.markdown-file) {
       padding-right: 40px;
+      .license {
+        position: absolute;
+        max-width: 425px;
+        width: 100%;
+        top: v-bind('licensesHeight');
+        left: calc(100% + 40px);
+        center {
+          display: flex;
+          img {
+            min-width: 0;
+            width: 100%;
+          }
+        }
+      }
     }
     .o-button {
       position: absolute;

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import { doLogin } from '@/shared/login';
+import { doLogin, goAuthorize } from '@/shared/login';
+import { queryUserInfo } from '@/api/api-user';
 import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
 
 import user from './user';
@@ -15,6 +16,7 @@ export const routes = [
   {
     path: '/',
     alias: '/home',
+    name: 'home',
     component: () => {
       return import('@/views/TheHome.vue');
     },
@@ -66,6 +68,14 @@ export const routes = [
       },
     ],
   },
+  // 排行榜
+  {
+    path: '/leaderboard',
+    name: 'leaderboard',
+    component: () => {
+      return import('@/views/TheLeaderboard.vue');
+    },
+  },
   // 用户
   ...user,
   // 模型
@@ -108,6 +118,29 @@ router.beforeEach(async (to, from) => {
 
   const loginStore = useLoginStore();
   const userInfoStore = useUserInfoStore();
+
+  // 运营活动-用户邀请
+  if (to.path === '/' && to.query && to.query.invited) {
+    if (loginStore.isLogined) {
+      window.history.replaceState({}, '', '/');
+      to.query = {};
+      to.fullPath = '/';
+    } else {
+      const userName = to.query.invited;
+      const res = await queryUserInfo({ userName });
+      if (res.status === 200) {
+        window.history.replaceState({}, '', '/');
+        to.query = {};
+        to.fullPath = '/';
+        localStorage.setItem('XIHE_INVITED', userName);
+        goAuthorize();
+      } else {
+        window.history.replaceState({}, '', '/');
+        to.query = {};
+        to.fullPath = '/';
+      }
+    }
+  }
 
   // 如已登录，直接进入
   if (loginStore.isLogined) {

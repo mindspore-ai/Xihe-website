@@ -51,6 +51,9 @@ function getUrlParam(url = window.location.search) {
 
 // code换token
 async function getUserToken(params) {
+  if (localStorage.getItem('XIHE_INVITED')) {
+    params.invited = localStorage.getItem('XIHE_INVITED');
+  }
   try {
     const res = await queryUserToken(params);
     if (res.status === 200) {
@@ -97,6 +100,7 @@ function afterLogined(userInfo) {
       nickname: nickName,
     },
     user_email: { email, is_active },
+    bonus = 0,
   } = userInfo;
 
   if (!id || !token) {
@@ -126,6 +130,7 @@ function afterLogined(userInfo) {
 
   userInfoStore.email = email;
   userInfoStore.emailStatus = is_active;
+  userInfoStore.bonus = bonus;
 }
 
 // 登录
@@ -149,6 +154,7 @@ export function saveUserAuth(token) {
     const userInfoStore = useUserInfoStore();
     userInfoStore.$reset();
   } else {
+    localStorage.removeItem('XIHE_INVITED');
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
   }
 }

@@ -163,6 +163,13 @@ export default [
           return import('@/views/setting/SettingEmail.vue');
         },
       },
+      {
+        path: 'invitation',
+        name: 'settingsInvitation',
+        component: () => {
+          return import('@/views/setting/SettingInvitation.vue');
+        },
+      },
     ],
   },
 ];

@@ -186,7 +186,7 @@ const classNames = computed(() => {
   &.o-button-size-small {
     font-size: 16px;
     line-height: 24px;
-    padding: 6px 16px;
+    padding: 5px 16px;
     // min-width: 100px;
   }
 

@@ -1,6 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+
+import IconProject from '~icons/app/project-tree';
 
 import OButton from '@/components/OButton.vue';
 import ODialog from '@/components/ODialog.vue';
@@ -11,15 +13,13 @@ import IconAddFile from '~icons/app/add-file';
 
 import { handleUpload } from '@/api/api-obs';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
-import {
-  getGroupid,
-  getTeamInfoById,
-  addProject,
-  revampTeam,
-} from '@/api/api-competition';
+import { getTeamInfoById, addProject, revampTeam } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
+});
+const teamId = computed(() => {
+  return useCompetitionData().teamId;
 });
 const userInfo = useUserInfoStore();
 
@@ -111,7 +111,29 @@ function confirmAdd() {
   });
 }
 
-let groupId = ref(null);
+watch(
+  () => {
+    return teamId.value;
+  },
+  (newVal) => {
+    if (newVal) {
+      getIndividual(newVal);
+    }
+  },
+  { immediate: true }
+);
+async function getIndividual(id) {
+  // 通过团队id获得团队信息
+  let res = await getTeamInfoById(id);
+  if (res.status === 200) {
+    detailData.value = res.data;
+    // TODO:更新时间
+    detailData.value.update_date_time = '2022-08-26 10:39:10';
+    detailData.value.project_name = [detailData.value.project_name];
+    console.log('detailData: ', detailData);
+  }
+}
+// let groupId = ref(null);
 const detailData = ref();
 /* async function getIndividual() {
   // 获得团队id，判断是否报名
@@ -133,6 +155,7 @@ const detailData = ref();
     // );
   }
 }
+
 getIndividual(); */
 function goProjectClick(val) {
   router.push(`/projects/${val.owner_name.name}/${val.name}`);
@@ -150,7 +173,11 @@ function goProjectClick(val) {
           @jump="goProjectClick"
         ></project-relate-card>
       </div>
-      <div v-else>
+      <div
+        v-else-if="
+          detailData && detailData.leader_name.name === userInfo.userName
+        "
+      >
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -164,6 +191,10 @@ function goProjectClick(val) {
             >确定</OButton
           >
         </div>
+      </div>
+      <div v-else class="empty">
+        <o-icon><icon-project></icon-project></o-icon>
+        当前暂未关联项目
       </div>
     </div>
     <div class="left">
@@ -295,6 +326,16 @@ function goProjectClick(val) {
       margin-top: 16px;
       display: flex;
       justify-content: space-between;
+    }
+    .empty {
+      color: #999999;
+      font-size: 14px;
+      width: 400px;
+      text-align: center;
+      margin: 100px 0;
+      .o-icon {
+        margin-right: 8px;
+      }
     }
   }
 }

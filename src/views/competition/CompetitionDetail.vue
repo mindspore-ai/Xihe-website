@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -16,9 +16,9 @@ const route = useRoute();
 const router = useRouter();
 
 const userComData = useCompetitionData();
-const detailData = computed(() => {
-  return userComData.competitionData;
-});
+// const detailData = computed(() => {
+//   return userComData.competitionData;
+// });
 // 用户团队id
 const teamId = computed(() => {
   return useCompetitionData().teamId;

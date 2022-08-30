@@ -108,7 +108,7 @@ function confirmAdd() {
         if (res.status === 200) {
           detailData.value = res.data;
           // TODO:更新时间
-          detailData.value.update_date_time = '2022-08-26 10:39:10';
+          detailData.value.update_date_time = res.data.project_name.update_time;
           detailData.value.project_name = [detailData.value.project_name];
           console.log('detailData: ', detailData);
           ElMessage({
@@ -143,7 +143,7 @@ async function getIndividual(id) {
   if (res.status === 200) {
     detailData.value = res.data;
     // TODO:更新时间
-    detailData.value.update_date_time = '2022-08-26 10:39:10';
+    detailData.value.update_date_time = res.data.project_name.update_time;
     detailData.value.project_name = [detailData.value.project_name];
     console.log('detailData: ', detailData);
   }

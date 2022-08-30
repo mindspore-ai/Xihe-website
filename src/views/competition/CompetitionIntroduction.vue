@@ -1,15 +1,23 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+// import { useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
 
+import { useCompetitionData } from '@/stores';
+
 import { getGuide } from '@/api/api-competition';
+
+const comInfo = computed(() => {
+  return useCompetitionData().competitionData;
+});
+console.log(comInfo);
 
 const mkit = handleMarkdown();
 const codeString = ref('');
 const result = ref();
 let README = '';
-getGuide()
+getGuide(comInfo.value.description_link)
   .then((tree) => {
     README = tree.data;
     codeString.value = README;

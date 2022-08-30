@@ -1,26 +1,40 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 import OButton from '@/components/OButton.vue';
+import { handleMarkdown } from '@/shared/markdown';
 
 import { downloadDataset } from '@/api/api-obs';
-// import { getTeamInfoById } from '@/api/api-competition';
+import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;
 });
 
-console.log(comInfo);
+const mkit = handleMarkdown();
+const codeString = ref('');
+const result = ref();
+let README = '';
+getGuide(comInfo.value.datasets_description)
+  .then((tree) => {
+    README = tree.data;
+    codeString.value = README;
+    result.value = mkit.render(codeString.value);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 </script>
 <template>
   <div class="dataset-page">
     <div class="header">
       <div>datasetname</div>
-      <o-button size="small" @click="downloadDataset(comInfo.datasets_link)"
+      <o-button size="small" @click="downloadDataset(comInfo.datasets)"
         >下载数据集</o-button
       >
     </div>
+    <div class="markdown-file" v-html="result"></div>
   </div>
 </template>
 
@@ -32,9 +46,13 @@ console.log(comInfo);
     line-height: 48px;
     display: flex;
     justify-content: space-between;
+    margin: 0 24px;
     .o-button {
       margin-top: 8px;
     }
   }
+}
+.markdown-file {
+  padding: 48px;
 }
 </style>

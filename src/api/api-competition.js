@@ -35,8 +35,9 @@ export function getCompetition(params) {
  * 获取排行榜信息
  * @returns
  */
-export function getFile(id) {
-  const url = `/api/base/files/${id}`;
+export function getRank(id) {
+  const url = `/api/competitions/competition_ranklist/${id}`;
+  console.log(url);
   return request.get(url).then((res) => {
     return res.data;
   });

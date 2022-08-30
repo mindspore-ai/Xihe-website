@@ -1,6 +1,18 @@
-<script setup></script>
+<script setup>
+import agreement from '@/assets/statement/competition_agreement.md?raw';
+import MdStatement from '@/components/MdStatement.vue';
+</script>
 <template>
-  <div>协议页面</div>
+  <div class="agreement">
+    <MdStatement :statement="agreement"></MdStatement>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.agreement {
+  padding: 0 48px;
+}
+:deep(.statement) {
+  padding-top: 0;
+}
+</style>

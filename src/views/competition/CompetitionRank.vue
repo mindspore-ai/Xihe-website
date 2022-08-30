@@ -2,20 +2,27 @@
 <script setup>
 import { ref } from 'vue';
 
-import IconArrowDown from '~icons/app/arrow-down.svg';
+// import IconArrowDown from '~icons/app/arrow-down.svg';
 
+import emptyImg from '@/assets/imgs/dataset-empty.png';
 import firstImg from '@/assets/imgs/first.png';
 import secondImg from '@/assets/imgs/second.png';
 import thirdImg from '@/assets/imgs/third.png';
 
+import { useRoute } from 'vue-router';
 
+import { getRank } from '@/api/api-competition';
+
+const route = useRoute();
 
 const tableData = ref();
-
-
+getRank(route.path.split('/')[2]).then((res) => {
+  console.log(res);
+  tableData.value = res.data;
+});
 </script>
 <template>
-  <div class="rank-page">
+  <div v-if="false" class="rank-page">
     <div class="rank-header">排行榜</div>
     <div class="rank-body">
       <el-table :data="tableData">
@@ -37,11 +44,15 @@ const tableData = ref();
           </template>
         </el-table-column>
         <el-table-column prop="address" label="提交时间" width="210" />
-        <template v-if="tableData" #append>
+        <!-- <template v-if="tableData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
-        </template>
+        </template> -->
       </el-table>
     </div>
+  </div>
+  <div v-else class="empty">
+    <img :src="emptyImg" alt="" />
+    <p>当前为选拔阶段，暂无排行榜</p>
   </div>
 </template>
 
@@ -139,6 +150,21 @@ const tableData = ref();
         }
       }
     }
+  }
+}
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 16px;
+  background-color: #f5f6f8;
+  img {
+    width: 280px;
+  }
+  p {
+    margin-top: 24px;
+    color: #555555;
+    font-size: 18px;
   }
 }
 </style>

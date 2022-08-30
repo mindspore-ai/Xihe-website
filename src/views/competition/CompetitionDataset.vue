@@ -1,11 +1,25 @@
 <script setup>
+import { computed } from 'vue';
+
 import OButton from '@/components/OButton.vue';
+
+import { downloadDataset } from '@/api/api-obs';
+// import { getTeamInfoById } from '@/api/api-competition';
+import { useCompetitionData } from '@/stores';
+
+const comInfo = computed(() => {
+  return useCompetitionData().competitionData;
+});
+
+console.log(comInfo);
 </script>
 <template>
   <div class="dataset-page">
     <div class="header">
       <div>datasetname</div>
-      <o-button size="small">下载数据集</o-button>
+      <o-button size="small" @click="downloadDataset(comInfo.datasets_link)"
+        >下载数据集</o-button
+      >
     </div>
   </div>
 </template>

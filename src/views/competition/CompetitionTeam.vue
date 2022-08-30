@@ -12,6 +12,7 @@ import { deleteTeam } from '@/api/api-competition';
 import { quitTeam } from '@/api/api-competition';
 import { removeMember } from '@/api/api-competition';
 import { transferCaptain } from '@/api/api-competition';
+import { createTeam } from '@/api/api-competition';
 
 import { ElMessage } from 'element-plus';
 
@@ -191,20 +192,34 @@ async function addTeam() {
 }
 
 // 移除成员
-function deleteMember(memberId) {
+async function deleteMember(memberId, memberName) {
   const memberIds = teamMemberData.value.map((item) => {
     return item.id;
   });
   let index = memberIds.indexOf(memberId);
   memberIds.splice(index, 1);
   let params = { members: memberIds };
-  removeMember(params, teamId.value).then((res) => {
+  let res = await removeMember(params, teamId.value);
+  console.log('移除成员的结果: ', res);
+  if (res.status === 200) {
     teamMemberData.value = res.data.members_order_list;
     ElMessage({
       type: 'success',
       message: '移除成功！',
     });
-  });
+  }
+  // 为移除的成员新建个人参赛的团队
+  let params2 = {
+    name: memberName,
+    relate_competition: route.params.id,
+    is_individual: true,
+  };
+  let res2 = await createTeam(params2);
+  console.log('新建个人参赛的团队的结果: ', res2);
+  // if (res2.status === 200) {
+  // teamData.value = res2.data;
+  // userComData.setTeamId(res2.data.id);
+  // }
 }
 
 // 移交队长
@@ -227,25 +242,26 @@ function handleCaptain(memberId) {
 }
 
 // 退出团队
-function handleQuitTeam() {
-  // console.log('teamId: ', teamId.value);
+async function handleQuitTeam() {
   let params = { id: teamId.value };
-  // console.log('params: ', params);
-  quitTeam(params).then((res) => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '退出团队成功！',
-      });
-      userComData.setTeamId(null);
-      router.push({
-        name: 'introduction',
-        params: {
-          id: route.params.id,
-        },
-      });
-    }
-  });
+  let res = await quitTeam(params);
+  if (res.status === 200) {
+    ElMessage({
+      type: 'success',
+      message: '退出团队成功！',
+    });
+  }
+  // 新建个人参赛的团队
+  let params2 = {
+    name: userInfoStore.userName,
+    relate_competition: route.params.id,
+    is_individual: true,
+  };
+  let res2 = await createTeam(params2);
+  if (res2.status === 200) {
+    // teamData.value = res2.data;
+    userComData.setTeamId(res2.data.id);
+  }
 }
 
 // 删除团队
@@ -439,7 +455,10 @@ function toggleEditDlg(flag) {
               v-if="teamData.leader_name.name !== scope.row.name"
               class="operate"
             >
-              <div class="delete" @click="deleteMember(scope.row.id)">
+              <div
+                class="delete"
+                @click="deleteMember(scope.row.id, scope.row.name)"
+              >
                 <o-icon><icon-cancel></icon-cancel></o-icon>
                 <span>移除</span>
               </div>
@@ -590,6 +609,8 @@ function toggleEditDlg(flag) {
             justify-content: space-between;
             align-items: center;
             .requirement {
+              display: flex;
+              align-items: center;
               span {
                 font-size: 14px;
                 color: #555;

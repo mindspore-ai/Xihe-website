@@ -19,10 +19,14 @@ import IconRemove from '~icons/app/remove';
 import warningImg from '@/assets/icons/warning.png';
 
 import {
-  downloadFile,
+  // downloadFile,
   findFile,
   createFolder,
   deleteFolder,
+  getCode,
+  getDownLoadToken,
+  addDownloadRecord,
+  addDownloadRecord2,
 } from '@/api/api-obs';
 import { changeByte } from '@/shared/utils';
 
@@ -256,6 +260,99 @@ watch(
     deep: true,
   }
 );
+// 多次下载输入验证码
+const showCode = ref(false);
+const verificationCode = ref('');
+const url = ref();
+const res1 = ref();
+let reopt = {
+  method: 'get',
+  url: null,
+  withCredentials: false,
+  headers: null,
+  validateStatus: function (status) {
+    return status >= 200;
+  },
+  maxRedirects: 0,
+  responseType: 'text',
+  data: null,
+};
+function downloadFiles(objkey, fileName, storeId) {
+  try {
+    getDownLoadToken({ objkey }).then((res) => {
+      res1.value = res; //
+
+      addDownloadRecord(storeId, objkey.split('/')[1])
+        .then((res) => {
+          reopt.method = 'get';
+          reopt.url = res1.value.data.signedUrl;
+          reopt.responseType = 'blob';
+          let link = document.createElement('a');
+          link.href = res1.value.data.signedUrl;
+          link.click();
+
+          if (res.status === 200) {
+          } else if (res.status === -1) {
+            toggleCodeeDlg(true);
+            getCode(storeId, objkey.split('/')[1]).then((res) => {
+              let blob = new Blob([res], { type: 'image/png' });
+              url.value = window.URL.createObjectURL(blob);
+            });
+          }
+          // ElMessage({
+          //   type: 'success',
+          //   message: res.msg,
+          //   center: true,
+          // });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  } catch (error) {
+    ElMessage({
+      type: 'error',
+      message: error,
+      center: true,
+    });
+  }
+}
+function toggleCodeeDlg(flag) {
+  if (flag === undefined) {
+    showCode.value = !showCode.value;
+  } else {
+    showCode.value = flag;
+  }
+}
+function changeAnother() {
+  getCode(detailData.value.id, `${prop.moduleName}s`).then((res) => {
+    let blob = new Blob([res], { type: 'image/png' });
+    url.value = window.URL.createObjectURL(blob);
+  });
+}
+function confirmation() {
+  addDownloadRecord2(detailData.value.id, `${prop.moduleName}s`, {
+    code: verificationCode.value,
+  }).then((res) => {
+    if (res.status === 200) {
+      toggleCodeeDlg(false);
+      reopt.method = 'get';
+      reopt.url = res1.value.data.signedUrl;
+      reopt.responseType = 'blob';
+      let link = document.createElement('a');
+      link.href = res1.value.data.signedUrl;
+      link.click();
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '验证码输入错误，请重新输入',
+        center: true,
+      });
+      changeAnother();
+      verificationCode.value = '';
+    }
+  });
+}
 </script>
 <template>
   <div v-if="!detailData.is_empty" class="tree">
@@ -346,7 +443,7 @@ watch(
               width="10%"
               @click="
                 !item.is_folder &&
-                  downloadFile(item.path, item.name, detailData.id)
+                  downloadFiles(item.path, item.name, detailData.id)
               "
             >
               <div v-if="item.size" class="inner-box">
@@ -445,9 +542,59 @@ watch(
       </div>
     </template>
   </o-dialog>
+  <!-- 多次下载输入验证码 -->
+  <o-dialog :show="showCode" :close="false">
+    <template #head>
+      <div class="dlg-title" :style="{ textAlign: 'center' }">请输入验证码</div>
+    </template>
+    <div class="o-dlg-body">
+      <div class="img">
+        <img :src="url" alt="" />
+        <span class="change" @click="changeAnother">看不清，换一张</span>
+      </div>
+      <el-input
+        v-model="verificationCode"
+        placeholder="请输入图片内容"
+      ></el-input>
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '24px',
+        }"
+      >
+        <o-button
+          :style="{ marginRight: '24px' }"
+          @click="toggleCodeeDlg(false)"
+          >{{ i18n.delete.cancel }}</o-button
+        >
+        <o-button type="primary" @click="confirmation">{{
+          i18n.delete.confirm
+        }}</o-button>
+      </div>
+    </template>
+  </o-dialog>
 </template>
 
 <style lang="scss" scoped>
+.o-dlg-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .img {
+    margin-bottom: 12px;
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .change {
+      cursor: pointer;
+    }
+  }
+}
 .o-icon {
   margin-right: 6px;
   font-size: 24px;

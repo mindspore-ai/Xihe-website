@@ -284,14 +284,13 @@ function downloadFiles(objkey, fileName, storeId) {
 
       addDownloadRecord(storeId, objkey.split('/')[1])
         .then((res) => {
-          reopt.method = 'get';
-          reopt.url = res1.value.data.signedUrl;
-          reopt.responseType = 'blob';
-          let link = document.createElement('a');
-          link.href = res1.value.data.signedUrl;
-          link.click();
-
           if (res.status === 200) {
+            reopt.method = 'get';
+            reopt.url = res1.value.data.signedUrl;
+            reopt.responseType = 'blob';
+            let link = document.createElement('a');
+            link.href = res1.value.data.signedUrl;
+            link.click();
           } else if (res.status === -1) {
             toggleCodeeDlg(true);
             getCode(storeId, objkey.split('/')[1]).then((res) => {

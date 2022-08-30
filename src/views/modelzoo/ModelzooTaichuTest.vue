@@ -1,12 +1,17 @@
 <script setup>
 import { request } from '@/shared/axios';
-import { ref, onMounted, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
 import IconDownload from '~icons/app/download';
+import IconRefresh from '~icons/app/refresh-taichu';
 import OButton from '@/components/OButton.vue';
 
-import { uploadModelzooPic, getInferencePicture } from '@/api/api-modelzoo';
+import {
+  uploadModelzooPic,
+  getInferencePicture,
+  getExampleTags,
+} from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
 const imageUrl = ref('');
@@ -43,12 +48,12 @@ const imgLists = [
 ];
 const inferUrl = ref(null);
 const exampleList = reactive([
-  { name: '一只可爱的猫坐在草坪上', isSelected: false },
-  { name: '摩天大楼', isSelected: false },
-  { name: '一架飞机', isSelected: false },
-  { name: '一辆火车行驶在铁路上', isSelected: false },
-  { name: '湖边落日', isSelected: false },
-  { name: '汉堡和薯条', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
 ]);
 const activeIndex = ref(-1);
 const analysis = ref('');
@@ -205,7 +210,23 @@ function downLoadPicture() {
   x.send();
 }
 
-onMounted(() => {});
+function getExampleLists() {
+  getExampleTags().then((res) => {
+    if (res.status === 200) {
+      res.data.forEach((item, index) => {
+        exampleList.forEach((it, i) => {
+          if (index === i) {
+            it.name = item;
+          }
+        });
+      });
+    }
+  });
+}
+getExampleLists();
+function refreshTags() {
+  getExampleLists();
+}
 </script>
 <template>
   <div class="model-page">
@@ -227,14 +248,20 @@ onMounted(() => {});
             type="textarea"
             maxlength="30"
             :show-word-limit="true"
-            placeholder="请用中文输入描述内容"
+            placeholder="请输入简体中文或选择下方样例"
             class="text-area"
             @input="handleTextChange"
           >
           </el-input>
 
           <div class="example">
-            <p class="title">选择样例</p>
+            <div class="example-top">
+              <p class="title">选择样例</p>
+              <div class="refresh-btn" @click="refreshTags">
+                <o-icon><icon-refresh></icon-refresh></o-icon>
+                <p>换一批</p>
+              </div>
+            </div>
             <div class="tags-box">
               <p
                 v-for="item in exampleList"
@@ -261,12 +288,10 @@ onMounted(() => {});
         <div class="content-right">
           <p class="content-right-title">图片结果</p>
           <div class="result">
-            <img
-              v-if="loading1"
-              class="loading-img"
-              src="@/assets/gifs/loading.gif"
-              alt=""
-            />
+            <!-- <div v-if="loading1">
+              <img class="loading-img" src="@/assets/gifs/loading.gif" alt="" />
+            </div> -->
+
             <img class="result-img" :src="inferUrl" />
             <a @click="downLoadPicture">
               <o-icon><icon-download></icon-download></o-icon
@@ -414,6 +439,26 @@ onMounted(() => {});
       .example {
         flex: 1;
         padding: 24px 0 40px 0;
+        &-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .refresh-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            p {
+              font-size: 12px;
+              font-weight: 400;
+              color: #0d8dff;
+              line-height: 17px;
+            }
+            .o-icon {
+              font-size: 12px;
+              margin-right: 4px;
+            }
+          }
+        }
         .title {
           font-size: 14px;
           font-weight: 400;
@@ -425,14 +470,14 @@ onMounted(() => {});
           display: flex;
           flex-wrap: wrap;
           p {
-            padding: 7px 16px;
+            padding: 7px 12px;
             border-radius: 8px;
             border: 1px solid #dbedff;
+            box-sizing: border-box;
             background-color: #f3f9ff;
             margin-top: 16px;
             font-size: 14px;
             color: #555;
-            line-height: 17px;
             margin-right: 16px;
             cursor: pointer;
             &:hover {

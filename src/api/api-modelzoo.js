@@ -44,3 +44,19 @@ export function getInferencePicture(params) {
       return e;
     });
 }
+
+/**
+ * 更换以文生图样例
+ * @returns
+ */
+export function getExampleTags() {
+  const url = `/api/foundation/taichu_opt`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

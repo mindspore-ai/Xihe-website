@@ -1,12 +1,12 @@
 <script setup>
 import { request } from '@/shared/axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
-// import IconDownload from '~icons/app/download';
+import IconDownload from '~icons/app/download';
 import OButton from '@/components/OButton.vue';
 
-import { uploadModelzooPic } from '@/api/api-modelzoo';
+import { uploadModelzooPic, getInferencePicture } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
 // import { ElMessage } from 'element-plus';
@@ -43,21 +43,21 @@ const imgLists = [
   //   url: '/imgs/taichu-example-7.png',
   // },
 ];
-
-// const exampleList = reactive([
-//   { name: '一直可爱的猫坐在草坪上', isSelected: false },
-//   { name: '两个女生', isSelected: false },
-//   { name: '一架飞机', isSelected: false },
-//   { name: '一俩货车行驶在铁路上', isSelected: false },
-//   { name: '湖边落日', isSelected: false },
-//   { name: '汉堡和薯条', isSelected: false },
-// ]);
+const inferUrl = ref(null);
+const exampleList = reactive([
+  { name: '一直可爱的猫坐在草坪上', isSelected: false },
+  { name: '两个女生', isSelected: false },
+  { name: '一架飞机', isSelected: false },
+  { name: '一俩货车行驶在铁路上', isSelected: false },
+  { name: '湖边落日', isSelected: false },
+  { name: '汉堡和薯条', isSelected: false },
+]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
-// const loading1 = ref(false);
-// const inferenceText = ref('');
-// const inputValue = ref(null);
+const loading1 = ref(false);
+const inferenceText = ref('');
+const inputValue = ref(null);
 
 const getImage = (name) => {
   return new URL(`../../assets/imgs/taichu-test/${name}.jpg`, import.meta.url)
@@ -132,73 +132,85 @@ function customUpload() {
   document.querySelector('.caption-bottom-left .el-upload__input').click();
 }
 
-// function resetInferText() {
-//   inferenceText.value = '';
-//   exampleList.forEach((item) => {
-//     item.isSelected = false;
-//   });
-//   inputValue.value.focus();
-// }
+function resetInferText() {
+  inferenceText.value = '';
+  exampleList.forEach((item) => {
+    item.isSelected = false;
+  });
+  inputValue.value.focus();
+}
 
-// function startRatiocnate() {
-//   if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
-//     console.log('中文');
-//     getInferencePicture({ content: inferenceText.value }).then((res) => {
-//       console.log(res);
-//     });
-//   } else {
-//     ElMessage({
-//       type: 'warning',
-//       message: '请输入中文描述',
-//     });
-//   }
-// }
+function startRatiocnate() {
+  if (
+    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+      inferenceText.value
+    )
+  ) {
+    loading1.value = true;
+    getInferencePicture({ content: inferenceText.value }).then((res) => {
+      if (res.status === 200) {
+        loading1.value = false;
+        inferUrl.value = res.data.output_image_url + '?' + new Date();
+      } else if (res.status === -2) {
+        ElMessage({
+          type: waring,
+          message: '前方道路拥挤，请稍后再试',
+        });
+      } else if (res.status === -1) {
+        ElMessage({
+          type: waring,
+          message: '识别不成功，请换个描述语句再试试吧',
+        });
+      }
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请输入中文描述',
+    });
+  }
+}
 
-// function selectTag(val) {
-//   val.isSelected = !val.isSelected;
-//   exampleList.forEach((item) => {
-//     item.isSelected = false;
-//     val.isSelected = true;
-//     inferenceText.value = val.name;
-//   });
-// }
+function selectTag(val) {
+  val.isSelected = !val.isSelected;
+  exampleList.forEach((item) => {
+    item.isSelected = false;
+    val.isSelected = true;
+    inferenceText.value = val.name;
+  });
+}
 
-// function handleTextChange() {
-//   exampleList.forEach((item) => {
-//     if (item.name === inferenceText.value) {
-//       item.isSelected = true;
-//     } else {
-//       item.isSelected = false;
-//     }
-//   });
-// }
+function handleTextChange() {
+  exampleList.forEach((item) => {
+    if (item.name === inferenceText.value) {
+      item.isSelected = true;
+    } else {
+      item.isSelected = false;
+    }
+  });
+}
 
-// function downLoadPicture() {
-//   let x = new XMLHttpRequest();
-//   x.open(
-//     'GET',
-//     'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
-//     true
-//   );
-//   x.responseType = 'blob';
-//   x.onload = function () {
-//     console.log(x.response);
-//     const blobs = new Blob([x.response], { type: 'image/jpg' });
-//     let url = window.URL.createObjectURL(blobs);
-//     let a = document.createElement('a');
-//     a.href = url;
-//     a.download = 'infer.jpg';
-//     a.click();
-//   };
-//   x.send();
-// }
+function downLoadPicture() {
+  let x = new XMLHttpRequest();
+  x.open('GET', inferUrl.value, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/jpg' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.jpg';
+    a.click();
+  };
+  x.send();
+}
 
 onMounted(() => {});
 </script>
 <template>
   <div class="model-page">
-    <!-- 以文生图 -->
-    <!-- <div class="text-to-img">
+    <!-- 以文生图() -->
+    <div class="text-to-img">
       <div class="title">
         <span> 以文生图（Text-To-Image）</span><span class="new-tag">new</span>
       </div>
@@ -244,7 +256,7 @@ onMounted(() => {});
           </div>
         </div>
         <div class="content-right">
-          <p class="content-right-title">分析结果</p>
+          <p class="content-right-title">图片结果</p>
           <div class="result">
             <img
               v-if="loading1"
@@ -259,11 +271,11 @@ onMounted(() => {});
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <!-- Image Caption -->
     <div class="caption-top">
       <div>
-        <p class="experience-title">Image Caption</p>
+        <p class="experience-title">以图生文（Image Caption）</p>
         <p class="experience-text">
           顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
         </p>
@@ -370,7 +382,6 @@ onMounted(() => {});
     display: flex;
     &-left {
       width: 464px;
-      // height: 467px;
       background: #ffffff;
       margin-right: 25px;
       padding: 24px 24px 32px;
@@ -457,7 +468,7 @@ onMounted(() => {});
         padding: 16px;
         height: 370px;
         &-img {
-          height: 100%;
+          height: 330px;
         }
         .o-icon {
           position: absolute;

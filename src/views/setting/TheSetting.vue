@@ -5,6 +5,9 @@ import { useRoute, useRouter } from 'vue-router';
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
 import IconEmail from '~icons/app/email';
+import IconInvitation from '~icons/app/invitation';
+
+import ringImg from '@/assets/icons/ring.png';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -27,6 +30,11 @@ const settingItems = [
     id: 'email',
     label: '邮件',
     icon: IconEmail,
+  },
+  {
+    id: 'invitation',
+    label: '我的邀请',
+    icon: IconInvitation,
   },
 ];
 
@@ -53,6 +61,10 @@ watch(
   },
   { immediate: true }
 );
+
+const showInvitationTip = computed(() => {
+  return route.name === 'settingsInvitation';
+});
 
 function goSetting(item) {
   router.push(`/settings/${item.id}`);
@@ -89,7 +101,13 @@ function goUserPage() {
         </ul>
       </div>
       <div class="setting-detail">
-        <h2>{{ detailTitle }}</h2>
+        <div class="detail-title">
+          <h2>{{ detailTitle }}</h2>
+          <div v-if="showInvitationTip" class="invatation-tip">
+            <img :src="ringImg" />
+            邀请好友注册，赢大奖，<a href="/leaderboard">点击查看排行</a>
+          </div>
+        </div>
         <router-view></router-view>
       </div>
     </div>
@@ -97,6 +115,26 @@ function goUserPage() {
 </template>
 
 <style lang="scss" scoped>
+.invatation-tip {
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+  padding: 8px 27px 8px 16px;
+  background: rgba(13, 141, 255, 0.03);
+  border: 1px solid #d8d8d8;
+  font-size: 14px;
+  font-weight: normal;
+  color: #555555;
+  line-height: 22px;
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 16px;
+  }
+  a{
+    color: #3d8df7;
+  }
+}
 .setting {
   width: 100%;
   padding-top: 80px;
@@ -188,14 +226,20 @@ function goUserPage() {
       margin-left: 24px;
       width: calc(75% - 24px);
 
-      h2 {
+      .detail-title {
         position: relative;
-        height: 48px;
+        display: flex;
+        align-items: center;
         margin-bottom: 48px;
-        font-size: 36px;
-        font-weight: 300;
-        color: #000000;
-        line-height: 48px;
+
+        h2 {
+          position: relative;
+          height: 48px;
+          font-size: 36px;
+          font-weight: 300;
+          color: #000000;
+          line-height: 48px;
+        }
 
         &::after {
           content: '';

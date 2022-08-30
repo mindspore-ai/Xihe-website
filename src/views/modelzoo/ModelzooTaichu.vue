@@ -7,6 +7,7 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
+
 const router = useRouter();
 const route = useRoute();
 
@@ -39,6 +40,15 @@ watch(
 // 点击导航
 function handleNavClick(item) {
   router.push({ path: item.href });
+  // if (item.label === '在线体验') {
+  //   ElMessage({
+  //     type: 'warning',
+  //     message:
+  //       '亲爱的用户，很抱歉，暂时无法进行在线体验。因市政要求，计算机中心于8月22日开始强制限电断电，大模型推理相关资源不可用，预计8月26日恢复。',
+  //   });
+  // } else {
+  //   router.push({ path: item.href });
+  // }
 }
 function goTaichuMore() {
   window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
@@ -64,7 +74,8 @@ function goTaichuMore() {
           <div class="content-banner-right">
             <div class="content-banner-right-title">紫东.太初</div>
             <div class="content-banner-right-content">
-              业界首个三模态千亿参数大模型，支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
+              OPT（Omni-Perception
+              Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
             </div>
             <div class="content-banner-right-btn">
               <OButton

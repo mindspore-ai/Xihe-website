@@ -179,8 +179,8 @@ export function addProject(params) {
  * 获取介绍
  * @returns
  */
-export function getGuide() {
-  const url = `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/competition/rules.md`;
+export function getGuide(link) {
+  const url = link;
   return request
     .get(url)
     .then((res) => {

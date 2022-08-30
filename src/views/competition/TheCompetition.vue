@@ -7,6 +7,7 @@ import OButton from '@/components/OButton.vue';
 import paintings from '@/assets/imgs/paintings.png';
 import imageClassify from '@/assets/imgs/imageClassify.jpg';
 import textClassification from '@/assets/imgs/textClassification.jpg';
+import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
@@ -24,7 +25,6 @@ const tableData = ref([]);
 function getCompetitions() {
   getCompetition()
     .then((res) => {
-      console.log(111, res.data);
       tableData.value = res.data;
       console.log('res.data: ', res.data);
     })
@@ -100,15 +100,64 @@ console.log(tableData);
                       <OIcon><IconArrowRight /></OIcon>
                     </template>
                   </OButton>
-                  <div class="number">报名人数：302</div>
+                  <div class="number">报名人数：{{ item.user_count }}</div>
                 </div>
               </div>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="进行中" name="second">Config</el-tab-pane>
-        <el-tab-pane label="已结束" name="third">Role</el-tab-pane>
-        <el-tab-pane label="未开始" name="fourth">Task</el-tab-pane>
+        <el-tab-pane label="进行中" name="second">
+          <div v-for="item in tableData" :key="item.id" class="competition-box">
+            <div class="left">
+              <div class="card-head">
+                <div class="card-head-title">
+                  {{ item.name }}
+                </div>
+                <div
+                  v-if="item.status_name === '进行中'"
+                  class="card-head-state"
+                  :class="state"
+                >
+                  火热进行中
+                </div>
+              </div>
+              <!-- <div class="card-body">{{ item.description }}</div> -->
+              <div class="card-body">
+                {{ item.description }}
+              </div>
+              <div class="card-footer">举办方:绿色计算产业联盟</div>
+            </div>
+            <div class="right1">
+              <div class="right1-bonus">
+                <div class="number">奖金：{{ item.bonus }}</div>
+                <div class="time">赛期:{{ item.during }}</div>
+              </div>
+              <div class="right-immediate">
+                <div class="right-wrap">
+                  <OButton type="primary" animation @click="goDetail(item.id)">
+                    立即报名
+                    <template #suffix>
+                      <OIcon><IconArrowRight /></OIcon>
+                    </template>
+                  </OButton>
+                  <div class="number">报名人数：{{ item.user_count }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="已结束" name="third">
+          <div class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>敬请期待</p>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="未开始" name="fourth">
+          <div class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>敬请期待</p>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -119,6 +168,23 @@ console.log(tableData);
   margin: 0 auto;
   padding: 0 16px;
   max-width: 1472px;
+}
+.el-tab-pane {
+  min-height: calc(100vh - 785px);
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 116px;
+    img {
+      width: 280px;
+    }
+    p {
+      color: #555555;
+      margin-top: 24px;
+      font-size: 18px;
+    }
+  }
 }
 .competition-page {
   background-color: #f5f6f8;

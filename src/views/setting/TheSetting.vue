@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
 import IconEmail from '~icons/app/email';
+import IconTrophy from '~icons/app/trophy';
 import IconInvitation from '~icons/app/invitation';
 
 import ringImg from '@/assets/icons/ring.png';
@@ -30,6 +31,11 @@ const settingItems = [
     id: 'email',
     label: '邮件',
     icon: IconEmail,
+  },
+  {
+    id: 'competition',
+    label: '我的比赛',
+    icon: IconTrophy,
   },
   {
     id: 'invitation',
@@ -131,7 +137,7 @@ function goUserPage() {
     height: 16px;
     margin-right: 16px;
   }
-  a{
+  a {
     color: #3d8df7;
   }
 }

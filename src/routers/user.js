@@ -164,6 +164,13 @@ export default [
         },
       },
       {
+        path: 'competition',
+        name: 'settingsCompetition',
+        component: () => {
+          return import('@/views/setting/SettingCompetition.vue');
+        },
+      },
+      {
         path: 'invitation',
         name: 'settingsInvitation',
         component: () => {

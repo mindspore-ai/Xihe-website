@@ -64,6 +64,11 @@ const navItems = [
     href: '/datasets',
   },
   {
+    id: 'competition',
+    label: '比赛',
+    href: '/competition',
+  },
+  {
     id: 'leaderboard',
     label: '排行榜',
     href: '/leaderboard',

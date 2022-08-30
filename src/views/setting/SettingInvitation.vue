@@ -39,9 +39,7 @@ const toggleDlg = (flag) => {
   showDlg.value = flag;
 };
 getRank().then((res) => {
-  console.log(res.data.user_invited);
   tableData.value = res.data.user_invited;
-  console.log(tableData);
 });
 </script>
 

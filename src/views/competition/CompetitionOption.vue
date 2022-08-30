@@ -54,12 +54,12 @@ const navItems = reactive([
     href: 'leaderboard',
     isIndividual: true,
   },
-  {
-    id: 'discussion',
-    label: '讨论',
-    href: 'discussion',
-    isIndividual: true,
-  },
+  // {
+  //   id: 'discussion',
+  //   label: '讨论',
+  //   href: 'discussion',
+  //   isIndividual: true,
+  // },
   {
     id: 'agreement',
     label: '协议',

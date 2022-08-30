@@ -24,7 +24,7 @@ getGuide(comInfo.value.description_link)
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 </script>
 <template>

@@ -17,7 +17,6 @@ const route = useRoute();
 
 const tableData = ref();
 getRank(route.path.split('/')[2]).then((res) => {
-  console.log(res);
   tableData.value = res.data;
 });
 </script>

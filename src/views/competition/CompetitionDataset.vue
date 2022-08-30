@@ -23,13 +23,12 @@ getGuide(comInfo.value.datasets_description)
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 </script>
 <template>
   <div class="dataset-page">
     <div class="header">
-      <div>datasetname</div>
       <o-button size="small" @click="downloadDataset(comInfo.datasets_link)"
         >下载数据集</o-button
       >
@@ -44,11 +43,12 @@ getGuide(comInfo.value.datasets_description)
     margin-top: 36px;
     font-size: 36px;
     line-height: 48px;
-    display: flex;
-    justify-content: space-between;
+    // display: flex;
+    // justify-content: space-between;
     margin: 0 24px;
     .o-button {
       margin-top: 8px;
+      float: right;
     }
   }
 }

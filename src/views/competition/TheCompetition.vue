@@ -26,7 +26,7 @@ function getCompetitions() {
   getCompetition()
     .then((res) => {
       tableData.value = res.data;
-      console.log('res.data: ', res.data);
+      // console.log('res.data: ', res.data);
     })
     .catch((err) => {
       console.error(err);
@@ -41,7 +41,6 @@ function goDetail(id) {
   });
   // router.push(`/competition/${id}`)
 }
-console.log(tableData);
 </script>
 <template>
   <div class="competition-page">

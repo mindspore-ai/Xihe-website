@@ -102,7 +102,6 @@ function confirmAdd() {
       });
       return;
     } else {
-      console.log(teamId);
       let relate_project = res.results.data[0].id;
       revampTeam({ relate_project }, teamId.value).then((res) => {
         if (res.status === 200) {
@@ -110,7 +109,6 @@ function confirmAdd() {
           // TODO:更新时间
           detailData.value.update_date_time = res.data.project_name.update_time;
           detailData.value.project_name = [detailData.value.project_name];
-          console.log('detailData: ', detailData);
           ElMessage({
             type: 'success',
             message: '绑定成功！',
@@ -145,7 +143,7 @@ async function getIndividual(id) {
     // TODO:更新时间
     detailData.value.update_date_time = res.data.project_name.update_time;
     detailData.value.project_name = [detailData.value.project_name];
-    console.log('detailData: ', detailData);
+    // console.log('detailData: ', detailData);
   }
 }
 // let groupId = ref(null);

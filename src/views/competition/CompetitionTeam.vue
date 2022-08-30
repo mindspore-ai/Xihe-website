@@ -150,11 +150,8 @@ function fountTeam() {
     name: form1.teamName,
     is_individual: false,
   };
-  console.log('params: ', params);
   // 修改团队
-  console.log('TeamId: ', teamId.value);
   revampTeam(params, teamId.value).then((res) => {
-    console.log('res: ', res);
     if (res.status === 200) {
       teamData.value = res.data;
       teamMemberData.value = res.data.members_order_list;
@@ -170,7 +167,6 @@ async function addTeam() {
   let res = await getTeamInfoByName(params.name);
   if (res.status === 200 && res.data.length !== 0) {
     newTeamId = res.data[0].id;
-    form2.teamName = '';
   } else {
     ElMessage({
       type: 'warning',
@@ -183,11 +179,12 @@ async function addTeam() {
   // 加入团队
   let res3 = await joinTeam({ id: newTeamId });
   if (res3.status === 200) {
+    form2.teamName = '';
+    userComData.setTeamId(newTeamId);
     ElMessage({
       type: 'success',
       message: '加入团队成功!',
     });
-    userComData.setTeamId(newTeamId);
     // is_individual.value = false;
   }
 }
@@ -212,7 +209,6 @@ async function deleteMember(memberId) {
 
 // 移交队长
 function handleCaptain(memberId) {
-  console.log('memberId: ', memberId);
   let params = {
     id: teamId.value,
     leader: memberId,
@@ -232,9 +228,7 @@ function handleCaptain(memberId) {
 // 退出团队
 async function handleQuitTeam() {
   let params = { id: teamId.value };
-  console.log('params: ', params);
   let res = await quitTeam(params);
-  console.log('退出团队结果: ', res);
   if (res.status === 200) {
     ElMessage({
       type: 'success',

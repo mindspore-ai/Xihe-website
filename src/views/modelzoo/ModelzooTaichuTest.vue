@@ -9,8 +9,6 @@ import OButton from '@/components/OButton.vue';
 import { uploadModelzooPic, getInferencePicture } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
-// import { ElMessage } from 'element-plus';
-
 const imageUrl = ref('');
 const fileList = ref([]);
 const imgLists = [
@@ -45,10 +43,10 @@ const imgLists = [
 ];
 const inferUrl = ref(null);
 const exampleList = reactive([
-  { name: '一直可爱的猫坐在草坪上', isSelected: false },
-  { name: '两个女生', isSelected: false },
+  { name: '一只可爱的猫坐在草坪上', isSelected: false },
+  { name: '摩天大楼', isSelected: false },
   { name: '一架飞机', isSelected: false },
-  { name: '一俩货车行驶在铁路上', isSelected: false },
+  { name: '一辆火车行驶在铁路上', isSelected: false },
   { name: '湖边落日', isSelected: false },
   { name: '汉堡和薯条', isSelected: false },
 ]);
@@ -153,14 +151,16 @@ function startRatiocnate() {
         inferUrl.value = res.data.output_image_url + '?' + new Date();
       } else if (res.status === -2) {
         ElMessage({
-          type: waring,
-          message: '前方道路拥挤，请稍后再试',
+          type: 'warning',
+          message: res.msg,
         });
+        loading1.value = false;
       } else if (res.status === -1) {
         ElMessage({
-          type: waring,
-          message: '识别不成功，请换个描述语句再试试吧',
+          type: 'warning',
+          message: res.msg,
         });
+        loading1.value = false;
       }
     });
   } else {
@@ -220,6 +220,7 @@ onMounted(() => {});
       <div class="content">
         <div class="content-left">
           <p class="content-left-title">输入描述</p>
+
           <el-input
             ref="inputValue"
             v-model="inferenceText"
@@ -231,6 +232,7 @@ onMounted(() => {});
             @input="handleTextChange"
           >
           </el-input>
+
           <div class="example">
             <p class="title">选择样例</p>
             <div class="tags-box">
@@ -244,10 +246,11 @@ onMounted(() => {});
               </p>
             </div>
           </div>
+
           <div class="btn-box">
-            <o-button size="medium" @click="resetInferText">重新输入</o-button>
+            <o-button size="small" @click="resetInferText">重新输入</o-button>
             <o-button
-              size="medium"
+              size="small"
               type="primary"
               class="infer-button"
               @click="startRatiocnate"
@@ -272,6 +275,7 @@ onMounted(() => {});
         </div>
       </div>
     </div>
+    <el-divider />
     <!-- Image Caption -->
     <div class="caption-top">
       <div>
@@ -359,14 +363,14 @@ onMounted(() => {});
 
 <style lang="scss" scoped>
 .text-to-img {
-  padding-top: 36px;
+  padding: 36px 0 16px 0;
   .title {
     font-size: 20px;
     color: #000000;
     line-height: 28px;
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     .new-tag {
       display: inline-block;
       width: 44px;
@@ -377,14 +381,17 @@ onMounted(() => {});
       font-size: 12px;
     }
   }
+  .experience-text {
+    margin-bottom: 16px;
+  }
   .content {
-    margin-top: 16px;
+    margin-bottom: 16px;
     display: flex;
     &-left {
       width: 464px;
       background: #ffffff;
       margin-right: 25px;
-      padding: 24px 24px 32px;
+      padding: 24px 24px 40px;
       display: flex;
       flex-direction: column;
       &-title {
@@ -394,8 +401,8 @@ onMounted(() => {});
         line-height: 25px;
       }
       .text-area {
-        height: 156px;
-        margin-top: 16px;
+        height: 150px;
+        margin-top: 24px;
         :deep(.el-input__count) {
           right: -5px;
         }
@@ -406,12 +413,13 @@ onMounted(() => {});
       }
       .example {
         flex: 1;
-        padding: 28px 0;
+        padding: 24px 0 40px 0;
         .title {
           font-size: 14px;
           font-weight: 400;
           color: #555555;
           line-height: 20px;
+          margin-bottom: 0;
         }
         .tags-box {
           display: flex;
@@ -420,9 +428,10 @@ onMounted(() => {});
             padding: 7px 16px;
             border-radius: 8px;
             border: 1px solid #dbedff;
+            background-color: #f3f9ff;
             margin-top: 16px;
             font-size: 14px;
-            color: #000;
+            color: #555;
             line-height: 17px;
             margin-right: 16px;
             cursor: pointer;
@@ -496,7 +505,7 @@ onMounted(() => {});
 .caption-top {
   display: flex;
   justify-content: space-between;
-  padding: 36px 0 20px 0;
+  padding: 16px 0 20px 0;
 
   .experience-btn {
     align-self: flex-end;

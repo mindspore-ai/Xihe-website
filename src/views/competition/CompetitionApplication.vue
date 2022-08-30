@@ -466,7 +466,6 @@ function handleProvince(province) {
         left: 18px;
       }
       .tips-text {
-        // width: 100%;
         line-height: 38px;
         color: #555555;
         font-size: 14px;
@@ -475,7 +474,6 @@ function handleProvince(province) {
     }
   }
   .el-divider .el-divider--horizontal {
-    // padding-left: 11%;
     width: 80%;
     margin-left: 138px !important;
   }

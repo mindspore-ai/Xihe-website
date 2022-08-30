@@ -12,7 +12,7 @@ import { deleteTeam } from '@/api/api-competition';
 import { quitTeam } from '@/api/api-competition';
 import { removeMember } from '@/api/api-competition';
 import { transferCaptain } from '@/api/api-competition';
-import { createTeam } from '@/api/api-competition';
+// import { createTeam } from '@/api/api-competition';
 
 import { ElMessage } from 'element-plus';
 
@@ -56,7 +56,7 @@ const teamData = ref([]); //创建团队后的团队信息
 const teamMemberData = ref([]); //创建团队后的团队成员信息
 const showDel = ref(false);
 const showEdit = ref(false);
-const is_individual = ref(true);
+const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
 
@@ -162,7 +162,7 @@ function fountTeam() {
     }
   });
 }
-// 点击加入团队
+// 加入团队
 async function addTeam() {
   // 通过团队名获取团队信息判断团队名是否存在
   let newTeamId = null; //新加入的团队id
@@ -170,6 +170,7 @@ async function addTeam() {
   let res = await getTeamInfoByName(params.name);
   if (res.status === 200 && res.data.length !== 0) {
     newTeamId = res.data[0].id;
+    form2.teamName = '';
   } else {
     ElMessage({
       type: 'warning',
@@ -178,7 +179,7 @@ async function addTeam() {
     return;
   }
   // 删除原来的个人团队信息
-  await deleteTeam(teamId.value);
+  // await deleteTeam(teamId.value);
   // 加入团队
   let res3 = await joinTeam({ id: newTeamId });
   if (res3.status === 200) {
@@ -192,7 +193,7 @@ async function addTeam() {
 }
 
 // 移除成员
-async function deleteMember(memberId, memberName) {
+async function deleteMember(memberId) {
   const memberIds = teamMemberData.value.map((item) => {
     return item.id;
   });
@@ -200,7 +201,6 @@ async function deleteMember(memberId, memberName) {
   memberIds.splice(index, 1);
   let params = { members: memberIds };
   let res = await removeMember(params, teamId.value);
-  console.log('移除成员的结果: ', res);
   if (res.status === 200) {
     teamMemberData.value = res.data.members_order_list;
     ElMessage({
@@ -208,18 +208,6 @@ async function deleteMember(memberId, memberName) {
       message: '移除成功！',
     });
   }
-  // 为移除的成员新建个人参赛的团队
-  let params2 = {
-    name: memberName,
-    relate_competition: route.params.id,
-    is_individual: true,
-  };
-  let res2 = await createTeam(params2);
-  console.log('新建个人参赛的团队的结果: ', res2);
-  // if (res2.status === 200) {
-  // teamData.value = res2.data;
-  // userComData.setTeamId(res2.data.id);
-  // }
 }
 
 // 移交队长
@@ -244,24 +232,27 @@ function handleCaptain(memberId) {
 // 退出团队
 async function handleQuitTeam() {
   let params = { id: teamId.value };
+  console.log('params: ', params);
   let res = await quitTeam(params);
+  console.log('退出团队结果: ', res);
   if (res.status === 200) {
     ElMessage({
       type: 'success',
       message: '退出团队成功！',
     });
+    is_individual.value = true;
   }
-  // 新建个人参赛的团队
-  let params2 = {
-    name: userInfoStore.userName,
-    relate_competition: route.params.id,
-    is_individual: true,
-  };
-  let res2 = await createTeam(params2);
-  if (res2.status === 200) {
-    // teamData.value = res2.data;
-    userComData.setTeamId(res2.data.id);
-  }
+  // // 新建个人参赛的团队
+  // let params2 = {
+  //   name: userInfoStore.userName,
+  //   relate_competition: route.params.id,
+  //   is_individual: true,
+  // };
+  // let res2 = await createTeam(params2);
+  // if (res2.status === 200) {
+  //   // teamData.value = res2.data;
+  //   userComData.setTeamId(res2.data.id);
+  // }
 }
 
 // 删除团队
@@ -423,7 +414,7 @@ function toggleEditDlg(flag) {
           }}</OButton>
         </div>
         <div v-else class="quit-button">
-          <OButton type="primary" size="small" @click="handleQuitTeam()">{{
+          <OButton type="primary" size="small" @click="handleQuitTeam">{{
             i18n.quit
           }}</OButton>
         </div>
@@ -455,10 +446,7 @@ function toggleEditDlg(flag) {
               v-if="teamData.leader_name.name !== scope.row.name"
               class="operate"
             >
-              <div
-                class="delete"
-                @click="deleteMember(scope.row.id, scope.row.name)"
-              >
+              <div class="delete" @click="deleteMember(scope.row.id)">
                 <o-icon><icon-cancel></icon-cancel></o-icon>
                 <span>移除</span>
               </div>

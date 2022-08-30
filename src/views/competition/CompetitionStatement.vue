@@ -4,7 +4,6 @@ import OButton from '@/components/OButton.vue';
 import agreement from '@/assets/statement/competition_agreement.md?raw';
 import MdStatement from '@/components/MdStatement.vue';
 
-const textarea = ref('');
 const agree = ref(false);
 // const active = ref(1);
 const i18n = {

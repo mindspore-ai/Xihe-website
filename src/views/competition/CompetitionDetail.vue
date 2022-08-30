@@ -56,17 +56,6 @@ watch(
     immediate: true,
   }
 );
-// 监听团队id
-// watch(
-//   () => {
-//     return teamId.value;
-//   },
-//   () => {
-//     getDetailData();
-//     console.log('详情页重新加载');
-//   }
-//   // { immediate: true }
-// );
 /* onMounted(() => {
   let card = document.querySelector('.competition-card');
   // let parent = document.querySelector('competition-bread');
@@ -75,7 +64,6 @@ watch(
   // let top2 = parent.offsetTop;
 
   window.addEventListener('scroll', function () {
-    // console.log('11111', top1, window.pageYOffset);
     if (window.pageYOffset > top1) {
       card.classList.add('fixed');
     }
@@ -95,12 +83,10 @@ async function getDetailData() {
     let res = await getCompetition({ id: route.params.id });
     if (res.status === 200) {
       competitionData.value = res.data;
-      // console.log('比赛数据: ', competitionData.value);
       userComData.setCompetitionData(res.data);
     }
     // 获取团队id
     let params = { id: route.params.id };
-    // console.log('params: ', params);
     let res2 = await getGroupid(params.id);
     if (res2.status === 200) {
       // teamId.value = res2.group_id;

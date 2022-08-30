@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-// const tableData = ref();
 const activeName = ref('first');
 
 const handleClick = (tab, event) => {
@@ -18,9 +17,6 @@ const handleClick = (tab, event) => {
     >
       <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
       <el-tab-pane label="全部" name="first">
-        <!-- <div v-for="item in tableData" :key="item.id" class="competition-card">
-          <div>全部比赛</div>
-        </div> -->
         <div class="competition-card">
           <div class="left">
             <div class="title">
@@ -139,8 +135,6 @@ const handleClick = (tab, event) => {
         box-shadow: 0 0 0 1px #0d8dff inset;
         color: #0d8dff;
       }
-    }
-    .el-tabs__content {
     }
   }
 }

@@ -19,17 +19,14 @@ const userComData = useCompetitionData();
 const detailData = computed(() => {
   return userComData.competitionData;
 });
+// 用户团队id
 const teamId = computed(() => {
   return useCompetitionData().teamId;
 });
-// console.log('teamId: ', teamId);
 
 const state = ref('doing'); //比赛状态：will-do，doing，done
 const competitionData = ref([]);
-// 用户团队id
-// const teamId = ref(null);
 const show = ref(true);
-// console.log('show: ', show);
 const showDetail = ref(false);
 
 // 立即报名
@@ -132,43 +129,49 @@ getDetailData();
           </el-breadcrumb>
         </div>
         <div class="competition-content">
-          <div class="competition-card">
-            <div class="competition-box">
-              <div class="left">
-                <div class="card-head">
-                  <div class="card-head-title">
-                    {{ competitionData.name }}
-                  </div>
-                  <div
-                    v-if="competitionData.status_name === '进行中'"
-                    class="card-head-state"
-                    :class="state"
-                  >
-                    火热进行中
-                  </div>
+          <!-- <div class="competition-card"> -->
+          <div class="competition-box">
+            <div class="left">
+              <div class="card-head">
+                <div class="card-head-title">
+                  {{ competitionData.name }}
                 </div>
-                <!-- <div class="card-body">{{ competitionData.description }}</div> -->
-                <div class="card-body">
-                  本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的本竞赛主要考察参赛团队在问题分析、数据处理、算法设计、功能实现，特别是基于昇腾的
-                  {{ competitionData.description }}
+                <div
+                  v-if="competitionData.status_name === '进行中'"
+                  class="card-head-state"
+                  :class="state"
+                >
+                  火热进行中
                 </div>
-                <div class="card-footer">举办方:绿色计算产业联盟</div>
               </div>
-              <div class="right">
-                <div class="right-bonus">
-                  <div class="number">奖金：{{ competitionData.bonus }}</div>
-                  <div class="time">赛期:{{ competitionData.during }}</div>
+              <!-- <div class="card-body">{{ competitionData.description }}</div> -->
+              <div class="card-body">
+                {{ competitionData.description }}
+              </div>
+              <div class="card-footer">举办方:绿色计算产业联盟</div>
+            </div>
+            <div v-if="teamId === null && show" class="right1">
+              <div class="right1-bonus">
+                <div class="number">奖金：{{ competitionData.bonus }}</div>
+                <div class="time">赛期:{{ competitionData.during }}</div>
+              </div>
+              <div class="right-immediate">
+                <div class="wrap">
+                  <OButton type="primary" animation @click="goApplication">
+                    立即报名
+                  </OButton>
+                  <div class="number">报名人数：302</div>
                 </div>
               </div>
             </div>
-            <div v-if="teamId === null && show" class="right-immediate">
-              <OButton type="primary" animation @click="goApplication">
-                立即报名
-              </OButton>
-              <!--TODO:  -->
-              <div class="number">报名人数：302</div>
+            <div v-else class="right2">
+              <div class="right2-bonus">
+                <div class="number">奖金：{{ competitionData.bonus }}</div>
+                <div class="time">赛期:{{ competitionData.during }}</div>
+              </div>
             </div>
           </div>
+          <!-- </div> -->
           <div class="competition-desc">
             <router-view></router-view>
           </div>
@@ -213,7 +216,7 @@ getDetailData();
     }
     .competition-content {
       scroll-behavior: smooth;
-      .fixed {
+      /* .fixed {
         position: fixed;
         z-index: 1000;
         top: 80px;
@@ -235,110 +238,154 @@ getDetailData();
         .time {
           margin: 0 !important;
         }
-      }
-      .competition-card {
+      } */
+      // .competition-card {
+      //   background-color: #ffffff;
+      //   display: flex;
+      //   align-items: center;
+      //   font-size: 14px;
+      //   margin-bottom: 24px;
+
+      .competition-box {
+        font-size: 14px;
+        // padding: 40px 48px 24px 40px;
         background-color: #ffffff;
         display: flex;
-        align-items: center;
-        font-size: 14px;
-        margin-bottom: 24px;
+        justify-content: space-between;
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        .left {
+          padding: 40px 0px 24px 40px;
 
-        .competition-box {
-          padding: 40px 0 24px 40px;
-          display: flex;
-
-          border-right: 1px solid #e4e5e7;
-          .left {
-            .card-head {
-              display: flex;
-              align-items: center;
-              &-title {
-                font-size: 24px;
-              }
-              &-state {
-                font-size: 12px;
-                height: 20px;
-                line-height: 20px;
-                margin-left: 15px;
-                padding: 0 8px;
-              }
-              .will-do {
-                color: #ffffff;
-                background-color: #6189ff;
-              }
-              .doing {
-                color: #ffffff;
-                background-color: #ff7f0d;
-              }
-              .done {
-                color: #555555;
-                background-color: #efefef;
-              }
-            }
-            .card-body {
-              margin-top: 16px;
-              color: #555555;
-              line-height: 22px;
-            }
-            .card-footer {
-              color: #555555;
-              line-height: 22px;
-              margin-top: 16px;
-            }
-          }
-          .right {
+          .card-head {
             display: flex;
             align-items: center;
-
-            &-bonus {
-              white-space: nowrap;
-              margin: 0 48px;
-              .number {
-                color: #6189ff;
-                font-size: 24px;
-                line-height: 28px;
-                text-align: center;
-              }
-              .time {
-                line-height: 24px;
-                padding: 12px 40px;
-                color: #555555;
-                margin-top: 24px;
-                background-color: #f4faff;
-              }
+            &-title {
+              font-size: 24px;
+            }
+            &-state {
+              font-size: 12px;
+              height: 20px;
+              line-height: 20px;
+              margin-left: 15px;
+              padding: 0 8px;
+            }
+            .will-do {
+              color: #ffffff;
+              background-color: #6189ff;
+            }
+            .doing {
+              color: #ffffff;
+              background-color: #ff7f0d;
+            }
+            .done {
+              color: #555555;
+              background-color: #efefef;
             }
           }
-        }
-        .right-immediate {
-          margin-left: 48px;
-          margin-right: 48px;
-          .number {
+          .card-body {
+            margin-top: 16px;
             color: #555555;
             line-height: 22px;
-            text-align: center;
+          }
+          .card-footer {
+            color: #555555;
+            line-height: 22px;
             margin-top: 16px;
           }
         }
+        .right1 {
+          display: flex;
+          padding-right: 48px;
+          &-bonus {
+            margin: 40px 90px 24px 88px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            // align-items: center;
+            white-space: nowrap;
+            .number {
+              color: #6189ff;
+              font-size: 24px;
+              line-height: 28px;
+              text-align: center;
+            }
+            .time {
+              line-height: 24px;
+              padding: 12px 40px;
+              color: #555555;
+              margin-top: 24px;
+              background-color: #f4faff;
+            }
+          }
+          .right-immediate {
+            border-left: 1px solid #e4e5e7;
+            .wrap {
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              margin-left: 48px;
+              .number {
+                color: #555555;
+                margin-top: 16px;
+              }
+            }
+            //
+            //   margin-right: 48px;
+            //   .number {
+            //
+            //     line-height: 22px;
+            //     text-align: center;
+            //
+            //   }
+          }
+        }
+        .right2 {
+          padding-right: 93px;
+          &-bonus {
+            margin-left: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            white-space: nowrap;
+            .number {
+              color: #6189ff;
+              font-size: 24px;
+              line-height: 28px;
+              text-align: center;
+            }
+            .time {
+              line-height: 24px;
+              padding: 12px 40px;
+              color: #555555;
+              margin-top: 24px;
+              background-color: #f4faff;
+            }
+          }
+        }
       }
-      .competition-desc {
-        margin-top: 24px;
-        background-color: #fff;
-
-        // &-tab {
-
-        //   height: 48px;
-        //   background-color: #fbfbfb;
-        //   :deep(.o-nav) {
-        //     width: 100%;
-        //     display: flex;
-        //     justify-content: center;
-        //     margin: 0 auto;
-        //     .nav-item {
-        //       color: #555;
-        //     }
-        //   }
-        // }
-      }
+    }
+    .competition-desc {
+      margin-top: 24px;
+      background-color: #fff;
+      /* &-tab {
+        height: 48px;
+        background-color: #fbfbfb;
+        :deep(.o-nav) {
+          .nav-item {
+            margin-left: 40px;
+          }
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          margin: 0 auto;
+          .nav-item {
+            color: #555;
+          }
+        }
+      } */
     }
   }
 }

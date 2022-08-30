@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import OButton from '@/components/OButton.vue';
+import agreement from '@/assets/statement/competition_agreement.md?raw';
+import MdStatement from '@/components/MdStatement.vue';
 
 const textarea = ref('');
 const agree = ref(false);
@@ -17,10 +19,12 @@ function goNextStep() {
 }
 </script>
 <template>
-  <!-- 法律声明 -->
+  <!-- 比赛协议 -->
   <div class="statement">
     <div class="statement-title">{{ i18n.statement }}</div>
-    <el-input id="txt" v-model="textarea" type="textarea" readonly />
+    <div class="statement-detail">
+      <MdStatement :statement="agreement"></MdStatement>
+    </div>
     <div class="nextBtn">
       <o-button v-if="!agree" disabled type="secondary">{{
         i18n.next
@@ -46,13 +50,41 @@ function goNextStep() {
     color: #000000;
     margin: 48px 0 24px;
   }
-  :deep(.el-textarea) {
-    width: 100% !important;
-    height: 100%;
-    .el-textarea__inner {
-      min-height: 500px !important;
-      // min-height: 865px !important;
-      height: 100%;
+  &-detail {
+    height: 520px;
+    padding: 10px;
+    overflow-x: auto;
+    border: 1px solid #999;
+    .statement,
+    .markdown-file {
+      padding-top: 0px;
+    }
+  }
+  // :deep(.el-textarea) {
+  //   width: 100% !important;
+  //   height: 100%;
+  //   .el-textarea__inner {
+  //     min-height: 500px !important;
+  //     // min-height: 865px !important;
+  //     height: 100%;
+  //   }
+  // }
+  :deep .statement-detail {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: #d8d8d8;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+      box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+      background: #ffffff;
     }
   }
   .isAgree {

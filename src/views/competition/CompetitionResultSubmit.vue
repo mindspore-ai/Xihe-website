@@ -102,10 +102,25 @@ function confirmAdd() {
       });
       return;
     } else {
-      // console.log(res.results.data[0].id);
+      console.log(teamId);
       let relate_project = res.results.data[0].id;
-      revampTeam({ relate_project }, groupId).then((res) => {
-        console.log(res);
+      revampTeam({ relate_project }, teamId.value).then((res) => {
+        if (res.status === 200) {
+          detailData.value = res.data;
+          // TODO:更新时间
+          detailData.value.update_date_time = '2022-08-26 10:39:10';
+          detailData.value.project_name = [detailData.value.project_name];
+          console.log('detailData: ', detailData);
+          ElMessage({
+            type: 'success',
+            message: '绑定成功！',
+          });
+        } else {
+          ElMessage({
+            type: 'error',
+            message: '只能绑定一个项目！',
+          });
+        }
       });
     }
   });
@@ -158,24 +173,33 @@ const detailData = ref();
 
 getIndividual(); */
 function goProjectClick(val) {
-  router.push(`/projects/${val.owner_name.name}/${val.name}`);
+  if (detailData.value.leader_name.name === userInfo.userName) {
+    router.push(`/projects/${val.owner_name.name}/${val.name}`);
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '只有队长可查看改项目',
+    });
+  }
+}
+console.log(userInfo.userName, detailData);
+// togglePhoneDlg(true)
+function handelSubmit() {
+  ElMessage({
+    type: 'error',
+    message: '暂支持比赛7天后提交结果，请耐心等待',
+  });
 }
 </script>
 <template>
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <div v-if="!!(detailData && detailData.project_name[0].photo)">
-        <div class="guide">你可对该项目内的文件进行改动</div>
-        <project-relate-card
-          :detail-data="detailData"
-          :name="'project_name'"
-          @jump="goProjectClick"
-        ></project-relate-card>
-      </div>
       <div
-        v-else-if="
-          detailData && detailData.leader_name.name === userInfo.userName
+        v-if="
+          detailData &&
+          !detailData.project_name[0] &&
+          detailData.leader_name.name === userInfo.userName
         "
       >
         <div class="guide">
@@ -192,6 +216,15 @@ function goProjectClick(val) {
           >
         </div>
       </div>
+      <div v-else-if="!!(detailData && detailData.project_name[0].photo)">
+        <div class="guide">你可对该项目内的文件进行改动</div>
+        <project-relate-card
+          :detail-data="detailData"
+          :name="'project_name'"
+          @jump="goProjectClick"
+        ></project-relate-card>
+      </div>
+
       <div v-else class="empty">
         <o-icon><icon-project></icon-project></o-icon>
         当前暂未关联项目
@@ -202,7 +235,7 @@ function goProjectClick(val) {
         <div class="header-title">提交结果</div>
         <div class="header-button">
           <span>每日限提交1次（限制条件待更新）</span>
-          <OButton type="primary" size="small" @click="togglePhoneDlg(true)"
+          <OButton type="primary" size="small" @click="handelSubmit"
             >提交结果</OButton
           >
         </div>

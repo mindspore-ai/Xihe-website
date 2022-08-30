@@ -4,6 +4,10 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
+import paintings from '@/assets/imgs/paintings.png';
+import imageClassify from '@/assets/imgs/imageClassify.jpg';
+import textClassification from '@/assets/imgs/textClassification.jpg';
+
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { getCompetition } from '@/api/api-competition';
@@ -16,15 +20,16 @@ const state = ref('doing'); //比赛状态：will-do，doing，done
 const handleClick = (tab, event) => {
   console.log(tab, event);
 };
-const tableData = ref();
+const tableData = ref([]);
 function getCompetitions() {
   getCompetition()
     .then((res) => {
+      console.log(111, res.data);
       tableData.value = res.data;
       console.log('res.data: ', res.data);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
 }
 getCompetitions();
@@ -36,14 +41,19 @@ function goDetail(id) {
   });
   // router.push(`/competition/${id}`)
 }
+console.log(tableData);
 </script>
 <template>
   <div class="competition-page">
     <div class="competition-head">
       <div class="wrap">
         <el-carousel :interval="4000" type="card" height="200px">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <h3 text="2xl" justify="center">{{ item }}</h3>
+          <el-carousel-item><img :src="paintings" alt="" /> </el-carousel-item>
+          <el-carousel-item
+            ><img :src="imageClassify" alt="" />
+          </el-carousel-item>
+          <el-carousel-item
+            ><img :src="textClassification" alt="" />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -57,41 +67,42 @@ function goDetail(id) {
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
         <el-tab-pane label="全部" name="first">
-          <div
-            v-for="item in tableData"
-            :key="item.id"
-            class="competition-card"
-          >
-            <div class="competition-box">
-              <div class="left">
-                <div class="card-head">
-                  <div class="card-head-title">
-                    第三届全国高校绿色计算创新大赛
-                  </div>
-                  <div class="card-head-state" :class="state">火热进行中</div>
+          <div v-for="item in tableData" :key="item.id" class="competition-box">
+            <div class="left">
+              <div class="card-head">
+                <div class="card-head-title">
+                  {{ item.name }}
                 </div>
-                <div class="card-body">
-                  大赛以“AI赋能视界”为主题，分为“华为・昇腾杯”AI+行人重识别、“华为・昇腾杯”AI+遥感影像、AI+无线通信三个赛道，在8月-10月面向全球开放报名参赛。
-                  初赛和复赛期间，优秀队伍可获得华为云资源支持；在昇腾开发者社区可以获得相关样例模型、开发者文档、技术支持等资源；基于昇腾的算法模型，决赛成绩可获得加分。
-                  大赛立足于国际视野，营造人工智能创新创…
-                </div>
-                <div class="card-footer">举办方:绿色计算产业联盟</div>
-              </div>
-              <div class="right">
-                <div class="right-bonus">
-                  <div class="number">奖金：800，000</div>
-                  <div class="time">赛期:2020/6/15-2020/9/11</div>
+                <div
+                  v-if="item.status_name === '进行中'"
+                  class="card-head-state"
+                  :class="state"
+                >
+                  火热进行中
                 </div>
               </div>
+              <!-- <div class="card-body">{{ item.description }}</div> -->
+              <div class="card-body">
+                {{ item.description }}
+              </div>
+              <div class="card-footer">举办方:绿色计算产业联盟</div>
             </div>
-            <div class="right-immediate">
-              <OButton type="primary" animation @click="goDetail(item.id)">
-                立即报名
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
-              <div class="number">报名人数：302</div>
+            <div class="right1">
+              <div class="right1-bonus">
+                <div class="number">奖金：{{ item.bonus }}</div>
+                <div class="time">赛期:{{ item.during }}</div>
+              </div>
+              <div class="right-immediate">
+                <div class="right-wrap">
+                  <OButton type="primary" animation @click="goDetail(item.id)">
+                    立即报名
+                    <template #suffix>
+                      <OIcon><IconArrowRight /></OIcon>
+                    </template>
+                  </OButton>
+                  <div class="number">报名人数：302</div>
+                </div>
+              </div>
             </div>
           </div>
         </el-tab-pane>
@@ -114,15 +125,14 @@ function goDetail(id) {
   .competition-head {
     background-color: #ffffff;
     padding-top: 80 + 40px;
-    .el-carousel__item h3 {
-      color: #475669;
-      opacity: 0.75;
-      line-height: 200px;
-      margin: 0;
-      text-align: center;
-    }
-    .el-carousel__item:nth-child(2n + 1) {
-      background-color: #d41b2d;
+    .el-carousel {
+      img {
+        width: 100%;
+      }
+
+      .is-active {
+        width: 776px;
+      }
     }
   }
   .competition-body {
@@ -161,86 +171,93 @@ function goDetail(id) {
         }
       }
       .el-tabs__content {
-        .competition-card {
-          background-color: #ffffff;
-          display: flex;
-          align-items: center;
+        .competition-box {
           font-size: 14px;
+          // padding: 40px 48px 24px 40px;
+          background-color: #ffffff;
           margin-bottom: 24px;
-
-          .competition-box {
-            padding: 40px 0 24px 40px;
-            display: flex;
-            border-right: 1px solid #e4e5e7;
-            .left {
-              .card-head {
-                display: flex;
-                align-items: center;
-                &-title {
-                  font-size: 24px;
-                }
-                &-state {
-                  font-size: 12px;
-                  height: 20px;
-                  line-height: 20px;
-                  margin-left: 15px;
-                  padding: 0 8px;
-                }
-                .will-do {
-                  color: #ffffff;
-                  background-color: #6189ff;
-                }
-                .doing {
-                  color: #ffffff;
-                  background-color: #ff7f0d;
-                }
-                .done {
-                  color: #555555;
-                  background-color: #efefef;
-                }
-              }
-              .card-body {
-                margin-top: 16px;
-                color: #555555;
-                line-height: 22px;
-              }
-              .card-footer {
-                color: #555555;
-                line-height: 22px;
-                margin-top: 16px;
-              }
-            }
-            .right {
+          display: flex;
+          justify-content: space-between;
+          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          .left {
+            padding: 40px 0px 24px 40px;
+            // background-color: red;
+            .card-head {
               display: flex;
               align-items: center;
-
-              &-bonus {
-                white-space: nowrap;
-                margin: 0 48px;
-                .number {
-                  color: #6189ff;
-                  font-size: 24px;
-                  line-height: 28px;
-                  text-align: center;
-                }
-                .time {
-                  line-height: 24px;
-                  padding: 12px 40px;
-                  color: #555555;
-                  margin-top: 24px;
-                  background-color: #f4faff;
-                }
+              &-title {
+                font-size: 24px;
+              }
+              &-state {
+                font-size: 12px;
+                height: 20px;
+                line-height: 20px;
+                margin-left: 15px;
+                padding: 0 8px;
+              }
+              .will-do {
+                color: #ffffff;
+                background-color: #6189ff;
+              }
+              .doing {
+                color: #ffffff;
+                background-color: #ff7f0d;
+              }
+              .done {
+                color: #555555;
+                background-color: #efefef;
               }
             }
-          }
-          .right-immediate {
-            margin-left: 48px;
-            margin-right: 48px;
-            .number {
+            .card-body {
+              margin-top: 16px;
               color: #555555;
               line-height: 22px;
-              text-align: center;
+            }
+            .card-footer {
+              color: #555555;
+              line-height: 22px;
               margin-top: 16px;
+            }
+          }
+          .right1 {
+            // background-color: blue;
+            display: flex;
+            padding-right: 48px;
+            &-bonus {
+              margin: 40px 90px 24px 88px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              // align-items: center;
+              white-space: nowrap;
+              .number {
+                color: #6189ff;
+                font-size: 24px;
+                line-height: 28px;
+                text-align: center;
+              }
+              .time {
+                line-height: 24px;
+                padding: 12px 40px;
+                color: #555555;
+                margin-top: 24px;
+                background-color: #f4faff;
+              }
+            }
+            .right-immediate {
+              border-left: 1px solid #e4e5e7;
+              .right-wrap {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-left: 48px;
+                .number {
+                  color: #555555;
+                  margin-top: 16px;
+                }
+              }
             }
           }
         }

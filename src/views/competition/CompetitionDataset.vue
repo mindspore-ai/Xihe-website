@@ -30,7 +30,7 @@ getGuide(comInfo.value.datasets_description)
   <div class="dataset-page">
     <div class="header">
       <div>datasetname</div>
-      <o-button size="small" @click="downloadDataset(comInfo.datasets)"
+      <o-button size="small" @click="downloadDataset(comInfo.datasets_link)"
         >下载数据集</o-button
       >
     </div>

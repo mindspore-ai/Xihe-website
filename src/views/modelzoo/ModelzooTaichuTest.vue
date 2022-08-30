@@ -1,15 +1,18 @@
 <script setup>
 import { request } from '@/shared/axios';
-import { ref, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
-// import IconDownload from '~icons/app/download';
+import IconDownload from '~icons/app/download';
+import IconRefresh from '~icons/app/refresh-taichu';
 import OButton from '@/components/OButton.vue';
 
-import { uploadModelzooPic } from '@/api/api-modelzoo';
+import {
+  uploadModelzooPic,
+  getInferencePicture,
+  getExampleTags,
+} from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
-
-// import { ElMessage } from 'element-plus';
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -43,21 +46,21 @@ const imgLists = [
   //   url: '/imgs/taichu-example-7.png',
   // },
 ];
-
-// const exampleList = reactive([
-//   { name: '一直可爱的猫坐在草坪上', isSelected: false },
-//   { name: '两个女生', isSelected: false },
-//   { name: '一架飞机', isSelected: false },
-//   { name: '一俩货车行驶在铁路上', isSelected: false },
-//   { name: '湖边落日', isSelected: false },
-//   { name: '汉堡和薯条', isSelected: false },
-// ]);
+const inferUrl = ref(null);
+const exampleList = reactive([
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+  { name: '', isSelected: false },
+]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
-// const loading1 = ref(false);
-// const inferenceText = ref('');
-// const inputValue = ref(null);
+const loading1 = ref(false);
+const inferenceText = ref('');
+const inputValue = ref(null);
 
 const getImage = (name) => {
   return new URL(`../../assets/imgs/taichu-test/${name}.jpg`, import.meta.url)
@@ -132,73 +135,103 @@ function customUpload() {
   document.querySelector('.caption-bottom-left .el-upload__input').click();
 }
 
-// function resetInferText() {
-//   inferenceText.value = '';
-//   exampleList.forEach((item) => {
-//     item.isSelected = false;
-//   });
-//   inputValue.value.focus();
-// }
+function resetInferText() {
+  inferenceText.value = '';
+  exampleList.forEach((item) => {
+    item.isSelected = false;
+  });
+  inputValue.value.focus();
+}
 
-// function startRatiocnate() {
-//   if (/^[\u4E00-\u9FA5]+$/.test(inferenceText.value)) {
-//     console.log('中文');
-//     getInferencePicture({ content: inferenceText.value }).then((res) => {
-//       console.log(res);
-//     });
-//   } else {
-//     ElMessage({
-//       type: 'warning',
-//       message: '请输入中文描述',
-//     });
-//   }
-// }
+function startRatiocnate() {
+  if (
+    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+      inferenceText.value
+    )
+  ) {
+    loading1.value = true;
+    getInferencePicture({ content: inferenceText.value }).then((res) => {
+      if (res.status === 200) {
+        loading1.value = false;
+        inferUrl.value = res.data.output_image_url + '?' + new Date();
+      } else if (res.status === -2) {
+        ElMessage({
+          type: 'warning',
+          message: res.msg,
+        });
+        loading1.value = false;
+      } else if (res.status === -1) {
+        ElMessage({
+          type: 'warning',
+          message: res.msg,
+        });
+        loading1.value = false;
+      }
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请输入中文描述',
+    });
+  }
+}
 
-// function selectTag(val) {
-//   val.isSelected = !val.isSelected;
-//   exampleList.forEach((item) => {
-//     item.isSelected = false;
-//     val.isSelected = true;
-//     inferenceText.value = val.name;
-//   });
-// }
+function selectTag(val) {
+  val.isSelected = !val.isSelected;
+  exampleList.forEach((item) => {
+    item.isSelected = false;
+    val.isSelected = true;
+    inferenceText.value = val.name;
+  });
+}
 
-// function handleTextChange() {
-//   exampleList.forEach((item) => {
-//     if (item.name === inferenceText.value) {
-//       item.isSelected = true;
-//     } else {
-//       item.isSelected = false;
-//     }
-//   });
-// }
+function handleTextChange() {
+  exampleList.forEach((item) => {
+    if (item.name === inferenceText.value) {
+      item.isSelected = true;
+    } else {
+      item.isSelected = false;
+    }
+  });
+}
 
-// function downLoadPicture() {
-//   let x = new XMLHttpRequest();
-//   x.open(
-//     'GET',
-//     'https://text2img.obs.cn-central-221.ovaijisuan.com/wesley/result.jpg',
-//     true
-//   );
-//   x.responseType = 'blob';
-//   x.onload = function () {
-//     console.log(x.response);
-//     const blobs = new Blob([x.response], { type: 'image/jpg' });
-//     let url = window.URL.createObjectURL(blobs);
-//     let a = document.createElement('a');
-//     a.href = url;
-//     a.download = 'infer.jpg';
-//     a.click();
-//   };
-//   x.send();
-// }
+function downLoadPicture() {
+  let x = new XMLHttpRequest();
+  x.open('GET', inferUrl.value, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/jpg' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.jpg';
+    a.click();
+  };
+  x.send();
+}
 
-onMounted(() => {});
+function getExampleLists() {
+  getExampleTags().then((res) => {
+    if (res.status === 200) {
+      res.data.forEach((item, index) => {
+        exampleList.forEach((it, i) => {
+          if (index === i) {
+            it.name = item;
+          }
+        });
+      });
+    }
+  });
+}
+getExampleLists();
+function refreshTags() {
+  getExampleLists();
+}
 </script>
 <template>
   <div class="model-page">
-    <!-- 以文生图 -->
-    <!-- <div class="text-to-img">
+    <!-- 以文生图() -->
+    <div class="text-to-img">
       <div class="title">
         <span> 以文生图（Text-To-Image）</span><span class="new-tag">new</span>
       </div>
@@ -208,19 +241,27 @@ onMounted(() => {});
       <div class="content">
         <div class="content-left">
           <p class="content-left-title">输入描述</p>
+
           <el-input
             ref="inputValue"
             v-model="inferenceText"
             type="textarea"
             maxlength="30"
             :show-word-limit="true"
-            placeholder="请用中文输入描述内容"
+            placeholder="请输入简体中文或选择下方样例"
             class="text-area"
             @input="handleTextChange"
           >
           </el-input>
+
           <div class="example">
-            <p class="title">选择样例</p>
+            <div class="example-top">
+              <p class="title">选择样例</p>
+              <div class="refresh-btn" @click="refreshTags">
+                <o-icon><icon-refresh></icon-refresh></o-icon>
+                <p>换一批</p>
+              </div>
+            </div>
             <div class="tags-box">
               <p
                 v-for="item in exampleList"
@@ -232,10 +273,11 @@ onMounted(() => {});
               </p>
             </div>
           </div>
+
           <div class="btn-box">
-            <o-button size="medium" @click="resetInferText">重新输入</o-button>
+            <o-button size="small" @click="resetInferText">重新输入</o-button>
             <o-button
-              size="medium"
+              size="small"
               type="primary"
               class="infer-button"
               @click="startRatiocnate"
@@ -244,14 +286,12 @@ onMounted(() => {});
           </div>
         </div>
         <div class="content-right">
-          <p class="content-right-title">分析结果</p>
+          <p class="content-right-title">图片结果</p>
           <div class="result">
-            <img
-              v-if="loading1"
-              class="loading-img"
-              src="@/assets/gifs/loading.gif"
-              alt=""
-            />
+            <!-- <div v-if="loading1">
+              <img class="loading-img" src="@/assets/gifs/loading.gif" alt="" />
+            </div> -->
+
             <img class="result-img" :src="inferUrl" />
             <a @click="downLoadPicture">
               <o-icon><icon-download></icon-download></o-icon
@@ -259,11 +299,12 @@ onMounted(() => {});
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
+    <el-divider />
     <!-- Image Caption -->
     <div class="caption-top">
       <div>
-        <p class="experience-title">Image Caption</p>
+        <p class="experience-title">以图生文（Image Caption）</p>
         <p class="experience-text">
           顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
         </p>
@@ -347,14 +388,14 @@ onMounted(() => {});
 
 <style lang="scss" scoped>
 .text-to-img {
-  padding-top: 36px;
+  padding: 36px 0 16px 0;
   .title {
     font-size: 20px;
     color: #000000;
     line-height: 28px;
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     .new-tag {
       display: inline-block;
       width: 44px;
@@ -365,15 +406,17 @@ onMounted(() => {});
       font-size: 12px;
     }
   }
+  .experience-text {
+    margin-bottom: 16px;
+  }
   .content {
-    margin-top: 16px;
+    margin-bottom: 16px;
     display: flex;
     &-left {
       width: 464px;
-      // height: 467px;
       background: #ffffff;
       margin-right: 25px;
-      padding: 24px 24px 32px;
+      padding: 24px 24px 40px;
       display: flex;
       flex-direction: column;
       &-title {
@@ -383,8 +426,8 @@ onMounted(() => {});
         line-height: 25px;
       }
       .text-area {
-        height: 156px;
-        margin-top: 16px;
+        height: 150px;
+        margin-top: 24px;
         :deep(.el-input__count) {
           right: -5px;
         }
@@ -395,24 +438,46 @@ onMounted(() => {});
       }
       .example {
         flex: 1;
-        padding: 28px 0;
+        padding: 24px 0 40px 0;
+        &-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .refresh-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            p {
+              font-size: 12px;
+              font-weight: 400;
+              color: #0d8dff;
+              line-height: 17px;
+            }
+            .o-icon {
+              font-size: 12px;
+              margin-right: 4px;
+            }
+          }
+        }
         .title {
           font-size: 14px;
           font-weight: 400;
           color: #555555;
           line-height: 20px;
+          margin-bottom: 0;
         }
         .tags-box {
           display: flex;
           flex-wrap: wrap;
           p {
-            padding: 7px 16px;
+            padding: 7px 12px;
             border-radius: 8px;
             border: 1px solid #dbedff;
+            box-sizing: border-box;
+            background-color: #f3f9ff;
             margin-top: 16px;
             font-size: 14px;
-            color: #000;
-            line-height: 17px;
+            color: #555;
             margin-right: 16px;
             cursor: pointer;
             &:hover {
@@ -457,7 +522,7 @@ onMounted(() => {});
         padding: 16px;
         height: 370px;
         &-img {
-          height: 100%;
+          height: 330px;
         }
         .o-icon {
           position: absolute;
@@ -485,7 +550,7 @@ onMounted(() => {});
 .caption-top {
   display: flex;
   justify-content: space-between;
-  padding: 36px 0 20px 0;
+  padding: 16px 0 20px 0;
 
   .experience-btn {
     align-self: flex-end;

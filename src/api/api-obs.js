@@ -136,6 +136,22 @@ export function addDownloadRecord(id, module) {
     return res.data;
   });
 }
+// 输入验证码继续下载
+export function addDownloadRecord2(id, module, params) {
+  const url = `/api/${module}/${id}/download`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+// 多次下载获取验证码
+export function getCode(id, module) {
+  const url = `/api/${module}/${id}/download`;
+  return request
+    .put(url, null, { ...getHeaderConfig(), responseType: 'blob' })
+    .then((res) => {
+      return res.data;
+    });
+}
 // 上传方法封装
 export async function handleUpload(params, progressCallback, successCallback) {
   // 验证文件名合法性

@@ -31,6 +31,12 @@ export function getCompetition(params) {
     });
   }
 }
+export function getAllCompetition(params) {
+  const url = `/api/competitions/competitions/`;
+  return request.get(url, params).then((res) => {
+    return res.data;
+  });
+}
 /**
  * 获取排行榜信息
  * @returns

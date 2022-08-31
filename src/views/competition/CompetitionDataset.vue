@@ -55,12 +55,13 @@ getGuide(comInfo.value.datasets_description)
     margin-top: 36px;
     font-size: 36px;
     line-height: 48px;
-    // display: flex;
-    // justify-content: space-between;
+    display: flex;
+    justify-content: flex-end;
     margin: 0 24px;
     .o-button {
       margin-top: 8px;
-      float: right;
+      margin-right: 20px;
+      // float: right;
     }
   }
 }

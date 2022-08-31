@@ -187,7 +187,7 @@ function saveInfo(formEl) {
               return true;
             }
           });
-          console.log('params1: ', params1);
+          // console.log('params1: ', params1);
           goCompetition(params1).then((res) => {
             if (res.status === 200) {
               emit('handleStep');

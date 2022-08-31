@@ -109,7 +109,7 @@ const rules3 = reactive({
     {
       // 只支持中英文，不超过20个字符
       pattern: /^[a-zA-Z\u4e00-\u9fa5]{1,20}$/,
-      message: '团队名支持中英文，不超过20个字符',
+      message: '团队名仅支持中英文，不超过20个字符',
       trigger: 'blur',
     },
   ],
@@ -156,6 +156,7 @@ function fountTeam() {
       teamData.value = res.data;
       teamMemberData.value = res.data.members_order_list;
       is_individual.value = false;
+      form1.teamName = '';
     }
   });
 }
@@ -185,7 +186,6 @@ async function addTeam() {
       type: 'success',
       message: '加入团队成功!',
     });
-    // is_individual.value = false;
   }
 }
 
@@ -236,35 +236,25 @@ async function handleQuitTeam() {
     });
     is_individual.value = true;
   }
-  // // 新建个人参赛的团队
-  // let params2 = {
-  //   name: userInfoStore.userName,
-  //   relate_competition: route.params.id,
-  //   is_individual: true,
-  // };
-  // let res2 = await createTeam(params2);
-  // if (res2.status === 200) {
-  //   // teamData.value = res2.data;
-  //   userComData.setTeamId(res2.data.id);
-  // }
 }
 
 // 删除团队
 function confirmDel() {
   deleteTeam(teamId.value).then((res) => {
     if (res.status === 200) {
-      userComData.setTeamId(null);
+      // userComData.setTeamId(null);
       showDel.value = false;
       ElMessage({
         type: 'success',
         message: '团队删除成功！',
       });
-      router.push({
+      /* router.push({
         name: 'introduction',
         params: {
           id: route.params.id, //比赛id
         },
-      });
+      }); */
+      is_individual.value = true;
     } else {
       ElMessage({
         type: 'error',
@@ -347,7 +337,12 @@ function toggleEditDlg(flag) {
         </el-tab-pane>
         <el-tab-pane label="加入团队" name="second">
           <div class="join">
-            <el-form ref="queryRef2" :model="form2" :rules="rules2">
+            <el-form
+              ref="queryRef2"
+              class="form2"
+              :model="form2"
+              :rules="rules2"
+            >
               <div class="requirement">
                 <icon-necessary></icon-necessary
                 ><span>{{ i18n.teamName }}</span>
@@ -516,6 +511,7 @@ function toggleEditDlg(flag) {
     >
       <el-form
         ref="queryRef3"
+        class="form3"
         :style="{ display: 'flex', justifyContent: 'center', align: 'center' }"
         :model="form3"
         :rules="rules3"

@@ -65,6 +65,7 @@ function goCompetition() {
                   <span v-else class="state finished">已结束</span>
                 </div>
                 <div class="information">
+                  <div class="host">举办方：{{ item.host }}</div>
                   <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
                   <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
                 </div>
@@ -91,6 +92,7 @@ function goCompetition() {
                   >
                 </div>
                 <div class="information">
+                  <div class="host">举办方：{{ item.host }}</div>
                   <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
                   <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
                 </div>
@@ -116,6 +118,7 @@ function goCompetition() {
                 <span class="state finished">已结束</span>
               </div>
               <div class="information">
+                <div class="host">举办方：{{ item.host }}</div>
                 <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
                 <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
               </div>

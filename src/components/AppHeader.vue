@@ -63,11 +63,11 @@ const navItems = [
     label: '数据集',
     href: '/datasets',
   },
-  {
+  /*   {
     id: 'competition',
     label: '比赛',
     href: '/competition',
-  },
+  }, */
   {
     id: 'leaderboard',
     label: '排行榜',

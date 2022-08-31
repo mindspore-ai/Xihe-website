@@ -142,7 +142,7 @@ export function getUserDig2(reopt) {
  */
 export function getUserEmail(id) {
   const url = `/api/users/${id}/email`;
-  console.log('url: ', url);
+  // console.log('url: ', url);
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

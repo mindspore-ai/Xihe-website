@@ -32,11 +32,11 @@ const settingItems = [
     label: '邮件',
     icon: IconEmail,
   },
-  {
-    id: 'competition',
-    label: '我的比赛',
-    icon: IconTrophy,
-  },
+  // {
+  //   id: 'competition',
+  //   label: '我的比赛',
+  //   icon: IconTrophy,
+  // },
   {
     id: 'invitation',
     label: '我的邀请',

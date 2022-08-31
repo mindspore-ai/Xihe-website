@@ -8,19 +8,11 @@ import { getGroupid } from '@/api/api-competition';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
-<<<<<<< Updated upstream
 import OButton from '@/components/OButton.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfoStore = useUserInfoStore();
-
-=======
-const userInfoStore = useUserInfoStore();
-// import OButton from '@/components/OButton.vue';
-
-// import { ArrowRight } from '@element-plus/icons-vue';
->>>>>>> Stashed changes
 const route = useRoute();
 const router = useRouter();
 
@@ -169,10 +161,10 @@ getDetailData();
               </div>
               <div class="right-immediate">
                 <div class="right-wrap">
-                  <OButton type="primary" animation @click="goApplication">
+                  <!-- <OButton type="primary" animation @click="goApplication">
                     立即报名
-                  </OButton>
-                  <!-- <div v-if="competitionData.status_name === '进行中'">
+                  </OButton> -->
+                  <div v-if="competitionData.status_name === '进行中'">
                     <OButton type="primary" animation @click="goApplication">
                       立即报名
                     </OButton>
@@ -182,7 +174,7 @@ getDetailData();
                   </div>
                   <div v-if="competitionData.status_name === '已结束'">
                     <div class="competitionState">比赛已结束</div>
-                  </div> -->
+                  </div>
                   <div class="number">
                     报名人数：{{ competitionData.user_count }}
                   </div>

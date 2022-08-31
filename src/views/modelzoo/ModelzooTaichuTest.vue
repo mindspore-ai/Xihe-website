@@ -800,6 +800,9 @@ function refreshTags() {
         color: #ccc;
         font-size: 24px;
         cursor: pointer;
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
         &:hover {
           transform: translateY(-3px);
           color: #0d8dff;
@@ -819,6 +822,9 @@ function refreshTags() {
       justify-content: center;
       @media screen and (max-width: 768px) {
         margin-bottom: 8px;
+        .o-button {
+          font-size: 14px;
+        }
       }
       .infer-button {
         margin-left: 16px;

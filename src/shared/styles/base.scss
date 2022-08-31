@@ -22,6 +22,11 @@ body {
   overflow-y: auto;
   min-width: 1280px;
 
+  &.mobile-fit {
+    min-width: auto;
+    width: 100vw;
+  }
+
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;

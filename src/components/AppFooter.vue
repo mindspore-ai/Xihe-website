@@ -1,11 +1,14 @@
 <script setup>
 import logoImg from '@/assets/imgs/footer-logo.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
+import useWindowResize from './hooks/useWindowResize';
+
+const screenWidth = useWindowResize();
 </script>
 
 <template>
   <footer class="footer">
-    <div class="footer-logo">
+    <div v-if="screenWidth > 768" class="footer-logo">
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="footer-content">
@@ -37,8 +40,14 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
   margin: 0 auto;
   height: 200px;
   padding: 16px 16px;
+  background-color: #060b29;
   color: rgba(255, 255, 255, 1);
 
+  @media screen and (max-width: 1080px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    height: auto;
+  }
   &-logo {
     display: flex;
     align-items: center;
@@ -54,17 +63,36 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    @media screen and (max-width: 1080px) {
+      position: static;
+      left: 0;
+      transform: none;
+      margin-top: 16px;
+    }
     .above {
       width: 202px;
       display: flex;
       justify-content: space-around;
       font-size: 14px;
       margin: 0 auto;
+      @media screen and (max-width: 1080px) {
+        width: auto;
+        justify-content: center;
+        align-items: center;
+      }
       .text {
         color: rgba(255, 255, 255, 1);
         height: 26px;
         line-height: 26px;
         cursor: pointer;
+
+        @media screen and (max-width: 1080px) {
+          margin-left: 8px;
+
+          &:first-child {
+            margin-right: 8px;
+          }
+        }
       }
 
       .division {
@@ -72,13 +100,19 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
         height: 20px;
         background-color: rgba(255, 255, 255, 1);
         margin-top: 2px;
+        @media screen and (max-width: 1080px) {
+          height: 14px;
+        }
       }
     }
 
     .below {
       display: flex;
       font-size: 12px;
-      margin-top: 21px;
+      margin-top: 20px;
+      @media screen and (max-width: 1080px) {
+        margin-top: 4px;
+      }
     }
   }
 

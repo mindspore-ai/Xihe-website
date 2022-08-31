@@ -1,11 +1,15 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
+import useWindowResize from './components/hooks/useWindowResize';
 
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
+import IconLeft from '~icons/app/left';
 const route = useRoute();
+const router = useRouter();
 
 const showFooter = computed(() => {
   return !(route.path === '/' || route.path === '/home');
@@ -29,16 +33,35 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', setHeader);
 });
+
+// 紫东太初移动端适配
+const isTaichuPage = computed(() => {
+  return route.name === 'taichuIntroduction' || route.name === 'taichuTest';
+});
+const screenWidth = useWindowResize();
+
+const goBack = () => {
+  router.go(-1);
+};
 </script>
 
 <template>
+  <header v-if="isTaichuPage && screenWidth < 1080" class="mobile-header">
+    <div class="back" @click="goBack">
+      <OIcon><IconLeft /></OIcon>
+    </div>
+    <span>大模型</span>
+  </header>
+
   <header
+    v-else
     ref="header"
     class="app-header"
     :class="{ opaque: isHeaderTransparent }"
   >
     <app-header></app-header>
   </header>
+
   <main class="app-body">
     <router-view></router-view>
   </main>
@@ -50,6 +73,45 @@ onUnmounted(() => {
 <style lang="scss">
 #app {
   min-width: 1280px;
+}
+// TODO:紫东太初移动端头部简单适配
+.mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 48px;
+  padding: 0 16px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  height: 24px;
+  font-size: 16px;
+  color: #000000;
+  line-height: 24px;
+  .back {
+    position: absolute;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    left: 16px;
+    font-size: 24px;
+  }
+}
+
+// TODO:移动端适配内容
+.mobile-fit {
+  #app {
+    min-width: auto;
+    width: 100vw;
+  }
+}
+// TODO:移动端适配内容
+.mobile-header {
+  width: 100%;
+  height: 48px;
 }
 
 .app-header {
@@ -66,6 +128,14 @@ onUnmounted(() => {
   min-width: 1280px;
 }
 
+// TODO:移动端适配
+.mobile-fit {
+  .app-header {
+    min-width: auto;
+    width: 100vw;
+  }
+}
+
 .opaque {
   z-index: 100;
   background-color: rgba(6, 11, 41, 1);
@@ -76,12 +146,28 @@ onUnmounted(() => {
   min-height: calc(100vh - 200px);
 }
 
+// TODO:移动端适配
+.mobile-fit {
+  .app-body {
+    min-width: auto;
+    width: 100vw;
+  }
+}
+
 .app-footer {
   min-width: 1280px;
   background-color: #18191d;
   background-image: url(@/assets/imgs/footer-bg.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+
+// TODO:移动端适配
+.mobile-fit {
+  .app-footer {
+    min-width: auto;
+    width: 100vw;
+  }
 }
 
 .slide-enter-active,

@@ -112,6 +112,12 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
+  const mobileFitWhiteList = ['taichuIntroduction', 'taichuTest'];
+  if (mobileFitWhiteList.indexOf(to.name) !== -1) {
+    document.body.classList.add('mobile-fit');
+  } else {
+    document.body.classList.remove('mobile-fit');
+  }
   // 设置语言
   const langStore = useLangStore();
   langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';

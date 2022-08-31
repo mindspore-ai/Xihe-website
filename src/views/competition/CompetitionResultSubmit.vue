@@ -47,7 +47,6 @@ function callback(transferredAmount, totalAmount) {
   );
 }
 async function upLoad(param) {
-  // console.log(param);
   let path = `xihe-obj/competition/${detailData1.value.name}/${groupName.value}/${param.file.name}`;
   // 上传函数接收三个参数
   // 1.文件相关信息，编辑完成不需要验证文件名重复isEdit传true，其余传false。
@@ -141,9 +140,10 @@ async function getIndividual(id) {
   if (res.status === 200) {
     detailData.value = res.data;
     // TODO:更新时间
-    detailData.value.update_date_time = res.data.project_name.update_time;
-    detailData.value.project_name = [detailData.value.project_name];
-    // console.log('detailData: ', detailData);
+    if (res.data.project_name) {
+      detailData.value.update_date_time = res.data.project_name.update_time;
+      detailData.value.project_name = [detailData.value.project_name];
+    }
   }
 }
 // let groupId = ref(null);
@@ -162,10 +162,6 @@ const detailData = ref();
     // TODO:更新时间
     detailData.value.update_date_time = '2022-08-26 10:39:10';
     detailData.value.project_name = [detailData.value.project_name];
-    // console.log(
-    //   '初始请求',
-    //   detailData.value && detailData.value.project_name[0].photo
-    // );
   }
 }
 
@@ -180,7 +176,6 @@ function goProjectClick(val) {
     });
   }
 }
-console.log(userInfo.userName, detailData);
 // togglePhoneDlg(true)
 function handelSubmit() {
   ElMessage({
@@ -196,7 +191,7 @@ function handelSubmit() {
       <div
         v-if="
           detailData &&
-          !detailData.project_name[0] &&
+          !detailData.project_name &&
           detailData.leader_name.name === userInfo.userName
         "
       >
@@ -214,7 +209,7 @@ function handelSubmit() {
           >
         </div>
       </div>
-      <div v-else-if="!!(detailData && detailData.project_name[0].photo)">
+      <div v-else-if="detailData && detailData.project_name">
         <div class="guide">你可对该项目内的文件进行改动</div>
         <project-relate-card
           :detail-data="detailData"
@@ -339,7 +334,7 @@ function handelSubmit() {
   .right {
     padding-top: 24px;
     padding-right: 56px;
-    border-right: 2px solid #d8d8d8;
+    border-right: 1px solid #d8d8d8;
     .header {
       font-size: 24px;
     }

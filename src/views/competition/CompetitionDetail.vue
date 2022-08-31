@@ -8,10 +8,12 @@ import { getGroupid } from '@/api/api-competition';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
-const userInfoStore = useUserInfoStore();
 import OButton from '@/components/OButton.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
+
+const userInfoStore = useUserInfoStore();
+
 const route = useRoute();
 const router = useRouter();
 

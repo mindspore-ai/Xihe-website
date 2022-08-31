@@ -8,7 +8,7 @@ import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
-import homeBanner2 from '@/assets/imgs/home-banner2.png';
+// import homeBanner2 from '@/assets/imgs/home-banner2.png';
 // import homeBanner3 from '@/assets/imgs/home-banner3.png';
 import homePageImg from '@/assets/imgs/home-page.png';
 import digitRecognition from '@/assets/imgs/digit-recognition.png';
@@ -183,9 +183,16 @@ function handleBtnClick3() {
         <div class="photo1 cursor" @click="goInvited"></div>
       </el-carousel-item>
       <el-carousel-item>
-        <div class="photo">
-          <img :src="homeBanner2" alt="" />
-        </div>
+        <div class="photo2"></div>
+      </el-carousel-item>
+      <el-carousel-item>
+        <div class="photo3 cursor"></div>
+      </el-carousel-item>
+      <el-carousel-item>
+        <div class="photo4 cursor"></div>
+      </el-carousel-item>
+      <el-carousel-item>
+        <div class="photo5 cursor"></div>
       </el-carousel-item>
     </el-carousel>
 
@@ -577,16 +584,50 @@ function handleBtnClick3() {
         width: 100%;
       }
     }
-    .photo {
-      display: flex;
-      justify-content: center;
-    }
+    // .photo {
+    //   display: flex;
+    //   justify-content: center;
+    // }
+    // .photo {
+    //   // display: flex;
+    //   // justify-content: center;
+    //   width: 100%;
+    //   height: 480px;
+    //   background-size: cover;
+    //   background-position: 50%;
+    // }
     .photo1 {
-      display: flex;
-      justify-content: center;
+      background: url(@/assets/imgs/home-banner3.png);
       width: 100%;
       height: 480px;
-      background: url(@/assets/imgs/home-banner3.png);
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo2 {
+      background: url(@/assets/imgs/home-banner2.png);
+      width: 100%;
+      height: 480px;
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo3 {
+      background: url(@/assets/imgs/home-banner4.jpg);
+      width: 100%;
+      height: 480px;
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo4 {
+      background: url(@/assets/imgs/home-banner5.jpg);
+      width: 100%;
+      height: 480px;
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo5 {
+      background: url(@/assets/imgs/home-banner6.png);
+      width: 100%;
+      height: 480px;
       background-size: cover;
       background-position: 50%;
     }

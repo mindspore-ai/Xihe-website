@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 
+import IconDownload from '~icons/app/download';
+
 import OButton from '@/components/OButton.vue';
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -38,8 +40,10 @@ getGuide(comInfo.value.datasets_description)
         v-if="teamId"
         size="small"
         @click="downloadDataset(comInfo.datasets_link)"
-        >下载数据集</o-button
-      >
+        >下载数据集
+        <template #suffix>
+          <o-icon><icon-download></icon-download></o-icon> </template
+      ></o-button>
     </div>
     <div class="markdown-file" v-html="result"></div>
   </div>

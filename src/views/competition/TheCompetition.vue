@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import paintings from '@/assets/imgs/paintings.png';
+import paintings from '@/assets/imgs/paintings1.png';
 import imageClassify from '@/assets/imgs/imageClassify.jpg';
-import textClassification from '@/assets/imgs/textClassification.jpg';
+import textClassification from '@/assets/imgs/textClassification2.jpg';
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -20,26 +20,32 @@ const state = ref('doing'); //比赛状态：will-do，doing，done
 
 const handleClick = (tab) => {
   if (tab.props.name !== 'first') {
-    getCompetitions1({ stastus: tab.props.name });
+    getCompetitions1(tab.props.name);
   }
 };
 const tableData = ref();
-const tableData2 = ref();
+const tableData1 = ref([]);
+const tableData2 = ref([]);
+const tableData3 = ref([]);
 function getCompetitions() {
   getCompetition()
     .then((res) => {
       tableData.value = res.data;
-      // console.log('res.data: ', res.data);
     })
     .catch((err) => {
       console.error(err);
     });
 }
-function getCompetitions1(params) {
-  getAllCompetition(params)
+function getCompetitions1(tab) {
+  getAllCompetition(tab)
     .then((res) => {
-      tableData.value = res.data;
-      // console.log('res.data: ', res.data);
+      if (tab === '1') {
+        tableData1.value = res.data;
+      } else if (tab === '2') {
+        tableData2.value = res.data;
+      } else if (tab === '3') {
+        tableData3.value = res.data;
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -59,7 +65,7 @@ function goDetail(id) {
   <div class="competition-page">
     <div class="competition-head">
       <div class="wrap">
-        <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item><img :src="paintings" alt="" /> </el-carousel-item>
           <el-carousel-item
             ><img :src="imageClassify" alt="" />
@@ -103,12 +109,12 @@ function goDetail(id) {
                 <div class="card-body">
                   {{ item.description }}
                 </div>
-                <div class="card-footer">举办方:绿色计算产业联盟</div>
+                <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期:{{ item.during }}</div>
+                  <div class="time">赛期：{{ item.during }}</div>
                 </div>
                 <div class="right-immediate">
                   <div v-if="item.status_name === '进行中'" class="right-wrap">
@@ -137,9 +143,9 @@ function goDetail(id) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="3">
-          <div v-if="tableData2">
+          <div v-if="tableData3.length">
             <div
-              v-for="item in tableData2"
+              v-for="item in tableData3"
               :key="item.id"
               class="competition-box"
               @click="goDetail(item.id)"
@@ -161,12 +167,12 @@ function goDetail(id) {
                 <div class="card-body">
                   {{ item.description }}
                 </div>
-                <div class="card-footer">举办方:绿色计算产业联盟</div>
+                <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期:{{ item.during }}</div>
+                  <div class="time">赛期：{{ item.during }}</div>
                 </div>
                 <div class="right-immediate">
                   <div class="right-wrap">
@@ -192,15 +198,9 @@ function goDetail(id) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="已结束" name="2">
-          <div class="empty">
-            <img :src="emptyImg" alt="" />
-            <p>敬请期待</p>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="未开始" name="1">
-          <div v-if="tableData">
+          <div v-if="tableData2.length">
             <div
-              v-for="item in tableData"
+              v-for="item in tableData2"
               :key="item.id"
               class="competition-box"
               @click="goDetail(item.id)"
@@ -222,12 +222,70 @@ function goDetail(id) {
                 <div class="card-body">
                   {{ item.description }}
                 </div>
-                <div class="card-footer">举办方:绿色计算产业联盟</div>
+                <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期:{{ item.during }}</div>
+                  <div class="time">赛期：{{ item.during }}</div>
+                </div>
+                <div class="right-immediate">
+                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                    <OButton
+                      type="primary"
+                      animation
+                      @click="goDetail(item.id)"
+                    >
+                      立即报名
+                      <template #suffix>
+                        <OIcon><IconArrowRight /></OIcon>
+                      </template>
+                    </OButton>
+                    <div class="number">报名人数：{{ item.user_count }}</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名未开始</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>暂无已结束比赛</p>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="未开始" name="1">
+          <div v-if="tableData1.length">
+            <div
+              v-for="item in tableData1"
+              :key="item.id"
+              class="competition-box"
+              @click="goDetail(item.id)"
+            >
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    {{ item.name }}
+                  </div>
+                  <div
+                    v-if="item.status_name === '进行中'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    火热进行中
+                  </div>
+                </div>
+                <!-- <div class="card-body">{{ item.description }}</div> -->
+                <div class="card-body">
+                  {{ item.description }}
+                </div>
+                <div class="card-footer">举办方：{{ item.host }}</div>
+              </div>
+              <div class="right1">
+                <div class="right1-bonus">
+                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="time">赛期：{{ item.during }}</div>
                 </div>
                 <div class="right-immediate">
                   <div v-if="item.status_name === '进行中'" class="right-wrap">
@@ -272,7 +330,7 @@ function goDetail(id) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 116px;
+    margin: 116px 0;
     img {
       width: 280px;
     }

@@ -14,6 +14,10 @@ const activeNavItem = ref('');
 const storeTeamId = computed(() => {
   return useCompetitionData().teamId;
 });
+const comInfo = computed(() => {
+  return useCompetitionData().competitionData;
+});
+
 watch(
   () => {
     return storeTeamId.value;
@@ -54,12 +58,13 @@ const navItems = reactive([
     href: 'leaderboard',
     isIndividual: true,
   },
-  // {
-  //   id: 'discussion',
-  //   label: '讨论',
-  //   href: 'discussion',
-  //   isIndividual: true,
-  // },
+  {
+    id: 'discussion',
+    label: '讨论',
+    href: comInfo.value.discuss_link,
+    windowOpen: true,
+    isIndividual: true,
+  },
   {
     id: 'agreement',
     label: '协议',
@@ -96,7 +101,11 @@ watch(
 );
 // 点击导航
 function handleNavClick(item) {
-  router.push(`/competition/${route.params.id}/0/${item.href}`);
+  if (item.windowOpen) {
+    window.open(item.href);
+  } else {
+    router.push(`/competition/${route.params.id}/0/${item.href}`);
+  }
 }
 </script>
 <template>

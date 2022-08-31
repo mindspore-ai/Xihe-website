@@ -32,8 +32,8 @@ export function getCompetition(params) {
   }
 }
 export function getAllCompetition(params) {
-  const url = `/api/competitions/competitions/`;
-  return request.get(url, params).then((res) => {
+  const url = `/api/competitions/competitions/?status=${params}`;
+  return request.get(url).then((res) => {
     return res.data;
   });
 }
@@ -43,7 +43,6 @@ export function getAllCompetition(params) {
  */
 export function getRank(id) {
   const url = `/api/competitions/competition_ranklist/${id}`;
-  // console.log(url);
   return request.get(url).then((res) => {
     return res.data;
   });

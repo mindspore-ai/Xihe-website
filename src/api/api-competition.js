@@ -166,7 +166,7 @@ export function transferCaptain(params) {
  * @returns
  */
 export function getAreaData() {
-  return request.get('/public/data.json').then((res) => {
+  return request.get('/data.json').then((res) => {
     return res;
   });
 }

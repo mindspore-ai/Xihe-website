@@ -108,27 +108,13 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  // identity: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // identityDetail1: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // identityDetail2: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
+  loc_province: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
 });
 // 获取城市数据
 function getArea() {
@@ -141,9 +127,19 @@ function getArea() {
         value: city,
       });
     });
+    // console.log(222, province.value);
   });
 }
 getArea();
+function handleProvince(province) {
+  citys.value = [];
+  Object.keys(areaData.value[province]).forEach((city) => {
+    citys.value.push(areaData.value[province][city]);
+  });
+  // console.log('citys.value', citys.value);
+  // console.log('citys.value[0].label', citys.value[0].label);
+  query.loc_city = citys.value[0].label;
+}
 // 切换身份
 function changeRole(item) {
   role.value = item;
@@ -191,6 +187,7 @@ function saveInfo(formEl) {
               return true;
             }
           });
+          console.log('params1: ', params1);
           goCompetition(params1).then((res) => {
             if (res.status === 200) {
               emit('handleStep');
@@ -206,13 +203,6 @@ function saveInfo(formEl) {
       return false;
     }
   });
-}
-function handleProvince(province) {
-  citys.value = [];
-  Object.keys(areaData.value[province]).forEach((city) => {
-    citys.value.push(areaData.value[province][city]);
-  });
-  query.loc_city = citys.value[0].label;
 }
 </script>
 <template>
@@ -248,7 +238,11 @@ function handleProvince(province) {
           <div class="requirement">
             <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
           </div>
-          <el-form-item class="location">
+          <el-form-item
+            class="location"
+            prop="loc_province"
+            :rules="rules.loc_province"
+          >
             <el-select
               v-model="query.loc_province"
               placeholder="请选择省份"
@@ -427,7 +421,9 @@ function handleProvince(province) {
         <span>{{ i18n.agree }}</span>
       </div>
       <div class="statement">
-        <router-link to="">{{ i18n.statement }}</router-link>
+        <router-link target="_blank" to="/privacy">{{
+          i18n.statement
+        }}</router-link>
       </div>
     </div>
   </div>
@@ -491,7 +487,7 @@ function handleProvince(province) {
             margin-right: 18px;
           }
           .el-form-item__error {
-            left: calc(100% + -142px);
+            left: calc(100% - 142px);
           }
         }
         // 身份item
@@ -551,6 +547,9 @@ function handleProvince(province) {
             .el-select {
               width: 196px;
               margin-right: 8px;
+            }
+            .el-form-item__error {
+              left: calc(100% + 210px);
             }
           }
         }

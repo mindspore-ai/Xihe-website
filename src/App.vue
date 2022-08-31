@@ -2,8 +2,6 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import useWindowResize from './components/hooks/useWindowResize';
-
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
@@ -30,10 +28,6 @@ onMounted(() => {
   window.addEventListener('scroll', setHeader);
 });
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', setHeader);
-});
-
 // 紫东太初移动端适配
 const isTaichuPage = computed(() => {
   return (
@@ -42,32 +36,58 @@ const isTaichuPage = computed(() => {
     route.name === 'taichuTest'
   );
 });
-const screenWidth = useWindowResize();
+
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+window.addEventListener('resize', onResize);
+
 const goBack = () => {
   router.go(-1);
 };
+
+const winWidth =
+  window.innerWidth ||
+  document.documentElement.clientWidth ||
+  document.body.clientWidth;
+onUnmounted(() => {
+  window.removeEventListener('scroll', setHeader);
+  window.removeEventListener('resize', onResize);
+});
 </script>
 
 <template>
-  <header v-if="isTaichuPage && screenWidth < 1080" class="mobile-header">
+  <header
+    v-if="!isTaichuPage || screenWidth > 1080"
+    ref="header"
+    class="app-header"
+    :class="{
+      opaque: isHeaderTransparent,
+      hide: winWidth < 1080,
+    }"
+  >
+    <app-header></app-header>
+  </header>
+
+  <header v-else class="mobile-header">
     <div class="back" @click="goBack">
       <OIcon><IconLeft /></OIcon>
     </div>
     <span>大模型</span>
   </header>
 
-  <header
-    v-else
-    ref="header"
-    class="app-header"
-    :class="{ opaque: isHeaderTransparent }"
-  >
-    <app-header></app-header>
-  </header>
-
-  <main class="app-body">
+  <div class="app-body">
     <router-view></router-view>
-  </main>
+  </div>
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
@@ -79,14 +99,18 @@ const goBack = () => {
 }
 // TODO:紫东太初移动端头部简单适配
 .mobile-header {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   height: 48px;
   padding: 0 16px;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(5px);
   height: 24px;
@@ -102,6 +126,10 @@ const goBack = () => {
     left: 16px;
     font-size: 24px;
   }
+}
+
+.hide {
+  display: none;
 }
 
 // TODO:移动端适配内容

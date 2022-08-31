@@ -27,7 +27,10 @@ let pendingPool = new Map();
 const requestInterceptorId = request.interceptors.request.use(
   (config) => {
     if (loadingCount === 0 && !config.url.includes('fork')) {
-      if (config.url.includes('/api/foundation/taichu_opt')) {
+      if (
+        config.url.includes('/api/foundation/taichu_opt') &&
+        config.method === 'put'
+      ) {
         loadingInstance = ElLoading.service({
           fullscreen: true,
           text: '正在排队中，请您耐心等待1分钟哦~',

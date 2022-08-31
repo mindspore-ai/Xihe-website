@@ -51,6 +51,14 @@ export default [
             component: () => {
               return import('@/views/competition/CompetitionResultSubmit.vue');
             },
+            beforeEnter: async () => {
+              const logingStore = useLoginStore();
+              if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+                return {
+                  name: '404',
+                };
+              }
+            },
           },
           // 我的团队
           {
@@ -59,14 +67,14 @@ export default [
             component: () => {
               return import('@/views/competition/CompetitionTeam.vue');
             },
-            /* beforeEnter: async () => {
+            beforeEnter: async () => {
               const logingStore = useLoginStore();
               if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
                 return {
                   name: '404',
                 };
               }
-            }, */
+            },
           },
           // 排行榜
           {

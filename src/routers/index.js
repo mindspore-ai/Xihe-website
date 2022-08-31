@@ -87,7 +87,7 @@ export const routes = [
   // 项目
   ...project,
   // 比赛
-  ...competition,
+  // ...competition,
   // 404页面
   {
     path: '/404',

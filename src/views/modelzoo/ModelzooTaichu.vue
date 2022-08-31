@@ -8,6 +8,12 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
 const router = useRouter();
 const route = useRoute();
 
@@ -151,7 +157,9 @@ function goTaichuMore() {
     }
     .taichu-content {
       @media screen and (max-width: 768px) {
-        padding-top: 16px;
+        padding-top: 62px;
+        padding-bottom: 40px;
+        min-height: calc(100vh - 190px);
       }
       .taichu-content-banner {
         padding: 80px;
@@ -184,6 +192,12 @@ function goTaichuMore() {
               color: #000000;
               line-height: 24px;
               height: 24px;
+            }
+          }
+          .home-btn {
+            @media screen and (max-width: 768px) {
+              line-height: 22px;
+              padding: 6px !important;
             }
           }
           &-content {

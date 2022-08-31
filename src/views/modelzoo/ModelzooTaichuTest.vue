@@ -335,6 +335,7 @@ function refreshTags() {
           </div>
           <el-divider />
           <p class="experience-title">描述</p>
+
           <el-input
             ref="inputValue"
             v-model="inferenceText"
@@ -550,6 +551,19 @@ function refreshTags() {
 </template>
 
 <style lang="scss" scoped>
+.mobile-input {
+  margin-bottom: 12px;
+  // :deep(.el-textarea) {
+  //   width: 100%;
+  //   .el-textarea__inner {
+  //     height: 96px;
+  //   }
+  // }
+  :deep(.el-textarea__inner) {
+    height: 96px !important;
+    width: calc(100vw - 64px);
+  }
+}
 .analyse-result {
   width: 100%;
   height: 120px;
@@ -686,6 +700,7 @@ function refreshTags() {
     display: none;
   }
 }
+
 :deep(.el-collapse) {
   .el-collapse-item__header {
     padding: 16px 16px 8px;
@@ -707,12 +722,6 @@ function refreshTags() {
       color: #000000;
       line-height: 20px;
       margin-bottom: 8px;
-    }
-    .mobile-input {
-      margin-bottom: 12px;
-      :deep(.el-textarea) {
-        width: 100%;
-      }
     }
     .example {
       flex: 1;
@@ -773,7 +782,7 @@ function refreshTags() {
     }
     .result {
       flex: 1;
-      border: 2px solid #a0d2ff;
+      border: 1px solid #a0d2ff;
       position: relative;
       display: flex;
       justify-content: center;

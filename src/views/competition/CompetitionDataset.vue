@@ -11,6 +11,9 @@ import { useCompetitionData } from '@/stores';
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;
 });
+const teamId = computed(() => {
+  return useCompetitionData().teamId;
+});
 
 const mkit = handleMarkdown();
 const codeString = ref('');
@@ -25,12 +28,16 @@ getGuide(comInfo.value.datasets_description)
   .catch((err) => {
     console.error(err);
   });
+// console.log(comInfo);
 </script>
 <template>
   <div class="dataset-page">
     <div class="header">
       <!-- <div></div> -->
-      <o-button size="small" @click="downloadDataset(comInfo.datasets_link)"
+      <o-button
+        v-if="teamId"
+        size="small"
+        @click="downloadDataset(comInfo.datasets_link)"
         >下载数据集</o-button
       >
     </div>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
 
-import { useRoute, useRouter } from 'vue-router';
+// import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 import { revampTeam } from '@/api/api-competition';
@@ -29,8 +29,8 @@ import OButton from '@/components/OButton.vue';
 const userInfoStore = useUserInfoStore();
 // import IconCancelBlue from '~icons/app/cancelBlue.svg';
 // import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
-const route = useRoute();
-const router = useRouter();
+// const route = useRoute();
+// const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamName: '团队名',
@@ -337,12 +337,7 @@ function toggleEditDlg(flag) {
         </el-tab-pane>
         <el-tab-pane label="加入团队" name="second">
           <div class="join">
-            <el-form
-              ref="queryRef2"
-              class="form2"
-              :model="form2"
-              :rules="rules2"
-            >
+            <el-form ref="queryRef2" :model="form2" :rules="rules2">
               <div class="requirement">
                 <icon-necessary></icon-necessary
                 ><span>{{ i18n.teamName }}</span>
@@ -511,7 +506,7 @@ function toggleEditDlg(flag) {
     >
       <el-form
         ref="queryRef3"
-        class="form3"
+        class="dialog-form"
         :style="{ display: 'flex', justifyContent: 'center', align: 'center' }"
         :model="form3"
         :rules="rules3"
@@ -731,6 +726,33 @@ function toggleEditDlg(flag) {
         }
       }
     }
+  }
+}
+:deep(.o-dialog) {
+  .o-dialog-wrap {
+    height: 700px !important;
+    .o-dialog-body {
+      .dlg-body {
+        width: 700px;
+        :deep(.el-form) {
+          font-size: 100px;
+          .el-form-item {
+            height: 100px;
+            .el-form-item__content {
+              .el-form-item__error {
+                font-size: 100px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+:deep(.dialog-form, .el-form) {
+  .el-form-item__error {
+    top: 55px !important;
+    left: 0px !important;
   }
 }
 </style>

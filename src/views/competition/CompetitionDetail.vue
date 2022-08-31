@@ -8,12 +8,19 @@ import { getGroupid } from '@/api/api-competition';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
+<<<<<<< Updated upstream
 import OButton from '@/components/OButton.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfoStore = useUserInfoStore();
 
+=======
+const userInfoStore = useUserInfoStore();
+// import OButton from '@/components/OButton.vue';
+
+// import { ArrowRight } from '@element-plus/icons-vue';
+>>>>>>> Stashed changes
 const route = useRoute();
 const router = useRouter();
 
@@ -26,9 +33,9 @@ const teamId = computed(() => {
   return useCompetitionData().teamId;
 });
 
-const state = ref('doing'); //比赛状态：will-do，doing，done
 const competitionData = ref([]);
 const show = ref(true);
+const showBread = ref(false);
 const showDetail = ref(false);
 
 // 立即报名
@@ -52,6 +59,10 @@ watch(
       route.name === 'success'
     ) {
       show.value = false;
+      showBread.value = true;
+    } else if (route.name === 'introduction') {
+      showBread.value = false;
+      show.value = true;
     }
   },
   {
@@ -85,6 +96,7 @@ async function getDetailData() {
     let res = await getCompetition({ id: route.params.id });
     if (res.status === 200) {
       competitionData.value = res.data;
+      // console.log('比赛信息: ', competitionData.value);
       userComData.setCompetitionData(res.data);
     }
     // 获取团队id
@@ -112,12 +124,13 @@ getDetailData();
               >比赛</el-breadcrumb-item
             >
             <el-breadcrumb-item
-              >第三届全国高校绿色计算创新大赛</el-breadcrumb-item
+              :to="{ path: `/competition/${competitionData.id}` }"
+              >{{ competitionData.name }}</el-breadcrumb-item
             >
+            <el-breadcrumb-item v-if="showBread">报名</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <div class="competition-content">
-          <!-- <div class="competition-card"> -->
           <div class="competition-box">
             <div class="left">
               <div class="card-head">
@@ -126,40 +139,63 @@ getDetailData();
                 </div>
                 <div
                   v-if="competitionData.status_name === '进行中'"
-                  class="card-head-state"
-                  :class="state"
+                  class="card-head-state doing"
                 >
                   火热进行中
+                </div>
+                <div
+                  v-if="competitionData.status_name === '未开始'"
+                  class="card-head-state noStarted"
+                >
+                  未开始
+                </div>
+                <div
+                  v-if="competitionData.status_name === '已结束'"
+                  class="card-head-state finished"
+                >
+                  已结束
                 </div>
               </div>
               <!-- <div class="card-body">{{ competitionData.description }}</div> -->
               <div class="card-body">
                 {{ competitionData.description }}
               </div>
-              <div class="card-footer">举办方:绿色计算产业联盟</div>
+              <div class="card-footer">举办方:{{ competitionData.host }}</div>
             </div>
             <div v-if="teamId === null && show" class="right1">
               <div class="right1-bonus">
-                <div class="number">奖金：{{ competitionData.bonus }}</div>
+                <div class="number">奖池：{{ competitionData.bonus }}</div>
                 <div class="time">赛期:{{ competitionData.during }}</div>
               </div>
               <div class="right-immediate">
-                <div class="wrap">
+                <div class="right-wrap">
                   <OButton type="primary" animation @click="goApplication">
                     立即报名
                   </OButton>
-                  <div class="number">报名人数：302</div>
+                  <!-- <div v-if="competitionData.status_name === '进行中'">
+                    <OButton type="primary" animation @click="goApplication">
+                      立即报名
+                    </OButton>
+                  </div>
+                  <div v-if="competitionData.status_name === '未开始'">
+                    <div class="competitionState">报名未开始</div>
+                  </div>
+                  <div v-if="competitionData.status_name === '已结束'">
+                    <div class="competitionState">比赛已结束</div>
+                  </div> -->
+                  <div class="number">
+                    报名人数：{{ competitionData.user_count }}
+                  </div>
                 </div>
               </div>
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="number">奖金：{{ competitionData.bonus }}</div>
+                <div class="number">奖池：{{ competitionData.bonus }}</div>
                 <div class="time">赛期:{{ competitionData.during }}</div>
               </div>
             </div>
           </div>
-          <!-- </div> -->
           <div class="competition-desc">
             <router-view></router-view>
           </div>
@@ -257,15 +293,15 @@ getDetailData();
               margin-left: 15px;
               padding: 0 8px;
             }
-            .will-do {
-              color: #ffffff;
-              background-color: #6189ff;
-            }
             .doing {
               color: #ffffff;
               background-color: #ff7f0d;
             }
-            .done {
+            .noStarted {
+              color: #ffffff;
+              background-color: #6189ff;
+            }
+            .finished {
               color: #555555;
               background-color: #efefef;
             }
@@ -307,13 +343,19 @@ getDetailData();
           }
           .right-immediate {
             border-left: 1px solid #e4e5e7;
-            .wrap {
+            .right-wrap {
+              width: 144px;
               height: 100%;
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: center;
               margin-left: 48px;
+              .competitionState {
+                font-size: 16px;
+                color: #cccccc;
+                line-height: 22px;
+              }
               .number {
                 color: #555555;
                 margin-top: 16px;

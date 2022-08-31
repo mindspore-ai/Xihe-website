@@ -1,5 +1,5 @@
-// import { useLoginStore } from '@/stores';
-// import { LOGIN_STATUS } from '@/shared/login';
+import { useLoginStore } from '@/stores';
+import { LOGIN_STATUS } from '@/shared/login';
 
 export default [
   // 比赛
@@ -100,6 +100,14 @@ export default [
         name: 'register',
         component: () => {
           return import('@/views/competition/CompetitionRegister.vue'); //待修改
+        },
+        beforeEnter: async () => {
+          const logingStore = useLoginStore();
+          if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+            return {
+              name: '404',
+            };
+          }
         },
         redirect: { name: 'statement' },
         children: [

@@ -142,6 +142,7 @@ export function getUserDig2(reopt) {
  */
 export function getUserEmail(id) {
   const url = `/api/users/${id}/email`;
+  console.log('url: ', url);
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -223,6 +224,26 @@ export function getUserCollection(id) {
 export function getRank() {
   const url = `/api/base/statistics/`;
   return request.put(url, null, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取用户参加的所有比赛
+ * @returns
+ */
+export function getAllCompetition() {
+  const url = `/api/competitions/user_competitions`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取用户进行中、已结束的比赛
+ * @returns
+ */
+export function getCompetition(status) {
+  const url = `/api/competitions/user_competitions/?status=${status}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

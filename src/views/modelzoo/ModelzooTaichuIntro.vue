@@ -6,6 +6,7 @@ import taichuEfficient1 from '@/assets/imgs/taichu/taichu-efficient1.png';
 import taichuEfficient2 from '@/assets/imgs/taichu/taichu-efficient2.png';
 import taichuEfficient3 from '@/assets/imgs/taichu/taichu-efficient3.png';
 import taichuLargeimg1 from '@/assets/imgs/taichu/taichu-largeimg1.png';
+import taichuLargeimg1Mo from '@/assets/imgs/taichu/taichu-largeimg1-mobile.png';
 import taichuLargeimg2 from '@/assets/imgs/taichu/taichu-largeimg2.png';
 import taichuArrows from '@/assets/imgs/taichu/taichu-arrows.png';
 import taichuVideo1 from '@/assets/imgs/taichu/taichu-video1.png';
@@ -16,6 +17,7 @@ import taichuVideo5 from '@/assets/imgs/taichu/taichuvideo5.png';
 import taichuPlay from '@/assets/imgs/taichu/taichuplay.png';
 import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
 import taichuCompanyImg from '@/assets/imgs/taichu/taichu-companyimg.png';
+import taichuFixImg from '@/assets/imgs/taichu/taichuFixImage.png';
 const taichuvideo1 =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
 const taichuvideo2 =
@@ -116,6 +118,7 @@ function closeInstanceVideo() {
       <p class="intro-info">
         紫东.太初的发布将改变当前单一模型对应单一任务的人工智能研发范式，实现三模态图文音的统一语义表达，大幅提升文本、语音、图像和视频等领域的基础任务性能，并在多模态内容的理解、搜索、推荐和问答，语音识别和合成，人机交互和无人驾驶等商业应用中具有潜力巨大的市场价值。
       </p>
+
       <div class="intro-body">
         <div class="intro-body-title">
           全球首个三模态大模型“紫东.太初”——助力科研创新与应用孵化
@@ -167,7 +170,11 @@ function closeInstanceVideo() {
       <div class="intro-img">
         <img :src="taichuLargeimg1" alt="" />
       </div>
+      <div class="intro-img-mobile">
+        <img :src="taichuLargeimg1Mo" alt="" />
+      </div>
     </div>
+
     <div class="taichu-detail-reference">
       <div class="reference-title">参考设计——多模态对话虚拟人“小初”</div>
       <p class="reference-info">
@@ -199,6 +206,7 @@ function closeInstanceVideo() {
         </div>
       </div>
     </div>
+
     <div class="taichu-detail-instance">
       <div class="instance-title">应用实例——千博手语教考一体机</div>
       <p class="instance-info">
@@ -279,6 +287,9 @@ function closeInstanceVideo() {
         <div class="instance-AIdesc-title">
           AI赋能，让手语学习更简单、可持续
         </div>
+        <div class="instance-AIdesc-title1">
+          听障人士长期手语学习过程中的三大挑战
+        </div>
         <ul class="instance-AIdesc-title2">
           <li>
             <span>持续丰富手语词汇库</span>
@@ -292,6 +303,7 @@ function closeInstanceVideo() {
             <span>持续丰富手语词汇库</span>
           </li>
         </ul>
+
         <div class="instance-AIdesc-img">
           <img :src="taichuLargeimg2" alt="" />
         </div>
@@ -300,6 +312,8 @@ function closeInstanceVideo() {
           :src="taichuCompanyImg"
           alt=""
         />
+        <img class="instance-AIdesc-fixImage" :src="taichuFixImg" alt="" />
+
         <div class="instance-AIdesc-video">
           <img class="video-img1" :src="taichuVideo5" alt="" />
           <div class="video-img2">
@@ -339,7 +353,13 @@ function closeInstanceVideo() {
 .taichu-detail {
   padding: 40px 80px;
   background-color: #fff;
+  @media screen and (max-width: 768px) {
+    padding: 16px 16px 40px;
+  }
   &-intro {
+    @media screen and (max-width: 768px) {
+      margin-bottom: 24px;
+    }
     .intro-title {
       height: 32px;
       font-size: 24px;
@@ -347,12 +367,25 @@ function closeInstanceVideo() {
       color: #000000;
       line-height: 32px;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        color: #000000;
+        line-height: 22px;
+        height: 22px;
+        margin-bottom: 8px;
+      }
     }
     .intro-info {
       font-size: 14px;
       font-weight: normal;
       color: #555555;
       line-height: 22px;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        font-weight: 400;
+        color: #555555;
+        line-height: 18px;
+      }
     }
     .info1 {
       margin-bottom: 16px;
@@ -362,28 +395,54 @@ function closeInstanceVideo() {
       margin-top: 40px;
       margin-bottom: 24px;
       background-color: #f5f9f8;
+      @media screen and (max-width: 768px) {
+        padding: 0;
+      }
       &-title {
-        height: 28px;
+        // height: 28px;
         line-height: 28px;
         font-size: 20px;
         color: #000000;
         margin-bottom: 24px;
         text-align: center;
+        @media screen and (max-width: 768px) {
+          // display: none;
+          font-size: 14px;
+          color: #000000;
+          line-height: 22px;
+          padding: 24px 8px 0;
+          margin-bottom: 16px;
+        }
       }
       &-diagram {
         display: flex;
         justify-content: space-between;
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          margin-bottom: 34px;
+        }
         .diagram-left {
           max-width: 213px;
           // margin-right: 166px;
+          @media screen and (max-width: 768px) {
+            max-width: 100%;
+            margin: 16px 42px;
+          }
         }
         .diagram-right {
           display: flex;
+          @media screen and (max-width: 768px) {
+            flex-direction: column;
+          }
           .text {
             img {
               display: block;
               width: 177px;
               margin-bottom: 24px;
+              @media screen and (max-width: 768px) {
+                margin-bottom: 16px;
+                width: 100%;
+              }
             }
             p {
               height: 14px;
@@ -391,17 +450,35 @@ function closeInstanceVideo() {
               font-size: 12px;
               color: #000000;
               text-align: center;
+              @media screen and (max-width: 768px) {
+                height: 14px;
+                font-size: 12px;
+                color: #000000;
+                line-height: 14px;
+                margin-bottom: 24px;
+              }
             }
           }
           .diagram-video {
             width: 198px;
             height: 90px;
             margin-left: 24px;
+            @media screen and (max-width: 768px) {
+              height: 100%;
+              width: 100%;
+              margin: 0;
+            }
             &-img {
               width: 100%;
               margin-bottom: 24px;
               position: relative;
               cursor: pointer;
+              @media screen and (max-width: 768px) {
+                &:nth-child(2) {
+                  margin-bottom: 8px;
+                }
+              }
+
               img {
                 width: 100%;
               }
@@ -423,14 +500,34 @@ function closeInstanceVideo() {
               font-size: 12px;
               color: #000000;
               text-align: center;
+              @media screen and (max-width: 768px) {
+                height: 14px;
+                font-size: 12px;
+                color: #000000;
+                line-height: 14px;
+                margin-bottom: 24px;
+              }
             }
           }
         }
       }
     }
     .intro-img {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
       img {
         width: 100%;
+      }
+    }
+    .intro-img-mobile {
+      display: none;
+      width: 100%;
+      img {
+        width: 100%;
+      }
+      @media screen and (max-width: 768px) {
+        display: block;
       }
     }
   }
@@ -441,6 +538,14 @@ function closeInstanceVideo() {
       font-size: 20px;
       color: #000000;
       margin-top: 40px;
+      @media screen and (max-width: 768px) {
+        margin: 0 0 8px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        line-height: 22px;
+        height: 22px;
+      }
     }
     .reference-info {
       height: 66px;
@@ -449,11 +554,23 @@ function closeInstanceVideo() {
       font-weight: 400;
       color: #555555;
       margin: 10px 0 24px;
+      @media screen and (max-width: 768px) {
+        height: 100%;
+        font-size: 12px;
+        font-weight: 400;
+        color: #555555;
+        line-height: 18px;
+        margin-bottom: 16px;
+      }
     }
     .reference-video {
       width: 100%;
       height: 707px;
       position: relative;
+      @media screen and (max-width: 768px) {
+        height: 167px;
+        margin-bottom: 24px;
+      }
       .video-img1 {
         width: 100%;
         height: 100%;
@@ -467,6 +584,12 @@ function closeInstanceVideo() {
         transform: translate(-50%, -50%);
         z-index: 9;
         cursor: pointer;
+        img {
+          @media screen and (max-width: 768px) {
+            height: 56px;
+            width: 56px;
+          }
+        }
         div {
           height: 28px;
           font-size: 20px;
@@ -474,12 +597,26 @@ function closeInstanceVideo() {
           line-height: 28px;
           margin-top: 16px;
           margin-bottom: 6px;
+          @media screen and (max-width: 768px) {
+            height: 22px;
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 22px;
+          }
         }
         p {
           height: 22px;
           font-size: 14px;
           color: #ffffff;
           line-height: 22px;
+          @media screen and (max-width: 768px) {
+            height: 20px;
+            font-size: 12px;
+            font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
+            font-weight: normal;
+            color: #ffffff;
+            line-height: 20px;
+          }
         }
       }
       .video-content {
@@ -516,12 +653,27 @@ function closeInstanceVideo() {
       font-weight: 400;
       color: #000000;
       margin: 40px 0 24px;
+      @media screen and (max-width: 768px) {
+        margin: 0 0 8px;
+        height: 22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        line-height: 22px;
+      }
     }
     .instance-info {
       line-height: 22px;
       font-size: 14px;
       font-weight: 400;
       color: #555555;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        font-weight: 400;
+        color: #555555;
+        line-height: 18px;
+        margin-bottom: 16px;
+      }
     }
     .instance-desc {
       &-title {
@@ -532,6 +684,15 @@ function closeInstanceVideo() {
         color: #000000;
         text-align: center;
         margin: 40px 0 6px;
+        @media screen and (max-width: 768px) {
+          height: 22px;
+          font-size: 14px;
+          font-family: FZLTZHJW--GB1-0, FZLTZHJW--GB1;
+          font-weight: normal;
+          color: #000000;
+          line-height: 22px;
+          margin: 0 0 8px;
+        }
       }
       &-title2 {
         height: 22px;
@@ -541,10 +702,22 @@ function closeInstanceVideo() {
         color: #555555;
         text-align: center;
         margin-bottom: 26px;
+        @media screen and (max-width: 768px) {
+          height: 18px;
+          font-size: 12px;
+          font-weight: 400;
+          color: #555555;
+          line-height: 18px;
+          margin-bottom: 13px;
+        }
       }
       .challenges {
         display: flex;
         justify-content: center;
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          margin-bottom: 26px;
+        }
         &-item {
           // width: 410px;
           height: 136px;
@@ -553,6 +726,9 @@ function closeInstanceVideo() {
           background: #f5f9fb;
           margin-right: 16px;
           display: flex;
+          @media screen and (max-width: 768px) {
+            margin-bottom: 16px;
+          }
           // 最后一个子元素
           &:last-child {
             margin-right: 0;
@@ -665,12 +841,40 @@ function closeInstanceVideo() {
         color: #000000;
         text-align: center;
         margin: 84px 0 6px;
+        @media screen and (max-width: 768px) {
+          margin: 0 0 8px;
+          height: 22px;
+          font-weight: normal;
+          font-size: 14px;
+          color: #000000;
+          line-height: 22px;
+        }
+      }
+      &-title1 {
+        height: 22px;
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #555555;
+        margin-bottom: 26px;
+        text-align: center;
+        @media screen and (max-width: 768px) {
+          height: 18px;
+          font-size: 12px;
+          font-weight: 400;
+          color: #555555;
+          line-height: 18px;
+          margin-bottom: 16px;
+        }
       }
       &-title2 {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-bottom: 18px;
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
         li {
           display: flex;
           align-items: center;
@@ -693,17 +897,35 @@ function closeInstanceVideo() {
           padding-bottom: 26px;
           border-bottom: 1px solid #eee;
         }
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
       }
       &-companyimg {
         display: block;
         width: 421px;
         margin: 52px auto 64px;
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+      &-fixImage {
+        display: none;
+        @media screen and (max-width: 768px) {
+          display: block;
+          width: 100%;
+          margin-bottom: 23px;
+        }
       }
       &-video {
         // width: 100%;
         height: 707px;
         background-color: #bfa;
         position: relative;
+        @media screen and (max-width: 768px) {
+          width: 100%;
+          max-height: 30vh;
+        }
         .video-img1 {
           width: 100%;
           height: 100%;
@@ -717,6 +939,12 @@ function closeInstanceVideo() {
           transform: translate(-50%, -50%);
           z-index: 9;
           cursor: pointer;
+          @media screen and (max-width: 768px) {
+            img {
+              width: 56px;
+              height: 56px;
+            }
+          }
         }
         .video-content {
           width: 100%;
@@ -749,6 +977,10 @@ function closeInstanceVideo() {
   video {
     width: 100%;
     height: 520px;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      max-height: 20vh;
+    }
   }
 }
 </style>

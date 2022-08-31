@@ -36,10 +36,13 @@ onUnmounted(() => {
 
 // 紫东太初移动端适配
 const isTaichuPage = computed(() => {
-  return route.name === 'taichuIntroduction' || route.name === 'taichuTest';
+  return (
+    route.name === 'taichu' ||
+    route.name === 'taichuIntroduction' ||
+    route.name === 'taichuTest'
+  );
 });
 const screenWidth = useWindowResize();
-
 const goBack = () => {
   router.go(-1);
 };

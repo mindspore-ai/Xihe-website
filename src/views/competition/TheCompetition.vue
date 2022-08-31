@@ -11,19 +11,32 @@ import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
-import { getCompetition } from '@/api/api-competition';
+import { getCompetition, getAllCompetition } from '@/api/api-competition';
 
 const router = useRouter();
 
 const activeName = ref('first');
 const state = ref('doing'); //比赛状态：will-do，doing，done
 
-const handleClick = (tab, event) => {
-  console.log(tab, event);
+const handleClick = (tab) => {
+  if (tab.props.name !== 'first') {
+    getCompetitions1({ stastus: tab.props.name });
+  }
 };
-const tableData = ref([]);
+const tableData = ref();
+const tableData2 = ref();
 function getCompetitions() {
   getCompetition()
+    .then((res) => {
+      tableData.value = res.data;
+      // console.log('res.data: ', res.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+function getCompetitions1(params) {
+  getAllCompetition(params)
     .then((res) => {
       tableData.value = res.data;
       // console.log('res.data: ', res.data);
@@ -65,94 +78,179 @@ function goDetail(id) {
         @tab-click="handleClick"
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
-        <el-tab-pane label="全部" name="first">
-          <div v-for="item in tableData" :key="item.id" class="competition-box">
-            <div class="left">
-              <div class="card-head">
-                <div class="card-head-title">
-                  {{ item.name }}
+        <el-tab-pane label="全部" name="first"
+          ><div v-if="tableData">
+            <div
+              v-for="item in tableData"
+              :key="item.id"
+              class="competition-box"
+              @click="goDetail(item.id)"
+            >
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    {{ item.name }}
+                  </div>
+                  <div
+                    v-if="item.status_name === '进行中'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    火热进行中
+                  </div>
                 </div>
-                <div
-                  v-if="item.status_name === '进行中'"
-                  class="card-head-state"
-                  :class="state"
-                >
-                  火热进行中
+                <!-- <div class="card-body">{{ item.description }}</div> -->
+                <div class="card-body">
+                  {{ item.description }}
                 </div>
+                <div class="card-footer">举办方:绿色计算产业联盟</div>
               </div>
-              <!-- <div class="card-body">{{ item.description }}</div> -->
-              <div class="card-body">
-                {{ item.description }}
-              </div>
-              <div class="card-footer">举办方:绿色计算产业联盟</div>
-            </div>
-            <div class="right1">
-              <div class="right1-bonus">
-                <div class="number">奖金：{{ item.bonus }}</div>
-                <div class="time">赛期:{{ item.during }}</div>
-              </div>
-              <div class="right-immediate">
-                <div class="right-wrap">
-                  <OButton type="primary" animation @click="goDetail(item.id)">
-                    立即报名
-                    <template #suffix>
-                      <OIcon><IconArrowRight /></OIcon>
-                    </template>
-                  </OButton>
-                  <div class="number">报名人数：{{ item.user_count }}</div>
+              <div class="right1">
+                <div class="right1-bonus">
+                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="time">赛期:{{ item.during }}</div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="进行中" name="second">
-          <div v-for="item in tableData" :key="item.id" class="competition-box">
-            <div class="left">
-              <div class="card-head">
-                <div class="card-head-title">
-                  {{ item.name }}
-                </div>
-                <div
-                  v-if="item.status_name === '进行中'"
-                  class="card-head-state"
-                  :class="state"
-                >
-                  火热进行中
-                </div>
-              </div>
-              <!-- <div class="card-body">{{ item.description }}</div> -->
-              <div class="card-body">
-                {{ item.description }}
-              </div>
-              <div class="card-footer">举办方:绿色计算产业联盟</div>
-            </div>
-            <div class="right1">
-              <div class="right1-bonus">
-                <div class="number">奖金：{{ item.bonus }}</div>
-                <div class="time">赛期:{{ item.during }}</div>
-              </div>
-              <div class="right-immediate">
-                <div class="right-wrap">
-                  <OButton type="primary" animation @click="goDetail(item.id)">
-                    立即报名
-                    <template #suffix>
-                      <OIcon><IconArrowRight /></OIcon>
-                    </template>
-                  </OButton>
-                  <div class="number">报名人数：{{ item.user_count }}</div>
+                <div class="right-immediate">
+                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                    <OButton
+                      type="primary"
+                      animation
+                      @click="goDetail(item.id)"
+                    >
+                      立即报名
+                      <template #suffix>
+                        <OIcon><IconArrowRight /></OIcon>
+                      </template>
+                    </OButton>
+                    <div class="number">报名人数：{{ item.user_count }}</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名未开始</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div v-else class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>敬请期待</p>
+          </div>
         </el-tab-pane>
-        <el-tab-pane label="已结束" name="third">
+        <el-tab-pane label="进行中" name="3">
+          <div v-if="tableData2">
+            <div
+              v-for="item in tableData2"
+              :key="item.id"
+              class="competition-box"
+              @click="goDetail(item.id)"
+            >
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    {{ item.name }}
+                  </div>
+                  <div
+                    v-if="item.status_name === '进行中'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    火热进行中
+                  </div>
+                </div>
+                <!-- <div class="card-body">{{ item.description }}</div> -->
+                <div class="card-body">
+                  {{ item.description }}
+                </div>
+                <div class="card-footer">举办方:绿色计算产业联盟</div>
+              </div>
+              <div class="right1">
+                <div class="right1-bonus">
+                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="time">赛期:{{ item.during }}</div>
+                </div>
+                <div class="right-immediate">
+                  <div class="right-wrap">
+                    <OButton
+                      type="primary"
+                      animation
+                      @click="goDetail(item.id)"
+                    >
+                      立即报名
+                      <template #suffix>
+                        <OIcon><IconArrowRight /></OIcon>
+                      </template>
+                    </OButton>
+                    <div class="number">报名人数：{{ item.user_count }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>敬请期待</p>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="已结束" name="2">
           <div class="empty">
             <img :src="emptyImg" alt="" />
             <p>敬请期待</p>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="未开始" name="fourth">
-          <div class="empty">
+        <el-tab-pane label="未开始" name="1">
+          <div v-if="tableData">
+            <div
+              v-for="item in tableData"
+              :key="item.id"
+              class="competition-box"
+              @click="goDetail(item.id)"
+            >
+              <div class="left">
+                <div class="card-head">
+                  <div class="card-head-title">
+                    {{ item.name }}
+                  </div>
+                  <div
+                    v-if="item.status_name === '进行中'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    火热进行中
+                  </div>
+                </div>
+                <!-- <div class="card-body">{{ item.description }}</div> -->
+                <div class="card-body">
+                  {{ item.description }}
+                </div>
+                <div class="card-footer">举办方:绿色计算产业联盟</div>
+              </div>
+              <div class="right1">
+                <div class="right1-bonus">
+                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="time">赛期:{{ item.during }}</div>
+                </div>
+                <div class="right-immediate">
+                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                    <OButton
+                      type="primary"
+                      animation
+                      @click="goDetail(item.id)"
+                    >
+                      立即报名
+                      <template #suffix>
+                        <OIcon><IconArrowRight /></OIcon>
+                      </template>
+                    </OButton>
+                    <div class="number">报名人数：{{ item.user_count }}</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名未开始</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="empty">
             <img :src="emptyImg" alt="" />
             <p>敬请期待</p>
           </div>
@@ -244,6 +342,10 @@ function goDetail(id) {
           display: flex;
           justify-content: space-between;
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          &:hover {
+            box-shadow: 0 6px 18px #0d8dff24;
+            cursor: pointer;
+          }
           .left {
             padding: 40px 0px 24px 40px;
             // background-color: red;
@@ -321,6 +423,11 @@ function goDetail(id) {
                 .number {
                   color: #555555;
                   margin-top: 16px;
+                }
+                .not-started {
+                  white-space: nowrap;
+                  color: #cccccc;
+                  margin: 0 32px;
                 }
               }
             }

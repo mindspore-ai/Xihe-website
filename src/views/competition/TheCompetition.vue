@@ -60,12 +60,24 @@ function goDetail(id) {
   });
   // router.push(`/competition/${id}`)
 }
+function change(pre, next) {
+  // console.log(pre, next);
+}
 </script>
 <template>
   <div class="competition-page">
     <div class="competition-head">
       <div class="wrap">
-        <el-carousel :interval="4000" type="card" height="300px">
+        <el-carousel
+          :interval="4000"
+          type="card"
+          height="300px"
+          @change="
+            (pre, next) => {
+              change(pre, next);
+            }
+          "
+        >
           <el-carousel-item><img :src="paintings" alt="" /> </el-carousel-item>
           <el-carousel-item
             ><img :src="imageClassify" alt="" />
@@ -123,7 +135,7 @@ function goDetail(id) {
                       animation
                       @click="goDetail(item.id)"
                     >
-                      立即报名
+                      立即前往
                       <template #suffix>
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
@@ -181,7 +193,7 @@ function goDetail(id) {
                       animation
                       @click="goDetail(item.id)"
                     >
-                      立即报名
+                      立即前往
                       <template #suffix>
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
@@ -236,7 +248,7 @@ function goDetail(id) {
                       animation
                       @click="goDetail(item.id)"
                     >
-                      立即报名
+                      立即前往
                       <template #suffix>
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
@@ -294,7 +306,7 @@ function goDetail(id) {
                       animation
                       @click="goDetail(item.id)"
                     >
-                      立即报名
+                      立即前往
                       <template #suffix>
                         <OIcon><IconArrowRight /></OIcon>
                       </template>

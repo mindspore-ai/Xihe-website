@@ -105,251 +105,265 @@ function closeInstanceVideo() {
 }
 </script>
 <template>
-  <div class="taichu-detail">
-    <div class="taichu-detail-intro">
-      <div class="intro-title">简述</div>
-      <p class="intro-info info1">
-        紫东.太初是中科院自动化所与MindSpore社区联合打造的全球首个图、文、音三模态大模型。紫东.太初将文本
-        + 视觉 + 语音
-        各个模型高效协同，实现超强性能，在图文跨模态理解与生成性能上都能领先目前业界的SOTA模型，高效完成跨模态检测、视觉问答、语义描述等下游任务。此外，视频理解与描述的性能更是实现了全球第一，在今年的两个国际大赛中，ACM
-        Multimedia（国际多媒体大会）
-        和ICCV（国际计算机视觉大会）紫东太初都获得了第一名的成绩。
-      </p>
-      <p class="intro-info">
-        紫东.太初的发布将改变当前单一模型对应单一任务的人工智能研发范式，实现三模态图文音的统一语义表达，大幅提升文本、语音、图像和视频等领域的基础任务性能，并在多模态内容的理解、搜索、推荐和问答，语音识别和合成，人机交互和无人驾驶等商业应用中具有潜力巨大的市场价值。
-      </p>
+  <div class="wrapper">
+    <div class="taichu-detail">
+      <div class="taichu-detail-intro">
+        <div class="intro-title">简述</div>
+        <p class="intro-info info1">
+          紫东.太初是中科院自动化所与MindSpore社区联合打造的全球首个图、文、音三模态大模型。紫东.太初将文本
+          + 视觉 + 语音
+          各个模型高效协同，实现超强性能，在图文跨模态理解与生成性能上都能领先目前业界的SOTA模型，高效完成跨模态检测、视觉问答、语义描述等下游任务。此外，视频理解与描述的性能更是实现了全球第一，在今年的两个国际大赛中，ACM
+          Multimedia（国际多媒体大会）
+          和ICCV（国际计算机视觉大会）紫东太初都获得了第一名的成绩。
+        </p>
+        <p class="intro-info">
+          紫东.太初的发布将改变当前单一模型对应单一任务的人工智能研发范式，实现三模态图文音的统一语义表达，大幅提升文本、语音、图像和视频等领域的基础任务性能，并在多模态内容的理解、搜索、推荐和问答，语音识别和合成，人机交互和无人驾驶等商业应用中具有潜力巨大的市场价值。
+        </p>
 
-      <div class="intro-body">
-        <div class="intro-body-title">
-          全球首个三模态大模型“紫东.太初”——助力科研创新与应用孵化
-        </div>
-        <div class="intro-body-diagram">
-          <img class="diagram-left" :src="taichuEfficient" alt="" />
-          <div class="diagram-right">
-            <div class="text">
-              <img :src="taichuEfficient1" alt="" />
-              <img :src="taichuEfficient2" alt="" />
-              <img :src="taichuEfficient3" alt="" />
-              <p>以文搜图</p>
-            </div>
-            <div class="diagram-video">
-              <div
-                v-for="item in videoImgArr1"
-                :key="item.id"
-                class="diagram-video-img"
-                @click="playVideo(item.videoUrl)"
-              >
-                <img class="video-img1" :src="item.src" alt="" />
-                <img class="video-img2" :src="taichuPlay" alt="" />
+        <div class="intro-body">
+          <div class="intro-body-title">
+            全球首个三模态大模型“紫东.太初”——助力科研创新与应用孵化
+          </div>
+          <div class="intro-body-diagram">
+            <img class="diagram-left" :src="taichuEfficient" alt="" />
+            <div class="diagram-right">
+              <div class="text">
+                <img :src="taichuEfficient1" alt="" />
+                <img :src="taichuEfficient2" alt="" />
+                <img :src="taichuEfficient3" alt="" />
+                <p>以文搜图</p>
               </div>
-              <!-- <div class="audio-video-img" @click="playVideo">
-                <img class="audio-video-img1" :src="taichuVideo3" alt="" />
-                <img class="audio-video-img2" :src="taichuPlay" alt="" />
-              </div> -->
-              <p>以图生音</p>
-            </div>
-            <div class="diagram-video">
-              <div
-                v-for="item in videoImgArr2"
-                :key="item.id"
-                class="diagram-video-img"
-                @click="playVideo(item.videoUrl)"
-              >
-                <img class="video-img1" :src="taichuVideo2" alt="" />
-                <img class="video-img2" :src="taichuPlay" alt="" />
+              <div class="diagram-video">
+                <div
+                  v-for="item in videoImgArr1"
+                  :key="item.id"
+                  class="diagram-video-img"
+                  @click="playVideo(item.videoUrl)"
+                >
+                  <img class="video-img1" :src="item.src" alt="" />
+                  <img class="video-img2" :src="taichuPlay" alt="" />
+                </div>
+                <!-- <div class="audio-video-img" @click="playVideo">
+                  <img class="audio-video-img1" :src="taichuVideo3" alt="" />
+                  <img class="audio-video-img2" :src="taichuPlay" alt="" />
+                </div> -->
+                <p>以图生音</p>
               </div>
-              <!-- <div class="audio-video-img" @click="playVideo">
-                <img class="audio-video-img1" :src="taichuVideo2" alt="" />
-                <img class="audio-video-img2" :src="taichuPlay" alt="" />
-              </div> -->
-              <p>以音生图</p>
+              <div class="diagram-video">
+                <div
+                  v-for="item in videoImgArr2"
+                  :key="item.id"
+                  class="diagram-video-img"
+                  @click="playVideo(item.videoUrl)"
+                >
+                  <img class="video-img1" :src="taichuVideo2" alt="" />
+                  <img class="video-img2" :src="taichuPlay" alt="" />
+                </div>
+                <!-- <div class="audio-video-img" @click="playVideo">
+                  <img class="audio-video-img1" :src="taichuVideo2" alt="" />
+                  <img class="audio-video-img2" :src="taichuPlay" alt="" />
+                </div> -->
+                <p>以音生图</p>
+              </div>
             </div>
           </div>
         </div>
+        <div class="intro-img">
+          <img :src="taichuLargeimg1" alt="" />
+        </div>
+        <div class="intro-img-mobile">
+          <img :src="taichuLargeimg1Mo" alt="" />
+        </div>
       </div>
-      <div class="intro-img">
-        <img :src="taichuLargeimg1" alt="" />
-      </div>
-      <div class="intro-img-mobile">
-        <img :src="taichuLargeimg1Mo" alt="" />
-      </div>
-    </div>
 
-    <div class="taichu-detail-reference">
-      <div class="reference-title">参考设计——多模态对话虚拟人“小初”</div>
-      <p class="reference-info">
-        自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
-      </p>
-      <div class="reference-video">
-        <img class="video-img1" :src="taichuVideo4" alt="" />
-        <div class="video-img2">
-          <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
-          <div>紫东.太初</div>
-          <p>全球首个三模态大模型</p>
-        </div>
-        <div v-if="showReferenceVideo" class="video-content">
-          <!-- <span class="close-btn" @click="closeReferenceVideo"> -->
-          <!-- <img src="" alt=""> -->
-          <img
-            class="close-btn"
-            :src="taichuClose"
-            alt=""
-            @click="closeReferenceVideo"
-          />
-          <!-- </span> -->
-          <video
-            id="referenceVideo"
-            controls="controls"
-            :src="referencevideo"
-            class="reference-video"
-          ></video>
-        </div>
-      </div>
-    </div>
-
-    <div class="taichu-detail-instance">
-      <div class="instance-title">应用实例——千博手语教考一体机</div>
-      <p class="instance-info">
-        手语教考一体机：我国共有2700多万听障人士，他们面临沟通难、就业难等一系列问题，究其原因，主要是手语知识学习的挑战，这其中手语词汇匮乏、师资短缺、手语标准难统一是三大挑战
-        。千博信息基于紫东.太初利用昇思MindSpore开发了手语多模态模型，开创性地实现手语动作与示意图片和文字的联动，让初学者更加方便的理解；基于手语多模态模型，利用昇腾AI基础软硬件平台开发了手语教考一体机，帮助学生随学随练随考，高效学习。
-        <br />
-        在解决手语师资短缺的同时，还能推动手语标准的推广。目前一体机已在湘潭特校等数十个学校陆续上线。
-      </p>
-      <div class="instance-desc">
-        <div class="instance-desc-title">听障群体持续学习成为难题</div>
-        <div class="instance-desc-title2">
-          听障人士长期手语学习过程中的三大挑战
-        </div>
-        <ul class="challenges">
-          <li class="challenges-item">
-            <div class="challenges-item-left">
-              <p class="challenges-item-left-num">1</p>
-              <p class="challenges-item-left-title">词汇匮乏</p>
-            </div>
-            <div class="challenges-item-right">
-              <div class="top">
-                <span class="top-strip strip"></span>
-                <div class="top-total">
-                  <p class="title1">69000个词语</p>
-                  <p class="title2">《现代汉语词典》新事物 新技术…</p>
-                </div>
-              </div>
-              <div class="bottom">
-                <span class="bottom-strip strip"></span>
-                <span class="bottom-title">8200个词语</span>
-              </div>
-            </div>
-          </li>
-          <li class="challenges-item">
-            <div class="challenges-item-left">
-              <p class="challenges-item-left-num">2</p>
-              <p class="challenges-item-left-title">师资短缺</p>
-            </div>
-            <div class="challenges-item-right">
-              <div class="top">
-                <span class="top-strip strip"></span>
-                <div class="top-total">
-                  <p class="title1">约460万聋哑学生</p>
-                  <!-- <p class="title2">《现代汉语词典》新事物 新技术…</p> -->
-                </div>
-              </div>
-              <div class="bottom">
-                <span class="bottom-strip strip"></span>
-                <span class="bottom-title3"> 约1万名手语教师</span>
-              </div>
-            </div>
-          </li>
-          <li class="challenges-item">
-            <div class="challenges-item-left">
-              <p class="challenges-item-left-num">3</p>
-              <p class="challenges-item-left-title">标准不一</p>
-            </div>
-            <div class="challenges-item-right">
-              <ul class="difference-arr">
-                <li class="difference-item">
-                  <span class="color-block"></span>
-                  <span class="text-block">方言差异</span>
-                </li>
-                <li class="difference-item">
-                  <span class="color-block"></span>
-                  <span class="text-block">语法差异</span>
-                </li>
-                <li class="difference-item">
-                  <span class="color-block"></span>
-                  <span class="text-block">认知差异</span>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="instance-AIdesc">
-        <div class="instance-AIdesc-title">
-          AI赋能，让手语学习更简单、可持续
-        </div>
-        <div class="instance-AIdesc-title1">
-          听障人士长期手语学习过程中的三大挑战
-        </div>
-        <ul class="instance-AIdesc-title2">
-          <li>
-            <span>持续丰富手语词汇库</span>
-            <img :src="taichuArrows" alt="" />
-          </li>
-          <li>
-            <span>推动融合手语国家标准制定</span>
-            <img :src="taichuArrows" alt="" />
-          </li>
-          <li>
-            <span>持续丰富手语词汇库</span>
-          </li>
-        </ul>
-
-        <div class="instance-AIdesc-img">
-          <img :src="taichuLargeimg2" alt="" />
-        </div>
-        <img
-          class="instance-AIdesc-companyimg"
-          :src="taichuCompanyImg"
-          alt=""
-        />
-        <img class="instance-AIdesc-fixImage" :src="taichuFixImg" alt="" />
-
-        <div class="instance-AIdesc-video">
-          <img class="video-img1" :src="taichuVideo5" alt="" />
+      <div class="taichu-detail-reference">
+        <div class="reference-title">参考设计——多模态对话虚拟人“小初”</div>
+        <p class="reference-info">
+          自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
+        </p>
+        <div class="reference-video">
+          <img class="video-img1" :src="taichuVideo4" alt="" />
           <div class="video-img2">
-            <img :src="taichuPlay" alt="" @click="playInstanceVideo" />
+            <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
+            <div>紫东.太初</div>
+            <p>全球首个三模态大模型</p>
           </div>
-          <div v-if="showInstanceVideo" class="video-content">
+          <div v-if="showReferenceVideo" class="video-content">
+            <!-- <span class="close-btn" @click="closeReferenceVideo"> -->
+            <!-- <img src="" alt=""> -->
             <img
               class="close-btn"
               :src="taichuClose"
               alt=""
-              @click="closeInstanceVideo"
+              @click="closeReferenceVideo"
             />
+            <!-- </span> -->
             <video
-              id="instanceVideo"
+              id="referenceVideo"
               controls="controls"
-              :src="instancevideo"
-              class="instance-video"
+              :src="referencevideo"
+              class="reference-video"
             ></video>
           </div>
         </div>
       </div>
+
+      <div class="taichu-detail-instance">
+        <div class="instance-title">应用实例——千博手语教考一体机</div>
+        <p class="instance-info">
+          手语教考一体机：我国共有2700多万听障人士，他们面临沟通难、就业难等一系列问题，究其原因，主要是手语知识学习的挑战，这其中手语词汇匮乏、师资短缺、手语标准难统一是三大挑战
+          。千博信息基于紫东.太初利用昇思MindSpore开发了手语多模态模型，开创性地实现手语动作与示意图片和文字的联动，让初学者更加方便的理解；基于手语多模态模型，利用昇腾AI基础软硬件平台开发了手语教考一体机，帮助学生随学随练随考，高效学习。
+          <br />
+          在解决手语师资短缺的同时，还能推动手语标准的推广。目前一体机已在湘潭特校等数十个学校陆续上线。
+        </p>
+        <div class="instance-desc">
+          <div class="instance-desc-title">听障群体持续学习成为难题</div>
+          <div class="instance-desc-title2">
+            听障人士长期手语学习过程中的三大挑战
+          </div>
+
+          <ul class="challenges">
+            <li class="challenges-item">
+              <div class="challenges-item-left">
+                <p class="challenges-item-left-num">1</p>
+                <p class="challenges-item-left-title">词汇匮乏</p>
+              </div>
+              <div class="challenges-item-right">
+                <div class="top">
+                  <span class="top-strip strip"></span>
+                  <div class="top-total">
+                    <p class="title1">69000个词语</p>
+                    <p class="title2">《现代汉语词典》新事物 新技术…</p>
+                  </div>
+                </div>
+                <div class="bottom">
+                  <span class="bottom-strip strip"></span>
+                  <span class="bottom-title">8200个词语</span>
+                </div>
+              </div>
+            </li>
+            <li class="challenges-item">
+              <div class="challenges-item-left">
+                <p class="challenges-item-left-num">2</p>
+                <p class="challenges-item-left-title">师资短缺</p>
+              </div>
+              <div class="challenges-item-right">
+                <div class="top">
+                  <span class="top-strip strip"></span>
+                  <div class="top-total">
+                    <p class="title1">约460万聋哑学生</p>
+                    <!-- <p class="title2">《现代汉语词典》新事物 新技术…</p> -->
+                  </div>
+                </div>
+                <div class="bottom">
+                  <span class="bottom-strip strip"></span>
+                  <span class="bottom-title3"> 约1万名手语教师</span>
+                </div>
+              </div>
+            </li>
+            <li class="challenges-item">
+              <div class="challenges-item-left">
+                <p class="challenges-item-left-num">3</p>
+                <p class="challenges-item-left-title">标准不一</p>
+              </div>
+              <div class="challenges-item-right">
+                <ul class="difference-arr">
+                  <li class="difference-item">
+                    <span class="color-block"></span>
+                    <span class="text-block">方言差异</span>
+                  </li>
+                  <li class="difference-item">
+                    <span class="color-block"></span>
+                    <span class="text-block">语法差异</span>
+                  </li>
+                  <li class="difference-item">
+                    <span class="color-block"></span>
+                    <span class="text-block">认知差异</span>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <div class="mobile-challenge">
+            <img src="@/assets/imgs/taichu/taichu-challenge1.png" alt="" />
+            <img src="@/assets/imgs/taichu/taichu-challenge2.png" alt="" />
+            <img src="@/assets/imgs/taichu/taichu-challenge3.png" alt="" />
+          </div>
+        </div>
+        <div class="instance-AIdesc">
+          <div class="instance-AIdesc-title">
+            AI赋能，让手语学习更简单、可持续
+          </div>
+          <div class="instance-AIdesc-title1">
+            听障人士长期手语学习过程中的三大挑战
+          </div>
+          <ul class="instance-AIdesc-title2">
+            <li>
+              <span>持续丰富手语词汇库</span>
+              <img :src="taichuArrows" alt="" />
+            </li>
+            <li>
+              <span>推动融合手语国家标准制定</span>
+              <img :src="taichuArrows" alt="" />
+            </li>
+            <li>
+              <span>持续丰富手语词汇库</span>
+            </li>
+          </ul>
+
+          <div class="instance-AIdesc-img">
+            <img :src="taichuLargeimg2" alt="" />
+          </div>
+          <img
+            class="instance-AIdesc-companyimg"
+            :src="taichuCompanyImg"
+            alt=""
+          />
+          <img class="instance-AIdesc-fixImage" :src="taichuFixImg" alt="" />
+
+          <div class="instance-AIdesc-video">
+            <img class="video-img1" :src="taichuVideo5" alt="" />
+            <div class="video-img2">
+              <img :src="taichuPlay" alt="" @click="playInstanceVideo" />
+            </div>
+            <div v-if="showInstanceVideo" class="video-content">
+              <img
+                class="close-btn"
+                :src="taichuClose"
+                alt=""
+                @click="closeInstanceVideo"
+              />
+              <video
+                id="instanceVideo"
+                controls="controls"
+                :src="instancevideo"
+                class="instance-video"
+              ></video>
+            </div>
+          </div>
+        </div>
+      </div>
+      <o-dialog :is-center="true" :show="showVideo" @close-click="toggleDialog">
+        <video
+          id="video"
+          width="198"
+          height="90"
+          controls="controls"
+          :src="taichuvideo1"
+          class="home-video"
+        ></video>
+      </o-dialog>
     </div>
-    <o-dialog :is-center="true" :show="showVideo" @close-click="toggleDialog">
-      <video
-        id="video"
-        width="198"
-        height="90"
-        controls="controls"
-        :src="taichuvideo1"
-        class="home-video"
-      ></video>
-    </o-dialog>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.wrapper {
+  @media screen and (max-width: 768px) {
+    padding: 16px;
+    background: #f5f6f8;
+  }
+}
 .taichu-detail {
   padding: 40px 80px;
   background-color: #fff;
@@ -425,8 +439,9 @@ function closeInstanceVideo() {
           max-width: 213px;
           // margin-right: 166px;
           @media screen and (max-width: 768px) {
-            max-width: 100%;
-            margin: 16px 42px;
+            height: 234px;
+            // margin: 16px 42px;
+            margin: 0 auto 16px;
           }
         }
         .diagram-right {
@@ -442,6 +457,7 @@ function closeInstanceVideo() {
               @media screen and (max-width: 768px) {
                 margin-bottom: 16px;
                 width: 100%;
+                height: 82px;
               }
             }
             p {
@@ -474,6 +490,7 @@ function closeInstanceVideo() {
               position: relative;
               cursor: pointer;
               @media screen and (max-width: 768px) {
+                margin-bottom: 16px;
                 &:nth-child(2) {
                   margin-bottom: 8px;
                 }
@@ -481,6 +498,11 @@ function closeInstanceVideo() {
 
               img {
                 width: 100%;
+              }
+              .video-img1 {
+                @media screen and (max-width: 768px) {
+                  height: 127px;
+                }
               }
               .video-img2 {
                 width: 36px;
@@ -711,12 +733,26 @@ function closeInstanceVideo() {
           margin-bottom: 13px;
         }
       }
+      .mobile-challenge {
+        display: none;
+        img {
+          width: 100%;
+          margin-bottom: 16px;
+          &:nth-child(3) {
+            margin-bottom: 26px;
+          }
+        }
+        @media screen and (max-width: 768px) {
+          display: block;
+        }
+      }
       .challenges {
         display: flex;
         justify-content: center;
         @media screen and (max-width: 768px) {
-          flex-direction: column;
-          margin-bottom: 26px;
+          // flex-direction: column;
+          // margin-bottom: 26px;
+          display: none;
         }
         &-item {
           // width: 410px;
@@ -726,9 +762,9 @@ function closeInstanceVideo() {
           background: #f5f9fb;
           margin-right: 16px;
           display: flex;
-          @media screen and (max-width: 768px) {
-            margin-bottom: 16px;
-          }
+          // @media screen and (max-width: 768px) {
+          //   margin-bottom: 16px;
+          // }
           // 最后一个子元素
           &:last-child {
             margin-right: 0;

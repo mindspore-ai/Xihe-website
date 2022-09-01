@@ -480,7 +480,7 @@ function goUserPage(vel) {
   display: block;
   cursor: pointer;
   text-align: center;
-  margin: 40px 0;
+  margin: 40px 0 64px 0;
   padding-bottom: 40px;
   color: #000000;
   .o-icon {

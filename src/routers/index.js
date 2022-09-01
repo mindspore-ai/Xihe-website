@@ -71,7 +71,7 @@ export const routes = [
   // 排行榜
   {
     path: '/leaderboard',
-    name: 'leaderboar',
+    name: 'leaderboards',
     component: () => {
       return import('@/views/TheLeaderboard.vue');
     },

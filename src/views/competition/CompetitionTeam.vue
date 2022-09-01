@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
 
-// import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 import { revampTeam } from '@/api/api-competition';
@@ -12,6 +12,7 @@ import { deleteTeam } from '@/api/api-competition';
 import { quitTeam } from '@/api/api-competition';
 import { removeMember } from '@/api/api-competition';
 import { transferCaptain } from '@/api/api-competition';
+import { getGroupid } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 
 import { ElMessage } from 'element-plus';
@@ -26,13 +27,15 @@ import IconTips from '~icons/app/tips.svg';
 import ODialog from '@/components/ODialog.vue';
 import OButton from '@/components/OButton.vue';
 
+import IconCancel2 from '~icons/app/cancelBlue.svg';
+import IconDelivery2 from '~icons/app/deliveryBlue.svg';
 const userInfoStore = useUserInfoStore();
-// import IconCancelBlue from '~icons/app/cancelBlue.svg';
-// import IconDeliveryBlue from '~icons/app/deliveryBlue.svg';
-// const route = useRoute();
-// const router = useRouter();
+const route = useRoute();
+const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
+  teamTips:
+    '提示：选择团队参赛后，个人参赛的成绩会重置，请以团队名义重新上传结果',
   teamName: '团队名',
   tips: '一个团队最多有3名成员',
   newTeamName: '新团队名',
@@ -43,6 +46,7 @@ const i18n = {
   edit: '编辑',
   delete: {
     describe1: '确定删除这个团队吗？',
+    describe2: '退出当前团队比赛成绩会重置，请重新上传结果',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
@@ -56,9 +60,14 @@ const teamData = ref([]); //创建团队后的团队信息
 const teamMemberData = ref([]); //创建团队后的团队成员信息
 const showDel = ref(false);
 const showEdit = ref(false);
+const showQuit = ref(false);
 const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
+// 含个人参赛的团队Id和团队参赛的团队Id
+const teamId = computed(() => {
+  return useCompetitionData().teamId;
+});
 
 const form1 = reactive({
   teamName: '',
@@ -79,7 +88,7 @@ const rules1 = reactive({
     {
       // 只支持中英文，不超过20个字符
       pattern: /^[a-zA-Z\u4e00-\u9fa5]{1,20}$/,
-      message: '团队名支持中英文，不超过20个字符',
+      message: '团队名仅支持中英文，不超过20个字符',
       trigger: 'blur',
     },
   ],
@@ -94,7 +103,7 @@ const rules2 = reactive({
     {
       // 只支持中英文，不超过20个字符
       pattern: /^[a-zA-Z\u4e00-\u9fa5]{1,20}$/,
-      message: '团队名支持中英文，不超过20个字符',
+      message: '团队名仅支持中英文，不超过20个字符',
       trigger: 'blur',
     },
   ],
@@ -114,10 +123,7 @@ const rules3 = reactive({
     },
   ],
 });
-// 含个人参赛的团队Id和团队参赛的团队Id
-const teamId = computed(() => {
-  return useCompetitionData().teamId;
-});
+
 function handleClick() {}
 watch(
   () => {
@@ -145,48 +151,67 @@ async function getIndividual(id) {
 }
 
 // 点击创建团队（修改团队）
-function fountTeam() {
-  let params = {
-    name: form1.teamName,
-    is_individual: false,
-  };
-  // 修改团队
-  revampTeam(params, teamId.value).then((res) => {
-    if (res.status === 200) {
-      teamData.value = res.data;
-      teamMemberData.value = res.data.members_order_list;
-      is_individual.value = false;
-      form1.teamName = '';
+function fountTeam(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      let params = {
+        name: form1.teamName,
+        is_individual: false,
+      };
+      // 修改团队
+      revampTeam(params, teamId.value).then((res) => {
+        if (res.status === 200) {
+          teamData.value = res.data;
+          teamMemberData.value = res.data.members_order_list;
+          is_individual.value = false;
+          form1.teamName = '';
+          ElMessage({
+            type: 'success',
+            message: '创建团队成功！',
+          });
+        }
+      });
+    } else {
+      console.error('error submit!');
+      return false;
     }
   });
 }
 // 加入团队
-async function addTeam() {
-  // 通过团队名获取团队信息判断团队名是否存在
-  let newTeamId = null; //新加入的团队id
-  let params = { name: form2.teamName };
-  let res = await getTeamInfoByName(params.name);
-  if (res.status === 200 && res.data.length !== 0) {
-    newTeamId = res.data[0].id;
-  } else {
-    ElMessage({
-      type: 'warning',
-      message: '团队不存在！',
-    });
-    return;
-  }
-  // 删除原来的个人团队信息
-  // await deleteTeam(teamId.value);
-  // 加入团队
-  let res3 = await joinTeam({ id: newTeamId });
-  if (res3.status === 200) {
-    form2.teamName = '';
-    userComData.setTeamId(newTeamId);
-    ElMessage({
-      type: 'success',
-      message: '加入团队成功!',
-    });
-  }
+function addTeam(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      // 通过团队名获取团队信息判断团队名是否存在
+      let newTeamId = null; //新加入的团队id
+      let params = { name: form2.teamName };
+      getTeamInfoByName(params.name).then((res) => {
+        if (res.status === 200 && res.data.length !== 0) {
+          newTeamId = res.data[0].id;
+          joinTeam({ id: newTeamId }).then((res) => {
+            if (res.status === 200) {
+              form2.teamName = '';
+              userComData.setTeamId(newTeamId);
+              ElMessage({
+                type: 'success',
+                message: '加入团队成功!',
+              });
+            }
+          });
+        } else {
+          ElMessage({
+            type: 'warning',
+            message: '团队不存在！',
+          });
+          return;
+        }
+      });
+    } else {
+      console.error('error submit!');
+      return false;
+    }
+  });
 }
 
 // 移除成员
@@ -225,43 +250,33 @@ function handleCaptain(memberId) {
   });
 }
 
-// 退出团队
-async function handleQuitTeam() {
-  let params = { id: teamId.value };
-  let res = await quitTeam(params);
+// 删除团队
+async function confirmDel() {
+  let res = await deleteTeam(teamId.value);
   if (res.status === 200) {
+    showDel.value = false;
     ElMessage({
       type: 'success',
-      message: '退出团队成功！',
+      message: '团队删除成功！',
     });
-    is_individual.value = true;
+    router.push({
+      name: 'introduction',
+      params: {
+        id: route.params.id, //比赛id
+      },
+    });
+    // is_individual.value = true;
+  } else {
+    ElMessage({
+      type: 'error',
+      message: res.msg,
+    });
   }
-}
-
-// 删除团队
-function confirmDel() {
-  deleteTeam(teamId.value).then((res) => {
-    if (res.status === 200) {
-      // userComData.setTeamId(null);
-      showDel.value = false;
-      ElMessage({
-        type: 'success',
-        message: '团队删除成功！',
-      });
-      /* router.push({
-        name: 'introduction',
-        params: {
-          id: route.params.id, //比赛id
-        },
-      }); */
-      is_individual.value = true;
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    }
-  });
+  // 更新团队id
+  let res2 = await getGroupid(route.params.id);
+  if (res2.status === 200) {
+    userComData.setTeamId(res2.group_id);
+  }
 }
 function toggleDelDlg(flag) {
   if (flag === undefined) {
@@ -270,29 +285,62 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
+
 // 编辑团队名
-function confirmEdit() {
-  let params = {
-    name: form3.teamName,
-  };
-  revampTeam(params, teamId.value).then((res) => {
-    if (res.status === 200) {
-      teamData.value = res.data;
-      showEdit.value = false;
-      form3.teamName = '';
-      ElMessage({
-        type: 'success',
-        message: '团队名修改成功！',
+function confirmEdit(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      let params = {
+        name: form3.teamName,
+      };
+      revampTeam(params, teamId.value).then((res) => {
+        if (res.status === 200) {
+          teamData.value = res.data;
+          showEdit.value = false;
+          form3.teamName = '';
+          ElMessage({
+            type: 'success',
+            message: '团队名修改成功！',
+          });
+        }
       });
+    } else {
+      console.error('error submit!');
+      return false;
     }
   });
 }
-
 function toggleEditDlg(flag) {
   if (flag === undefined) {
     showEdit.value = !showEdit.value;
   } else {
     showEdit.value = flag;
+  }
+}
+
+// 退出团队
+async function confirmQuit() {
+  let params = { id: teamId.value };
+  let res = await quitTeam(params);
+  if (res.status === 200) {
+    ElMessage({
+      type: 'success',
+      message: '退出团队成功！',
+    });
+    showQuit.value = false;
+  }
+  // 更新团队id
+  let res2 = await getGroupid(route.params.id);
+  if (res2.status === 200) {
+    userComData.setTeamId(res2.group_id);
+  }
+}
+function toggleQuitDlg(flag) {
+  if (flag === undefined) {
+    showQuit.value = !showQuit.value;
+  } else {
+    showQuit.value = flag;
   }
 }
 </script>
@@ -301,6 +349,9 @@ function toggleEditDlg(flag) {
     <div v-if="is_individual" class="noteam-page">
       <div class="title">
         {{ i18n.title }}
+      </div>
+      <div class="tips">
+        {{ i18n.teamTips }}
       </div>
       <el-tabs v-model="activeName" class="team-tabs" @tab-click="handleClick">
         <el-tab-pane label="创建团队" name="first">
@@ -320,7 +371,7 @@ function toggleEditDlg(flag) {
                       ><icon-poppver></icon-poppver
                     ></o-icon>
                   </template>
-                  <div>团队名支持中英文，不超过20个字符</div>
+                  <div>团队名仅支持中英文，不超过20个字符</div>
                 </el-popover>
               </div>
               <el-form-item prop="teamName">
@@ -328,7 +379,7 @@ function toggleEditDlg(flag) {
                   v-model="form1.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="fountTeam">{{
+                <o-button type="primary" @click="fountTeam(queryRef1)">{{
                   i18n.createTeam
                 }}</o-button>
               </el-form-item>
@@ -341,26 +392,13 @@ function toggleEditDlg(flag) {
               <div class="requirement">
                 <icon-necessary></icon-necessary
                 ><span>{{ i18n.teamName }}</span>
-                <!-- <el-popover
-                  placement="bottom-start"
-                  :width="372"
-                  trigger="hover"
-                  :teleported="true"
-                >
-                  <template #reference>
-                    <o-icon style="font-size: 18px"
-                      ><icon-poppver></icon-poppver
-                    ></o-icon>
-                  </template>
-                  <div>团队名支持中英文，不超过20个字符</div>
-                </el-popover> -->
               </div>
               <el-form-item prop="teamName">
                 <el-input
                   v-model="form2.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="addTeam">{{
+                <o-button type="primary" @click="addTeam(queryRef2)">{{
                   i18n.joinTeam
                 }}</o-button>
               </el-form-item>
@@ -398,7 +436,7 @@ function toggleEditDlg(flag) {
           }}</OButton>
         </div>
         <div v-else class="quit-button">
-          <OButton type="primary" size="small" @click="handleQuitTeam">{{
+          <OButton type="primary" size="small" @click="showQuit = true">{{
             i18n.quit
           }}</OButton>
         </div>
@@ -431,11 +469,15 @@ function toggleEditDlg(flag) {
               class="operate"
             >
               <div class="delete" @click="deleteMember(scope.row.id)">
-                <o-icon><icon-cancel></icon-cancel></o-icon>
+                <o-icon class="del"><icon-cancel></icon-cancel></o-icon>
+                <o-icon class="del2"><icon-cancel2></icon-cancel2></o-icon>
                 <span>移除</span>
               </div>
               <div class="delivery" @click="handleCaptain(scope.row.id)">
-                <o-icon><icon-delivery></icon-delivery></o-icon>
+                <o-icon class="remove"><icon-delivery></icon-delivery></o-icon>
+                <o-icon class="remove2"
+                  ><icon-delivery2></icon-delivery2
+                ></o-icon>
                 <span>移交队长</span>
               </div>
             </div>
@@ -539,7 +581,48 @@ function toggleEditDlg(flag) {
           @click="toggleEditDlg(false)"
           >{{ i18n.delete.cancel }}</o-button
         >
-        <o-button type="primary" @click="confirmEdit">{{
+        <o-button type="primary" @click="confirmEdit(queryRef3)">{{
+          i18n.delete.confirm
+        }}</o-button>
+      </div>
+    </template>
+  </o-dialog>
+  <!-- 退出团队弹窗 -->
+  <o-dialog :show="showQuit" :close="false" @close-click="toggleQuitDlg(false)">
+    <template #head>
+      <div
+        class="dlg-title"
+        :style="{ textAlign: 'center', paddingTop: '40px' }"
+      >
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 12px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      {{ i18n.delete.describe2 }}
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '56px',
+        }"
+      >
+        <o-button
+          :style="{ marginRight: '24px' }"
+          @click="toggleQuitDlg(false)"
+          >{{ i18n.delete.cancel }}</o-button
+        >
+        <o-button type="primary" @click="confirmQuit">{{
           i18n.delete.confirm
         }}</o-button>
       </div>
@@ -558,7 +641,11 @@ function toggleEditDlg(flag) {
       line-height: 32px;
       font-size: 24px;
       color: #000000;
-      margin-bottom: 48px;
+      // margin-bottom: 48px;
+    }
+    .tips {
+      color: #555;
+      margin: 15px 0 48px;
     }
     :deep(.el-tabs) {
       .el-tabs__header {
@@ -660,6 +747,7 @@ function toggleEditDlg(flag) {
     }
     :deep(.el-table) {
       margin-top: 24px;
+      border: 1px solid #e5e5e5;
       --el-table-header-bg-color: #e5e8f0;
       --el-table-header-text-color: #555;
       .el-table__inner-wrapper {
@@ -668,6 +756,9 @@ function toggleEditDlg(flag) {
           .cell {
             display: flex;
             // align-items: center;
+            .delivery {
+              margin-left: -22px;
+            }
             .o-icon {
               font-size: 16px;
               line-height: 24px;
@@ -685,12 +776,21 @@ function toggleEditDlg(flag) {
         }
         .el-table__body {
           .el-table__row {
+            .del,
+            .remove {
+              position: relative;
+              left: 22px;
+              // display: none;
+              // opacity: 0;
+            }
             &:hover {
               .el-table_1_column_3 {
                 .cell {
-                  // .delete {
                   color: #0d8dff;
-                  // }
+                  .del,
+                  .remove {
+                    opacity: 0;
+                  }
                 }
               }
             }
@@ -720,27 +820,6 @@ function toggleEditDlg(flag) {
                     align-items: center;
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-:deep(.o-dialog) {
-  .o-dialog-wrap {
-    height: 700px !important;
-    .o-dialog-body {
-      .dlg-body {
-        width: 700px;
-        :deep(.el-form) {
-          font-size: 100px;
-          .el-form-item {
-            height: 100px;
-            .el-form-item__content {
-              .el-form-item__error {
-                font-size: 100px !important;
               }
             }
           }

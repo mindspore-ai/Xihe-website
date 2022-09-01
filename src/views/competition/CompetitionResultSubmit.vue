@@ -233,16 +233,18 @@ function handelSubmit() {
           >
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="name">
-          <template #header>
-            <o-icon><icon-upload></icon-upload> </o-icon
-            >提交的最新结果（显示最近3条）
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="提交时间" width="171" />
-        <el-table-column prop="address" label="我的分数" width="104" />
-      </el-table>
+      <div class="table">
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="name">
+            <template #header>
+              <o-icon><icon-upload></icon-upload> </o-icon
+              >提交的最新结果（显示最近3条）
+            </template>
+          </el-table-column>
+          <el-table-column prop="address" label="提交时间" width="171" />
+          <el-table-column prop="address" label="我的分数" width="104" />
+        </el-table>
+      </div>
     </div>
   </div>
   <o-dialog :show="showPhoneDlg" :close="false">
@@ -301,10 +303,14 @@ function handelSubmit() {
         margin-left: 8px;
       }
     }
-    .el-table {
+    .table {
       margin-top: 24px;
-      --el-table-header-bg-color: #e5e8f0;
-      --el-table-header-text-color: #555;
+      border: 1px solid #e5e5e5;
+      .el-table {
+        // margin-top: 24px;
+        --el-table-header-bg-color: #e5e8f0;
+        --el-table-header-text-color: #555;
+      }
     }
     :deep(.el-table__inner-wrapper) {
       .el-table__cell {

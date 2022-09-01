@@ -69,7 +69,7 @@ const navItems = [
     href: '/competition',
   },
   {
-    id: 'leaderboard',
+    id: 'leaderboards',
     label: '排行榜',
     href: '/leaderboard',
   },
@@ -143,7 +143,11 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^models|datasets|projects|modelzoo|leaderboard|teams/g.test(val)) {
+    if (
+      /^models|datasets|projects|modelzoo|competition|leaderboards|teams/g.test(
+        val
+      )
+    ) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';

@@ -7,7 +7,7 @@ import OButton from '@/components/OButton.vue';
 import paintings from '@/assets/imgs/paintings1.png';
 import imageClassify from '@/assets/imgs/imageClassify.jpg';
 import textClassification from '@/assets/imgs/textClassification2.jpg';
-import emptyImg from '@/assets/imgs/dataset-empty.png';
+import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
@@ -23,7 +23,7 @@ const handleClick = (tab) => {
     getCompetitions1(tab.props.name);
   }
 };
-const tableData = ref();
+const tableData = ref([]);
 const tableData1 = ref([]);
 const tableData2 = ref([]);
 const tableData3 = ref([]);
@@ -60,30 +60,23 @@ function goDetail(id) {
   });
   // router.push(`/competition/${id}`)
 }
-function change(pre, next) {
-  // console.log(pre, next);
-}
+// function change(pre, next) {
+// console.log(pre, next);
+// }
 </script>
 <template>
   <div class="competition-page">
     <div class="competition-head">
       <div class="wrap">
-        <el-carousel
-          :interval="4000"
-          type="card"
-          height="300px"
-          @change="
-            (pre, next) => {
-              change(pre, next);
-            }
-          "
-        >
-          <el-carousel-item><img :src="paintings" alt="" /> </el-carousel-item>
+        <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item
-            ><img :src="imageClassify" alt="" />
+            ><img :src="paintings" alt="" @click="goDetail(1)" />
           </el-carousel-item>
           <el-carousel-item
-            ><img :src="textClassification" alt="" />
+            ><img :src="imageClassify" alt="" @click="goDetail(3)" />
+          </el-carousel-item>
+          <el-carousel-item
+            ><img :src="textClassification" alt="" @click="goDetail(2)" />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -97,7 +90,7 @@ function change(pre, next) {
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
         <el-tab-pane label="全部" name="first"
-          ><div v-if="tableData">
+          ><div v-if="tableData.length">
             <div
               v-for="item in tableData"
               :key="item.id"
@@ -142,8 +135,14 @@ function change(pre, next) {
                     </OButton>
                     <div class="number">报名人数：{{ item.user_count }}</div>
                   </div>
-                  <div v-else class="right-wrap">
+                  <div
+                    v-else-if="item.status_name === '未开始'"
+                    class="right-wrap"
+                  >
                     <div class="not-started">报名未开始</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名已截至</div>
                   </div>
                 </div>
               </div>
@@ -187,7 +186,7 @@ function change(pre, next) {
                   <div class="time">赛期：{{ item.during }}</div>
                 </div>
                 <div class="right-immediate">
-                  <div class="right-wrap">
+                  <div v-if="item.status_name === '进行中'" class="right-wrap">
                     <OButton
                       type="primary"
                       animation
@@ -199,6 +198,15 @@ function change(pre, next) {
                       </template>
                     </OButton>
                     <div class="number">报名人数：{{ item.user_count }}</div>
+                  </div>
+                  <div
+                    v-else-if="item.status_name === '未开始'"
+                    class="right-wrap"
+                  >
+                    <div class="not-started">报名未开始</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名已截至</div>
                   </div>
                 </div>
               </div>
@@ -255,8 +263,14 @@ function change(pre, next) {
                     </OButton>
                     <div class="number">报名人数：{{ item.user_count }}</div>
                   </div>
-                  <div v-else class="right-wrap">
+                  <div
+                    v-else-if="item.status_name === '未开始'"
+                    class="right-wrap"
+                  >
                     <div class="not-started">报名未开始</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名已截至</div>
                   </div>
                 </div>
               </div>
@@ -313,8 +327,14 @@ function change(pre, next) {
                     </OButton>
                     <div class="number">报名人数：{{ item.user_count }}</div>
                   </div>
-                  <div v-else class="right-wrap">
+                  <div
+                    v-else-if="item.status_name === '未开始'"
+                    class="right-wrap"
+                  >
                     <div class="not-started">报名未开始</div>
+                  </div>
+                  <div v-else class="right-wrap">
+                    <div class="not-started">报名已截至</div>
                   </div>
                 </div>
               </div>
@@ -338,11 +358,12 @@ function change(pre, next) {
 }
 .el-tab-pane {
   min-height: calc(100vh - 785px);
+  padding-bottom: 40px;
   .empty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 116px 0;
+    margin: 116px 0 76px 0;
     img {
       width: 280px;
     }

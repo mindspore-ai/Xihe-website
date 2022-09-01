@@ -119,6 +119,12 @@ function handleBtnClick2() {
 function handleBtnClick3() {
   router.push(`https://${DOMAIN}/modelzoo`);
 }
+function goDetail(id) {
+  router.push({
+    name: 'competitionDetail',
+    params: { id: id },
+  });
+}
 </script>
 
 <template>
@@ -182,17 +188,17 @@ function handleBtnClick3() {
       <el-carousel-item>
         <div class="photo1 cursor" @click="goInvited"></div>
       </el-carousel-item>
-      <el-carousel-item>
+      <!-- <el-carousel-item>
         <div class="photo2"></div>
+      </el-carousel-item> -->
+      <el-carousel-item>
+        <div class="photo3 cursor" @click="goDetail(3)"></div>
       </el-carousel-item>
       <el-carousel-item>
-        <div class="photo3 cursor"></div>
+        <div class="photo4 cursor" @click="goDetail(2)"></div>
       </el-carousel-item>
       <el-carousel-item>
-        <div class="photo4 cursor"></div>
-      </el-carousel-item>
-      <el-carousel-item>
-        <div class="photo5 cursor"></div>
+        <div class="photo5 cursor" @click="goDetail(1)"></div>
       </el-carousel-item>
     </el-carousel>
 
@@ -603,13 +609,13 @@ function handleBtnClick3() {
       background-size: cover;
       background-position: 50%;
     }
-    .photo2 {
-      background: url(@/assets/imgs/home-banner2.png);
-      width: 100%;
-      height: 480px;
-      background-size: cover;
-      background-position: 50%;
-    }
+    // .photo2 {
+    //   background: url(@/assets/imgs/home-banner2.png);
+    //   width: 100%;
+    //   height: 480px;
+    //   background-size: cover;
+    //   background-position: 50%;
+    // }
     .photo3 {
       background: url(@/assets/imgs/home-banner4.jpg);
       width: 100%;

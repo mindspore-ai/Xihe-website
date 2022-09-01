@@ -124,7 +124,7 @@ function goTaichuMore() {
     padding-top: 0;
   }
   .taichu-wrap {
-    padding: 42px 16px 64px;
+    padding: 120px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
     @media screen and (max-width: 768px) {

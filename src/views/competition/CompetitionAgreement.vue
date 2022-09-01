@@ -13,6 +13,6 @@ import MdStatement from '@/components/MdStatement.vue';
   padding: 0 48px;
 }
 :deep(.statement) {
-  padding-top: 0;
+  padding-top: 0 !important;
 }
 </style>

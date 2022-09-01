@@ -118,7 +118,6 @@ function goTaichuMore() {
 <style lang="scss" scoped>
 .taichu {
   background-color: #f5f6f8;
-  // margin-top: 80px;
   @media screen and (max-width: 768px) {
     padding-top: 80px;
     padding-top: 0;

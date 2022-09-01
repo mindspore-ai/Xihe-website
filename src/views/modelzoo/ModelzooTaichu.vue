@@ -20,14 +20,14 @@ const route = useRoute();
 const activeNavItem = ref('');
 const navItems = [
   {
-    id: 'taichuIntroduction',
-    label: '介绍',
-    href: '/modelzoo/taichu',
-  },
-  {
     id: 'taichuTest',
     label: '在线体验',
     href: '/modelzoo/taichu/test',
+  },
+  {
+    id: 'taichuIntroduction',
+    label: '介绍',
+    href: '/modelzoo/taichu',
   },
 ];
 watch(
@@ -118,9 +118,9 @@ function goTaichuMore() {
 <style lang="scss" scoped>
 .taichu {
   background-color: #f5f6f8;
-  padding-top: 80px;
   // margin-top: 80px;
   @media screen and (max-width: 768px) {
+    padding-top: 80px;
     padding-top: 0;
   }
   .taichu-wrap {

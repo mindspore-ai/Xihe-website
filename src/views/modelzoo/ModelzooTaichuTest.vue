@@ -233,7 +233,7 @@ function downLoadPicture() {
 const activeNames = ref(['1']);
 const activeNames1 = ref(['1']);
 const handleNameChange = (val) => {
-  console.log(val);
+  return val;
 };
 
 function getExampleLists() {
@@ -494,7 +494,7 @@ function refreshTags() {
             <div v-else class="empty-status">
               <o-icon><icon-upload></icon-upload></o-icon>
               <p class="upload-tip">
-                点击上传图片(jpg/jepg/png)<br /><span>大小不超过200KB</span>
+                点击上传图片(jpg/jpeg/png)<br /><span>大小不超过200KB</span>
               </p>
             </div>
           </el-upload>

@@ -27,7 +27,7 @@ let i18n = {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
       url: taichu,
-      path: '/modelzoo/taichu',
+      path: '/modelzoo/taichu/test',
       openness: true,
     },
     {

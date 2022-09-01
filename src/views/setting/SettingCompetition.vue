@@ -13,7 +13,6 @@ const competitionDatas3 = ref([]); //已结束的比赛
 // 获取用户参加的所以比赛
 function getCompetitons() {
   getAllCompetition().then((res) => {
-    // console.log('用户参加的所有比赛: ', res.data);
     competitionDatas.value = res.data;
   });
 }
@@ -24,18 +23,23 @@ const handleClick = (tab) => {
   if (tab.props.name === 'doing') {
     getCompetition(3).then((res) => {
       competitionDatas2.value = res.data;
-      // console.log('进行中的比赛: ', competitionDatas2.value);
     });
   } else if (tab.props.name === 'done') {
     getCompetition(2).then((res) => {
       competitionDatas3.value = res.data;
-      // console.log('已结束的比赛: ', competitionDatas3.value);
     });
   }
 };
 
 function goCompetition() {
   router.push({ name: 'competition' });
+}
+// 跳转到比赛详情页
+function goDetail(id) {
+  router.push({
+    name: 'competitionDetail',
+    params: { id: id },
+  });
 }
 </script>
 <template>
@@ -55,6 +59,7 @@ function goCompetition() {
               v-for="item in competitionDatas"
               :key="item.id"
               class="competition-card"
+              @click="goDetail(item.id)"
             >
               <div class="left">
                 <div class="title">
@@ -66,19 +71,17 @@ function goCompetition() {
                 </div>
                 <div class="information">
                   <div class="host">举办方：{{ item.host }}</div>
-                  <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
-                  <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
                 </div>
               </div>
               <div class="right">
-                <div class="bonus">奖金：{{ item.bonus }}</div>
+                <div class="bonus">奖池：{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.during }}</div>
               </div>
             </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="doing">
-          <div>
+          <div v-if="competitionDatas2.length !== 0">
             <div
               v-for="item in competitionDatas2"
               :key="item.id"
@@ -93,55 +96,57 @@ function goCompetition() {
                 </div>
                 <div class="information">
                   <div class="host">举办方：{{ item.host }}</div>
-                  <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
-                  <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
                 </div>
               </div>
               <div class="right">
-                <div class="bonus">奖金：{{ item.bonus }}</div>
+                <div class="bonus">奖池：{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.during }}</div>
               </div>
+            </div>
+          </div>
+          <div v-else class="empty2">
+            <img class="empty-img" :src="emptyImg" />
+            <div class="empty-text">
+              <span>暂无进行中比赛</span>
             </div>
           </div>
         </el-tab-pane>
 
         <el-tab-pane label="已结束" name="done">
-          <!-- <div v-if="competitionDatas3.length !== 0"> -->
-          <div
-            v-for="item in competitionDatas3"
-            :key="item.id"
-            class="competition-card"
-          >
-            <div class="left">
-              <div class="title">
-                <span> {{ item.name }} </span>
-                <span class="state finished">已结束</span>
+          <div v-if="competitionDatas3.length !== 0">
+            <div
+              v-for="item in competitionDatas3"
+              :key="item.id"
+              class="competition-card"
+            >
+              <div class="left">
+                <div class="title">
+                  <span> {{ item.name }} </span>
+                  <span class="state finished">已结束</span>
+                </div>
+                <div class="information">
+                  <div class="host">举办方：{{ item.host }}</div>
+                </div>
               </div>
-              <div class="information">
-                <div class="host">举办方：{{ item.host }}</div>
-                <!-- <div class="competition-time">参赛时间：{{ item.during }}</div>TODO:参赛时间和形式暂没有字段 -->
-                <!-- <div class="competition-form">参赛形式：啊对对对队</div> -->
+              <div class="right">
+                <div class="bonus">奖池：{{ item.bonus }}</div>
+                <div class="time">赛期:{{ item.during }}</div>
               </div>
-            </div>
-            <div class="right">
-              <div class="bonus">奖金：{{ item.bonus }}</div>
-              <div class="time">赛期:{{ item.during }}</div>
             </div>
           </div>
-          <!-- </div> -->
-          <!-- <div v-else class="empty2">
+          <div v-else class="empty3">
             <img class="empty-img" :src="emptyImg" />
             <div class="empty-text">
-              <span>暂未参加比赛，</span>
+              <span>暂无已结束比赛</span>
             </div>
-          </div> -->
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
     <div v-else class="empty">
       <img class="empty-img" :src="emptyImg" />
       <div class="empty-text">
-        <span>暂未参加比赛，</span>
+        <span>暂未参加比赛,</span>
         <span class="link" @click="goCompetition">点击参加比赛</span>
       </div>
     </div>
@@ -162,6 +167,7 @@ function goCompetition() {
           padding: 22px 52px 22px 40px;
           margin: 1px;
           margin-bottom: 24px;
+          cursor: pointer;
           display: flex;
           justify-content: space-between;
           .left {
@@ -219,12 +225,37 @@ function goCompetition() {
             }
           }
         }
+        .empty2 {
+          display: inline-block;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .empty-text {
+            line-height: 28px;
+            margin-top: 24px;
+            font-size: 18px;
+            color: #555555;
+          }
+        }
+        .empty3 {
+          display: inline-block;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .empty-text {
+            line-height: 28px;
+            margin-top: 24px;
+            font-size: 18px;
+            color: #555555;
+          }
+        }
       }
     }
   }
   .empty {
     position: absolute;
-    // top: calc(50% + 48px);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -247,6 +278,7 @@ function goCompetition() {
       }
     }
   }
+
   :deep(.el-tabs) {
     .el-tabs__header {
       border: none;

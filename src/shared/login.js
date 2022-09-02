@@ -6,8 +6,11 @@ import {
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
-const APP_ID = '62f463c917a9cd81591e0be1';
-const APP_HOST = 'https://xihe-test2-cz.authing.cn';
+// const APP_ID = '62f463c917a9cd81591e0be1';
+// const APP_HOST = 'https://xihe-test2-cz.authing.cn';
+
+const APP_ID = '62fca8d8289a36e3847b31d5';
+const APP_HOST = 'https://xihe-server-dev.authing.cn';
 
 // 登录事件
 export const LOGIN_EVENTS = {
@@ -58,7 +61,6 @@ async function getUserToken(params) {
   }
   try {
     await queryUserToken(params);
-    debugger;
     // 去掉url中的code
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
     window.location.href = newUrl;
@@ -200,10 +202,13 @@ export async function goAuthorize() {
       appHost: APP_HOST,
       redirectUri: `${window.location.href}`,
     });
+
     // 构造 OIDC 授权登录 URL
     const url = client.buildAuthorizeUrl({
       scope: 'openid profile email phone address username',
     });
+    console.log('client', client);
+    console.log('url: ', url);
     window.location.href = url;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);

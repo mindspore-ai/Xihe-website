@@ -217,7 +217,7 @@ function goTaichuMore() {
         }
       }
       .taichu-content-desc {
-        margin-top: 24px;
+        margin-top: 16px;
         background-color: #fff;
         .o-nav {
           background: #fff;

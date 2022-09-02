@@ -6,11 +6,11 @@ import {
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
-// const APP_ID = '62f463c917a9cd81591e0be1';
-// const APP_HOST = 'https://xihe-test2-cz.authing.cn';
+const APP_ID = '62f463c917a9cd81591e0be1';
+const APP_HOST = 'https://xihe-test2-cz.authing.cn';
 
-const APP_ID = '62fca8d8289a36e3847b31d5';
-const APP_HOST = 'https://xihe-server-dev.authing.cn';
+// const APP_ID = '62fca8d8289a36e3847b31d5';
+// const APP_HOST = 'https://xihe-server-dev.authing.cn';
 
 // 登录事件
 export const LOGIN_EVENTS = {

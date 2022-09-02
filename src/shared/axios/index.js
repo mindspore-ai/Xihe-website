@@ -86,10 +86,10 @@ const responseInterceptorId = request.interceptors.response.use(
       err = handleError(err);
 
       // token过期，重新登录
-      if (err.code === 401) {
-        saveUserAuth();
-        goAuthorize();
-      }
+      // if (err.code === 401) {
+      //   saveUserAuth();
+      //   goAuthorize();
+      // }
     }
     // 没有response(没有状态码)的情况
     // eg: 超时；断网；请求重复被取消；主动取消请求；

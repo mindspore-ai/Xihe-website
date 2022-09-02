@@ -251,6 +251,9 @@ function getExampleLists() {
 }
 getExampleLists();
 function refreshTags() {
+  exampleList.forEach((item) => {
+    item.isSelected = false;
+  });
   getExampleLists();
 }
 </script>

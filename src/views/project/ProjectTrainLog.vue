@@ -177,6 +177,8 @@ function getTrainLogData() {
           );
         }, 10000);
       } else {
+        setTimeout(ws.close(), 10000);
+        socket.close();
       }
     }
   });
@@ -197,9 +199,9 @@ socket.onopen = function () {
   );
 };
 
-socket.onclose = function () {
-  // console.log('closed');
-};
+// socket.onclose = function () {
+//   console.log('closed');
+// };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {

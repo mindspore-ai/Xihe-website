@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import paintings from '@/assets/imgs/paintings1.png';
+import paintings from '@/assets/imgs/paintings1.jpg';
 import imageClassify from '@/assets/imgs/imageClassify.jpg';
 import textClassification from '@/assets/imgs/textClassification2.jpg';
 import emptyImg from '@/assets/imgs/live-empty.png';

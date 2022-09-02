@@ -74,7 +74,7 @@ function goDetail(id) {
                 </div>
               </div>
               <div class="right">
-                <div class="bonus">奖池：{{ item.bonus }}</div>
+                <div class="bonus">奖池：￥{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.during }}</div>
               </div>
             </div>
@@ -99,7 +99,7 @@ function goDetail(id) {
                 </div>
               </div>
               <div class="right">
-                <div class="bonus">奖池：{{ item.bonus }}</div>
+                <div class="bonus">奖池：￥{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.during }}</div>
               </div>
             </div>
@@ -129,7 +129,7 @@ function goDetail(id) {
                 </div>
               </div>
               <div class="right">
-                <div class="bonus">奖池：{{ item.bonus }}</div>
+                <div class="bonus">奖池：￥{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.during }}</div>
               </div>
             </div>

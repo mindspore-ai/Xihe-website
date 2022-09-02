@@ -299,10 +299,12 @@ const checkBootfile = (rule, value, callback) => {
   } else {
     // 判断数组的第一个元素只含有数字，字母，下划线
     let arr = value.split('.');
-    if (arr[0].match(/^[a-zA-Z0-9_]+$/) && arr[1] === 'py') {
+    if (arr[0].match(/^[a-zA-Z0-9_/]+$/) && arr[1] === 'py') {
       callback();
     } else {
-      callback(new Error('启动文件名只能包含数字，字母，下划线，且为.py文件'));
+      callback(
+        new Error('启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件')
+      );
     }
   }
 };
@@ -801,7 +803,7 @@ const rules = reactive({
             position: relative;
             .item-title {
               position: absolute;
-              transform: translateY(38%);
+              transform: translateY(60%);
               display: flex;
               align-items: center;
               .item-title-text {
@@ -818,7 +820,7 @@ const rules = reactive({
           .createfile-form-item {
             .item-title {
               position: absolute;
-              transform: translateY(38%);
+              transform: translateY(60%);
               display: flex;
               align-items: center;
               .item-title-text {

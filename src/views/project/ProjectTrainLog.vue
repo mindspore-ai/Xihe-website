@@ -189,7 +189,7 @@ const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
-  console.log('connected');
+  // console.log('connected');
   socket.send(
     JSON.stringify({
       pk: detailData.value.id,

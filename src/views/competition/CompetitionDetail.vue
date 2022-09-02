@@ -86,10 +86,12 @@ async function getDetailData() {
   try {
     // 获取比赛信息
     let res = await getCompetition({ id: route.params.id });
-    if (res.status === 200) {
+    if (res.status === 200 && res.data.name) {
       competitionData.value = res.data;
-      // console.log('比赛信息: ', competitionData.value);
+      // console.log('比赛信息: ', res.data);
       userComData.setCompetitionData(res.data);
+    } else {
+      router.push('/competition');
     }
     // 获取团队id
     let params = { id: route.params.id };
@@ -117,6 +119,7 @@ getDetailData();
             >
             <el-breadcrumb-item
               :to="{ path: `/competition/${competitionData.id}` }"
+              class="breadcrumb-item"
               >{{ competitionData.name }}</el-breadcrumb-item
             >
             <el-breadcrumb-item v-if="showBread">报名</el-breadcrumb-item>
@@ -156,7 +159,7 @@ getDetailData();
             </div>
             <div v-if="teamId === null && show" class="right1">
               <div class="right1-bonus">
-                <div class="number">奖池：{{ competitionData.bonus }}</div>
+                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
                 <div class="time">赛期:{{ competitionData.during }}</div>
               </div>
               <div class="right-immediate">
@@ -183,7 +186,7 @@ getDetailData();
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="number">奖池：{{ competitionData.bonus }}</div>
+                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
                 <div class="time">赛期:{{ competitionData.during }}</div>
               </div>
             </div>

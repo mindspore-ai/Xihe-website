@@ -5,6 +5,8 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
+import { getGitlabToken } from '@/api/api-gitlab';
+
 const route = useRoute();
 
 const showFooter = computed(() => {
@@ -21,7 +23,9 @@ const setHeader = () => {
   isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
-
+getGitlabToken().then((res) => {
+  console.log(res);
+});
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
 });

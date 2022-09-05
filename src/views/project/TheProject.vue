@@ -23,7 +23,6 @@ import { goAuthorize } from '@/shared/login';
 import { getProjectData, getModelTags } from '@/api/api-project';
 
 import { useLoginStore } from '@/stores';
-import { isArray } from '@vue/shared';
 
 const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';

@@ -23,6 +23,7 @@ import { goAuthorize } from '@/shared/login';
 import { getProjectData, getModelTags } from '@/api/api-project';
 
 import { useLoginStore } from '@/stores';
+import { isArray } from '@vue/shared';
 
 const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';
@@ -133,17 +134,16 @@ const debounceSearch = debounce(getProject, 500, {
 });
 
 function projectTypeClick(val) {
-  val.isActive = !val.isActive;
-  const selectedOrder = [];
-  projectType.forEach((item) => {
-    if (item.isActive) {
-      selectedOrder.push(item.num);
-    }
-  });
-  if (selectedOrder.length) {
-    queryData.display_order = selectedOrder.join(',');
-  } else {
+  console.log(val);
+  if (val.isActive) {
+    val.isActive = !val.isActive;
     delete queryData['display_order'];
+  } else {
+    projectType.forEach((item) => {
+      item.isActive = false;
+    });
+    val.isActive = true;
+    queryData.display_order = val.num;
   }
 }
 
@@ -550,7 +550,7 @@ onUnmounted(() => {
       <!-- 应用分类 -->
       <div v-show="showCondition" class="condition">
         <div class="condition-item">
-          <p class="condition-title">项目精选</p>
+          <p class="condition-title">项目类型</p>
           <div class="condition-box">
             <div
               v-for="item in projectType"
@@ -725,7 +725,7 @@ onUnmounted(() => {
                 </div>
 
                 <div class="description">
-                  {{ item.description }}
+                  <p>{{ item.description }}</p>
                 </div>
 
                 <img :src="item.photo_url" alt="" />
@@ -1073,27 +1073,41 @@ $theme: #0d8dff;
             height: 169px;
             position: relative;
             color: #fff;
+            &:hover {
+              .description {
+                display: block;
+              }
+            }
             img {
               width: 100%;
               height: 100%;
             }
             .description {
+              display: none;
               position: absolute;
               left: 50%;
-              bottom: 16px;
+              bottom: 0;
               transform: translateX(-50%);
               width: 100%;
               padding: 0 16px;
-
               z-index: 1;
               font-size: 12px;
               color: #ffffff;
-              line-height: 17px;
-              display: -webkit-box;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
+              background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 0%,
+                #000000 100%
+              );
+
+              p {
+                line-height: 17px;
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                margin-bottom: 16px;
+              }
             }
             .title {
               font-size: 18px;

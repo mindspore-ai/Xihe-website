@@ -227,7 +227,7 @@ function handelSubmit() {
       <div class="header">
         <div class="header-title">提交结果</div>
         <div class="header-button">
-          <span>每日限提交1次（限制条件待更新）</span>
+          <span>每日限提交1次</span>
           <OButton type="primary" size="small" @click="handelSubmit"
             >提交结果</OButton
           >
@@ -305,7 +305,9 @@ function handelSubmit() {
     }
     .table {
       margin-top: 24px;
-      border: 1px solid #e5e5e5;
+      border: 1px solid #ebeef5;
+      border-bottom: none;
+      border-top: none;
       .el-table {
         // margin-top: 24px;
         --el-table-header-bg-color: #e5e8f0;

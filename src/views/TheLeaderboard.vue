@@ -413,7 +413,7 @@ function goUserPage(vel) {
               margin-left: 40px;
             }
             .score {
-              margin-left: 60px;
+              margin-left: 45px;
               color: #ff7f0d;
               font-size: 24px;
               vertical-align: sub;

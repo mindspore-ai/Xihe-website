@@ -376,6 +376,11 @@ function start2() {
     startInference2(detailData.value.id).then((res) => {
       if (res.data.status === 200) {
         msg.value = '启动中';
+      } else if (res.data.status === -1) {
+        ElMessage({
+          type: 'error',
+          message: res.data.msg,
+        });
       }
       // socket.send(JSON.stringify({ pk: detailData.value.id }));
     });

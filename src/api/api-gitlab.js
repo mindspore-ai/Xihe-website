@@ -18,7 +18,7 @@ function getHeaderConfig() {
 }
 
 export function getGitlabToken() {
-  const url = `/repo/gzbang/gitlab`;
+  const url = `/server/user/gzbang/gitlab`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

@@ -97,6 +97,11 @@ let i18n = {
   ],
 };
 
+const projectType = reactive([
+  { type: '精选', isActive: false, num: 3 },
+  { type: '官方', isActive: false, num: 2 },
+]);
+
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
@@ -126,6 +131,21 @@ const debounceSearch = debounce(getProject, 500, {
   // leading: true,
   trailing: true,
 });
+
+function projectTypeClick(val) {
+  val.isActive = !val.isActive;
+  const selectedOrder = [];
+  projectType.forEach((item) => {
+    if (item.isActive) {
+      selectedOrder.push(item.num);
+    }
+  });
+  if (selectedOrder.length) {
+    queryData.display_order = selectedOrder.join(',');
+  } else {
+    delete queryData['display_order'];
+  }
+}
 
 function moreClick() {
   showDetail.value = true;
@@ -349,7 +369,6 @@ function getModelTag() {
     renderSorts.value = i18n.screenCondition.splice(0, 1);
     otherCondition.value = i18n.screenCondition;
     moreSortTags.value = renderSorts.value[0].condition;
-
     moreSortTags.value.forEach((sort) => {
       sort.haveActive = false;
       sort.task_list.forEach((tag) => {
@@ -451,7 +470,6 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="model-body wrap">
-      <div></div>
       <!-- 标签二级(全部) -->
       <div v-show="showDetail" class="condition">
         <p class="getback" @click="backCondition">
@@ -529,9 +547,26 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-
+      <!-- 应用分类 -->
       <div v-show="showCondition" class="condition">
-        <!-- 应用分类 -->
+        <div class="condition-item">
+          <p class="condition-title">项目精选</p>
+          <div class="condition-box">
+            <div
+              v-for="item in projectType"
+              :key="item.num"
+              class="condition-detail"
+              :class="[{ 'condition-active1': item.isActive }]"
+              @click="projectTypeClick(item)"
+            >
+              {{ item.type }}
+              <o-icon class="icon-x">
+                <icon-x></icon-x>
+              </o-icon>
+            </div>
+          </div>
+        </div>
+
         <div
           v-for="(item, index) in renderSorts"
           :key="item.title"
@@ -678,6 +713,21 @@ onUnmounted(() => {
               @click="goDetail(item.owner_name.name, item.name)"
             >
               <div class="card-top">
+                <div
+                  v-if="item.display_order_name !== '普通'"
+                  :class="
+                    item.display_order_name === '精选'
+                      ? 'mark-tag'
+                      : 'mark-tag1'
+                  "
+                >
+                  {{ item.display_order_name }}
+                </div>
+
+                <div class="description">
+                  {{ item.description }}
+                </div>
+
                 <img :src="item.photo_url" alt="" />
                 <p class="title">{{ item.name }}</p>
                 <div class="dig">
@@ -978,6 +1028,29 @@ $theme: #0d8dff;
         row-gap: 24px;
         margin-top: 40px;
         position: relative;
+        .pro-card {
+          position: relative;
+          .mark-tag {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            padding: 3px 8px;
+            background: linear-gradient(326deg, #fba727 0%, #ffe1b3 100%);
+            z-index: 10;
+            font-size: 12px;
+            color: #ffffff;
+          }
+          .mark-tag1 {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            padding: 3px 8px;
+            background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
+            z-index: 10;
+            font-size: 12px;
+            color: #ffffff;
+          }
+        }
         .pagination {
           display: flex;
           justify-content: center;
@@ -1004,8 +1077,27 @@ $theme: #0d8dff;
               width: 100%;
               height: 100%;
             }
+            .description {
+              position: absolute;
+              left: 50%;
+              bottom: 16px;
+              transform: translateX(-50%);
+              width: 100%;
+              padding: 0 16px;
+
+              z-index: 1;
+              font-size: 12px;
+              color: #ffffff;
+              line-height: 17px;
+              display: -webkit-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+            }
             .title {
               font-size: 18px;
+              line-height: 32px;
               position: absolute;
               top: 50%;
               left: 50%;

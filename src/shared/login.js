@@ -196,7 +196,7 @@ export async function goAuthorize() {
     const client = new AuthenticationClient({
       appId: APP_ID,
       appHost: APP_HOST,
-      redirectUri: `${window.location.origin}/`,
+      redirectUri: `${window.location.href}`,
     });
 
     // 构造 OIDC 授权登录 URL

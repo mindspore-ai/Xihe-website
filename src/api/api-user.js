@@ -17,10 +17,16 @@ function getHeaderConfig() {
  * @returns
  */
 export function queryUserToken(params) {
-  const url = `/server/login?code=${params.code}`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
+  const url = `/server/login?code=${params.code}&redirect_uri=${window.location.origin}/`;
+  return request
+    .get(url)
+    .then((res) => {
+      debugger;
+      return res.data;
+    })
+    .catch((err) => {
+      debugger;
+    });
 }
 
 /**

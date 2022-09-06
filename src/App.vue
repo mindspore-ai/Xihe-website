@@ -5,7 +5,13 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-import { getGitlabToken } from '@/api/api-gitlab';
+// import {
+//   getGitlabToken,
+//   creatModelRepo,
+//   getModelById,
+//   uploadFileGitlab,
+//   getGitlabTree,
+// } from '@/api/api-gitlab';
 
 const route = useRoute();
 
@@ -23,9 +29,21 @@ const setHeader = () => {
   isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
-getGitlabToken().then((res) => {
-  console.log(res);
-});
+
+setTimeout(() => {
+  // getGitlabToken().then((res) => {
+  //   console.log(res.data.token);
+  // });
+  // getModelById().then((res) => {
+  //   console.log(res);
+  // });
+  // getGitlabTree().then((res) => {
+  //   console.log(res);
+  // });
+  // uploadFileGitlab().then((res) => {
+  //   console.log(res);
+  // });
+}, 3000);
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
 });

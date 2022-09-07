@@ -1,16 +1,19 @@
 import { request } from '@/shared/axios';
 import { useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
 
 function getUserInfo() {
   return useUserInfoStore();
 }
 
 function getHeaderConfig() {
-  let headersConfig = {
-    headers: {
-      Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
-    },
-  };
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
 }
 
@@ -129,11 +132,15 @@ export function addDownloadRecord(id) {
  * @returns
  */
 export function createModelStore(params) {
-  const url = `/api/models/`;
+  const url = `/server/model`;
+  console.log(params);
   return request
-    .post(url, JSON.stringify(params), getHeaderConfig())
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 /**

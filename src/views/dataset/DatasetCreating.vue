@@ -33,19 +33,19 @@ const i18n = {
   },
 };
 const owner = ref([]);
-const licenses = ref([]);
+const protocol = ref([]);
 
 let queryRef = ref(null);
 
 let query = reactive({
-  owner_id: userInfo.userName,
+  owner: userInfo.userName,
   name: '',
-  is_private: 'false',
-  description: '',
-  licenses: null,
+  repo_type: 'public',
+  desc: '',
+  protocol: null,
 });
 // function getOwnSelect(value) {
-//   query.owner_id = value;
+//   query.owner = value;
 // }
 // function getLicenses(value) {
 //   query.licenses.push(value);
@@ -54,10 +54,10 @@ let query = reactive({
 try {
   owner.value = useUserInfoStore().owner;
   getModelTags().then((res) => {
-    licenses.value = res.data.licenses;
-    query.licenses = licenses.value[0].id;
+    protocol.value = res.data.licenses;
+    query.protocol = protocol.value[0].name;
   });
-  // query.owner_id = owner.value[0];
+  // query.owner = owner.value[0];
   // query.licenses[0] = licenses.value[0];
 } catch (error) {
   console.error(error);
@@ -65,10 +65,11 @@ try {
 function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
+    console.log(valid);
     if (valid) {
-      let newList = JSON.parse(JSON.stringify(query));
-      newList.licenses = [newList.licenses];
-      createDataset(newList).then((res) => {
+      // let newList = JSON.parse(JSON.stringify(query));
+      // newList.protocol = [newList.protocol];
+      createDataset(query).then((res) => {
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -111,7 +112,7 @@ function create(formEl) {
     <el-form ref="queryRef" class="creating-box" :model="query" prop="region">
       <el-form-item
         class="item"
-        prop="owner_id"
+        prop="owner"
         :rules="{ required: true, message: '必填项', trigger: 'change' }"
       >
         <div class="requirement">
@@ -119,7 +120,7 @@ function create(formEl) {
         </div>
 
         <el-select
-          v-model="query.owner_id"
+          v-model="query.owner"
           class="m-2"
           placeholder="Select"
           size="large"
@@ -198,7 +199,7 @@ function create(formEl) {
       </el-form-item>
       <el-form-item
         class="des item"
-        prop="description"
+        prop="desc"
         :rules="{ required: true, message: '必填项', trigger: 'blur' }"
       >
         <div>
@@ -206,7 +207,7 @@ function create(formEl) {
           ><span>{{ i18n.datasetDescribe }}</span>
         </div>
         <el-input
-          v-model="query.description"
+          v-model="query.desc"
           :rows="2"
           type="textarea"
           :placeholder="i18n.placeholder.describe"
@@ -216,23 +217,23 @@ function create(formEl) {
       </el-form-item>
       <el-form-item
         class="item"
-        prop="licenses"
+        prop="protocol"
         :rules="{ required: true, message: '必填项', trigger: 'change' }"
       >
         <div class="requirement">
           <icon-necessary></icon-necessary><span>{{ i18n.license }}</span>
         </div>
         <el-select
-          v-model="query.licenses"
+          v-model="query.protocol"
           class="m-2"
           placeholder="Select"
           size="large"
         >
           <el-option
-            v-for="item in licenses"
+            v-for="item in protocol"
             :key="item.id"
             :label="item.name"
-            :value="item.id"
+            :value="item.name"
           />
         </el-select>
       </el-form-item>
@@ -242,11 +243,11 @@ function create(formEl) {
         </div>
         <div></div>
         <div class="radio">
-          <el-radio v-model="query.is_private" label="false" size="large"
+          <el-radio v-model="query.repo_type" label="public" size="large"
             >Public</el-radio
           >
           <div class="explain1">{{ i18n.public }}</div>
-          <el-radio v-model="query.is_private" label="true" size="large"
+          <el-radio v-model="query.repo_type" label="private" size="large"
             >Private</el-radio
           >
           <div class="explain2">{{ i18n.private }}</div>

@@ -10,18 +10,17 @@ import IconPlus2 from '~icons/app/plus-square';
 import IconDescribe from '~icons/app/describe';
 import IconUpload from '~icons/app/upload';
 
-import { handleUpload } from '@/api/api-obs';
+import { uploadFileGitlab } from '@/api/api-gitlab';
+
+import { useUserInfoStore } from '@/stores';
+import { fileToBase64 } from '@/shared/utils';
 
 const router = useRouter();
 const route = useRoute();
-let currentContents = null;
+const userInfo = useUserInfoStore();
+
 const routerParams = router.currentRoute.value.params;
-if (routerParams.contents && routerParams.contents.length) {
-  currentContents =
-    `${routerParams.name}/${routerParams.contents.join('/')}` || '';
-} else {
-  currentContents = `${routerParams.name}`;
-}
+
 const uploadRef = ref();
 const description = ref('');
 const prop = defineProps({
@@ -45,28 +44,30 @@ const i18n = {
 const Progress = ref(0);
 
 // 进度条
-function callback(transferredAmount, totalAmount) {
-  Progress.value = parseFloat(
-    ((transferredAmount * 100.0) / totalAmount).toFixed(2)
-  );
-}
-// SDK 上传
+// function callback(transferredAmount, totalAmount) {
+//   Progress.value = parseFloat(
+//     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
+//   );
+// }
+// gitlab 上传
 async function upLoad(param) {
-  let path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${currentContents}/${param.file.name}`;
-  // 上传函数接收三个参数
-  // 1.文件相关信息，编辑完成不需要验证文件名重复isEdit传true，其余传false。
-  // 2.进度条回调函数
-  // 3.上传成功的回调
-  // TODO:是否统一封装失败情况
-  await handleUpload(
-    {
-      file: param.file,
-      path,
-      isEdit: false,
-      description: description.value || `upload ${param.file.name}`,
-    },
-    callback,
-    function () {
+  let path = `${param.file.name}`;
+  //非根目录下
+  if (routerParams.contents.length) {
+    path = `${routerParams.contents.join('/')}/${param.file.name}`;
+  }
+  await fileToBase64(param.file, function (content) {
+    uploadFileGitlab(
+      {
+        branch: 'main',
+        encoding: 'base64',
+        author_email: userInfo.email,
+        author_name: userInfo.userName,
+        content: content,
+        commit_message: description.value || `upload ${param.file.name}`,
+      },
+      path
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '上传成功！你可点击“文件-编辑”编辑文件。',
@@ -74,8 +75,8 @@ async function upLoad(param) {
       pathClick(route.params.contents.length);
       Progress.value = '';
       fileList.value = [];
-    }
-  );
+    });
+  });
 }
 
 const fileList = ref([]);

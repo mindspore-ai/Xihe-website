@@ -1,10 +1,10 @@
 import { request } from '@/shared/axios';
-// import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
-// function getUserInfo() {
-//   return useUserInfoStore();
-// }
+function getUserInfo() {
+  return useUserInfoStore();
+}
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -18,21 +18,14 @@ function getHeaderConfig() {
 }
 
 export function getGitlabToken() {
-  const url = `/server/888/gitlab`;
+  const url = `/server/${getUserInfo().userName}/gitlab`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 
-export function creatModelRepo() {
+export function creatModelRepo(params) {
   const url = `/server/model`;
-  const params = {
-    desc: '描述',
-    name: 'firstModel',
-    owner: '888',
-    protocol: 'mit',
-    repo_type: 'public',
-  };
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -45,28 +38,59 @@ export function getModelById() {
   });
 }
 
-export function uploadFileGitlab() {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(
-    'app%2Fproject%2Erb2'
-  )}`;
+export function uploadFileGitlab(params, path) {
+  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
   const headers = {
     'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
   };
-  const data = {
-    branch: 'main',
-    author_email: '845831435@qq.com',
-    author_name: '888',
-    content: '第一文件',
-    commit_message: 'commit_message',
-  };
-  return request.post(url, data, { headers }).then((res) => {
+  return request.post(url, params, { headers }).then((res) => {
     return res.data;
   });
 }
-
-export function getGitlabTree() {
-  const url = '/repo/projects/2/repository/tree';
+// 获取 gitlab 树
+export function getGitlabTree(path) {
+  console.log(path);
+  const url = `/repo/projects/2/repository/tree?path=${path}`;
   const headers = {
+    'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
+  };
+  return request.get(url, { headers }).then((res) => {
+    return res.data;
+  });
+}
+// 删除文件
+export function deleteFile(path, id) {
+  console.log(path);
+  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
+  const params = {
+    branch: 'main',
+    commit_message: 'delete file',
+  };
+  const headers = {
+    'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
+  };
+  return request.delete(url, { params, headers }).then((res) => {
+    return res.data;
+  });
+}
+// gitlab 文件下载
+export function getGitlabFileDetail(path) {
+  const url = `/repo/projects/2/repository/files/${encodeURIComponent(
+    path
+  )}?ref=main`;
+  const headers = {
+    'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
+  };
+  return request.get(url, { headers }).then((res) => {
+    return res.data;
+  });
+}
+export function getGitlabFileRaw(path) {
+  const url = `/repo/projects/2/repository/files/${encodeURIComponent(
+    path
+  )}/raw?ref=main`;
+  const headers = {
+    responseType: 'blob',
     'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
   };
   return request.get(url, { headers }).then((res) => {

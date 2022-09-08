@@ -112,7 +112,11 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const mobileFitWhiteList = ['taichu', 'taichuIntroduction', 'taichuTest'];
+  const mobileFitWhiteList = [
+    'taichu',
+    'taichuIntroduction',
+    'taichuExperience',
+  ];
   if (mobileFitWhiteList.indexOf(to.name) !== -1) {
     document.body.classList.add('mobile-fit');
   } else {

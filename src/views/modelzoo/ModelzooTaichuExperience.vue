@@ -66,7 +66,12 @@ const mobileImgLists = [
   },
 ];
 
+const form = reactive({
+  type: [],
+});
+
 const inferUrl = ref(null);
+const inferUrlList = ref([]);
 const exampleList = reactive([
   { name: '', isSelected: false },
   { name: '', isSelected: false },
@@ -170,7 +175,9 @@ function startRatiocnate() {
     )
   ) {
     loading1.value = true;
-    getInferencePicture({ content: inferenceText.value }).then((res) => {
+    getInferencePicture({
+      content: inferenceText.value,
+    }).then((res) => {
       if (res.status === 200) {
         loading1.value = false;
         inferUrl.value = res.data.output_image_url + '?' + new Date();
@@ -194,6 +201,85 @@ function startRatiocnate() {
       message: '请输入中文描述',
     });
   }
+}
+
+// 生成三张图片
+function startRatiocnate1() {
+  if (
+    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+      inferenceText.value
+    )
+  ) {
+    loading1.value = true;
+    if (form.type.length) {
+      getInferencePicture({
+        content: inferenceText.value,
+        img_type: '3img',
+      }).then((res) => {
+        if (res.status === 200) {
+          loading1.value = false;
+          inferUrlList.value = res.data.output_image_url;
+        } else if (res.status === -2) {
+          ElMessage({
+            type: 'warning',
+            message: res.msg,
+          });
+          loading1.value = false;
+        } else if (res.status === -1) {
+          ElMessage({
+            type: 'warning',
+            message: res.msg,
+          });
+          loading1.value = false;
+        }
+      });
+    } else {
+      loading1.value = true;
+      getInferencePicture({
+        content: inferenceText.value,
+      }).then((res) => {
+        if (res.status === 200) {
+          loading1.value = false;
+          inferUrlList.value = [];
+          inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
+        } else if (res.status === -2) {
+          ElMessage({
+            type: 'warning',
+            message: res.msg,
+          });
+          loading1.value = false;
+        } else if (res.status === -1) {
+          ElMessage({
+            type: 'warning',
+            message: res.msg,
+          });
+          loading1.value = false;
+        }
+      });
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请输入中文描述',
+    });
+  }
+}
+
+function downLoadPictures() {
+  inferUrlList.value.forEach((item) => {
+    let x = new XMLHttpRequest();
+    x.open('GET', item, true);
+    x.responseType = 'blob';
+    x.onload = function () {
+      const blobs = new Blob([x.response], { type: 'image/jpg' });
+      let url = window.URL.createObjectURL(blobs);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = 'infer.jpg';
+      a.click();
+    };
+    x.send();
+  });
 }
 
 function selectTag(val) {
@@ -309,22 +395,40 @@ function refreshTags() {
               size="small"
               type="primary"
               class="infer-button"
-              @click="startRatiocnate"
+              :disabled="loading1"
+              @click="startRatiocnate1"
               >开始推理</o-button
             >
+          </div>
+          <div class="more-pictures">
+            <el-form>
+              <el-form-item v-model="form">
+                <el-checkbox-group v-model="form.type">
+                  <el-checkbox label="生成3张" name="type" />
+                </el-checkbox-group>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
         <div class="content-right">
           <p class="content-right-title">图片结果</p>
           <div class="result">
-            <!-- <div v-if="loading1">
-              <img class="loading-img" src="@/assets/gifs/loading.gif" alt="" />
-            </div> -->
+            <img
+              v-for="item in inferUrlList"
+              :key="item"
+              :src="item + '?' + new Date()"
+              class="result-img"
+            />
 
-            <img class="result-img" :src="inferUrl" />
-            <a @click="downLoadPicture">
-              <o-icon><icon-download></icon-download></o-icon
-            ></a>
+            <!-- <a @click="downLoadPictures">
+              <o-icon><icon-download></icon-download> </o-icon>
+              <span class="download-text">下载</span>
+            </a> -->
+
+            <div class="download" @click="downLoadPictures">
+              <o-icon><icon-download></icon-download> </o-icon>
+              <span class="download-text">下载</span>
+            </div>
           </div>
         </div>
       </div>
@@ -796,6 +900,7 @@ function refreshTags() {
       &-img {
         height: 100%;
       }
+
       .o-icon {
         position: absolute;
         bottom: 16px;
@@ -803,6 +908,7 @@ function refreshTags() {
         color: #ccc;
         font-size: 24px;
         cursor: pointer;
+
         @media screen and (max-width: 768px) {
           display: none;
         }
@@ -833,6 +939,7 @@ function refreshTags() {
         margin-left: 16px;
       }
     }
+
     :deep(.el-upload) {
       .el-upload-dragger {
         width: 100%;
@@ -953,6 +1060,12 @@ function refreshTags() {
           }
         }
       }
+      .more-pictures {
+        height: 22px;
+        display: flex;
+        justify-content: end;
+        margin-top: 8px;
+      }
       .btn-box {
         width: 100%;
         display: flex;
@@ -986,15 +1099,38 @@ function refreshTags() {
         padding: 16px;
         height: 370px;
         &-img {
-          height: 330px;
+          height: 274px;
+          &:nth-child(2) {
+            margin: 0 16px;
+          }
         }
-        .o-icon {
+        // .o-icon {
+        //   position: absolute;
+        //   bottom: 16px;
+        //   right: 16px;
+        //   color: #ccc;
+        //   font-size: 24px;
+        //   cursor: pointer;
+        //   &:hover {
+        //     transform: translateY(-3px);
+        //     color: #0d8dff;
+        //   }
+        // }
+        .download {
           position: absolute;
           bottom: 16px;
           right: 16px;
           color: #ccc;
-          font-size: 24px;
+          display: flex;
           cursor: pointer;
+          &-text {
+            font-size: 12px;
+            line-height: 24px;
+            height: 24px;
+          }
+          .o-icon {
+            font-size: 24px;
+          }
           &:hover {
             transform: translateY(-3px);
             color: #0d8dff;

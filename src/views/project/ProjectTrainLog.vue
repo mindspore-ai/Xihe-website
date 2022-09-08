@@ -73,11 +73,6 @@ const rules = reactive({
       message: '请输入例如[0.01, 0.02, 0.03]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
   momentum: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -86,11 +81,6 @@ const rules = reactive({
       message: '请输入例如[0.9, 0.99]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
   batch_size: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -99,11 +89,6 @@ const rules = reactive({
       message: '请输入例如[32,64]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[((\d+\,)+\d+)*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
 });
 
@@ -177,8 +162,8 @@ function getTrainLogData() {
           );
         }, 10000);
       } else {
-        setTimeout(ws.close(), 10000);
-        socket.close();
+        setTimeout(socket.close(), 10000);
+        // socket.close();
       }
     }
   });
@@ -230,51 +215,113 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
-// ws.onopen = function () {
-//   console.log('服务器已连接');
-// };
+/* 评估 */
+function wsConnect() {
+  const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
 
-ws.onclose = function () {
-  clearInterval(timer2);
-};
+  timer2 = setInterval(() => {
+    ws.send(
+      JSON.stringify({
+        pk: detailData.value.id,
+        train_id: route.params.trainId,
+        is_cust: true,
+      })
+    );
+  }, 10000);
 
-ws.onmessage = function (event) {
-  if (
-    JSON.parse(event.data).status === 200 &&
-    JSON.parse(event.data).msg === '运行中'
-  ) {
-    ElMessage({
-      type: 'success',
-      message: '自动评估完成！点击查看报告查看。',
-    });
-    showAnaButton.value = false;
-    showGoButton.value = true;
+  ws.onmessage = function (event) {
+    if (
+      JSON.parse(event.data).status === 200 &&
+      JSON.parse(event.data).msg === '运行中'
+    ) {
+      ElMessage({
+        type: 'success',
+        message: '评估完成！点击查看报告查看。',
+      });
+      showAnaButton.value = false;
+      showGoButton.value = true;
 
-    showAnaButton1.value = false;
-    showGoButton1.value = true;
+      showAnaButton1.value = false;
+      showGoButton1.value = true;
 
-    evaluateUrl.value = JSON.parse(event.data).data.url;
+      evaluateUrl.value = JSON.parse(event.data).data.url;
 
+      clearInterval(timer2);
+      // clearInterval(timer3);
+      ws.close();
+    } else if (
+      JSON.parse(event.data).status === -1 &&
+      JSON.parse(event.data).msg === '启动失败'
+    ) {
+      ElMessage({
+        type: 'error',
+        message: JSON.parse(event.data).msg,
+      });
+      showEvaBtn.value = true;
+      showAnaButton.value = false;
+      ws.close();
+      clearInterval(timer2);
+    } else {
+      // showEvaBtn.value = true;
+      // showAnaButton.value = false;
+    }
+  };
+
+  ws.onclose = function () {
     clearInterval(timer2);
-    clearInterval(timer3);
-  } else if (
-    JSON.parse(event.data).status === -1 &&
-    JSON.parse(event.data).msg === '启动失败'
-  ) {
-    ElMessage({
-      type: 'error',
-      message: JSON.parse(event.data).msg,
-    });
-    showEvaBtn.value = true;
-    showAnaButton.value = false;
+  };
+}
+
+function autoWsConnect() {
+  const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
+
+  // ws.send(JSON.stringify({ pk: detailData.value.id }));
+
+  timer3 = setInterval(() => {
+    ws.send(JSON.stringify({ pk: detailData.value.id }));
+  }, 10000);
+
+  ws.onmessage = function (event) {
+    if (
+      JSON.parse(event.data).status === 200 &&
+      JSON.parse(event.data).msg === '运行中'
+    ) {
+      ElMessage({
+        type: 'success',
+        message: '评估完成！点击查看报告查看。',
+      });
+      showAnaButton.value = false;
+      showGoButton.value = true;
+
+      showAnaButton1.value = false;
+      showGoButton1.value = true;
+
+      evaluateUrl.value = JSON.parse(event.data).data.url;
+
+      clearInterval(timer3);
+      ws.close();
+    } else if (
+      JSON.parse(event.data).status === -1 &&
+      JSON.parse(event.data).msg === '启动失败'
+    ) {
+      ElMessage({
+        type: 'error',
+        message: JSON.parse(event.data).msg,
+      });
+      showEvaBtn.value = true;
+      showAnaButton.value = false;
+      ws.close();
+      clearInterval(timer3);
+    } else {
+      // showEvaBtn.value = true;
+      // showAnaButton.value = false;
+    }
+  };
+
+  ws.onclose = function () {
     clearInterval(timer2);
-    clearInterval(timer3);
-  } else {
-    // showEvaBtn.value = true;
-    // showAnaButton.value = false;
-  }
-};
+  };
+}
 
 // 自动评估
 function saveSetting() {
@@ -286,12 +333,9 @@ function saveSetting() {
             res.data.status === 200 &&
             res.data.msg === '创建日志可视化成功'
           ) {
+            autoWsConnect();
             showEvaBtn.value = false;
             showAnaButton.value = true;
-            ws.send(JSON.stringify({ pk: detailData.value.id }));
-            timer3 = setInterval(() => {
-              ws.send(JSON.stringify({ pk: detailData.value.id }));
-            }, 10000);
           } else if (res.data.status === -1) {
             ElMessage({
               type: 'error',
@@ -319,17 +363,9 @@ function handleAssessment() {
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
       if (res.status === 200) {
+        wsConnect();
         isDisabled1.value = false;
         showAnaButton1.value = true;
-        timer2 = setInterval(() => {
-          ws.send(
-            JSON.stringify({
-              pk: detailData.value.id,
-              train_id: route.params.trainId,
-              is_cust: true,
-            })
-          );
-        }, 10000);
       } else {
       }
     }

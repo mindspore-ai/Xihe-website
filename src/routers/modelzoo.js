@@ -14,19 +14,25 @@ export default [
     component: () => {
       return import('@/views/modelzoo/ModelzooTaichu.vue');
     },
+
     children: [
       {
         path: '',
-        name: 'taichuIntroduction',
+        name: 'taichuExperience',
         component: () => {
-          return import('@/views/modelzoo/ModelzooTaichuIntro.vue');
+          return import('@/views/modelzoo/ModelzooTaichuExperience.vue');
         },
       },
       {
         path: 'test',
         name: 'taichuTest',
+        redirect: '/modelzoo/taichu',
+      },
+      {
+        path: 'introduce',
+        name: 'taichuIntroduction',
         component: () => {
-          return import('@/views/modelzoo/ModelzooTaichuTest.vue');
+          return import('@/views/modelzoo/ModelzooTaichuIntro.vue');
         },
       },
     ],

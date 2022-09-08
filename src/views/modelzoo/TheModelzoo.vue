@@ -27,11 +27,11 @@ let i18n = {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
       url: taichu,
-      path: '/modelzoo/taichu/test',
+      path: '/modelzoo/taichu',
       openness: true,
     },
     {
-      title: '武大.Luojia',
+      title: '武大.LuoJia',
       introduce: '全球首个遥感专用框架及最大遥感样本库',
       url: luojia,
       path: '/modelzoo/luojia',

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppHeader from '@/components/AppHeader.vue';
@@ -33,7 +33,7 @@ const isTaichuPage = computed(() => {
   return (
     route.name === 'taichu' ||
     route.name === 'taichuIntroduction' ||
-    route.name === 'taichuTest'
+    route.name === 'taichuExperience'
   );
 });
 
@@ -55,14 +55,14 @@ const goBack = () => {
   router.go(-1);
 };
 
-const winWidth =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
-onUnmounted(() => {
-  window.removeEventListener('scroll', setHeader);
-  window.removeEventListener('resize', onResize);
-});
+// const winWidth =
+//   window.innerWidth ||
+//   document.documentElement.clientWidth ||
+//   document.body.clientWidth;
+// onUnmounted(() => {
+//   window.removeEventListener('scroll', setHeader);
+//   window.removeEventListener('resize', onResize);
+// });
 </script>
 
 <template>
@@ -72,7 +72,6 @@ onUnmounted(() => {
     class="app-header"
     :class="{
       opaque: isHeaderTransparent,
-      hide: winWidth < 1080,
     }"
   >
     <app-header></app-header>
@@ -128,15 +127,14 @@ onUnmounted(() => {
   }
 }
 
-.hide {
-  display: none;
-}
-
 // TODO:移动端适配内容
 .mobile-fit {
   #app {
     min-width: auto;
     width: 100vw;
+  }
+  .app-header {
+    display: none;
   }
 }
 // TODO:移动端适配内容

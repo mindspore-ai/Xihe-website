@@ -20,14 +20,14 @@ const route = useRoute();
 const activeNavItem = ref('');
 const navItems = [
   {
-    id: 'taichuTest',
+    id: 'taichuExperience',
     label: '在线体验',
-    href: '/modelzoo/taichu/test',
+    href: '/modelzoo/taichu',
   },
   {
     id: 'taichuIntroduction',
     label: '介绍',
-    href: '/modelzoo/taichu',
+    href: '/modelzoo/taichu/introduce',
   },
 ];
 watch(
@@ -35,7 +35,7 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^taichuIntroduction|taichuTest/g.test(val)) {
+    if (/^taichuIntroduction|taichuExperience/g.test(val)) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';

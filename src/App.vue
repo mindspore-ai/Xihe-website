@@ -133,8 +133,11 @@ const goBack = () => {
     min-width: auto;
     width: 100vw;
   }
+
   .app-header {
-    display: none;
+    @media screen and (max-width: 1080px) {
+      display: none;
+    }
   }
 }
 // TODO:移动端适配内容

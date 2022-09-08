@@ -127,7 +127,6 @@ function getArea() {
         value: city,
       });
     });
-    // console.log(222, province.value);
   });
 }
 getArea();

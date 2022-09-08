@@ -59,13 +59,12 @@ getGuide(comInfo.value.datasets_description)
     justify-content: flex-end;
     margin: 0 24px;
     .o-button {
-      margin-top: 8px;
-      margin-right: 20px;
-      // float: right;
+      margin-top: 48px;
+      margin-right: 23px;
     }
   }
 }
 .markdown-file {
-  padding: 48px;
+  padding: 40px 48px 48px;
 }
 </style>

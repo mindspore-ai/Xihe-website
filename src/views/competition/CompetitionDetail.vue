@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -29,6 +29,7 @@ const competitionData = ref([]);
 const show = ref(true);
 const showBread = ref(false);
 const showDetail = ref(false);
+const fixed = ref(false);
 
 // 立即报名
 function goApplication() {
@@ -61,25 +62,31 @@ watch(
     immediate: true,
   }
 );
-/* onMounted(() => {
+onUpdated(() => {
   let card = document.querySelector('.competition-card');
-  // let parent = document.querySelector('competition-bread');
-
-  let top1 = card.offsetTop;
+  let box = document.querySelector('.competition-info');
+  let top1 = card.offsetTop - 66;
   // let top2 = parent.offsetTop;
-
   window.addEventListener('scroll', function () {
-    if (window.pageYOffset > top1) {
-      card.classList.add('fixed');
-    }
     if (
-      window.pageYOffset < top1 &&
-      Array.from(card.classList).indexOf('fixed') > -1
+      window.pageYOffset > top1 &&
+      (route.name === 'introduction' ||
+        route.name === 'leaderboard' ||
+        route.name === 'dataset' ||
+        route.name === 'result' ||
+        route.name === 'team' ||
+        route.name === 'agreement')
     ) {
-      card.classList.remove('fixed');
+      box.style.display = 'flex';
+      fixed.value = true;
+    }
+    if (window.pageYOffset < top1) {
+      box.style.display = 'none';
+      // card.classList.remove('fixed');
+      fixed.value = false;
     }
   });
-}); */
+});
 
 // 获取比赛信息、判断是否报名
 async function getDetailData() {
@@ -88,7 +95,6 @@ async function getDetailData() {
     let res = await getCompetition({ id: route.params.id });
     if (res.status === 200 && res.data.name) {
       competitionData.value = res.data;
-      // console.log('比赛信息: ', res.data);
       userComData.setCompetitionData(res.data);
     } else {
       router.push('/competition');
@@ -112,21 +118,23 @@ getDetailData();
   <div v-if="showDetail">
     <div class="competition-detail">
       <div class="competition-wrap">
-        <div class="competition-bread">
-          <el-breadcrumb :separator-icon="ArrowRight">
-            <el-breadcrumb-item :to="{ path: '/competition' }"
-              >比赛</el-breadcrumb-item
-            >
-            <el-breadcrumb-item
-              :to="{ path: `/competition/${competitionData.id}` }"
-              class="breadcrumb-item"
-              >{{ competitionData.name }}</el-breadcrumb-item
-            >
-            <el-breadcrumb-item v-if="showBread">报名</el-breadcrumb-item>
-          </el-breadcrumb>
+        <div class="bread-wrap">
+          <div class="competition-bread">
+            <el-breadcrumb :separator-icon="ArrowRight">
+              <el-breadcrumb-item :to="{ path: '/competition' }"
+                >比赛</el-breadcrumb-item
+              >
+              <el-breadcrumb-item
+                :to="{ path: `/competition/${competitionData.id}` }"
+                class="breadcrumb-item"
+                >{{ competitionData.name }}</el-breadcrumb-item
+              >
+              <el-breadcrumb-item v-if="showBread">报名</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
         </div>
         <div class="competition-content">
-          <div class="competition-box">
+          <div class="competition-box competition-card">
             <div class="left">
               <div class="card-head">
                 <div class="card-head-title">
@@ -164,9 +172,6 @@ getDetailData();
               </div>
               <div class="right-immediate">
                 <div class="right-wrap">
-                  <!-- <OButton type="primary" animation @click="goApplication">
-                    立即报名
-                  </OButton> -->
                   <div v-if="competitionData.status_name === '进行中'">
                     <OButton type="primary" animation @click="goApplication">
                       立即报名
@@ -191,8 +196,63 @@ getDetailData();
               </div>
             </div>
           </div>
+          <div class="competition-box competition-info">
+            <div class="left">
+              <div class="card-head">
+                <div class="card-head-title">
+                  {{ competitionData.name }}
+                </div>
+                <div
+                  v-if="competitionData.status_name === '进行中'"
+                  class="card-head-state doing"
+                >
+                  火热进行中
+                </div>
+                <div
+                  v-if="competitionData.status_name === '未开始'"
+                  class="card-head-state noStarted"
+                >
+                  未开始
+                </div>
+                <div
+                  v-if="competitionData.status_name === '已结束'"
+                  class="card-head-state finished"
+                >
+                  已结束
+                </div>
+              </div>
+            </div>
+            <div v-if="teamId === null && show" class="right1">
+              <div v-if="teamId !== null" class="right1-bonus">
+                <div class="time">赛期:{{ competitionData.during }}</div>
+              </div>
+              <div class="right-immediate">
+                <div class="right-wrap">
+                  <div v-if="competitionData.status_name === '进行中'">
+                    <OButton type="primary" animation @click="goApplication">
+                      立即报名
+                    </OButton>
+                  </div>
+                  <div v-if="competitionData.status_name === '未开始'">
+                    <div class="competitionState">报名未开始</div>
+                  </div>
+                  <div v-if="competitionData.status_name === '已结束'">
+                    <div class="competitionState">比赛已结束</div>
+                  </div>
+                  <!-- <div class="number">
+                    报名人数：{{ competitionData.user_count }}
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            <div v-else class="right2">
+              <div class="right2-bonus">
+                <div class="time">赛期:{{ competitionData.during }}</div>
+              </div>
+            </div>
+          </div>
           <div class="competition-desc">
-            <router-view></router-view>
+            <router-view :fixed="fixed"></router-view>
           </div>
         </div>
       </div>
@@ -208,37 +268,55 @@ getDetailData();
   min-height: calc(100vh - 200px);
 
   .competition-wrap {
-    padding: 42px 16px 64px;
+    padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
-    .competition-bread {
-      margin-bottom: 40px;
-      .el-breadcrumb {
-        height: 21px;
-        line-height: 21px;
-        .el-breadcrumb__item {
-          :deep(.el-breadcrumb__inner.is-link) {
-            color: #555;
-            font-weight: 400;
-            &:hover {
-              color: #0d8dff;
+    overflow: hidden;
+    .bread-wrap {
+      height: 94px;
+      position: fixed;
+      z-index: 10;
+      min-width: 100%;
+      max-width: 100%;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #f5f6f8;
+      .competition-bread {
+        width: 100%;
+        overflow-y: auto;
+        // background-color: #f5f6f8;
+        .el-breadcrumb {
+          height: 21px;
+          line-height: 21px;
+          .el-breadcrumb__item {
+            :deep(.el-breadcrumb__inner.is-link) {
+              color: #555;
+              font-weight: 400;
+              &:hover {
+                color: #0d8dff;
+              }
+            }
+            :deep(.el-breadcrumb__separator.el-icon) {
+              color: #555;
             }
           }
-          :deep(.el-breadcrumb__separator.el-icon) {
-            color: #555;
+          :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+            color: #000;
           }
-        }
-        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-          color: #000;
+          :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
+            cursor: pointer;
+          }
         }
       }
     }
     .competition-content {
+      margin-top: 94px;
       scroll-behavior: smooth;
-      /* .fixed {
+      /*  .fixed {
         position: fixed;
-        z-index: 1000;
-        top: 80px;
+        height: 128px;
+        z-index: 100;
+        top: 174px;
         width: 100%;
         max-width: 1440px;
         .competition-box {
@@ -271,6 +349,7 @@ getDetailData();
         background-color: #ffffff;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .left {
           padding: 40px 0px 24px 40px;
@@ -391,26 +470,57 @@ getDetailData();
           }
         }
       }
+      .competition-info {
+        display: none;
+        position: fixed;
+        scroll-behavior: smooth;
+        z-index: 10;
+        width: 100%;
+        top: 174px;
+        overflow: hidden;
+        max-width: 1440px;
+        height: 128px;
+        .left {
+          padding: 0 0 0 40px;
+        }
+        .right1 {
+          padding-right: 80px;
+          .right-immediate {
+            border-left: 0px;
+            .right1-bonus {
+              margin: 0px 90px 0px 88px;
+              .time {
+                margin-top: 0px;
+              }
+            }
+          }
+        }
+        .right2 {
+          .time {
+            margin-top: 0px;
+          }
+        }
+      }
     }
     .competition-desc {
       margin-top: 24px;
       background-color: #fff;
       /* &-tab {
-        height: 48px;
-        background-color: #fbfbfb;
-        :deep(.o-nav) {
-          .nav-item {
-            margin-left: 40px;
+          height: 48px;
+          background-color: #fbfbfb;
+          :deep(.o-nav) {
+            .nav-item {
+              margin-left: 40px;
+            }
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            .nav-item {
+              color: #555;
+            }
           }
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          margin: 0 auto;
-          .nav-item {
-            color: #555;
-          }
-        }
-      } */
+        } */
     }
   }
 }

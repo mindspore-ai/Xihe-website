@@ -24,7 +24,16 @@ import {
   createFolder,
   deleteFolder,
 } from '@/api/api-obs';
-import { changeByte } from '@/shared/utils';
+
+import {
+  getGitlabTree,
+  deleteFile,
+  getGitlabFileDetail,
+} from '@/api/api-gitlab';
+
+import { fileToBase64 } from '@/shared/utils';
+
+import { changeByte, dataURLtoBlob } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -94,23 +103,29 @@ let query = reactive({
 });
 function getDetailData(path) {
   try {
-    findFile(path).then((tree) => {
-      if (
-        tree.status === 200 &&
-        tree.data.children &&
-        tree.data.children.length
-      ) {
-        filesList.value = tree.data.children;
-        useFileData().fileStoreData['is_empty'] = false;
-        filesList.value.sort((a, b) => {
-          return b.is_folder - a.is_folder;
-        });
-      } else if (route.params.contents && route.params.contents.length) {
-        filesList.value = [];
-        useFileData().fileStoreData['is_empty'] = false;
-      } else {
-        useFileData().fileStoreData['is_empty'] = true;
-      }
+    // obs
+    // findFile(path).then((tree) => {
+    //   if (
+    //     tree.status === 200 &&
+    //     tree.data.children &&
+    //     tree.data.children.length
+    //   ) {
+    //     filesList.value = tree.data.children;
+    //     useFileData().fileStoreData['is_empty'] = false;
+    //     filesList.value.sort((a, b) => {
+    //       return b.is_folder - a.is_folder;
+    //     });
+    //   } else if (route.params.contents && route.params.contents.length) {
+    //     filesList.value = [];
+    //     useFileData().fileStoreData['is_empty'] = false;
+    //   } else {
+    //     useFileData().fileStoreData['is_empty'] = true;
+    //   }
+    // });
+    // gitlab
+    console.log(contents);
+    getGitlabTree(path).then((res) => {
+      filesList.value = res;
     });
   } catch (error) {
     console.error(error);
@@ -129,20 +144,15 @@ function toggleDelDlg(flag, itemFileName, itemIsFolder) {
     isFolder.value = false;
   }
 }
+
 function getFilesByPath() {
   routerParams = router.currentRoute.value.params;
   contents = routerParams.contents;
   if (contents && contents.length) {
-    getDetailData(
-      `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-        routerParams.name
-      }/${contents.join('/')}/`
-    );
+    getDetailData(`${contents.join('/')}/`);
   } else {
     // 根目录下
-    getDetailData(
-      `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/`
-    );
+    getDetailData('');
   }
 }
 function emptyClick(ind) {
@@ -159,9 +169,14 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
+  // downloadGitlabFile(item.name).then((res) => {
+  //   const blobs = dataURLtoBlob(res.content);
+  //   let href = window.URL.createObjectURL(blobs);
+  //   window.open(href);
+  // });
   let contents = [...routerParams.contents, decodeURI(item.name)];
   let targetRoute = null;
-  if (!item.is_folder) {
+  if (item.type === 'blob') {
     targetRoute = `${prop.moduleName}FileBlob`;
   } else {
     targetRoute = `${prop.moduleName}File`;
@@ -214,35 +229,46 @@ function cancelCreate() {
   useFileData().setShowFolder(false);
   query.folderName = '';
 }
-function deleteFolderClick(folderName, isFolder) {
-  let path = '';
-  if (contents && contents.length) {
-    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-      routerParams.name
-    }/${contents.join('/')}/${folderName}`;
-  } else {
-    // 根目录下
-    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${folderName}`;
+function deleteFolderClick(folderName, id) {
+  let path = folderName;
+  if (contents.length) {
+    path = `${contents.join('/')}/${folderName}`;
   }
-  if (isFolder) {
-    path = `${path}/`;
-  }
-  deleteFolder(path).then((res) => {
-    if (res.status === 200) {
-      getFilesByPath();
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-      });
-      showDel.value = false;
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-      showDel.value = false;
-    }
+  // if (contents && contents.length) {
+  //   path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
+  //     routerParams.name
+  //   }/${contents.join('/')}/${folderName}`;
+  // } else {
+  //   // 根目录下
+  //   path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${folderName}`;
+  // }
+  // if (isFolder) {
+  //   path = `${path}/`;
+  // }
+  deleteFile(path, id).then((res) => {
+    getFilesByPath();
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    });
+    showDel.value = false;
   });
+  // deleteFolder(path).then((res) => {
+  //   if (res.status === 200) {
+  //     getFilesByPath();
+  //     ElMessage({
+  //       type: 'success',
+  //       message: res.msg,
+  //     });
+  //     showDel.value = false;
+  //   } else {
+  //     ElMessage({
+  //       type: 'error',
+  //       message: res.msg,
+  //     });
+  //     showDel.value = false;
+  //   }
+  // });
 }
 watch(
   () => route.fullPath,
@@ -331,12 +357,14 @@ watch(
           <tr
             v-for="item in filesList"
             :key="item.download_path"
-            :class="{ 'folder-item': item.is_folder }"
+            :class="{ 'folder-item': item.type === 'tree' }"
             class="tree-table-item"
           >
             <td class="tree-table-item-name" :title="item.name">
               <router-link :to="goBlob(item)" class="inner-box">
-                <o-icon v-if="!item.is_folder"><icon-file></icon-file> </o-icon>
+                <o-icon v-if="item.type === 'blob'"
+                  ><icon-file></icon-file>
+                </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
                 <span>{{ item.name }}</span>
               </router-link>
@@ -360,7 +388,7 @@ watch(
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !detailData.is_owner }"
-                  @click="toggleDelDlg(true, item.name, item.is_folder)"
+                  @click="toggleDelDlg(true, item.name, item.id)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
                     <icon-remove></icon-remove>
@@ -405,7 +433,6 @@ watch(
       </p>
     </div>
   </div>
-  <!-- TODO:弹窗提醒 -->
   <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
     <template #head>
       <div class="dlg-title" :style="{ textAlign: 'center' }">

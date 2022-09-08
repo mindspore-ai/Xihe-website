@@ -23,6 +23,8 @@ import {
   findFile,
   downloadFile,
 } from '@/api/api-obs';
+
+import { getGitlabFileDetail, getGitlabFileRaw } from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
 import { useFileData } from '@/stores';
 
@@ -43,9 +45,7 @@ const router = useRouter();
 const route = useRoute();
 
 let routerParams = router.currentRoute.value.params;
-const path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-  routerParams.name
-}/${routerParams.contents.join('/')}`;
+const path = `${routerParams.contents.join('/')}`;
 
 const i18n = {
   viewRawCode: '查看源代码',
@@ -80,7 +80,25 @@ let reopt = {
   data: null,
 };
 
-function previewFile(objkey) {
+function previewFile(file_path) {
+  getGitlabFileRaw(file_path).then((res) => {
+    if (
+      suffix.value === 'md' ||
+      suffix.value === 'json' ||
+      suffix.value === 'py' ||
+      suffix.value === 'txt' ||
+      suffix.value === 'log' ||
+      !res.includes('�')
+    ) {
+      rawData.value = res;
+      // md文件不需加```
+      suffix.value === 'md'
+        ? (codeString.value = res)
+        : (codeString.value = '```' + suffix.value + ' \n' + res + '\n```');
+    } else {
+      showBlob.value = false;
+    }
+  });
   getDownLoadToken({ objkey }).then((res) => {
     reopt.url = res.data.signedUrl;
     reopt.responseType = 'blob';
@@ -143,19 +161,23 @@ function goEditor() {
     },
   });
 }
-
-findFile(path).then((res) => {
-  if (res.status === 200 && res.data.children.length) {
-    fileData.value = res.data.children[0];
-    fileData.value.name.match(/[^.]+$/)
-      ? (suffix.value = fileData.value.name.match(/[^.]+$/)[0])
-      : (suffix.value = 'py');
-    if (fileData.value.size < 524288) {
-      showBlob.value = true;
-      previewFile(fileData.value.path);
-    }
+getGitlabFileDetail(path).then((res) => {
+  fileData.value = res;
+  fileData.value.file_name.match(/[^.]+$/)
+    ? (suffix.value = fileData.value.file_name.match(/[^.]+$/)[0])
+    : (suffix.value = 'py');
+  if (fileData.value.size < 524288) {
+    showBlob.value = true;
+    previewFile(fileData.value.file_path);
   }
+  console.log(res);
 });
+
+// findFile(path).then((res) => {
+//   if (res.status === 200 && res.data.children.length) {
+//     fileData.value = res.data.children[0];
+//   }
+// });
 
 function goRaw(blob) {
   const blobs = new Blob([blob], { type: 'text/plain;charset=utf-8' });

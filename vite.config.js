@@ -57,8 +57,9 @@ export default defineConfig({
       },
       '/repo': {
         // target: 'https://xihe2.test.osinfra.cn/',
-        target: 'https://xihe-dev.test.osinfra.cn/',
+        target: 'https://gitlab.openeuler.sh/api/v4',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/repo/, ''),
       },
     },
   },

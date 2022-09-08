@@ -62,3 +62,31 @@ export function escapeHtml(html) {
   temp = null;
   return output;
 }
+
+export function fileToBase64(file, callback) {
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(file);
+  fileReader.onload = function () {
+    callback(this.result);
+  };
+}
+export function dataURLtoBlob(dataurl) {
+  let arr = dataurl.split(',');
+  let array = arr[0].match(/:(.*?);/);
+  let mime = (array && array.length > 1 ? array[1] : '') || '';
+  // 去掉url的头，并转化为byte
+  console.log(arr);
+  let bytes = decodeURIComponent(
+    escape(window.atob(arr[1].replace(/-/g, '+').replace(/_/g, '/')))
+  );
+  // 处理异常,将ascii码小于0的转换为大于0
+  let ab = new ArrayBuffer(bytes.length);
+  // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+  let ia = new Uint8Array(ab);
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i);
+  }
+  return new Blob([ab], {
+    type: mime,
+  });
+}

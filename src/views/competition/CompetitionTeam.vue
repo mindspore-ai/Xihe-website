@@ -185,8 +185,11 @@ function addTeam(formEl) {
     if (valid) {
       // 通过团队名获取团队信息判断团队名是否存在
       let newTeamId = null; //新加入的团队id
-      let params = { name: form2.teamName };
-      getTeamInfoByName(params.name).then((res) => {
+      let params = {
+        name: form2.teamName,
+        relate_competition: route.params.id,
+      };
+      getTeamInfoByName(params.name, params.relate_competition).then((res) => {
         if (res.status === 200 && res.data.length !== 0) {
           newTeamId = res.data[0].id;
           joinTeam({ id: newTeamId }).then((res) => {
@@ -196,6 +199,14 @@ function addTeam(formEl) {
               ElMessage({
                 type: 'success',
                 message: '加入团队成功!',
+              });
+            } else if (
+              res.status === -1 &&
+              res.msg === '加入失败，团队成员已达上限'
+            ) {
+              ElMessage({
+                type: 'warning',
+                message: '加入失败，团队成员已达上限!',
               });
             }
           });

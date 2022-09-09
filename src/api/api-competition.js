@@ -98,8 +98,8 @@ export function getTeamInfo(params) {
   });
 }
 // 通过团队名获取团队信息
-export function getTeamInfoByName(name) {
-  const url = `/api/competitions/groups/?name=${name}`;
+export function getTeamInfoByName(name, competitionId) {
+  const url = `/api/competitions/groups/?name=${name}&relate_competition=${competitionId}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

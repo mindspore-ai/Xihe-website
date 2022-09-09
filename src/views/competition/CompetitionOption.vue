@@ -8,8 +8,8 @@ import { useCompetitionData } from '@/stores';
 const route = useRoute();
 const router = useRouter();
 const teamId = ref(null);
-
 const activeNavItem = ref('');
+// const fixed = ref(false);
 
 const storeTeamId = computed(() => {
   return useCompetitionData().teamId;
@@ -107,6 +107,35 @@ function handleNavClick(item) {
     router.push(`/competition/${route.params.id}/0/${item.href}`);
   }
 }
+
+const props = defineProps({
+  fixed: {
+    type: Boolean,
+    default: () => {
+      return {};
+    },
+  },
+});
+watch(
+  () => {
+    return props.fixed;
+  },
+  (newVal) => {
+    // fixed.value = newVal;
+    let tab = document.querySelector('.competition-desc-tab');
+    let box = document.querySelector('.competition-desc-info');
+    if (newVal) {
+      tab.classList.add('fixed');
+      box.style.paddingTop = '32px';
+    } else {
+      if (tab && Array.from(tab.classList).indexOf('fixed')) {
+        tab.classList.remove('fixed');
+        box.style.paddingTop = '0px';
+      }
+    }
+  },
+  { immediate: true }
+);
 </script>
 <template>
   <div class="competition-desc">
@@ -128,11 +157,13 @@ function handleNavClick(item) {
   &-tab {
     // position: sticky;
     // z-index: 1000;
-    // opacity: 1;
-    // top: 180px;
+    // // opacity: 1;
+    // top: 174px;
     font-size: 90px;
     height: 48px;
     background-color: #fbfbfb;
+    display: flex;
+    justify-content: center;
     .o-nav {
       width: 100%;
       display: flex;
@@ -142,6 +173,16 @@ function handleNavClick(item) {
         color: #555;
       }
     }
+  }
+  .fixed {
+    position: fixed;
+    transition: all 1s linear;
+    z-index: 100;
+    top: 302px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1440px;
   }
 }
 </style>

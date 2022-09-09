@@ -28,12 +28,12 @@ import {
 import {
   getGitlabTree,
   deleteFile,
+  uploadFileGitlab,
   getGitlabFileDetail,
+  gitlabDownloadAll,
 } from '@/api/api-gitlab';
 
-import { fileToBase64 } from '@/shared/utils';
-
-import { changeByte, dataURLtoBlob } from '@/shared/utils';
+import { changeByte, dataURLtoBlob, fileToBase64 } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -123,7 +123,6 @@ function getDetailData(path) {
     //   }
     // });
     // gitlab
-    console.log(contents);
     getGitlabTree(path).then((res) => {
       filesList.value = res;
     });
@@ -191,34 +190,42 @@ function goBlob(item) {
   };
 }
 function creatFolter(formEl) {
+  // gitlabDownloadAll().then((res) => {
+  // });
   if (!formEl) return;
-  let path = '';
-  if (contents && contents.length) {
-    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-      routerParams.name
-    }/${contents.join('/')}/${query.folderName}/`;
-  } else {
-    // 根目录下
-    path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${query.folderName}/`;
+  let path = `${query.folderName}/.keep`;
+  // 非根目录下
+  if (contents.length) {
+    path = `${contents.join('/')}/${query.folderName}/.keep`;
   }
-
   formEl.validate((valid) => {
     if (valid) {
-      createFolder(
+      // createFolder(
+      //   {
+      //     folderName: query.folderName,
+      //     path,
+      //   },
+
+      //   }
+      // );
+      uploadFileGitlab(
         {
-          folderName: query.folderName,
-          path,
+          branch: 'main',
+          author_email: userInfoStore.email,
+          author_name: userInfoStore.userName,
+          content: '',
+          commit_message: `created ${query.folderName}`,
         },
-        function () {
-          useFileData().setShowFolder(false);
-          getFilesByPath();
-          query.folderName = '';
-          ElMessage({
-            type: 'success',
-            message: '新建成功！',
-          });
-        }
-      );
+        path
+      ).then(() => {
+        useFileData().setShowFolder(false);
+        getFilesByPath();
+        query.folderName = '';
+        ElMessage({
+          type: 'success',
+          message: '新建成功！',
+        });
+      });
     } else {
       console.error('error submit!');
       return false;
@@ -245,7 +252,7 @@ function deleteFolderClick(folderName, id) {
   // if (isFolder) {
   //   path = `${path}/`;
   // }
-  deleteFile(path, id).then((res) => {
+  deleteFile(path, id).then(() => {
     getFilesByPath();
     ElMessage({
       type: 'success',

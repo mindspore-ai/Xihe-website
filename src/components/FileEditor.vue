@@ -12,22 +12,27 @@ import IconDescribe from '~icons/app/describe';
 import IconEdit from '~icons/app/edit-file';
 
 import {
+  getGitlabFileDetail,
+  getGitlabFileRaw,
+  editorFileGitlab,
+} from '@/api/api-gitlab';
+
+import { useUserInfoStore, useFileData } from '@/stores';
+
+const userInfoStore = useUserInfoStore();
+
+import {
   findFile,
   downloadFileObs,
   getDownLoadToken,
   handleUpload,
 } from '@/api/api-obs';
 
-const isShow = ref(false);
+const isShowEditor = ref(false);
 const router = useRouter();
 const route = useRoute();
 let routerParams = route.params;
-let path = '';
-routerParams.contents
-  ? (path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-      routerParams.name
-    }/${routerParams.contents.join('/')}`)
-  : '';
+let path = routerParams.contents.join('/');
 
 const lang = ref('');
 const i18n = {
@@ -49,69 +54,80 @@ const prop = defineProps({
 });
 let fileData = reactive({});
 const description = ref('');
-let reopt = {
-  method: 'get',
-  url: null,
-  withCredentials: false,
-  headers: null,
-  validateStatus: function (status) {
-    return status >= 200;
-  },
-  maxRedirects: 0,
-  responseType: 'blob',
-  data: null,
-};
 
 const codeString = ref('');
-function downLoad(objkey) {
-  let params = {
-    objkey: objkey,
-  };
-  getDownLoadToken(params).then((res) => {
-    reopt.url = res.data.signedUrl;
-    downloadFileObs(reopt).then((res) => {
-      let reader = new FileReader();
-      reader.readAsText(res, 'utf-8');
-      reader.onload = function () {
-        codeString.value = reader.result;
-        isShow.value = true;
-      };
-    });
+function previewFile(path, id) {
+  getGitlabFileRaw(path).then((res) => {
+    codeString.value = res;
+    isShowEditor.value = true;
   });
+  // getDownLoadToken(params).then((res) => {
+  //   reopt.url = res.data.signedUrl;
+  //   downloadFileObs(reopt).then((res) => {
+  //     let reader = new FileReader();
+  //     reader.readAsText(res, 'utf-8');
+  //     reader.onload = function () {
+  //       codeString.value = reader.result;
+  //       isShow.value = true;
+  //     };
+  //   });
+  // });
 }
 // SDK 上传
 async function upLoadObs() {
   // 构造文件对象
-  let blob = new Blob([codeString.value], {
-    type: 'text/plain;charset=utf-8',
-  });
-  let file = new File([blob], fileData.name, {
-    type: 'text/plain;charset=utf-8',
-    lastModified: Date.now(),
-  });
-  await handleUpload(
+  // let blob = new Blob([codeString.value], {
+  //   type: 'text/plain;charset=utf-8',
+  // });
+  // let file = new File([blob], fileData.name, {
+  //   type: 'text/plain;charset=utf-8',
+  //   lastModified: Date.now(),
+  // });
+  await editorFileGitlab(
     {
-      file,
-      path,
-      isEdit: true,
-      description: description.value || `edit ${fileData.name}`,
+      branch: 'main',
+      author_email: userInfoStore.email,
+      author_name: userInfoStore.userName,
+      content: codeString.value,
+      commit_message: `edit ${fileData.name}`,
     },
-    null,
-    function () {
-      ElMessage({
-        type: 'success',
-        message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
-      });
-    }
-  );
+    path
+  ).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
+    });
+  });
+  // await handleUpload(
+  //   {
+  //     file,
+  //     path,
+  //     isEdit: true,
+  //     description: description.value || `edit ${fileData.name}`,
+  //   },
+  //   null,
+  //   function () {
+  //     ElMessage({
+  //       type: 'success',
+  //       message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
+  //     });
+  //   }
+  // );
   pathClick(route.params.contents.length);
 }
 
-findFile(path).then((res) => {
-  if (res.status && res.data && res.data.children.length) {
-    fileData = res.data.children[0];
-    description.value = `edit ${fileData.name}`;
-    downLoad(fileData.path);
+// findFile(path).then((res) => {
+//   if (res.status && res.data && res.data.children.length) {
+//     fileData = res.data.children[0];
+//     description.value = `edit ${fileData.name}`;
+//     downLoad(fileData.path);
+//   }
+// });
+getGitlabFileDetail(path).then((res) => {
+  fileData = res;
+  description.value = `edit ${fileData.file_name}`;
+  if (fileData.size < 524288) {
+    previewFile(fileData.file_path);
   }
 });
 function pathClick(index) {
@@ -157,7 +173,7 @@ function pathClick(index) {
       </div>
       <div class="upload-body">
         <o-editor
-          v-if="isShow"
+          v-if="isShowEditor"
           v-model="codeString"
           :lang="lang"
           :model-value="codeString"

@@ -63,7 +63,7 @@ async function upLoad(param) {
         encoding: 'base64',
         author_email: userInfo.email,
         author_name: userInfo.userName,
-        content: content,
+        content: content.split(',')[1],
         commit_message: description.value || `upload ${param.file.name}`,
       },
       path

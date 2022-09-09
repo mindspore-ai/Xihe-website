@@ -37,13 +37,23 @@ export function getModelById() {
     return res.data;
   });
 }
-
+//上传文件
 export function uploadFileGitlab(params, path) {
   const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
   const headers = {
     'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
   };
   return request.post(url, params, { headers }).then((res) => {
+    return res.data;
+  });
+}
+//更新上传文件
+export function editorFileGitlab(params, path) {
+  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
+  const headers = {
+    'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
+  };
+  return request.put(url, params, { headers }).then((res) => {
     return res.data;
   });
 }
@@ -60,7 +70,6 @@ export function getGitlabTree(path) {
 }
 // 删除文件
 export function deleteFile(path, id) {
-  console.log(path);
   const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
   const params = {
     branch: 'main',
@@ -73,7 +82,7 @@ export function deleteFile(path, id) {
     return res.data;
   });
 }
-// gitlab 文件下载
+// gitlab 文件详情
 export function getGitlabFileDetail(path) {
   const url = `/repo/projects/2/repository/files/${encodeURIComponent(
     path
@@ -85,12 +94,22 @@ export function getGitlabFileDetail(path) {
     return res.data;
   });
 }
-export function getGitlabFileRaw(path) {
+// gitlab 原文件下载
+export function getGitlabFileRaw(path, id) {
   const url = `/repo/projects/2/repository/files/${encodeURIComponent(
     path
   )}/raw?ref=main`;
   const headers = {
     responseType: 'blob',
+    'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
+  };
+  return request.get(url, { headers }).then((res) => {
+    return res.data;
+  });
+}
+export function gitlabDownloadAll(id) {
+  const url = `/repo/projects/2/repository/archive.zip`;
+  const headers = {
     'PRIVATE-TOKEN': 'hGq8ze9XF6VDsis2t4SY',
   };
   return request.get(url, { headers }).then((res) => {

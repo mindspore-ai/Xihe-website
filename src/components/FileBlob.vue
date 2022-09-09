@@ -99,34 +99,34 @@ function previewFile(file_path) {
       showBlob.value = false;
     }
   });
-  getDownLoadToken({ objkey }).then((res) => {
-    reopt.url = res.data.signedUrl;
-    reopt.responseType = 'blob';
-    downloadFileObs(reopt).then((res) => {
-      rawBlob.value = res;
-      let reader = new FileReader();
-      reader.readAsText(res, 'utf-8');
-      reader.onload = function () {
-        if (
-          suffix.value === 'md' ||
-          suffix.value === 'json' ||
-          suffix.value === 'py' ||
-          suffix.value === 'txt' ||
-          suffix.value === 'log' ||
-          !reader.result.includes('�')
-        ) {
-          rawData.value = reader.result;
-          // md文件不需加```
-          suffix.value === 'md'
-            ? (codeString.value = reader.result)
-            : (codeString.value =
-                '```' + suffix.value + ' \n' + reader.result + '\n```');
-        } else {
-          showBlob.value = false;
-        }
-      };
-    });
-  });
+  // getDownLoadToken({ objkey }).then((res) => {
+  //   reopt.url = res.data.signedUrl;
+  //   reopt.responseType = 'blob';
+  //   downloadFileObs(reopt).then((res) => {
+  //     rawBlob.value = res;
+  //     let reader = new FileReader();
+  //     reader.readAsText(res, 'utf-8');
+  //     reader.onload = function () {
+  //       if (
+  //         suffix.value === 'md' ||
+  //         suffix.value === 'json' ||
+  //         suffix.value === 'py' ||
+  //         suffix.value === 'txt' ||
+  //         suffix.value === 'log' ||
+  //         !reader.result.includes('�')
+  //       ) {
+  //         rawData.value = reader.result;
+  //         // md文件不需加```
+  //         suffix.value === 'md'
+  //           ? (codeString.value = reader.result)
+  //           : (codeString.value =
+  //               '```' + suffix.value + ' \n' + reader.result + '\n```');
+  //       } else {
+  //         showBlob.value = false;
+  //       }
+  //     };
+  //   });
+  // });
 }
 
 async function headleDelFile(objkey) {
@@ -170,7 +170,6 @@ getGitlabFileDetail(path).then((res) => {
     showBlob.value = true;
     previewFile(fileData.value.file_path);
   }
-  console.log(res);
 });
 
 // findFile(path).then((res) => {

@@ -133,7 +133,6 @@ export function addDownloadRecord(id) {
  */
 export function createModelStore(params) {
   const url = `/server/model`;
-  console.log(params);
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {

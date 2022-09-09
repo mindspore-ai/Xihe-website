@@ -11,9 +11,11 @@ import IconDescribe from '~icons/app/describe';
 import IconEdit from '~icons/app/edit-file';
 import IconPoppver from '~icons/app/popover.svg';
 
-import { handleUpload } from '@/api/api-obs';
-import { ElMessage } from 'element-plus';
+import { uploadFileGitlab } from '@/api/api-gitlab';
 
+import { useUserInfoStore } from '@/stores';
+
+const userInfoStore = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 const prop = defineProps({
@@ -77,44 +79,71 @@ async function upLoadObs(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let path = `xihe-obj/${prop.moduleName}s/${
-        route.params.user
-      }/${currentContents}${query.fileName.trim()}`;
-      let blob = new Blob([query.textValue], {
-        type: 'text/plain;charset=utf-8',
-      });
-      let file = new File([blob], query.fileName, {
-        type: 'text/plain;charset=utf-8',
-        lastModified: Date.now(),
-      });
-      handleUpload(
+      let path = query.fileName.trim();
+      //非根目录下
+      if (routerParams.contents.length) {
+        path = `${routerParams.contents.join('/')}/${path}`;
+      }
+      // let blob = new Blob([query.textValue], {
+      //   type: 'text/plain;charset=utf-8',
+      // });
+      // let file = new File([blob], query.fileName, {
+      //   type: 'text/plain;charset=utf-8',
+      //   lastModified: Date.now(),
+      // });
+      uploadFileGitlab(
         {
-          file,
-          path,
-          isEdit: false,
-          description: query.description || `create ${query.fileName}`,
+          branch: 'main',
+          author_email: userInfoStore.email,
+          author_name: userInfoStore.userName,
+          content: query.textValue,
+          commit_message: `created ${query.folderName}`,
         },
-        null,
-        function () {
-          ElMessage({
-            type: 'success',
-            message: '新建成功！你可点击“文件-编辑”编辑该文件。',
-          });
-          // 上传成功跳转详情页
-          let contents = [
-            ...route.params.contents,
-            ...query.fileName.split('/'),
-          ];
-          router.push({
-            name: `${prop.moduleName}FileBlob`,
-            params: {
-              user: route.params.user,
-              name: route.params.name,
-              contents,
-            },
-          });
-        }
-      );
+        path
+      ).then(() => {
+        ElMessage({
+          type: 'success',
+          message: '新建成功！你可点击“文件-编辑”编辑该文件。',
+        });
+        // 上传成功跳转详情页
+        let contents = [...route.params.contents, ...query.fileName.split('/')];
+        router.push({
+          name: `${prop.moduleName}FileBlob`,
+          params: {
+            user: route.params.user,
+            name: route.params.name,
+            contents,
+          },
+        });
+      });
+      // handleUpload(
+      //   {
+      //     file,
+      //     path,
+      //     isEdit: false,
+      //     description: query.description || `create ${query.fileName}`,
+      //   },
+      //   null,
+      //   function () {
+      //     ElMessage({
+      //       type: 'success',
+      //       message: '新建成功！你可点击“文件-编辑”编辑该文件。',
+      //     });
+      //     // 上传成功跳转详情页
+      //     let contents = [
+      //       ...route.params.contents,
+      //       ...query.fileName.split('/'),
+      //     ];
+      //     router.push({
+      //       name: `${prop.moduleName}FileBlob`,
+      //       params: {
+      //         user: route.params.user,
+      //         name: route.params.name,
+      //         contents,
+      //       },
+      //     });
+      //   }
+      // );
     } else {
       console.error('error submit!');
       return false;

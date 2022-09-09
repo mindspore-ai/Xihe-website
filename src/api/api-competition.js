@@ -176,7 +176,27 @@ export function getAreaData() {
  */
 export function addProject(params) {
   const url = `/api/projects/?name=${params.name}&owner_name=${params.owner_name}`;
-  return request.get(url, params).then((res) => {
+  return request.get(url, { params, ...getHeaderConfig() }).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 队长提交结果
+ * @returns
+ */
+export function handleSubmit(params, pk) {
+  const url = `/api/competitions/commit_result/${pk}`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 自动评分
+ * @returns
+ */
+export function handleScoring(params, pk) {
+  const url = `/api/competitions/evaluation/${pk}`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

@@ -13,7 +13,13 @@ import IconAddFile from '~icons/app/add-file';
 
 import { handleUpload } from '@/api/api-obs';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
-import { getTeamInfoById, addProject, revampTeam } from '@/api/api-competition';
+import {
+  getTeamInfoById,
+  addProject,
+  revampTeam,
+  handleSubmit,
+  handleScoring,
+} from '@/api/api-competition';
 
 const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
@@ -25,15 +31,41 @@ const userInfo = useUserInfoStore();
 
 const route = useRoute();
 const router = useRouter();
-const tableData = [];
+const tableData = ref();
 
 const showPhoneDlg = ref(false);
 const uploadRef = ref();
 
+const date = new Date();
+const year = date.getFullYear();
+let month = date.getMonth() + 1;
+let day = date.getDate();
+const hour = date.getHours();
+const minute = date.getMinutes();
+const second = date.getSeconds();
+if (month < 10) month = '0' + month;
+if (day < 10) day = '0' + day;
 const beforeAvatarUpload = (rawFile) => {
-  // console.log(rawFile.type);
-  if (rawFile.type !== 'text/plain') {
+  if (
+    detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+    rawFile.type !== 'application/x-zip-compressed'
+  ) {
+    ElMessage.error('请上传.zip文件');
+    return false;
+  } else if (
+    detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
+    rawFile.type !== 'text/plain'
+  ) {
     ElMessage.error('请上传.txt文件');
+    return false;
+  } else {
+    const fileName =
+      rawFile.name.split('.')[0] +
+      `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
+      rawFile.name.split('.')[1];
+    // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
+    const copyFile = new File([rawFile], fileName);
+    upLoad(copyFile);
     return false;
   }
   return true;
@@ -47,7 +79,9 @@ function callback(transferredAmount, totalAmount) {
   );
 }
 async function upLoad(param) {
-  let path = `xihe-obj/competition/${detailData1.value.name}/${groupName.value}/${param.file.name}`;
+  let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
+    detailData.value.name
+  }_${detailData.value.is_individual ? 1 : 0}/${param.name}`;
   // 上传函数接收三个参数
   // 1.文件相关信息，编辑完成不需要验证文件名重复isEdit传true，其余传false。
   // 2.进度条回调函数
@@ -55,19 +89,47 @@ async function upLoad(param) {
   // TODO:是否统一封装失败情况
   await handleUpload(
     {
-      file: param.file,
+      file: param,
       path,
-      isEdit: false,
+      isEdit: true,
     },
     callback,
     function () {
-      ElMessage({
-        type: 'success',
-        message: '上传成功！',
-      });
-      pathClick(route.params.contents.length);
+      // pathClick(route.params.contents.length);
+      togglePhoneDlg(false);
       Progress.value = '';
       fileList.value = [];
+      handleSubmit({ file_name: param.name }, route.path.split('/')[2]).then(
+        (res) => {
+          if (res.status === 200) {
+            ElMessage({
+              type: 'success',
+              message: '上传成功,正在自动评分中！',
+            });
+            handleScoring({ file_name: param.name }, teamId.value).then(
+              (res) => {
+                if (res.status === 200) {
+                  // ElMessage({
+                  //   type: 'success',
+                  //   message: '上传成功！',
+                  // });
+                  getIndividual(teamId.value);
+                } else {
+                  ElMessage({
+                    type: 'error',
+                    message: res.msg,
+                  });
+                }
+              }
+            );
+          } else {
+            ElMessage({
+              type: 'error',
+              message: res.msg,
+            });
+          }
+        }
+      );
     }
   );
 }
@@ -139,6 +201,15 @@ async function getIndividual(id) {
   let res = await getTeamInfoById(id);
   if (res.status === 200) {
     detailData.value = res.data;
+    tableData.value = res.data.score_list;
+    tableData.value.forEach((item) => {
+      item.create_time = item.create_time.split('T')[0];
+      item.file_name = item.file_name.split('-')[0];
+    });
+    tableData.value.reverse();
+    if (tableData.value.length > 3) {
+      tableData.value = tableData.value.slice(0, 3);
+    }
     // TODO:更新时间
     if (res.data.project_name) {
       detailData.value.update_date_time = res.data.project_name.update_time;
@@ -178,10 +249,28 @@ function goProjectClick(val) {
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
-  ElMessage({
-    type: 'error',
-    message: '暂支持比赛7天后提交结果，请耐心等待',
-  });
+  if (
+    tableData.value[0] &&
+    `${year}-${month}-${day}` === tableData.value[0].create_time
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '您今天已经提交过了哦~',
+    });
+  } else {
+    if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+      ElMessage({
+        type: 'error',
+        message: '提交结果通道火速开通中，请您耐心等待哦~',
+      });
+    } else {
+      togglePhoneDlg(true);
+    }
+  }
+}
+function handelCancel() {
+  togglePhoneDlg(false);
+  uploadRef.value.clearFiles();
 }
 </script>
 <template>
@@ -210,7 +299,12 @@ function handelSubmit() {
         </div>
       </div>
       <div v-else-if="detailData && detailData.project_name">
-        <div class="guide">你可对该项目内的文件进行改动</div>
+        <div
+          v-if="detailData.leader_name.name === userInfo.userName"
+          class="guide"
+        >
+          你可对该项目内的文件进行改动
+        </div>
         <project-relate-card
           :detail-data="detailData"
           :name="'project_name'"
@@ -225,8 +319,11 @@ function handelSubmit() {
     </div>
     <div class="left">
       <div class="header">
-        <div class="header-title">提交结果</div>
-        <div class="header-button">
+        <div class="header-title">结果列表</div>
+        <div
+          v-if="detailData && detailData.leader_name.name === userInfo.userName"
+          class="header-button"
+        >
           <span>每日限提交1次</span>
           <OButton type="primary" size="small" @click="handelSubmit"
             >提交结果</OButton
@@ -235,14 +332,15 @@ function handelSubmit() {
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="name">
+          <el-table-column prop="file_name">
             <template #header>
               <o-icon><icon-upload></icon-upload> </o-icon
               >提交的最新结果（显示最近3条）
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="提交时间" width="171" />
-          <el-table-column prop="address" label="我的分数" width="104" />
+          <el-table-column prop="create_time" label="提交时间" width="134" />
+          <el-table-column prop="status_info" label="状态" width="320" />
+          <el-table-column prop="score" label="我的分数" width="104" />
         </el-table>
       </div>
     </div>
@@ -263,13 +361,18 @@ function handelSubmit() {
     >
       <el-icon class="el-icon--upload"><IconAddFile /></el-icon>
       <div class="el-upload__text">
-        请拖拽<em>.txt</em>文件到此处上传 或<em>点击此处</em>浏览本地文件
+        请拖拽<em>{{
+          detailData1.name === '昇思AI挑战赛-艺术家画作风格迁移'
+            ? '.zip'
+            : '.txt'
+        }}</em
+        >文件到此处上传 或<em>点击此处</em>浏览本地文件
       </div>
     </el-upload>
     <el-progress v-if="Progress" :percentage="Progress" />
     <template #foot>
       <div class="dlg-foot">
-        <o-button @click="togglePhoneDlg(false)">取消</o-button>
+        <o-button @click="handelCancel">取消</o-button>
         <o-button type="primary" @click="submitUpload">确定</o-button>
       </div>
     </template>

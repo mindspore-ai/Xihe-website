@@ -119,6 +119,7 @@ async function upLoad(param) {
                     type: 'error',
                     message: res.msg,
                   });
+                  getIndividual(teamId.value);
                 }
               }
             );

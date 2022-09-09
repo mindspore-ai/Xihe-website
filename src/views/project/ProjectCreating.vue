@@ -87,7 +87,6 @@ const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
     if (valid) {
       setProject();
-      // console.log(proList);
     } else {
       ElMessage({
         type: 'error',
@@ -149,7 +148,6 @@ function setProject() {
   });
 }
 getModelTags().then((res) => {
-  // console.log(res.data.projects_photo);
   projectPhotos.value = res.data.projects_photo;
   projectPhotos.value.forEach((item) => {
     item.is_active = false;
@@ -170,10 +168,6 @@ onMounted(() => {});
 <template>
   <div class="create">
     <div class="link">
-      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)"
-        >个人主页</span
-      ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.create }}</span> -->
       <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
           >个人主页</el-breadcrumb-item
@@ -351,18 +345,16 @@ onMounted(() => {});
               </el-radio-group>
               <div class="visual-desc">所有人可见</div>
               <el-radio-group v-model="proList.is_private">
-                <el-radio label="Pravate" />
+                <el-radio label="Private" />
               </el-radio-group>
               <div class="visual-desc">仅自己可见</div>
             </div>
           </el-form-item>
         </div>
         <div class="obuton">
-          <!-- <el-form-item> -->
           <o-button style="margin-top: 48px" type="primary" @click="submitClick"
             >保存</o-button
           >
-          <!-- </el-form-item> -->
         </div>
       </el-form>
     </div>

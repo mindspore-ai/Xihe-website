@@ -102,17 +102,17 @@ async function upLoad(param) {
       handleSubmit({ file_name: param.name }, route.path.split('/')[2]).then(
         (res) => {
           if (res.status === 200) {
-            ElMessage({
-              type: 'success',
-              message: '上传成功,正在自动评分中！',
-            });
+            // ElMessage({
+            //   type: 'success',
+            //   message: '上传成功,正在自动评分中！',
+            // });
             handleScoring({ file_name: param.name }, teamId.value).then(
               (res) => {
                 if (res.status === 200) {
-                  // ElMessage({
-                  //   type: 'success',
-                  //   message: '上传成功！',
-                  // });
+                  ElMessage({
+                    type: 'success',
+                    message: '上传成功,正在自动评分中！！',
+                  });
                   getIndividual(teamId.value);
                 } else {
                   ElMessage({

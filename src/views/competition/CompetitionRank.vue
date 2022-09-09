@@ -15,13 +15,17 @@ import { getRank } from '@/api/api-competition';
 
 const route = useRoute();
 
-const tableData = ref();
+const tableData = ref([]);
 getRank(route.path.split('/')[2]).then((res) => {
   tableData.value = res.data;
+  tableData.value.forEach((element) => {
+    element.create_time = element.create_time.split('T')[0];
+  });
+  // console.log(tableData.value)hli
 });
 </script>
 <template>
-  <div v-if="false" class="rank-page">
+  <div v-if="tableData.length" class="rank-page">
     <div class="rank-header">排行榜</div>
     <div class="rank-body">
       <el-table :data="tableData">
@@ -36,13 +40,13 @@ getRank(route.path.split('/')[2]).then((res) => {
             <div v-else class="num">{{ scope.$index + 1 }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="参赛团队" />
+        <el-table-column prop="group_name" label="参赛团队" />
         <el-table-column label="分数">
           <template #default="scope">
-            <div class="score">{{ tableData[scope.$index].address }}</div>
+            <div class="score">{{ tableData[scope.$index].score }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="提交时间" width="210" />
+        <el-table-column prop="create_time" label="提交时间" width="210" />
         <!-- <template v-if="tableData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
         </template> -->

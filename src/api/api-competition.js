@@ -201,6 +201,16 @@ export function handleScoring(params, pk) {
   });
 }
 /**
+ * 艺术家画作风格查分数
+ * @returns
+ */
+export function getScore(params, pk) {
+  const url = `/api/competitions/get_score_obs/${pk}`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
  * 获取介绍
  * @returns
  */

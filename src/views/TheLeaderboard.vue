@@ -450,6 +450,7 @@ function goUserPage(vel) {
         }
         a {
           color: #0d8dff;
+          height: 20px;
         }
         &-left {
           display: flex;
@@ -599,6 +600,13 @@ function goUserPage(vel) {
   .o-icon {
     margin-left: 8px;
     color: #0d8dff;
+    display: inline-block;
+    transition: all 0.2s linear;
+  }
+  &:hover {
+    .o-icon {
+      transform: translate(4px);
+    }
   }
 }
 .link {
@@ -611,6 +619,13 @@ function goUserPage(vel) {
   .o-icon {
     margin-left: 8px;
     color: #0d8dff;
+    display: inline-block;
+    transition: all 0.2s linear;
+  }
+  &:hover {
+    .o-icon {
+      transform: translate(4px);
+    }
   }
 }
 </style>

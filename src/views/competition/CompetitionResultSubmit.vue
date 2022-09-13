@@ -48,8 +48,10 @@ if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
 const beforeAvatarUpload = (rawFile) => {
   if (
-    detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
-    rawFile.type !== 'application/x-zip-compressed'
+    (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+      rawFile.type !== 'application/x-zip-compressed') ||
+    rawFile.type !== 'application/x-zip' ||
+    rawFile.type !== 'application/zip'
   ) {
     ElMessage.error('请上传.zip文件');
     return false;

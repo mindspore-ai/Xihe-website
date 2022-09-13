@@ -19,6 +19,7 @@ import {
   revampTeam,
   handleSubmit,
   handleScoring,
+  getScore,
 } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
@@ -59,11 +60,14 @@ const beforeAvatarUpload = (rawFile) => {
     ElMessage.error('请上传.txt文件');
     return false;
   } else {
-    const fileName =
+    let fileName =
       rawFile.name.split('.')[0] +
       `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
       rawFile.name.split('.')[1];
     // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
+    if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+      fileName = fileName.split('.')[0];
+    }
     const copyFile = new File([rawFile], fileName);
     upLoad(copyFile);
     return false;
@@ -111,7 +115,7 @@ async function upLoad(param) {
                 if (res.status === 200) {
                   ElMessage({
                     type: 'success',
-                    message: '上传成功,正在自动评分中！！',
+                    message: '上传成功,正在自动评分中！',
                   });
                   getIndividual(teamId.value);
                 } else {
@@ -201,17 +205,37 @@ async function getIndividual(id) {
   // 通过团队id获得团队信息
   let res = await getTeamInfoById(id);
   if (res.status === 200) {
+    // let fileName = res.data.score_list.reverse()[0].file_name;
     detailData.value = res.data;
     tableData.value = res.data.score_list;
-    tableData.value.forEach((item) => {
-      item.create_time = item.create_time.split('T')[0];
-      item.file_name = item.file_name.split('-')[0];
-    });
     tableData.value.reverse();
     if (tableData.value.length > 3) {
       tableData.value = tableData.value.slice(0, 3);
     }
-    // TODO:更新时间
+
+    let fileName = '';
+    if (tableData.value[0]) {
+      fileName = tableData.value[0].file_name;
+    }
+
+    tableData.value.forEach((item) => {
+      item.create_time = item.create_time.split('T')[0];
+      item.file_name = item.file_name.split('-')[0];
+    });
+    //艺术家画作风格迁移查分数
+    if (
+      detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+      tableData.value[0].score === null
+    ) {
+      getScore(fileName, teamId.value).then((qwq) => {
+        // console.log(qwq);
+        if (qwq.data) {
+          tableData.value[0].status_info = qwq.msg;
+          tableData.value[0].score = qwq.data.toFixed(3);
+        }
+      });
+    }
+    // TODO: 关联卡片时间
     if (res.data.project_name) {
       detailData.value.update_date_time = res.data.project_name.update_time;
       detailData.value.project_name = [detailData.value.project_name];
@@ -259,14 +283,14 @@ function handelSubmit() {
       message: '您今天已经提交过了哦~',
     });
   } else {
-    if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-      ElMessage({
-        type: 'error',
-        message: '提交结果通道火速开通中，请您耐心等待哦~',
-      });
-    } else {
-      togglePhoneDlg(true);
-    }
+    // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '提交结果通道火速开通中，请您耐心等待哦~',
+    //   });
+    // } else {
+    togglePhoneDlg(true);
+    // }
   }
 }
 function handelCancel() {

@@ -4,9 +4,9 @@ import { ref } from 'vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import ringImg from '@/assets/icons/ring.png';
-import firstImg from '@/assets/imgs/first.png';
-import secondImg from '@/assets/imgs/second.png';
-import thirdImg from '@/assets/imgs/third.png';
+// import firstImg from '@/assets/imgs/first.png';
+// import secondImg from '@/assets/imgs/second.png';
+// import thirdImg from '@/assets/imgs/third.png';
 
 import { getRank } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
@@ -17,7 +17,7 @@ const loginStore = useLoginStore();
 
 let i18n = {
   head: {
-    title: '排行榜',
+    title: '公测活动排行榜',
     introduce: '用户名',
   },
 };
@@ -81,6 +81,30 @@ function goUserPage(vel) {
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="邀请人数排行榜" name="first">
         <div class="tips">
+          <div
+            v-if="tableData1"
+            class="first"
+            @click="goUserPage(tableData1[0].username)"
+          >
+            <img :src="tableData1[0].avatar_url" alt="" />
+            <span>{{ tableData1[0].username }} </span>
+          </div>
+          <div
+            v-if="tableData1"
+            class="second"
+            @click="goUserPage(tableData1[1].username)"
+          >
+            <img :src="tableData1[1].avatar_url" alt="" />
+            <span>{{ tableData1[1].username }} </span>
+          </div>
+          <div
+            v-if="tableData1"
+            class="third"
+            @click="goUserPage(tableData1[2].username)"
+          >
+            <img :src="tableData1[2].avatar_url" alt="" />
+            <span>{{ tableData1[2].username }} </span>
+          </div>
           <div class="tips-left">
             <img :src="ringImg" alt="" />
             邀请新用户成功注册可赢取丰厚大奖 ，<a
@@ -93,7 +117,7 @@ function goUserPage(vel) {
             我的邀请人数：<span>{{ you_count1 }}</span>
           </div>
         </div>
-        <div class="rank">
+        <!-- <div class="rank">
           <div class="rank-body">
             <el-table :data="tableData1">
               <el-table-column width="120" label="排名">
@@ -128,13 +152,37 @@ function goUserPage(vel) {
               </el-table-column>
             </el-table>
           </div>
-        </div>
+        </div> -->
         <div class="footer" @click="goInvited">
           立即邀请赢大奖<OIcon><IconArrowRight /></OIcon>
         </div>
       </el-tab-pane>
       <el-tab-pane label="下载量排行榜" name="second">
         <div class="tips">
+          <div
+            v-if="tableData2"
+            class="first"
+            @click="goUserPage(tableData2[0].user_detail.username)"
+          >
+            <img :src="tableData2[0].user_detail.avatar_url" alt="" />
+            <span>{{ tableData2[0].user_detail.username }} </span>
+          </div>
+          <div
+            v-if="tableData2"
+            class="second"
+            @click="goUserPage(tableData2[1].user_detail.username)"
+          >
+            <img :src="tableData2[1].user_detail.avatar_url" alt="" />
+            <span>{{ tableData2[1].user_detail.username }} </span>
+          </div>
+          <div
+            v-if="tableData2"
+            class="third"
+            @click="goUserPage(tableData2[2].user_detail.username)"
+          >
+            <img :src="tableData2[2].user_detail.avatar_url" alt="" />
+            <span>{{ tableData2[2].user_detail.username }} </span>
+          </div>
           <div class="tips-left">
             <img :src="ringImg" alt="" />
             下载模型可赢取丰厚大奖，<a
@@ -147,7 +195,7 @@ function goUserPage(vel) {
             我的下载数量：<span>{{ you_count2 }}</span>
           </div>
         </div>
-        <div class="rank">
+        <!-- <div class="rank">
           <div class="rank-body">
             <el-table :data="tableData2">
               <el-table-column width="120" label="排名">
@@ -189,13 +237,37 @@ function goUserPage(vel) {
               </el-table-column>
             </el-table>
           </div>
-        </div>
+        </div> -->
         <div class="link" @click="goModels">
           浏览模型并下载<OIcon><IconArrowRight /></OIcon>
         </div>
       </el-tab-pane>
       <el-tab-pane label="创建项目排行榜" name="third">
         <div class="tips">
+          <div
+            v-if="tableData3"
+            class="first"
+            @click="goUserPage(tableData3[0].user_detail.username)"
+          >
+            <img :src="tableData3[0].user_detail.avatar_url" alt="" />
+            <span>{{ tableData3[0].user_detail.username }} </span>
+          </div>
+          <div
+            v-if="tableData3"
+            class="second"
+            @click="goUserPage(tableData3[1].user_detail.username)"
+          >
+            <img :src="tableData3[1].user_detail.avatar_url" alt="" />
+            <span>{{ tableData3[1].user_detail.username }} </span>
+          </div>
+          <div
+            v-if="tableData3"
+            class="third"
+            @click="goUserPage(tableData3[2].user_detail.username)"
+          >
+            <img :src="tableData3[2].user_detail.avatar_url" alt="" />
+            <span>{{ tableData3[2].user_detail.username }} </span>
+          </div>
           <div class="tips-left">
             <img :src="ringImg" alt="" />
             创建可运行项目赢取丰厚大奖 ，<a
@@ -208,7 +280,7 @@ function goUserPage(vel) {
             我的创建数量：<span>{{ you_count3 }}</span>
           </div>
         </div>
-        <div class="rank">
+        <!-- <div class="rank">
           <div class="rank-body">
             <el-table :data="tableData3">
               <el-table-column width="120" label="排名">
@@ -250,7 +322,7 @@ function goUserPage(vel) {
               </el-table-column>
             </el-table>
           </div>
-        </div>
+        </div> -->
         <div class="link" @click="goSetNew">
           立即创建项目<OIcon><IconArrowRight /></OIcon>
         </div>
@@ -311,8 +383,58 @@ function goUserPage(vel) {
       margin: 40px auto;
       background-color: #fff;
       .tips {
+        height: 616px;
+        position: relative;
+        background: url(@/assets/imgs/ranks-bg.png);
+        background-size: cover;
+        background-position: 50%;
+        .first {
+          position: absolute;
+          top: 181px;
+          left: 46%;
+          font-size: 16px;
+          cursor: pointer;
+          img {
+            width: 40px;
+            height: 40px;
+          }
+          span {
+            display: inline-block;
+            margin-top: 10px;
+          }
+        }
+        .second {
+          position: absolute;
+          top: 292px;
+          left: 22%;
+          font-size: 16px;
+          cursor: pointer;
+          img {
+            width: 40px;
+            height: 40px;
+          }
+          span {
+            display: inline-block;
+            margin-top: 10px;
+          }
+        }
+        .third {
+          position: absolute;
+          top: 375px;
+          left: 65%;
+          font-size: 16px;
+          cursor: pointer;
+          img {
+            width: 40px;
+            height: 40px;
+          }
+          span {
+            display: inline-block;
+            margin-top: 10px;
+          }
+        }
         display: flex;
-        align-items: center;
+        // align-items: center;
         justify-content: space-between;
         padding: 40px 40px 8px 40px;
         // background: rgba(13, 141, 255, 0.03);
@@ -331,7 +453,10 @@ function goUserPage(vel) {
         }
         &-left {
           display: flex;
-          align-items: center;
+          // align-items: center;
+          img {
+            margin-top: 3px;
+          }
         }
         &-right {
           font-size: 18px;

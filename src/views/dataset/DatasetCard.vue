@@ -173,12 +173,12 @@ watch(
     <div class="right-data">
       <div ref="rightModel" class="right-inner">
         <div class="download-data">
-          <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+          <div class="download-title">{{ i18n.recentDownload }}</div>
           <span class="download-count">{{ detailData.download_count }}</span>
         </div>
         <!-- 相关模型 -->
         <div class="dataset-data">
-          <h4 class="title">{{ i18n.dataset }}</h4>
+          <div class="title">{{ i18n.dataset }}</div>
           <div class="dataset-box">
             <no-relate
               v-if="

@@ -66,7 +66,7 @@ getRank(route.path.split('/')[2]).then((res) => {
     width: 59px;
   }
   .rank-header {
-    margin-top: 40px;
+    margin: 40px 80px 0;
     background-image: url(@/assets/imgs/rank-bg.png);
     color: #ffffff;
     font-size: 24px;
@@ -75,6 +75,7 @@ getRank(route.path.split('/')[2]).then((res) => {
     padding: 24px;
   }
   .rank-body {
+    margin: 0 80px;
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;
     }

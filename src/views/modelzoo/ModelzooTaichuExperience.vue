@@ -2,17 +2,19 @@
 import { request } from '@/shared/axios';
 import { ref, reactive } from 'vue';
 
+import { ElMessage } from 'element-plus';
+
+import OButton from '@/components/OButton.vue';
+
 import IconUpload from '~icons/app/modelzoo-upload';
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
-import OButton from '@/components/OButton.vue';
 
 import {
   uploadModelzooPic,
   getInferencePicture,
   getExampleTags,
 } from '@/api/api-modelzoo';
-import { ElMessage } from 'element-plus';
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -70,8 +72,22 @@ const form = reactive({
   type: [],
 });
 
-const inferUrl = ref(null);
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+window.addEventListener('resize', onResize);
+
 const inferUrlList = ref([]);
+
 const exampleList = reactive([
   { name: '', isSelected: false },
   { name: '', isSelected: false },
@@ -168,31 +184,63 @@ function resetInferText() {
   inputValue.value.focus();
 }
 
+// 生成一张图片
 function startRatiocnate() {
   if (
     /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
       inferenceText.value
     )
   ) {
-    loading1.value = true;
+    // loading1.value = true;
     getInferencePicture({
       content: inferenceText.value,
     }).then((res) => {
       if (res.status === 200) {
-        loading1.value = false;
-        inferUrl.value = res.data.output_image_url + '?' + new Date();
+        inferUrlList.value = [];
+        // inferUrl.value = res.data.output_image_url + '?' + new Date();
+        inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
       } else if (res.status === -2) {
         ElMessage({
           type: 'warning',
           message: res.msg,
         });
-        loading1.value = false;
       } else if (res.status === -1) {
         ElMessage({
           type: 'warning',
           message: res.msg,
         });
-        loading1.value = false;
+      }
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请输入中文描述',
+    });
+  }
+}
+
+function startRatiocnateMo() {
+  if (
+    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+      inferenceText.value
+    )
+  ) {
+    getInferencePicture({
+      content: inferenceText.value,
+      img_type: '3img',
+    }).then((res) => {
+      if (res.status === 200) {
+        inferUrlList.value = res.data.output_image_url;
+      } else if (res.status === -2) {
+        ElMessage({
+          type: 'warning',
+          message: res.msg,
+        });
+      } else if (res.status === -1) {
+        ElMessage({
+          type: 'warning',
+          message: res.msg,
+        });
       }
     });
   } else {
@@ -210,36 +258,30 @@ function startRatiocnate1() {
       inferenceText.value
     )
   ) {
-    loading1.value = true;
     if (form.type.length) {
       getInferencePicture({
         content: inferenceText.value,
         img_type: '3img',
       }).then((res) => {
         if (res.status === 200) {
-          loading1.value = false;
           inferUrlList.value = res.data.output_image_url;
         } else if (res.status === -2) {
           ElMessage({
             type: 'warning',
             message: res.msg,
           });
-          loading1.value = false;
         } else if (res.status === -1) {
           ElMessage({
             type: 'warning',
             message: res.msg,
           });
-          loading1.value = false;
         }
       });
     } else {
-      loading1.value = true;
       getInferencePicture({
         content: inferenceText.value,
       }).then((res) => {
         if (res.status === 200) {
-          loading1.value = false;
           inferUrlList.value = [];
           inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
         } else if (res.status === -2) {
@@ -247,13 +289,11 @@ function startRatiocnate1() {
             type: 'warning',
             message: res.msg,
           });
-          loading1.value = false;
         } else if (res.status === -1) {
           ElMessage({
             type: 'warning',
             message: res.msg,
           });
-          loading1.value = false;
         }
       });
     }
@@ -301,20 +341,20 @@ function handleTextChange() {
   });
 }
 
-function downLoadPicture() {
-  let x = new XMLHttpRequest();
-  x.open('GET', inferUrl.value, true);
-  x.responseType = 'blob';
-  x.onload = function () {
-    const blobs = new Blob([x.response], { type: 'image/jpg' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'infer.jpg';
-    a.click();
-  };
-  x.send();
-}
+// function downLoadPicture() {
+//   let x = new XMLHttpRequest();
+//   x.open('GET', inferUrl.value, true);
+//   x.responseType = 'blob';
+//   x.onload = function () {
+//     const blobs = new Blob([x.response], { type: 'image/jpg' });
+//     let url = window.URL.createObjectURL(blobs);
+//     let a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'infer.jpg';
+//     a.click();
+//   };
+//   x.send();
+// }
 
 const activeNames = ref(['1']);
 const activeNames1 = ref(['1']);
@@ -400,6 +440,7 @@ function refreshTags() {
               >开始推理</o-button
             >
           </div>
+
           <div class="more-pictures">
             <el-form>
               <el-form-item v-model="form">
@@ -419,11 +460,6 @@ function refreshTags() {
               :src="item + '?' + new Date()"
               class="result-img"
             />
-
-            <!-- <a @click="downLoadPictures">
-              <o-icon><icon-download></icon-download> </o-icon>
-              <span class="download-text">下载</span>
-            </a> -->
 
             <div class="download" @click="downLoadPictures">
               <o-icon><icon-download></icon-download> </o-icon>
@@ -477,26 +513,66 @@ function refreshTags() {
 
           <p class="experience-title">图片结果</p>
 
-          <div class="result">
-            <!-- <div v-if="loading1">
-              <img class="loading-img" src="@/assets/gifs/loading.gif" alt="" />
-            </div> -->
-
-            <img class="result-img" :src="inferUrl" />
-            <a @click="downLoadPicture">
-              <o-icon><icon-download></icon-download></o-icon
-            ></a>
+          <div v-if="inferUrlList.length > 1" class="result">
+            <!-- <img
+              v-for="item in inferUrlList"
+              :key="item"
+              class="result-img"
+              :src="item"
+              @click="toggleClick"
+            /> -->
+            <el-image
+              class="image-modal"
+              style="width: 100px; height: 100px"
+              :src="inferUrlList[0]"
+              :preview-src-list="inferUrlList"
+              :initial-index="0"
+              fit="cover"
+              :hide-on-click-modal="true"
+            />
+            <el-image
+              class="image-modal"
+              style="width: 100px; height: 100px"
+              :src="inferUrlList[1]"
+              :preview-src-list="inferUrlList"
+              :initial-index="1"
+              fit="cover"
+              :hide-on-click-modal="true"
+            />
+            <el-image
+              class="image-modal"
+              style="width: 100px; height: 100px"
+              :src="inferUrlList[2]"
+              :preview-src-list="inferUrlList"
+              :initial-index="2"
+              fit="cover"
+              :hide-on-click-modal="true"
+            />
           </div>
 
-          <div class="btn-box">
-            <o-button size="small" @click="resetInferText">重新输入</o-button>
+          <div
+            v-if="inferUrlList.length === 1 || inferUrlList.length === 0"
+            class="result"
+          >
+            <img
+              v-for="item in inferUrlList"
+              :key="item"
+              class="result-img-single"
+              :src="item"
+            />
+          </div>
+
+          <div class="btn-box-mobile">
+            <o-button size="small" @click="startRatiocnateMo"
+              >生成三张</o-button
+            >
             <o-button
               size="small"
               type="primary"
-              class="infer-button"
+              class="infer-button-mobile"
               :disabled="loading1"
               @click="startRatiocnate"
-              >开始推理</o-button
+              >生成一张</o-button
             >
           </div>
         </el-collapse-item>
@@ -832,7 +908,6 @@ function refreshTags() {
     }
     .example {
       flex: 1;
-      // padding: 24px 0 40px 0;
       margin-bottom: 24px;
       &-top {
         display: flex;
@@ -898,45 +973,27 @@ function refreshTags() {
       height: 254px;
       margin-bottom: 16px;
       &-img {
+        height: 85px;
+        height: 85px;
+        &:nth-child(2) {
+          margin: 0 8px;
+        }
+      }
+      &-img-single {
         height: 100%;
       }
-
-      .o-icon {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        color: #ccc;
-        font-size: 24px;
-        cursor: pointer;
-
-        @media screen and (max-width: 768px) {
-          display: none;
-        }
-        &:hover {
-          transform: translateY(-3px);
-          color: #0d8dff;
-        }
-      }
-      .loading-img {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 80px;
-      }
     }
-    .btn-box {
-      width: 100%;
-      display: flex;
-      justify-content: center;
+
+    .btn-box-mobile {
+      display: none;
+
       @media screen and (max-width: 768px) {
-        margin-bottom: 8px;
-        .o-button {
-          font-size: 14px;
+        display: block;
+        display: flex;
+        justify-content: center;
+        .infer-button-mobile {
+          margin-left: 8px;
         }
-      }
-      .infer-button {
-        margin-left: 16px;
       }
     }
 
@@ -951,6 +1008,42 @@ function refreshTags() {
 .mobile {
   padding: 16px 16px 0;
   display: none;
+  :deep(.el-image) {
+    .el-image__preview {
+      width: calc((100vw - 108px) / 3);
+      height: calc((100vw - 108px) / 3);
+    }
+  }
+  .image-modal {
+    display: block;
+    &:nth-child(2) {
+      margin: 0 8px;
+    }
+    :deep(.el-image-viewer__wrapper) {
+      margin-top: 48px;
+
+      .el-image-viewer__canvas {
+        img {
+          width: 76% !important;
+          height: 76vw;
+        }
+      }
+      .el-image-viewer__close {
+        display: none;
+      }
+      .el-image-viewer__prev {
+        left: 4px;
+        background: none;
+      }
+      .el-image-viewer__next {
+        background: none;
+        right: 4px;
+      }
+      .el-image-viewer__actions {
+        display: none;
+      }
+    }
+  }
   @media screen and (max-width: 768px) {
     display: block;
   }
@@ -1135,13 +1228,6 @@ function refreshTags() {
             transform: translateY(-3px);
             color: #0d8dff;
           }
-        }
-        .loading-img {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          width: 80px;
         }
       }
     }

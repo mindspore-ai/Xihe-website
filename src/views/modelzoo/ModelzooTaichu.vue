@@ -8,12 +8,6 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 
-// const screenWidth = ref(
-//   window.innerWidth ||
-//     document.documentElement.clientWidth ||
-//     document.body.clientWidth
-// );
-
 const router = useRouter();
 const route = useRoute();
 

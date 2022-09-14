@@ -12,28 +12,50 @@ export default [
     path: '/modelzoo/taichu',
     name: 'taichu',
     component: () => {
-      return import('@/views/modelzoo/ModelzooTaichu.vue');
+      return import('@/views/modelzoo/taichu/ModelzooTaichu.vue');
     },
 
     children: [
       {
         path: '',
+        name: 'taichuVision',
+        component: () => {
+          return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
+        },
+      },
+
+      {
+        path: 'experience',
         name: 'taichuExperience',
         component: () => {
-          return import('@/views/modelzoo/ModelzooTaichuExperience.vue');
+          return import('@/views/modelzoo/taichu/ModelzooTaichuExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'taichuIntroduction',
+        component: () => {
+          return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
+        },
+      },
+      {
+        path: 'text',
+        name: 'textToImage',
+        component: () => {
+          return import('@/views/modelzoo/taichu/ModelzooTextToImage.vue');
+        },
+      },
+      {
+        path: 'image',
+        name: 'imageCaption',
+        component: () => {
+          return import('@/views/modelzoo/taichu/ModelzooImageCaption.vue');
         },
       },
       {
         path: 'test',
         name: 'taichuTest',
         redirect: '/modelzoo/taichu',
-      },
-      {
-        path: 'introduce',
-        name: 'taichuIntroduction',
-        component: () => {
-          return import('@/views/modelzoo/ModelzooTaichuIntro.vue');
-        },
       },
     ],
   },

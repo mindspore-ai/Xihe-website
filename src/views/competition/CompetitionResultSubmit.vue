@@ -49,10 +49,10 @@ if (day < 10) day = '0' + day;
 const beforeAvatarUpload = (rawFile) => {
   if (
     detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
-    rawFile.type !==
-      ('application/x-zip-compressed' ||
-        'application/x-zip-compressed' ||
-        'application/zip')
+    !(
+      rawFile.type === 'application/x-zip-compressed' ||
+      rawFile.type === 'application/zip'
+    )
   ) {
     ElMessage.error('请上传.zip文件');
     return false;
@@ -228,6 +228,7 @@ async function getIndividual(id) {
     //艺术家画作风格迁移查分数
     if (
       detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+      tableData.value[0] &&
       tableData.value[0].score === null
     ) {
       getScore(fileName, teamId.value).then((qwq) => {

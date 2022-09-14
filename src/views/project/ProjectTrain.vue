@@ -94,30 +94,36 @@ function getTrainList() {
 }
 getTrainList();
 //跳转到选择文件创建训练实例页
+// function goSelectFile() {
+//   if (trainListData.value.length === 5) {
+//     describe.value = i18n.describe2;
+//     showTip.value = true;
+//     // 判断每一项的status是否为Running,如果有，则不能创建训练实例
+//   } else if (trainListData.value.some((item) => item.status === 'Running')) {
+//     describe.value = i18n.describe1;
+//     showTip.value = true;
+//   } else {
+//     // 点击在新页签打开
+//     let routerData = router.resolve({
+//       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+//       query: {
+//         id: detailData.value.id,
+//       },
+//     });
+//     window.open(routerData.href, '_blank');
+//     // router.push({
+//     //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+//     //   query: {
+//     //     id: detailData.value.id,
+//     //   },
+//     // });
+//   }
+// }
 function goSelectFile() {
-  if (trainListData.value.length === 5) {
-    describe.value = i18n.describe2;
-    showTip.value = true;
-    // 判断每一项的status是否为Running,如果有，则不能创建训练实例
-  } else if (trainListData.value.some((item) => item.status === 'Running')) {
-    describe.value = i18n.describe1;
-    showTip.value = true;
-  } else {
-    // 点击在新页签打开
-    let routerData = router.resolve({
-      path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-      query: {
-        id: detailData.value.id,
-      },
-    });
-    window.open(routerData.href, '_blank');
-    // router.push({
-    //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-    //   query: {
-    //     id: detailData.value.id,
-    //   },
-    // });
-  }
+  ElMessage({
+    type: 'warning',
+    message: '服务升级中',
+  });
 }
 
 // 点击新增数据集

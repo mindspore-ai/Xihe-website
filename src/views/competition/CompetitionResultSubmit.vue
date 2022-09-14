@@ -232,10 +232,12 @@ async function getIndividual(id) {
       tableData.value[0].score === null
     ) {
       getScore(fileName, teamId.value).then((qwq) => {
-        // console.log(qwq);
-        if (qwq.data) {
+        if (qwq.data || qwq.data === 0) {
+          // console.log(qwq.data);
           tableData.value[0].status_info = qwq.msg;
-          tableData.value[0].score = qwq.data.toFixed(3);
+          if (qwq.data) {
+            tableData.value[0].score = qwq.data.toFixed(3);
+          }
         }
       });
     }
@@ -367,9 +369,9 @@ function handelCancel() {
               >提交的最新结果（显示最近3条）
             </template>
           </el-table-column>
-          <el-table-column prop="create_time" label="提交时间" width="134" />
-          <el-table-column prop="status_info" label="状态" width="320" />
-          <el-table-column prop="score" label="我的分数" width="104" />
+          <el-table-column prop="create_time" label="提交时间" width="125" />
+          <el-table-column prop="status_info" label="状态" width="295" />
+          <el-table-column prop="score" label="我的分数" width="105" />
         </el-table>
       </div>
     </div>

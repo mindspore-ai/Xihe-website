@@ -413,6 +413,7 @@ function handelCancel() {
 <style lang="scss" scoped>
 .submit-page {
   max-width: 1472px;
+  width: 100%;
   padding: 36px 40px 40px;
   min-height: 319px;
   display: flex;
@@ -420,8 +421,9 @@ function handelCancel() {
   .left {
     padding-top: 24px;
     padding-bottom: 24px;
+    max-width: 916px;
     width: 100%;
-    padding-left: 56px;
+    padding-left: 40px;
     .header {
       display: flex;
       justify-content: space-between;
@@ -477,6 +479,8 @@ function handelCancel() {
     padding-top: 24px;
     padding-right: 56px;
     border-right: 1px solid #d8d8d8;
+    max-width: 456px;
+    width: 100%;
     .header {
       font-size: 24px;
     }
@@ -487,9 +491,13 @@ function handelCancel() {
       color: #555555;
       margin: 8px 0 24px;
     }
-    :deep(.project-item) {
-      width: 400px;
+    .el-input {
+      width: 100%;
     }
+    // :deep(.project-item) {
+    //   max-width: 400px;
+    //   width: 100%;
+    // }
     .submit {
       margin-top: 16px;
       display: flex;
@@ -498,7 +506,7 @@ function handelCancel() {
     .empty {
       color: #999999;
       font-size: 14px;
-      width: 400px;
+      max-width: 400px;
       text-align: center;
       margin: 100px 0;
       .o-icon {

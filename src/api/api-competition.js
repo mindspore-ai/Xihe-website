@@ -81,7 +81,7 @@ export function createTeam(params) {
  * 修改团队信息(点击创建团队，修改团队名)
  * @returns
  */
-export function revampTeam(params, id) {
+export function changeTeam(params, id) {
   const url = `/api/competitions/groups/${id}`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;

@@ -259,7 +259,7 @@ export function projectFork(params, projectId) {
 export function getTrainLog(params) {
   const { projectId, trainId } = params;
   const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
-  console.log(getHeaderConfig());
+  // console.log(getHeaderConfig());
   return request
     .get(url, getHeaderConfig(), params)
     .then((res) => {

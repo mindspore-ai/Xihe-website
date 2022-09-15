@@ -80,29 +80,29 @@ function getTrainList() {
 getTrainList();
 
 //跳转到选择文件创建训练实例页
-// function goSelectFile() {
-//   if (trainData.value.length === 5) {
-//     description.value = i18n.description2;
-//     tips.value = true;
-//     // 判断每一项的status是否为Running,如果有，则不能创建训练实例
-//   } else if (trainData.value.some((item) => item.status === 'Running')) {
-//     description.value = i18n.description1;
-//     tips.value = true;
-//   } else {
-//     router.push({
-//       path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-//       query: {
-//         id: detailData.value.id,
-//       },
-//     });
-//   }
-// }
 function goSelectFile() {
+  if (trainData.value.length === 5) {
+    description.value = i18n.description2;
+    tips.value = true;
+    // 判断每一项的status是否为Running,如果有，则不能创建训练实例
+  } else if (trainData.value.some((item) => item.status === 'Running')) {
+    description.value = i18n.description1;
+    tips.value = true;
+  } else {
+    router.push({
+      path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+      query: {
+        id: detailData.value.id,
+      },
+    });
+  }
+}
+/* function goSelectFile() {
   ElMessage({
     type: 'warning',
     message: '服务升级中',
   });
-}
+} */
 
 function toggleDelDlg(flag) {
   if (flag === undefined) {

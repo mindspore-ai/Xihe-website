@@ -4,7 +4,7 @@ import { ref, reactive, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
-import { revampTeam } from '@/api/api-competition';
+import { changeTeam } from '@/api/api-competition';
 import { joinTeam } from '@/api/api-competition';
 import { getTeamInfoByName } from '@/api/api-competition';
 import { getTeamInfoById } from '@/api/api-competition';
@@ -160,7 +160,7 @@ function fountTeam(formEl) {
         is_individual: false,
       };
       // 修改团队
-      revampTeam(params, teamId.value).then((res) => {
+      changeTeam(params, teamId.value).then((res) => {
         if (res.status === 200) {
           teamData.value = res.data;
           teamMemberData.value = res.data.members_order_list;
@@ -305,7 +305,7 @@ function confirmEdit(formEl) {
       let params = {
         name: form3.teamName,
       };
-      revampTeam(params, teamId.value).then((res) => {
+      changeTeam(params, teamId.value).then((res) => {
         if (res.status === 200) {
           teamData.value = res.data;
           showEdit.value = false;

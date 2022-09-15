@@ -78,18 +78,18 @@ const optionData = reactive({
         name: 'GPU:1*NVIDIA-V100(32GB)|CPU:8核 64GB 3200 GB',
         content: 'modelarts.p3.large.public',
       },
-      {
+      /* {
         value: 'A12',
         name: 'GPU:8*NVIDIA-V100(32GB)|CPU:72核 512GB 3200 GB',
         content: 'modelarts.p3.8xlarge.public',
-      },
+      }, */
     ],
     B1: [
-      {
+      /* {
         value: 'B11',
         name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
         content: 'modelarts.kat1.8xlarge.public',
-      },
+      }, */
       {
         value: 'B12',
         name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
@@ -97,11 +97,11 @@ const optionData = reactive({
       },
     ],
     B2: [
-      {
+      /* {
         value: 'B21',
         name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
         content: 'modelarts.kat1.8xlarge.public',
-      },
+      }, */
       {
         value: 'B22',
         name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
@@ -116,6 +116,7 @@ function change1(val) {
     let a = optionData.com1.find((item) => {
       return item.value === val;
     });
+    // console.log('a: ', a);
     form.frameworks.framework_type = a.content;
     selectData.com2 = optionData.com2[val][0].value; //根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
     change2(); //控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
@@ -127,19 +128,31 @@ function change1(val) {
 
 function change2() {
   let val = selectData.com2;
+  // console.log('val: ', val);
   if (val) {
     let b = optionData.com2[selectData.com1].find((item) => {
       return item.value === val;
     });
     form.frameworks.framework_version = b.content;
-
     selectData.com3 = optionData.com3[val][0].value;
-    let c = optionData.com3[selectData.com2].find((item) => {
+    change3();
+    /* let c = optionData.com3[selectData.com2].find((item) => {
       return item.value === selectData.com3;
     });
-    form.train_instance_type = c.content;
+    form.train_instance_type = c.content; */
   } else {
     selectData.com3 = '';
+    change3();
+  }
+}
+function change3() {
+  let val = selectData.com3;
+  if (val) {
+    let c = optionData.com3[selectData.com2].find((item) => {
+      return item.value === val;
+    });
+    // console.log('c: ', c);
+    form.train_instance_type = c.content;
   }
 }
 
@@ -236,6 +249,7 @@ async function confirmCreating(formEl) {
       };
       // params.inputs = inputs;
       // params.outputs = outputs;
+      // console.log('表单数据: ', params);
       createTrainProject(params, route.query.id).then((res) => {
         if (res.status === 200) {
           ElMessage({
@@ -603,7 +617,11 @@ const rules = reactive({
                   <icon-necessary></icon-necessary><span>计算资源</span>
                 </div>
                 <el-form-item prop="train_instance_type">
-                  <el-select v-model="selectData.com3" placeholder="请选择">
+                  <el-select
+                    v-model="selectData.com3"
+                    placeholder="请选择"
+                    @change="change3"
+                  >
                     <el-option
                       v-for="x in optionData.com3[selectData.com2]"
                       :key="x.value"

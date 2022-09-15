@@ -133,7 +133,7 @@ const debounceSearch = debounce(getProject, 500, {
 });
 
 function projectTypeClick(val) {
-  console.log(val);
+  // console.log(val);
   if (val.isActive) {
     val.isActive = !val.isActive;
     delete queryData['display_order'];

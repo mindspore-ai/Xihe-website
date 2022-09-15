@@ -126,7 +126,7 @@ watch(
     let box = document.querySelector('.competition-desc-info');
     if (newVal) {
       tab.classList.add('fixed');
-      box.style.paddingTop = '32px';
+      box.style.paddingTop = '30px';
     } else {
       if (tab && Array.from(tab.classList).indexOf('fixed')) {
         tab.classList.remove('fixed');
@@ -178,7 +178,7 @@ watch(
     position: fixed;
     transition: all 1s linear;
     z-index: 100;
-    top: 302px;
+    top: 208px;
     display: flex;
     justify-content: center;
     width: 100%;

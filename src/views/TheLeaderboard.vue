@@ -407,6 +407,9 @@ function goUserPage(vel) {
           position: absolute;
           top: 292px;
           left: 22%;
+          @media screen and (max-width: 1366px) {
+            left: 18%;
+          }
           font-size: 16px;
           cursor: pointer;
           img {
@@ -422,6 +425,9 @@ function goUserPage(vel) {
           position: absolute;
           top: 375px;
           left: 65%;
+          @media screen and (max-width: 1366px) {
+            left: 69%;
+          }
           font-size: 16px;
           cursor: pointer;
           img {

@@ -76,6 +76,7 @@ getRank(route.path.split('/')[2]).then((res) => {
   }
   .rank-body {
     margin: 0 80px;
+    padding-bottom: 40px;
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;
     }

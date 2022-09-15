@@ -65,7 +65,7 @@ watch(
 onUpdated(() => {
   let card = document.querySelector('.competition-card');
   let box = document.querySelector('.competition-info');
-  let top1 = card.offsetTop - 66;
+  let top1 = card.offsetTop + 30;
   // let top2 = parent.offsetTop;
   window.addEventListener('scroll', function () {
     if (
@@ -274,10 +274,10 @@ getDetailData();
     overflow: hidden;
     .bread-wrap {
       height: 94px;
-      position: fixed;
-      z-index: 10;
-      min-width: 100%;
-      max-width: 100%;
+      // position: fixed;
+      // z-index: 10;
+      // min-width: 100%;
+      // max-width: 100%;
       padding-top: 40px;
       padding-bottom: 40px;
       background-color: #f5f6f8;
@@ -310,7 +310,7 @@ getDetailData();
       }
     }
     .competition-content {
-      margin-top: 94px;
+      // margin-top: 94px;
       scroll-behavior: smooth;
       /*  .fixed {
         position: fixed;
@@ -476,7 +476,7 @@ getDetailData();
         scroll-behavior: smooth;
         z-index: 10;
         width: 100%;
-        top: 174px;
+        top: 80px;
         overflow: hidden;
         max-width: 1440px;
         height: 128px;

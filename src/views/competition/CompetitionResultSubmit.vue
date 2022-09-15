@@ -16,7 +16,7 @@ import { useUserInfoStore, useCompetitionData } from '@/stores';
 import {
   getTeamInfoById,
   addProject,
-  revampTeam,
+  changeTeam,
   handleSubmit,
   handleScoring,
   getScore,
@@ -61,6 +61,9 @@ const beforeAvatarUpload = (rawFile) => {
     rawFile.type !== 'text/plain'
   ) {
     ElMessage.error('请上传.txt文件');
+    return false;
+  } else if (!/^\S*$/.test(rawFile.name)) {
+    ElMessage.error('文件名不能包含空格');
     return false;
   } else {
     let fileName =
@@ -172,7 +175,7 @@ function confirmAdd() {
       return;
     } else {
       let relate_project = res.results.data[0].id;
-      revampTeam({ relate_project }, teamId.value).then((res) => {
+      changeTeam({ relate_project }, teamId.value).then((res) => {
         if (res.status === 200) {
           detailData.value = res.data;
           // TODO:更新时间

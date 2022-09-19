@@ -1,15 +1,18 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
+// import { useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
 
-function getUserInfo() {
-  return useUserInfoStore();
-}
+// function getUserInfo() {
+//   return useUserInfoStore();
+// }
 function getHeaderConfig() {
-  let headersConfig = {
-    headers: {
-      Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
-    },
-  };
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
 }
 /**
@@ -45,7 +48,8 @@ export function getUserDig(reopt) {
  * @returns
  */
 export function setNewProject(params) {
-  const url = `/api/projects/`;
+  const url = `/server/project`;
+  console.log(params);
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -240,10 +244,11 @@ export function createTrainProject(params, projectId) {
  * Fork
  * @returns
  */
-export function projectFork(params, projectId) {
-  const url = `/api/projects/fork/${projectId}`;
+export function projectFork(owner, projectId) {
+  const url = `/server/project/${owner}/${projectId}`;
+  console.log(url);
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, null, getHeaderConfig())
     .then((res) => {
       return res;
     })

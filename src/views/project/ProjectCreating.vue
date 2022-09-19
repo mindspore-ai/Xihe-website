@@ -32,14 +32,14 @@ const i18n = {
 
 // 表单信息
 const proList = reactive({
-  nickName: null,
-  photo: 1,
+  owner: null,
+  cover_id: '1',
   name: null,
-  description: null,
-  licenses: null,
-  train_sdk: null,
-  infer_sdk: null,
-  is_private: null,
+  desc: null,
+  protocol: null,
+  training: null,
+  type: null,
+  repo_type: null,
 });
 
 const ruleFormRef = ref(null);
@@ -68,7 +68,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  description: [
+  desc: [
     { required: true, message: '必填项', trigger: 'blur' },
     { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
   ],
@@ -78,10 +78,10 @@ const nameList = ref([]);
 const projectPhotos = ref([]);
 const trainSdk = ref([]);
 const inferSdk = ref([]);
-const licenses = ref([]);
+const protocol = ref([]);
 
 nameList.value.push(userInfo.userName);
-proList.nickName = nameList.value[0];
+proList.owner = nameList.value[0];
 
 const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
@@ -100,7 +100,7 @@ const submitClick = async () => {
 };
 
 function selectImgClick(item) {
-  proList.photo = item.id;
+  proList.cover_id = item.id.toString();
   projectPhotos.value.forEach((single) => {
     single.is_active = false;
   });
@@ -110,16 +110,16 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  if (newList.is_private === 'Public') {
-    newList.is_private = false;
-  } else {
-    newList.is_private = true;
-  }
-  licenses.value.forEach((item) => {
-    if (item.name === newList.licenses) {
-      newList.licenses = [item.id];
-    }
-  });
+  // if (newList.is_private === 'Public') {
+  //   newList.is_private = false;
+  // } else {
+  //   newList.is_private = true;
+  // }
+  // protocol.value.forEach((item) => {
+  //   if (item.name === newList.protocol) {
+  //     newList.protocol = [item.id];
+  //   }
+  // });
   setNewProject(newList).then((res) => {
     if (res.status === 200) {
       ElMessage({
@@ -155,14 +155,14 @@ getModelTags().then((res) => {
     item.is_active = false;
   });
   projectPhotos.value[0].is_active = true;
-  licenses.value = res.data.licenses;
+  protocol.value = res.data.licenses;
   trainSdk.value = res.data.train_sdk;
   inferSdk.value = res.data.infer_sdk;
 
-  proList.infer_sdk = inferSdk.value[0].id;
-  proList.train_sdk = trainSdk.value[0].id;
-  proList.licenses = licenses.value[0].name;
-  proList.is_private = 'Public';
+  proList.type = inferSdk.value[0].name;
+  proList.training = trainSdk.value[0].name;
+  proList.protocol = protocol.value[0].name;
+  proList.repo_type = 'public';
 });
 onMounted(() => {});
 </script>
@@ -198,7 +198,7 @@ onMounted(() => {});
           </div>
 
           <el-form-item :label="i18n.owner" prop="owner">
-            <el-select v-model="proList.nickName">
+            <el-select v-model="proList.owner">
               <el-option v-for="item in nameList" :key="item" :value="item">{{
                 item
               }}</el-option>
@@ -280,9 +280,9 @@ onMounted(() => {});
           <div class="warning">
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
-          <el-form-item :label="i18n.desc" prop="description">
+          <el-form-item :label="i18n.desc" prop="desc">
             <el-input
-              v-model="proList.description"
+              v-model="proList.desc"
               type="textarea"
               :placeholder="i18n.input_text"
               rows="5"
@@ -297,9 +297,9 @@ onMounted(() => {});
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
           <el-form-item :label="i18n.licenses">
-            <el-select v-model="proList.licenses">
+            <el-select v-model="proList.protocol">
               <el-option
-                v-for="item in licenses"
+                v-for="item in protocol"
                 :key="item.id"
                 :value="item.name"
                 :label="item.name"
@@ -313,12 +313,12 @@ onMounted(() => {});
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
           <el-form-item :label="i18n.infer_sdk">
-            <el-select v-model="proList.infer_sdk">
+            <el-select v-model="proList.type">
               <el-option
                 v-for="item in inferSdk"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.name"
               />
             </el-select>
           </el-form-item>
@@ -329,12 +329,12 @@ onMounted(() => {});
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
           <el-form-item :label="i18n.train_sdk">
-            <el-select v-model="proList.train_sdk">
+            <el-select v-model="proList.training">
               <el-option
                 v-for="item in trainSdk"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.name"
               />
             </el-select>
           </el-form-item>
@@ -346,12 +346,12 @@ onMounted(() => {});
           </div>
           <el-form-item class="view" :label="i18n.view">
             <div class="visual">
-              <el-radio-group v-model="proList.is_private">
-                <el-radio label="Public" />
+              <el-radio-group v-model="proList.repo_type">
+                <el-radio label="public" />
               </el-radio-group>
               <div class="visual-desc">所有人可见</div>
-              <el-radio-group v-model="proList.is_private">
-                <el-radio label="Pravate" />
+              <el-radio-group v-model="proList.repo_type">
+                <el-radio label="pravate" />
               </el-radio-group>
               <div class="visual-desc">仅自己可见</div>
             </div>

@@ -130,8 +130,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 // 训练选项
@@ -237,7 +237,7 @@ function getDetailData() {
         router.push('/404');
       }
     });
-  } catch (error) { }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -251,7 +251,8 @@ function handleTabClick(item) {
     return;
   }
   router.push(
-    `/projects/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/projects/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -489,8 +490,8 @@ function forkCreateClick() {
   ruleFormRef.value.validate(async (valid) => {
     if (valid) {
       forkShow.value = false;
-      loadingShow.value = true;
-      let projectId = detailData.value.id;
+      // loadingShow.value = true;
+      // let projectId = detailData.value.id;
       let params = {};
       params.name = forkForm.storeName;
       params.owner_id = userInfoStore.id;
@@ -499,8 +500,11 @@ function forkCreateClick() {
         params.owner_type = res.user_type_id;
       });
       forkShow.value = false;
-      loadingShow.value = true;
-      projectFork(params, projectId).then((res) => {
+      // loadingShow.value = true;
+      //换后台
+      const owner1 = 's9qfqri3zpc8j2x7';
+      const id1 = '632414db7187a3b38b417660';
+      projectFork(owner1, id1).then((res) => {
         if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(

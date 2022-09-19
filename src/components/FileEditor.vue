@@ -83,13 +83,14 @@ async function upLoadObs() {
   //   type: 'text/plain;charset=utf-8',
   //   lastModified: Date.now(),
   // });
+  console.log(fileData);
   await editorFileGitlab(
     {
       branch: 'main',
       author_email: userInfoStore.email,
       author_name: userInfoStore.userName,
       content: codeString.value,
-      commit_message: `edit ${fileData.name}`,
+      commit_message: description.value || `edit ${fileData.file_name}`,
     },
     path
   ).then(() => {

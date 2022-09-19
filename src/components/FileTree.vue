@@ -18,17 +18,15 @@ import IconRemove from '~icons/app/remove';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import {
-  downloadFile,
-  findFile,
-  createFolder,
-  deleteFolder,
-} from '@/api/api-obs';
+// import { findFile, createFolder, deleteFolder } from '@/api/api-obs';
 
 import {
   getGitlabTree,
   deleteFile,
   uploadFileGitlab,
+  getGitlabFileRaw,
+  getGitlabCommit,
+  getGitlabToken,
   getGitlabFileDetail,
   gitlabDownloadAll,
 } from '@/api/api-gitlab';
@@ -125,6 +123,9 @@ function getDetailData(path) {
     // gitlab
     getGitlabTree(path).then((res) => {
       filesList.value = res;
+    });
+    getGitlabCommit(2, path).then((res) => {
+      console.log(res);
     });
   } catch (error) {
     console.error(error);
@@ -235,6 +236,21 @@ function creatFolter(formEl) {
 function cancelCreate() {
   useFileData().setShowFolder(false);
   query.folderName = '';
+}
+
+function downloadFile(path) {
+  getGitlabFileRaw(path).then((res) => {
+    let blob = new Blob([res], { type: 'text/plain;charset=UTF-8' });
+    console.log(blob);
+    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let href = window.URL.createObjectURL(blob); // 创建下载的链接
+    downloadElement.href = href;
+    downloadElement.download = path; // 下载后文件名
+    document.body.appendChild(downloadElement);
+    downloadElement.click(); // 点击下载
+    document.body.removeChild(downloadElement); // 下载完成移除元素
+    window.URL.revokeObjectURL(href);
+  });
 }
 function deleteFolderClick(folderName, id) {
   let path = folderName;
@@ -379,12 +395,9 @@ watch(
             <td
               class="tree-table-item-download"
               width="10%"
-              @click="
-                !item.is_folder &&
-                  downloadFile(item.path, item.name, detailData.id)
-              "
+              @click="item.type === 'blob' && downloadFile(item.path)"
             >
-              <div v-if="item.size" class="inner-box">
+              <div class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span class="size">{{ changeByte(item.size) }}</span>
               </div>

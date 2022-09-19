@@ -4,11 +4,11 @@ import { computed } from 'vue';
 import OButton from '@/components/OButton.vue';
 import FileTree from './FileTree.vue';
 
-// import IconDownload from '~icons/app/download';
+import IconDownload from '~icons/app/download';
 import IconPlus from '~icons/app/plus';
+import { gitlabDownloadAll } from '@/api/api-gitlab';
 
 import { useFileData } from '@/stores';
-
 const router = useRouter();
 const route = useRoute();
 const detailData = computed(() => {
@@ -75,6 +75,12 @@ function pathClick(index) {
     },
   });
 }
+function downloadAll() {
+  gitlabDownloadAll();
+  // gitlabDownloadAll().then((res) => {
+  //   console.log(res);
+  // });
+}
 </script>
 <template>
   <div class="model-file">
@@ -100,12 +106,12 @@ function pathClick(index) {
         </div>
       </div>
       <div class="file-top-right">
-        <!-- <o-button class="download-all"
-          >{{ i18n.downloadAll }}
+        <o-button @click="downloadAll" class="download-all"
+          ><a>{{ i18n.downloadAll }}</a>
           <template #suffix>
             <o-icon><icon-download></icon-download></o-icon>
           </template>
-        </o-button> -->
+        </o-button>
         <el-dropdown v-if="detailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}

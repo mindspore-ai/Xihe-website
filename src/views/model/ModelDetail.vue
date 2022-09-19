@@ -18,6 +18,7 @@ import {
   modifyModel,
 } from '@/api/api-model';
 
+import { getModelById } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 
 const fileData = useFileData();
@@ -100,6 +101,11 @@ const renderNav = computed(() => {
         return !item.isPrivate;
       });
 });
+
+getModelById(route.params.user, route.params.name).then((res) => {
+  console.log(res);
+});
+
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
   fileData.$reset();

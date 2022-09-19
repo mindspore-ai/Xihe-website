@@ -135,6 +135,7 @@ getRank(route.path.split('/')[2]).then((res) => {
         }
         .score {
           color: #ff7f0d;
+          font-size: 24px;
         }
       }
       .el-table__append-wrapper {

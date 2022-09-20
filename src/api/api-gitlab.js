@@ -49,38 +49,43 @@ export function creatModelRepo(params) {
     return res.data;
   });
 }
-
-export function getModelById(user, repoName) {
-  // const url = `/server/model/${user}/${repoName}`;
-  const url = '/server/model/888/6315f1007187a3b38b417638';
+// 获取仓库详情
+export function getRepoDetailByName(params) {
+  const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 //上传文件
 export async function uploadFileGitlab(params, path) {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
+  const url = `/repo/projects/${
+    params.id
+  }/repository/files/${encodeURIComponent(path)}`;
   return request.post(url, params, await getGitlabConfig()).then((res) => {
     return res.data;
   });
 }
 //更新上传文件
 export async function editorFileGitlab(params, path) {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
+  const url = `/repo/projects/${
+    params.id
+  }/repository/files/${encodeURIComponent(path)}`;
   return request.put(url, params, await getGitlabConfig()).then((res) => {
     return res.data;
   });
 }
 // 获取 gitlab 树
 export async function getGitlabTree(path, id) {
-  const url = `/repo/projects/2/repository/tree?path=${path}`;
+  const url = `/repo/projects/${id}/repository/tree?path=${path}`;
   return request.get(url, await getGitlabConfig()).then((res) => {
     return res.data;
   });
 }
 // 删除文件
 export async function deleteFile(path, id) {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(path)}`;
+  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
+    path
+  )}`;
   const params = {
     branch: 'main',
     commit_message: 'delete file',
@@ -92,9 +97,24 @@ export async function deleteFile(path, id) {
       return res.data;
     });
 }
+// 删除文件夹
+export async function deleteFolder(path, id) {
+  const url = `/projects/${id}/repository/commits`;
+  const params = {
+    branch: 'main',
+    commit_message: 'delete file',
+    actions: [{}],
+  };
+
+  return request
+    .delete(url, { params, ...(await getGitlabConfig()) })
+    .then((res) => {
+      return res.data;
+    });
+}
 // gitlab 文件详情
 export async function getGitlabFileDetail(path, id) {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(
+  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
     path
   )}?ref=main`;
   return request.get(url, await getGitlabConfig()).then((res) => {
@@ -103,7 +123,7 @@ export async function getGitlabFileDetail(path, id) {
 }
 // gitlab 原文件下载
 export async function getGitlabFileRaw(path, id) {
-  const url = `/repo/projects/2/repository/files/${encodeURIComponent(
+  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
     path
   )}/raw?ref=main`;
 
@@ -113,12 +133,12 @@ export async function getGitlabFileRaw(path, id) {
 }
 // 下载全部
 export async function gitlabDownloadAll(id) {
-  const url = `/repo/projects/2/repository/archive.zip`;
+  const url = `/repo/projects/${id}/repository/archive.zip`;
   return request.get(url, await getGitlabConfig()).then((res) => {
     return res.data;
   });
 }
-export function getGitlabCommit(id, path) {
+export function getGitlabCommit(path, id) {
   // const url = `/graphql/api/graphql`;
   // const params = {
   //   operationName: 'getPaginatedTree',
@@ -132,15 +152,41 @@ export function getGitlabCommit(id, path) {
   //     ref: 'main',
   //   },
   // };
-  const url = `/repo/projects/${id}/repository/commits?path=${path}`;
+  const url = `/repo/projects/${id}/repository/commits?path=${path}&trailers=true`;
 
   const headers = {
     Authorization: ' Bearer hGq8ze9XF6VDsis2t4SY',
   };
-  const params = {
-    path: path,
-  };
   return request.get(url, { headers }).then((res) => {
     return res.data;
+  });
+}
+// 递归查询所有文件
+export async function findAllFileByPath(fullPath, path) {
+  const url = `/graphql/api/graphql`;
+  const params = {
+    query:
+      'query findAllFileByPath($fullPath:ID!,$path:String)   { project(fullPath: $fullPath) { repository { tree(ref: "main", recursive: true, path:$path ,pre_page:1000){ blobs{ nodes { name type path } } } } } } ',
+    variables: {
+      path,
+      fullPath,
+    },
+  };
+  return request.post(url, params, await getGitlabConfig()).then((res) => {
+    return res.data;
+  });
+}
+
+export function downloadFile(path, id) {
+  getGitlabFileRaw(path, id).then((res) => {
+    let blob = new Blob([res], { type: 'text/plain;charset=UTF-8' });
+    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let href = window.URL.createObjectURL(blob); // 创建下载的链接
+    downloadElement.href = href;
+    downloadElement.download = path; // 下载后文件名
+    document.body.appendChild(downloadElement);
+    downloadElement.click(); // 点击下载
+    document.body.removeChild(downloadElement); // 下载完成移除元素
+    window.URL.revokeObjectURL(href);
   });
 }

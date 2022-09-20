@@ -18,7 +18,7 @@ import {
   modifyModel,
 } from '@/api/api-model';
 
-import { getModelById } from '@/api/api-gitlab';
+import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 
 const fileData = useFileData();
@@ -102,10 +102,6 @@ const renderNav = computed(() => {
       });
 });
 
-getModelById(route.params.user, route.params.name).then((res) => {
-  console.log(res);
-});
-
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -114,57 +110,54 @@ onBeforeRouteLeave(() => {
 let modelTags = ref([]);
 function getDetailData() {
   try {
-    getModelData({
-      name: route.params.name,
-      owner_name: route.params.user,
+    getRepoDetailByName({
+      user: route.params.user,
+      repoName: route.params.name,
+      modular: 'model',
     }).then((res) => {
-      if (res.results.status === 200 && res.results.data.length) {
-        let storeData = res.results.data[0];
-        // 判断仓库是否属于自己
-        storeData['is_owner'] =
-          userInfoStore.userName === storeData.owner_name.name;
-        // 文件列表是否为空
-        if (detailData.value) {
-          storeData['is_empty'] = detailData.value.is_empty;
-        }
-        fileData.setFileData(storeData);
-        digCount.value = detailData.value.digg_count;
-        const {
-          licenses_list,
-          libraries_list,
-          task_list,
-          tags_list,
-          device_target_list,
-          model_format_list,
-        } = detailData.value;
-        isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-        modelTags.value = [
-          ...licenses_list,
-          ...task_list,
-          ...tags_list,
-          ...libraries_list,
-          ...device_target_list,
-          ...model_format_list,
-        ];
-        modelTags.value = [
-          ...licenses_list,
-          ...device_target_list,
-          ...model_format_list,
-          ...task_list,
-          ...tags_list,
-          ...libraries_list,
-        ];
-        modelTags.value = modelTags.value.map((item) => {
-          return item;
-        });
-        headTags.value = [...modelTags.value];
-        getTagList();
-      } else {
-        router.push('/notfound');
+      let storeData = res.data;
+      // 判断仓库是否属于自己
+      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+      // 文件列表是否为空
+      if (detailData.value) {
+        storeData['is_empty'] = detailData.value.is_empty;
       }
+      fileData.setFileData(storeData);
+      // digCount.value = detailData.value.digg_count;
+      // const {
+      //   licenses_list,
+      //   libraries_list,
+      //   task_list,
+      //   tags_list,
+      //   device_target_list,
+      //   model_format_list,
+      // } = detailData.value;
+      // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+
+      // modelTags.value = [
+      //   ...licenses_list,
+      //   ...task_list,
+      //   ...tags_list,
+      //   ...libraries_list,
+      //   ...device_target_list,
+      //   ...model_format_list,
+      // ];
+      // modelTags.value = [
+      //   ...licenses_list,
+      //   ...device_target_list,
+      //   ...model_format_list,
+      //   ...task_list,
+      //   ...tags_list,
+      //   ...libraries_list,
+      // ];
+      // modelTags.value = modelTags.value.map((item) => {
+      //   return item;
+      // });
+      // headTags.value = [...modelTags.value];
+      // getTagList();
     });
   } catch (error) {
+    router.push('/notfound');
     console.error(error);
   }
 }
@@ -424,15 +417,16 @@ watch(
     <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
-          <img :src="detailData.owner_name.avatar_url" alt="" />
+          <!-- //TODO: -->
+          <img :src="userInfoStore.avatar" alt="" />
         </div>
         <router-link :to="{ path: `/${route.params.user}` }">
-          {{ detailData.owner_name.name }} </router-link
+          {{ detailData.owner }} </router-link
         >/
         <span>{{ detailData.name }}</span>
         <div
           class="card-head-copy"
-          @click="copyText(`${detailData.owner_name.name}/${detailData.name}`)"
+          @click="copyText(`${detailData.owner}/${detailData.name}`)"
         >
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>

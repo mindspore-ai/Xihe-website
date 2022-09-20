@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OInput from '@/components/OInput.vue';
@@ -20,17 +20,13 @@ import {
 import { useUserInfoStore, useFileData } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
-
-import {
-  findFile,
-  downloadFileObs,
-  getDownLoadToken,
-  handleUpload,
-} from '@/api/api-obs';
-
+const repoDetailData = computed(() => {
+  return useFileData().fileStoreData;
+});
 const isShowEditor = ref(false);
 const router = useRouter();
 const route = useRoute();
+const suffix = ref('');
 let routerParams = route.params;
 let path = routerParams.contents.join('/');
 
@@ -57,8 +53,10 @@ const description = ref('');
 
 const codeString = ref('');
 function previewFile(path, id) {
-  getGitlabFileRaw(path).then((res) => {
-    codeString.value = res;
+  getGitlabFileRaw(path, id).then((res) => {
+    suffix.value === 'json'
+      ? (codeString.value = JSON.stringify(res, null, '\t'))
+      : (codeString.value = res);
     isShowEditor.value = true;
   });
   // getDownLoadToken(params).then((res) => {
@@ -73,8 +71,8 @@ function previewFile(path, id) {
   //   });
   // });
 }
-// SDK 上传
-async function upLoadObs() {
+
+async function uploadGitlab() {
   // 构造文件对象
   // let blob = new Blob([codeString.value], {
   //   type: 'text/plain;charset=utf-8',
@@ -83,13 +81,13 @@ async function upLoadObs() {
   //   type: 'text/plain;charset=utf-8',
   //   lastModified: Date.now(),
   // });
-  console.log(fileData);
   await editorFileGitlab(
     {
       branch: 'main',
       author_email: userInfoStore.email,
       author_name: userInfoStore.userName,
       content: codeString.value,
+      id: repoDetailData.value.repo_id,
       commit_message: description.value || `edit ${fileData.file_name}`,
     },
     path
@@ -124,16 +122,15 @@ async function upLoadObs() {
 //     downLoad(fileData.path);
 //   }
 // });
-getGitlabFileDetail(path).then((res) => {
+getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
   fileData = res;
+  suffix.value = fileData.file_name.match(/[^.]+$/)[0];
   description.value = `edit ${fileData.file_name}`;
   if (fileData.size < 524288) {
-    previewFile(fileData.file_path);
+    previewFile(fileData.file_path, repoDetailData.value.repo_id);
   }
 });
 function pathClick(index) {
-  // !!! 此处填写各自模块的组件名称！！！
-  // 路径最后一项为文件，跳转至文件详情，其余项跳转至文件树页面
   let routerName = '';
   route.params.contents.length === index
     ? (routerName = `${prop.moduleName}FileBlob`)
@@ -195,7 +192,7 @@ function pathClick(index) {
           @click="pathClick(route.params.contents.length)"
           >{{ i18n.modelUpload.cancel }}</o-button
         >
-        <o-button type="primary" @click="upLoadObs">{{
+        <o-button type="primary" @click="uploadGitlab">{{
           i18n.modelUpload.confirm
         }}</o-button>
       </div>

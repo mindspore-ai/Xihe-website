@@ -61,14 +61,12 @@ function create(formEl) {
       // let newList = JSON.parse(JSON.stringify(query));
       // newList.protocol = [newList.protocol];
       createModelStore(query).then((res) => {
-        if (res.status === 200) {
+        if (res.data) {
           ElMessage({
             type: 'success',
             message: '创建成功',
           });
-          router.push(
-            `/models/${res.data.owner_name.name}/${res.data.name}/tree`
-          );
+          router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
         } else {
           ElMessage({
             type: 'error',

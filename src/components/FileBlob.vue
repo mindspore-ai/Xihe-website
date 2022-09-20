@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -21,10 +21,14 @@ import {
   getDelToken,
   delFileObs,
   findFile,
-  downloadFile,
 } from '@/api/api-obs';
 
-import { getGitlabFileDetail, getGitlabFileRaw } from '@/api/api-gitlab';
+import {
+  getGitlabFileDetail,
+  getGitlabFileRaw,
+  downloadFile,
+  deleteFile,
+} from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
 import { useFileData } from '@/stores';
 
@@ -35,7 +39,10 @@ const prop = defineProps({
   },
 });
 
-let detailData = reactive(useFileData().fileStoreData);
+// let detailData = reactive(useFileData().fileStoreData);
+const repoDetailData = computed(() => {
+  return useFileData().fileStoreData;
+});
 const fileData = ref();
 const mkit = handleMarkdown();
 const codeString = ref('');
@@ -67,21 +74,8 @@ const inputDom = ref(null);
 const rawBlob = ref('');
 const showDel = ref(false);
 
-let reopt = {
-  method: 'get',
-  url: null,
-  withCredentials: false,
-  headers: null,
-  validateStatus: function (status) {
-    return status >= 200;
-  },
-  maxRedirects: 0,
-  responseType: 'blob',
-  data: null,
-};
-
-function previewFile(file_path) {
-  getGitlabFileRaw(file_path).then((res) => {
+function previewFile(path, id) {
+  getGitlabFileRaw(path, id).then((res) => {
     if (
       suffix.value === 'md' ||
       suffix.value === 'json' ||
@@ -92,9 +86,16 @@ function previewFile(file_path) {
     ) {
       rawData.value = res;
       // md文件不需加```
-      suffix.value === 'md'
-        ? (codeString.value = res)
-        : (codeString.value = '```' + suffix.value + ' \n' + res + '\n```');
+      //json数据需特殊处理
+      if (suffix.value === 'md') {
+        codeString.value = res;
+      } else if (suffix.value === 'json') {
+        rawData.value = JSON.stringify(res, null, '\t');
+        codeString.value = '```json \n' + rawData.value + '\n```';
+      } else {
+        codeString.value =
+          '```' + suffix.value + ' \n' + rawData.value + '\n```';
+      }
     } else {
       showBlob.value = false;
     }
@@ -129,28 +130,17 @@ function previewFile(file_path) {
   // });
 }
 
-async function headleDelFile(objkey) {
-  try {
-    await getDelToken({ objkey }).then((res) => {
-      reopt.method = 'DELETE';
-      reopt.url = res.data.signedUrl;
-      reopt.responseType = 'text';
-    });
-    await delFileObs(reopt).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      });
-      // 删除完成跳转至被删除文件目录下
-      pathClick(route.params.contents.length - 1);
-    });
-  } catch (error) {
+async function headleDelFile(path, id) {
+  deleteFile(path, id).then(() => {
     ElMessage({
-      type: 'error',
-      message: error,
+      type: 'success',
+      message: '删除成功',
     });
-  }
+    showDel.value = false;
+    pathClick(route.params.contents.length - 1);
+  });
 }
+
 function goEditor() {
   router.push({
     name: `${prop.moduleName}FileEditor`,
@@ -161,14 +151,15 @@ function goEditor() {
     },
   });
 }
-getGitlabFileDetail(path).then((res) => {
+
+getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
   fileData.value = res;
   fileData.value.file_name.match(/[^.]+$/)
     ? (suffix.value = fileData.value.file_name.match(/[^.]+$/)[0])
     : (suffix.value = 'py');
   if (fileData.value.size < 524288) {
     showBlob.value = true;
-    previewFile(fileData.value.file_path);
+    previewFile(fileData.value.file_path, repoDetailData.value.repo_id);
   }
 });
 
@@ -202,9 +193,6 @@ function toggleDelDlg(flag) {
   }
 }
 function pathClick(index) {
-  // let routeParams = route.params.contents;
-  // !!! 此处填写各自模块的组件！！！
-  // 路径最后一项为文件，跳转至文件详情
   if (route.params.contents.length === index) {
     return false;
   } else {
@@ -267,7 +255,7 @@ watch(
             ><span class="text">{{ i18n.copy }}</span>
           </div>
           <div
-            v-if="detailData.is_owner && showBlob"
+            v-if="repoDetailData.is_owner && showBlob"
             class="file-operation-item"
             @click="goEditor"
           >
@@ -275,7 +263,7 @@ watch(
             ><span class="text">{{ i18n.edit }}</span>
           </div>
           <div
-            v-if="detailData.is_owner"
+            v-if="repoDetailData.is_owner"
             class="file-operation-item"
             @click="toggleDelDlg(true)"
           >
@@ -284,7 +272,7 @@ watch(
           </div>
           <div
             class="file-operation-item"
-            @click="downloadFile(fileData.path, fileData.name, detailData.id)"
+            @click="downloadFile(fileData.file_path, repoDetailData.repo_id)"
           >
             <o-icon><icon-download></icon-download></o-icon
             ><span class="text">{{ i18n.download }}</span>
@@ -300,7 +288,7 @@ watch(
       <div v-else class="big-file">
         文件太大或格式不支持展示但你仍然可以<span
           class="download"
-          @click="downloadFile(fileData.path, fileData.name, detailData.id)"
+          @click="downloadFile(fileData.file_path, repoDetailData.repo_id)"
           >下载 </span
         ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
       </div>
@@ -325,7 +313,7 @@ watch(
           width: '640px',
         }"
       >
-        {{ i18n.delete.description }} {{ fileData.name }} 吗？
+        {{ i18n.delete.description }} {{ fileData.file_name }} 吗？
       </div>
       <template #foot>
         <div
@@ -341,9 +329,11 @@ watch(
             @click="toggleDelDlg(false)"
             >{{ i18n.delete.cancel }}</o-button
           >
-          <o-button type="primary" @click="headleDelFile(fileData.path)">{{
-            i18n.delete.confirm
-          }}</o-button>
+          <o-button
+            type="primary"
+            @click="headleDelFile(fileData.file_path, repoDetailData.repo_id)"
+            >{{ i18n.delete.confirm }}</o-button
+          >
         </div>
       </template>
     </o-dialog>

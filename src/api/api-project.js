@@ -59,8 +59,8 @@ export function setNewProject(params) {
  * 修改项目信息
  * @returns
  */
-export function modifyProject(params) {
-  const url = `/api/projects/${params.id}`;
+export function modifyProject(params, owner) {
+  const url = `/server/project/${owner}/${params.id}`;
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

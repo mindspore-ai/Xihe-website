@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -13,7 +13,7 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useFileData } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 const router = useRouter();
@@ -23,6 +23,9 @@ const prop = defineProps({
     type: String,
     default: '',
   },
+});
+const repoDetailData = computed(() => {
+  return useFileData().fileStoreData;
 });
 const routerParams = router.currentRoute.value.params;
 let currentContents = null;
@@ -98,6 +101,7 @@ async function upLoadObs(formEl) {
           author_name: userInfoStore.userName,
           content: query.textValue,
           commit_message: `created ${query.folderName}`,
+          id: repoDetailData.value.repo_id,
         },
         path
       ).then(() => {
@@ -174,7 +178,19 @@ function pathClick() {
         <el-form-item class="item" prop="fileName">
           <div class="model-name tip-text">
             <o-icon> <icon-plus2></icon-plus2> </o-icon>
-            <span>{{ currentContents }}</span>
+            <div class="file-path">
+              <div class="item-path" @click="pathClick(null)">
+                {{ routerParams.name }}
+              </div>
+              <div
+                v-for="(item, index) in routerParams.contents"
+                :key="item"
+                class="item-path"
+                @click="pathClick(index + 1)"
+              >
+                /{{ item }}
+              </div>
+            </div>
             <el-input
               v-model.trim="query.fileName"
               class="name-input"
@@ -292,6 +308,16 @@ function pathClick() {
       .explain {
         color: #999999;
         font-size: 14px;
+      }
+    }
+  }
+  .file-path {
+    display: flex;
+    font-size: 18px;
+    .item-path {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

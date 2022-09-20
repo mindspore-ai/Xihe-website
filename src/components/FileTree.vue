@@ -26,9 +26,11 @@ import {
   uploadFileGitlab,
   getGitlabFileRaw,
   getGitlabCommit,
+  deleteFolder,
   getGitlabToken,
   getGitlabFileDetail,
-  gitlabDownloadAll,
+  findAllFileByPath,
+  downloadFile,
 } from '@/api/api-gitlab';
 
 import { changeByte, dataURLtoBlob, fileToBase64 } from '@/shared/utils';
@@ -36,7 +38,7 @@ import { changeByte, dataURLtoBlob, fileToBase64 } from '@/shared/utils';
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
 
-const detailData = computed(() => {
+const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
 const showFolder = computed(() => {
@@ -121,10 +123,10 @@ function getDetailData(path) {
     //   }
     // });
     // gitlab
-    getGitlabTree(path).then((res) => {
+    getGitlabTree(path, repoDetailData.value.repo_id).then((res) => {
       filesList.value = res;
     });
-    getGitlabCommit(2, path).then((res) => {
+    getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
       console.log(res);
     });
   } catch (error) {
@@ -134,7 +136,7 @@ function getDetailData(path) {
 function toggleDelDlg(flag, itemFileName, itemIsFolder) {
   if (flag === undefined) {
     showDel.value = !showDel.value;
-  } else if (flag === true) {
+  } else if (flag) {
     showDel.value = true;
     fileName.value = itemFileName;
     isFolder.value = itemIsFolder;
@@ -191,8 +193,6 @@ function goBlob(item) {
   };
 }
 function creatFolter(formEl) {
-  // gitlabDownloadAll().then((res) => {
-  // });
   if (!formEl) return;
   let path = `${query.folderName}/.keep`;
   // 非根目录下
@@ -201,20 +201,13 @@ function creatFolter(formEl) {
   }
   formEl.validate((valid) => {
     if (valid) {
-      // createFolder(
-      //   {
-      //     folderName: query.folderName,
-      //     path,
-      //   },
-
-      //   }
-      // );
       uploadFileGitlab(
         {
           branch: 'main',
           author_email: userInfoStore.email,
           author_name: userInfoStore.userName,
           content: '',
+          id: repoDetailData.value.repo_id,
           commit_message: `created ${query.folderName}`,
         },
         path
@@ -238,60 +231,27 @@ function cancelCreate() {
   query.folderName = '';
 }
 
-function downloadFile(path) {
-  getGitlabFileRaw(path).then((res) => {
-    let blob = new Blob([res], { type: 'text/plain;charset=UTF-8' });
-    console.log(blob);
-    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
-    let href = window.URL.createObjectURL(blob); // 创建下载的链接
-    downloadElement.href = href;
-    downloadElement.download = path; // 下载后文件名
-    document.body.appendChild(downloadElement);
-    downloadElement.click(); // 点击下载
-    document.body.removeChild(downloadElement); // 下载完成移除元素
-    window.URL.revokeObjectURL(href);
-  });
-}
 function deleteFolderClick(folderName, id) {
   let path = folderName;
   if (contents.length) {
     path = `${contents.join('/')}/${folderName}`;
   }
-  // if (contents && contents.length) {
-  //   path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${
-  //     routerParams.name
-  //   }/${contents.join('/')}/${folderName}`;
-  // } else {
-  //   // 根目录下
-  //   path = `xihe-obj/${prop.moduleName}s/${route.params.user}/${routerParams.name}/${folderName}`;
-  // }
-  // if (isFolder) {
-  //   path = `${path}/`;
-  // }
-  deleteFile(path, id).then(() => {
-    getFilesByPath();
-    ElMessage({
-      type: 'success',
-      message: '删除成功',
+  if (isFolder.value) {
+    findAllFileByPath(`${routerParams.user}/${routerParams.name}`, path).then(
+      (res) => {
+        console.log(res);
+      }
+    );
+  } else {
+    deleteFile(path, id).then(() => {
+      getFilesByPath();
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      });
+      showDel.value = false;
     });
-    showDel.value = false;
-  });
-  // deleteFolder(path).then((res) => {
-  //   if (res.status === 200) {
-  //     getFilesByPath();
-  //     ElMessage({
-  //       type: 'success',
-  //       message: res.msg,
-  //     });
-  //     showDel.value = false;
-  //   } else {
-  //     ElMessage({
-  //       type: 'error',
-  //       message: res.msg,
-  //     });
-  //     showDel.value = false;
-  //   }
-  // });
+  }
 }
 watch(
   () => route.fullPath,
@@ -307,7 +267,7 @@ watch(
 );
 </script>
 <template>
-  <div v-if="!detailData.is_empty" class="tree">
+  <div v-if="!repoDetailData.is_empty" class="tree">
     <table class="tree-table">
       <col width="330px" />
       <col width="120px" />
@@ -328,8 +288,8 @@ watch(
               </o-icon>
               <span
                 class="tree-head-left-describe"
-                :title="detailData.description"
-                >{{ detailData.description }}</span
+                :title="repoDetailData.desc"
+                >{{ repoDetailData.desc }}</span
               >
             </div>
           </td>
@@ -395,7 +355,10 @@ watch(
             <td
               class="tree-table-item-download"
               width="10%"
-              @click="item.type === 'blob' && downloadFile(item.path)"
+              @click="
+                item.type === 'blob' &&
+                  downloadFile(item.path, repoDetailData.repo_id)
+              "
             >
               <div class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
@@ -407,7 +370,7 @@ watch(
                 <span>{{ item.description }}</span>
                 <div
                   class="delete-folder"
-                  :class="{ 'is-visitor': !detailData.is_owner }"
+                  :class="{ 'is-visitor': !repoDetailData.is_owner }"
                   @click="toggleDelDlg(true, item.name, item.id)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
@@ -486,7 +449,7 @@ watch(
         >
         <o-button
           type="primary"
-          @click="deleteFolderClick(fileName, isFolder)"
+          @click="deleteFolderClick(fileName, repoDetailData.repo_id)"
           >{{ i18n.delete.confirm }}</o-button
         >
       </div>

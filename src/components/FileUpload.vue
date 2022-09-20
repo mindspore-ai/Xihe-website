@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OIcon from '@/components/OIcon.vue';
@@ -12,7 +12,7 @@ import IconUpload from '~icons/app/upload';
 
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useFileData } from '@/stores';
 import { fileToBase64 } from '@/shared/utils';
 
 const router = useRouter();
@@ -20,7 +20,9 @@ const route = useRoute();
 const userInfo = useUserInfoStore();
 
 const routerParams = router.currentRoute.value.params;
-
+const repoDetailData = computed(() => {
+  return useFileData().fileStoreData;
+});
 const uploadRef = ref();
 const description = ref('');
 const prop = defineProps({
@@ -64,6 +66,7 @@ async function upLoad(param) {
         author_email: userInfo.email,
         author_name: userInfo.userName,
         content: content.split(',')[1],
+        id: repoDetailData.value.repo_id,
         commit_message: description.value || `upload ${param.file.name}`,
       },
       path

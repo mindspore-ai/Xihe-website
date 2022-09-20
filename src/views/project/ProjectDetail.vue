@@ -24,6 +24,8 @@ import {
   projectFork,
 } from '@/api/api-project';
 
+import { getRepoDetailByName } from '@/api/api-gitlab';
+
 import { getBaseInfo } from '@/api/api-shared';
 
 onBeforeRouteLeave(() => {
@@ -194,50 +196,44 @@ const isForkShow = ref();
 // 详情数据
 function getDetailData() {
   try {
-    getProjectData({
-      name: route.params.name,
-      owner_name: route.params.user,
+    getRepoDetailByName({
+      user: route.params.user,
+      repoName: route.params.name,
+      modular: 'project',
     }).then((res) => {
-      if (res.results.data.length) {
-        let storeData = res.results.data[0];
-
-        isForkShow.value =
-          storeData.owner_name.name !== userInfoStore.userName ? true : false;
-
-        // 判断仓库是否属于自己
-        storeData['is_owner'] =
-          userInfoStore.userName === storeData.owner_name.name;
-        // 文件列表是否为空
-        if (detailData.value) {
-          storeData['is_empty'] = detailData.value.is_empty;
-        }
-        fileData.setFileData(storeData);
-
-        isShow.value = userInfoStore.userName === storeData.owner_name.name;
-        forkForm.storeName = detailData.value.name;
-        forkForm.owner = userInfoStore.userName;
-
-        if (detailData.value.sdk_name !== 'Gradio') {
-          tabTitle[0].label = '项目卡片';
-          activeName.value = '项目卡片';
-        }
-
-        digCount.value = detailData.value.digg_count;
-
-        const { licenses_list, task_list, tags_list } = detailData.value;
-        isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-        modelTags.value = [...licenses_list, ...task_list, ...tags_list];
-        modelTags.value = modelTags.value.map((item) => {
-          return item;
-        });
-        headTags.value = [...modelTags.value];
-        getAllTags();
-      } else {
-        router.push('/404');
+      let storeData = res.data;
+      // 判断仓库是否属于自己
+      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+      // 文件列表是否为空
+      if (detailData.value) {
+        storeData['is_empty'] = detailData.value.is_empty;
       }
+      fileData.setFileData(storeData);
+
+      isShow.value = userInfoStore.userName === storeData.owner;
+      forkForm.storeName = detailData.value.name;
+      forkForm.owner = userInfoStore.userName;
+
+      // if (detailData.value.sdk_name !== 'Gradio') {
+      //   tabTitle[0].label = '项目卡片';
+      //   activeName.value = '项目卡片';
+      // }
+
+      // digCount.value = detailData.value.digg_count;
+
+      // const { licenses_list, task_list, tags_list } = detailData.value;
+      // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+
+      // modelTags.value = [...licenses_list, ...task_list, ...tags_list];
+      // modelTags.value = modelTags.value.map((item) => {
+      //   return item;
+      // });
+      // headTags.value = [...modelTags.value];
+      // getAllTags();
     });
-  } catch (error) {}
+  } catch (error) {
+    router.push('/404');
+  }
 }
 getDetailData();
 

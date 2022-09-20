@@ -11,7 +11,7 @@ import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
 const router = useRouter();
 const route = useRoute();
-const detailData = computed(() => {
+const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
 const prop = defineProps({
@@ -76,24 +76,23 @@ function pathClick(index) {
   });
 }
 function downloadAll() {
-  gitlabDownloadAll();
-  // gitlabDownloadAll().then((res) => {
-  //   console.log(res);
-  // });
+  gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
+    console.log(res);
+  });
 }
 </script>
 <template>
   <div class="model-file">
     <div
       :class="{
-        'file-top-hide': detailData.is_empty && !route.params.contents,
+        'file-top-hide': repoDetailData.is_empty && !route.params.contents,
       }"
       class="file-top"
     >
       <div class="file-top-left">
         <div class="file-path">
           <div class="item-path" @click="pathClick()">
-            {{ detailData.name }}
+            {{ repoDetailData.name }}
           </div>
           <div
             v-for="(item, index) in route.params.contents"
@@ -106,13 +105,13 @@ function downloadAll() {
         </div>
       </div>
       <div class="file-top-right">
-        <o-button @click="downloadAll" class="download-all"
+        <o-button class="download-all" @click="downloadAll"
           ><a>{{ i18n.downloadAll }}</a>
           <template #suffix>
             <o-icon><icon-download></icon-download></o-icon>
           </template>
         </o-button>
-        <el-dropdown v-if="detailData.is_owner" popper-class="filter">
+        <el-dropdown v-if="repoDetailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}
             <template #prefix>

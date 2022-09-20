@@ -113,12 +113,12 @@ function getIndex(value) {
 //   newOwn.value = value;
 // }
 
-visibleValue.value = detailData.is_private === 'Private' ? true : false;
-function getVisiableSelect(value) {
-  value === 'Private'
-    ? (visibleValue.value = true)
-    : (visibleValue.value = false);
-}
+// visibleValue.value = detailData.is_private === 'Private' ? true : false;
+// function getVisiableSelect(value) {
+//   value === 'Private'
+//     ? (visibleValue.value = true)
+//     : (visibleValue.value = false);
+// }
 photos.forEach((item) => {
   item.is_active = false;
   if (item.url === detailData.photo_url) {
@@ -150,12 +150,13 @@ function selectImgClick(item) {
 
 function confirmPrivate() {
   let query = {
-    is_private: visibleValue.value,
-    photo: photoId.value,
-    id: detailData.id,
-    description: description.value,
+    type: 'public',
+    cover_id: `${photoId.value}`,
+    id: '632414db7187a3b38b417660',
+    desc: description.value,
+    name: 'project-hudshfi',
   };
-  modifyProject(query).then((res) => {
+  modifyProject(query, 's9qfqri3zpc8j2x7').then((res) => {
     if (res.status === 200) {
       description.value = res.data.description;
       ElMessage({

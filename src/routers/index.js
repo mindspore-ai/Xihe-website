@@ -115,7 +115,9 @@ router.beforeEach(async (to, from) => {
   const mobileFitWhiteList = [
     'taichu',
     'taichuIntroduction',
-    'taichuExperience',
+    'textToImage',
+    'taichuVision',
+    'imageCaption',
   ];
   if (mobileFitWhiteList.indexOf(to.name) !== -1) {
     document.body.classList.add('mobile-fit');

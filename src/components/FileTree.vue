@@ -62,6 +62,7 @@ const pushParams = {
   contents: routerParams.contents,
 };
 const filesList = ref([]);
+const commitData = ref([]);
 const prop = defineProps({
   moduleName: {
     type: String,
@@ -101,7 +102,7 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-function getDetailData(path) {
+async function getDetailData(path) {
   try {
     // obs
     // findFile(path).then((tree) => {
@@ -123,10 +124,11 @@ function getDetailData(path) {
     //   }
     // });
     // gitlab
-    getGitlabTree(path, repoDetailData.value.repo_id).then((res) => {
+    await getGitlabTree(path, repoDetailData.value.repo_id).then((res) => {
       filesList.value = res;
     });
-    getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
+    await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
+      commitData.value = res;
       console.log(res);
     });
   } catch (error) {
@@ -338,7 +340,7 @@ watch(
         </tr>
         <template v-if="filesList.length">
           <tr
-            v-for="item in filesList"
+            v-for="(item, index) in filesList"
             :key="item.download_path"
             :class="{ 'folder-item': item.type === 'tree' }"
             class="tree-table-item"
@@ -367,7 +369,7 @@ watch(
             </td>
             <td class="tree-table-item-from" :title="item.description">
               <div class="inner-box">
-                <span>{{ item.description }}</span>
+                <!-- <span>{{ commitData[index].message }}</span> -->
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"

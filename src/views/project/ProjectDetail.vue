@@ -240,10 +240,7 @@ getDetailData();
 // const runingStatus = ref(false);
 
 function handleTabClick(item) {
-  if (
-    item.index === '1' &&
-    userInfoStore.userName === detailData.value.owner_name.name
-  ) {
+  if (item.index === '1' && userInfoStore.userName === detailData.value.owner) {
     return;
   }
   router.push(
@@ -594,18 +591,16 @@ watch(
         <div>
           <div class="card-head-1">
             <div class="avatar">
-              <img :src="detailData.owner_name.avatar_url" alt="" />
+              <!-- <img :src="detailData.owner_name.avatar_url" alt="" /> -->
             </div>
 
             <router-link :to="{ path: `/${route.params.user}` }">
-              {{ detailData.owner_name.name }} </router-link
+              {{ detailData.owner }} </router-link
             >/
             <span>{{ detailData.name }}</span>
             <div
               class="card-head-copy"
-              @click="
-                copyText(`${detailData.owner_name.name}/${detailData.name}`)
-              "
+              @click="copyText(`${detailData.owner}/${detailData.name}`)"
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
@@ -650,7 +645,7 @@ watch(
               :key="item.id"
               class="center-tab-pane"
               :name="item.path"
-              :disabled="userInfoStore.userName === detailData.owner_name.name"
+              :disabled="userInfoStore.userName === detailData.owner"
             >
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">
@@ -667,7 +662,7 @@ watch(
                     <!-- <span v-else class="status train-status3"></span> -->
                   </p>
                   <template
-                    v-if="userInfoStore.userName === detailData.owner_name.name"
+                    v-if="userInfoStore.userName === detailData.owner"
                     #dropdown
                   >
                     <el-dropdown-menu>

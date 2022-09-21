@@ -76,7 +76,7 @@ export async function editorFileGitlab(params, path) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(path, id) {
-  const url = `/repo/projects/${id}/repository/tree?path=${path}`;
+  const url = `/repo/projects/${id}/repository/tree?path=${path}&per_page=100`;
   return request.get(url, await getGitlabConfig()).then((res) => {
     return res.data;
   });
@@ -152,7 +152,7 @@ export function getGitlabCommit(path, id) {
   //     ref: 'main',
   //   },
   // };
-  const url = `/repo/projects/${id}/repository/commits?path=${path}&trailers=true`;
+  const url = `/repo/projects/${id}/repository/commits?path=${path}&per_page=100`;
 
   const headers = {
     Authorization: ' Bearer hGq8ze9XF6VDsis2t4SY',

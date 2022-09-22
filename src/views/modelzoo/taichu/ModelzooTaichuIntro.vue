@@ -359,8 +359,11 @@ function closeInstanceVideo() {
 
 <style lang="scss" scoped>
 .wrapper {
+  margin: 0 auto;
+  max-width: 1440px;
+  padding-bottom: 64px;
   @media screen and (max-width: 768px) {
-    padding: 16px;
+    padding: 16px 16px 40px;
     background: #f5f6f8;
   }
 }

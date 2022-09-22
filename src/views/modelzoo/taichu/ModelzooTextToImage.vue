@@ -236,192 +236,194 @@ function refreshTags() {
 </script>
 <template>
   <div class="model-page">
-    <!-- 以文生图() -->
-    <div class="text-to-img">
-      <div class="title">
-        <span> 以文生图（Text-To-Image）</span>
-      </div>
-      <p class="experience-text">
-        以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
-      </p>
-      <div class="content">
-        <div class="content-left">
-          <p class="content-left-title">输入描述</p>
+    <div class="model-wrap">
+      <!-- 以文生图() -->
+      <div class="text-to-img">
+        <div class="title">
+          <span> 以文生图（Text-To-Image）</span>
+        </div>
+        <p class="experience-text">
+          以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+        </p>
+        <div class="content">
+          <div class="content-left">
+            <p class="content-left-title">输入描述</p>
 
-          <el-input
-            ref="inputValue"
-            v-model="inferenceText"
-            type="textarea"
-            maxlength="30"
-            :show-word-limit="true"
-            placeholder="请输入简体中文或选择下方样例"
-            class="text-area"
-            @input="handleTextChange"
-          >
-          </el-input>
+            <el-input
+              ref="inputValue"
+              v-model="inferenceText"
+              type="textarea"
+              maxlength="30"
+              :show-word-limit="true"
+              placeholder="请输入简体中文或选择下方样例"
+              class="text-area"
+              @input="handleTextChange"
+            >
+            </el-input>
 
-          <div class="example">
-            <div class="example-top">
-              <p class="title">选择样例</p>
-              <div class="refresh-btn" @click="refreshTags">
-                <o-icon><icon-refresh></icon-refresh></o-icon>
-                <p>换一批</p>
+            <div class="example">
+              <div class="example-top">
+                <p class="title">选择样例</p>
+                <div class="refresh-btn" @click="refreshTags">
+                  <o-icon><icon-refresh></icon-refresh></o-icon>
+                  <p>换一批</p>
+                </div>
+              </div>
+              <div class="tags-box">
+                <p
+                  v-for="item in exampleList"
+                  :key="item.name"
+                  :class="item.isSelected ? 'active' : ''"
+                  @click="selectTag(item)"
+                >
+                  {{ item.name }}
+                </p>
               </div>
             </div>
-            <div class="tags-box">
-              <p
-                v-for="item in exampleList"
-                :key="item.name"
-                :class="item.isSelected ? 'active' : ''"
-                @click="selectTag(item)"
+
+            <div class="btn-box">
+              <o-button size="small" @click="resetInferText">重新输入</o-button>
+              <o-button
+                size="small"
+                type="primary"
+                class="infer-button"
+                :disabled="loading1"
+                @click="startRatiocnate1"
+                >开始推理</o-button
               >
-                {{ item.name }}
-              </p>
+            </div>
+
+            <div class="more-pictures">
+              <el-form>
+                <el-form-item v-model="form">
+                  <el-checkbox-group v-model="form.type">
+                    <el-checkbox label="生成3张" name="type" />
+                  </el-checkbox-group>
+                </el-form-item>
+              </el-form>
             </div>
           </div>
+          <div class="content-right">
+            <p class="content-right-title">图片结果</p>
+            <div class="result">
+              <img
+                v-for="item in inferUrlList"
+                :key="item"
+                :src="item + '?' + new Date()"
+                class="result-img"
+                :draggable="false"
+              />
 
-          <div class="btn-box">
-            <o-button size="small" @click="resetInferText">重新输入</o-button>
-            <o-button
-              size="small"
-              type="primary"
-              class="infer-button"
-              :disabled="loading1"
-              @click="startRatiocnate1"
-              >开始推理</o-button
-            >
-          </div>
-
-          <div class="more-pictures">
-            <el-form>
-              <el-form-item v-model="form">
-                <el-checkbox-group v-model="form.type">
-                  <el-checkbox label="生成3张" name="type" />
-                </el-checkbox-group>
-              </el-form-item>
-            </el-form>
-          </div>
-        </div>
-        <div class="content-right">
-          <p class="content-right-title">图片结果</p>
-          <div class="result">
-            <img
-              v-for="item in inferUrlList"
-              :key="item"
-              :src="item + '?' + new Date()"
-              class="result-img"
-              :draggable="false"
-            />
-
-            <div class="download" @click="downLoadPictures">
-              <o-icon><icon-download></icon-download> </o-icon>
-              <span class="download-text">下载</span>
+              <div class="download" @click="downLoadPictures">
+                <o-icon><icon-download></icon-download> </o-icon>
+                <span class="download-text">下载</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="mobile">
-      <el-collapse v-model="activeNames" @change="handleNameChange">
-        <el-collapse-item title="以文生图（Text-To-Image）" name="1">
-          <div class="description">
-            以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
-          </div>
-          <el-divider />
-          <p class="experience-title">描述</p>
+      <div class="mobile">
+        <el-collapse v-model="activeNames" @change="handleNameChange">
+          <el-collapse-item title="以文生图（Text-To-Image）" name="1">
+            <div class="description">
+              以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+            </div>
+            <el-divider />
+            <p class="experience-title">描述</p>
 
-          <el-input
-            ref="inputValue"
-            v-model="inferenceText"
-            type="textarea"
-            maxlength="30"
-            :show-word-limit="true"
-            placeholder="请输入简体中文或选择下方样例"
-            class="mobile-input"
-            @input="handleTextChange"
-          >
-          </el-input>
+            <el-input
+              ref="inputValue"
+              v-model="inferenceText"
+              type="textarea"
+              maxlength="30"
+              :show-word-limit="true"
+              placeholder="请输入简体中文或选择下方样例"
+              class="mobile-input"
+              @input="handleTextChange"
+            >
+            </el-input>
 
-          <div class="example">
-            <div class="example-top">
-              <p class="title">选择样例</p>
-              <div class="refresh-btn" @click="refreshTags">
-                <o-icon><icon-refresh></icon-refresh></o-icon>
-                <p>换一批</p>
+            <div class="example">
+              <div class="example-top">
+                <p class="title">选择样例</p>
+                <div class="refresh-btn" @click="refreshTags">
+                  <o-icon><icon-refresh></icon-refresh></o-icon>
+                  <p>换一批</p>
+                </div>
+              </div>
+              <div class="tags-box">
+                <p
+                  v-for="item in exampleList"
+                  :key="item.name"
+                  :class="item.isSelected ? 'active' : ''"
+                  @click="selectTag(item)"
+                >
+                  {{ item.name }}
+                </p>
               </div>
             </div>
-            <div class="tags-box">
-              <p
-                v-for="item in exampleList"
-                :key="item.name"
-                :class="item.isSelected ? 'active' : ''"
-                @click="selectTag(item)"
-              >
-                {{ item.name }}
-              </p>
+
+            <p class="experience-title">图片结果</p>
+
+            <div v-if="inferUrlList.length > 1" class="result">
+              <el-image
+                class="image-modal"
+                style="width: 100px; height: 100px"
+                :src="inferUrlList[0]"
+                :preview-src-list="inferUrlList"
+                :initial-index="0"
+                fit="cover"
+                :hide-on-click-modal="true"
+              />
+              <el-image
+                class="image-modal"
+                style="width: 100px; height: 100px"
+                :src="inferUrlList[1]"
+                :preview-src-list="inferUrlList"
+                :initial-index="1"
+                fit="cover"
+                :hide-on-click-modal="true"
+              />
+              <el-image
+                class="image-modal"
+                style="width: 100px; height: 100px"
+                :src="inferUrlList[2]"
+                :preview-src-list="inferUrlList"
+                :initial-index="2"
+                fit="cover"
+                :hide-on-click-modal="true"
+              />
             </div>
-          </div>
 
-          <p class="experience-title">图片结果</p>
-
-          <div v-if="inferUrlList.length > 1" class="result">
-            <el-image
-              class="image-modal"
-              style="width: 100px; height: 100px"
-              :src="inferUrlList[0]"
-              :preview-src-list="inferUrlList"
-              :initial-index="0"
-              fit="cover"
-              :hide-on-click-modal="true"
-            />
-            <el-image
-              class="image-modal"
-              style="width: 100px; height: 100px"
-              :src="inferUrlList[1]"
-              :preview-src-list="inferUrlList"
-              :initial-index="1"
-              fit="cover"
-              :hide-on-click-modal="true"
-            />
-            <el-image
-              class="image-modal"
-              style="width: 100px; height: 100px"
-              :src="inferUrlList[2]"
-              :preview-src-list="inferUrlList"
-              :initial-index="2"
-              fit="cover"
-              :hide-on-click-modal="true"
-            />
-          </div>
-
-          <div
-            v-if="inferUrlList.length === 1 || inferUrlList.length === 0"
-            class="result"
-          >
-            <img
-              v-for="item in inferUrlList"
-              :key="item"
-              class="result-img-single"
-              :src="item"
-            />
-          </div>
-
-          <div class="btn-box-mobile">
-            <o-button size="small" @click="startRatiocnateMo"
-              >生成三张</o-button
+            <div
+              v-if="inferUrlList.length === 1 || inferUrlList.length === 0"
+              class="result"
             >
-            <o-button
-              size="small"
-              type="primary"
-              class="infer-button-mobile"
-              :disabled="loading1"
-              @click="startRatiocnate"
-              >生成一张</o-button
-            >
-          </div>
-        </el-collapse-item>
-      </el-collapse>
+              <img
+                v-for="item in inferUrlList"
+                :key="item"
+                class="result-img-single"
+                :src="item"
+              />
+            </div>
+
+            <div class="btn-box-mobile">
+              <o-button size="small" @click="startRatiocnateMo"
+                >生成三张</o-button
+              >
+              <o-button
+                size="small"
+                type="primary"
+                class="infer-button-mobile"
+                :disabled="loading1"
+                @click="startRatiocnate"
+                >生成一张</o-button
+              >
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
     </div>
   </div>
 </template>
@@ -694,7 +696,7 @@ function refreshTags() {
   }
 }
 .mobile {
-  padding: 16px 16px 0;
+  // padding: 16px 16px 0;
   display: none;
   :deep(.el-image) {
     .el-image__preview {
@@ -922,7 +924,15 @@ function refreshTags() {
   line-height: 22px;
 }
 .model-page {
-  background-color: #f5f6f8;
-  max-width: 1440px;
+  // background-color: #f5f6f8;
+  width: 100%;
+  padding-bottom: 64px;
+  @media screen and (max-width: 768px) {
+    padding: 16px 16px 40px;
+  }
+  .model-wrap {
+    margin: 0 auto;
+    max-width: 1440px;
+  }
 }
 </style>

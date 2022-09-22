@@ -87,21 +87,56 @@ const getImage = (name) => {
   ).href;
 };
 
+function successCallback() {
+  msgList.value.push({
+    message: '',
+    type: 1,
+    url: imgUrl.value,
+    isPicture: true,
+  });
+  srcList.value.push(imgUrl.value);
+
+  if (!sendList.value.length) {
+    if (srcList.value.length === 1) {
+      setTimeout(() => {
+        msgList.value.push({
+          message: '请输入一个与图片的相关问题。',
+          type: 0,
+          url: '',
+          isPicture: false,
+        });
+      }, 300);
+    } else if (srcList.value.length > 1) {
+      setTimeout(() => {
+        msgList.value.push({
+          message: '请输入一个最新图片的相关问题。',
+          type: 0,
+          url: '',
+          isPicture: false,
+        });
+      }, 300);
+    }
+  } else {
+    if (msgList.value[msgList.value.length - 1].isPicture) {
+      setTimeout(() => {
+        msgList.value.push({
+          message: '请输入一个与图片的相关问题。',
+          type: 0,
+          url: '',
+          isPicture: false,
+          isLoading: false,
+        });
+      }, 300);
+    }
+  }
+}
+
 // 样例
 function selectImage(val) {
   if (isClick.value) {
     isClick.value = false;
 
     imgUrl.value = getImage(val);
-
-    msgList.value.push({
-      message: '',
-      type: 1,
-      url: imgUrl.value,
-      isPicture: true,
-    });
-
-    srcList.value.push(imgUrl.value);
 
     formData.delete('file');
     formData = new FormData();
@@ -111,57 +146,25 @@ function selectImage(val) {
         responseType: 'blob',
       })
       .then((res) => {
-        console.log(res.data);
-
         let file = new File([res.data], 'img', {
           type: 'image/png',
           lastModified: Date.now(),
         });
+
         fileList.value = [];
         fileList.value[0] = { raw: file }; // formData.append('blob', file);
-        console.log(fileList.value[0].raw);
 
-        handleVqaUpload({
-          path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
-          file: fileList.value[0].raw,
-          isEdit: false,
-          description: '',
-        });
+        handleVqaUpload(
+          {
+            path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
+            file: fileList.value[0].raw,
+            isEdit: false,
+            description: '',
+          },
+          null,
+          successCallback
+        );
       });
-
-    if (!sendList.value.length) {
-      if (srcList.value.length === 1) {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个与图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-          });
-        }, 300);
-      } else {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个最新图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-          });
-        }, 300);
-      }
-    } else {
-      if (msgList.value[msgList.value.length - 1].isPicture) {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个与图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-            isLoading: false,
-          });
-        }, 300);
-      }
-    }
   }
 
   setTimeout(() => {
@@ -271,8 +274,6 @@ onMounted(() => {
         responseType: 'blob',
       })
       .then((res) => {
-        // console.log(res.data);
-
         let file = new File([res.data], 'img', {
           type: 'image/png',
           lastModified: Date.now(),
@@ -280,56 +281,18 @@ onMounted(() => {
 
         fileList.value = [];
         fileList.value[0] = { raw: file }; // formData.append('blob', file);
-        // console.log(fileList.value[0].raw);
 
-        handleVqaUpload({
-          path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
-          file: fileList.value[0].raw,
-          isEdit: false,
-          description: '',
-        });
+        handleVqaUpload(
+          {
+            path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
+            file: fileList.value[0].raw,
+            isEdit: false,
+            description: '',
+          },
+          null,
+          successCallback
+        );
       });
-
-    msgList.value.push({
-      message: '',
-      type: 1,
-      url: imgUrl.value,
-      isPicture: true,
-    });
-
-    if (!sendList.value.length) {
-      if (srcList.value.length === 1) {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个与图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-          });
-        }, 500);
-      } else {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个最新图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-          });
-        }, 300);
-      }
-    } else {
-      if (msgList.value[msgList.value.length - 1].isPicture) {
-        setTimeout(() => {
-          msgList.value.push({
-            message: '请输入一个与图片的相关问题。',
-            type: 0,
-            url: '',
-            isPicture: false,
-            isLoading: false,
-          });
-        }, 300);
-      }
-    }
   };
 
   document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {
@@ -340,7 +303,6 @@ onMounted(() => {
   });
 });
 </script>
-
 <template>
   <div class="vision">
     <div class="vision-box">
@@ -362,7 +324,7 @@ onMounted(() => {
           <div class="avatar">
             <img :src="item.type === 0 ? avatar : avatarUrl" alt="" />
           </div>
-          <div class="message">
+          <div class="message" :class="item.isPicture ? 'message-img' : ''">
             <!-- loading -->
             <img
               v-if="item.isLoading"
@@ -440,6 +402,7 @@ onMounted(() => {
 :deep(.el-image) {
   width: 160px;
   height: 160px;
+  border-radius: 16px;
   @media screen and (max-width: 1080px) {
     width: 104px;
     height: 108px;
@@ -476,6 +439,9 @@ onMounted(() => {
     background: #f5f6f8;
     box-shadow: none;
     padding: 12px 24px;
+    &:hover {
+      box-shadow: none;
+    }
     @media screen and (max-width: 1080px) {
       padding: 6px 16px;
       height: 29px;
@@ -484,17 +450,20 @@ onMounted(() => {
       }
     }
   }
+  .is-focus {
+    box-shadow: none !important;
+  }
 }
 .vision {
   background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
   background-position: 0% 0%;
   background-size: 100%;
   width: 100%;
-  padding: 40px 64px;
+  padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
-    padding: 16px;
-    background-image: none;
-    background: #f5f6f8;
+    padding: 16px 16px 40px;
+    // background-image: none;
+    // background: #f5f6f8;
   }
   &-box {
     margin: 0 auto;
@@ -585,6 +554,7 @@ onMounted(() => {
           margin-bottom: 16px;
           padding-right: 16px;
         }
+
         .message {
           padding: 16px 24px;
           background: rgba(13, 141, 255, 0.1);
@@ -616,8 +586,13 @@ onMounted(() => {
             }
           }
           img {
-            max-height: 160px;
+            min-height: 160px;
           }
+        }
+
+        .message-img {
+          padding: 8px;
+          line-height: 0px;
         }
 
         .avatar {
@@ -737,7 +712,8 @@ onMounted(() => {
         justify-content: center;
         align-items: center;
         color: #0d8dff;
-        background-color: #e7f4ff;
+        border: 2px dashed #d1e9ff;
+        // background-color: #e7f4ff;
 
         .o-icon {
           font-size: 48px;

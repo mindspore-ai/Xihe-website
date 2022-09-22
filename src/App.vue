@@ -33,7 +33,9 @@ const isTaichuPage = computed(() => {
   return (
     route.name === 'taichu' ||
     route.name === 'taichuIntroduction' ||
-    route.name === 'taichuExperience'
+    route.name === 'textToImage' ||
+    route.name === 'taichuVision' ||
+    route.name === 'imageCaption'
   );
 });
 
@@ -52,7 +54,7 @@ const onResize = () => {
 window.addEventListener('resize', onResize);
 
 const goBack = () => {
-  router.go(-1);
+  router.push('/modelzoo');
 };
 
 // const winWidth =

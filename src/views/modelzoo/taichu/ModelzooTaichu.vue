@@ -14,22 +14,40 @@ const route = useRoute();
 const activeNavItem = ref('');
 const navItems = [
   {
-    id: 'taichuExperience',
-    label: '在线体验',
-    href: '/modelzoo/taichu',
-  },
-  {
     id: 'taichuIntroduction',
     label: '介绍',
     href: '/modelzoo/taichu/introduce',
   },
+  {
+    id: 'taichuVision',
+    label: '视觉问答',
+    href: '/modelzoo/taichu',
+  },
+  // {
+  //   id: 'taichuExperience',
+  //   label: '在线体验',
+  //   href: '/modelzoo/taichu/experience',
+  // },
+  {
+    id: 'textToImage',
+    label: '以文生图',
+    href: '/modelzoo/taichu/text',
+  },
+  {
+    id: 'imageCaption',
+    label: '以图生文',
+    href: '/modelzoo/taichu/image',
+  },
 ];
+
 watch(
   () => {
     return route.name;
   },
   (val) => {
-    if (/^taichuIntroduction|taichuExperience/g.test(val)) {
+    if (
+      /^taichuIntroduction|taichuVision|textToImage|imageCaption/g.test(val)
+    ) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';
@@ -37,6 +55,7 @@ watch(
   },
   { immediate: true }
 );
+
 // 点击导航
 function handleNavClick(item) {
   router.push({ path: item.href });
@@ -112,7 +131,7 @@ function goTaichuMore() {
 <style lang="scss" scoped>
 .taichu {
   background-color: #f5f6f8;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1080px) {
     padding-top: 80px;
     padding-top: 0;
   }
@@ -120,12 +139,12 @@ function goTaichuMore() {
     padding: 120px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1080px) {
       padding: 0;
     }
     .taichu-bread {
       margin-bottom: 40px;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 1080px) {
         display: none;
       }
       .el-breadcrumb {
@@ -149,7 +168,7 @@ function goTaichuMore() {
       }
     }
     .taichu-content {
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 1080px) {
         padding-top: 62px;
         padding-bottom: 40px;
         min-height: calc(100vh - 190px);
@@ -159,13 +178,13 @@ function goTaichuMore() {
         background-color: #fff;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 1080px) {
           padding: 16px;
           margin: 0 16px;
         }
         .content-banner-left {
           margin-right: 40px;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 1080px) {
             display: none;
           }
           img {
@@ -179,7 +198,7 @@ function goTaichuMore() {
             font-size: 36px;
             color: #000000;
             margin-bottom: 16px;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1080px) {
               font-size: 16px;
               font-weight: 300;
               color: #000000;
@@ -188,7 +207,7 @@ function goTaichuMore() {
             }
           }
           .home-btn {
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1080px) {
               line-height: 22px;
               padding: 6px !important;
               font-size: 14px;
@@ -200,7 +219,7 @@ function goTaichuMore() {
             color: #555555;
             line-height: 22px;
             margin-bottom: 54px;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1080px) {
               font-size: 12px;
               font-weight: 400;
               color: #000000;
@@ -226,7 +245,7 @@ function goTaichuMore() {
             margin: 0 auto;
             .nav-item {
               color: #555;
-              @media screen and (max-width: 768px) {
+              @media screen and (max-width: 1080px) {
                 font-size: 14px;
                 font-weight: 400;
                 color: #000000;

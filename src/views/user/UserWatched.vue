@@ -10,10 +10,14 @@ import IconStar from '~icons/app/Star';
 import OButton from '@/components/OButton.vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-import { getUserDig2 } from '@/api/api-user';
+// import { getUserDig2 } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
 
+// TODO:切换后台后
+import { getUserFollow, cancelFollowing, getFollowing } from '@/api/api-user';
+
 const userInfoStore = useUserInfoStore();
+// console.log('userInfoStore: ', userInfoStore);
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
@@ -26,6 +30,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
+// console.log('userInfo: ', userInfo.value);
 /*TODO:暂无接口
 let i18n = {
   placeholder: '搜索我的关注',
@@ -42,31 +47,43 @@ let queryData = reactive({
 });
 
 // 登录用户的关注列表
-const loginFollowList = computed(() => {
+/* const loginFollowList = computed(() => {
   return userInfoStore.followList;
-});
+}); */
 // 登录用户关注id列表
-let loginFollowIdList = computed(() =>
+/* let loginFollowIdList = computed(() =>
   loginFollowList.value.map((val) => val.id)
-);
+); */
 // 当前用户的关注列表
-const currentFollowList = computed(() => {
+/* const currentFollowList = computed(() => {
   return userInfo.value.followList;
-});
+}); */
+
+const currentFollowList = ref([]);
+// 获取用户的关注列表
+function getFollowList() {
+  getUserFollow().then((res) => {
+    currentFollowList.value = res.data;
+    console.log('关注列表: ', currentFollowList.value);
+  });
+  // let resData = getUserFollow();
+}
+getFollowList();
+
 const emit = defineEmits(['domChange']);
 watch(
   () => {
-    return currentFollowList.value.length;
+    return currentFollowList.value;
   },
   (val) => {
-    if (val > 6) {
+    if (val && val.length > 6) {
       emit('domChange', 74);
     }
   },
   { immediate: true }
 );
 // 用于判断按钮的内容状态
-function watchFollowList() {
+/* function watchFollowList() {
   currentFollowList.value.forEach((val) => {
     if (loginFollowIdList.value.indexOf(val.id) !== -1) {
       val.isFollow = true;
@@ -75,22 +92,55 @@ function watchFollowList() {
     }
   });
 }
-watchFollowList();
-watch(
+watchFollowList(); */
+/* watch(
   () => currentFollowList.value,
   () => {
     watchFollowList();
   }
-);
+); */
 
-// 取消关注or取消点赞
-function getWatched(userId, follow) {
+// 关注用户or点赞
+function getWatch(name) {
+  // 如果用户没有登录，则跳转到登录页面
+  if (!userInfoStore.id) {
+    goAuthorize();
+  } else {
+    try {
+      let params = { account: name };
+      getFollowing(params).then((res) => {
+        console.log('关注他人: ', res);
+      });
+      /* getUserDig({ userId, fans }).then((res) => {
+        if (res.status === 200) {
+          if (loginFollowIdList.value.indexOf(fans.id) !== -1) {
+            let index = loginFollowIdList.value.indexOf(fans.id);
+            loginFollowList.value.splice(index, 1);
+          } else {
+            loginFollowList.value.push(fans);
+          }
+        }
+        fans.isFollow = !fans.isFollow;
+      }); */
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+// 取消关注他人
+function cancelWatch(name) {
   if (!userInfoStore.id) {
     goAuthorize();
     return;
   } else {
     try {
-      getUserDig2({ userId, follow }).then((res) => {
+      let params = { account: name };
+      cancelFollowing(params).then((res) => {
+        console.log('取消关注结果: ', res);
+        // TODO:取消关注更新数据
+      });
+      /* getUserDig2({ userId, follow }).then((res) => {
         if (res.status === 200) {
           if (loginFollowIdList.value.indexOf(follow.id) !== -1) {
             let index = loginFollowIdList.value.indexOf(follow.id);
@@ -100,7 +150,7 @@ function getWatched(userId, follow) {
           }
         }
         follow.isFollow = !follow.isFollow;
-      });
+      }); */
     } catch (error) {
       console.error(error);
     }
@@ -135,7 +185,7 @@ function toTop() {
         >
         <el-breadcrumb-item
           >/ {{ isAuthentic ? '我' : userInfo.userName }}的关注 ({{
-            userInfo.followCount
+            userInfo.followingCount
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
@@ -165,37 +215,48 @@ function toTop() {
           </el-dropdown>
         </div>
       </div> -->
-      <div v-if="currentFollowList.length" class="watched-list">
+      <div
+        v-if="currentFollowList && currentFollowList.length"
+        class="watched-list"
+      >
         <div
-          v-for="follow in currentFollowList.slice(
+          v-for="(follow, index) in currentFollowList.slice(
             (queryData.page - 1) * queryData.size,
             queryData.page * queryData.size
           )"
-          :key="follow.id"
+          :key="index"
           class="watched-list-item"
         >
           <div class="list-item-left">
             <div class="watched-avatar">
-              <router-link :to="`/${follow.name}`" target="_blank">
-                <el-avatar :size="60" :src="follow.avatar_url" fit="fill" />
+              <router-link :to="`/${follow.account}`" target="_blank">
+                <el-avatar :size="60" :src="follow.avatar_id" fit="fill" />
               </router-link>
             </div>
             <div class="watched-info">
-              <div class="watched-info-name">{{ follow.name }}</div>
+              <div class="watched-info-name">{{ follow.account }}</div>
               <div class="watched-info-desc">
-                {{ follow.description || '这个人很懒，啥都没留下' }}
+                {{ follow.bio || '这个人很懒，啥都没留下' }}
               </div>
             </div>
           </div>
-          <div
-            v-show="follow.id !== userInfoStore.id"
-            class="list-item-right"
-            @click="getWatched(userInfoStore.id, follow)"
+          <o-button
+            type="secondary"
+            class="item"
+            @click="cancelWatch(follow.account)"
+            >取消关注</o-button
           >
-            <o-button v-if="follow.isFollow" type="secondary" class="item"
+          <div v-show="follow.id !== userInfoStore.id" class="list-item-right">
+            <o-button
+              v-if="follow.isFollow"
+              type="secondary"
+              class="item"
+              @click="cancelWatch(follow.account)"
               >取消关注</o-button
             >
-            <o-button v-else type="primary">关注TA</o-button>
+            <o-button v-else type="primary" @click="getWatch(follow.account)"
+              >关注TA</o-button
+            >
           </div>
         </div>
       </div>
@@ -206,7 +267,10 @@ function toTop() {
       </div>
     </div>
     <!-- 分页器 -->
-    <div v-if="currentFollowList.length > 6" class="pagination">
+    <div
+      v-if="currentFollowList && currentFollowList.length > 6"
+      class="pagination"
+    >
       <el-pagination
         :page-sizes="[6, 12, 18]"
         :current-page="queryData.page"

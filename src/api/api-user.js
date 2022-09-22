@@ -95,22 +95,6 @@ export function setUserData(params) {
     return res.data;
   });
 }
-/**
- * 关注用户or取消关注
- * @returns
- */
-export function getUserDig(reopt) {
-  const url = `/api/users/${reopt.userId}/users/${reopt.fans.id}`;
-  return request.put(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-export function getUserDig2(reopt) {
-  const url = `/api/users/${reopt.userId}/users/${reopt.follow.id}`;
-  return request.put(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
 
 /**
  * 邮箱
@@ -175,20 +159,135 @@ export function changeUserPhone(params) {
  * 用户动态
  * @returns
  */
-export function getUserLive(id) {
+/* export function getUserLive(id) {
   const url = `/api/users/actions/actions/${id}`;
   return request.get(url).then((res) => {
     return res.data;
   });
+} */
+
+/**
+ * 用户收藏
+ * @returns
+ */
+/* export function getUserCollection(id) {
+  const url = `/api/users/actions/digg/${id}`;
+  return request.get(url).then((res) => {
+    return res.data;
+  });
+} */
+
+/**
+ * 关注用户or取消关注
+ * @returns
+ */
+/* export function getUserDig(reopt) {
+  const url = `/api/users/${reopt.userId}/users/${reopt.fans.id}`;
+  return request.put(url, reopt, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+export function getUserDig2(reopt) {
+  const url = `/api/users/${reopt.userId}/users/${reopt.follow.id}`;
+  return request.put(url, reopt, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+} */
+
+// TODO:换后台的接口
+/**
+ * 用户动态
+ * @returns
+ */
+export function getUserLive() {
+  const url = `/server/user/activity`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
 }
 
 /**
  * 用户收藏
  * @returns
  */
-export function getUserCollection(id) {
-  const url = `/api/users/actions/digg/${id}`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
+export function getUserCollection() {
+  const url = `/server/user/like`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+/**
+ * 关注他人
+ * @returns
+ */
+export function getFollowing(params) {
+  const url = `/server/user/following`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+/**
+ * 取消关注他人
+ * @returns
+ */
+export function cancelFollowing(params) {
+  const url = `/server/user/following/${params.account}`;
+  debugger;
+  return request
+    .delete(url, Object.assign({ data: params }, getHeaderConfig()))
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+/**
+ * 用户的粉丝列表
+ * @returns
+ */
+export function getUserFans() {
+  const url = `/server/user/follower`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+/**
+ * 用户的关注列表
+ * @returns
+ */
+export function getUserFollow() {
+  const url = `/server/user/following`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }

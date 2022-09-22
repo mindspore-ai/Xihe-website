@@ -15,9 +15,10 @@ import IconEmail from '~icons/app/email';
 import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-import { getUserDig } from '@/api/api-user';
+// import { getUserDig } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
-
+// TODO:切后台后
+import { getFollowing } from '@/api/api-user';
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
@@ -32,6 +33,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
+// console.log('userInfo: ', userInfo);
 // console.log(userInfo.value.userName);
 const activeNavItem = ref('');
 
@@ -107,9 +109,9 @@ const followList = computed(() => {
 });
 
 // 登录用户关注id列表
-let followIdList = followList.value.map((val) => {
-  return val.id;
-});
+// let followIdList = followList.value.map((val) => {
+//   return val.id;
+// });
 // 拼接登陆用户信息与关注列表的信息一致
 let currentUserInfo = reactive({
   avatar: userInfoStore.avatar,
@@ -122,14 +124,15 @@ let jointUserInfo = reactive({
   avatar: userInfo.value.avatar,
   description: userInfo.value.description,
   id: userInfo.value.id,
-  name: userInfo.value.nickName,
+  name: userInfo.value.userName,
 });
+// console.log('jointUserInfo: ', jointUserInfo);
 // 判断用户关注id列表是否含有该粉丝id
-if (followIdList.indexOf(jointUserInfo.id) !== -1) {
-  jointUserInfo.isFollow = true;
-} else {
-  jointUserInfo.isFollow = false;
-}
+/* if (followIdList.indexOf(jointUserInfo.id) !== -1) {
+    jointUserInfo.isFollow = true;
+  } else {
+    jointUserInfo.isFollow = false;
+  } */
 const holder = computed(() => {
   return route.path.split('/')[2];
 });
@@ -162,8 +165,8 @@ const renderNav = computed(() => {
   return isAuthentic.value
     ? navItems
     : navItems.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 
 watch(
@@ -232,30 +235,35 @@ function goWatched() {
 }
 
 // 关注用户or点赞
-function getFollow(userId, fans) {
+function getFollow(account) {
+  // console.log('account: ', account);
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     return goAuthorize();
   } else {
     try {
-      getUserDig({ userId, fans }).then((res) => {
-        if (res.status === 200) {
-          if (followIdList.indexOf(fans.id) !== -1) {
-            let index = followIdList.indexOf(fans.id);
-            followList.value.splice(index, 1);
-          } else {
-            followList.value.push(fans);
-          }
-          if (jointUserInfo.isFollow) {
-            // 删除粉丝列表中的粉丝信息
-            let index = userInfo.value.fansList.indexOf(currentUserInfo);
-            userInfo.value.fansList.splice(index, 1);
-          } else {
-            userInfo.value.fansList.push(currentUserInfo);
-          }
-        }
-        jointUserInfo.isFollow = !jointUserInfo.isFollow;
+      let params = { account: account };
+      getFollowing(params).then((res) => {
+        console.log('res: ', res);
       });
+      /* getUserDig({ userId, fans }).then((res) => {
+          if (res.status === 200) {
+            if (followIdList.indexOf(fans.id) !== -1) {
+              let index = followIdList.indexOf(fans.id);
+              followList.value.splice(index, 1);
+            } else {
+              followList.value.push(fans);
+            }
+            if (jointUserInfo.isFollow) {
+              // 删除粉丝列表中的粉丝信息
+              let index = userInfo.value.fansList.indexOf(currentUserInfo);
+              userInfo.value.fansList.splice(index, 1);
+            } else {
+              userInfo.value.fansList.push(currentUserInfo);
+            }
+          }
+          jointUserInfo.isFollow = !jointUserInfo.isFollow;
+        }); */
     } catch (error) {
       console.error(error);
     }
@@ -309,7 +317,9 @@ function handleDomChange(val) {
             </p>
             <p class="user-social-item" @click="goWatched()">
               <span>关注</span>
-              <span class="social-item-follow">{{ userInfo.followCount }}</span>
+              <span class="social-item-follow">{{
+                userInfo.followingCount
+              }}</span>
             </p>
           </div>
 
@@ -322,8 +332,9 @@ function handleDomChange(val) {
           <div
             v-else
             :style="{ marginTop: '24px' }"
-            @click="getFollow(userInfoStore.id, jointUserInfo)"
+            @click="getFollow(jointUserInfo.name)"
           >
+            <!-- @click="getFollow(userInfoStore.id, jointUserInfo)" -->
             <OButton
               v-if="jointUserInfo.isFollow"
               type="secondary"

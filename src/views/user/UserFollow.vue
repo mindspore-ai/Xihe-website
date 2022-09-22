@@ -8,7 +8,10 @@ import IconStar from '~icons/app/Star';
 import OButton from '@/components/OButton.vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-import { getUserDig } from '@/api/api-user';
+import { getFollowing, cancelFollowing } from '@/api/api-user';
+
+// TODO:切后台后
+import { getUserFans } from '@/api/api-user';
 
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
@@ -29,27 +32,36 @@ let queryData = reactive({
   size: 6,
 });
 // 登录用户关注列表
-const loginFollowList = computed(() => {
+/* const loginFollowList = computed(() => {
   return userInfoStore.followList;
-});
+}); */
 
 // 登录用户关注id列表
-let loginFollowIdList = computed(() =>
+/* let loginFollowIdList = computed(() =>
   loginFollowList.value.map((val) => val.id)
-);
+); */
 
 // 当前用户粉丝列表
-const currentFansList = computed(() => {
+/* const currentFansList = computed(() => {
   return userInfo.value.fansList;
-});
+}); */
+const currentFansList = ref([]);
+function getFansList() {
+  getUserFans().then((res) => {
+    console.log('粉丝列表: ', res);
+    currentFansList.value = res.data;
+  });
+  // console.log('currentFansList.value: ', currentFansList.value);
+}
+getFansList();
 
 const emit = defineEmits(['domChange']);
 watch(
   () => {
-    return currentFansList.value.length;
+    return currentFansList.value;
   },
   (val) => {
-    if (val > 6) {
+    if (val && val.length > 6) {
       emit('domChange', 74);
     }
   },
@@ -57,7 +69,7 @@ watch(
 );
 
 // 用于判断按钮的内容状态
-function watchFansList() {
+/* function watchFansList() {
   currentFansList.value.forEach((val) => {
     if (loginFollowIdList.value.indexOf(val.id) !== -1) {
       val.isFollow = true;
@@ -67,23 +79,27 @@ function watchFansList() {
   });
 }
 
-watchFansList();
+watchFansList(); */
 
-watch(
+/* watch(
   () => currentFansList.value,
   () => {
     watchFansList();
   }
-);
+); */
 
 // 关注用户or点赞
-function getFollow(userId, fans) {
+function getFollow() {
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     goAuthorize();
   } else {
     try {
-      getUserDig({ userId, fans }).then((res) => {
+      let params = { account: 's9qfqri3zpc8j2x7' };
+      getFollowing(params).then((res) => {
+        console.log('关注他人: ', res);
+      });
+      /* getUserDig({ userId, fans }).then((res) => {
         if (res.status === 200) {
           if (loginFollowIdList.value.indexOf(fans.id) !== -1) {
             let index = loginFollowIdList.value.indexOf(fans.id);
@@ -93,10 +109,22 @@ function getFollow(userId, fans) {
           }
         }
         fans.isFollow = !fans.isFollow;
-      });
+      }); */
     } catch (error) {
       console.error(error);
     }
+  }
+}
+
+// 取消关注用户
+function cancelFollow() {
+  try {
+    let params = { account: 's9qfqri3zpc8j2x7' };
+    cancelFollowing(params).then((res) => {
+      console.log('res: ', res);
+    });
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -132,7 +160,7 @@ function toTop() {
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
-      <div v-if="currentFansList.length" class="follow-list">
+      <div v-if="currentFansList && currentFansList.length" class="follow-list">
         <div
           v-for="fans in currentFansList.slice(
             (queryData.page - 1) * queryData.size,
@@ -143,21 +171,21 @@ function toTop() {
         >
           <div class="list-item-left">
             <div class="follow-avatar">
-              <router-link :to="`/${fans.name}`" target="_blank"
-                ><el-avatar :size="60" :src="fans.avatar_url" fit="fill"
+              <router-link :to="`/${fans.account}`" target="_blank"
+                ><el-avatar :size="60" :src="fans.avatar_id" fit="fill"
               /></router-link>
             </div>
             <div class="follow-info">
-              <div class="follow-info-name">{{ fans.name }}</div>
+              <div class="follow-info-name">{{ fans.account }}</div>
               <div class="follow-info-desc">
-                {{ fans.description || '这个人很懒，啥都没留下' }}
+                {{ fans.bio || '这个人很懒，啥都没留下' }}
               </div>
             </div>
           </div>
           <div
             v-if="userInfoStore.id !== fans.id"
             class="list-item-right"
-            @click="getFollow(userInfoStore.id, fans)"
+            @click="getFollow()"
           >
             <o-button v-if="fans.isFollow" type="secondary" class="item-btn">
               取消关注
@@ -165,14 +193,25 @@ function toTop() {
             <o-button v-else type="primary">关注TA</o-button>
           </div>
         </div>
+        <o-button type="secondary" class="item-btn" @click="cancelFollow">
+          取消关注
+        </o-button>
+
+        <o-button type="primary" @click="getFollow">关注TA</o-button>
       </div>
       <div v-else class="nofollow">
         <o-icon class="star-icon"><icon-star></icon-star></o-icon>
-        <div class="star-info">暂未有人关注</div>
+        <div class="star-info" @click="getFollow">关注他人</div>
+        <div class="star-info" @click="cancelFollow">
+          暂未有人关注（取消关注）
+        </div>
       </div>
     </div>
     <!-- 分页器 -->
-    <div v-if="currentFansList.length > 6" class="pagination">
+    <div
+      v-if="currentFansList && currentFansList.length > 6"
+      class="pagination"
+    >
       <el-pagination
         :page-sizes="[6, 12, 18]"
         :current-page="queryData.page"

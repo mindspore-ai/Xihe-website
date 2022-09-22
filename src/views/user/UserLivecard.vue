@@ -26,44 +26,44 @@ const i18n = {
 <template>
   <div class="o-livecard o-live-hover">
     <div class="card-top">
-      <div class="model-name">{{ cardData.name }}</div>
+      <div class="model-name">{{ cardData.resource.name }}</div>
     </div>
     <div class="label-box">
-      <div
+      <!-- <div
         v-for="label in cardData.task_list"
         :key="label.id"
         class="label-item"
       >
         {{ label.name }}
-      </div>
+      </div> -->
     </div>
     <p class="model-introduce">
-      {{ cardData.description }}
+      {{ cardData.resource.description }}
     </p>
     <div class="card-bottom">
       <div class="card-bottom-left">
         <div class="user-avatar">
-          <img :src="cardData.owner.avatar" alt="" />
+          <img :src="cardData.resource.owner.avatar_id" alt="" />
         </div>
-        <div v-if="cardData.owner.name" class="nickname">
-          {{ cardData.owner.name }}
+        <div class="nickname">
+          {{ cardData.resource.owner.name }}
         </div>
       </div>
       <div class="card-bottom-right">
-        <div v-if="cardData.time" class="update-time" :title="i18n.uploadTime">
+        <div class="update-time" :title="i18n.uploadTime">
           <o-icon> <icon-time></icon-time></o-icon>
-          <span class="time">{{ cardData.time.substring(0, 10) }}</span>
+          <span class="time">{{ cardData.time }}</span>
         </div>
         <div class="download likes" :title="i18n.likesNumber">
           <o-icon><icon-heart></icon-heart></o-icon>
           <span>
-            {{ cardData.digg_count }}
+            {{ cardData.resource.like_count }}
           </span>
         </div>
-        <div class="download" :title="i18n.downloadTime">
+        <div class="download" :title="i18n.downloadTitle">
           <o-icon><icon-download></icon-download></o-icon>
           <span>
-            {{ cardData.download_count }}
+            {{ cardData.resource.download_count }}
           </span>
         </div>
       </div>

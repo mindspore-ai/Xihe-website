@@ -38,8 +38,20 @@ const userInfo = computed(() => {
 
 const emit = defineEmits(['domChange']);
 // 获得收藏页面数据
-getUserCollection(userInfo.value.id).then((res) => {
+/* getUserCollection(userInfo.value.id).then((res) => {
   if (res.status === 200 && res.data.length) {
+    collectionCount.value = res.data.length;
+    collectionData.value = res.data;
+    if (collectionCount.value > 6) {
+      emit('domChange', 76);
+    }
+  } else {
+    collectionData.value = [];
+  }
+}); */
+getUserCollection().then((res) => {
+  console.log('收藏: ', res.data);
+  if (res.data) {
     collectionCount.value = res.data.length;
     collectionData.value = res.data;
     if (collectionCount.value > 6) {
@@ -100,19 +112,17 @@ function toTop() {
             <span> 收藏了一个</span>
             <span>
               {{
-                item.type.includes('模型')
+                item.resource.type.includes('model')
                   ? '模型'
-                  : item.type.includes('数据集')
-                  ? '数据集'
-                  : '项目'
+                  : item.resource.type.includes('project')
+                  ? '项目'
+                  : '数据集'
               }}
             </span>
-            <span class="item-title-time">{{
-              item.time.substring(0, 10)
-            }}</span>
+            <span class="item-title-time">{{ item.time }}</span>
           </div>
           <projectcard
-            v-if="item.type.includes('项目')"
+            v-if="item.resource.type.includes('project')"
             :card-data="item"
             class="collection-list-item-content"
             @click="goDetail(item)"

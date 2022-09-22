@@ -21,10 +21,9 @@ import {
   modifyProject,
   getModelTags,
   getUserDig,
+  cancelCollection,
   projectFork,
 } from '@/api/api-project';
-
-import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { getBaseInfo } from '@/api/api-shared';
 
@@ -196,44 +195,50 @@ const isForkShow = ref();
 // 详情数据
 function getDetailData() {
   try {
-    getRepoDetailByName({
-      user: route.params.user,
-      repoName: route.params.name,
-      modular: 'project',
+    getProjectData({
+      name: route.params.name,
+      owner_name: route.params.user,
     }).then((res) => {
-      let storeData = res.data;
-      // 判断仓库是否属于自己
-      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
-      // 文件列表是否为空
-      if (detailData.value) {
-        storeData['is_empty'] = detailData.value.is_empty;
+      if (res.results.data.length) {
+        let storeData = res.results.data[0];
+
+        isForkShow.value =
+          storeData.owner_name.name !== userInfoStore.userName ? true : false;
+
+        // 判断仓库是否属于自己
+        storeData['is_owner'] =
+          userInfoStore.userName === storeData.owner_name.name;
+        // 文件列表是否为空
+        if (detailData.value) {
+          storeData['is_empty'] = detailData.value.is_empty;
+        }
+        fileData.setFileData(storeData);
+
+        isShow.value = userInfoStore.userName === storeData.owner_name.name;
+        forkForm.storeName = detailData.value.name;
+        forkForm.owner = userInfoStore.userName;
+
+        if (detailData.value.sdk_name !== 'Gradio') {
+          tabTitle[0].label = '项目卡片';
+          activeName.value = '项目卡片';
+        }
+
+        digCount.value = detailData.value.digg_count;
+
+        const { licenses_list, task_list, tags_list } = detailData.value;
+        isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+        // console.log('isDigged.value', isDigged.value);
+        modelTags.value = [...licenses_list, ...task_list, ...tags_list];
+        modelTags.value = modelTags.value.map((item) => {
+          return item;
+        });
+        headTags.value = [...modelTags.value];
+        getAllTags();
+      } else {
+        router.push('/404');
       }
-      fileData.setFileData(storeData);
-
-      isShow.value = userInfoStore.userName === storeData.owner;
-      forkForm.storeName = detailData.value.name;
-      forkForm.owner = userInfoStore.userName;
-
-      // if (detailData.value.sdk_name !== 'Gradio') {
-      //   tabTitle[0].label = '项目卡片';
-      //   activeName.value = '项目卡片';
-      // }
-
-      // digCount.value = detailData.value.digg_count;
-
-      // const { licenses_list, task_list, tags_list } = detailData.value;
-      // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-      // modelTags.value = [...licenses_list, ...task_list, ...tags_list];
-      // modelTags.value = modelTags.value.map((item) => {
-      //   return item;
-      // });
-      // headTags.value = [...modelTags.value];
-      // getAllTags();
     });
-  } catch (error) {
-    router.push('/404');
-  }
+  } catch (error) {}
 }
 getDetailData();
 
@@ -299,17 +304,36 @@ function addTagClick() {
   // getAllTags();
   // getDetailData();
 }
-
-// 点赞
-function digClick() {
-  reopt.url = `/api/projects/${detailData.value.id}/digg`;
-  reopt.headers = { Authorization: 'Bearer ' + userInfoStore.token };
-  getUserDig(reopt).then((res) => {
-    if (res.data.status === 200) {
-      getDetailData();
-    }
+// console.log('route', route);
+// 点赞(收藏)
+function getLike() {
+  let params = {
+    // name: route.params.name,
+    // owner: route.params.user,
+    // name: 'project-ceshi123',
+    name: 'model-adataset',
+    owner: 'yyj',
+  };
+  getUserDig(params).then((res) => {
+    console.log('点赞、收藏结果: ', res);
+    // if (res.data.status === 200) {
+    getDetailData();
+    console.log(isDigged.value);
+    // }
   });
   // }
+}
+
+// 取消收藏
+function cancelLike() {
+  let params = {
+    // name: 'project-ceshi123',
+    name: 'model-adataset',
+    owner: 'yyj',
+  };
+  cancelCollection(params).then((res) => {
+    console.log('取消收藏结果: ', res);
+  });
 }
 
 // 删除
@@ -608,7 +632,12 @@ watch(
               <o-heart
                 :is-digged="isDigged"
                 :dig-count="digCount"
-                @click="digClick"
+                @click="getLike"
+              ></o-heart>
+              <o-heart
+                :is-digged="true"
+                :dig-count="digCount"
+                @click="cancelLike"
               ></o-heart>
             </div>
           </div>

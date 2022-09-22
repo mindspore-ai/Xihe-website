@@ -11,6 +11,7 @@ export default (err) => {
       err.message = '错误响应也会有状态码为200的情况';
       break;
     case 400:
+      err.message = response.data?.msg || '请求出错(400)';
       break;
     case 401:
       err.message = '请重新登录(401)';

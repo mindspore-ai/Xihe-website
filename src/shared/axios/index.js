@@ -4,7 +4,7 @@ import handleError from './handleError';
 import setConfig from './setConfig';
 
 import { ElLoading } from 'element-plus';
-import { goAuthorize, saveUserAuth } from '@/shared/login';
+import { saveUserAuth } from '@/shared/login';
 /**
  * intactRequest是只在axios基础上更改了请求配置。
  * 而request是基于axios创建的实例，实例只有常见的数据请求方法，没有axios.isCancel/ axios.CancelToken等方法，
@@ -64,49 +64,51 @@ const responseInterceptorId = request.interceptors.response.use(
     }
     const { config } = response;
     pendingPool.delete(config.url);
+    debugger;
 
     return Promise.resolve(handleResponse(response));
   },
   // 对异常响应处理
   (err) => {
     loadingInstance.close();
-    if (err.code !== 400) {
-      ElMessage({
-        type: 'error',
-        message: err,
-        center: true,
-      });
-    }
 
     const { config } = request;
     if (!axios.isCancel(err)) {
       pendingPool.delete(config.url);
     }
 
-    if (!err) return Promise.reject(err);
+    if (!err) {
+      return Promise.reject(err);
+    }
 
     if (err.response) {
       err = handleError(err);
-
       // token过期，重新登录
       if (err.code === 401) {
         saveUserAuth();
       }
-    }
-    // 没有response(没有状态码)的情况
-    // eg: 超时；断网；请求重复被取消；主动取消请求；
-    else {
+    } else {
+      // 没有response(没有状态码)的情况
+      // eg: 超时；断网；请求重复被取消；主动取消请求；
+
       // 错误信息err传入isCancel方法，可以判断请求是否被取消
       if (axios.isCancel(err)) {
-        throw new axios.Cancel(
-          err.message || `请求'${request.config.url}'被取消`
-        );
+        throw new axios.Cancel(err.message || `请求'${request.config.url}'被取消`);
       } else if (err.stack && err.stack.includes('timeout')) {
         err.message = '请求超时!';
       } else {
         err.message = '连接服务器失败!';
       }
     }
+
+    if (err.code !== 400) {
+      ElMessage({
+        type: 'error',
+        message: err.message,
+        center: true,
+      });
+    }
+
     return Promise.reject(err);
   }
 );

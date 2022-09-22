@@ -76,7 +76,6 @@ export function cancelCollection(params) {
  */
 export function setNewProject(params) {
   const url = `/server/project`;
-  console.log(params);
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

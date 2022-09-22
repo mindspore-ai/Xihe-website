@@ -30,12 +30,12 @@ const i18n = {
     </div>
     <div class="label-box">
       <!-- <div
-        v-for="label in cardData.task_list"
-        :key="label.id"
-        class="label-item"
-      >
-        {{ label.name }}
-      </div> -->
+          v-for="label in cardData.task_list"
+          :key="label.id"
+          class="label-item"
+        >
+          {{ label.name }}
+        </div> -->
     </div>
     <p class="model-introduce">
       {{ cardData.resource.description }}

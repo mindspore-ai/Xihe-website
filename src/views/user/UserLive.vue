@@ -55,17 +55,18 @@ getUserLive().then((res) => {
 });
 
 function goDetail(item) {
+  console.log('item: ', item);
   if (item.resource.type.indexOf('model') > -1) {
     router.push({
       path: `/models/${item.resource.owner.name}/${item.resource.name}`,
     });
   } else if (item.resource.type.indexOf('dataset') > -1) {
     router.push({
-      path: `/datasets/${item.owner.name}/${item.resource.name}`,
+      path: `/datasets/${item.resource.owner.name}/${item.resource.name}`,
     });
   } else if (item.resource.type.indexOf('project') > -1) {
     router.push({
-      path: `/projects/${item.owner.name}/${item.resource.name}`,
+      path: `/projects/${item.resource.owner.name}/${item.resource.name}`,
     });
   }
 }

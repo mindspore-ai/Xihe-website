@@ -30,7 +30,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-// console.log('userInfo: ', userInfo.value);
+console.log('userInfo: ', userInfo.value);
 /*TODO:暂无接口
 let i18n = {
   placeholder: '搜索我的关注',
@@ -62,11 +62,15 @@ let queryData = reactive({
 const currentFollowList = ref([]);
 // 获取用户的关注列表
 function getFollowList() {
-  getUserFollow().then((res) => {
-    currentFollowList.value = res.data;
-    console.log('关注列表: ', currentFollowList.value);
-  });
-  // let resData = getUserFollow();
+  try {
+    getUserFollow(userInfo.value.userName).then((res) => {
+      console.log('关注列表: ', res);
+      currentFollowList.value = res.data;
+      // console.log('关注列表: ', currentFollowList.value);
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 getFollowList();
 

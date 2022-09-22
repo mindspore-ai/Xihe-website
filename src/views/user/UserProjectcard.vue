@@ -25,7 +25,11 @@ const i18n = {
 <template>
   <div class="project-card">
     <div class="card-top">
-      <img :src="cardData.resource.cover_id" alt="" />
+      <img
+        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/long_proimg${cardData.resource.cover_id}.png`"
+        alt=""
+      />
+      <!-- <img :src="cardData.resource.cover_id" alt="" /> -->
       <p class="title">{{ cardData.resource.name }}</p>
       <div class="dig">
         <o-icon> <icon-heart></icon-heart> </o-icon>

@@ -21,6 +21,7 @@ import {
   modifyProject,
   getModelTags,
   getUserDig,
+  cancelCollection,
   projectFork,
 } from '@/api/api-project';
 
@@ -53,11 +54,11 @@ const isShow = ref();
 const isTagShow = ref(false);
 const tabPosition = ref('left');
 
-let reopt = {
+/* let reopt = {
   method: 'PUT',
   url: null,
   headers: null,
-};
+}; */
 
 let queryDate = {
   infer_sdk: null,
@@ -300,16 +301,35 @@ function addTagClick() {
   // getDetailData();
 }
 
-// 点赞
-function digClick() {
-  reopt.url = `/api/projects/${detailData.value.id}/digg`;
-  reopt.headers = { Authorization: 'Bearer ' + userInfoStore.token };
-  getUserDig(reopt).then((res) => {
-    if (res.data.status === 200) {
-      getDetailData();
-    }
+// 点赞(收藏)
+function getLike() {
+  let params = {
+    // name: route.params.name,
+    // owner: route.params.user,
+    // name: 'project-ceshi123',
+    name: 'model-adataset',
+    owner: 'yyj',
+  };
+  getUserDig(params).then((res) => {
+    console.log('点赞、收藏结果: ', res);
+    // if (res.data.status === 200) {
+    getDetailData();
+    console.log(isDigged.value);
+    // }
   });
   // }
+}
+
+// 取消收藏
+function cancelLike() {
+  let params = {
+    // name: 'project-ceshi123',
+    name: 'model-adataset',
+    owner: 'yyj',
+  };
+  cancelCollection(params).then((res) => {
+    console.log('取消收藏结果: ', res);
+  });
 }
 
 // 删除
@@ -608,7 +628,12 @@ watch(
               <o-heart
                 :is-digged="isDigged"
                 :dig-count="digCount"
-                @click="digClick"
+                @click="getLike"
+              ></o-heart>
+              <o-heart
+                :is-digged="true"
+                :dig-count="digCount"
+                @click="cancelLike"
               ></o-heart>
             </div>
           </div>

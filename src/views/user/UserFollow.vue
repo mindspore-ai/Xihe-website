@@ -26,6 +26,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
+console.log('userInfo: ', userInfo.value);
 let queryData = reactive({
   search: null,
   page: 1,
@@ -46,8 +47,10 @@ let queryData = reactive({
   return userInfo.value.fansList;
 }); */
 const currentFansList = ref([]);
+// console.log('route', route);
 function getFansList() {
-  getUserFans().then((res) => {
+  getUserFans(userInfo.value.userName).then((res) => {
+    // console.log('route.params.user: ', route.params.user);
     console.log('粉丝列表: ', res);
     currentFansList.value = res.data;
   });
@@ -95,7 +98,7 @@ function getFollow() {
     goAuthorize();
   } else {
     try {
-      let params = { account: 's9qfqri3zpc8j2x7' };
+      let params = { account: 'yangyongjun' };
       getFollowing(params).then((res) => {
         console.log('关注他人: ', res);
       });

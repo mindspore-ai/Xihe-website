@@ -234,7 +234,7 @@ function goWatched() {
   router.push({ path: `/${userInfo.value.userName}/watched` });
 }
 
-// 关注用户or点赞
+// 关注用户or点赞TODO:
 function getFollow(account) {
   // console.log('account: ', account);
   // 如果用户没有登录，则跳转到登录页面

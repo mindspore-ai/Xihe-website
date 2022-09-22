@@ -264,8 +264,9 @@ export function cancelFollowing(params) {
  * 用户的粉丝列表
  * @returns
  */
-export function getUserFans() {
-  const url = `/server/user/follower`;
+export function getUserFans(name) {
+  console.log('name: ', name);
+  const url = `/server/user/follower/${name}`;
   return request
     .get(url, getHeaderConfig())
     .then((res) => {
@@ -280,8 +281,8 @@ export function getUserFans() {
  * 用户的关注列表
  * @returns
  */
-export function getUserFollow() {
-  const url = `/server/user/following`;
+export function getUserFollow(name) {
+  const url = `/server/user/following/${name}`;
   return request
     .get(url, getHeaderConfig())
     .then((res) => {

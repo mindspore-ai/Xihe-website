@@ -70,11 +70,14 @@ const responseInterceptorId = request.interceptors.response.use(
   // 对异常响应处理
   (err) => {
     loadingInstance.close();
-    ElMessage({
-      type: 'error',
-      message: err,
-      center: true,
-    });
+    if (err.code !== 400) {
+      ElMessage({
+        type: 'error',
+        message: err,
+        center: true,
+      });
+    }
+
     const { config } = request;
     if (!axios.isCancel(err)) {
       pendingPool.delete(config.url);
@@ -86,10 +89,9 @@ const responseInterceptorId = request.interceptors.response.use(
       err = handleError(err);
 
       // token过期，重新登录
-      // if (err.code === 401) {
-      //   saveUserAuth();
-      //   goAuthorize();
-      // }
+      if (err.code === 401) {
+        saveUserAuth();
+      }
     }
     // 没有response(没有状态码)的情况
     // eg: 超时；断网；请求重复被取消；主动取消请求；

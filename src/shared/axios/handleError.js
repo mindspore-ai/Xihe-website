@@ -11,10 +11,9 @@ export default (err) => {
       err.message = '错误响应也会有状态码为200的情况';
       break;
     case 400:
-      err.message = '请求错误(400)';
       break;
     case 401:
-      err.message = '未授权，请重新登录(401)';
+      err.message = '请重新登录(401)';
       break;
     case 403:
       err.message = '拒绝访问(403)';

@@ -25,26 +25,26 @@ const i18n = {
 <template>
   <div class="project-card">
     <div class="card-top">
-      <img :src="cardData.photo" alt="" />
-      <p class="title">{{ cardData.name }}</p>
+      <img :src="cardData.resource.cover_id" alt="" />
+      <p class="title">{{ cardData.resource.name }}</p>
       <div class="dig">
         <o-icon> <icon-heart></icon-heart> </o-icon>
-        <span>{{ cardData.digg_count }}</span>
+        <span>{{ cardData.resource.like_count }}</span>
       </div>
     </div>
 
     <div class="card-bottom">
       <div class="info">
         <div class="info-avatar">
-          <img :src="cardData.owner.avatar" alt="" />
+          <img :src="cardData.resource.owner.avatar_id" alt="" />
         </div>
-        <div class="info-name">{{ cardData.owner.name }}</div>
+        <div class="info-name">{{ cardData.resource.owner.name }}</div>
       </div>
       <div class="time" :title="i18n.uploadTime">
         <o-icon>
           <icon-time></icon-time>
         </o-icon>
-        <span>{{ cardData.time.substring(0, 10) }}</span>
+        <span>{{ cardData.time }}</span>
       </div>
     </div>
   </div>

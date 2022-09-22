@@ -41,8 +41,9 @@ const userInfo = computed(() => {
 const emit = defineEmits(['getlivecount', 'domChange']);
 
 // 获得动态页面数据
-getUserLive(userInfo.value.id).then((res) => {
-  if (res.status === 200 && res.data.length) {
+getUserLive().then((res) => {
+  console.log('动态信息: ', res);
+  if (res.data) {
     liveCount.value = res.data.length;
     liveData.value = res.data;
     if (liveCount.value > 6) {
@@ -54,17 +55,17 @@ getUserLive(userInfo.value.id).then((res) => {
 });
 
 function goDetail(item) {
-  if (item.type.indexOf('模型') > -1) {
+  if (item.resource.type.indexOf('model') > -1) {
     router.push({
-      path: `/models/${item.owner.name}/${item.name}`,
+      path: `/models/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.type.indexOf('数据集') > -1) {
+  } else if (item.resource.type.indexOf('dataset') > -1) {
     router.push({
-      path: `/datasets/${item.owner.name}/${item.name}`,
+      path: `/datasets/${item.owner.name}/${item.resource.name}`,
     });
-  } else if (item.type.indexOf('项目') > -1) {
+  } else if (item.resource.type.indexOf('project') > -1) {
     router.push({
-      path: `/projects/${item.owner.name}/${item.name}`,
+      path: `/projects/${item.owner.name}/${item.resource.name}`,
     });
   }
 }
@@ -103,28 +104,26 @@ getCount();
           class="card-list-item"
         >
           <div class="card-list-item-title">
-            <img v-if="item.type.includes('点赞')" :src="lovingHeartImg" />
+            <img v-if="item.type.includes('like')" :src="lovingHeartImg" />
             <img v-else :src="creatingImg" />
             <span>
               {{
-                item.type.includes('点赞') ? '收藏了一个' : '创建了一个'
+                item.type.includes('like') ? '收藏了一个' : '创建了一个'
               }}</span
             >
             <span>
               {{
-                item.type.includes('模型')
+                item.resource.type.includes('model')
                   ? '模型'
-                  : item.type.includes('数据集')
-                  ? '数据集'
-                  : '项目'
+                  : item.resource.type.includes('project')
+                  ? '项目'
+                  : '数据集'
               }}
             </span>
-            <span class="item-title-time">{{
-              item.time.substring(0, 10)
-            }}</span>
+            <span class="item-title-time">{{ item.time }}</span>
           </div>
           <projectcard
-            v-if="item.type.includes('项目')"
+            v-if="item.resource.type.includes('project')"
             :card-data="item"
             class="card-list-item-content"
             @click="goDetail(item)"

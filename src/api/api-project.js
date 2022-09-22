@@ -34,13 +34,40 @@ export function getProjectData(params) {
 }
 
 /**
- * 点赞
+ * 点赞(收藏)
  * @returns
  */
-export function getUserDig(reopt) {
+/* export function getUserDig(reopt) {
   return request(reopt).then((res) => {
     return res;
   });
+} */
+export function getUserDig(params) {
+  const url = `/server/user/like`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+/**
+ * 取消点赞(取消收藏)
+ * @returns
+ */
+export function cancelCollection(params) {
+  // console.log('params: ', params);
+  const url = `/server/user/like`;
+  return request
+    .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 /**

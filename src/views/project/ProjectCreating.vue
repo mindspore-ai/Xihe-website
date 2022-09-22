@@ -171,9 +171,9 @@ onMounted(() => {});
   <div class="create">
     <div class="link">
       <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)"
-        >个人主页</span
-      ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.create }}</span> -->
+          >个人主页</span
+        ><span class="arrow">&gt;</span
+        ><span class="createPlaceholder">{{ i18n.create }}</span> -->
       <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
           >个人主页</el-breadcrumb-item

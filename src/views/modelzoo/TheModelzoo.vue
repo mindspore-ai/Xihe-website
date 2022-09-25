@@ -3,9 +3,9 @@ import ModelzooCard from '@/components/ModelzooCard.vue';
 
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
+import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-// import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng1.png';
 
 import IconArrow from '~icons/app/arrow-blue';
@@ -31,8 +31,15 @@ let i18n = {
       openness: true,
     },
     {
+      title: 'CodeGeeX',
+      introduce: '全球首个三模态千亿参数大模型',
+      url: codegeex,
+      path: '/modelzoo/codegeex',
+      openness: true,
+    },
+    {
       title: '武大.LuoJia',
-      introduce: '全球首个遥感专用框架及最大遥感样本库',
+      introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
       url: luojia,
       path: '/modelzoo/luojia',
       openness: true,

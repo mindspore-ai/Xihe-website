@@ -58,6 +58,35 @@ export default [
       },
     ],
   },
+  // CodeGeex
+  {
+    path: '/modelzoo/codegeex',
+    name: 'codegeex',
+    component: () => {
+      return import('@/views/modelzoo/code-geex/TheCodeGeex.vue');
+    },
+    children: [
+      {
+        path: '',
+        name: 'codegeexExperience',
+        component: () => {
+          return import('@/views/modelzoo/code-geex/TheCodeGeexExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'codegeexIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
+        },
+      },
+      {
+        path: 'test',
+        name: 'codegeexTest',
+        redirect: '/modelzoo/codegeex',
+      },
+    ],
+  },
   // 武大.Luojia
   {
     path: '/modelzoo/luojia',

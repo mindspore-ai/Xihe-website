@@ -35,7 +35,7 @@ function jumpDetail() {
 <template>
   <div :class="openness ? 'card' : 'card-closed'" @click="jumpDetail">
     <div class="card-top">
-      <img class="cover" :src="prop.url" alt="" />
+      <img draggable class="cover" :src="prop.url" alt="" />
     </div>
     <div class="card-bottom">
       <div class="card-bottom-title">

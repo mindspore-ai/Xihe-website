@@ -19,25 +19,25 @@ const navItems = [
     href: '/modelzoo/taichu/introduce',
   },
   {
-    id: 'taichuVision',
-    label: '视觉问答',
+    id: 'imageCaption',
+    label: '以图生文',
     href: '/modelzoo/taichu',
   },
-  // {
-  //   id: 'taichuExperience',
-  //   label: '在线体验',
-  //   href: '/modelzoo/taichu/experience',
-  // },
   {
     id: 'textToImage',
     label: '以文生图',
     href: '/modelzoo/taichu/text',
   },
   {
-    id: 'imageCaption',
-    label: '以图生文',
-    href: '/modelzoo/taichu/image',
+    id: 'taichuVision',
+    label: '视觉问答',
+    href: '/modelzoo/taichu/vision',
   },
+  // {
+  //   id: 'taichuExperience',
+  //   label: '在线体验',
+  //   href: '/modelzoo/taichu/experience',
+  // },
 ];
 
 watch(
@@ -111,18 +111,18 @@ function goTaichuMore() {
             </div>
           </div>
         </div>
-        <div class="taichu-content-desc">
-          <div class="taichu-content-desc-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div>
-          <div class="taichu-content-desc-info">
-            <router-view></router-view>
-          </div>
-        </div>
+      </div>
+    </div>
+    <div class="taichu-content-desc">
+      <div class="taichu-tab">
+        <o-nav
+          :nav-items="navItems"
+          :active-item="activeNavItem"
+          @nav-click="handleNavClick"
+        ></o-nav>
+      </div>
+      <div class="taichu-info">
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -130,13 +130,14 @@ function goTaichuMore() {
 
 <style lang="scss" scoped>
 .taichu {
+  min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
   @media screen and (max-width: 1080px) {
     padding-top: 80px;
     padding-top: 0;
   }
   .taichu-wrap {
-    padding: 120px 16px 64px;
+    padding: 120px 16px 0px;
     margin: 0 auto;
     max-width: 1472px;
     @media screen and (max-width: 1080px) {
@@ -170,8 +171,8 @@ function goTaichuMore() {
     .taichu-content {
       @media screen and (max-width: 1080px) {
         padding-top: 62px;
-        padding-bottom: 40px;
-        min-height: calc(100vh - 190px);
+        // padding-bottom: 40px;
+        // min-height: calc(100vh - 190px);
       }
       .taichu-content-banner {
         padding: 80px;
@@ -189,6 +190,7 @@ function goTaichuMore() {
           }
           img {
             width: 416px;
+            height: 100%;
           }
         }
         .content-banner-right {
@@ -229,31 +231,39 @@ function goTaichuMore() {
           }
         }
       }
-      .taichu-content-desc {
-        margin-top: 16px;
-        background-color: #fff;
-        .o-nav {
-          background: #fff;
-        }
-        &-tab {
-          height: 48px;
-          background-color: #fbfbfb;
-          :deep(.o-nav) {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 0 auto;
-            .nav-item {
-              color: #555;
-              @media screen and (max-width: 1080px) {
-                font-size: 14px;
-                font-weight: 400;
-                color: #000000;
-                line-height: 22px;
-              }
-            }
+    }
+  }
+  .taichu-content-desc {
+    margin-top: 40px;
+    // background-color: #fff;
+    @media screen and (max-width: 768px) {
+      margin-top: 16px;
+    }
+    .o-nav {
+      background: #fff;
+    }
+    .taichu-tab {
+      max-width: 1440px;
+      margin: 0 auto;
+      height: 48px;
+      background-color: #fbfbfb;
+      :deep(.o-nav) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
+        .nav-item {
+          color: #555;
+          @media screen and (max-width: 1080px) {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
           }
         }
+      }
+      .taichu-info {
+        background-color: #f5f6f8;
       }
     }
   }

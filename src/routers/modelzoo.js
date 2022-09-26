@@ -17,20 +17,19 @@ export default [
 
     children: [
       {
-        path: '',
+        path: 'vision',
         name: 'taichuVision',
         component: () => {
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-
-      {
+      /* {
         path: 'experience',
         name: 'taichuExperience',
         component: () => {
           return import('@/views/modelzoo/taichu/ModelzooTaichuExperience.vue');
         },
-      },
+      }, */
       {
         path: 'introduce',
         name: 'taichuIntroduction',
@@ -46,14 +45,14 @@ export default [
         },
       },
       {
-        path: 'image',
+        path: '',
         name: 'imageCaption',
         component: () => {
           return import('@/views/modelzoo/taichu/ModelzooImageCaption.vue');
         },
       },
       {
-        path: 'test',
+        path: 'image',
         name: 'taichuTest',
         redirect: '/modelzoo/taichu',
       },

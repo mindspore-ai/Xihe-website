@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
+import warningImg from '@/assets/icons/warning.png';
 
 import { ElMessage } from 'element-plus';
 import { createTrainProject, getProjectData } from '@/api/api-project';
@@ -20,6 +21,7 @@ const route = useRoute();
 const router = useRouter();
 const queryRef = ref(null);
 const detailData = ref({});
+const tips = ref(false);
 // const isloading = ref(true);
 
 const form = reactive({
@@ -214,6 +216,7 @@ function verify(node, code, message) {
 }
 // 确认创建训练实例
 async function confirmCreating(formEl) {
+  tips.value = false;
   // 如果表单为空，返回
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -734,13 +737,52 @@ const rules = reactive({
             class="confim"
             type="primary"
             loading
-            @click="confirmCreating(queryRef)"
+            @click="tips = true"
             >创建</o-button
           >
           <o-button v-else class="confim2" disabled>创建</o-button>
         </div>
       </div>
     </div>
+    <!-- 训练在24小时后终止提示 -->
+    <o-dialog :show="tips" :close="false" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '40px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          padding: '8px 0 30px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '640px',
+        }"
+      >
+        体验期间最大训练时长为24小时
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '46px',
+          }"
+        >
+          <o-button :style="{ marginRight: '24px' }" @click="tips = false"
+            >取消</o-button
+          >
+          <o-button type="primary" @click="confirmCreating(queryRef)"
+            >确认
+          </o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 

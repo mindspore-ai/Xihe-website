@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, nextTick } from 'vue';
 
 import { request } from '@/shared/axios';
+import { goAuthorize } from '@/shared/login';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -133,48 +134,56 @@ function successCallback() {
 
 // 样例
 function selectImage(val) {
-  if (isClick.value) {
-    isClick.value = false;
+  if (!userInfoStore.id) {
+    goAuthorize();
+  } else {
+    if (isClick.value) {
+      isClick.value = false;
 
-    imgUrl.value = getImage(val);
+      imgUrl.value = getImage(val);
 
-    formData.delete('file');
-    formData = new FormData();
+      formData.delete('file');
+      formData = new FormData();
 
-    request
-      .get(imgUrl.value, {
-        responseType: 'blob',
-      })
-      .then((res) => {
-        let file = new File([res.data], 'img', {
-          type: 'image/png',
-          lastModified: Date.now(),
+      request
+        .get(imgUrl.value, {
+          responseType: 'blob',
+        })
+        .then((res) => {
+          let file = new File([res.data], 'img', {
+            type: 'image/png',
+            lastModified: Date.now(),
+          });
+
+          fileList.value = [];
+          fileList.value[0] = { raw: file }; // formData.append('blob', file);
+
+          handleVqaUpload(
+            {
+              path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
+              file: fileList.value[0].raw,
+              isEdit: false,
+              description: '',
+            },
+            null,
+            successCallback
+          );
         });
+    }
 
-        fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
-
-        handleVqaUpload(
-          {
-            path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
-            file: fileList.value[0].raw,
-            isEdit: false,
-            description: '',
-          },
-          null,
-          successCallback
-        );
-      });
+    setTimeout(() => {
+      isClick.value = true;
+    }, 500);
   }
-
-  setTimeout(() => {
-    isClick.value = true;
-  }, 500);
 }
 
 // 自定义图片
 function customUpload() {
-  inp.value.click();
+  if (!userInfoStore.id) {
+    goAuthorize();
+  } else {
+    inp.value.click();
+  }
 }
 const latestIndex = ref(0);
 
@@ -585,7 +594,7 @@ onMounted(() => {
               left: -20px;
             }
           }
-          img {
+          .image-modal {
             min-height: 160px;
           }
         }

@@ -44,14 +44,9 @@ export function getProjectData(params) {
 } */
 export function getUserDig(params) {
   const url = `/server/user/like`;
-  return request
-    .post(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 取消点赞(取消收藏)
@@ -64,9 +59,6 @@ export function cancelCollection(params) {
     .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
     .then((res) => {
       return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
     });
 }
 

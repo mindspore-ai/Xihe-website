@@ -18,6 +18,7 @@ import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
 let detailData = reactive(useFileData().fileStoreData);
+console.log(detailData);
 
 // const router = useRouter();
 // const route = useRoute();
@@ -33,14 +34,14 @@ const i18n = {
     description: '更改描述',
     options: [
       {
-        value: 'Private',
+        value: 'private',
         label: 'Private',
         id: 1,
         describe:
           '其他用户将无法搜索、查看你的模项目，仅你及你的团队成员可查看和编辑此项目。',
       },
       {
-        value: 'Public',
+        value: 'public',
         label: 'Public',
         id: 2,
         describe:
@@ -73,8 +74,8 @@ const i18n = {
 };
 
 const visibleOptions = reactive(i18n.visible.options);
-const visibleValue = ref(detailData.is_private);
-const description = ref(detailData.description);
+const visibleValue = ref(detailData.repo_type);
+const description = ref(detailData.desc);
 // const newOwn = ref('');
 // const newName = ref('');
 const visibleIndex = ref(0);
@@ -83,19 +84,19 @@ const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
 // const queryRef = ref(null);
 const photos = reactive([
   {
-    id: 1,
+    id: '1',
     url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg1.png',
   },
   {
-    id: 2,
+    id: '2',
     url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg2.png',
   },
   {
-    id: 3,
+    id: '3',
     url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg3.png',
   },
   {
-    id: 4,
+    id: '4',
     url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg4.png',
   },
 ]);
@@ -104,7 +105,9 @@ const photoId = ref(0);
 //   name: '',
 // });
 
-detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
+detailData.repo_type === 'private'
+  ? (visibleIndex.value = 0)
+  : (visibleIndex.value = 1);
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -113,16 +116,18 @@ function getIndex(value) {
 //   newOwn.value = value;
 // }
 
-// visibleValue.value = detailData.is_private === 'Private' ? true : false;
-// function getVisiableSelect(value) {
-//   value === 'Private'
-//     ? (visibleValue.value = true)
-//     : (visibleValue.value = false);
-// }
+visibleValue.value = detailData.repo_type;
+function getVisiableSelect(value) {
+  visibleValue.value = value;
+  //   value === 'private'
+  //     ? (visibleValue.value = true)
+  //     : (visibleValue.value = false);
+}
 photos.forEach((item) => {
   item.is_active = false;
-  if (item.url === detailData.photo_url) {
+  if (item.id === detailData.cover_id) {
     photoId.value = item.id;
+    item.is_active = true;
   }
 });
 
@@ -150,25 +155,24 @@ function selectImgClick(item) {
 
 function confirmPrivate() {
   let query = {
-    type: 'public',
+    type: visibleValue.value,
     cover_id: `${photoId.value}`,
-    id: '632414db7187a3b38b417660',
+    id: detailData.id,
     desc: description.value,
-    name: 'project-hudshfi',
   };
-  modifyProject(query, 's9qfqri3zpc8j2x7').then((res) => {
-    if (res.status === 200) {
-      description.value = res.data.description;
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    }
+  modifyProject(query, userInfoStore.userName).then((res) => {
+    // if (res.status === 200) {
+    // description.value = res.data.description;
+    ElMessage({
+      type: 'success',
+      message: '项目信息更改成功',
+    });
+    // } else {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: res.msg,
+    //   });
+    // }
   });
 }
 

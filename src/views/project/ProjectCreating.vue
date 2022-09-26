@@ -121,31 +121,31 @@ function setProject() {
   //   }
   // });
   setNewProject(newList).then((res) => {
-    if (res.status === 200) {
-      ElMessage({
-        type: 'success',
-        message: '创建成功',
-      });
-      router.push(`/projects/${userInfo.userName}/${proList.name}`);
-    } else if (
-      res.data.name &&
-      res.data.name[0] === '项目名必须是3-20位数字、字母、下划线组成'
-    ) {
-      ElMessage({
-        type: 'error',
-        message: res.data.name[0],
-      });
-    } else if (
-      res.data.non_field_errors &&
-      res.data.non_field_errors[0] ===
-        '字段 name, owner_id, owner_type 必须能构成唯一集合。'
-    ) {
-      ElMessage({
-        type: 'error',
-        message: '项目名已存在',
-      });
-    } else {
-    }
+    // if (res.status === 200) {
+    ElMessage({
+      type: 'success',
+      message: '创建成功',
+    });
+    router.push(`/projects/${userInfo.userName}/${res.data.name}`);
+    // } else if (
+    //   res.data.name &&
+    //   res.data.name[0] === '项目名必须是3-20位数字、字母、下划线组成'
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: res.data.name[0],
+    //   });
+    // } else if (
+    //   res.data.non_field_errors &&
+    //   res.data.non_field_errors[0] ===
+    //     '字段 name, owner_id, owner_type 必须能构成唯一集合。'
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '项目名已存在',
+    //   });
+    // } else {
+    // }
   });
 }
 getModelTags().then((res) => {

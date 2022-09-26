@@ -64,7 +64,7 @@ const responseInterceptorId = request.interceptors.response.use(
     }
     const { config } = response;
     pendingPool.delete(config.url);
-    debugger;
+    // debugger;
 
     return Promise.resolve(handleResponse(response));
   },

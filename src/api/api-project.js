@@ -20,7 +20,7 @@ function getHeaderConfig() {
  * @returns
  */
 export function getProjectData(params) {
-  const url = `/api/projects/?`;
+  const url = `/server/project/s9qfqri3zpc8j2x7`;
   let header = getHeaderConfig();
   // 登录之后携带token
   return request
@@ -87,6 +87,7 @@ export function setNewProject(params) {
  */
 export function modifyProject(params, owner) {
   const url = `/server/project/${owner}/${params.id}`;
+  // console.log(params);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {
@@ -104,6 +105,12 @@ export function modifyProject(params, owner) {
 export function getModelTags() {
   const url = `/api/base/filter/`;
   return request.get(url).then((res) => {
+    return res.data;
+  });
+}
+export function getTags() {
+  const url = `/server/tags/project`;
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -162,9 +169,9 @@ export function projectsOrder(params) {
  * 添加数据集（查询数据集信息）
  * @returns
  */
-export function addDataset(params) {
-  const url = `/api/datasets/?name=${params.name}&owner_name=${params.owner_name}`;
-  return request.get(url, params).then((res) => {
+export function addDataset(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/dataset/relation`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -189,9 +196,9 @@ export function modifyProjectAdd(params, projectId) {
  * 添加模型（查询模型信息）
  * @returns
  */
-export function addModel(params) {
-  const url = `/api/models/?name=${params.name}&owner_name=${params.owner_name}`;
-  return request.get(url, params).then((res) => {
+export function addModel(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/model/relation`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

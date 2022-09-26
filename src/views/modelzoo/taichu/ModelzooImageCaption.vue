@@ -181,27 +181,87 @@ getExampleLists();
 </script>
 <template>
   <div class="model-page">
-    <div class="image-caption">
-      <div class="caption-top">
-        <div>
-          <p class="experience-title">以图生文（Image Caption）</p>
-          <p class="experience-text">
-            顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
-          </p>
+    <div class="model-wrap">
+      <div class="image-caption">
+        <div class="caption-top">
+          <div>
+            <p class="experience-title">以图生文（Image Caption）</p>
+            <p class="experience-text">
+              顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
+            </p>
+          </div>
+          <div class="experience-btn">
+            <o-button
+              v-if="!loading"
+              type="primary"
+              :disabled="loading"
+              @click="submitUpload"
+              >开始推理</o-button
+            >
+          </div>
         </div>
-        <div class="experience-btn">
-          <o-button
-            v-if="!loading"
-            type="primary"
-            :disabled="loading"
-            @click="submitUpload"
-            >开始推理</o-button
-          >
+        <div class="caption-bottom">
+          <div class="caption-bottom-left">
+            <div>
+              <el-upload
+                drag
+                action=""
+                :multiple="false"
+                accept=".png,.jpeg,.jpg"
+                list-type="picture"
+                :file-list="fileList"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="handleChange"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <div v-else class="empty-status">
+                  <o-icon><icon-upload></icon-upload></o-icon>
+                  <p class="upload-tip">
+                    拖拽图片(jpg/jepg/png)到此处上传,且<span
+                      >大小不超过200KB</span
+                    >
+                  </p>
+                </div>
+              </el-upload>
+            </div>
+
+            <div class="img-list">
+              <div
+                v-for="(item, index) in imgLists"
+                :key="item"
+                class="img-list-item"
+                :class="item.id === activeIndex ? 'active' : ''"
+                @click="selectImage(item.url, index)"
+              >
+                <img draggable="false" :src="getImage(item.url)" />
+              </div>
+              <div class="img-list-item custom" @click="customUpload">
+                <o-icon><icon-upload></icon-upload></o-icon>
+                <p>自定义图片</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="caption-bottom-right">
+            <p class="result">分析结果</p>
+            <div v-if="analysis" class="result-text">
+              <span class="head">Caption:</span>
+              <span class="main">&nbsp;{{ analysis }}</span>
+            </div>
+            <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
+            <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
+          </div>
         </div>
       </div>
-      <div class="caption-bottom">
-        <div class="caption-bottom-left">
-          <div>
+
+      <div class="mobile">
+        <el-collapse v-model="activeNames1">
+          <el-collapse-item title="以图生文（Image Caption）" name="1">
+            <div class="description">
+              顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
+            </div>
+            <el-divider />
             <el-upload
               drag
               action=""
@@ -217,104 +277,46 @@ getExampleLists();
               <div v-else class="empty-status">
                 <o-icon><icon-upload></icon-upload></o-icon>
                 <p class="upload-tip">
-                  拖拽图片(jpg/jepg/png)到此处上传,且<span
-                    >大小不超过200KB</span
-                  >
+                  点击上传图片(jpg/jpeg/png)<br /><span>大小不超过200KB</span>
                 </p>
               </div>
             </el-upload>
-          </div>
+            <div class="img-list">
+              <div
+                v-for="(item, index) in mobileImgLists"
+                :key="item"
+                class="img-list-item"
+                :class="item.id === activeIndex ? 'active' : ''"
+                @click="selectImage(item.url, index)"
+              >
+                <img draggable="false" :src="getImage(item.url)" />
+              </div>
 
-          <div class="img-list">
-            <div
-              v-for="(item, index) in imgLists"
-              :key="item"
-              class="img-list-item"
-              :class="item.id === activeIndex ? 'active' : ''"
-              @click="selectImage(item.url, index)"
-            >
-              <img draggable="false" :src="getImage(item.url)" />
+              <div class="img-list-item custom" @click="customUpload">
+                <o-icon><icon-upload></icon-upload></o-icon>
+                <p>自定义</p>
+              </div>
             </div>
-            <div class="img-list-item custom" @click="customUpload">
-              <o-icon><icon-upload></icon-upload></o-icon>
-              <p>自定义图片</p>
+            <p class="experience-title">分析结果</p>
+            <div class="analyse-result">
+              <div v-if="analysis" class="result-text">
+                <span class="head">Caption:</span>
+                <span class="main">&nbsp;{{ analysis }}</span>
+              </div>
+              <!-- <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" /> -->
             </div>
-          </div>
-        </div>
-
-        <div class="caption-bottom-right">
-          <p class="result">分析结果</p>
-          <div v-if="analysis" class="result-text">
-            <span class="head">Caption:</span>
-            <span class="main">&nbsp;{{ analysis }}</span>
-          </div>
-          <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-          <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
-        </div>
+            <div class="btn-box-mobile">
+              <o-button
+                type="primary"
+                size="small"
+                :disabled="loading"
+                @click="submitUpload"
+                >开始推理</o-button
+              >
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
-    </div>
-
-    <div class="mobile">
-      <el-collapse v-model="activeNames1">
-        <el-collapse-item title="以图生文（Image Caption）" name="1">
-          <div class="description">
-            顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
-          </div>
-          <el-divider />
-          <el-upload
-            drag
-            action=""
-            :multiple="false"
-            accept=".png,.jpeg,.jpg"
-            list-type="picture"
-            :file-list="fileList"
-            :auto-upload="false"
-            :show-file-list="false"
-            :on-change="handleChange"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <div v-else class="empty-status">
-              <o-icon><icon-upload></icon-upload></o-icon>
-              <p class="upload-tip">
-                点击上传图片(jpg/jpeg/png)<br /><span>大小不超过200KB</span>
-              </p>
-            </div>
-          </el-upload>
-          <div class="img-list">
-            <div
-              v-for="(item, index) in mobileImgLists"
-              :key="item"
-              class="img-list-item"
-              :class="item.id === activeIndex ? 'active' : ''"
-              @click="selectImage(item.url, index)"
-            >
-              <img draggable="false" :src="getImage(item.url)" />
-            </div>
-
-            <div class="img-list-item custom" @click="customUpload">
-              <o-icon><icon-upload></icon-upload></o-icon>
-              <p>自定义</p>
-            </div>
-          </div>
-          <p class="experience-title">分析结果</p>
-          <div class="analyse-result">
-            <div v-if="analysis" class="result-text">
-              <span class="head">Caption:</span>
-              <span class="main">&nbsp;{{ analysis }}</span>
-            </div>
-            <!-- <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" /> -->
-          </div>
-          <div class="btn-box-mobile">
-            <o-button
-              type="primary"
-              size="small"
-              :disabled="loading"
-              @click="submitUpload"
-              >开始推理</o-button
-            >
-          </div>
-        </el-collapse-item>
-      </el-collapse>
     </div>
   </div>
 </template>
@@ -587,7 +589,7 @@ getExampleLists();
   }
 }
 .mobile {
-  padding: 16px 16px 0;
+  // padding: 16px 16px 0;
   display: none;
   :deep(.el-image) {
     .el-image__preview {
@@ -658,7 +660,16 @@ getExampleLists();
 }
 .model-page {
   background-color: #f5f6f8;
-  max-width: 1440px;
+  // max-width: 1440px;
+  width: 100%;
+  padding-bottom: 64px;
+  @media screen and (max-width: 768px) {
+    padding: 16px 16px 40px;
+  }
+  .model-wrap {
+    margin: 0 auto;
+    max-width: 1440px;
+  }
 }
 .caption-bottom {
   height: 560px;

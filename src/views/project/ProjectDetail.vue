@@ -19,7 +19,7 @@ import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 import {
   getProjectData,
   modifyProject,
-  getModelTags,
+  getTags,
   getUserDig,
   cancelCollection,
   projectFork,
@@ -230,7 +230,7 @@ function getDetailData() {
       //   return item;
       // });
       // headTags.value = [...modelTags.value];
-      // getAllTags();
+      getAllTags();
     });
   } catch (error) {
     router.push('/404');
@@ -441,7 +441,7 @@ function cancelBtn() {
 }
 
 function getAllTags() {
-  getModelTags().then((res) => {
+  getTags().then((res) => {
     renderList.value = res.data;
     // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
 

@@ -20,7 +20,7 @@ import { debounce } from 'lodash/function';
 
 import { goAuthorize } from '@/shared/login';
 
-import { getProjectData, getModelTags } from '@/api/api-project';
+import { getProjectData, getTags } from '@/api/api-project';
 
 import { useLoginStore } from '@/stores';
 
@@ -326,12 +326,13 @@ function getProject() {
     if (projectCount.value / 10 < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
-    projectData.value = res.results.data;
+    projectData.value = res.data;
+    console.log(projectData);
   });
 }
 
 function getModelTag() {
-  getModelTags(queryData).then((res) => {
+  getTags(queryData).then((res) => {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].forEach((it) => {
         it.isActive = false;
@@ -675,14 +676,17 @@ onUnmounted(() => {
               v-for="item in projectData"
               :key="item.id"
               class="pro-card"
-              @click="goDetail(item.owner_name.name, item.name)"
+              @click="goDetail(item.owner, item.name)"
             >
               <div class="card-top">
-                <img :src="item.photo_url" alt="" />
+                <img
+                  :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
+                  alt=""
+                />
                 <p class="title">{{ item.name }}</p>
                 <div class="dig">
                   <o-icon> <icon-heart></icon-heart> </o-icon
-                  >{{ item.digg_count }}
+                  >{{ item.like_count }}
                 </div>
                 <div class="card-modal"></div>
               </div>
@@ -690,17 +694,17 @@ onUnmounted(() => {
               <div class="card-bottom">
                 <div class="info">
                   <div class="info-avata">
-                    <img :src="item.owner_name.avatar_url" alt="" />
+                    <!-- <img :src="item.owner_name.avatar_url" alt="" /> -->
                   </div>
                   <div class="info-name">
-                    {{ item.owner_name.name }}
+                    {{ item.owner }}
                   </div>
                 </div>
                 <div class="time">
                   <o-icon>
                     <icon-time></icon-time>
                   </o-icon>
-                  {{ item.update_date_time.split(' ')[0] }}
+                  {{ item.updated_at }}
                 </div>
               </div>
             </div>

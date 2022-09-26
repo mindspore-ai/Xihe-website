@@ -117,38 +117,40 @@ function confirmAdd() {
     });
     return;
   } else {
-    params.owner_name = paramsArr[0];
+    params.owner = paramsArr[0];
     params.name = paramsArr[1];
 
-    addDataset(params).then((res) => {
-      if (res.results.data.length === 0) {
-        ElMessage({
-          type: 'error',
-          message: '没有查询到数据！',
-        });
-        return;
-      } else {
-        let modifyParams = {
-          relate_infer_datasets: [],
-        };
-        detailData.value.relate_infer_datasets_list.forEach((item) => {
-          modifyParams.relate_infer_datasets.push(item.id);
-        });
-        let projectId = detailData.value.id;
-        modifyParams.relate_infer_datasets.push(res.results.data[0].id);
-        modifyProjectAdd(modifyParams, projectId).then((res) => {
-          if (res.status === 200) {
-            ElMessage({
-              type: 'success',
-              message: '添加成功',
-            });
-            emit('on-click');
-            isShow.value = false;
-            addSearch.value = '';
-          }
-        });
+    addDataset(params, detailData.value.owner, detailData.value.id).then(
+      (res) => {
+        if (res.results.data.length === 0) {
+          ElMessage({
+            type: 'error',
+            message: '没有查询到数据！',
+          });
+          return;
+        } else {
+          let modifyParams = {
+            relate_infer_datasets: [],
+          };
+          detailData.value.relate_infer_datasets_list.forEach((item) => {
+            modifyParams.relate_infer_datasets.push(item.id);
+          });
+          // let projectId = detailData.value.id;
+          modifyParams.relate_infer_datasets.push(res.results.data[0].id);
+          // modifyProjectAdd(modifyParams, projectId).then((res) => {
+          //   if (res.status === 200) {
+          //     ElMessage({
+          //       type: 'success',
+          //       message: '添加成功',
+          //     });
+          //     emit('on-click');
+          //     isShow.value = false;
+          //     addSearch.value = '';
+          //   }
+          // });
+        }
       }
-    });
+    );
   }
 }
 
@@ -186,28 +188,30 @@ function confirmClick() {
     });
     return;
   } else {
-    params.owner_name = paramsArr[0];
+    params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    addModel(params).then((res) => {
-      let modifyParams = {
-        relate_infer_models: [],
-      };
+    addModel(params, detailData.value.owner, detailData.value.id).then(
+      (res) => {
+        let modifyParams = {
+          relate_infer_models: [],
+        };
 
-      detailData.value.relate_infer_models_list.forEach((item) => {
-        modifyParams.relate_infer_models.push(item.id);
-      });
+        detailData.value.relate_infer_models_list.forEach((item) => {
+          modifyParams.relate_infer_models.push(item.id);
+        });
 
-      let projectId = detailData.value.id;
-      modifyParams.relate_infer_models.push(res.results.data[0].id);
+        // let projectId = detailData.value.id;
+        modifyParams.relate_infer_models.push(res.results.data[0].id);
 
-      modifyModelAdd(modifyParams, projectId).then((res) => {
-        if (res.status === 200) {
-          emit('on-click');
-          isShow1.value = false;
-          addSearch.value = '';
-        }
-      });
-    });
+        // modifyModelAdd(modifyParams, projectId).then((res) => {
+        //   if (res.status === 200) {
+        //     emit('on-click');
+        //     isShow1.value = false;
+        //     addSearch.value = '';
+        //   }
+        // });
+      }
+    );
   }
 }
 
@@ -347,7 +351,7 @@ watch(
   }
 );
 const failLog = ref('');
-const loading = ref(false);
+const loading = ref(true);
 getLog(detailData.value.id).then((res) => {
   if (res.data.data) {
     failLog.value = res.data.data.replace(/\n/g, '<br>');
@@ -599,6 +603,7 @@ onUnmounted(() => {
 //     window.clearInterval(ht);
 //   }
 // }
+console.log(detailData);
 </script>
 <template>
   <div v-if="detailData" class="model-card">
@@ -705,7 +710,7 @@ onUnmounted(() => {
         <div class="add-title">
           <h4 class="title">{{ i18n.dataset }}</h4>
           <p
-            v-if="userInfo.userName === detailData.owner_name.name"
+            v-if="userInfo.userName === detailData.owner"
             class="add"
             @click="addRelateClick"
           >
@@ -720,12 +725,12 @@ onUnmounted(() => {
             "
             :relate-name="'dataset'"
           ></no-relate>
-          <relate-card
+          <!-- <relate-card
             :detail-data="detailData"
             :name="'relate_infer_datasets_list'"
             @delete="deleteClick"
             @jump="goDetasetClick"
-          ></relate-card>
+          ></relate-card> -->
         </div>
       </div>
       <!-- 添加模型 -->
@@ -733,7 +738,7 @@ onUnmounted(() => {
         <div class="add-title">
           <h4 class="title">{{ i18n.relatedItem }}</h4>
           <p
-            v-if="userInfo.userName === detailData.owner_name.name"
+            v-if="userInfo.userName === detailData.owner"
             class="add"
             @click="addModeClick"
           >
@@ -747,12 +752,12 @@ onUnmounted(() => {
           "
           :relate-name="'model'"
         ></no-relate>
-        <relate-card
+        <!-- <relate-card
           :detail-data="detailData"
           :name="'relate_infer_models_list'"
           @delete="deleteClick"
           @jump="goDetailClick"
-        ></relate-card>
+        ></relate-card> -->
       </div>
     </div>
 

@@ -41,8 +41,8 @@ const userInfo = computed(() => {
 const emit = defineEmits(['getlivecount', 'domChange']);
 
 // 获得动态页面数据
-getUserLive().then((res) => {
-  console.log('动态信息: ', res);
+getUserLive(userInfo.value.userName).then((res) => {
+  // console.log('动态信息: ', res);
   if (res.data) {
     liveCount.value = res.data.length;
     liveData.value = res.data;

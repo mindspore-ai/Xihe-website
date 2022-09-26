@@ -310,13 +310,17 @@ function getLike() {
     name: 'model-adataset',
     owner: 'yyj',
   };
-  getUserDig(params).then((res) => {
-    console.log('点赞、收藏结果: ', res);
-    // if (res.data.status === 200) {
-    getDetailData();
-    console.log(isDigged.value);
-    // }
-  });
+  getUserDig(params)
+    .then((res) => {
+      console.log('点赞、收藏结果: ', res);
+      // if (res.data.status === 200) {
+      getDetailData();
+      // console.log(isDigged.value);
+      // }
+    })
+    .catch((err) => {
+      throw err;
+    });
   // }
 }
 

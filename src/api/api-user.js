@@ -155,76 +155,27 @@ export function changeUserPhone(params) {
   });
 }
 
-/**
- * 用户动态
- * @returns
- */
-/* export function getUserLive(id) {
-  const url = `/api/users/actions/actions/${id}`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
-} */
-
-/**
- * 用户收藏
- * @returns
- */
-/* export function getUserCollection(id) {
-  const url = `/api/users/actions/digg/${id}`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
-} */
-
-/**
- * 关注用户or取消关注
- * @returns
- */
-/* export function getUserDig(reopt) {
-  const url = `/api/users/${reopt.userId}/users/${reopt.fans.id}`;
-  return request.put(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-export function getUserDig2(reopt) {
-  const url = `/api/users/${reopt.userId}/users/${reopt.follow.id}`;
-  return request.put(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
-
 // TODO:换后台的接口
 /**
  * 用户动态
  * @returns
  */
-export function getUserLive() {
-  const url = `/server/user/activity`;
-  return request
-    .get(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      throw err;
-    });
+export function getUserLive(name) {
+  const url = `/server/user/activity/${name}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**
  * 用户收藏
  * @returns
  */
-export function getUserCollection() {
-  const url = `/server/user/like`;
-  return request
-    .get(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export function getUserCollection(name) {
+  const url = `/server/user/like/${name}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**
@@ -233,14 +184,9 @@ export function getUserCollection() {
  */
 export function getFollowing(params) {
   const url = `/server/user/following`;
-  return request
-    .post(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**
@@ -254,9 +200,6 @@ export function cancelFollowing(params) {
     .delete(url, Object.assign({ data: params }, getHeaderConfig()))
     .then((res) => {
       return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
     });
 }
 
@@ -267,14 +210,9 @@ export function cancelFollowing(params) {
 export function getUserFans(name) {
   console.log('name: ', name);
   const url = `/server/user/follower/${name}`;
-  return request
-    .get(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**

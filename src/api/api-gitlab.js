@@ -77,6 +77,7 @@ export async function editorFileGitlab(params, path) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(path, id) {
+  console.log(getGitlabConfig());
   const url = `/repo/projects/${id}/repository/tree?path=${path}&per_page=100`;
   return request.get(url, await getGitlabConfig()).then((res) => {
     return res.data;
@@ -99,19 +100,17 @@ export async function deleteFile(path, id) {
     });
 }
 // 删除文件夹
-export async function deleteFolder(path, id) {
-  const url = `/projects/${id}/repository/commits`;
+export async function deleteFolder(actions, id) {
+  const url = `/repo/projects/${id}/repository/commits`;
   const params = {
     branch: 'main',
     commit_message: 'delete file',
-    actions: [{}],
+    actions: actions,
   };
-
-  return request
-    .delete(url, { params, ...(await getGitlabConfig()) })
-    .then((res) => {
-      return res.data;
-    });
+  console.log(params);
+  return request.post(url, params, await getGitlabConfig()).then((res) => {
+    return res.data;
+  });
 }
 // gitlab 文件详情
 export async function getGitlabFileDetail(path, id) {
@@ -140,20 +139,7 @@ export async function gitlabDownloadAll(id) {
   });
 }
 export function getGitlabCommit(path, id) {
-  // const url = `/graphql/api/graphql`;
-  // const params = {
-  //   operationName: 'getPaginatedTree',
-  //   query:
-  //     'fragment TreeEntry on Entry {\n  __typename\n  id\n  sha\n  name\n  flatPath\n  type\n }\n\nquery getPaginatedTree($projectPath: ID!, $path: String, $ref: String!, $nextPageCursor: String) {\n  project(fullPath: $projectPath) {\n    id\n    __typename\n    repository {\n      __typename\n      paginatedTree(path: $path, ref: $ref, after: $nextPageCursor) {\n        __typename\n        pageInfo {\n          __typename\n          endCursor\n          startCursor\n          hasNextPage\n        }\n        nodes {\n          __typename\n          trees {\n            __typename\n            nodes {\n              ...TreeEntry\n              webPath\n              __typename\n            }\n          }\n          submodules {\n            __typename\n            nodes {\n              ...TreeEntry\n              webUrl\n              treeUrl\n              __typename\n            }\n          }\n          blobs {\n            __typename\n            nodes {\n              ...TreeEntry\n              mode\n              webPath\n              lfsOid\n              __typename\n            }\n          }\n        }\n      }\n    }\n  }\n}\n',
-  //   variables: {
-  //     nextPageCursor: '',
-  //     pageSize: 100,
-  //     path: '/',
-  //     projectPath: '888/model-firstModel',
-  //     ref: 'main',
-  //   },
-  // };
-  const url = `/repo/projects/${id}/repository/commits?path=${path}&per_page=100`;
+  const url = `/repo/projects/${id}/repository/commits?path=${path}&trailers=true`;
 
   const headers = {
     Authorization: ' Bearer hGq8ze9XF6VDsis2t4SY',
@@ -167,7 +153,7 @@ export async function findAllFileByPath(fullPath, path) {
   const url = `/graphql/api/graphql`;
   const params = {
     query:
-      'query findAllFileByPath($fullPath:ID!,$path:String)   { project(fullPath: $fullPath) { repository { tree(ref: "main", recursive: true, path:$path ,pre_page:1000){ blobs{ nodes { name type path } } } } } } ',
+      'query findAllFileByPath($fullPath:ID!,$path:String)   { project(fullPath: $fullPath) { repository { tree(ref: "main", recursive: true, path:$path ){ blobs{ nodes { name type path } } } } } } ',
     variables: {
       path,
       fullPath,

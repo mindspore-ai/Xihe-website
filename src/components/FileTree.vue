@@ -104,25 +104,6 @@ let query = reactive({
 });
 async function getDetailData(path) {
   try {
-    // obs
-    // findFile(path).then((tree) => {
-    //   if (
-    //     tree.status === 200 &&
-    //     tree.data.children &&
-    //     tree.data.children.length
-    //   ) {
-    //     filesList.value = tree.data.children;
-    //     useFileData().fileStoreData['is_empty'] = false;
-    //     filesList.value.sort((a, b) => {
-    //       return b.is_folder - a.is_folder;
-    //     });
-    //   } else if (route.params.contents && route.params.contents.length) {
-    //     filesList.value = [];
-    //     useFileData().fileStoreData['is_empty'] = false;
-    //   } else {
-    //     useFileData().fileStoreData['is_empty'] = true;
-    //   }
-    // });
     // gitlab
     await getGitlabTree(path, repoDetailData.value.repo_id).then((res) => {
       filesList.value = res;
@@ -173,11 +154,6 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
-  // downloadGitlabFile(item.name).then((res) => {
-  //   const blobs = dataURLtoBlob(res.content);
-  //   let href = window.URL.createObjectURL(blobs);
-  //   window.open(href);
-  // });
   let contents = [...routerParams.contents, decodeURI(item.name)];
   let targetRoute = null;
   if (item.type === 'blob') {
@@ -241,7 +217,31 @@ function deleteFolderClick(folderName, id) {
   if (isFolder.value) {
     findAllFileByPath(`${routerParams.user}/${routerParams.name}`, path).then(
       (res) => {
-        console.log(res);
+        if (
+          res.data &&
+          res?.data?.project?.repository?.tree?.blobs?.nodes.length !== 100
+        ) {
+          let nodes = res.data.project.repository.tree.blobs.nodes;
+          let targetArr = new Array(nodes.length);
+          nodes.forEach((item, index) => {
+            targetArr[index] = {
+              action: 'delete',
+              file_path: item.path,
+            };
+          });
+          deleteFolder(targetArr, repoDetailData.value.repo_id).then(() => {
+            getFilesByPath();
+            ElMessage({
+              type: 'success',
+              message: '删除成功',
+            });
+          });
+        } else {
+          ElMessage({
+            type: 'error',
+            message: '出了点问题，请使用git操作',
+          });
+        }
       }
     );
   } else {
@@ -251,9 +251,9 @@ function deleteFolderClick(folderName, id) {
         type: 'success',
         message: '删除成功',
       });
-      showDel.value = false;
     });
   }
+  showDel.value = false;
 }
 watch(
   () => route.fullPath,

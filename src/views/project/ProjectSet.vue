@@ -157,10 +157,10 @@ function confirmPrivate() {
   let query = {
     type: visibleValue.value,
     cover_id: `${photoId.value}`,
-    id: detailData.id,
     desc: description.value,
   };
-  modifyProject(query, userInfoStore.userName).then((res) => {
+  console.log(detailData.id);
+  modifyProject(query, userInfoStore.userName, detailData.id).then((res) => {
     // if (res.status === 200) {
     // description.value = res.data.description;
     ElMessage({

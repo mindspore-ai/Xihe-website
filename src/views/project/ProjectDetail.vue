@@ -77,11 +77,11 @@ let dialogList = {
   tags: [],
 
   menuList: [
-    { tab: '应用分类', key: 'task' },
+    { tab: '应用分类', key: '0' },
     // { tab: '项目类型', key: 'infer_sdk' },
-    // { tab: '训练平台', key: 'train_sdk' },
-    { tab: '协议', key: 'licenses' },
-    { tab: '其他', key: 'tags' },
+    { tab: '训练平台', key: '1' },
+    // { tab: '协议', key: 'licenses' },
+    { tab: '其他', key: '2' },
   ],
 };
 
@@ -215,17 +215,21 @@ function getDetailData() {
       forkForm.storeName = detailData.value.name;
       forkForm.owner = userInfoStore.userName;
 
-      // if (detailData.value.sdk_name !== 'Gradio') {
-      //   tabTitle[0].label = '项目卡片';
-      //   activeName.value = '项目卡片';
-      // }
+      if (detailData.value.type !== 'Gradio') {
+        tabTitle[0].label = '项目卡片';
+        activeName.value = '项目卡片';
+      }
 
-      // digCount.value = detailData.value.digg_count;
+      // digCount.value = detailData.value.type;
 
-      // const { licenses_list, task_list, tags_list } = detailData.value;
+      const { protocol, training, tags } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-      // modelTags.value = [...licenses_list, ...task_list, ...tags_list];
+      if (tags) {
+        modelTags.value = [...protocol, ...training, ...tags];
+      } else {
+        modelTags.value = [{ name: protocol }, { name: training }];
+      }
+      // TODO:显示已添加可以修改的标签
       // modelTags.value = modelTags.value.map((item) => {
       //   return item;
       // });
@@ -342,25 +346,26 @@ function deleteClick(tag) {
   headTags.value.splice(i, 1);
 
   let menu = dialogList.menuList.map((item) => item.key);
+  console.log(menu);
   menu.forEach((key) => {
-    if (key === 'task') {
-      renderList.value[key].forEach((item) => {
-        item.task_list.forEach((it) => {
+    if (key === '0') {
+      renderList.value[key].items.forEach((item) => {
+        item.items.forEach((it) => {
           if (it.name === tag.name) {
             it.isActive = false;
           }
         });
       });
     } else {
-      renderList.value[key].forEach((item) => {
-        if (item.name === tag.name) {
-          item.isActive = false;
-        }
-      });
+      //     renderList.value[key].forEach((item) => {
+      //       if (item.name === tag.name) {
+      //         item.isActive = false;
+      //       }
+      //     });
     }
   });
 }
-
+// TODO:
 // 编辑标签头部标签删除
 function deleteModelTags() {
   headTags.value = [];
@@ -383,44 +388,48 @@ function deleteModelTags() {
 
 // 确认
 function confirmBtn() {
-  dialogList.menuList.forEach((menu) => {
-    if (menu.key === 'task') {
-      queryDate[menu.key] = [];
-      renderList.value[menu.key].forEach((item) => {
-        item.task_list.forEach((it) => {
-          if (it.isActive) {
-            queryDate[menu.key].push(it.id);
-            let index = queryDate['task_cate'].indexOf(it.task_cate_id);
-            if (index === -1) {
-              queryDate['task_cate'].push(it.task_cate_id);
-            }
-          } else {
-            return;
-          }
-        });
-      });
-    } else if (menu.key === 'tags') {
-      queryDate[menu.key] = [];
-      renderList.value[menu.key].forEach((item) => {
-        if (item.isActive === true) {
-          queryDate[menu.key].push(item.id);
-        }
-      });
-    } else if (menu.key === 'licenses') {
-      queryDate[menu.key] = [];
-      renderList.value[menu.key].forEach((item) => {
-        if (item.isActive) {
-          queryDate[menu.key].push(item.id);
-        }
-      });
-    } else {
-      renderList.value[menu.key].forEach((item) => {
-        if (item.isActive === true) {
-          queryDate[menu.key] = item.id;
-        }
-      });
-    }
+  headTags.value = headTags.value.map((item) => {
+    return item.name;
   });
+  console.log(headTags.value);
+  // dialogList.menuList.forEach((menu) => {
+  //   if (menu.key === 'task') {
+  //     queryDate[menu.key] = [];
+  //     renderList.value[menu.key].forEach((item) => {
+  //       item.task_list.forEach((it) => {
+  //         if (it.isActive) {
+  //           queryDate[menu.key].push(it.id);
+  //           let index = queryDate['task_cate'].indexOf(it.task_cate_id);
+  //           if (index === -1) {
+  //             queryDate['task_cate'].push(it.task_cate_id);
+  //           }
+  //         } else {
+  //           return;
+  //         }
+  //       });
+  //     });
+  //   } else if (menu.key === 'tags') {
+  //     queryDate[menu.key] = [];
+  //     renderList.value[menu.key].forEach((item) => {
+  //       if (item.isActive === true) {
+  //         queryDate[menu.key].push(item.id);
+  //       }
+  //     });
+  //   } else if (menu.key === 'licenses') {
+  //     queryDate[menu.key] = [];
+  //     renderList.value[menu.key].forEach((item) => {
+  //       if (item.isActive) {
+  //         queryDate[menu.key].push(item.id);
+  //       }
+  //     });
+  //   } else {
+  //     renderList.value[menu.key].forEach((item) => {
+  //       if (item.isActive === true) {
+  //         queryDate[menu.key] = item.id;
+  //       }
+  //     });
+  //   }
+  // });
   let params = queryDate;
   params.id = detailData.value.id;
 
@@ -447,45 +456,49 @@ function getAllTags() {
 
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key === 'task') {
-        renderList.value[key].forEach((item) => {
-          item.task_list.forEach((it) => {
-            it.isActive = false;
+      // if (key === '0') {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return (it = {
+            name: it,
+            isActive: false,
           });
         });
-      } else {
-        renderList.value[key].forEach((item) => {
-          item.isActive = false;
-          item.isSelected = false;
-        });
-      }
-    });
-
-    modelTags.value.forEach((item) => {
-      menu.forEach((menuitem) => {
-        if (menuitem === 'task') {
-          renderList.value[menuitem].forEach((mit) => {
-            mit.task_list.forEach((it) => {
-              if (it.name === item.name) {
-                it.isActive = true;
-              }
-            });
-          });
-        } else if (menuitem === 'tags') {
-          renderList.value[menuitem].forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
-          });
-        } else {
-          renderList.value[menuitem].forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
-          });
-        }
       });
+      // } else {
+      //   renderList.value[key].forEach((item) => {
+      //     item.isActive = false;
+      //     item.isSelected = false;
+      //   });
+      // }
     });
+    // console.log(renderList);
+    // TODO:已添加标签高亮
+    // modelTags.value.forEach((item) => {
+    //   menu.forEach((menuitem) => {
+    //     if (menuitem === 'task') {
+    //       renderList.value[menuitem].forEach((mit) => {
+    //         mit.task_list.forEach((it) => {
+    //           if (it.name === item.name) {
+    //             it.isActive = true;
+    //           }
+    //         });
+    //       });
+    //     } else if (menuitem === 'tags') {
+    //       renderList.value[menuitem].forEach((it) => {
+    //         if (it.name === item.name) {
+    //           it.isActive = true;
+    //         }
+    //       });
+    //     } else {
+    //       renderList.value[menuitem].forEach((it) => {
+    //         if (it.name === item.name) {
+    //           it.isActive = true;
+    //         }
+    //       });
+    //     }
+    //   });
+    // });
   });
 }
 // getAllTags();
@@ -519,9 +532,9 @@ function forkCreateClick() {
       forkShow.value = false;
       // loadingShow.value = true;
       //换后台
-      const owner1 = 's9qfqri3zpc8j2x7';
-      const id1 = '632414db7187a3b38b417660';
-      projectFork(owner1, id1).then((res) => {
+      // const owner1 = 's9qfqri3zpc8j2x7';
+      // const id1 = '632414db7187a3b38b417660';
+      projectFork(userInfoStore.userName, detailData.value.id).then((res) => {
         if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
@@ -750,20 +763,20 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <div v-if="menu.key == 'task'" class="body-right">
+                <div v-if="menu.key == '0'" class="body-right">
                   <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
+                    v-for="item in renderList[menu.key].items"
+                    :key="item"
                     class="detail-box"
                   >
                     <div>
                       <p class="tan-title">
-                        {{ item.name }}
+                        {{ item.kind }}
                       </p>
                       <div class="tag-box">
                         <div
-                          v-for="it in item.task_list"
-                          :key="it.id"
+                          v-for="it in item.items"
+                          :key="it"
                           class="condition-detail"
                           :class="{ 'condition-active': it.isActive }"
                           @click="tagClick(it, menu.key)"

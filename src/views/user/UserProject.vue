@@ -40,7 +40,7 @@ const props = defineProps({
 let query = reactive({
   search: '',
   page: 1,
-  size: 12,
+  count_per_page: 12,
   owner_name: route.params.user,
   order: '',
 });
@@ -62,16 +62,16 @@ function handleCurrentChange(val) {
 
 function getUserProject() {
   getProjectData(query).then((res) => {
-    if (res.count && res.results.status === 200) {
-      if (res.count > 12) {
-        emit('domChange', 76);
-      }
-      projectCount.value = res.count;
-      projectData.value = res.results.data;
-    } else {
-      projectData.value = [];
-      projectCount.value = res.count;
+    // if (res.count && res.results.status === 200) {
+    if (res.data.length > 12) {
+      emit('domChange', 76);
     }
+    projectCount.value = res.data.length;
+    projectData.value = res.data;
+    // } else {
+    //   projectData.value = [];
+    //   projectCount.value = res.count;
+    // }
   });
 }
 function goDetail(user, name) {
@@ -109,13 +109,16 @@ watch(
           v-for="item in projectData"
           :key="item.id"
           class="pro-card"
-          @click="goDetail(item.owner_name.name, item.name)"
+          @click="goDetail(item.owner, item.name)"
         >
           <div class="card-top">
-            <img :src="item.photo_url" alt="" />
+            <img
+              :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
+              alt=""
+            />
             <p class="title">{{ item.name }}</p>
             <div class="dig">
-              <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.digg_count }}
+              <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.like_count }}
             </div>
             <div class="card-modal"></div>
           </div>
@@ -123,15 +126,15 @@ watch(
           <div class="card-bottom">
             <div class="info">
               <div class="info-avata">
-                <img :src="item.owner_name.avatar_url" alt="" />
+                <!-- <img :src="item.owner_name.avatar_url" alt="" /> -->
               </div>
-              <div class="info-name">{{ item.owner_name.name }}</div>
+              <div class="info-name">{{ item.owner }}</div>
             </div>
             <div class="time">
               <o-icon>
                 <icon-time></icon-time>
               </o-icon>
-              {{ item.update_date_time.split(' ')[0] }}
+              {{ item.updated_at.split(' ')[0] }}
             </div>
           </div>
         </div>

@@ -32,14 +32,14 @@ let i18n = {
     },
     {
       title: 'CodeGeeX',
-      introduce: '全球首个三模态千亿参数大模型',
+      introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
       url: codegeex,
       path: '/modelzoo/codegeex',
       openness: true,
     },
     {
       title: '武大.LuoJia',
-      introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
+      introduce: '全球首个遥感专用框架及最大遥感样本库',
       url: luojia,
       path: '/modelzoo/luojia',
       openness: true,

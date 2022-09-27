@@ -2,6 +2,7 @@
 import { ref, reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
+import warningImg from '@/assets/icons/warning.png';
 import { ElMessage } from 'element-plus';
 
 // import { useFileData } from '@/stores';
@@ -19,6 +20,7 @@ const userInfoStore = useUserInfoStore();
 
 const filePath = ref('');
 const isShow = ref(false);
+const tips = ref(false);
 const codeString = ref('');
 const detailData = ref({});
 
@@ -42,6 +44,7 @@ function goTrain() {
 }
 // 确认创建训练实例
 function confirmCreating() {
+  tips.value = false;
   // let params = { config_path: filePath.value };
   let params = codeString.value;
   // try {
@@ -199,13 +202,50 @@ getDetailData();
             v-if="codeString"
             class="confim"
             type="primary"
-            @click="confirmCreating"
+            @click="tips = true"
             >创建</o-button
           >
           <o-button v-else class="confim2" disabled>创建</o-button>
         </div>
       </div>
     </div>
+    <!-- 训练在24小时后终止提示 -->
+    <o-dialog :show="tips" :close="false" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '40px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          padding: '8px 0 30px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '640px',
+        }"
+      >
+        体验期间最大训练时长为24小时
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '46px',
+          }"
+        >
+          <o-button :style="{ marginRight: '24px' }" @click="tips = false"
+            >取消</o-button
+          >
+          <o-button type="primary" @click="confirmCreating">确认 </o-button>
+        </div>
+      </template>
+    </o-dialog>
   </div>
 </template>
 

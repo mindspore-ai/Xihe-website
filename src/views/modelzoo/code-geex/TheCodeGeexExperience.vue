@@ -148,10 +148,11 @@ onUnmounted(() => {
           {{ item.name }}
         </p>
       </div>
+      <div class="editor" style="border-radius: 0 0 16px 16px">
+        <div ref="edit" class="editor-detail"></div>
 
-      <div ref="edit" class="editor"></div>
-
-      <div class="empty" @click="getValue"></div>
+        <div class="empty" @click="getValue"></div>
+      </div>
 
       <div class="create-btn">
         <o-button
@@ -167,6 +168,9 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .experience {
+  padding: 40px;
+  background: #fff;
+  // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
   &-head {
     &-title {
       font-size: 36px;
@@ -186,16 +190,14 @@ onUnmounted(() => {
   }
 
   &-body {
+    // height: 640px;
     margin-top: 24px;
     border-radius: 0 0 16px 16px;
     display: flex;
     flex-direction: column;
-    .editor {
-      height: 738px;
-      border-radius: 0 0 16px 16px;
-    }
 
     .edit-tabs {
+      height: 64px;
       display: flex;
       background: #1e1e1e;
       border-radius: 16px 16px 0 0;
@@ -206,7 +208,7 @@ onUnmounted(() => {
       }
 
       .tab-item {
-        padding: 24px 40px;
+        padding: 15px 40px;
         font-size: 18px;
         font-weight: 400;
         color: #c0c1c0;
@@ -226,14 +228,29 @@ onUnmounted(() => {
         }
       }
     }
-    .empty {
-      height: 16px;
-      background: #323232;
+    .editor {
+      // background: #323232;
+      background-color: #1e1e1e;
+
       border-radius: 0 0 16px 16px;
+
+      .editor-detail {
+        height: 576px;
+        border-radius: 0 0 16px 16px;
+      }
+      .empty {
+        height: 16px;
+        background-color: #1e1e1e;
+        // background: #323232;
+        border-radius: 0 0 16px 16px;
+      }
     }
     .create-btn {
       align-self: flex-end;
-      margin-top: 24px;
+      margin-top: 40px;
+      .o-button {
+        width: 127px;
+      }
     }
   }
 }

@@ -138,6 +138,7 @@ function closeShennongVideo() {
           margin-right: 40px;
           img {
             width: 416px;
+            height: 100%;
           }
         }
         .banner-right {

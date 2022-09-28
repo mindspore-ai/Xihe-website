@@ -3,6 +3,7 @@ import performance from '@/assets/imgs/codegeex/performance.png';
 import framework from '@/assets/imgs/codegeex/framework.png';
 import baseline from '@/assets/imgs/codegeex/baseline.png';
 import codeGeneration from '@/assets/imgs/codegeex/code-generation.png';
+import codeGeneration2 from '@/assets/imgs/codegeex/code-generation2.png';
 import generationExample from '@/assets/imgs/codegeex/generation-example.png';
 
 const feature = [
@@ -45,7 +46,9 @@ const feature = [
         Benchmark。HumanEval-X是一个新的多语言基准测试，包含5种编程语言（Python、C++、Java、JavaScript
         和 Go）中的820 个人工编码问题，每个问题都与测试和解决方案相关联。
       </div>
-      <img class="performance-img" :src="performance" alt="" />
+      <div class="performance-img">
+        <img :src="performance" alt="" />
+      </div>
     </div>
     <div class="feature">
       <div class="title">CodeGeeX：架构、代码语料库和实现</div>
@@ -59,7 +62,9 @@ const feature = [
             2,048。
           </span>
         </div>
-        <img class="framework-img" :src="framework" alt="" />
+        <div class="framework-img">
+          <img :src="framework" alt="" />
+        </div>
         <div class="framework-tips">
           左： CodeGeeX 的训练数据中编程语言的比例。 右图：训练损失与 CodeGeeX
           训练步骤的对比图。
@@ -84,7 +89,7 @@ const feature = [
         >
       </div>
       <div class="train">
-        <span class="train-item">培训：</span>
+        <span class="train-item">训练：</span>
         <span class="train info"
           >我们在Mindspore 1.7中实现 CodeGeeX 并在 1,536 个 Ascend 910 AI 处理器
           (32GB) 上对其进行训练。模型权重采用 FP16 格式，除了我们使用 FP32 进行
@@ -107,7 +112,9 @@ const feature = [
         Python、C++、Java、JavaScript 和 Go 语言的 820
         个高质量人工数据样本（每个都有测试用例）组成，可用于各种任务。
       </div>
-      <img class="baseline-img" :src="baseline" alt="" />
+      <div class="baseline-img">
+        <img :src="baseline" alt="" />
+      </div>
       <div class="baseline-description description2">
         HumanEval-X支持的任务说明。声明、文档字符串和解决方案分别用红色、绿色和蓝色标记。代码生成使用声明和文档字符串作为输入，生成解决方案。代码翻译使用两种语言的声明，并将源语言的解决方案翻译成目标语言的解决方案。
       </div>
@@ -118,7 +125,9 @@ const feature = [
       </div>
       <div class="code-generation">
         <div class="code-title">多语言代码生成</div>
-        <img class="generation-img" :src="codeGeneration" alt="" />
+        <div class="generation-img">
+          <img :src="codeGeneration" alt="" />
+        </div>
         <div class="generation-tips">
           左：HumanEval-X 中五种语言的代码生成任务的详细 pass@k (k=1,10,100)
           性能。右：每个模型的所有语言的平均性能。与
@@ -135,7 +144,9 @@ const feature = [
           使用一种简单的启发式方法来分配由训练数据分布加权的预算，CodeGeeX
           的通过率高于任何单一语言（由红色虚线圆圈表示）。
         </div>
-        <img class="result-img" :src="codeGeneration2" alt="" />
+        <div class="result-img">
+          <img :src="codeGeneration2" alt="" />
+        </div>
         <div class="result-tips">
           HumanEval-X代码翻译任务的结果。最佳语言表现以粗体显示。
         </div>
@@ -155,7 +166,7 @@ const feature = [
         <div class="baseline-text">
           有关如何使用 HumanEval-X
           的更多详细信息，请参阅用法。我们非常欢迎社区通过添加更多问题或将其扩展到其他语言来为
-          HumanEval-X 做出贡献，请查看 HumanEval-X 的
+          HumanEval-X 做出贡献，请查看 HumanEval-X 的标准格式并添加拉取请求。
         </div>
         <div class="contact">
           如果您有任何意见或建议，请通过codegeex@aminer.cn告诉我们。
@@ -163,9 +174,11 @@ const feature = [
       </div>
       <div class="generation-example">
         <div class="title">生成示例</div>
-        <img class="example-img" :src="generationExample" alt="" />
+        <div class="example-img">
+          <img :src="generationExample" alt="" />
+        </div>
       </div>
-      <div class="gratitude">
+      <!-- <div class="gratitude">
         <div class="title">致谢</div>
         <div class="text">
           该项目得到国家杰出青年科学基金（No. 61825602）的支持。
@@ -210,7 +223,7 @@ const feature = [
           <span class="title">项目负责人：</span>
           <span>唐杰（清华KEG & BAAI）</span>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="license">
       <div class="title">执照</div>
@@ -253,7 +266,10 @@ const feature = [
       }
     }
     .performance-img {
-      width: 100%;
+      text-align: center;
+      img {
+        width: 60%;
+      }
     }
   }
   .feature {
@@ -276,8 +292,11 @@ const feature = [
           color: #000000;
         }
       }
-      &-img {
-        width: 100%;
+      .framework-img {
+        text-align: center;
+        img {
+          width: 80%;
+        }
       }
       &-tips {
         text-align: center;
@@ -329,8 +348,11 @@ const feature = [
     .description2 {
       margin: 16px 0;
     }
-    &-img {
-      width: 100%;
+    .baseline-img {
+      text-align: center;
+      img {
+        width: 60%;
+      }
     }
     .code-generation {
       .code-title {
@@ -341,7 +363,10 @@ const feature = [
         margin-bottom: 24px;
       }
       .generation-img {
-        width: 100%;
+        text-align: center;
+        img {
+          width: 80%;
+        }
       }
       .generation-tips,
       .generation-text {
@@ -351,8 +376,11 @@ const feature = [
         margin-top: 16px;
       }
       .result-img {
-        width: 100%;
+        text-align: center;
         margin-top: 24px;
+        img {
+          width: 80%;
+        }
       }
       .result-tips {
         line-height: 22px;
@@ -393,10 +421,12 @@ const feature = [
         color: #000000;
       }
       .example-img {
-        width: 100%;
+        img {
+          width: 100%;
+        }
       }
     }
-    .gratitude {
+    /* .gratitude {
       margin-top: 24px;
       .title {
         height: 28px;
@@ -422,7 +452,7 @@ const feature = [
           color: #000000;
         }
       }
-    }
+    } */
   }
   .license {
     margin-top: 40px;

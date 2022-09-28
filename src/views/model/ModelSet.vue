@@ -65,8 +65,8 @@ const i18n = {
   },
 };
 const visibleOptions = reactive(i18n.visible.options);
-const visibleValue = ref(detailData.is_private);
-const description = ref(detailData.description);
+const visibleValue = ref(detailData.repo_type);
+const description = ref(detailData.desc);
 const newOwn = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
@@ -74,10 +74,12 @@ const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
 const queryRef = ref(null);
 
 let query = reactive({
-  name: '',
+  name: detailData.name,
 });
 
-detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
+detailData.repo_type === 'private'
+  ? (visibleIndex.value = 0)
+  : (visibleIndex.value = 1);
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -87,8 +89,8 @@ function getOwnSelect(value) {
 }
 function getVisiableSelect(value) {
   value === 'Private'
-    ? (visibleValue.value = true)
-    : (visibleValue.value = false);
+    ? (visibleValue.value = 'private')
+    : (visibleValue.value = 'public');
 }
 
 async function confirmRename(formEl) {
@@ -99,39 +101,39 @@ async function confirmRename(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       try {
-        let pathQuery = {
-          new_path: `xihe-obj/models/${route.params.user}/${query.name}/`,
-          old_path: `xihe-obj/models/${route.params.user}/${routerParams.name}/`,
-        };
-        fileRename(pathQuery).then((res) => {
-          if (res.status === 200) {
-            // 改名成功更新pinia数据
-            getModelData({ name: query.name }).then((res) => {
-              if (res.results.data.length) {
-                let storeData = res.results.data[0];
-                storeData['is_owner'] =
-                  userInfoStore.userName === storeData.owner_name.name;
-                fileData.setFileData(storeData);
-              }
-              ElMessage({
-                type: 'success',
-                message: '仓库信息更新成功',
-              });
-              router.push({
-                name: 'modelSet',
-                params: {
-                  user: routerParams.user,
-                  name: query.name,
-                },
-              });
-              routerParams.name = query.name;
-            });
-          } else {
-            ElMessage({
-              type: 'error',
-              message: res.msg,
-            });
-          }
+        // let pathQuery = {
+        //   new_path: `xihe-obj/models/${route.params.user}/${query.name}/`,
+        //   old_path: `xihe-obj/models/${route.params.user}/${routerParams.name}/`,
+        // };
+        modifyModel(query, detailData.owner, detailData.id).then((res) => {
+          // if (res.status === 200) {
+          // 改名成功更新pinia数据
+          // getModelData({ name: query.name }).then((res) => {
+          //   if (res.results.data.length) {
+          //     let storeData = res.results.data[0];
+          //     storeData['is_owner'] =
+          userInfoStore.userName = res.data.name;
+          //   fileData.setFileData(storeData);
+          // }
+          ElMessage({
+            type: 'success',
+            message: '仓库信息更新成功',
+          });
+          //   router.push({
+          //     name: 'modelSet',
+          //     params: {
+          //       user: routerParams.user,
+          //       name: query.name,
+          //     },
+          //   });
+          //   routerParams.name = query.name;
+          // });
+          // } else {
+          //   ElMessage({
+          //     type: 'error',
+          //     message: res.msg,
+          //   });
+          // }
         });
       } catch (error) {
         ElMessage({
@@ -147,11 +149,10 @@ async function confirmRename(formEl) {
 }
 function confirmPrivate() {
   let query = {
-    is_private: visibleValue.value,
-    id: detailData.id,
-    description: description.value,
+    type: visibleValue.value,
+    desc: description.value,
   };
-  modifyModel(query).then((res) => {
+  modifyModel(query, detailData.owner, detailData.id).then((res) => {
     if (res.status === 200) {
       description.value = res.data.description;
       ElMessage({
@@ -219,7 +220,7 @@ function toggleDelDlg(flag) {
         <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
         <o-select
           :select-data="organizationAdminList"
-          :placeholder="detailData.owner_name.name"
+          :placeholder="detailData.owner"
           keys="id"
           value="name"
           @change="getOwnSelect"

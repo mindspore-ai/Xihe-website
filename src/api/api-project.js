@@ -19,8 +19,8 @@ function getHeaderConfig() {
  * 获取项目页面数据（筛选）
  * @returns
  */
-export function getProjectData(params) {
-  const url = `/server/project/s9qfqri3zpc8j2x7`;
+export function getProjectData(params, name) {
+  const url = `/server/project/${name}`;
   let header = getHeaderConfig();
   // 登录之后携带token
   return request
@@ -80,6 +80,22 @@ export function setNewProject(params) {
 export function modifyProject(params, owner) {
   const url = `/server/project/${owner}/${params.id}`;
   // console.log(params);
+  return request
+    .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 修改项目标签
+ * @returns
+ */
+export function modifyTags(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/tags`;
+  console.log(params, owner, id);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {
@@ -173,9 +189,9 @@ export function addDataset(params, owner, id) {
  * @returns
  */
 export function modifyProjectAdd(params, projectId) {
-  const url = `/api/projects/${projectId}/inference`;
+  const url = `/server/project/${owner}/${id}/model/relation`;
   return request
-    .put(url, params, getHeaderConfig())
+    .delete(url, { params, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })

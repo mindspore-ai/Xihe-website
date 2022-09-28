@@ -65,18 +65,18 @@ watch(
       @click="goDetailClick(item)"
     >
       <o-icon
-        v-if="userInfo.userName === detailData.owner_name.name"
+        v-if="userInfo.userName === detailData.owner"
         class="remove-item"
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove
       ></o-icon>
       <div class="card-top">
-        <div v-if="item.owner_name" class="avatar">
-          <img :src="item.owner_name.avatar_url" />
+        <div v-if="item.owner" class="avatar">
+          <img :src="item.owner.avatar_id" />
         </div>
 
-        <p v-if="item.owner_name" class="nick-name">
-          {{ item.owner_name.name }}/{{ item.name }}
+        <p v-if="item.owner" class="nick-name">
+          {{ item.owner.name }}/{{ item.name }}
         </p>
       </div>
       <div class="dataset-bottom">
@@ -90,7 +90,7 @@ watch(
         </div>
         <div class="update-time" :title="i18n.uploadTime">
           <o-icon> <icon-time></icon-time></o-icon>
-          {{ detailData.update_date_time.split(' ')[0] }}
+          {{ detailData.updated_at.split(' ')[0] }}
         </div>
       </div>
     </div>

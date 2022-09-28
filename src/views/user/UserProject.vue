@@ -9,15 +9,22 @@ import IconHeart from '~icons/app/heart';
 import OIcon from '@/components/OIcon.vue';
 
 import { getProjectData } from '@/api/api-project';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
+
 const route = useRoute();
 const router = useRouter();
 // let bool = userInfoStore.userName === route.query.userName;
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
+});
+
+// 当前用户信息
+const userInfo = computed(() => {
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 const i18n = {
   emptyText: '暂未创建项目，点击创建项目立即创建',
@@ -61,7 +68,7 @@ function handleCurrentChange(val) {
 }
 
 function getUserProject() {
-  getProjectData(query).then((res) => {
+  getProjectData(query, userInfo.value.userName).then((res) => {
     // if (res.count && res.results.status === 200) {
     if (res.data.length > 12) {
       emit('domChange', 76);

@@ -57,21 +57,54 @@ export function queryUserIdToken(params) {
  * 获取用户模型信息
  * @returns
  */
-export function getUserModelData(id) {
+/* export function getUserModelData(id) {
   const url = `/api/users/${id}/models`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
+} */
+export function getUserModelData(params, name) {
+  console.log('params: ', params);
+  const url = `/server/model/${name}`;
+  let header = getHeaderConfig();
+  // 登录之后携带token
+  return request
+    .get(url, {
+      params,
+      ...header,
+    })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 获取用户数据集信息
  * @returns
  */
-export function getUserDatasetData(id) {
+/* export function getUserDatasetData(id) {
   const url = `/api/users/${id}/datasets`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
+} */
+export function getDatasetData(params) {
+  const url = `/api/datasets/`;
+  let header = getHeaderConfig();
+  // 登录之后携带token
+  if (getUserInfo().token) {
+    return request
+      .get(url, {
+        params,
+        ...header,
+      })
+      .then((res) => {
+        return res.data;
+      });
+  } else {
+    return request.get(url, { params }).then((res) => {
+      return res.data;
+    });
+  }
 }
 
 /**

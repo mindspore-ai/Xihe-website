@@ -203,6 +203,7 @@ function getDetailData() {
       modular: 'project',
     }).then((res) => {
       let storeData = res.data;
+      // console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
       storeData['is_owner'] = userInfoStore.userName === storeData.owner;
       // 文件列表是否为空
@@ -243,6 +244,7 @@ function getDetailData() {
 getDetailData();
 
 // const runingStatus = ref(false);
+console.log('detailData: ', detailData);
 
 function handleTabClick(item) {
   if (item.index === '1' && userInfoStore.userName === detailData.value.owner) {
@@ -311,14 +313,16 @@ function getLike() {
     // name: route.params.name,
     // owner: route.params.user,
     // name: 'project-ceshi123',
-    name: 'model-adataset',
-    owner: 'yyj',
+    name: detailData.value.name,
+    owner: detailData.value.owner,
   };
   getUserDig(params)
     .then((res) => {
       console.log('点赞、收藏结果: ', res);
       // if (res.data.status === 200) {
       getDetailData();
+      // isDigged.value = !isDigged.value;
+
       // console.log(isDigged.value);
       // }
     })
@@ -332,11 +336,15 @@ function getLike() {
 function cancelLike() {
   let params = {
     // name: 'project-ceshi123',
-    name: 'model-adataset',
-    owner: 'yyj',
+    name: detailData.value.name,
+    owner: detailData.value.owner,
   };
   cancelCollection(params).then((res) => {
+    detailData.value.liked = false;
     console.log('取消收藏结果: ', res);
+    // isDigged.value = true;
+    // detailData.value.like_count--;
+    getDetailData();
   });
 }
 
@@ -641,16 +649,18 @@ watch(
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
-            <div class="loves">
+            <div v-if="detailData.liked" class="loves">
+              <o-heart
+                :is-digged="!isDigged"
+                :dig-count="detailData.like_count"
+                @click="cancelLike"
+              ></o-heart>
+            </div>
+            <div v-else class="loves">
               <o-heart
                 :is-digged="isDigged"
-                :dig-count="digCount"
+                :dig-count="detailData.like_count"
                 @click="getLike"
-              ></o-heart>
-              <o-heart
-                :is-digged="true"
-                :dig-count="digCount"
-                @click="cancelLike"
               ></o-heart>
             </div>
           </div>

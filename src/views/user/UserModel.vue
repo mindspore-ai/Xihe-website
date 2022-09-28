@@ -4,17 +4,23 @@ import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/model-empty.png';
 
-import { getModelData } from '@/api/api-model';
-import { useUserInfoStore } from '@/stores';
+import { getUserModelData } from '@/api/api-user';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
 
 const userInfoStore = useUserInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
 
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
+});
+
+// 当前用户信息
+const userInfo = computed(() => {
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 
 const i18n = {
@@ -41,13 +47,14 @@ const modelData = ref([]);
 let query = reactive({
   search: '',
   page: 1,
-  size: 10,
+  count_per_page: 10,
   owner_name: route.params.user,
   order: '',
 });
 
-function getUserModelData() {
-  getModelData(query).then((res) => {
+function getUserModel() {
+  getUserModelData(query, userInfo.value.userName).then((res) => {
+    console.log('个人模型数据: ', res);
     if (res.count && res.results.status === 200) {
       if (res.count > 10) {
         emit('domChange', 76);
@@ -81,7 +88,7 @@ function handleCurrentChange(val) {
 watch(
   query,
   () => {
-    getUserModelData();
+    getUserModel();
   },
   {
     deep: true,

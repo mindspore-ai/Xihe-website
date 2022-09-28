@@ -1,10 +1,10 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
+// import { useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
-function getUserInfo() {
-  return useUserInfoStore();
-}
+// function getUserInfo() {
+//   return useUserInfoStore();
+// }
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -77,8 +77,8 @@ export function setNewProject(params) {
  * 修改项目信息
  * @returns
  */
-export function modifyProject(params, owner, id) {
-  const url = `/server/project/${owner}/${id}`;
+export function modifyProject(params, owner) {
+  const url = `/server/project/${owner}/${params.id}`;
   // console.log(params);
   return request
     .put(url, params, getHeaderConfig())

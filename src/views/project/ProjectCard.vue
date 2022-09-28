@@ -603,6 +603,7 @@ onUnmounted(() => {
 //     window.clearInterval(ht);
 //   }
 // }
+// console.log(detailData);
 </script>
 <template>
   <div v-if="detailData" class="model-card">

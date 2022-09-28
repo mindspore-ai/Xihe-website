@@ -98,9 +98,11 @@ function hanleGenerateCode() {
   isDisabled.value = true;
   handleGenerateCode({
     content: tabsList.value[activeIndex.value].code,
-    n: 5,
+    n: 1,
     lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
+    // console.log(res);
+
     if (res.status === 200) {
       isDisabled.value = false;
 

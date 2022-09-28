@@ -13,12 +13,13 @@ import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import { ElMessage } from 'element-plus';
 
 const tabsList = ref([
   {
     name: 'Python',
     language: 'python',
-    code: 'from typing import List \n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    """ Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    """"',
+    code: 'from typing import List \n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    """ Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    """"\n',
   },
   {
     name: 'JavaScript',
@@ -31,7 +32,7 @@ const tabsList = ref([
     code: '/*\n Check if in given vector of numbers, are any two numbers closer to each other than\n given threshold.\n >>> has_close_elements({1.0, 2.0, 3.0}, 0.5)\n false\n >>> has_close_elements({1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n true\n */\n#include<stdio.h>\n#include<vector>\n#include<math.h>\nusing namespace std;\nbool has_close_elements(vector<float> numbers, float threshold) {',
   },
   {
-    name: 'GO',
+    name: 'Go',
     language: 'go',
     code: 'import (\n    "math"\n)\n\n// Check if in given list of numbers, are any two numbers closer to each other than given threshold.\n// >>> HasCloseElements([]float64{1.0, 2.0, 3.0}, 0.5)\n// false\n// >>> HasCloseElements([]float64{1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n// true\nfunc HasCloseElements(numbers []float64, threshold float64) bool {',
   },
@@ -48,6 +49,8 @@ const activeIndex = ref(0);
 function handleTabClick(i, item) {
   if (i === 5) return;
   activeIndex.value = i;
+
+  isDisabled.value = false;
 
   instance.dispose();
   init(item);
@@ -70,8 +73,6 @@ self.MonacoEnvironment = {
 
 // 获取文本内容
 function getValue() {
-  console.log(instance.getValue());
-
   return instance.getValue();
 }
 
@@ -80,7 +81,8 @@ function init(item) {
     value: item.code,
     language: item.language,
     theme: 'vs-dark',
-    fontSize: 14,
+    fontSize: 18,
+    automaticLayout: true,
   });
 
   instance.onDidChangeModelContent(() => {
@@ -88,25 +90,32 @@ function init(item) {
   });
 }
 
+const isDisabled = ref(false);
+
 function hanleGenerateCode() {
-  console.log(tabsList.value[activeIndex.value]);
-
+  isDisabled.value = true;
   handleGenerateCode({
-    samples: tabsList.value[activeIndex.value].code,
+    content: tabsList.value[activeIndex.value].code,
+    n: 1,
+    lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
-    console.log(res);
+    // console.log(res);
 
-    tabsList.value[activeIndex.value].code = res.data;
+    if (res.status === 200) {
+      isDisabled.value = false;
 
-    instance.dispose();
-    init(tabsList.value[activeIndex.value]);
+      tabsList.value[activeIndex.value].code =
+        tabsList.value[activeIndex.value].code + res.data;
+
+      instance.dispose();
+      init(tabsList.value[activeIndex.value]);
+    } else if (res.status === -1) {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+      });
+    }
   });
-
-  // tabsList.value[activeIndex.value].code =
-  //   tabsList.value[activeIndex.value].code + '\n/*123*/';
-
-  // instance.dispose();
-  // init(tabsList.value[activeIndex.value]);
 }
 
 onMounted(() => {
@@ -145,7 +154,10 @@ onUnmounted(() => {
       <div class="empty" @click="getValue"></div>
 
       <div class="create-btn">
-        <o-button type="primary" @click="hanleGenerateCode"
+        <o-button
+          type="primary"
+          :disabled="isDisabled"
+          @click="hanleGenerateCode"
           >Generate Code</o-button
         >
       </div>

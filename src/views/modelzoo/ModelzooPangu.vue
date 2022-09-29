@@ -222,6 +222,7 @@ function goPanguMore() {
           margin-right: 40px;
           img {
             width: 416px;
+            height: 100%;
           }
         }
         .banner-right {
@@ -275,12 +276,12 @@ function goPanguMore() {
             color: #000000;
             margin: 40px 0 24px;
           }
-          .model-img {
+          /* .model-img {
             // width: 621px;
             img {
               // width: 100%;
             }
-          }
+          } */
           .model-desc {
             height: 44px;
             line-height: 22px;
@@ -307,8 +308,8 @@ function goPanguMore() {
             line-height: 22px;
             margin-bottom: 24px;
           }
-          .dataset-img {
-          }
+          /* .dataset-img {
+          } */
           .dataset-desc {
             height: 44px;
             line-height: 22px;
@@ -334,8 +335,8 @@ function goPanguMore() {
             line-height: 22px;
             margin-bottom: 24px;
           }
-          .mindspore-img {
-          }
+          /* .mindspore-img {
+          } */
           .mindspore-desc {
             height: 44px;
             line-height: 22px;

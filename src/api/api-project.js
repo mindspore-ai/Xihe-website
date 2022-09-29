@@ -183,6 +183,28 @@ export function addDataset(params, owner, id) {
     return res.data;
   });
 }
+/**
+ * 添加模型（查询模型信息）
+ * @returns
+ */
+export function addModel(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/model/relation`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 删除模型（查询模型信息）
+ * @returns
+ */
+export function deleteModel(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/model/relation`;
+  return request
+    .delete(url, { data: params, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
+}
 
 /**
  * 修改项目信息(inference)
@@ -198,17 +220,6 @@ export function modifyProjectAdd(params, projectId) {
     .catch((e) => {
       return e;
     });
-}
-
-/**
- * 添加模型（查询模型信息）
- * @returns
- */
-export function addModel(params, owner, id) {
-  const url = `/server/project/${owner}/${id}/model/relation`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
 }
 
 /**

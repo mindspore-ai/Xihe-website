@@ -112,21 +112,22 @@ async function confirmRename(formEl) {
           //   if (res.results.data.length) {
           //     let storeData = res.results.data[0];
           //     storeData['is_owner'] =
-          userInfoStore.userName = res.data.name;
+          detailData.name = res.data.name;
+          // route.params.name = detailData.name;
           //   fileData.setFileData(storeData);
           // }
           ElMessage({
             type: 'success',
             message: '仓库信息更新成功',
           });
-          //   router.push({
-          //     name: 'modelSet',
-          //     params: {
-          //       user: routerParams.user,
-          //       name: query.name,
-          //     },
-          //   });
-          //   routerParams.name = query.name;
+          router.push({
+            name: 'modelSet',
+            params: {
+              user: routerParams.user,
+              name: detailData.name,
+            },
+          });
+          routerParams.name = detailData.name;
           // });
           // } else {
           //   ElMessage({

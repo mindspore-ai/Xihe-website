@@ -282,18 +282,16 @@ watch(
         </div>
         <div class="dataset-box">
           <no-relate
-            v-if="
-              !detailData.relate_datasets_list ||
-              detailData.relate_datasets_list.length === 0
-            "
+            v-if="!detailData.related_datasets"
             relate-name="dataset"
           ></no-relate>
-          <!-- <relate-card
+          <relate-card
+            v-else
             :detail-data="detailData"
-            :name="'relate_datasets_list'"
+            :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetailClick"
-          ></relate-card> -->
+          ></relate-card>
         </div>
       </div>
       <!-- 项目 -->
@@ -302,19 +300,16 @@ watch(
           <h4 class="title">{{ i18n.relatedItem }}</h4>
         </div>
         <no-relate
-          v-if="
-            !detailData.relate_projects_list ||
-            detailData.relate_projects_list.length === 0
-          "
+          v-if="!detailData.related_projects"
           relate-name="project"
         ></no-relate>
-        <!-- <project-relate-card
+        <project-relate-card
           v-else
           :detail-data="detailData"
           :name="'relate_projects_list'"
           @delete="deleteClick"
           @jump="goProjectClick"
-        ></project-relate-card> -->
+        ></project-relate-card>
       </div>
     </div>
 

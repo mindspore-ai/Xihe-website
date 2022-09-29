@@ -110,10 +110,10 @@ watch(
 </script>
 <template>
   <div>
-    <div v-if="projectCount" class="project-card">
+    <div v-if="projectData.total" class="project-card">
       <div class="card-list">
         <div
-          v-for="item in projectData"
+          v-for="item in projectData.projects"
           :key="item.id"
           class="pro-card"
           @click="goDetail(item.owner, item.name)"

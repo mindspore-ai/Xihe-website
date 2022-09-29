@@ -20,7 +20,7 @@ import models3 from '@/assets/imgs/models3.png';
 import models4 from '@/assets/imgs/models4.png';
 import modelzoo1 from '@/assets/imgs/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/modelzoo2.png';
-import modelzoo3 from '@/assets/imgs/modelzoo3.png';
+import modelzoo3 from '@/assets/imgs/modelzoo4.png';
 import datasetPageImg from '@/assets/imgs/dataset-page.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
@@ -62,8 +62,8 @@ const i18n = {
     introduce1: '全球首个三模态千亿参数大模型',
     modelzoo2: '武大.Luojia',
     introduce2: '全球首个遥感专用框架及最大遥感样本库',
-    modelzoo3: '鹏程.盘古',
-    introduce3: '业界首个千亿级参数中文自然语言处理大模型',
+    modelzoo3: 'CodeGeeX',
+    introduce3: '一个具有130亿参数的多编程语言代码生成预训练模型',
   },
   model: {
     title: '模型',
@@ -119,11 +119,8 @@ function handleBtnClick2() {
 function handleBtnClick3() {
   router.push(`https://${DOMAIN}/modelzoo`);
 }
-function goDetail(id) {
-  router.push({
-    name: 'competitionDetail',
-    params: { id: id },
-  });
+function goCode() {
+  router.push({ path: '/modelzoo/codegeex' });
 }
 </script>
 
@@ -185,6 +182,9 @@ function goDetail(id) {
     </div> -->
     <!-- 轮播图 -->
     <el-carousel trigger="click" height="480px">
+      <el-carousel-item>
+        <div class="photo6 cursor" @click="goCode()"></div>
+      </el-carousel-item>
       <el-carousel-item>
         <div class="photo1 cursor" @click="goInvited"></div>
       </el-carousel-item>
@@ -318,6 +318,21 @@ function goDetail(id) {
           <div class="modelzoo-card-list">
             <a
               class="modelzoo-card"
+              :href="`https://${DOMAIN}/modelzoo/codegeex`"
+            >
+              <div class="card-header">
+                <img :src="modelzoo3" alt="" />
+              </div>
+              <div class="card-body">
+                <div class="modelzoo-title">
+                  <p>{{ i18n.modelzoo.modelzoo3 }}</p>
+                  <OIcon><IconArrowRight /></OIcon>
+                </div>
+                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
+              </div>
+            </a>
+            <a
+              class="modelzoo-card"
               :href="`https://${DOMAIN}/modelzoo/taichu`"
             >
               <div class="card-header">
@@ -346,7 +361,7 @@ function goDetail(id) {
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce2 }}</div>
               </div>
             </a>
-            <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
+            <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
               <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>
@@ -357,7 +372,7 @@ function goDetail(id) {
                 </div>
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
               </div>
-            </a>
+            </a> -->
           </div>
         </div>
 
@@ -632,6 +647,13 @@ function goDetail(id) {
     }
     .photo5 {
       background: url(@/assets/imgs/home-banner6.png);
+      width: 100%;
+      height: 480px;
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo6 {
+      background: url(@/assets/imgs/home-banner1.png);
       width: 100%;
       height: 480px;
       background-size: cover;

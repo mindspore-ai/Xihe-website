@@ -226,8 +226,8 @@ const feature = [
       </div> -->
     </div>
     <div class="license">
-      <div class="title">执照</div>
-      <div class="license-text">我们的代码在Apache-2.0 许可下获得许可。</div>
+      <div class="title">Liscence</div>
+      <div class="license-text">CodeGeex的代码使用Apache-2.0开源协议。</div>
     </div>
   </div>
 </template>

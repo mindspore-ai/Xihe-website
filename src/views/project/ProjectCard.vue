@@ -18,6 +18,7 @@ import {
   addDataset,
   modifyProjectAdd,
   addModel,
+  deleteModel,
   modifyModelAdd,
   startInference,
   startInference2,
@@ -215,15 +216,16 @@ function confirmClick() {
   }
 }
 
-// 删除数据集
+// 删除关联仓库
 function deleteClick(item) {
-  let projectId = detailData.value.id;
-  let modifyParams = {
-    relate_infer_datasets: [],
-  };
-  let modelParams = {
-    relate_infer_models: [],
-  };
+  console.log(item);
+  // let projectId = detailData.value.id;
+  // let modifyParams = {
+  //   relate_infer_datasets: [],
+  // };
+  // let modelParams = {
+  //   relate_infer_models: [],
+  // };
   if (item[1] === 'relate_infer_datasets_list') {
     detailData.value.relate_infer_datasets_list.forEach((child) => {
       if (item[0].id !== child.id) {
@@ -239,13 +241,17 @@ function deleteClick(item) {
         emit('on-click');
       }
     });
-  } else if (item[1] === 'relate_infer_models_list') {
-    detailData.value.relate_infer_models_list.forEach((child) => {
-      if (item[0].id !== child.id) {
-        modelParams.relate_infer_models.push(child.id);
-      }
-    });
-    modifyProjectAdd(modelParams, projectId).then((res) => {
+  } else if (item[1] === 'related_models') {
+    // detailData.value.relate_infer_models_list.forEach((child) => {
+    //   if (item[0].id !== child.id) {
+    //     modelParams.relate_infer_models.push(child.id);
+    //   }
+    // });
+    deleteModel(
+      { id: item[0].id, owner: item[0].owner.name },
+      detailData.value.owner,
+      detailData.value.id
+    ).then((res) => {
       if (res.status === 200) {
         ElMessage({
           type: 'success',

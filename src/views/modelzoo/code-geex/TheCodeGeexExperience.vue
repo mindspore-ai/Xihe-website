@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 
@@ -57,6 +57,8 @@ function handleTabClick(i, item) {
 }
 
 const edit = ref();
+const count = ref(0);
+const isDisabled = ref(false);
 
 let instance = null;
 
@@ -83,14 +85,14 @@ function init(item) {
     theme: 'vs-dark',
     fontSize: 18,
     automaticLayout: true,
+    scrollBeyondLastLine: false,
   });
 
   instance.onDidChangeModelContent(() => {
     tabsList.value[activeIndex.value].code = instance.getValue();
   });
+  count.value = instance.getModel().getLineCount();
 }
-
-const isDisabled = ref(false);
 
 function hanleGenerateCode() {
   isDisabled.value = true;
@@ -117,6 +119,16 @@ function hanleGenerateCode() {
     }
   });
 }
+
+watch(
+  () => count.value,
+  () => {
+    instance.revealLine(count.value);
+  },
+  {
+    deep: true,
+  }
+);
 
 onMounted(() => {
   init(tabsList.value[0]);

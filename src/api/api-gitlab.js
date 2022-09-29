@@ -77,7 +77,6 @@ export async function editorFileGitlab(params, path) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(path, id) {
-  console.log(getGitlabConfig());
   const url = `/repo/projects/${id}/repository/tree?path=${path}&per_page=100`;
   return request.get(url, await getGitlabConfig()).then((res) => {
     return res.data;

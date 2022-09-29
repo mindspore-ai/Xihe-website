@@ -12,6 +12,7 @@ import OHeart from '@/components/OHeart.vue';
 
 import { getUserDig, getModelTags } from '@/api/api-model';
 import { getDatasetData, modifyDataset } from '@/api/api-dataset';
+import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 
@@ -92,8 +93,8 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-      return !item.isPrivate;
-    });
+        return !item.isPrivate;
+      });
 });
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -101,50 +102,22 @@ onBeforeRouteLeave(() => {
 let modelTags = ref([]);
 function getDetailData() {
   try {
-    getDatasetData({
-      name: route.params.name,
-      owner_name: route.params.user,
+    getRepoDetailByName({
+      user: route.params.user,
+      repoName: route.params.name,
+      modular: 'dataset',
     }).then((res) => {
-      if (res.results.data.length) {
-        let storeData = res.results.data[0];
-        // 判断仓库是否属于自己
-        storeData['is_owner'] =
-          userInfoStore.userName === storeData.owner_name.name;
-        // 文件列表是否为空
-        if (detailData.value) {
-          storeData['is_empty'] = detailData.value.is_empty;
-        }
-        fileData.setFileData(storeData);
-        digCount.value = detailData.value.digg_count;
-        const {
-          licenses_list,
-          // libraries_list,
-          task_list,
-          tags_list,
-          // device_target_list,
-          files_list,
-        } = detailData.value;
-        isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-        modelTags.value = [
-          ...licenses_list,
-          ...task_list,
-          ...tags_list,
-          // ...libraries_list,
-          // ...device_target_list,
-          ...files_list,
-        ];
-        modelTags.value = modelTags.value.map((item) => {
-          return item;
-        });
-
-        headTags.value = [...modelTags.value];
-        getTagList();
-      } else {
-        router.push('/404');
+      let storeData = res.data;
+      // 判断仓库是否属于自己
+      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+      // 文件列表是否为空
+      if (detailData.value) {
+        storeData['is_empty'] = detailData.value.is_empty;
       }
+      fileData.setFileData(storeData);
     });
   } catch (error) {
+    router.push('/notfound');
     console.error(error);
   }
 }
@@ -152,7 +125,8 @@ getDetailData();
 
 function handleTabClick(item) {
   router.push(
-    `/datasets/${route.params.user}/${route.params.name}/${tabTitle[Number(item.index)].path
+    `/datasets/${route.params.user}/${route.params.name}/${
+      tabTitle[Number(item.index)].path
     }`
   );
 }
@@ -448,15 +422,15 @@ watch(
     <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
-          <img :src="detailData.owner_name.avatar_url" alt="" />
+          <img :src="userInfoStore.avatar" alt="" />
         </div>
         <router-link :to="{ path: `/${route.params.user}` }">
-          {{ detailData.owner_name.name }} </router-link
+          {{ detailData.owner }} </router-link
         >/
         <span>{{ detailData.name }}</span>
         <div
           class="card-head-copy"
-          @click="copyText(`${detailData.owner_name.name}/${detailData.name}`)"
+          @click="copyText(`${detailData.owner}/${detailData.name}`)"
         >
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>

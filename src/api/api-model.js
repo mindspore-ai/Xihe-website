@@ -70,8 +70,8 @@ export function createModel(params) {
  * 修改模型信息
  * @returns
  */
-export function modifyModel(params) {
-  const url = `/api/models/${params.id}`;
+export function modifyModel(params, owner, id) {
+  const url = `/server/model/${owner}/${id}`;
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

@@ -332,11 +332,11 @@ function emptyClick(ind) {
 }
 
 function goDetailClick(val) {
-  router.push(`/models/${val.owner_name.name}/${val.name}`);
+  router.push(`/models/${val.owner.name}/${val.name}`);
 }
 
 function goDetasetClick(val) {
-  router.push(`/datasets/${val.owner_name.name}/${val.name}`);
+  router.push(`/datasets/${val.owner.name}/${val.name}`);
 }
 
 watch(
@@ -603,6 +603,7 @@ onUnmounted(() => {
 //     window.clearInterval(ht);
 //   }
 // }
+// console.log(detailData);
 </script>
 <template>
   <div v-if="detailData" class="model-card">
@@ -718,18 +719,15 @@ onUnmounted(() => {
         </div>
         <div class="dataset-box">
           <no-relate
-            v-if="
-              !detailData.relate_infer_datasets_list ||
-              detailData.relate_infer_datasets_list.length === 0
-            "
+            v-if="!detailData.related_datasets"
             :relate-name="'dataset'"
           ></no-relate>
-          <!-- <relate-card
+          <relate-card
             :detail-data="detailData"
-            :name="'relate_infer_datasets_list'"
+            :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetasetClick"
-          ></relate-card> -->
+          ></relate-card>
         </div>
       </div>
       <!-- 添加模型 -->
@@ -745,18 +743,15 @@ onUnmounted(() => {
           </p>
         </div>
         <no-relate
-          v-if="
-            !detailData.relate_infer_models_list ||
-            detailData.relate_infer_models_list.length === 0
-          "
+          v-if="!detailData.related_models"
           :relate-name="'model'"
         ></no-relate>
-        <!-- <relate-card
+        <relate-card
           :detail-data="detailData"
-          :name="'relate_infer_models_list'"
+          :name="'related_models'"
           @delete="deleteClick"
           @jump="goDetailClick"
-        ></relate-card> -->
+        ></relate-card>
       </div>
     </div>
 

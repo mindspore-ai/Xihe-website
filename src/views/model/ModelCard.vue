@@ -229,11 +229,16 @@ watch(
   <div v-if="detailData.id" class="model-card">
     <div v-if="codeString" class="markdown-body">
       <div v-highlight class="markdown-file" v-html="result"></div>
-      <o-button v-if="detailData.is_owner" @click="goEditor">{{
-        i18n.editor
-      }}</o-button>
+      <o-button
+        v-if="detailData.owner === userInfo.userName"
+        @click="goEditor"
+        >{{ i18n.editor }}</o-button
+      >
     </div>
-    <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
+    <div
+      v-else-if="detailData.owner === userInfo.userName"
+      class="upload-readme markdown-body"
+    >
       <div class="upload-readme-img">
         <o-icon> <icon-add-file></icon-add-file> </o-icon>
       </div>
@@ -261,14 +266,14 @@ watch(
     <div class="right-data">
       <div class="download-data">
         <h4 class="download-title">{{ i18n.recentDownload }}</h4>
-        <span class="download-count">{{ detailData.download_count }}</span>
+        <!-- <span class="download-count">{{ detailData.download_count }}</span> -->
       </div>
       <!-- 添加数据集 -->
       <div class="dataset-data">
         <div class="add-title">
           <h4 class="title">{{ i18n.dataset }}</h4>
           <p
-            v-if="userInfo.userName === detailData.owner_name.name"
+            v-if="userInfo.userName === detailData.owner"
             class="add"
             @click="addRelateClick"
           >
@@ -283,12 +288,12 @@ watch(
             "
             relate-name="dataset"
           ></no-relate>
-          <relate-card
+          <!-- <relate-card
             :detail-data="detailData"
             :name="'relate_datasets_list'"
             @delete="deleteClick"
             @jump="goDetailClick"
-          ></relate-card>
+          ></relate-card> -->
         </div>
       </div>
       <!-- 项目 -->
@@ -303,13 +308,13 @@ watch(
           "
           relate-name="project"
         ></no-relate>
-        <project-relate-card
+        <!-- <project-relate-card
           v-else
           :detail-data="detailData"
           :name="'relate_projects_list'"
           @delete="deleteClick"
           @jump="goProjectClick"
-        ></project-relate-card>
+        ></project-relate-card> -->
       </div>
     </div>
 

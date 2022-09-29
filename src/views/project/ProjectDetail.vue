@@ -18,7 +18,7 @@ import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
 import {
   getProjectData,
-  modifyProject,
+  modifyTags,
   getTags,
   getUserDig,
   cancelCollection,
@@ -203,6 +203,7 @@ function getDetailData() {
       modular: 'project',
     }).then((res) => {
       let storeData = res.data;
+      // console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
       storeData['is_owner'] = userInfoStore.userName === storeData.owner;
       // 文件列表是否为空
@@ -225,24 +226,43 @@ function getDetailData() {
       const { protocol, training, tags } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
       if (tags) {
-        modelTags.value = [...protocol, ...training, ...tags];
+        // TODO: tags很有可能不止一个;
+        modelTags.value = [{ name: protocol }, { name: training }];
+        tags.forEach((item) => {
+          modelTags.value.push({ name: item });
+        });
       } else {
         modelTags.value = [{ name: protocol }, { name: training }];
       }
-      // TODO:显示已添加可以修改的标签
-      // modelTags.value = modelTags.value.map((item) => {
-      //   return item;
-      // });
+      modelTags.value = modelTags.value.map((item) => {
+        return item;
+      });
+      console.log(modelTags.value);
+      if (tags) {
+        // TODO: tags很有可能不止一个;
+        headTags.value = [{ name: training }];
+        tags.forEach((item) => {
+          headTags.value.push({ name: item });
+        });
+      } else {
+        headTags.value = [{ name: training }];
+      }
+      headTags.value = headTags.value.map((item) => {
+        return item;
+      });
       // headTags.value = [...modelTags.value];
+      preStorage.value = JSON.stringify(headTags.value);
       getAllTags();
     });
   } catch (error) {
     router.push('/404');
   }
 }
+const preStorage = ref();
 getDetailData();
 
 // const runingStatus = ref(false);
+console.log('detailData: ', detailData);
 
 function handleTabClick(item) {
   if (item.index === '1' && userInfoStore.userName === detailData.value.owner) {
@@ -311,14 +331,16 @@ function getLike() {
     // name: route.params.name,
     // owner: route.params.user,
     // name: 'project-ceshi123',
-    name: 'model-adataset',
-    owner: 'yyj',
+    name: detailData.value.name,
+    owner: detailData.value.owner,
   };
   getUserDig(params)
     .then((res) => {
       console.log('点赞、收藏结果: ', res);
       // if (res.data.status === 200) {
       getDetailData();
+      // isDigged.value = !isDigged.value;
+
       // console.log(isDigged.value);
       // }
     })
@@ -332,11 +354,15 @@ function getLike() {
 function cancelLike() {
   let params = {
     // name: 'project-ceshi123',
-    name: 'model-adataset',
-    owner: 'yyj',
+    name: detailData.value.name,
+    owner: detailData.value.owner,
   };
   cancelCollection(params).then((res) => {
+    detailData.value.liked = false;
     console.log('取消收藏结果: ', res);
+    // isDigged.value = true;
+    // detailData.value.like_count--;
+    getDetailData();
   });
 }
 
@@ -348,25 +374,25 @@ function deleteClick(tag) {
   let menu = dialogList.menuList.map((item) => item.key);
   console.log(menu);
   menu.forEach((key) => {
-    if (key === '0') {
-      renderList.value[key].items.forEach((item) => {
-        item.items.forEach((it) => {
-          if (it.name === tag.name) {
-            it.isActive = false;
-          }
-        });
+    // if (key === '0') {
+    renderList.value[key].items.forEach((item) => {
+      item.items.forEach((it) => {
+        if (it.name === tag.name) {
+          it.isActive = false;
+        }
       });
-    } else {
-      //     renderList.value[key].forEach((item) => {
-      //       if (item.name === tag.name) {
-      //         item.isActive = false;
-      //       }
-      //     });
-    }
+    });
+    // } else {
+    //     renderList.value[key].forEach((item) => {
+    //       if (item.name === tag.name) {
+    //         item.isActive = false;
+    //       }
+    //     });
+    // }
   });
 }
 // TODO:
-// 编辑标签头部标签删除
+// 编辑标签头部标签删除全部已添加标签
 function deleteModelTags() {
   headTags.value = [];
   let menu = dialogList.menuList.map((item) => item.key);
@@ -391,7 +417,23 @@ function confirmBtn() {
   headTags.value = headTags.value.map((item) => {
     return item.name;
   });
-  console.log(headTags.value);
+  preStorage.value = JSON.parse(preStorage.value);
+  preStorage.value = preStorage.value.map((item) => {
+    return item.name;
+  });
+  let add = [];
+  let remove = [];
+  preStorage.value.forEach((item) => {
+    if (headTags.value.indexOf(item) === -1) {
+      remove.push(item);
+    }
+  });
+  headTags.value.forEach((item) => {
+    if (preStorage.value.indexOf(item) === -1) {
+      add.push(item);
+    }
+  });
+  console.log({ add, remove });
   // dialogList.menuList.forEach((menu) => {
   //   if (menu.key === 'task') {
   //     queryDate[menu.key] = [];
@@ -430,15 +472,17 @@ function confirmBtn() {
   //     });
   //   }
   // });
-  let params = queryDate;
-  params.id = detailData.value.id;
+  // let params = queryDate;
+  // params.id = detailData.value.id;
 
-  modifyProject(params).then((res) => {
-    if (res.status === 200) {
+  modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
+    (res) => {
+      // if (res.status === 200) {
       getDetailData();
       // getAllTags();
+      // }
     }
-  });
+  );
   isTagShow.value = false;
 }
 
@@ -453,7 +497,10 @@ function getAllTags() {
   getTags().then((res) => {
     renderList.value = res.data;
     // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
-
+    console.log(res.data);
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
       // if (key === '0') {
@@ -474,31 +521,31 @@ function getAllTags() {
     });
     // console.log(renderList);
     // TODO:已添加标签高亮
-    // modelTags.value.forEach((item) => {
-    //   menu.forEach((menuitem) => {
-    //     if (menuitem === 'task') {
-    //       renderList.value[menuitem].forEach((mit) => {
-    //         mit.task_list.forEach((it) => {
-    //           if (it.name === item.name) {
-    //             it.isActive = true;
-    //           }
-    //         });
-    //       });
-    //     } else if (menuitem === 'tags') {
-    //       renderList.value[menuitem].forEach((it) => {
-    //         if (it.name === item.name) {
-    //           it.isActive = true;
-    //         }
-    //       });
-    //     } else {
-    //       renderList.value[menuitem].forEach((it) => {
-    //         if (it.name === item.name) {
-    //           it.isActive = true;
-    //         }
-    //       });
-    //     }
-    //   });
-    // });
+    headTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        //     if (menuitem === 'task') {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
+            if (it.name === item.name) {
+              it.isActive = true;
+            }
+          });
+        });
+        //     } else if (menuitem === 'tags') {
+        //       renderList.value[menuitem].forEach((it) => {
+        //         if (it.name === item.name) {
+        //           it.isActive = true;
+        //         }
+        //       });
+        //     } else {
+        //       renderList.value[menuitem].forEach((it) => {
+        //         if (it.name === item.name) {
+        //           it.isActive = true;
+        //         }
+        //       });
+        //     }
+      });
+    });
   });
 }
 // getAllTags();
@@ -641,16 +688,18 @@ watch(
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
-            <div class="loves">
+            <div v-if="detailData.liked" class="loves">
+              <o-heart
+                :is-digged="!isDigged"
+                :dig-count="detailData.like_count"
+                @click="cancelLike"
+              ></o-heart>
+            </div>
+            <div v-else class="loves">
               <o-heart
                 :is-digged="isDigged"
-                :dig-count="digCount"
+                :dig-count="detailData.like_count"
                 @click="getLike"
-              ></o-heart>
-              <o-heart
-                :is-digged="true"
-                :dig-count="digCount"
-                @click="cancelLike"
               ></o-heart>
             </div>
           </div>
@@ -763,7 +812,8 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <div v-if="menu.key == '0'" class="body-right">
+                <!-- <div v-if="menu.key == '0'" class="body-right"> -->
+                <div class="body-right">
                   <div
                     v-for="item in renderList[menu.key].items"
                     :key="item"
@@ -788,7 +838,7 @@ watch(
                   </div>
                 </div>
 
-                <div v-else class="noTask-box">
+                <!-- <div v-else class="noTask-box">
                   <div
                     v-for="item in renderList[menu.key]"
                     :key="item.id"
@@ -801,7 +851,7 @@ watch(
                   >
                     {{ item.name }}
                   </div>
-                </div>
+                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>

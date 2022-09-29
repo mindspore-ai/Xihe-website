@@ -52,7 +52,7 @@ export function creatModelRepo(params) {
 // 获取仓库详情
 export function getRepoDetailByName(params) {
   const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
-  console.log('url: ', url);
+  // console.log('url: ', url);
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

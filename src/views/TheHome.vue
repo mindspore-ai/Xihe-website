@@ -119,6 +119,12 @@ function handleBtnClick2() {
 function handleBtnClick3() {
   router.push(`https://${DOMAIN}/modelzoo`);
 }
+function goDetail(id) {
+  router.push({
+    name: 'competitionDetail',
+    params: { id: id },
+  });
+}
 function goCode() {
   router.push({ path: '/modelzoo/codegeex' });
 }

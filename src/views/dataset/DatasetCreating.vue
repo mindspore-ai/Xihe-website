@@ -70,20 +70,25 @@ function create(formEl) {
       // let newList = JSON.parse(JSON.stringify(query));
       // newList.protocol = [newList.protocol];
       createDataset(query).then((res) => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '创建成功',
-          });
-          router.push(
-            `/datasets/${res.data.owner_name.name}/${res.data.name}/tree`
-          );
-        } else {
-          ElMessage({
-            type: 'error',
-            message: '文件名重复，或文件名不合规',
-          });
-        }
+        ElMessage({
+          type: 'success',
+          message: '创建成功',
+        });
+        router.push(`/datasets/${userInfo.userName}/${res.data.name}`);
+        // if (res.status === 200) {
+        //   ElMessage({
+        //     type: 'success',
+        //     message: '创建成功',
+        //   });
+        //   router.push(
+        //     `/datasets/${res.data.owner_name.name}/${res.data.name}/tree`
+        //   );
+        // } else {
+        //   ElMessage({
+        //     type: 'error',
+        //     message: '文件名重复，或文件名不合规',
+        //   });
+        // }
       });
     } else {
       console.error('error submit!');

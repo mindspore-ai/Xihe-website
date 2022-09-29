@@ -21,28 +21,44 @@ export default [
           const res = await queryUserInfo({
             userName: name,
           });
-          if (res.data) {
-            const visitorInfo = res.data;
+          if (res.status === 200 && res.data && res.data.length) {
+            const visitorInfo = res.data[0];
             const {
               id,
-              account: userName,
-              bio: description,
-              avatar_id: avatar,
-              email,
-              follower_count: fansCount,
-              following_count: followingCount,
-              is_follower: isFollower,
+              username: userName,
+              fans_list: fansList,
+              follow_list: followList,
+              models_digg_list: modelDiggList,
+              datasets_digg_list: datasetDiggList,
+              organization_list: organizationList,
+              organization_admin_list: organizationAdminList,
+              user_detail: {
+                avatar_url,
+                description,
+                gitee,
+                github,
+                nickname: nickName,
+              },
+              user_email: { email, is_active },
             } = visitorInfo;
 
             const visitorInfoStore = useVisitorInfoStore();
             visitorInfoStore.id = id;
             visitorInfoStore.userName = userName;
+            visitorInfoStore.avatar = avatar_url;
             visitorInfoStore.description = description;
-            visitorInfoStore.avatar = avatar;
+            visitorInfoStore.nickName = nickName;
+            visitorInfoStore.gitee = gitee;
+            visitorInfoStore.github = github;
+            visitorInfoStore.fansList = fansList;
+            visitorInfoStore.followList = followList;
+            visitorInfoStore.modelDiggList = modelDiggList;
+            visitorInfoStore.datasetDiggList = datasetDiggList;
+            visitorInfoStore.organizationList = organizationList;
+            visitorInfoStore.organizationAdminList = organizationAdminList;
+
             visitorInfoStore.email = email;
-            visitorInfoStore.fansCount = fansCount;
-            visitorInfoStore.followingCount = followingCount;
-            visitorInfoStore.isFollower = isFollower;
+            visitorInfoStore.emailStatus = is_active;
           } else {
             return {
               name: '404',
@@ -145,6 +161,13 @@ export default [
         name: 'settingsEmail',
         component: () => {
           return import('@/views/setting/SettingEmail.vue');
+        },
+      },
+      {
+        path: 'competition',
+        name: 'settingsCompetition',
+        component: () => {
+          return import('@/views/setting/SettingCompetition.vue');
         },
       },
       {

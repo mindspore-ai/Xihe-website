@@ -9,6 +9,7 @@ import model from './model';
 import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
+import competition from './competition';
 
 export const routes = [
   // 主页
@@ -67,6 +68,14 @@ export const routes = [
       },
     ],
   },
+  // 排行榜
+  {
+    path: '/leaderboard',
+    name: 'leaderboards',
+    component: () => {
+      return import('@/views/TheLeaderboard.vue');
+    },
+  },
   // 用户
   ...user,
   // 模型
@@ -77,6 +86,8 @@ export const routes = [
   ...dataset,
   // 项目
   ...project,
+  // 比赛
+  ...competition,
   // 404页面
   {
     path: '/404',
@@ -101,6 +112,18 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
+  const mobileFitWhiteList = [
+    'taichu',
+    'taichuIntroduction',
+    'textToImage',
+    'taichuVision',
+    'imageCaption',
+  ];
+  if (mobileFitWhiteList.indexOf(to.name) !== -1) {
+    document.body.classList.add('mobile-fit');
+  } else {
+    document.body.classList.remove('mobile-fit');
+  }
   // 设置语言
   const langStore = useLangStore();
   langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';

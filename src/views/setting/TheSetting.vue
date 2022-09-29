@@ -5,7 +5,8 @@ import { useRoute, useRouter } from 'vue-router';
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
 import IconEmail from '~icons/app/email';
-import IconUser from '~icons/app/user';
+import IconTrophy from '~icons/app/trophy';
+import IconInvitation from '~icons/app/invitation';
 
 import ringImg from '@/assets/icons/ring.png';
 
@@ -32,9 +33,14 @@ const settingItems = [
     icon: IconEmail,
   },
   {
+    id: 'competition',
+    label: '我的比赛',
+    icon: IconTrophy,
+  },
+  {
     id: 'invitation',
     label: '我的邀请',
-    icon: IconUser,
+    icon: IconInvitation,
   },
 ];
 
@@ -67,6 +73,7 @@ const showInvitationTip = computed(() => {
 });
 
 function goSetting(item) {
+  console.log('item.id: ', item.id);
   router.push(`/settings/${item.id}`);
 }
 
@@ -105,7 +112,7 @@ function goUserPage() {
           <h2>{{ detailTitle }}</h2>
           <div v-if="showInvitationTip" class="invatation-tip">
             <img :src="ringImg" />
-            邀请好友注册，赢万元大奖
+            邀请好友注册，赢大奖，<a href="/leaderboard">点击查看排行</a>
           </div>
         </div>
         <router-view></router-view>
@@ -130,6 +137,9 @@ function goUserPage() {
     width: 16px;
     height: 16px;
     margin-right: 16px;
+  }
+  a {
+    color: #3d8df7;
   }
 }
 .setting {

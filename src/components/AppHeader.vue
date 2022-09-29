@@ -64,6 +64,16 @@ const navItems = [
     href: '/datasets',
   },
   {
+    id: 'competition',
+    label: '比赛',
+    href: '/competition',
+  },
+  {
+    id: 'leaderboards',
+    label: '排行榜',
+    href: '/leaderboard',
+  },
+  {
     id: 'docs',
     label: '文档',
     href: 'https://xihe-docs.mindspore.cn/',
@@ -133,7 +143,11 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^models|datasets|projects|modelzoo|teams/g.test(val)) {
+    if (
+      /^models|datasets|projects|modelzoo|competition|leaderboards|teams/g.test(
+        val
+      )
+    ) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';

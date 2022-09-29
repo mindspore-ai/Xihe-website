@@ -188,6 +188,38 @@ export function changeUserPhone(params) {
   });
 }
 
+/**
+ * 排行榜
+ * @returns
+ */
+export function getRank() {
+  const url = `/api/base/statistics/`;
+  return request.put(url, null, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取用户参加的所有比赛
+ * @returns
+ */
+export function getAllCompetition() {
+  // console.log('url: ', url);
+  const url = `/api/competitions/user_competitions`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取用户进行中、已结束的比赛
+ * @returns
+ */
+export function getCompetition(status) {
+  const url = `/api/competitions/user_competitions/?status=${status}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
 // TODO:换后台的接口
 /**
  * 用户动态

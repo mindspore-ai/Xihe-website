@@ -143,14 +143,22 @@ export function createModelStore(params) {
     });
 }
 /**
- * 添加数据集（查询数据集信息）
+ * 添加相关数据集（查询数据集信息）
  * @returns
  */
-export function addDataset(params) {
-  const url = `/api/datasets/?name=${params.name}&owner_name=${params.owner_name}`;
-  return request.get(url, params).then((res) => {
+export function addDataset(params, owner, id) {
+  const url = `/server/model/${owner}/${id}/dataset/relation`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
+}
+export function deleteDataset(params, owner, id) {
+  const url = `/server/model/${owner}/${id}/dataset/relation`;
+  return request
+    .delete(url, { data: params, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

@@ -10,7 +10,7 @@ import NoRelate from '@/components/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-import { addDataset, modifyProjectAdd } from '@/api/api-model';
+import { addDataset, deleteDataset, modifyProjectAdd } from '@/api/api-model';
 import { downloadObs, findFile } from '@/api/api-obs';
 import { useFileData, useUserInfoStore } from '@/stores';
 import { handleMarkdown } from '@/shared/markdown';
@@ -95,59 +95,65 @@ function confirmAdd() {
   if (addSearch.value === '') return;
   let params = {};
   let paramsArr = addSearch.value.split('/');
-  params.owner_name = paramsArr[0];
+  params.owner = paramsArr[0];
   params.name = paramsArr[1];
   // 训练数据集添加
-  addDataset(params).then((res) => {
-    if (res.results.data.length === 0) {
-      ElMessage({
-        type: 'error',
-        message: '没有查询到数据！',
-      });
-      return;
-    } else {
-      let modifyParams = {
-        relate_datasets: [],
-      };
-      detailData.value.relate_datasets_list.forEach((item) => {
-        modifyParams.relate_datasets.push(item.id);
-      });
-      let projectId = detailData.value.id;
-      modifyParams.relate_datasets.push(res.results.data[0].id);
-      modifyProjectAdd(modifyParams, projectId).then((res) => {
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '添加成功',
-          });
-          emit('on-click');
-        }
-      });
+  addDataset(params, detailData.value.owner, detailData.value.id).then(
+    (res) => {
+      if (res.data.length === 0) {
+        ElMessage({
+          type: 'error',
+          message: '没有查询到数据！',
+        });
+        return;
+      } else {
+        // let modifyParams = {
+        //   relate_datasets: [],
+        // };
+        // detailData.value.relate_datasets_list.forEach((item) => {
+        //   modifyParams.relate_datasets.push(item.id);
+        // });
+        // let projectId = detailData.value.id;
+        // modifyParams.relate_datasets.push(res.results.data[0].id);
+        // modifyProjectAdd(modifyParams, projectId).then((res) => {
+        // if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '添加成功',
+        });
+        emit('on-click');
+        // }
+        // });
+      }
     }
-  });
+  );
   isShow.value = false;
 }
 
 // 删除数据集
 function deleteClick(item) {
   let projectId = detailData.value.id;
-  if (item[1] === 'relate_datasets_list') {
-    let modifyParams = {
-      relate_datasets: [],
-    };
-    detailData.value.relate_datasets_list.forEach((child) => {
-      if (item[0].id !== child.id) {
-        modifyParams.relate_datasets_list.push(child.id);
-      }
-    });
-    modifyProjectAdd(modifyParams, projectId).then((res) => {
-      if (res.status === 200) {
-        ElMessage({
-          type: 'success',
-          message: '删除成功！你可再次添加相关数据集。',
-        });
-        emit('on-click');
-      }
+  if (item[1] === 'related_datasets') {
+    // let modifyParams = {
+    //   relate_datasets: [],
+    // };
+    // detailData.value.relate_datasets_list.forEach((child) => {
+    //   if (item[0].id !== child.id) {
+    //     modifyParams.relate_datasets_list.push(child.id);
+    //   }
+    // });
+    deleteDataset(
+      { id: item[0].id, owner: item[0].owner.name },
+      detailData.value.owner,
+      detailData.value.id
+    ).then((res) => {
+      // if (res.status === 200) {
+      ElMessage({
+        type: 'success',
+        message: '删除成功！你可再次添加相关数据集。',
+      });
+      emit('on-click');
+      // }
     });
   } else {
     let modifyParams = {
@@ -306,7 +312,7 @@ watch(
         <project-relate-card
           v-else
           :detail-data="detailData"
-          :name="'relate_projects_list'"
+          :name="'related_projects'"
           @delete="deleteClick"
           @jump="goProjectClick"
         ></project-relate-card>

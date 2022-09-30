@@ -367,3 +367,23 @@ export function downloadFile(objkey, fileName, storeId) {
     });
   }
 }
+// 比赛数据集下载
+export function downloadDataset(objkey) {
+  try {
+    getDownLoadToken({ objkey }).then((res) => {
+      // reopt.method = 'get';
+      // reopt.url = res.data.signedUrl;
+      // reopt.responseType = 'blob';
+      // reopt.headers = { 'request-module': 'app_info' };
+      let link = document.createElement('a');
+      link.href = res.data.signedUrl;
+      link.click();
+    });
+  } catch (error) {
+    ElMessage({
+      type: 'error',
+      message: error,
+      center: true,
+    });
+  }
+}

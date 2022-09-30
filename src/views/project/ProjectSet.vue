@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-// import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
 import ODialog from '@/components/ODialog.vue';
@@ -13,19 +13,19 @@ import {
 } from '@/api/api-project';
 // import { fileRename } from '@/api/api-obs';
 
-// import IconPoppver from '~icons/app/popover.svg';
+import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
 let detailData = reactive(useFileData().fileStoreData);
 console.log(detailData);
 
-// const router = useRouter();
+const router = useRouter();
 // const route = useRoute();
-// let routerParams = router.currentRoute.value.params;
+let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
-// const organizationAdminList = reactive(userInfoStore.organizationAdminList);
+const organizationAdminList = reactive(userInfoStore.organizationAdminList);
 // const fileData = useFileData();
 
 const i18n = {
@@ -77,11 +77,11 @@ const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref(detailData.repo_type);
 const description = ref(detailData.desc);
 // const newOwn = ref('');
-// const newName = ref('');
+const newName = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
 const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
-// const queryRef = ref(null);
+const queryRef = ref(null);
 const photos = reactive([
   {
     id: '1',
@@ -101,9 +101,9 @@ const photos = reactive([
   },
 ]);
 const photoId = ref(0);
-// let query = reactive({
-//   name: '',
-// });
+let query = reactive({
+  name: detailData.name,
+});
 
 detailData.repo_type === 'private'
   ? (visibleIndex.value = 0)
@@ -112,9 +112,9 @@ detailData.repo_type === 'private'
 function getIndex(value) {
   visibleIndex.value = value;
 }
-// function getOwnSelect(value) {
-//   newOwn.value = value;
-// }
+function getOwnSelect(value) {
+  newOwn.value = value;
+}
 
 visibleValue.value = detailData.repo_type;
 function getVisiableSelect(value) {
@@ -176,59 +176,63 @@ function confirmPrivate() {
   });
 }
 
-// async function confirmRename(formEl) {
-//   if (!formEl) return;
-//   if (!query.name.trim()) {
-//     return false;
-//   }
-//   formEl.validate((valid) => {
-//     if (valid) {
-//       try {
-//         let pathQuery = {
-//           new_path: `xihe-obj/projects/${route.params.user}/${query.name}/`,
-//           old_path: `xihe-obj/projects/${route.params.user}/${routerParams.name}/`,
-//         };
-//         fileRename(pathQuery).then((res) => {
-//           if (res.status === 200) {
-//             // 改名成功更新pinia数据
-//             getProjectData({ name: query.name }).then((res) => {
-//               if (res.results.data.length) {
-//                 let storeData = res.results.data[0];
-//                 storeData['is_owner'] =
-//                   userInfoStore.userName === storeData.owner_name.name;
-//                 fileData.setFileData(storeData);
-//               }
-//               ElMessage({
-//                 type: 'success',
-//                 message: '仓库信息更新成功',
-//               });
-//               router.push({
-//                 name: 'projectSet',
-//                 params: {
-//                   user: routerParams.user,
-//                   name: query.name,
-//                 },
-//               });
-//             });
-//           } else {
-//             ElMessage({
-//               type: 'error',
-//               message: res.msg,
-//             });
-//           }
-//         });
-//       } catch (error) {
-//         ElMessage({
-//           type: 'error',
-//           message: error,
-//         });
-//       }
-//     } else {
-//       console.error('error submit!');
-//       return false;
-//     }
-//   });
-// }
+async function confirmRename(formEl) {
+  console.log(formEl);
+  if (!formEl) return;
+  if (!query.name.trim()) {
+    return false;
+  }
+  formEl.validate((valid) => {
+    if (valid) {
+      try {
+        // let pathQuery = {
+        //   new_path: `xihe-obj/projects/${route.params.user}/${query.name}/`,
+        //   old_path: `xihe-obj/projects/${route.params.user}/${routerParams.name}/`,
+        // };
+        modifyProject(query, userInfoStore.userName, detailData.id).then(
+          (res) => {
+            //   if (res.status === 200) {
+            //     // 改名成功更新pinia数据
+            //     getProjectData({ name: query.name }).then((res) => {
+            //       if (res.results.data.length) {
+            //         let storeData = res.results.data[0];
+            //         storeData['is_owner'] =
+            //           userInfoStore.userName === storeData.owner_name.name;
+            //         fileData.setFileData(storeData);
+            //       }
+            ElMessage({
+              type: 'success',
+              message: '仓库信息更新成功',
+            });
+            router.push({
+              name: 'projectSet',
+              params: {
+                user: routerParams.user,
+                name: query.name,
+              },
+            });
+            detailData.name = query.name;
+            //     });
+            //   } else {
+            //     ElMessage({
+            //       type: 'error',
+            //       message: res.msg,
+            //     });
+            //   }
+          }
+        );
+      } catch (error) {
+        ElMessage({
+          type: 'error',
+          message: error,
+        });
+      }
+    } else {
+      console.error('error submit!');
+      return false;
+    }
+  });
+}
 // 删除成功，你可再次创建新模型，点击确定回到个人主页。
 function confirmDel() {
   deleteProject(detailData.id).then((res) => {
@@ -295,16 +299,16 @@ function toggleDelDlg(flag) {
           i18n.visible.btnText
         }}</o-button>
 
-        <!-- <div class="setting-title">
+        <div class="setting-title">
           {{ i18n.rename.title }}
           <el-divider />
         </div>
         <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
         <o-select
           :select-data="organizationAdminList"
-          :placeholder="detailData.owner_name.name"
+          :placeholder="detailData.owner"
           keys="id"
-          value="name"
+          value="detailData.name"
           @change="getOwnSelect"
         ></o-select>
         <el-form
@@ -312,25 +316,32 @@ function toggleDelDlg(flag) {
           class="creating-box"
           :model="query"
           prop="region"
+          @submit.prevent
         >
           <p class="setting-tip">{{ i18n.rename.newName }}</p>
           <el-form-item
             class="item"
             prop="name"
             :rules="[
+              { required: true, message: '必填项', trigger: 'blur' },
               {
-                pattern: /^[^\u4e00-\u9fa5]{1,1000}$/g,
-                message: '仓库名目前只支持英文',
+                pattern: /^[^\u4e00-\u9fa5]{3,64}$/g,
+                message: '暂不支持中文字符，且长度为3-64个字符',
                 trigger: 'blur',
               },
               {
-                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-                message: '格式不正确',
+                pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
+                message: '不能含有:/\*?<>|等特殊字符',
                 trigger: 'blur',
               },
               {
-                pattern: /^[^.]*[^.]$/,
-                message: '格式不正确',
+                pattern: /^[^.].*[^.]$/,
+                message: '不能以.开头或结尾',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^(?!.*(-)\1+).*$/,
+                message: '不能连续两个及以上中划线',
                 trigger: 'blur',
               },
             ]"
@@ -364,17 +375,17 @@ function toggleDelDlg(flag) {
               </div>
             </el-popover>
           </el-form-item>
-        </el-form> -->
+        </el-form>
 
         <!-- <p class="setting-tip">{{ i18n.rename.newName }}</p>
         <o-input v-model="newName" :placeholder="i18n.rename.placeholder">
         </o-input> -->
-        <!-- <p class="setting-tip">{{ i18n.rename.describe }}</p>
+        <p class="setting-tip">{{ i18n.rename.describe }}</p>
         <o-button
           style="margin-bottom: 40px"
           @click="confirmRename(queryRef)"
           >{{ i18n.rename.btnText }}</o-button
-        > -->
+        >
 
         <h4 class="setting-title">
           {{ i18n.delete.title }}

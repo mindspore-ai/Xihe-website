@@ -77,8 +77,8 @@ export function setNewProject(params) {
  * 修改项目信息
  * @returns
  */
-export function modifyProject(params, owner) {
-  const url = `/server/project/${owner}/${params.id}`;
+export function modifyProject(params, owner, id) {
+  const url = `/server/project/${owner}/${id}`;
   // console.log(params);
   return request
     .put(url, params, getHeaderConfig())
@@ -182,6 +182,14 @@ export function addDataset(params, owner, id) {
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
+}
+export function deleteDataset(params, owner, id) {
+  const url = `/server/project/${owner}/${id}/dataset/relation`;
+  return request
+    .delete(url, { data: params, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 添加模型（查询模型信息）

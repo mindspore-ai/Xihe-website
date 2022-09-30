@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus';
 import OButton from '@/components/OButton.vue';
 
 import IconDownload from '~icons/app/download';
-// import IconRefresh from '~icons/app/refresh-taichu';
+import IconRefresh from '~icons/app/refresh-taichu';
 
 import {
   getInferencePicture,
@@ -284,7 +284,7 @@ function refreshTags() {
               <div class="example-top">
                 <p class="title">选择样例</p>
                 <div class="refresh-btn" @click="refreshTags">
-                  <!-- <o-icon><icon-refresh></icon-refresh></o-icon> -->
+                  <o-icon><icon-refresh></icon-refresh></o-icon>
                   <p>换一批</p>
                 </div>
               </div>

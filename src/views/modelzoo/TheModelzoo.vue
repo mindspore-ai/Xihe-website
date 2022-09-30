@@ -24,19 +24,20 @@ let i18n = {
   clear: '清除',
   cardLists: [
     {
-      title: '紫东.太初',
-      introduce: '全球首个三模态千亿参数大模型',
-      url: taichu,
-      path: '/modelzoo/taichu',
-      openness: true,
-    },
-    {
       title: 'CodeGeeX',
       introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
       url: codegeex,
       path: '/modelzoo/codegeex',
       openness: true,
     },
+    {
+      title: '紫东.太初',
+      introduce: '全球首个三模态千亿参数大模型',
+      url: taichu,
+      path: '/modelzoo/taichu',
+      openness: true,
+    },
+
     {
       title: '武大.LuoJia',
       introduce: '全球首个遥感专用框架及最大遥感样本库',

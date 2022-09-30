@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 
-import { getDatasetData } from '@/api/api-dataset';
+import { getUserDatasetData } from '@/api/api-user';
 import { useUserInfoStore } from '@/stores';
 
 const route = useRoute();
@@ -16,8 +16,14 @@ const i18n = {
   visitorEmpty: '该用户暂未创建任何数据集',
   searchEmpty: '无匹配数据集',
 };
+// 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
+});
+
+// 当前用户信息
+const userInfo = computed(() => {
+  return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 const props = defineProps({
   queryData: {
@@ -27,12 +33,12 @@ const props = defineProps({
     },
   },
 });
-const modelCount = ref(0);
-const modelData = ref([]);
+const datasetCount = ref(0);
+const datasetData = ref([]);
 let query = reactive({
   search: '',
   page: 1,
-  size: 10,
+  count_per_page: 10,
   owner_name: route.params.user,
   order: '',
 });
@@ -43,24 +49,25 @@ function goDetail(user, modelName) {
     path: `/datasets/${user}/${modelName}`,
   });
 }
-function getUserDatasetData() {
-  getDatasetData(query).then((res) => {
-    if (res.count && res.results.status === 200) {
+function getDatasetData() {
+  getUserDatasetData(query, userInfo.value.userName).then((res) => {
+    console.log('个人数据集数据: ', res);
+    if (res.data.total) {
       if (res.count > 10) {
         emit('domChange', 76);
       }
-      modelCount.value = res.count;
-      modelData.value = res.results.data;
+      datasetCount.value = res.data.total;
+      datasetData.value = res.data.models;
     } else {
-      modelData.value = [];
+      datasetData.value = [];
     }
   });
 }
 function handleSizeChange(val) {
-  if (modelCount.value / val < 8) {
+  if (datasetCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  query.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
@@ -71,7 +78,7 @@ function handleCurrentChange(val) {
 watch(
   query,
   () => {
-    getUserDatasetData();
+    getDatasetData();
   },
   {
     deep: true,
@@ -85,22 +92,22 @@ watch(props, () => {
 });
 </script>
 <template>
-  <div v-if="modelData.length" class="card-box">
+  <div v-if="datasetData.length" class="card-box">
     <div class="card-list">
       <o-card
-        v-for="item in modelData"
+        v-for="item in datasetData"
         :key="item.id"
         card-type="dataset"
         :card-data="item"
-        @click="goDetail(item.owner_name.name, item.name)"
+        @click="goDetail(item.owner, item.name)"
       ></o-card>
     </div>
-    <div v-if="modelCount > 10" class="pagination">
+    <div v-if="datasetCount > 10" class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
-        :page-size="query.size"
-        :total="modelCount"
+        :page-size="query.count_per_page"
+        :total="datasetCount"
         layout="sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"

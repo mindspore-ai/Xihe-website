@@ -70,7 +70,7 @@ const i18n = {
 };
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref(detailData.is_private);
-const description = ref(detailData.description);
+const description = ref(detailData.desc);
 const newOwn = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
@@ -78,7 +78,7 @@ const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
 const queryRef = ref(null);
 
 let query = reactive({
-  name: '',
+  name: detailData.name,
 });
 
 detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
@@ -95,7 +95,9 @@ function getVisiableSelect(value) {
     : (visibleValue.value = false);
 }
 
+console.log('数据集详情数据: ', detailData);
 async function confirmRename(formEl) {
+  console.log(11111111);
   if (!formEl) return;
   if (!query.name.trim()) {
     return false;
@@ -103,11 +105,30 @@ async function confirmRename(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       try {
-        let pathQuery = {
+        modifyDataset(query, detailData.value.owner, detailData.value.id).then(
+          (res) => {
+            console.log('res: ', res);
+            detailData.name = res.data.name;
+            ElMessage({
+              type: 'success',
+              message: '仓库信息更新成功',
+            });
+            router.push({
+              name: 'datasetSet',
+              params: {
+                user: routerParams.user,
+                name: detailData.name,
+              },
+            });
+            routerParams.name = detailData.name;
+          }
+        );
+
+        /* let pathQuery = {
           new_path: `xihe-obj/datasets/${route.params.user}/${query.name}/`,
           old_path: `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`,
-        };
-        fileRename(pathQuery).then((res) => {
+        }; */
+        /*   fileRename(pathQuery).then((res) => {
           if (res.status === 200) {
             // 改名成功更新pinia数据
             getDatasetData({ name: query.name }).then((res) => {
@@ -135,8 +156,9 @@ async function confirmRename(formEl) {
               type: 'error',
               message: res.msg,
             });
-          }
+          } 
         });
+       */
       } catch (error) {
         ElMessage({
           type: 'error',
@@ -151,23 +173,22 @@ async function confirmRename(formEl) {
 }
 function confirmPrivate() {
   let query = {
-    is_private: visibleValue.value,
-    id: detailData.id,
-    description: description.value,
+    type: visibleValue.value,
+    desc: description.value,
   };
-  modifyDataset(query).then((res) => {
-    if (res.status === 200) {
-      description.value = res.data.description;
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-      });
-    } else {
+  modifyDataset(query, detailData.owner, detailData.id).then((res) => {
+    // if (res.status === 200) {
+    description.value = res.data.desc;
+    ElMessage({
+      type: 'success',
+      message: res.msg,
+    });
+    /* } else {
       ElMessage({
         type: 'error',
         message: res.msg,
       });
-    }
+    } */
   });
 }
 function confirmDel() {
@@ -223,7 +244,7 @@ function toggleDelDlg(flag) {
         <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
         <o-select
           :select-data="organizationAdminList"
-          :placeholder="detailData.owner_name.name"
+          :placeholder="detailData.owner"
           keys="id"
           value="name"
           @change="getOwnSelect"

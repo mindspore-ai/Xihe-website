@@ -63,17 +63,18 @@ getUserCollection(userInfo.value.userName).then((res) => {
 });
 
 function goDetail(item) {
-  if (item.type.indexOf('模型') > -1) {
+  console.log('item: ', item);
+  if (item.resource.type.indexOf('model') !== -1) {
     router.push({
-      path: `/models/${item.owner.name}/${item.name}`,
+      path: `/models/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.type.indexOf('数据集') > -1) {
+  } else if (item.resource.type.indexOf('dataset') !== -1) {
     router.push({
-      path: `/datasets/${item.owner.name}/${item.name}`,
+      path: `/datasets/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.type.indexOf('项目') > -1) {
+  } else if (item.resource.type.indexOf('project') !== -1) {
     router.push({
-      path: `/projects/${item.owner.name}/${item.name}`,
+      path: `/projects/${item.resource.owner.name}/${item.resource.name}`,
     });
   }
 }

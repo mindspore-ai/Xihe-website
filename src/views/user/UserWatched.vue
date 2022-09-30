@@ -64,7 +64,7 @@ const currentFollowList = ref([]);
 function getFollowList() {
   try {
     getUserFollow(userInfo.value.userName).then((res) => {
-      console.log('关注列表: ', res);
+      console.log('关注列表: ', res.data);
       currentFollowList.value = res.data;
       // console.log('关注列表: ', currentFollowList.value);
     });

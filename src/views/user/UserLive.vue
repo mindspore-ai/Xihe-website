@@ -42,7 +42,7 @@ const emit = defineEmits(['getlivecount', 'domChange']);
 
 // 获得动态页面数据
 getUserLive(userInfo.value.userName).then((res) => {
-  // console.log('动态信息: ', res);
+  console.log('动态信息: ', res);
   if (res.data) {
     liveCount.value = res.data.length;
     liveData.value = res.data;
@@ -55,16 +55,15 @@ getUserLive(userInfo.value.userName).then((res) => {
 });
 
 function goDetail(item) {
-  console.log('item: ', item);
-  if (item.resource.type.indexOf('model') > -1) {
+  if (item.resource.type.indexOf('model') !== -1) {
     router.push({
       path: `/models/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.resource.type.indexOf('dataset') > -1) {
+  } else if (item.resource.type.indexOf('dataset') !== -1) {
     router.push({
       path: `/datasets/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.resource.type.indexOf('project') > -1) {
+  } else if (item.resource.type.indexOf('project') !== -1) {
     router.push({
       path: `/projects/${item.resource.owner.name}/${item.resource.name}`,
     });

@@ -36,11 +36,11 @@ const props = defineProps({
 const datasetCount = ref(0);
 const datasetData = ref([]);
 let query = reactive({
-  search: '',
-  page: 1,
+  // search: '',
+  page_num: 1,
   count_per_page: 10,
-  owner_name: route.params.user,
-  order: '',
+  // owner_name: route.params.user,
+  // order: '',
 });
 const emit = defineEmits(['getlivecount', 'domChange']);
 
@@ -71,7 +71,7 @@ function handleSizeChange(val) {
 }
 
 function handleCurrentChange(val) {
-  query.page = val;
+  query.page_num = val;
   document.documentElement.scrollTop = 0;
 }
 

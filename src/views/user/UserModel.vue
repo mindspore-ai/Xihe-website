@@ -45,11 +45,11 @@ const modelCount = ref(0);
 const modelData = ref([]);
 
 let query = reactive({
-  search: '',
-  page: 1,
+  // search: '',
+  page_num: 1,
   count_per_page: 10,
-  owner_name: route.params.user,
-  order: '',
+  // owner_name: route.params.user,
+  // order: '',
 });
 
 function getUserModel() {
@@ -81,7 +81,7 @@ function handleSizeChange(val) {
 }
 
 function handleCurrentChange(val) {
-  query.page = val;
+  query.page_num = val;
   document.documentElement.scrollTop = 0;
 }
 

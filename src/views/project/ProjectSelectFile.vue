@@ -228,7 +228,13 @@ getDetailData();
           width: '640px',
         }"
       >
-        体验期间最大训练时长为24小时
+        <div :style="{ marginBottom: '8px' }">
+          亲爱的用户您好，为保证用户使用体验，
+        </div>
+        <div>
+          单次训练时长最大为<span style="color: #0d8dff">24小时</span
+          >，请您注意使用时长哦~
+        </div>
       </div>
       <template #foot>
         <div
@@ -242,7 +248,7 @@ getDetailData();
           <o-button :style="{ marginRight: '24px' }" @click="tips = false"
             >取消</o-button
           >
-          <o-button type="primary" @click="confirmCreating">确认 </o-button>
+          <o-button type="primary" @click="confirmCreating">继续 </o-button>
         </div>
       </template>
     </o-dialog>

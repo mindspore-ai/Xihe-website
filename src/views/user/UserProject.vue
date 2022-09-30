@@ -59,7 +59,7 @@ function handleSizeChange(val) {
   if (projectCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  query.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
@@ -150,7 +150,7 @@ watch(
         <el-pagination
           :page-sizes="[12, 24, 60]"
           :current-page="query.page"
-          :page-size="query.size"
+          :page-size="query.count_per_page"
           :total="projectCount"
           :layout="layout"
           @size-change="handleSizeChange"

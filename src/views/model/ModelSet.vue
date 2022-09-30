@@ -127,7 +127,7 @@ async function confirmRename(formEl) {
               name: detailData.name,
             },
           });
-          routerParams.name = detailData.name;
+          detailData.name = query.name;
           // });
           // } else {
           //   ElMessage({
@@ -154,18 +154,18 @@ function confirmPrivate() {
     desc: description.value,
   };
   modifyModel(query, detailData.owner, detailData.id).then((res) => {
-    if (res.status === 200) {
-      description.value = res.data.description;
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    }
+    // if (res.status === 200) {
+    description.value = res.data.desc;
+    ElMessage({
+      type: 'success',
+      message: '修改成功',
+    });
+    // } else {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: res.msg,
+    //   });
+    // }
   });
 }
 function confirmDel() {

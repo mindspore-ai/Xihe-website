@@ -471,6 +471,7 @@ onMounted(() => {
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
     padding: 16px 16px 40px;
+    background-image: none;
     // background-image: none;
     // background: #f5f6f8;
   }
@@ -596,12 +597,18 @@ onMounted(() => {
           }
           .image-modal {
             min-height: 160px;
+            @media screen and (max-width: 1080px) {
+              min-height: 96px;
+            }
           }
         }
 
         .message-img {
           padding: 8px;
           line-height: 0px;
+          @media screen and (max-width: 1080px) {
+            padding: 4px;
+          }
         }
 
         .avatar {

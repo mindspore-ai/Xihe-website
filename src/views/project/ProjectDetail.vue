@@ -203,7 +203,7 @@ function getDetailData() {
       modular: 'project',
     }).then((res) => {
       let storeData = res.data;
-      // console.log('项目详情数据: ', res.data);
+      console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
       storeData['is_owner'] = userInfoStore.userName === storeData.owner;
       // 文件列表是否为空
@@ -627,6 +627,7 @@ watch(
   }
 );
 // 在router里面配置mate nav高亮跟随
+console.log('route: ', route);
 watch(
   () => {
     return route.name;
@@ -688,19 +689,21 @@ watch(
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
-            <div v-if="detailData.liked" class="loves">
-              <o-heart
-                :is-digged="!isDigged"
-                :dig-count="detailData.like_count"
-                @click="cancelLike"
-              ></o-heart>
-            </div>
-            <div v-else class="loves">
-              <o-heart
-                :is-digged="isDigged"
-                :dig-count="detailData.like_count"
-                @click="getLike"
-              ></o-heart>
+            <div v-if="userInfoStore.userName !== detailData.owner">
+              <div v-if="detailData.liked" class="loves">
+                <o-heart
+                  :is-digged="!isDigged"
+                  :dig-count="detailData.like_count"
+                  @click="cancelLike"
+                ></o-heart>
+              </div>
+              <div v-else class="loves">
+                <o-heart
+                  :is-digged="isDigged"
+                  :dig-count="detailData.like_count"
+                  @click="getLike"
+                ></o-heart>
+              </div>
             </div>
           </div>
           <div class="label-box">

@@ -54,13 +54,13 @@ let query = reactive({
 
 function getUserModel() {
   getUserModelData(query, userInfo.value.userName).then((res) => {
-    console.log('个人模型数据: ', res);
-    if (res.count && res.results.status === 200) {
-      if (res.count > 10) {
+    if (res.data.total) {
+      if (res.data.total > 10) {
         emit('domChange', 76);
       }
-      modelCount.value = res.count;
-      modelData.value = res.results.data;
+      modelCount.value = res.data.total;
+      modelData.value = res.data.models;
+      console.log('个人模型数据: ', modelData.value);
     } else {
       modelData.value = [];
     }
@@ -77,7 +77,7 @@ function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  query.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
@@ -108,14 +108,14 @@ watch(props, () => {
         v-for="item in modelData"
         :key="item.id"
         :card-data="item"
-        @click="goDetail(item.owner_name.name, item.name)"
+        @click="goDetail(item.owner, item.name)"
       ></o-card>
     </div>
     <div v-if="modelCount > 10" class="pagination">
       <el-pagination
         :page-sizes="[10, 20, 50]"
         :current-page="query.page"
-        :page-size="query.size"
+        :page-size="query.count_per_page"
         :total="modelCount"
         layout="sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"

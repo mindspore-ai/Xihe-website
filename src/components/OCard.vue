@@ -26,7 +26,7 @@ const i18n = {
 };
 const tagList = JSON.stringify(props.cardData);
 
-if (props.cardType === 'model') {
+/* if (props.cardType === 'model') {
   const {
     licenses_list,
     libraries_list,
@@ -47,7 +47,7 @@ if (props.cardType === 'model') {
 } else if (props.cardType === 'dataset') {
   const { licenses_list, task_list, files_list } = JSON.parse(tagList);
   labelList.value = [...licenses_list, ...task_list, ...files_list];
-}
+} */
 </script>
 <template>
   <div
@@ -59,39 +59,39 @@ if (props.cardType === 'model') {
   >
     <div class="card-top">
       <div class="portrait">
-        <img :src="cardData.owner_name.avatar_url" alt="" />
+        <!-- :TODO: 头像-->
+        <!-- <img :src="cardData.owner_name.avatar_url" alt="" /> -->
       </div>
-      <div v-if="cardData.owner_name" class="nickname">
-        {{ cardData.owner_name.name }}
+      <div v-if="cardData.owner" class="nickname">
+        {{ cardData.owner }}
       </div>
       <div class="model-name">/{{ cardData.name }}</div>
     </div>
+    <!-- TODO: 标签-->
     <div class="label-box">
       <div v-for="label in labelList" :key="label.id" class="label-item">
         {{ label.name }}
       </div>
     </div>
     <p class="model-introduce">
-      {{ cardData.description }}
+      {{ cardData.desc }}
     </p>
     <div class="card-bottom">
       <div class="card-bottom-left">
         <div
-          v-if="cardData.update_date_time"
+          v-if="cardData.updated_at"
           class="update-time"
           :title="i18n.uploadTime"
         >
           <o-icon> <icon-time></icon-time></o-icon>
-          <span class="text">{{
-            cardData.update_date_time.split(' ')[0]
-          }}</span>
+          <span class="text">{{ cardData.updated_at }}</span>
         </div>
       </div>
       <div class="card-bottom-right">
         <div class="download likes" :title="i18n.likesNumber">
-          <o-icon><icon-heart></icon-heart></o-icon>{{ cardData.digg_count }}
+          <o-icon><icon-heart></icon-heart></o-icon>{{ cardData.like_count }}
         </div>
-        <div class="download" :title="i18n.downloadTime">
+        <div class="download" :title="i18n.downloadTitle">
           <o-icon><icon-download></icon-download></o-icon
           >{{ cardData.download_count }}
         </div>

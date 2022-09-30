@@ -64,7 +64,6 @@ export function queryUserIdToken(params) {
   });
 } */
 export function getUserModelData(params, name) {
-  console.log('params: ', params);
   const url = `/server/model/${name}`;
   let header = getHeaderConfig();
   // 登录之后携带token
@@ -87,24 +86,24 @@ export function getUserModelData(params, name) {
     return res.data;
   });
 } */
-export function getDatasetData(params) {
-  const url = `/api/datasets/`;
+export function getUserDatasetData(params, name) {
+  const url = `/server/dataset/${name}`;
   let header = getHeaderConfig();
   // 登录之后携带token
-  if (getUserInfo().token) {
-    return request
-      .get(url, {
-        params,
-        ...header,
-      })
-      .then((res) => {
-        return res.data;
-      });
-  } else {
+  // if (getUserInfo().token) {
+  return request
+    .get(url, {
+      params,
+      ...header,
+    })
+    .then((res) => {
+      return res.data;
+    });
+  /* } else {
     return request.get(url, { params }).then((res) => {
       return res.data;
     });
-  }
+  } */
 }
 
 /**

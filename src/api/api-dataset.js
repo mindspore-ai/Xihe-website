@@ -80,8 +80,19 @@ export function createDataset(params) {
  * 修改数据集信息
  * @returns
  */
-export function modifyDataset(params) {
+/* export function modifyDataset(params) {
   const url = `/api/datasets/${params.id}`;
+  return request
+    .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+} */
+export function modifyDataset(params, owner, id) {
+  const url = `/server/dataset/${owner}/${id}`;
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

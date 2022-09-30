@@ -355,7 +355,7 @@ function goPanguMore() {
             margin: 40px 0 24px;
           }
           .config-img {
-            img{
+            img {
               width: 100%;
             }
           }
@@ -371,7 +371,7 @@ function goPanguMore() {
             margin: 40px 0 24px;
           }
           .require-img {
-            img{
+            img {
               width: 100%;
             }
           }

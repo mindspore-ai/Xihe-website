@@ -45,11 +45,11 @@ const props = defineProps({
 });
 
 let query = reactive({
-  search: '',
-  page: 1,
+  // search: '',
+  page_num: 1,
   count_per_page: 12,
-  owner_name: route.params.user,
-  order: '',
+  // owner_name: route.params.user,
+  // order: '',
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');
@@ -63,7 +63,7 @@ function handleSizeChange(val) {
 }
 
 function handleCurrentChange(val) {
-  query.page = val;
+  query.page_num = val;
   document.documentElement.scrollTop = 0;
 }
 
@@ -146,12 +146,12 @@ watch(
           </div>
         </div>
       </div>
-      <div v-if="projectCount > 12" class="pagination">
+      <div v-if="projectData.total > 12" class="pagination">
         <el-pagination
           :page-sizes="[12, 24, 60]"
           :current-page="query.page"
           :page-size="query.count_per_page"
-          :total="projectCount"
+          :total="projectData.total"
           :layout="layout"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"

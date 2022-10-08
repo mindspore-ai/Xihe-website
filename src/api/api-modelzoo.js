@@ -80,7 +80,7 @@ export function getSinglePicture(params) {
  * 上传紫东太初大模型以文生图(生成一张图片)
  * @returns
  */
- export function getMultiplePicture(params) {
+export function getMultiplePicture(params) {
   const url = `/server/bigmodel/multiple_pictures`;
   return request
     .post(url, params, getHeaderConfig())
@@ -109,14 +109,13 @@ export function getExampleTags() {
 }
 
 /**
- * VQA文字审核
+ * VQA图片上传
  * @returns
  */
-
-export function handleTextRview(params) {
-  const url = `/api/base/content_auditing/`;
+export function uploadVqaPicture(params) {
+  const url = `/server/bigmodel/upload_picture`;
   return request
-    .post(url, params)
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })
@@ -130,9 +129,38 @@ export function handleTextRview(params) {
  * @returns
  */
 export function handleVqaInference(params) {
-  const url = `/api/foundation/taichu_vqa`;
+  const url = '/server/bigmodel/ask';
   return request
     .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+// export function handleVqaInference(params) {
+//   const url = `/api/foundation/taichu_vqa`;
+//   return request
+//     .post(url, params, getHeaderConfig())
+//     .then((res) => {
+//       return res.data;
+//     })
+//     .catch((e) => {
+//       return e;
+//     });
+// }
+
+/**
+ * VQA文字审核
+ * @returns
+ */
+
+export function handleTextRview(params) {
+  const url = `/api/base/content_auditing/`;
+  return request
+    .post(url, params)
     .then((res) => {
       return res.data;
     })

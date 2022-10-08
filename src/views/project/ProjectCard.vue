@@ -732,7 +732,10 @@ onUnmounted(() => {
         </div>
         <div class="dataset-box">
           <no-relate
-            v-if="!detailData.related_datasets"
+            v-if="
+              !detailData.related_datasets ||
+              !detailData.related_datasets.length
+            "
             :relate-name="'dataset'"
           ></no-relate>
           <relate-card
@@ -756,7 +759,7 @@ onUnmounted(() => {
           </p>
         </div>
         <no-relate
-          v-if="!detailData.related_models"
+          v-if="!detailData.related_models || !detailData.related_models.length"
           :relate-name="'model'"
         ></no-relate>
         <relate-card

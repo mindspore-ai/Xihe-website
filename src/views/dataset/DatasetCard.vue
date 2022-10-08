@@ -104,10 +104,10 @@ function emptyClick(ind) {
   }
 }
 function handleDetailClick(val) {
-  router.push(`/models/${val.owner_name.name}/${val.name}`);
+  router.push(`/models/${val.owner.name}/${val.name}`);
 }
 function handleProjectClick(val) {
-  router.push(`/projects/${val.owner_name.name}/${val.name}`);
+  router.push(`/projects/${val.owner.name}/${val.name}`);
 }
 // 文本监听
 watch(
@@ -177,14 +177,14 @@ watch(
         <div class="dataset-box">
           <no-relate
             v-if="
-              !detailData.relate_models_list ||
-              detailData.relate_models_list.length === 0
+              !detailData.related_models ||
+              detailData.related_models.length === 0
             "
             relate-name="model"
           ></no-relate>
           <relate-card
             :detail-data="detailData"
-            :name="'relate_models_list'"
+            :name="'related_models'"
             @jump="handleDetailClick"
           ></relate-card>
         </div>
@@ -194,15 +194,15 @@ watch(
         <div class="title">{{ i18n.relatedItem }}</div>
         <no-relate
           v-if="
-            !detailData.relate_projects_list ||
-            detailData.relate_projects_list.length === 0
+            !detailData.related_projects ||
+            detailData.related_projects.length === 0
           "
           relate-name="project"
         ></no-relate>
         <project-relate-card
           v-else
           :detail-data="detailData"
-          :name="'relate_projects_list'"
+          :name="'related_projects'"
           @jump="handleProjectClick"
         ></project-relate-card>
       </div>

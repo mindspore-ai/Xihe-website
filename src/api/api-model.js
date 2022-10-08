@@ -112,11 +112,11 @@ export function getModelTags() {
  * 点赞
  * @returns
  */
-export function getUserDig(reopt) {
+/* export function getUserDig(reopt) {
   return request(reopt).then((res) => {
     return res;
   });
-}
+} */
 /**
  * 添加下载记录
  * @returns

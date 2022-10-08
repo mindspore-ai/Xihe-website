@@ -259,7 +259,6 @@ export function getFollowing(params) {
  */
 export function cancelFollowing(params) {
   const url = `/server/user/following/${params.account}`;
-  debugger;
   return request
     .delete(url, Object.assign({ data: params }, getHeaderConfig()))
     .then((res) => {
@@ -272,7 +271,7 @@ export function cancelFollowing(params) {
  * @returns
  */
 export function getUserFans(name) {
-  console.log('name: ', name);
+  // console.log('name: ', name);
   const url = `/server/user/follower/${name}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;

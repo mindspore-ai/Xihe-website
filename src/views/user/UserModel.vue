@@ -54,6 +54,7 @@ let query = reactive({
 
 function getUserModel() {
   getUserModelData(query, userInfo.value.userName).then((res) => {
+    console.log('res: ', res);
     if (res.data.total) {
       if (res.data.total > 10) {
         emit('domChange', 76);

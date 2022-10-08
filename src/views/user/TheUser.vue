@@ -17,8 +17,7 @@ import { Search } from '@element-plus/icons-vue';
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 // import { getUserDig } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
-// TODO:切后台后
-import { getFollowing } from '@/api/api-user';
+import { getFollowing, cancelFollowing } from '@/api/api-user';
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
@@ -33,8 +32,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-// console.log('userInfo: ', userInfo);
-// console.log(userInfo.value.userName);
+console.log('userInfo: ', userInfo);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -103,36 +101,7 @@ let i18n = {
 };
 // 搜索关键词
 const keyWord = ref('');
-// 登录用户关注列表
-const followList = computed(() => {
-  return userInfoStore.followList;
-});
 
-// 登录用户关注id列表
-// let followIdList = followList.value.map((val) => {
-//   return val.id;
-// });
-// 拼接登陆用户信息与关注列表的信息一致
-let currentUserInfo = reactive({
-  avatar: userInfoStore.avatar,
-  description: userInfoStore.description,
-  id: userInfoStore.id,
-  name: userInfoStore.nickName,
-});
-// 拼接当前用户信息与关注列表的信息一致
-let jointUserInfo = reactive({
-  avatar: userInfo.value.avatar,
-  description: userInfo.value.description,
-  id: userInfo.value.id,
-  name: userInfo.value.userName,
-});
-// console.log('jointUserInfo: ', jointUserInfo);
-// 判断用户关注id列表是否含有该粉丝id
-/* if (followIdList.indexOf(jointUserInfo.id) !== -1) {
-    jointUserInfo.isFollow = true;
-  } else {
-    jointUserInfo.isFollow = false;
-  } */
 const holder = computed(() => {
   return route.path.split('/')[2];
 });
@@ -234,39 +203,37 @@ function goWatched() {
   router.push({ path: `/${userInfo.value.userName}/watched` });
 }
 
-// 关注用户or点赞TODO:
-function getFollow(account) {
-  // console.log('account: ', account);
+// 关注用户or点赞
+function getFollow(name) {
+  console.log('name: ', name);
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
-    return goAuthorize();
+    goAuthorize();
   } else {
     try {
-      let params = { account: account };
+      let params = { account: name };
       getFollowing(params).then((res) => {
-        console.log('res: ', res);
+        console.log('关注他人: ', res);
+        userInfoStore.followingCount++;
+        getFansList();
       });
-      /* getUserDig({ userId, fans }).then((res) => {
-          if (res.status === 200) {
-            if (followIdList.indexOf(fans.id) !== -1) {
-              let index = followIdList.indexOf(fans.id);
-              followList.value.splice(index, 1);
-            } else {
-              followList.value.push(fans);
-            }
-            if (jointUserInfo.isFollow) {
-              // 删除粉丝列表中的粉丝信息
-              let index = userInfo.value.fansList.indexOf(currentUserInfo);
-              userInfo.value.fansList.splice(index, 1);
-            } else {
-              userInfo.value.fansList.push(currentUserInfo);
-            }
-          }
-          jointUserInfo.isFollow = !jointUserInfo.isFollow;
-        }); */
     } catch (error) {
       console.error(error);
     }
+  }
+}
+
+// 取消关注用户
+function cancelFollow(name) {
+  try {
+    let params = { account: name };
+    cancelFollowing(params).then((res) => {
+      console.log('res: ', res);
+      userInfoStore.followingCount--;
+      getFansList();
+    });
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -313,13 +280,29 @@ function handleDomChange(val) {
           <div class="user-social">
             <p class="user-social-item" @click="goFollow()">
               <span>粉丝</span>
-              <span class="social-item-fans">{{ userInfo.fansCount }}</span>
+              <span class="social-item-fans">{{
+                userInfo.fansCount > 10000
+                  ? (userInfo.fansCount - (userInfo.fansCount % 1000)) / 10000 +
+                    'W'
+                  : userInfo.fansCount
+              }}</span>
+              <!-- <span class="social-item-fans">{{ userInfo.fansCount }}</span> -->
             </p>
             <p class="user-social-item" @click="goWatched()">
               <span>关注</span>
-              <span class="social-item-follow">{{
+              <span class="social-item-follow">
+                {{
+                  userInfo.followingCount > 10000
+                    ? (userInfo.followingCount -
+                        (userInfo.followingCount % 1000)) /
+                        10000 +
+                      'W'
+                    : userInfo.followingCount
+                }}
+              </span>
+              <!-- <span class="social-item-follow">{{
                 userInfo.followingCount
-              }}</span>
+              }}</span> -->
             </p>
           </div>
 
@@ -329,20 +312,14 @@ function handleDomChange(val) {
             @click="goSetting"
             >设置个人资料</OButton
           >
+          <!-- TODO:关注，取消关注未完成 -->
           <div
             v-else
             :style="{ marginTop: '24px' }"
-            @click="getFollow(jointUserInfo.name)"
+            @click="getFollow(userInfo.userName)"
           >
-            <!-- @click="getFollow(userInfoStore.id, jointUserInfo)" -->
-            <OButton
-              v-if="jointUserInfo.isFollow"
-              type="secondary"
-              class="item-btn"
-            >
-              取消关注
-            </OButton>
-            <OButton v-else type="primary">关注TA</OButton>
+            <OButton type="secondary" class="item-btn"> 取消关注 </OButton>
+            <OButton type="primary">关注TA</OButton>
           </div>
         </div>
         <div class="user-info-extends">
@@ -359,9 +336,7 @@ function handleDomChange(val) {
             <div class="info-extends-detail gray">
               <OIcon size="medium"><IconEmail /></OIcon>
               <span style="margin-left: 8px">{{
-                userInfo.email && userInfo.emailStatus
-                  ? userInfo.email
-                  : '暂未留下邮箱地址'
+                userInfo.email ? userInfo.email : '暂未留下邮箱地址'
               }}</span>
             </div>
           </div>

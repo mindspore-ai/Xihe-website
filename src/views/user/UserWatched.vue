@@ -13,11 +13,10 @@ import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 // import { getUserDig2 } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
 
-// TODO:切换后台后
 import { getUserFollow, cancelFollowing, getFollowing } from '@/api/api-user';
 
 const userInfoStore = useUserInfoStore();
-// console.log('userInfoStore: ', userInfoStore);
+console.log('userInfoStore: ', userInfoStore);
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
@@ -65,8 +64,7 @@ function getFollowList() {
   try {
     getUserFollow(userInfo.value.userName).then((res) => {
       console.log('关注列表: ', res.data);
-      currentFollowList.value = res.data;
-      // console.log('关注列表: ', currentFollowList.value);
+      currentFollowList.value = res.data.data;
     });
   } catch (error) {
     console.error(error);
@@ -114,6 +112,8 @@ function getWatch(name) {
       let params = { account: name };
       getFollowing(params).then((res) => {
         console.log('关注他人: ', res);
+        userInfoStore.followingCount++;
+        getFollowList();
       });
       /* getUserDig({ userId, fans }).then((res) => {
         if (res.status === 200) {
@@ -143,6 +143,8 @@ function cancelWatch(name) {
       cancelFollowing(params).then((res) => {
         console.log('取消关注结果: ', res);
         // TODO:取消关注更新数据
+        userInfoStore.followingCount--;
+        getFollowList();
       });
       /* getUserDig2({ userId, follow }).then((res) => {
         if (res.status === 200) {
@@ -189,7 +191,11 @@ function toTop() {
         >
         <el-breadcrumb-item
           >/ {{ isAuthentic ? '我' : userInfo.userName }}的关注 ({{
-            userInfo.followingCount
+            userInfo.followingCount > 10000
+              ? (userInfo.followingCount - (userInfo.followingCount % 1000)) /
+                  10000 +
+                'W'
+              : userInfo.followingCount
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
@@ -244,15 +250,12 @@ function toTop() {
               </div>
             </div>
           </div>
-          <o-button
-            type="secondary"
-            class="item"
-            @click="cancelWatch(follow.account)"
-            >取消关注</o-button
+          <div
+            v-if="userInfoStore.userName !== follow.account"
+            class="list-item-right"
           >
-          <div v-show="follow.id !== userInfoStore.id" class="list-item-right">
             <o-button
-              v-if="follow.isFollow"
+              v-if="follow.is_follower"
               type="secondary"
               class="item"
               @click="cancelWatch(follow.account)"

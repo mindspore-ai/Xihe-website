@@ -10,7 +10,6 @@ import OButton from '@/components/OButton.vue';
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { getFollowing, cancelFollowing } from '@/api/api-user';
 
-// TODO:切后台后
 import { getUserFans } from '@/api/api-user';
 
 const userInfoStore = useUserInfoStore();
@@ -26,6 +25,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
+console.log('userInfoStore: ', userInfoStore);
 console.log('userInfo: ', userInfo.value);
 let queryData = reactive({
   search: null,
@@ -52,7 +52,7 @@ function getFansList() {
   getUserFans(userInfo.value.userName).then((res) => {
     // console.log('route.params.user: ', route.params.user);
     console.log('粉丝列表: ', res);
-    currentFansList.value = res.data;
+    currentFansList.value = res.data.data;
   });
   // console.log('currentFansList.value: ', currentFansList.value);
 }
@@ -92,27 +92,19 @@ watchFansList(); */
 ); */
 
 // 关注用户or点赞
-function getFollow() {
+function getFollow(name) {
+  console.log('name: ', name);
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     goAuthorize();
   } else {
     try {
-      let params = { account: 'yangyongjun' };
+      let params = { account: name };
       getFollowing(params).then((res) => {
         console.log('关注他人: ', res);
+        userInfoStore.followingCount++;
+        getFansList();
       });
-      /* getUserDig({ userId, fans }).then((res) => {
-        if (res.status === 200) {
-          if (loginFollowIdList.value.indexOf(fans.id) !== -1) {
-            let index = loginFollowIdList.value.indexOf(fans.id);
-            loginFollowList.value.splice(index, 1);
-          } else {
-            loginFollowList.value.push(fans);
-          }
-        }
-        fans.isFollow = !fans.isFollow;
-      }); */
     } catch (error) {
       console.error(error);
     }
@@ -120,11 +112,13 @@ function getFollow() {
 }
 
 // 取消关注用户
-function cancelFollow() {
+function cancelFollow(name) {
   try {
-    let params = { account: 's9qfqri3zpc8j2x7' };
+    let params = { account: name };
     cancelFollowing(params).then((res) => {
       console.log('res: ', res);
+      userInfoStore.followingCount--;
+      getFansList();
     });
   } catch (error) {
     console.error(error);
@@ -159,7 +153,9 @@ function toTop() {
         >
         <el-breadcrumb-item
           >/ {{ isAuthentic ? '我' : userInfo.userName }}的粉丝 ({{
-            userInfo.fansCount
+            userInfo.fansCount > 10000
+              ? (userInfo.fansCount - (userInfo.fansCount % 1000)) / 10000 + 'W'
+              : userInfo.fansCount
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
@@ -186,28 +182,26 @@ function toTop() {
             </div>
           </div>
           <div
-            v-if="userInfoStore.id !== fans.id"
+            v-if="userInfoStore.userName !== fans.account"
             class="list-item-right"
-            @click="getFollow()"
           >
-            <o-button v-if="fans.isFollow" type="secondary" class="item-btn">
+            <o-button
+              v-if="fans.is_follower"
+              type="secondary"
+              class="item-btn"
+              @click="cancelFollow(fans.account)"
+            >
               取消关注
             </o-button>
-            <o-button v-else type="primary">关注TA</o-button>
+            <o-button v-else type="primary" @click="getFollow(fans.account)"
+              >关注TA</o-button
+            >
           </div>
         </div>
-        <o-button type="secondary" class="item-btn" @click="cancelFollow">
-          取消关注
-        </o-button>
-
-        <o-button type="primary" @click="getFollow">关注TA</o-button>
       </div>
       <div v-else class="nofollow">
         <o-icon class="star-icon"><icon-star></icon-star></o-icon>
-        <div class="star-info" @click="getFollow">关注他人</div>
-        <div class="star-info" @click="cancelFollow">
-          暂未有人关注（取消关注）
-        </div>
+        <div class="star-info">暂未有人关注</div>
       </div>
     </div>
     <!-- 分页器 -->

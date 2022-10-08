@@ -203,7 +203,7 @@ function getDetailData() {
       modular: 'project',
     }).then((res) => {
       let storeData = res.data;
-      console.log('项目详情数据: ', res.data);
+      // console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
       storeData['is_owner'] = userInfoStore.userName === storeData.owner;
       // 文件列表是否为空
@@ -237,7 +237,7 @@ function getDetailData() {
       modelTags.value = modelTags.value.map((item) => {
         return item;
       });
-      console.log(modelTags.value);
+      // console.log(modelTags.value);
       if (tags) {
         // TODO: tags很有可能不止一个;
         headTags.value = [{ name: training }];
@@ -328,21 +328,13 @@ function addTagClick() {
 // 点赞(收藏)
 function getLike() {
   let params = {
-    // name: route.params.name,
-    // owner: route.params.user,
-    // name: 'project-ceshi123',
     name: detailData.value.name,
     owner: detailData.value.owner,
   };
   getUserDig(params)
     .then((res) => {
       console.log('点赞、收藏结果: ', res);
-      // if (res.data.status === 200) {
       getDetailData();
-      // isDigged.value = !isDigged.value;
-
-      // console.log(isDigged.value);
-      // }
     })
     .catch((err) => {
       throw err;
@@ -353,15 +345,12 @@ function getLike() {
 // 取消收藏
 function cancelLike() {
   let params = {
-    // name: 'project-ceshi123',
     name: detailData.value.name,
     owner: detailData.value.owner,
   };
   cancelCollection(params).then((res) => {
     detailData.value.liked = false;
     console.log('取消收藏结果: ', res);
-    // isDigged.value = true;
-    // detailData.value.like_count--;
     getDetailData();
   });
 }
@@ -497,7 +486,7 @@ function getAllTags() {
   getTags().then((res) => {
     renderList.value = res.data;
     // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
-    console.log(res.data);
+    // console.log(res.data);
     dialogList.menuList = res.data.map((item, index) => {
       return { tab: item.domain, key: index };
     });
@@ -627,7 +616,6 @@ watch(
   }
 );
 // 在router里面配置mate nav高亮跟随
-console.log('route: ', route);
 watch(
   () => {
     return route.name;

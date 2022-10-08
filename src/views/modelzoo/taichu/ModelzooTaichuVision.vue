@@ -3,16 +3,17 @@ import { ref, onMounted, watch, nextTick } from 'vue';
 
 import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
-
 import { useUserInfoStore } from '@/stores';
 
-import { handleTextRview, handleVqaInference } from '@/api/api-modelzoo';
-import { handleVqaUpload } from '@/api/api-obs';
+import {
+  handleTextRview,
+  handleVqaInference,
+  uploadVqaPicture,
+} from '@/api/api-modelzoo';
 
 import IconSend from '~icons/app/vqa-send';
 import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
-import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 
@@ -49,9 +50,6 @@ const imgLists = [
   },
 ];
 
-const srcList = ref([]);
-const imgUrl = ref(null);
-const avatarUrl = ref('');
 const msgList = ref([
   {
     message:
@@ -62,6 +60,10 @@ const msgList = ref([
     isLoading: false,
   },
 ]);
+const uploadPictureUrl = ref('');
+const srcList = ref([]);
+const imgUrl = ref(null);
+const avatarUrl = ref('');
 const sendList = ref([]);
 const isClick = ref(true);
 
@@ -79,6 +81,7 @@ const onResize = () => {
     document.documentElement.clientWidth ||
     document.body.clientWidth;
 };
+
 window.addEventListener('resize', onResize);
 
 const getImage = (name) => {
@@ -88,48 +91,72 @@ const getImage = (name) => {
   ).href;
 };
 
-function successCallback() {
-  msgList.value.push({
-    message: '',
-    type: 1,
-    url: imgUrl.value,
-    isPicture: true,
-  });
-  srcList.value.push(imgUrl.value);
+// 处理上传图片
+function handleUploadImg(url) {
+  formData = new FormData();
 
-  if (!sendList.value.length) {
-    if (srcList.value.length === 1) {
-      setTimeout(() => {
+  request
+    .get(url, {
+      responseType: 'blob',
+    })
+    .then((res) => {
+      let file = new File([res.data], 'img', {
+        type: 'image/png',
+        lastModified: Date.now(),
+      });
+
+      fileList.value = [];
+      fileList.value[0] = { raw: file }; // formData.append('blob', file);
+
+      formData.append('picture', fileList.value[fileList.value.length - 1].raw);
+
+      // 图片上传
+      uploadVqaPicture(formData).then((res) => {
+        console.log(res);
+        uploadPictureUrl.value = res.data.path;
         msgList.value.push({
-          message: '请输入一个与图片的相关问题。',
-          type: 0,
-          url: '',
-          isPicture: false,
+          message: '',
+          type: 1,
+          url: url,
+          isPicture: true,
         });
-      }, 300);
-    } else if (srcList.value.length > 1) {
-      setTimeout(() => {
-        msgList.value.push({
-          message: '请输入一个最新图片的相关问题。',
-          type: 0,
-          url: '',
-          isPicture: false,
-        });
-      }, 300);
-    }
-  } else {
-    if (msgList.value[msgList.value.length - 1].isPicture) {
-      setTimeout(() => {
-        msgList.value.push({
-          message: '请输入一个与图片的相关问题。',
-          type: 0,
-          url: '',
-          isPicture: false,
-          isLoading: false,
-        });
-      }, 300);
-    }
-  }
+        srcList.value.push(url);
+
+        if (!sendList.value.length) {
+          if (srcList.value.length === 1) {
+            setTimeout(() => {
+              msgList.value.push({
+                message: '请输入一个与图片的相关问题。',
+                type: 0,
+                url: '',
+                isPicture: false,
+              });
+            }, 300);
+          } else if (srcList.value.length > 1) {
+            setTimeout(() => {
+              msgList.value.push({
+                message: '请输入一个最新图片的相关问题。',
+                type: 0,
+                url: '',
+                isPicture: false,
+              });
+            }, 300);
+          }
+        } else {
+          if (msgList.value[msgList.value.length - 1].isPicture) {
+            setTimeout(() => {
+              msgList.value.push({
+                message: '请输入一个与图片的相关问题。',
+                type: 0,
+                url: '',
+                isPicture: false,
+                isLoading: false,
+              });
+            }, 300);
+          }
+        }
+      });
+    });
 }
 
 // 样例
@@ -142,35 +169,10 @@ function selectImage(val) {
 
       imgUrl.value = getImage(val);
 
-      formData.delete('file');
-      formData = new FormData();
+      formData.delete('picture');
 
-      request
-        .get(imgUrl.value, {
-          responseType: 'blob',
-        })
-        .then((res) => {
-          let file = new File([res.data], 'img', {
-            type: 'image/png',
-            lastModified: Date.now(),
-          });
-
-          fileList.value = [];
-          fileList.value[0] = { raw: file }; // formData.append('blob', file);
-
-          handleVqaUpload(
-            {
-              path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
-              file: fileList.value[0].raw,
-              isEdit: false,
-              description: '',
-            },
-            null,
-            successCallback
-          );
-        });
+      handleUploadImg(imgUrl.value);
     }
-
     setTimeout(() => {
       isClick.value = true;
     }, 500);
@@ -220,22 +222,15 @@ function sendMessage() {
           }, 300);
         } else {
           handleVqaInference({
-            image_path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
+            picture: uploadPictureUrl.value,
             question: inputMsg.value,
           }).then((res) => {
-            if (res.status === 200) {
-              msgList.value.push({
-                message: res.data.instances,
-                type: 0,
-                url: '',
-                isPicture: false,
-              });
-            } else if (res.status === -1) {
-              ElMessage({
-                type: 'warning',
-                message: '请登录',
-              });
-            }
+            msgList.value.push({
+              message: res.data.answer,
+              type: 0,
+              url: '',
+              isPicture: false,
+            });
           });
         }
 
@@ -275,33 +270,9 @@ onMounted(() => {
 
     srcList.value.push(imgUrl.value);
 
-    formData.delete('file');
-    formData = new FormData();
+    formData.delete('picture');
 
-    request
-      .get(imgUrl.value, {
-        responseType: 'blob',
-      })
-      .then((res) => {
-        let file = new File([res.data], 'img', {
-          type: 'image/png',
-          lastModified: Date.now(),
-        });
-
-        fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
-
-        handleVqaUpload(
-          {
-            path: `vqa/uploads/${userInfoStore.userName}/result.jpg`,
-            file: fileList.value[0].raw,
-            isEdit: false,
-            description: '',
-          },
-          null,
-          successCallback
-        );
-      });
+    handleUploadImg(imgUrl.value);
   };
 
   document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {

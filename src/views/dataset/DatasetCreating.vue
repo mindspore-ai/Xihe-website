@@ -10,7 +10,8 @@ import IconNecessary from '~icons/app/necessary.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
-import { getModelTags } from '@/api/api-model';
+import protocol from '../../../config/protocol';
+// import { getModelTags } from '@/api/api-model';
 import { createDataset } from '@/api/api-dataset';
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -33,7 +34,7 @@ const i18n = {
   },
 };
 const owner = ref([]);
-const protocol = ref([]);
+// const protocol = ref([]);
 
 let queryRef = ref(null);
 
@@ -42,7 +43,7 @@ let query = reactive({
   name: '',
   repo_type: 'public',
   desc: '',
-  protocol: null,
+  protocol: protocol[0].name,
 });
 // function getOwnSelect(value) {
 //   query.owner = value;
@@ -53,10 +54,10 @@ let query = reactive({
 
 try {
   owner.value = useUserInfoStore().owner;
-  getModelTags().then((res) => {
-    protocol.value = res.data.licenses;
-    query.protocol = protocol.value[0].name;
-  });
+  // getModelTags().then((res) => {
+  //   protocol.value = res.data.licenses;
+  //   query.protocol = protocol.value[0].name;
+  // });
   // query.owner = owner.value[0];
   // query.licenses[0] = licenses.value[0];
 } catch (error) {

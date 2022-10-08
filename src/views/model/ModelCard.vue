@@ -199,10 +199,10 @@ function emptyClick(ind) {
 }
 // TODO:子组件传路径，统一跳转
 function goDetailClick(val) {
-  router.push(`/datasets/${val.owner_name.name}/${val.name}`);
+  router.push(`/datasets/${val.owner.name}/${val.name}`);
 }
 function goProjectClick(val) {
-  router.push(`/projects/${val.owner_name.name}/${val.name}`);
+  router.push(`/projects/${val.owner.name}/${val.name}`);
 }
 // 文本监听
 watch(

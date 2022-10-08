@@ -10,7 +10,8 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import OHeart from '@/components/OHeart.vue';
 
-import { getUserDig, getModelTags } from '@/api/api-model';
+import { getModelTags } from '@/api/api-model';
+import { getUserDig, cancelCollection } from '@/api/api-project';
 import { getDatasetData, modifyDataset } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
@@ -237,13 +238,43 @@ function deleteModelTags() {
 }
 
 // 点赞
-function digClick() {
+/* function digClick() {
   reopt.url = `/api/datasets/${detailData.value.id}/digg`;
   reopt.headers = { Authorization: 'Bearer ' + userInfoStore.token };
   getUserDig(reopt).then((res) => {
     if (res.data.status === 200) {
       getDetailData();
     }
+  });
+} */
+
+// 点赞(收藏)
+function getLike() {
+  let params = {
+    name: detailData.value.name,
+    owner: detailData.value.owner,
+  };
+  getUserDig(params)
+    .then((res) => {
+      console.log('点赞、收藏结果: ', res);
+      getDetailData();
+    })
+    .catch((err) => {
+      throw err;
+    });
+  // }
+}
+
+// 取消收藏
+function cancelLike() {
+  let params = {
+    name: detailData.value.name,
+    owner: detailData.value.owner,
+  };
+  cancelCollection(params).then((res) => {
+    detailData.value.liked = false;
+    console.log('取消收藏结果: ', res);
+    getDetailData();
   });
 }
 
@@ -434,12 +465,21 @@ watch(
         >
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>
-        <div class="loves">
-          <o-heart
-            :is-digged="isDigged"
-            :dig-count="digCount"
-            @click="digClick"
-          ></o-heart>
+        <div v-if="userInfoStore.userName !== detailData.owner">
+          <div v-if="detailData.liked" class="loves">
+            <o-heart
+              :is-digged="!isDigged"
+              :dig-count="detailData.like_count"
+              @click="cancelLike"
+            ></o-heart>
+          </div>
+          <div v-else class="loves">
+            <o-heart
+              :is-digged="isDigged"
+              :dig-count="detailData.like_count"
+              @click="getLike"
+            ></o-heart>
+          </div>
         </div>
       </div>
       <div class="label-box">

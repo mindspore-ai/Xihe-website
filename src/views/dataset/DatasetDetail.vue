@@ -12,7 +12,7 @@ import OHeart from '@/components/OHeart.vue';
 
 import { getModelTags } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
-import { getDatasetData, modifyDataset,getTags } from '@/api/api-dataset';
+import { getDatasetData, modifyDataset, getTags } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -117,6 +117,7 @@ function getDetailData() {
       }
       fileData.setFileData(storeData);
     });
+    getTagList();
   } catch (error) {
     router.push('/notfound');
     console.error(error);
@@ -349,19 +350,26 @@ function cancelBtn() {
 function getTagList() {
   getTags().then((res) => {
     renderList.value = res.data;
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key === 'task') {
-        renderList.value[key].map((item) => {
-          item.task_list.map((it) => {
-            it.isActive = false;
+      // if (key === 'task') {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return (it = {
+            name: it,
+            isActive: false,
           });
         });
-      } else {
-        renderList.value[key].map((item) => {
-          item.isActive = false;
-        });
-      }
+      });
+      console.log(renderList);
+      // } else {
+      //   renderList.value[key].map((item) => {
+      //     item.isActive = false;
+      //   });
+      // }
     });
 
     modelTags.value.forEach((item) => {
@@ -535,31 +543,31 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <div v-if="menu.key == 'task'" class="body-right">
-                  <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
-                    class="detail-box"
-                  >
-                    <div>
-                      <p class="tan-title">
-                        {{ item.name }}
-                      </p>
-                      <div class="tag-box">
-                        <div
-                          v-for="it in item.task_list"
-                          :key="it.id"
-                          class="condition-detail"
-                          :class="{ 'condition-active': it.isActive }"
-                          @click="tagClick(it, menu.key)"
-                        >
-                          {{ it.name }}
-                        </div>
+                <!-- <div v-if="menu.key == 'task'" class="body-right"> -->
+                <div
+                  v-for="item in renderList[menu.key].items"
+                  :key="item"
+                  class="detail-box"
+                >
+                  <div>
+                    <p class="tan-title">
+                      {{ item.kind }}
+                    </p>
+                    <div class="tag-box">
+                      <div
+                        v-for="it in item.items"
+                        :key="it"
+                        class="condition-detail"
+                        :class="{ 'condition-active': it.isActive }"
+                        @click="tagClick(it, menu.key)"
+                      >
+                        {{ it.name }}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div v-else class="noTask-box">
+                <!-- </div> -->
+                <!-- <div v-else class="noTask-box">
                   <div
                     v-for="item in renderList[menu.key]"
                     :key="item.id"
@@ -572,7 +580,7 @@ watch(
                   >
                     {{ item.name }}
                   </div>
-                </div>
+                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>

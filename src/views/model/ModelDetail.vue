@@ -11,7 +11,7 @@ import OHeart from '@/components/OHeart.vue';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 
-import { getModelData, getModelTags, modifyModel } from '@/api/api-model';
+import { getModelData, getTags, modifyModel } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
@@ -150,7 +150,7 @@ function getDetailData() {
       //   return item;
       // });
       // headTags.value = [...modelTags.value];
-      // getTagList();
+      getTagList();
     });
   } catch (error) {
     router.push('/notfound');
@@ -304,39 +304,45 @@ function cancelBtn() {
   isTagShow.value = false;
 }
 function getTagList() {
-  getModelTags().then((res) => {
+  getTags().then((res) => {
     renderList.value = res.data;
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      if (key === 'task') {
-        renderList.value[key].forEach((item) => {
-          item.task_list.forEach((it) => {
-            it.isActive = false;
+      // if (key === 'task') {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return (it = {
+            name: it,
+            isActive: false,
           });
         });
-      } else {
-        renderList.value[key].forEach((item) => {
-          item.isActive = false;
-        });
-      }
+      });
+      // } else {
+      //   renderList.value[key].forEach((item) => {
+      //     item.isActive = false;
+      //   });
+      // }
     });
     modelTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        if (menuitem === 'task') {
-          renderList.value[menuitem].forEach((mit) => {
-            mit.task_list.map((it) => {
-              if (it.name === item.name) {
-                it.isActive = true;
-              }
-            });
-          });
-        } else {
-          renderList.value[menuitem].forEach((it) => {
+        // if (menuitem === 'task') {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
             if (it.name === item.name) {
               it.isActive = true;
             }
           });
-        }
+        });
+        // } else {
+        //   renderList.value[menuitem].forEach((it) => {
+        //     if (it.name === item.name) {
+        //       it.isActive = true;
+        //     }
+        //   });
+        // }
       });
     });
   });
@@ -526,32 +532,32 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <div v-if="menu.key == 'task'" class="body-right">
-                  <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
-                    class="detail-box"
-                  >
-                    <div>
-                      <p class="tan-title">
-                        {{ item.name }}
-                      </p>
-                      <div class="tag-box">
-                        <div
-                          v-for="it in item.task_list"
-                          :key="it.id"
-                          class="condition-detail"
-                          :class="{ 'condition-active': it.isActive }"
-                          @click="tagClick(it, menu.key)"
-                        >
-                          {{ it.name }}
-                        </div>
+                <!-- <div v-if="menu.key == 'task'" class="body-right"> -->
+                <div
+                  v-for="item in renderList[menu.key].items"
+                  :key="item"
+                  class="detail-box"
+                >
+                  <div>
+                    <p class="tan-title">
+                      {{ item.kind }}
+                    </p>
+                    <div class="tag-box">
+                      <div
+                        v-for="it in item.items"
+                        :key="it.id"
+                        class="condition-detail"
+                        :class="{ 'condition-active': it.isActive }"
+                        @click="tagClick(it, menu.key)"
+                      >
+                        {{ it.name }}
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- </div> -->
 
-                <div v-else class="noTask-box">
+                <!-- <div v-else class="noTask-box">
                   <div
                     v-for="item in renderList[menu.key]"
                     :key="item.id"
@@ -564,7 +570,7 @@ watch(
                   >
                     {{ item.name }}
                   </div>
-                </div>
+                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>

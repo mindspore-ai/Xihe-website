@@ -31,7 +31,7 @@ const i18n = {
   searchEmpty: '无匹配项目',
   visitorEmpty: '该用户暂未创建任何项目',
 };
-
+const avatarImg = ref('');
 const projectCount = ref(0);
 const projectData = ref([]);
 
@@ -70,10 +70,11 @@ function handleCurrentChange(val) {
 function getUserProject() {
   getProjectData(query, userInfo.value.userName).then((res) => {
     // if (res.count && res.results.status === 200) {
-    if (res.data.length > 12) {
+    if (res.data.total > 12) {
       emit('domChange', 76);
     }
-    projectCount.value = res.data.length;
+    avatarImg.value = res.data.avatar_id;
+    projectCount.value = res.data.total;
     projectData.value = res.data;
     // } else {
     //   projectData.value = [];
@@ -133,7 +134,7 @@ watch(
           <div class="card-bottom">
             <div class="info">
               <div class="info-avata">
-                <!-- <img :src="item.owner_name.avatar_url" alt="" /> -->
+                <img :src="avatarImg" alt="" />
               </div>
               <div class="info-name">{{ item.owner }}</div>
             </div>

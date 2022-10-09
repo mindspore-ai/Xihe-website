@@ -41,27 +41,28 @@ const props = defineProps({
 const layout = ref('sizes, prev, pager, next, jumper');
 const emit = defineEmits(['getlivecount', 'domChange']);
 
+const avatarImg = ref('');
 const modelCount = ref(0);
 const modelData = ref([]);
 
 let query = reactive({
-  // search: '',
+  search: '',
   page_num: 1,
   count_per_page: 10,
-  // owner_name: route.params.user,
-  // order: '',
+  owner: route.params.user,
+  sort_by: '',
 });
 
 function getUserModel() {
   getUserModelData(query, userInfo.value.userName).then((res) => {
-    console.log('res: ', res);
     if (res.data.total) {
       if (res.data.total > 10) {
         emit('domChange', 76);
       }
+      avatarImg.value = res.data.avatar_id;
       modelCount.value = res.data.total;
       modelData.value = res.data.models;
-      console.log('个人模型数据: ', modelData.value);
+      // console.log('个人模型数据: ', modelData.value);
     } else {
       modelData.value = [];
     }
@@ -97,9 +98,10 @@ watch(
   }
 );
 watch(props, () => {
+  // console.log('props.queryData: ', props.queryData);
   query.search = props.queryData.keyWord;
-  query.order = props.queryData.order;
-  query.page = 1;
+  query.sort_by = props.queryData.order;
+  query.page_num = 1;
 });
 </script>
 <template>
@@ -108,6 +110,7 @@ watch(props, () => {
       <o-card
         v-for="item in modelData"
         :key="item.id"
+        :avatar-img="avatarImg"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"
       ></o-card>

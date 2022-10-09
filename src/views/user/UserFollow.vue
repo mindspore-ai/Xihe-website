@@ -25,8 +25,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-console.log('userInfoStore: ', userInfoStore);
-console.log('userInfo: ', userInfo.value);
 let queryData = reactive({
   search: null,
   page: 1,
@@ -47,14 +45,10 @@ let queryData = reactive({
   return userInfo.value.fansList;
 }); */
 const currentFansList = ref([]);
-// console.log('route', route);
 function getFansList() {
   getUserFans(userInfo.value.userName).then((res) => {
-    // console.log('route.params.user: ', route.params.user);
-    console.log('粉丝列表: ', res);
     currentFansList.value = res.data.data;
   });
-  // console.log('currentFansList.value: ', currentFansList.value);
 }
 getFansList();
 
@@ -93,7 +87,6 @@ watchFansList(); */
 
 // 关注用户or点赞
 function getFollow(name) {
-  console.log('name: ', name);
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     goAuthorize();

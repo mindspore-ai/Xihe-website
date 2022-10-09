@@ -36,7 +36,7 @@ export async function queryUserInfo(params) {
     });
   } else if (userName) {
     const url = `/server/user?account=${userName}`;
-    return request.get(url).then((res) => {
+    return request.get(url, getHeaderConfig()).then((res) => {
       return res.data;
     });
   }

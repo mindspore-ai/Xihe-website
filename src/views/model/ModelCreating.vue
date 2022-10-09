@@ -9,6 +9,7 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import protocol from '../../../config/protocol';
 import { createModelStore, getModelTags } from '@/api/api-model';
 import { useRouter } from 'vue-router';
 
@@ -32,7 +33,7 @@ const i18n = {
   },
 };
 const owner = ref([]);
-const protocol = ref([]);
+// const protocol = ref([]);
 
 let queryRef = ref(null);
 
@@ -41,15 +42,15 @@ let query = reactive({
   name: '',
   repo_type: 'public',
   desc: '',
-  protocol: null,
+  protocol: protocol[0].name,
 });
 
 try {
   owner.value = useUserInfoStore().owner;
-  getModelTags().then((res) => {
-    protocol.value = res.data.licenses;
-    query.protocol = protocol.value[0].name;
-  });
+  // getModelTags().then((res) => {
+  //   protocol.value = res.data.licenses;
+  //   query.protocol = protocol.value[0].name;
+  // });
 } catch (error) {
   console.error(error);
 }

@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import protocol from '../../../config/protocol';
 import { getModelTags, setNewProject } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
@@ -78,7 +79,7 @@ const nameList = ref([]);
 const projectPhotos = ref([]);
 const trainSdk = ref([]);
 const inferSdk = ref([]);
-const protocol = ref([]);
+// const protocol = ref([]);
 
 nameList.value.push(userInfo.userName);
 proList.owner = nameList.value[0];
@@ -148,8 +149,9 @@ function setProject() {
     // }
   });
 }
+// TODO:项目封面，项目类型以及训练平台的数据
 getModelTags().then((res) => {
-  // console.log(res.data.projects_photo);
+  console.log(res.data);
   projectPhotos.value = res.data.projects_photo;
   projectPhotos.value.forEach((item) => {
     item.is_active = false;

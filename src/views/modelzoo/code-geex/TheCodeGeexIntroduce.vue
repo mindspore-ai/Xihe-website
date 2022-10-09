@@ -225,10 +225,10 @@ const feature = [
         </div>
       </div> -->
     </div>
-    <div class="license">
+    <!-- <div class="license">
       <div class="title">Liscence</div>
       <div class="license-text">CodeGeex的代码使用Apache-2.0开源协议。</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -454,20 +454,20 @@ const feature = [
       }
     } */
   }
-  .license {
-    margin-top: 40px;
-    .title {
-      line-height: 32px;
-      font-size: 24px;
-      font-weight: 500;
-      color: #000000;
-      margin-bottom: 24px;
-    }
-    .license-text {
-      line-height: 22px;
-      font-size: 14px;
-      color: #555555;
-    }
-  }
+  // .license {
+  //   margin-top: 40px;
+  //   .title {
+  //     line-height: 32px;
+  //     font-size: 24px;
+  //     font-weight: 500;
+  //     color: #000000;
+  //     margin-bottom: 24px;
+  //   }
+  //   .license-text {
+  //     line-height: 22px;
+  //     font-size: 14px;
+  //     color: #555555;
+  //   }
+  // }
 }
 </style>

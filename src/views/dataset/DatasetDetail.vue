@@ -12,7 +12,7 @@ import OHeart from '@/components/OHeart.vue';
 
 import { getModelTags } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
-import { getDatasetData, modifyDataset } from '@/api/api-dataset';
+import { getDatasetData, modifyDataset,getTags } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -347,7 +347,7 @@ function cancelBtn() {
 }
 
 function getTagList() {
-  getModelTags().then((res) => {
+  getTags().then((res) => {
     renderList.value = res.data;
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {

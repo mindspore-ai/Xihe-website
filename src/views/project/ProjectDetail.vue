@@ -16,6 +16,7 @@ import OPopper from '@/components/OPopper.vue';
 
 import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
+import protocol from '../../../config/protocol';
 import {
   getProjectData,
   modifyTags,
@@ -223,11 +224,11 @@ function getDetailData() {
 
       // digCount.value = detailData.value.type;
 
-      const { protocol, training, tags } = detailData.value;
+      const { training, tags } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
       if (tags) {
         // TODO: tags很有可能不止一个;
-        modelTags.value = [{ name: protocol }, { name: training }];
+        // modelTags.value = [{ name: protocol }, { name: training }];
         tags.forEach((item) => {
           modelTags.value.push({ name: item });
         });
@@ -240,7 +241,7 @@ function getDetailData() {
       // console.log(modelTags.value);
       if (tags) {
         // TODO: tags很有可能不止一个;
-        headTags.value = [{ name: training }];
+        // headTags.value = [{ name: training }];
         tags.forEach((item) => {
           headTags.value.push({ name: item });
         });
@@ -248,8 +249,14 @@ function getDetailData() {
         headTags.value = [{ name: training }];
       }
       headTags.value = headTags.value.map((item) => {
-        return item;
+        protocol.forEach((items) => {
+          if (items.name !== item) {
+            return item;
+          }
+        });
       });
+      // if (headTags.value[0]) headTags.value = '';
+      console.log(headTags.value);
       // headTags.value = [...modelTags.value];
       preStorage.value = JSON.stringify(headTags.value);
       getAllTags();
@@ -307,7 +314,8 @@ function tagClick(it, key) {
   } else {
     it.isActive = !it.isActive;
     if (it.isActive) {
-      headTags.value.push(it);
+      if (!headTags.value[0]) headTags.value[0] = it;
+      else headTags.value.push(it);
     } else {
       headTags.value.forEach((item, index) => {
         if (item.name === it.name) {
@@ -786,7 +794,7 @@ watch(
               {{ dialogList.head.delete }}
             </div>
           </div>
-          <div class="head-tags">
+          <div v-if="headTags[0]" class="head-tags">
             <div v-for="it in headTags" :key="it" class="condition-detail">
               {{ it.name }}
               <o-icon class="icon-x" @click="deleteClick(it)"

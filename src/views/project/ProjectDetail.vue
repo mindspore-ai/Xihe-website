@@ -256,7 +256,6 @@ function getDetailData() {
         });
       });
       // if (headTags.value[0]) headTags.value = '';
-      console.log(headTags.value);
       // headTags.value = [...modelTags.value];
       preStorage.value = JSON.stringify(headTags.value);
       getAllTags();
@@ -416,7 +415,7 @@ function confirmBtn() {
   });
   preStorage.value = JSON.parse(preStorage.value);
   preStorage.value = preStorage.value.map((item) => {
-    return item.name;
+    if (item) return item.name;
   });
   let add = [];
   let remove = [];

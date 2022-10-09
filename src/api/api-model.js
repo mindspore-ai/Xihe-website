@@ -107,6 +107,12 @@ export function getModelTags() {
     return res.data;
   });
 }
+export function getTags() {
+  const url = `/server/tags/model`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 
 /**
  * 点赞

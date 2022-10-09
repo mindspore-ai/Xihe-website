@@ -5,12 +5,13 @@ import { useRoute, useRouter } from 'vue-router';
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 
 import { getUserDatasetData } from '@/api/api-user';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
 
 const userInfoStore = useUserInfoStore();
+const visitorInfoStore = useVisitorInfoStore();
 const i18n = {
   emptyText: '暂未创建数据集，点击创建数据集立即创建',
   visitorEmpty: '该用户暂未创建任何数据集',
@@ -33,6 +34,7 @@ const props = defineProps({
     },
   },
 });
+const avatarImg = ref('');
 const datasetCount = ref(0);
 const datasetData = ref([]);
 let query = reactive({
@@ -56,6 +58,7 @@ function getDatasetData() {
       if (res.count > 10) {
         emit('domChange', 76);
       }
+      avatarImg.value = res.data.avatar_id;
       datasetCount.value = res.data.total;
       datasetData.value = res.data.models;
     } else {
@@ -97,6 +100,7 @@ watch(props, () => {
       <o-card
         v-for="item in datasetData"
         :key="item.id"
+        :avatar-img="avatarImg"
         card-type="dataset"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"

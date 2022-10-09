@@ -32,7 +32,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-console.log('userInfo: ', userInfo);
+// console.log('userInfo: ', userInfo);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -94,8 +94,8 @@ let i18n = {
     projects: '请输入项目名',
   },
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
+    { text: '按照下载量排序', value: 'download_count' },
+    { text: '按照首字母排序', value: 'first_letter' },
     { text: '按照更新时间排序', value: 'update_time' },
   ],
 };
@@ -172,11 +172,12 @@ function handleNavClick(item) {
 }
 
 function dropdownClick(item) {
-  if (item.value === 'update_time') {
-    queryData.order = '-' + item.value;
-  } else {
-    queryData.order = item.value;
-  }
+  console.log('item: ', item);
+  // if (item.value === 'update_time') {
+  //   queryData.order = '-' + item.value;
+  // } else {
+  queryData.order = item.value;
+  // }
 }
 function createNew(item) {
   // router.push(`/new/${item.id}`);
@@ -193,6 +194,7 @@ function goSetting() {
 function getKeyWord() {
   queryData.page = 1;
   queryData.keyWord = keyWord.value;
+  console.log('queryData: ', queryData);
 }
 // 粉丝页
 function goFollow() {
@@ -205,7 +207,6 @@ function goWatched() {
 
 // 关注用户or点赞
 function getFollow(name) {
-  console.log('name: ', name);
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     goAuthorize();
@@ -213,7 +214,6 @@ function getFollow(name) {
     try {
       let params = { account: name };
       getFollowing(params).then((res) => {
-        console.log('关注他人: ', res);
         userInfoStore.followingCount++;
         getFansList();
       });

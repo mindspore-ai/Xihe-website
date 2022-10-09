@@ -16,7 +16,6 @@ import { goAuthorize } from '@/shared/login';
 import { getUserFollow, cancelFollowing, getFollowing } from '@/api/api-user';
 
 const userInfoStore = useUserInfoStore();
-console.log('userInfoStore: ', userInfoStore);
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
@@ -29,7 +28,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-console.log('userInfo: ', userInfo.value);
 /*TODO:暂无接口
 let i18n = {
   placeholder: '搜索我的关注',
@@ -63,7 +61,6 @@ const currentFollowList = ref([]);
 function getFollowList() {
   try {
     getUserFollow(userInfo.value.userName).then((res) => {
-      console.log('关注列表: ', res.data);
       currentFollowList.value = res.data.data;
     });
   } catch (error) {

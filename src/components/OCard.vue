@@ -17,6 +17,12 @@ const props = defineProps({
       return 'model';
     },
   },
+  avatarImg: {
+    type: String,
+    default: () => {
+      return '';
+    },
+  },
 });
 const labelList = ref([]);
 const i18n = {
@@ -59,8 +65,7 @@ const tagList = JSON.stringify(props.cardData);
   >
     <div class="card-top">
       <div class="portrait">
-        <!-- :TODO: 头像-->
-        <!-- <img :src="cardData.owner_name.avatar_url" alt="" /> -->
+        <img :src="avatarImg" alt="" />
       </div>
       <div v-if="cardData.owner" class="nickname">
         {{ cardData.owner }}

@@ -28,7 +28,7 @@ const navItems = [
 ];
 
 function goCodeGeexMore() {
-  window.open('https://models.aminer.cn/codegeex/');
+  window.open('https://github.com/THUDM/CodeGeex');
 }
 
 // 点击导航

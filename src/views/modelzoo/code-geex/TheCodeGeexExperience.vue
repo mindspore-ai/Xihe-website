@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 
@@ -92,6 +92,7 @@ function init(item) {
     tabsList.value[activeIndex.value].code = instance.getValue();
   });
   count.value = instance.getModel().getLineCount();
+  instance.revealLine(count.value);
 }
 
 function hanleGenerateCode() {
@@ -101,8 +102,6 @@ function hanleGenerateCode() {
     n: 1,
     lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
-    // console.log(res);
-
     if (res.status === 200) {
       isDisabled.value = false;
 
@@ -112,6 +111,7 @@ function hanleGenerateCode() {
       instance.dispose();
       init(tabsList.value[activeIndex.value]);
     } else if (res.status === -1) {
+      isDisabled.value = false;
       ElMessage({
         type: 'error',
         message: res.msg,
@@ -119,16 +119,6 @@ function hanleGenerateCode() {
     }
   });
 }
-
-watch(
-  () => count.value,
-  () => {
-    instance.revealLine(count.value);
-  },
-  {
-    deep: true,
-  }
-);
 
 onMounted(() => {
   init(tabsList.value[0]);

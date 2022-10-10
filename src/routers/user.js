@@ -21,7 +21,6 @@ export default [
           const res = await queryUserInfo({
             userName: name,
           });
-          console.log('用户信息: ', res.data);
           if (res.data) {
             const visitorInfo = res.data;
             const {

@@ -128,15 +128,10 @@ function getDetailData() {
           modelTags.value.push({ name: item });
         });
         headTags.value = modelTags.value.map((item) => {
-          protocol.forEach((items) => {
-            if (items.name !== item) {
-              return item;
-            }
-          });
+          if (protocol.indexOf(item) === -1) return item;
         });
       }
       preStorage.value = JSON.stringify(headTags.value);
-      console.log(modelTags.value);
     });
     getTagList();
   } catch (error) {
@@ -322,7 +317,6 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  console.log({ add, remove });
   // dialogList.menuList.forEach((menu) => {
   //   if (menu.key === 'task') {
   //     queryDate[menu.key] = [];
@@ -417,33 +411,34 @@ function getTagList() {
 
     modelTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        if (menuitem === 'task') {
-          renderList.value[menuitem].map((mit) => {
-            mit.task_list.map((it) => {
-              if (it.name === item.name) {
-                it.isActive = true;
-              }
-            });
-          });
-        } else if (menuitem === 'status') {
-          renderList.value[menuitem].forEach((it) => {
-            if (detailData.value.status_name === it.name) {
-              it.isActive = true;
-            }
-          });
-        } else if (menuitem === 'sdk') {
-          renderList.value[menuitem].forEach((it) => {
-            if (detailData.value.sdk_name === it.name) {
-              it.isActive = true;
-            }
-          });
-        } else {
-          renderList.value[menuitem].map((it) => {
+        // if (menuitem === 'task') {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
             if (it.name === item.name) {
               it.isActive = true;
             }
           });
-        }
+        });
+
+        // } else if (menuitem === 'status') {
+        //   renderList.value[menuitem].forEach((it) => {
+        //     if (detailData.value.status_name === it.name) {
+        //       it.isActive = true;
+        //     }
+        //   });
+        // } else if (menuitem === 'sdk') {
+        //   renderList.value[menuitem].forEach((it) => {
+        //     if (detailData.value.sdk_name === it.name) {
+        //       it.isActive = true;
+        //     }
+        //   });
+        // } else {
+        //   renderList.value[menuitem].map((it) => {
+        //     if (it.name === item.name) {
+        //       it.isActive = true;
+        //     }
+        //   });
+        // }
       });
     });
   });
@@ -569,7 +564,7 @@ watch(
             </div>
           </div>
 
-          <div class="head-tags">
+          <div v-if="headTags[0]" class="head-tags">
             <div v-for="it in headTags" :key="it" class="condition-detail">
               {{ it.name }}
               <o-icon class="icon-x" @click="deleteClick(it)"

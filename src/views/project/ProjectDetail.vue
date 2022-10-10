@@ -249,11 +249,7 @@ function getDetailData() {
         headTags.value = [{ name: training }];
       }
       headTags.value = headTags.value.map((item) => {
-        protocol.forEach((items) => {
-          if (items.name !== item) {
-            return item;
-          }
-        });
+        if (protocol.indexOf(item) === -1) return item;
       });
       // if (headTags.value[0]) headTags.value = '';
       // headTags.value = [...modelTags.value];

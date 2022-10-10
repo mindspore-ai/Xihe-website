@@ -157,15 +157,12 @@ function getDetailData() {
           modelTags.value.push({ name: item });
         });
         headTags.value = modelTags.value.map((item) => {
-          protocol.forEach((items) => {
-            if (items.name !== item) {
-              return item;
-            }
-          });
+          if (protocol.indexOf(item) === -1) return item;
         });
+        console.log(headTags);
       }
       preStorage.value = JSON.stringify(headTags.value);
-      console.log(modelTags.value);
+
       // modelTags.value = modelTags.value.map((item) => {
       //   return item;
       // });

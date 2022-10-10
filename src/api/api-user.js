@@ -284,12 +284,7 @@ export function getUserFans(name) {
  */
 export function getUserFollow(name) {
   const url = `/server/user/following/${name}`;
-  return request
-    .get(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }

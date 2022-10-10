@@ -8,10 +8,9 @@ import IconStar from '~icons/app/Star';
 import OButton from '@/components/OButton.vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-import { getFollowing, cancelFollowing } from '@/api/api-user';
+import { getUserFans, getFollowing, cancelFollowing } from '@/api/api-user';
 
-import { getUserFans } from '@/api/api-user';
-
+const currentFansList = ref([]);
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
@@ -30,24 +29,11 @@ let queryData = reactive({
   page: 1,
   size: 6,
 });
-// 登录用户关注列表
-/* const loginFollowList = computed(() => {
-  return userInfoStore.followList;
-}); */
 
-// 登录用户关注id列表
-/* let loginFollowIdList = computed(() =>
-  loginFollowList.value.map((val) => val.id)
-); */
-
-// 当前用户粉丝列表
-/* const currentFansList = computed(() => {
-  return userInfo.value.fansList;
-}); */
-const currentFansList = ref([]);
 function getFansList() {
   getUserFans(userInfo.value.userName).then((res) => {
     currentFansList.value = res.data.data;
+    console.log('当前用户粉丝列表: ', currentFansList.value);
   });
 }
 getFansList();
@@ -65,26 +51,6 @@ watch(
   { immediate: true }
 );
 
-// 用于判断按钮的内容状态
-/* function watchFansList() {
-  currentFansList.value.forEach((val) => {
-    if (loginFollowIdList.value.indexOf(val.id) !== -1) {
-      val.isFollow = true;
-    } else {
-      val.isFollow = false;
-    }
-  });
-}
-
-watchFansList(); */
-
-/* watch(
-  () => currentFansList.value,
-  () => {
-    watchFansList();
-  }
-); */
-
 // 关注用户or点赞
 function getFollow(name) {
   // 如果用户没有登录，则跳转到登录页面
@@ -94,7 +60,6 @@ function getFollow(name) {
     try {
       let params = { account: name };
       getFollowing(params).then((res) => {
-        console.log('关注他人: ', res);
         userInfoStore.followingCount++;
         getFansList();
       });
@@ -109,7 +74,6 @@ function cancelFollow(name) {
   try {
     let params = { account: name };
     cancelFollowing(params).then((res) => {
-      console.log('res: ', res);
       userInfoStore.followingCount--;
       getFansList();
     });
@@ -135,6 +99,7 @@ function handleCurrentChange(val) {
 function toTop() {
   document.documentElement.scrollTop = 0;
 }
+defineExpose({ getFansList });
 </script>
 
 <template>

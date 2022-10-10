@@ -32,7 +32,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-// console.log('userInfo: ', userInfo);
+// console.log('用户信息: ', userInfo);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -172,7 +172,7 @@ function handleNavClick(item) {
 }
 
 function dropdownClick(item) {
-  console.log('item: ', item);
+  // console.log('item: ', item);
   // if (item.value === 'update_time') {
   //   queryData.order = '-' + item.value;
   // } else {
@@ -194,7 +194,7 @@ function goSetting() {
 function getKeyWord() {
   queryData.page = 1;
   queryData.keyWord = keyWord.value;
-  console.log('queryData: ', queryData);
+  // console.log('queryData: ', queryData);
 }
 // 粉丝页
 function goFollow() {
@@ -214,8 +214,11 @@ function getFollow(name) {
     try {
       let params = { account: name };
       getFollowing(params).then((res) => {
-        userInfoStore.followingCount++;
-        getFansList();
+        userInfo.value.isFollower = true;
+        userInfo.value.fansCount++;
+        detailInfo.value.getFansList();
+        console.log('detailInfo: ', detailInfo.value);
+        // getFansList();
       });
     } catch (error) {
       console.error(error);
@@ -228,9 +231,10 @@ function cancelFollow(name) {
   try {
     let params = { account: name };
     cancelFollowing(params).then((res) => {
-      console.log('res: ', res);
-      userInfoStore.followingCount--;
-      getFansList();
+      userInfo.value.isFollower = false;
+      userInfo.value.fansCount--;
+      detailInfo.value.getFansList();
+      console.log('detailInfo: ', detailInfo.value);
     });
   } catch (error) {
     console.error(error);
@@ -312,14 +316,18 @@ function handleDomChange(val) {
             @click="goSetting"
             >设置个人资料</OButton
           >
-          <!-- TODO:关注，取消关注未完成 -->
-          <div
-            v-else
-            :style="{ marginTop: '24px' }"
-            @click="getFollow(userInfo.userName)"
-          >
-            <OButton type="secondary" class="item-btn"> 取消关注 </OButton>
-            <OButton type="primary">关注TA</OButton>
+          <div v-else :style="{ marginTop: '24px' }">
+            <OButton
+              v-if="userInfo.isFollower"
+              type="secondary"
+              class="item-btn"
+              @click="cancelFollow(userInfo.userName)"
+            >
+              取消关注
+            </OButton>
+            <OButton v-else type="primary" @click="getFollow(userInfo.userName)"
+              >关注TA</OButton
+            >
           </div>
         </div>
         <div class="user-info-extends">

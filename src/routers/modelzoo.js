@@ -92,8 +92,24 @@ export default [
     path: '/modelzoo/luojia',
     name: 'luojia',
     component: () => {
-      return import('@/views/modelzoo/ModelzooLuojia.vue');
+      return import('@/views/modelzoo/luojia/TheLuoJia.vue');
     },
+    children: [
+      {
+        path: '',
+        name: 'luojiaExperience',
+        component: () => {
+          return import('@/views/modelzoo/luojia/TheLuojiaExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'luojiaIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/luojia/TheLuojiaIntroduce.vue');
+        },
+      },
+    ],
   },
   // 鹏程.盘古
   {

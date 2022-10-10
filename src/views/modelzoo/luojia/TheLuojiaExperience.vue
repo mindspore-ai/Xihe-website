@@ -1,16 +1,22 @@
 <script setup>
-// import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
-// const cesiumContainer = ref(null);
+import ExampleCesium from '@/shared/modelzoo/luojia/example-cesium';
+// import ExampleCesium from '@/shared/modelzoo/luojia/drawrect.js';
 
-// const viewer = new Cesium.Viewer('cesiumContainer', {});
+const cesiumContainer = ref(null);
 
-// viewer.extend(Cesium.viewerDragDropMixin);
+function drawClick() {}
+
+onMounted(() => {
+  const viewer = new ExampleCesium(cesiumContainer.value);
+  console.log(viewer.drawer);
+});
 </script>
 <template>
   <div class="luojia">
     <div class="luojia-top">
-      <p class="type">目标识别（Object Detection）</p>
+      <p class="type" @click="drawClick">目标识别（Object Detection）</p>
       <p class="desc">
         指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。
       </p>

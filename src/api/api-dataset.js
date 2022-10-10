@@ -133,6 +133,22 @@ export function getTags() {
     return res.data;
   });
 }
+/**
+ * 修改标签
+ * @returns
+ */
+export function modifyTags(params, owner, id) {
+  const url = `/server/dataset/${owner}/${id}/tags`;
+  console.log(params, owner, id);
+  return request
+    .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
 
 /**
  * 点赞

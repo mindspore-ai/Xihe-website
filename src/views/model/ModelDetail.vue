@@ -11,7 +11,13 @@ import OHeart from '@/components/OHeart.vue';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 
-import { getModelData, getTags, modifyModel } from '@/api/api-model';
+import protocol from '../../../config/protocol';
+import {
+  getModelData,
+  getTags,
+  modifyModel,
+  modifyTags,
+} from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
@@ -120,14 +126,14 @@ function getDetailData() {
       }
       fileData.setFileData(storeData);
       // digCount.value = detailData.value.digg_count;
-      // const {
-      //   licenses_list,
-      //   libraries_list,
-      //   task_list,
-      //   tags_list,
-      //   device_target_list,
-      //   model_format_list,
-      // } = detailData.value;
+      const {
+        //   licenses_list,
+        //   libraries_list,
+        //   task_list,
+        tags,
+        //   device_target_list,
+        //   model_format_list,
+      } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
 
       // modelTags.value = [
@@ -146,6 +152,20 @@ function getDetailData() {
       //   ...tags_list,
       //   ...libraries_list,
       // ];
+      if (tags) {
+        tags.forEach((item) => {
+          modelTags.value.push({ name: item });
+        });
+        headTags.value = modelTags.value.map((item) => {
+          protocol.forEach((items) => {
+            if (items.name !== item) {
+              return item;
+            }
+          });
+        });
+      }
+      preStorage.value = JSON.stringify(headTags.value);
+      console.log(modelTags.value);
       // modelTags.value = modelTags.value.map((item) => {
       //   return item;
       // });
@@ -157,6 +177,7 @@ function getDetailData() {
     console.error(error);
   }
 }
+const preStorage = ref();
 getDetailData();
 
 function tagClick(it, key) {
@@ -212,21 +233,21 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    if (key === 'task') {
-      renderList.value[key].forEach((item) => {
-        item.task_list.forEach((it) => {
-          if (it.name === tag.name) {
-            it.isActive = false;
-          }
-        });
-      });
-    } else {
-      renderList.value[key].forEach((item) => {
-        if (item.name === tag.name) {
-          item.isActive = false;
+    // if (key === 'task') {
+    renderList.value[key].items.forEach((item) => {
+      item.items.forEach((it) => {
+        if (it.name === tag.name) {
+          it.isActive = false;
         }
       });
-    }
+    });
+    // } else {
+    //   renderList.value[key].forEach((item) => {
+    //     if (item.name === tag.name) {
+    //       item.isActive = false;
+    //     }
+    //   });
+    // }
   });
 }
 
@@ -236,66 +257,88 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    if (menuitem === 'task') {
-      renderList.value[menuitem].forEach((mit) => {
-        mit.task_list.map((it) => {
-          it.isActive = false;
-        });
+    // if (menuitem === 'task') {
+    renderList.value[menuitem].items.forEach((it) => {
+      it.items.forEach((item) => {
+        item.isActive = false;
       });
-    } else if (menuitem === 'status') {
-      renderList.value[menuitem].forEach((it) => {
-        if (detailData.value.status_name === it.name) {
-          it.isActive = true;
-        }
-      });
-    } else if (menuitem === 'sdk') {
-      renderList.value[menuitem].forEach((it) => {
-        if (detailData.value.sdk_name === it.name) {
-          it.isActive = true;
-        }
-      });
-    } else {
-      renderList.value[menuitem].forEach((it) => {
-        it.isActive = false;
-      });
-    }
+    });
+    // } else if (menuitem === 'status') {
+    //   renderList.value[menuitem].forEach((it) => {
+    //     if (detailData.value.status_name === it.name) {
+    //       it.isActive = true;
+    //     }
+    //   });
+    // } else if (menuitem === 'sdk') {
+    //   renderList.value[menuitem].forEach((it) => {
+    //     if (detailData.value.sdk_name === it.name) {
+    //       it.isActive = true;
+    //     }
+    //   });
+    // } else {
+    //   renderList.value[menuitem].forEach((it) => {
+    //     it.isActive = false;
+    //   });
+    // }
   });
 }
 
 // 确认
 function confirmBtn() {
-  dialogList.menuList.forEach((menu) => {
-    if (menu.key === 'task') {
-      queryDate[menu.key] = [];
-      renderList.value[menu.key].forEach((item) => {
-        item.task_list.forEach((it) => {
-          if (it.isActive) {
-            queryDate[menu.key].push(it.id);
-            let index = queryDate['task_cate'].indexOf(it.task_cate_id);
-            if (index === -1) {
-              queryDate['task_cate'].push(it.task_cate_id);
-            }
-          } else {
-            return;
-          }
-        });
-      });
-    } else {
-      queryDate[menu.key] = [];
-      renderList.value[menu.key].forEach((item) => {
-        if (item.isActive) {
-          queryDate[menu.key].push(item.id);
-        }
-      });
+  headTags.value = headTags.value.map((item) => {
+    return item.name;
+  });
+  preStorage.value = JSON.parse(preStorage.value);
+  preStorage.value = preStorage.value.map((item) => {
+    if (item) return item.name;
+  });
+  let add = [];
+  let remove = [];
+  preStorage.value.forEach((item) => {
+    if (headTags.value.indexOf(item) === -1) {
+      remove.push(item);
     }
   });
-  let params = queryDate;
-  params.id = detailData.value.id;
-  modifyModel(params).then((res) => {
-    if (res.status === 200) {
+  headTags.value.forEach((item) => {
+    if (preStorage.value.indexOf(item) === -1) {
+      add.push(item);
+    }
+  });
+  console.log({ add, remove });
+  // dialogList.menuList.forEach((menu) => {
+  //   if (menu.key === 'task') {
+  //     queryDate[menu.key] = [];
+  //     renderList.value[menu.key].forEach((item) => {
+  //       item.task_list.forEach((it) => {
+  //         if (it.isActive) {
+  //           queryDate[menu.key].push(it.id);
+  //           let index = queryDate['task_cate'].indexOf(it.task_cate_id);
+  //           if (index === -1) {
+  //             queryDate['task_cate'].push(it.task_cate_id);
+  //           }
+  //         } else {
+  //           return;
+  //         }
+  //       });
+  //     });
+  //   } else {
+  //     queryDate[menu.key] = [];
+  //     renderList.value[menu.key].forEach((item) => {
+  //       if (item.isActive) {
+  //         queryDate[menu.key].push(item.id);
+  //       }
+  //     });
+  //   }
+  // });
+  // let params = queryDate;
+  // params.id = detailData.value.id;
+  modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
+    (res) => {
+      // if (res.status === 200) {
       getDetailData();
+      // }
     }
-  });
+  );
   isTagShow.value = false;
 }
 

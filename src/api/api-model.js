@@ -82,13 +82,14 @@ export function modifyModel(params, owner, id) {
     });
 }
 /**
- * 删除模型仓库
+ * 修改标签
  * @returns
  */
-export function deleteModel(id) {
-  const url = `/api/models/${id}`;
+export function modifyTags(params, owner, id) {
+  const url = `/server/model/${owner}/${id}/tags`;
+  console.log(params, owner, id);
   return request
-    .delete(url, getHeaderConfig())
+    .put(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })
@@ -96,7 +97,6 @@ export function deleteModel(id) {
       return e;
     });
 }
-
 /**
  * 获取标签信息
  * @returns
@@ -112,6 +112,21 @@ export function getTags() {
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
+}
+/**
+ * 删除模型仓库
+ * @returns
+ */
+export function deleteModel(id) {
+  const url = `/api/models/${id}`;
+  return request
+    .delete(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
 }
 
 /**

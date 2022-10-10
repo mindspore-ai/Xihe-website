@@ -95,7 +95,6 @@ export function modifyProject(params, owner, id) {
  */
 export function modifyTags(params, owner, id) {
   const url = `/server/project/${owner}/${id}/tags`;
-  console.log(params, owner, id);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

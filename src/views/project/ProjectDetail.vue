@@ -368,7 +368,6 @@ function deleteClick(tag) {
   headTags.value.splice(i, 1);
 
   let menu = dialogList.menuList.map((item) => item.key);
-  console.log(menu);
   menu.forEach((key) => {
     // if (key === '0') {
     renderList.value[key].items.forEach((item) => {
@@ -394,17 +393,17 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    if (menuitem === 'task') {
-      renderList.value[menuitem].forEach((mit) => {
-        mit.task_list.map((it) => {
-          it.isActive = false;
-        });
+    // if (menuitem === 'task') {
+    renderList.value[menuitem].items.forEach((it) => {
+      it.items.forEach((item) => {
+        item.isActive = false;
       });
-    } else {
-      renderList.value[menuitem].forEach((it) => {
-        it.isActive = false;
-      });
-    }
+    });
+    // } else {
+    //   renderList.value[menuitem].forEach((it) => {
+    //     it.isActive = false;
+    //   });
+    // }
   });
 }
 

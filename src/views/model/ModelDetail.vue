@@ -153,6 +153,7 @@ function getDetailData() {
       //   ...libraries_list,
       // ];
       modelTags.value = [];
+      headTags.value = [];
       if (tags) {
         tags.forEach((item) => {
           modelTags.value.push({ name: item });

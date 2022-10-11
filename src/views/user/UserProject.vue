@@ -49,7 +49,7 @@ let query = reactive({
   page_num: 1,
   count_per_page: 12,
   // owner_name: route.params.user,
-  sort_by: '',
+  sort_by: 'update_time',
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');

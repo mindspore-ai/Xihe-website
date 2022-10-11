@@ -46,10 +46,10 @@ const modelCount = ref(0);
 const modelData = ref([]);
 
 let query = reactive({
-  search: '',
+  name: '',
   page_num: 1,
   count_per_page: 10,
-  owner: route.params.user,
+  // owner: route.params.user,
   sort_by: '',
 });
 
@@ -62,7 +62,6 @@ function getUserModel() {
       avatarImg.value = res.data.avatar_id;
       modelCount.value = res.data.total;
       modelData.value = res.data.models;
-      // console.log('个人模型数据: ', modelData.value);
     } else {
       modelData.value = [];
     }
@@ -99,7 +98,7 @@ watch(
 );
 watch(props, () => {
   // console.log('props.queryData: ', props.queryData);
-  query.search = props.queryData.keyWord;
+  query.name = props.queryData.keyWord;
   query.sort_by = props.queryData.order;
   query.page_num = 1;
 });

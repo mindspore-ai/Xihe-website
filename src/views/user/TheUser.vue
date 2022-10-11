@@ -32,7 +32,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-// console.log('用户信息: ', userInfo);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -172,7 +171,6 @@ function handleNavClick(item) {
 }
 
 function dropdownClick(item) {
-  // console.log('item: ', item);
   // if (item.value === 'update_time') {
   //   queryData.order = '-' + item.value;
   // } else {
@@ -205,6 +203,19 @@ function goWatched() {
   router.push({ path: `/${userInfo.value.userName}/watched` });
 }
 
+// 当前用户粉丝列表
+const currentFansList = ref([]);
+function getCurrentFanslist(val) {
+  currentFansList.value = val;
+}
+// 登录用户的信息
+let loginUserInfo = reactive({
+  account: userInfoStore.userName,
+  avatar_id: userInfoStore.avatar,
+  bio: userInfoStore.description,
+  is_follower: false,
+});
+
 // 关注用户or点赞
 function getFollow(name) {
   // 如果用户没有登录，则跳转到登录页面
@@ -213,12 +224,10 @@ function getFollow(name) {
   } else {
     try {
       let params = { account: name };
-      getFollowing(params).then((res) => {
+      getFollowing(params).then(() => {
         userInfo.value.isFollower = true;
         userInfo.value.fansCount++;
-        detailInfo.value.getFansList();
-        console.log('detailInfo: ', detailInfo.value);
-        // getFansList();
+        currentFansList.value.unshift(loginUserInfo);
       });
     } catch (error) {
       console.error(error);
@@ -230,11 +239,10 @@ function getFollow(name) {
 function cancelFollow(name) {
   try {
     let params = { account: name };
-    cancelFollowing(params).then((res) => {
+    cancelFollowing(params).then(() => {
+      currentFansList.value.splice(0, 1);
       userInfo.value.isFollower = false;
       userInfo.value.fansCount--;
-      detailInfo.value.getFansList();
-      console.log('detailInfo: ', detailInfo.value);
     });
   } catch (error) {
     console.error(error);
@@ -435,6 +443,7 @@ function handleDomChange(val) {
         <div ref="detailInfo" class="content-detail-info">
           <router-view
             :query-data="queryData"
+            @get-fanslist="getCurrentFanslist"
             @dom-change="handleDomChange"
           ></router-view>
         </div>

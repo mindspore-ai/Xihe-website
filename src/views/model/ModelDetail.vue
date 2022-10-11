@@ -152,6 +152,7 @@ function getDetailData() {
       //   ...tags_list,
       //   ...libraries_list,
       // ];
+      modelTags.value = [];
       if (tags) {
         tags.forEach((item) => {
           modelTags.value.push({ name: item });
@@ -354,10 +355,10 @@ function getTagList() {
       // if (key === 'task') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
-          return (it = {
+          return {
             name: it,
             isActive: false,
-          });
+          };
         });
       });
       // } else {
@@ -366,7 +367,7 @@ function getTagList() {
       //   });
       // }
     });
-    modelTags.value.forEach((item) => {
+    headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
         // if (menuitem === 'task') {
         renderList.value[menuitem].items.forEach((mit) => {

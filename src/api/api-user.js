@@ -202,7 +202,6 @@ export function getRank() {
  * @returns
  */
 export function getAllCompetition() {
-  // console.log('url: ', url);
   const url = `/api/competitions/user_competitions`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
@@ -271,7 +270,6 @@ export function cancelFollowing(params) {
  * @returns
  */
 export function getUserFans(name) {
-  // console.log('name: ', name);
   const url = `/server/user/follower/${name}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;

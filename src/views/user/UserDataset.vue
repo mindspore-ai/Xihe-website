@@ -38,11 +38,11 @@ const avatarImg = ref('');
 const datasetCount = ref(0);
 const datasetData = ref([]);
 let query = reactive({
-  // search: '',
+  name: '',
   page_num: 1,
   count_per_page: 10,
   // owner_name: route.params.user,
-  // order: '',
+  sort_by: '',
 });
 const emit = defineEmits(['getlivecount', 'domChange']);
 
@@ -89,9 +89,9 @@ watch(
   }
 );
 watch(props, () => {
-  query.search = props.queryData.keyWord;
-  query.order = props.queryData.order;
-  query.page = 1;
+  query.name = props.queryData.keyWord;
+  query.sort_by = props.queryData.order;
+  query.page_num = 1;
 });
 </script>
 <template>

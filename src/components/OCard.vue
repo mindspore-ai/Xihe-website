@@ -32,28 +32,37 @@ const i18n = {
 };
 const tagList = JSON.stringify(props.cardData);
 
-/* if (props.cardType === 'model') {
+if (props.cardType === 'model') {
   const {
-    licenses_list,
+    /* licenses_list,
     libraries_list,
     task_list,
     tags_list,
     device_target_list,
-    files_list,
+    files_list, */
+    tags,
   } = JSON.parse(tagList);
-
-  labelList.value = [
+  labelList.value = tags;
+  /*  labelList.value = [
     ...licenses_list,
     ...task_list,
     ...tags_list,
     ...libraries_list,
     ...device_target_list,
     ...files_list,
-  ];
+    ...tags,
+  ]; */
+  // console.log('labelList.value: ', labelList.value);
 } else if (props.cardType === 'dataset') {
-  const { licenses_list, task_list, files_list } = JSON.parse(tagList);
-  labelList.value = [...licenses_list, ...task_list, ...files_list];
-} */
+  const {
+    /* licenses_list, task_list, files_list, */
+    tags,
+  } = JSON.parse(tagList);
+  labelList.value = tags;
+  /*  labelList.value = [
+    ...licenses_list, ...task_list, ...files_list,
+  ]; */
+}
 </script>
 <template>
   <div
@@ -72,10 +81,9 @@ const tagList = JSON.stringify(props.cardData);
       </div>
       <div class="model-name">/{{ cardData.name }}</div>
     </div>
-    <!-- TODO: 标签-->
     <div class="label-box">
-      <div v-for="label in labelList" :key="label.id" class="label-item">
-        {{ label.name }}
+      <div v-for="label in labelList" :key="label.index" class="label-item">
+        {{ label }}
       </div>
     </div>
     <p class="model-introduce">

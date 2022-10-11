@@ -226,6 +226,7 @@ function getDetailData() {
 
       const { training, tags } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+      modelTags.value = [];
       if (tags) {
         // TODO: tags很有可能不止一个;
         // modelTags.value = [{ name: protocol }, { name: training }];
@@ -497,10 +498,10 @@ function getAllTags() {
       // if (key === '0') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
-          return (it = {
+          return {
             name: it,
             isActive: false,
-          });
+          };
         });
       });
       // } else {

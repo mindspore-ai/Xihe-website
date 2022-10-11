@@ -123,6 +123,7 @@ function getDetailData() {
       }
       fileData.setFileData(storeData);
       const { tags } = detailData.value;
+      modelTags.value = [];
       if (tags) {
         tags.forEach((item) => {
           modelTags.value.push({ name: item });
@@ -360,7 +361,7 @@ function confirmBtn() {
   // let params = queryDate;
   // params.id = detailData.value.id;
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
-    (res) => {
+    () => {
       // if (res.status === 200) {
       //   ElMessage({
       //     type: 'success',
@@ -396,10 +397,10 @@ function getTagList() {
       // if (key === 'task') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
-          return (it = {
+          return {
             name: it,
             isActive: false,
-          });
+          };
         });
       });
       // } else {
@@ -408,8 +409,7 @@ function getTagList() {
       //   });
       // }
     });
-
-    modelTags.value.forEach((item) => {
+    headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
         // if (menuitem === 'task') {
         renderList.value[menuitem].items.forEach((mit) => {

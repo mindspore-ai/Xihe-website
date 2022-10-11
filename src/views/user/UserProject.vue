@@ -96,7 +96,7 @@ function setNewClick() {
 watch(props, () => {
   query.name = props.queryData.keyWord;
   query.sort_by = props.queryData.order;
-  query.page = 1;
+  query.page_num = 1;
 });
 watch(
   query,

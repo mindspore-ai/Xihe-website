@@ -33,12 +33,12 @@ let queryData = reactive({
 function getFansList() {
   getUserFans(userInfo.value.userName).then((res) => {
     currentFansList.value = res.data.data;
-    console.log('当前用户粉丝列表: ', currentFansList.value);
+    emit('getFanslist', currentFansList.value);
   });
 }
 getFansList();
 
-const emit = defineEmits(['domChange']);
+const emit = defineEmits(['domChange', 'getFanslist']);
 watch(
   () => {
     return currentFansList.value;

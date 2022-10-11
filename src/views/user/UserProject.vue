@@ -45,11 +45,11 @@ const props = defineProps({
 });
 
 let query = reactive({
-  // search: '',
+  name: '',
   page_num: 1,
   count_per_page: 12,
   // owner_name: route.params.user,
-  // order: '',
+  sort_by: 'update_time',
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');
@@ -94,8 +94,8 @@ function setNewClick() {
   });
 }
 watch(props, () => {
-  query.search = props.queryData.keyWord;
-  query.order = props.queryData.order;
+  query.name = props.queryData.keyWord;
+  query.sort_by = props.queryData.order;
   query.page = 1;
 });
 watch(

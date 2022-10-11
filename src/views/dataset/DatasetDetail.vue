@@ -124,6 +124,7 @@ function getDetailData() {
       fileData.setFileData(storeData);
       const { tags } = detailData.value;
       modelTags.value = [];
+      headTags.value = [];
       if (tags) {
         tags.forEach((item) => {
           modelTags.value.push({ name: item });

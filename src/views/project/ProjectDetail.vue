@@ -227,15 +227,16 @@ function getDetailData() {
       const { training, tags } = detailData.value;
       // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
       modelTags.value = [];
+      headTags.value = [];
       if (tags) {
         // TODO: tags很有可能不止一个;
         // modelTags.value = [{ name: protocol }, { name: training }];
         tags.forEach((item) => {
           modelTags.value.push({ name: item });
         });
-      } else {
-        modelTags.value = [{ name: protocol }, { name: training }];
-      }
+      } // else {
+      //   modelTags.value = [{ name: protocol }, { name: training }];
+      // }
       modelTags.value = modelTags.value.map((item) => {
         return item;
       });
@@ -246,9 +247,9 @@ function getDetailData() {
         tags.forEach((item) => {
           headTags.value.push({ name: item });
         });
-      } else {
-        headTags.value = [{ name: training }];
-      }
+      } //else {
+      //   headTags.value = [{ name: training }];
+      // }
       headTags.value = headTags.value.map((item) => {
         if (protocol.indexOf(item) === -1) return item;
       });

@@ -158,8 +158,12 @@ function getDetailData() {
         tags.forEach((item) => {
           modelTags.value.push({ name: item });
         });
-        headTags.value = modelTags.value.map((item) => {
-          if (protocol.indexOf(item) === -1) return item;
+        headTags.value = modelTags.value.filter((item) => {
+          let a = protocol.map((it) => {
+            if (it.name === item.name) return false;
+          });
+          if (!a.indexOf(false)) return false;
+          else return true;
         });
         console.log(headTags);
       }

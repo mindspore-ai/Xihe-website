@@ -250,8 +250,12 @@ function getDetailData() {
       } //else {
       //   headTags.value = [{ name: training }];
       // }
-      headTags.value = headTags.value.map((item) => {
-        if (protocol.indexOf(item) === -1) return item;
+      headTags.value = headTags.value.filter((item) => {
+        let a = protocol.map((it) => {
+          if (it.name === item.name) return false;
+        });
+        if (!a.indexOf(false)) return false;
+        else return true;
       });
       // if (headTags.value[0]) headTags.value = '';
       // headTags.value = [...modelTags.value];

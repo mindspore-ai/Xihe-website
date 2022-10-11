@@ -150,8 +150,7 @@ function confirmAdd() {
           addSearch.value = '';
           //   }
           // });
-
-          detailData.value.related_datasets.push(res.data);
+          // detailData.value.related_datasets.push(res.data);
         }
       }
     );

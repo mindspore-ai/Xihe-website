@@ -40,7 +40,7 @@ export class DrawRect {
 
     //双击鼠标左键清除默认事件
     viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(
-      Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK,
+      Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK
     );
     //绘制点
     function createPoint(worldPosition) {
@@ -63,7 +63,9 @@ export class DrawRect {
       let shape;
       //当positionData为数组时绘制最终图，如果为function则绘制动态图
       let arr =
-        typeof positionData.getValue === 'function' ? positionData.getValue(0) : positionData;
+        typeof positionData.getValue === 'function'
+          ? positionData.getValue(0)
+          : positionData;
       shape = viewer.entities.add({
         id: rectID,
         name: 'rect',

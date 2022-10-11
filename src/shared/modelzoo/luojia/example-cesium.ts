@@ -17,7 +17,7 @@ Cesium.Ion.defaultAccessToken =
 
 //设置天地图token
 const tdtkey = ''; //Fix:http://lbs.tianditu.gov.cn/authorization/authorization.html
-
+// 4d3f2ea02f72106d6d014d2c701a8e31
 //天地图URL配置
 const TDTURL_CONFIG = {
   TDT_IMG_W:

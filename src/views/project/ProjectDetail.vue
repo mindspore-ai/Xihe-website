@@ -270,7 +270,6 @@ const preStorage = ref();
 getDetailData();
 
 // const runingStatus = ref(false);
-console.log('detailData: ', detailData);
 
 function handleTabClick(item) {
   if (item.index === '1' && userInfoStore.userName === detailData.value.owner) {

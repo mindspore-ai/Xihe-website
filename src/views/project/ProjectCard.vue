@@ -156,7 +156,6 @@ function confirmAdd() {
     );
   }
 }
-// console.log(detailData.value.related_datasets);
 // 模型添加
 function confirmClick() {
   // 如果填写为空,提示-->return  TODO:提示

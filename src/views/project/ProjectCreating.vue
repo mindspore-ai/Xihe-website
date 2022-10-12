@@ -353,7 +353,7 @@ onMounted(() => {});
               </el-radio-group>
               <div class="visual-desc">所有人可见</div>
               <el-radio-group v-model="proList.repo_type">
-                <el-radio label="pravate" />
+                <el-radio label="private" />
               </el-radio-group>
               <div class="visual-desc">仅自己可见</div>
             </div>

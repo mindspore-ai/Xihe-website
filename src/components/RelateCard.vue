@@ -29,6 +29,7 @@ const props = defineProps({
     default: false,
   },
 });
+// console.log('detailData',props.detailData);
 const emit = defineEmits(['delete', 'jump', 'cancel']);
 
 function removeItemClick(item) {

@@ -51,7 +51,7 @@ const lngLatToPixelXY = (lng: number, lat: number, level: number) => {
  */
 const getBingMeta = async () => {
   const BING_KEY =
-    'AqNk635jQXUvEkYOc6WNUWcYjI7r778bvAlkiSCStR51hhn7afgg6aTmJ4fepjuO'; //Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
+    'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o'; //Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
 
   const req = await fetch(
     'https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?key=' +
@@ -226,7 +226,6 @@ const getTileImg = async (
     fullimg.onload = function () {
       ctx?.drawImage(fullimg, sx, sy, swidth, sheight, 0, 0, swidth, sheight);
       clipcanvas.toBlob((blob) => {
-        console.log(blob);
         resolve(blob as Blob);
       });
     };

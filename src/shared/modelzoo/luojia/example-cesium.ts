@@ -16,8 +16,8 @@ Cesium.Ion.defaultAccessToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTFlNWVmMC1jOWRhLTQyMDktOTY4Ny02YTU5YWFlMGYwY2IiLCJpZCI6OTQzNDQsImlhdCI6MTY1Mjg4ODEyNn0.g2vq1qq_rdfZeRTy73nBkEDzhMIM4upkYcbIdFYnCiQ'; //Fix:Your access token can be found at: https://cesium.com/ion/tokens.
 
 //设置天地图token
-const tdtkey = ''; //Fix:http://lbs.tianditu.gov.cn/authorization/authorization.html
-// 4d3f2ea02f72106d6d014d2c701a8e31
+const tdtkey = '3a696e02b3d443d903ed577690be0c8b'; //Fix:http://lbs.tianditu.gov.cn/authorization/authorization.html
+
 //天地图URL配置
 const TDTURL_CONFIG = {
   TDT_IMG_W:
@@ -269,7 +269,7 @@ const BING_IMG_P = new Cesium.ProviderViewModel({
   creationFunction: function () {
     let wmts = new Cesium.BingMapsImageryProvider({
       url: 'https://dev.virtualearth.net',
-      key: '', //Fix:https://www.bingmapsportal.com/Application
+      key: 'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o', //Fix:https://www.bingmapsportal.com/Application
       mapStyle: Cesium.BingMapsStyle.AERIAL,
     });
     return wmts;

@@ -2,47 +2,55 @@
 import { ref, onMounted } from 'vue';
 
 import ExampleCesium from '@/shared/modelzoo/luojia/example-cesium';
-import {
-  lngLatToTileXY,
-  rectToImg,
-} from '@/shared/modelzoo/luojia/tiles-to-img';
+import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img';
 
 import OButton from '@/components/OButton.vue';
+import { ElMessage } from 'element-plus';
 
 const isSelected = ref(false);
 const cesiumContainer = ref('');
 const viewer = ref(null);
 const nowModelName = ref('高德影像');
 const zoomlv = ref(18);
+const tblob = ref(null);
 
 async function drawClick() {
-  //   console.log(viewer);
+  console.log(viewer);
   isSelected.value = !isSelected.value;
   //  开始选区/结束选区
   isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
 
   if (!isSelected.value) {
     // 获取矩形框坐标
-    console.log(viewer.value.drawer.getAnsShapeRectCoor());
     const location = viewer.value.drawer.getAnsShapeRectCoor();
-
-    console.log(lngLatToTileXY(location.west, location.north, 18));
-    console.log(lngLatToTileXY(location.east, location.south, 18));
 
     const ltpoint = [location.west, location.north];
     const rbpoint = [location.east, location.south];
-    const tblob = await rectToImg(
+    tblob.value = await rectToImg(
       ltpoint,
       rbpoint,
       zoomlv.value,
       nowModelName.value
     );
 
-    console.log(tblob);
+    console.log(tblob.value);
   }
 }
 
-function getImage() {}
+function handleImgDownload() {
+  if (tblob.value) {
+    const url = URL.createObjectURL(tblob.value);
+    let a = document.createElement('a');
+    a.download = 'input.png';
+    a.href = url;
+    a.click();
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请框选区域',
+    });
+  }
+}
 
 onMounted(() => {
   viewer.value = new ExampleCesium(cesiumContainer.value);
@@ -61,7 +69,9 @@ onMounted(() => {
         <OButton :type="isSelected ? 'error' : 'primary'" @click="drawClick">
           {{ isSelected ? '结束框选实验区域' : '开始框选实验区域' }}
         </OButton>
-        <OButton @click="getImage">获取图片</OButton>
+
+        <OButton @click="handleImgDownload">原图下载</OButton>
+        <OButton>结果下载</OButton>
       </div>
       <div ref="cesiumContainer"></div>
     </div>

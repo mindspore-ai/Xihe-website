@@ -373,7 +373,7 @@ watch(
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
-                  @click="toggleDelDlg(true, item.name, item.id)"
+                  @click="toggleDelDlg(true, item.name, item.type === 'tree')"
                 >
                   <o-icon @click="creatFolter(queryRef)">
                     <icon-remove></icon-remove>

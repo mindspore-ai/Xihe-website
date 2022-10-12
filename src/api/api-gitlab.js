@@ -106,7 +106,6 @@ export async function deleteFolder(actions, id) {
     commit_message: 'delete file',
     actions: actions,
   };
-  console.log(params);
   return request.post(url, params, await getGitlabConfig()).then((res) => {
     return res.data;
   });

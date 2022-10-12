@@ -46,6 +46,11 @@ let queryRef = ref(null);
 const rules = reactive({
   fileName: [
     {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+    {
       pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -./_]{1,210}$/,
       message: '文件名中禁止特殊字符',
       trigger: 'blur',

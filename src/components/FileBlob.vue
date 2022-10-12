@@ -16,14 +16,6 @@ import { changeByte } from '@/shared/utils';
 import warningImg from '@/assets/icons/warning.png';
 
 import {
-  getDownLoadToken,
-  downloadFileObs,
-  getDelToken,
-  delFileObs,
-  findFile,
-} from '@/api/api-obs';
-
-import {
   getGitlabFileDetail,
   getGitlabFileRaw,
   downloadFile,
@@ -71,7 +63,6 @@ const i18n = {
 const showBlob = ref(false);
 const suffix = ref('');
 const inputDom = ref(null);
-const rawBlob = ref('');
 const showDel = ref(false);
 
 function previewFile(path, id) {

@@ -20,6 +20,7 @@ import warningImg from '@/assets/icons/warning.png';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { downloadObs, findFile } from '@/api/api-obs';
+import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { trainList } from '@/api/api-project';
 
 import {
@@ -305,28 +306,47 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    findFile(
-      `xihe-obj/projects/${route.params.user}/${routerParams.name}/train/`
-    ).then((tree) => {
-      // console.log('tree: ', tree);
-      if (
-        tree.status === 200 &&
-        tree.data.children &&
-        tree.data.children.length
-      ) {
-        README = tree.data.children.filter((item) => {
+    getGitlabTree(encodeURIComponent('train/'), detailData.value.repo_id)
+      .then((tree) => {
+        README = tree.filter((item) => {
           return item.name === 'README.md';
         });
         if (README[0]) {
-          downloadObs(README[0].path).then((res) => {
-            res ? (codeString.value = res) : '';
-          });
-          result.value = mkit.render(codeString.value);
+          getGitlabFileRaw('train/README.md', detailData.value.repo_id).then(
+            (res) => {
+              res ? (codeString.value = res) : '';
+              result.value = mkit.render(codeString.value);
+            }
+          );
         } else {
           codeString.value = '';
         }
-      }
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // findFile(
+    //   `xihe-obj/projects/${route.params.user}/${routerParams.name}/train/`
+    // ).then((tree) => {
+    //   if (
+    //     tree.status === 200 &&
+    //     tree.data.children &&
+    //     tree.data.children.length
+    //   ) {
+    //     README = tree.data.children.filter((item) => {
+    //       return item.name === 'README.md';
+    //     });
+    //     if (README[0]) {
+    //       downloadObs(README[0].path).then((res) => {
+    //         res ? (codeString.value = res) : '';
+    //       });
+    //       result.value = mkit.render(codeString.value);
+    //     } else {
+    //       codeString.value = '';
+    //     }
+    //   }
+    // });
   } catch (error) {
     console.error(error);
   }

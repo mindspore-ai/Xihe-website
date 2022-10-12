@@ -59,6 +59,7 @@ function handleTabClick(i, item) {
 const edit = ref();
 const count = ref(0);
 const isDisabled = ref(false);
+const endedContent = ref('');
 
 let instance = null;
 
@@ -90,8 +91,17 @@ function init(item) {
 
   instance.onDidChangeModelContent(() => {
     tabsList.value[activeIndex.value].code = instance.getValue();
+
+    if (
+      endedContent.value &&
+      tabsList.value[activeIndex.value].code !== endedContent.value
+    ) {
+      isDisabled.value = false;
+    }
   });
+
   count.value = instance.getModel().getLineCount();
+
   instance.revealLine(count.value);
 }
 
@@ -109,9 +119,18 @@ function hanleGenerateCode() {
         tabsList.value[activeIndex.value].code + res.data;
 
       instance.dispose();
+
+      init(tabsList.value[activeIndex.value]);
+    } else if (res.status === -2) {
+      tabsList.value[activeIndex.value].code = endedContent.value =
+        tabsList.value[activeIndex.value].code + res.msg;
+
+      instance.dispose();
+
       init(tabsList.value[activeIndex.value]);
     } else if (res.status === -1) {
       isDisabled.value = false;
+
       ElMessage({
         type: 'error',
         message: res.msg,

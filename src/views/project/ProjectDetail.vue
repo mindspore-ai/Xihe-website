@@ -204,7 +204,7 @@ function getDetailData() {
       modular: 'project',
     }).then((res) => {
       let storeData = res.data;
-      // console.log('项目详情数据: ', res.data);
+      console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
       storeData['is_owner'] = userInfoStore.userName === storeData.owner;
       // 文件列表是否为空

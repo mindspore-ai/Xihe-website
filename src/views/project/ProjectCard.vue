@@ -14,6 +14,7 @@ import RelateCard from '@/components/RelateCard.vue';
 import NoRelate from '@/components/NoRelate.vue';
 
 import { downloadObs, findFile } from '@/api/api-obs';
+import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import {
   addDataset,
   deleteDataset,
@@ -274,14 +275,35 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    if (detailData.value.sdk_name === 'Gradio') {
+    if (detailData.value.type === 'Gradio') {
       getGuide().then((tree) => {
+        console.log('tree: ', tree);
         README = tree.data;
         codeString2.value = README;
         result2.value = mkit.render(codeString2.value);
       });
     } else {
-      findFile(
+      getGitlabTree(encodeURIComponent(''), detailData.value.repo_id)
+        .then((tree) => {
+          console.log('tree2222: ', tree);
+          README = tree.filter((item) => {
+            return item.name === 'README.md';
+          });
+          if (README[0]) {
+            getGitlabFileRaw('README.md', detailData.value.repo_id).then(
+              (res) => {
+                res ? (codeString.value = res) : '';
+                result.value = mkit.render(codeString.value);
+              }
+            );
+          } else {
+            codeString.value = '';
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      /* findFile(
         `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
       ).then((tree) => {
         if (
@@ -301,7 +323,7 @@ function getReadMeFile() {
             codeString.value = '';
           }
         }
-      });
+      }); */
     }
   } catch (error) {
     console.error(error);
@@ -618,7 +640,7 @@ onUnmounted(() => {
 </script>
 <template>
   <div v-if="detailData" class="model-card">
-    <div v-if="detailData.sdk_name === 'Gradio' && loading" class="left-data2">
+    <div v-if="detailData.type === 'Gradio' && loading" class="left-data2">
       <div v-if="msg === '运行中'" class="markdown-body">
         <iframe
           :src="clientSrc"

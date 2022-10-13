@@ -91,15 +91,13 @@ function init(item) {
 
   instance.onDidChangeModelContent(() => {
     tabsList.value[activeIndex.value].code = instance.getValue();
-
-    if (
-      endedContent.value &&
-      tabsList.value[activeIndex.value].code &&
-      tabsList.value[activeIndex.value].code !== endedContent.value
-    ) {
-      isDisabled.value = false;
-    } else {
+    // 1.内容为空置灰 （输入内容取消置灰） 2.推理完成置灰（增加或删除内容取消置灰；删除所有内容依旧置灰）
+    if (!tabsList.value[activeIndex.value].code) {
       isDisabled.value = true;
+    } else if (endedContent.value === tabsList.value[activeIndex.value].code) {
+      isDisabled.value = true;
+    } else if (endedContent.value !== tabsList.value[activeIndex.value].code) {
+      isDisabled.value = false;
     }
   });
 

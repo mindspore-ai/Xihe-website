@@ -7,6 +7,7 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { ElMessage } from 'element-plus';
 import { createTrainProject, getProjectData } from '@/api/api-project';
+import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -19,7 +20,7 @@ const isAuthentic = computed(() => {
 const route = useRoute();
 const router = useRouter();
 const queryRef = ref(null);
-const detailData = ref({});
+const detailData = ref([]);
 // const isloading = ref(true);
 
 const form = reactive({
@@ -159,13 +160,17 @@ function goTrain() {
 // 获得项目详情数据
 function getDetailData() {
   try {
-    getProjectData({
-      name: route.params.name,
-      owner_name: route.params.user,
+    getRepoDetailByName({
+      user: route.params.user,
+      repoName: route.params.name,
+      modular: 'project',
     }).then((res) => {
-      if (res.results.status === 200) {
-        detailData.value = res.results.data[0];
-      }
+      // console.log('res: ', res);
+      // if (res.results.status === 200) {
+      detailData.value = res.data;
+      // console.log('detailData.value: ', detailData.value);
+
+      // }
     });
   } catch (error) {
     console.error(error);
@@ -175,7 +180,7 @@ getDetailData();
 // 跳转到选择文件创建训练实例页
 function goSelectFile() {
   router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
     query: {
       id: detailData.value.id,
     },
@@ -491,7 +496,16 @@ const rules = reactive({
                   />
                 </el-form-item>
               </div>
+              <!-- TODO:新增 -->
               <div class="createfile-form-item">
+                <div class="item-title">
+                  <icon-necessary></icon-necessary><span>模型</span>
+                </div>
+                <el-form-item placeholder="请输入模型名" prop="log_url">
+                  <el-input v-model="form.log_url" placeholder="请输入模型名" />
+                </el-form-item>
+              </div>
+              <!-- <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">输入</span>
                   <el-popover
@@ -530,7 +544,7 @@ const rules = reactive({
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
-              </div>
+              </div> -->
               <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">超参</span>
@@ -622,7 +636,19 @@ const rules = reactive({
                   />
                 </el-form-item>
               </div>
+              <!-- TODO:新增 -->
               <div class="createfile-form-item">
+                <div class="item-title">
+                  <span>数据集</span>
+                </div>
+                <el-form-item placeholder="请输入数据集名">
+                  <el-input
+                    v-model="form.job_description"
+                    placeholder="请输入数据集名"
+                  />
+                </el-form-item>
+              </div>
+              <!-- <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">输出</span>
                   <el-popover
@@ -660,7 +686,7 @@ const rules = reactive({
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
-              </div>
+              </div> -->
               <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">环境变量</span>

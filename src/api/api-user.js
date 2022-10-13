@@ -54,15 +54,9 @@ export function queryUserIdToken(params) {
 }
 
 /**
- * 获取用户模型信息
+ * 获取用户的模型
  * @returns
  */
-/* export function getUserModelData(id) {
-  const url = `/api/users/${id}/models`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
 export function getUserModelData(params, name) {
   const url = `/server/model/${name}`;
   let header = getHeaderConfig();
@@ -77,15 +71,9 @@ export function getUserModelData(params, name) {
     });
 }
 /**
- * 获取用户数据集信息
+ * 获取用户的数据集
  * @returns
  */
-/* export function getUserDatasetData(id) {
-  const url = `/api/users/${id}/datasets`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
 export function getUserDatasetData(params, name) {
   const url = `/server/dataset/${name}`;
   let header = getHeaderConfig();
@@ -107,14 +95,21 @@ export function getUserDatasetData(params, name) {
 }
 
 /**
- * 获取用户项目信息
+ * 获取用户的项目
  * @returns
  */
-export function getProjectData(id) {
-  const url = `/api/users/${id}/projects`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+export function getUserProjectData(params, name) {
+  const url = `/server/project/${name}`;
+  let header = getHeaderConfig();
+  // 登录之后携带token
+  return request
+    .get(url, {
+      params,
+      ...header,
+    })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

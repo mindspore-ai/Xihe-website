@@ -8,7 +8,7 @@ import IconHeart from '~icons/app/heart';
 
 import OIcon from '@/components/OIcon.vue';
 
-import { getProjectData } from '@/api/api-project';
+import { getUserProjectData } from '@/api/api-user';
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
@@ -68,7 +68,7 @@ function handleCurrentChange(val) {
 }
 
 function getUserProject() {
-  getProjectData(query, userInfo.value.userName).then((res) => {
+  getUserProjectData(query, userInfo.value.userName).then((res) => {
     // if (res.count && res.results.status === 200) {
     if (res.data.total > 12) {
       emit('domChange', 76);

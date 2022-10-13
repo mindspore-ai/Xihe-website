@@ -70,27 +70,34 @@ function create(formEl) {
     if (valid) {
       // let newList = JSON.parse(JSON.stringify(query));
       // newList.protocol = [newList.protocol];
-      createDataset(query).then((res) => {
-        ElMessage({
-          type: 'success',
-          message: '创建成功',
+      createDataset(query)
+        .then((res) => {
+          router.push(`/datasets/${userInfo.userName}/${res.data.name}`);
+          ElMessage({
+            type: 'success',
+            message: '创建成功',
+          });
+          // if (res.status === 200) {
+          //   ElMessage({
+          //     type: 'success',
+          //     message: '创建成功',
+          //   });
+          //   router.push(
+          //     `/datasets/${res.data.owner_name.name}/${res.data.name}/tree`
+          //   );
+          // } else {
+          //   ElMessage({
+          //     type: 'error',
+          //     message: '文件名重复，或文件名不合规',
+          //   });
+          // }
+        })
+        .catch((err) => {
+          ElMessage({
+            type: 'error',
+            message: '输入的内容有误',
+          });
         });
-        router.push(`/datasets/${userInfo.userName}/${res.data.name}`);
-        // if (res.status === 200) {
-        //   ElMessage({
-        //     type: 'success',
-        //     message: '创建成功',
-        //   });
-        //   router.push(
-        //     `/datasets/${res.data.owner_name.name}/${res.data.name}/tree`
-        //   );
-        // } else {
-        //   ElMessage({
-        //     type: 'error',
-        //     message: '文件名重复，或文件名不合规',
-        //   });
-        // }
-      });
     } else {
       console.error('error submit!');
       return false;

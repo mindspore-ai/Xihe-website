@@ -7,10 +7,11 @@ import { ElMessage } from 'element-plus';
 // import { useFileData } from '@/stores';
 
 import { createTrainProject, getProjectData } from '@/api/api-project';
+import { findFile, downloadFileObs, getDownLoadToken } from '@/api/api-obs';
+import { getRepoDetailByName } from '@/api/api-gitlab';
+
 // import { fileVerify } from '@/api/api-obs.js';
 import { useUserInfoStore } from '@/stores';
-
-import { findFile, downloadFileObs, getDownLoadToken } from '@/api/api-obs';
 
 const route = useRoute();
 const router = useRouter();
@@ -20,7 +21,7 @@ const userInfoStore = useUserInfoStore();
 const filePath = ref('');
 const isShow = ref(false);
 const codeString = ref('');
-const detailData = ref({});
+const detailData = ref([]);
 
 // 是否是访客
 const isAuthentic = computed(() => {
@@ -126,10 +127,10 @@ function findFileByPath() {
     });
   }
 }
-//跳转到配置文件创建训练实例页2
+//跳转到配置文件创建训练实例页
 function goCreateFile() {
   router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/createfile`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     query: {
       id: detailData.value.id,
     },
@@ -138,13 +139,17 @@ function goCreateFile() {
 // 获得项目详情数据
 function getDetailData() {
   try {
-    getProjectData({
-      name: route.params.name,
-      owner_name: route.params.user,
+    getRepoDetailByName({
+      user: route.params.user,
+      repoName: route.params.name,
+      modular: 'project',
     }).then((res) => {
-      if (res.results.status === 200) {
-        detailData.value = res.results.data[0];
-      }
+      // console.log('res: ', res);
+      // if (res.results.status === 200) {
+      detailData.value = res.data;
+      // console.log('detailData.value: ', detailData.value);
+
+      // }
     });
   } catch (error) {
     console.error(error);

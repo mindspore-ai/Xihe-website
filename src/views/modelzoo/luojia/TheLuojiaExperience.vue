@@ -22,7 +22,7 @@ async function drawClick() {
   if (!isSelected.value) {
     // 获取矩形框坐标
     const location = viewer.value.drawer.getAnsShapeRectCoor();
-
+    console.log(location);
     const ltpoint = [location.west, location.north];
     const rbpoint = [location.east, location.south];
     tblob.value = await rectToImg(
@@ -31,13 +31,13 @@ async function drawClick() {
       zoomlv.value,
       nowModelName.value
     );
-
-    // TODO: blob文件获取完成后取消下载图片按钮置灰
+    console.log(tblob.value);
+    // blob文件获取完成后取消下载图片按钮置灰
 
     const aurl = URL.createObjectURL(tblob.value);
     const tempimg = document.createElement('img');
     tempimg.src = aurl;
-    viewer.value.setImageAsLayerWithCoor(tempimg, location, true, false);
+    viewer.value.setImageAsLayer(tempimg);
   }
 }
 

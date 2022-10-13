@@ -283,34 +283,39 @@ function handleTabClick(item) {
 }
 
 // 点击标签
-function tagClick(it, key) {
-  if (key === 'train_sdk' || key === 'infer_sdk' || key === 'licenses') {
-    if (it.isActive) {
-      it.isActive = false;
-      renderList.value[key].forEach((item) => {
-        item.isSelected = false;
-      });
-      headTags.value.forEach((item, index) => {
-        if (item.name === it.name) {
-          headTags.value.splice(index, 1);
-        }
-      });
-    } else {
-      renderList.value[key].forEach((item) => {
-        if (item.isActive) {
-          headTags.value.forEach((tag, index) => {
-            if (item.name === tag.name) {
+function tagClick(it, key, index) {
+  // if (key === 'train_sdk' || key === 'infer_sdk' || key === 'licenses') {
+  if (key === '应用分类') {
+    renderList.value.forEach((a) => {
+      if (a.domain === key) {
+        if (it.isActive) {
+          it.isActive = false;
+          a.items[index].items.forEach((item) => {
+            item.isSelected = false;
+          });
+          headTags.value.forEach((item, index) => {
+            if (item.name === it.name) {
               headTags.value.splice(index, 1);
             }
           });
-          item.isActive = false;
+        } else {
+          a.items[index].items.forEach((item) => {
+            if (item.isActive) {
+              headTags.value.forEach((tag, index) => {
+                if (item.name === tag.name) {
+                  headTags.value.splice(index, 1);
+                }
+              });
+              item.isActive = false;
+            }
+            item.isSelected = true;
+          });
+          it.isActive = true;
+          it.isSelected = false;
+          headTags.value.push(it);
         }
-        item.isSelected = true;
-      });
-      it.isActive = true;
-      it.isSelected = false;
-      headTags.value.push(it);
-    }
+      }
+    });
   } else {
     it.isActive = !it.isActive;
     if (it.isActive) {
@@ -813,7 +818,7 @@ watch(
                 <!-- <div v-if="menu.key == '0'" class="body-right"> -->
                 <div class="body-right">
                   <div
-                    v-for="item in renderList[menu.key].items"
+                    v-for="(item, index) in renderList[menu.key].items"
                     :key="item"
                     class="detail-box"
                   >
@@ -821,7 +826,21 @@ watch(
                       <p class="tan-title">
                         {{ item.kind }}
                       </p>
-                      <div class="tag-box">
+                      <div v-if="menu.tab === '应用分类'" class="noTask-box">
+                        <div
+                          v-for="it in item.items"
+                          :key="it"
+                          class="condition-detail"
+                          :class="[
+                            { 'condition-active': it.isActive },
+                            { 'condition-active1': it.isSelected },
+                          ]"
+                          @click="tagClick(it, menu.tab, index)"
+                        >
+                          {{ it.name }}
+                        </div>
+                      </div>
+                      <div v-else class="tag-box">
                         <div
                           v-for="it in item.items"
                           :key="it"

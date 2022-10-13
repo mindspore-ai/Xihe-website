@@ -5,7 +5,6 @@ import ExampleCesium from '@/shared/modelzoo/luojia/example-cesium';
 import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img';
 
 import OButton from '@/components/OButton.vue';
-import { ElMessage } from 'element-plus';
 
 const isSelected = ref(false);
 const cesiumContainer = ref('');
@@ -33,7 +32,12 @@ async function drawClick() {
       nowModelName.value
     );
 
-    console.log(tblob.value);
+    // TODO: blob文件获取完成后取消下载图片按钮置灰
+
+    const aurl = URL.createObjectURL(tblob.value);
+    const tempimg = document.createElement('img');
+    tempimg.src = aurl;
+    viewer.value.setImageAsLayerWithCoor(tempimg, location, true, false);
   }
 }
 
@@ -74,6 +78,7 @@ onMounted(() => {
         <OButton>结果下载</OButton>
       </div>
       <div ref="cesiumContainer"></div>
+      <div id="slider"></div>
     </div>
   </div>
 </template>

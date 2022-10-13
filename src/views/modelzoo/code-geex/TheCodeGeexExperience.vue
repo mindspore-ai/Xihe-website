@@ -94,9 +94,12 @@ function init(item) {
 
     if (
       endedContent.value &&
+      tabsList.value[activeIndex.value].code &&
       tabsList.value[activeIndex.value].code !== endedContent.value
     ) {
       isDisabled.value = false;
+    } else {
+      isDisabled.value = true;
     }
   });
 

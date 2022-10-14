@@ -49,10 +49,10 @@ export function getInferencePicture(params) {
  * 更换以文生图样例
  * @returns
  */
-export function getExampleTags() {
-  const url = `/api/foundation/taichu_opt`;
+export function getExampleTags(params) {
+  const url = `/api/foundation/random_description`;
   return request
-    .get(url, getHeaderConfig())
+    .post(url, params)
     .then((res) => {
       return res.data;
     })
@@ -100,6 +100,38 @@ export function handleVqaInference(params) {
  */
 export function handleGenerateCode(params) {
   const url = `/api/foundation/CodeGeeX`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 盘古获取随机示例
+ * @returns
+ */
+export function getExapmles(params) {
+  const url = `/api/foundation/random_description`;
+  return request
+    .post(url, params)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 盘古推理
+ * @returns
+ */
+export function handlePanguInfer(params) {
+  const url = '/api/foundation/pangu_qa';
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {

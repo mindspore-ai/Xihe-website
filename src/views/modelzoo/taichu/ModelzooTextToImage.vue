@@ -213,7 +213,7 @@ const handleNameChange = (val) => {
 };
 
 function getExampleLists() {
-  getExampleTags().then((res) => {
+  getExampleTags({ foundation_type: 1, counts: 6 }).then((res) => {
     if (res.status === 200) {
       res.data.forEach((item, index) => {
         exampleList.forEach((it, i) => {

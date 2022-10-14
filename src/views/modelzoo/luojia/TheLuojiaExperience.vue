@@ -74,15 +74,28 @@ onMounted(() => {
           {{ isSelected ? '结束框选实验区域' : '开始框选实验区域' }}
         </OButton>
 
-        <OButton @click="handleImgDownload">原图下载</OButton>
-        <OButton>结果下载</OButton>
+        <!-- <OButton @click="handleImgDownload">原图下载</OButton>
+        <OButton>结果下载</OButton> -->
       </div>
-      <div ref="cesiumContainer"></div>
-      <div id="slider"></div>
+      <div ref="cesiumContainer" class="map-container">
+        <div id="slider" class="slider"></div>
+      </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
+.map-container {
+  position: relative;
+}
+.slider {
+  position: absolute;
+  top: 0px;
+  left: -350px;
+  z-index: 9999;
+  width: 5px;
+  height: 100%;
+  background-color: #d3d3d3;
+}
 .luojia {
   &-top {
     .type {

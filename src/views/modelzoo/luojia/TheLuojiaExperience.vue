@@ -74,8 +74,8 @@ onMounted(() => {
           {{ isSelected ? '结束框选实验区域' : '开始框选实验区域' }}
         </OButton>
 
-        <OButton @click="handleImgDownload">原图下载</OButton>
-        <OButton>结果下载</OButton>
+        <!-- <OButton @click="handleImgDownload">原图下载</OButton>
+        <OButton>结果下载</OButton> -->
       </div>
       <div ref="cesiumContainer" class="map-container">
         <div id="slider" class="slider"></div>

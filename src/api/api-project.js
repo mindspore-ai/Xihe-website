@@ -250,7 +250,8 @@ export function modifyModelAdd(params, projectId) {
  * @returns
  */
 export function trainList(projectId) {
-  const url = `/api/projects/${projectId}/train/trainins/`;
+  // console.log('projectId: ', projectId);
+  const url = `/server/train/project/${projectId}/training/`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });
@@ -293,7 +294,7 @@ export function deleteTainList(projectId, trainId) {
  * @returns
  */
 export function createTrainProject(params, projectId) {
-  const url = `/api/projects/${projectId}/train/trainins/`;
+  const url = `/server/train/project/${projectId}/training`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -305,7 +306,7 @@ export function createTrainProject(params, projectId) {
  */
 export function projectFork(owner, projectId) {
   const url = `/server/project/${owner}/${projectId}`;
-  console.log(url);
+  // console.log(url);
   return request
     .post(url, null, getHeaderConfig())
     .then((res) => {

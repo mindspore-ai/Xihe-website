@@ -18,7 +18,7 @@ import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
 let detailData = reactive(useFileData().fileStoreData);
-console.log(detailData);
+// console.log(detailData);
 
 const router = useRouter();
 // const route = useRoute();
@@ -159,7 +159,7 @@ function confirmPrivate() {
     cover_id: `${photoId.value}`,
     desc: description.value,
   };
-  console.log(detailData.id);
+  // console.log(detailData.id);
   modifyProject(query, userInfoStore.userName, detailData.id).then((res) => {
     // if (res.status === 200) {
     // description.value = res.data.description;
@@ -177,7 +177,7 @@ function confirmPrivate() {
 }
 
 async function confirmRename(formEl) {
-  console.log(formEl);
+  // console.log(formEl);
   if (!formEl) return;
   if (!query.name.trim()) {
     return false;

@@ -165,7 +165,7 @@ function getDetailData() {
           if (!a.indexOf(false)) return false;
           else return true;
         });
-        console.log(headTags);
+        // console.log(headTags);
       }
       preStorage.value = JSON.stringify(headTags.value);
 
@@ -307,7 +307,7 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  console.log({ add, remove });
+  // console.log({ add, remove });
   // dialogList.menuList.forEach((menu) => {
   //   if (menu.key === 'task') {
   //     queryDate[menu.key] = [];
@@ -420,7 +420,6 @@ function getLike() {
   };
   getUserDig(params)
     .then((res) => {
-      console.log('点赞、收藏结果: ', res);
       getDetailData();
     })
     .catch((err) => {
@@ -437,7 +436,6 @@ function cancelLike() {
   };
   cancelCollection(params).then((res) => {
     detailData.value.liked = false;
-    console.log('取消收藏结果: ', res);
     getDetailData();
   });
 }

@@ -45,7 +45,7 @@ const zoomlv = ref(18);
 const tblob = ref(null);
 
 async function handleDrawClick() {
-  console.log(viewer);
+  // console.log(viewer);
   isSelected.value = !isSelected.value;
   //  开始选区/结束选区
   isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
@@ -53,7 +53,7 @@ async function handleDrawClick() {
   if (!isSelected.value) {
     // 获取矩形框坐标
     const location = viewer.value.drawer.getAnsShapeRectCoor();
-    console.log(location);
+    // console.log(location);
     const ltpoint = [location.west, location.north];
     const rbpoint = [location.east, location.south];
     tblob.value = await rectToImg(
@@ -62,7 +62,7 @@ async function handleDrawClick() {
       zoomlv.value,
       nowModelName.value
     );
-    console.log(tblob.value);
+    // console.log(tblob.value);
     // blob文件获取完成后取消下载图片按钮置灰
 
     const aurl = URL.createObjectURL(tblob.value);
@@ -73,7 +73,7 @@ async function handleDrawClick() {
 }
 
 function handleCompareClick() {
-  console.log(1);
+  // console.log(1);
   isShowSlider.value = !isShowSlider.value;
 }
 // 下载图片

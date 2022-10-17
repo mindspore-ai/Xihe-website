@@ -352,6 +352,33 @@ function handleBlur() {
             v-if="(modelCount || datasetCount || projectCount) && keyword"
             class="search-result"
           >
+            <!-- TODO:用户搜索结果 -->
+            <!-- <div v-show="userData.length" class="search-result-items">
+              <div class="result-items-title">
+                <div class="items-title-name">
+                  <img :src="userImg" alt="" />
+                  <span>用户</span>
+                </div>
+                <div class="search-result-num" @click="getuser(keyword)">
+                  <span class="related-result"
+                    >查看{{ userCount }}个相关用户</span
+                  >
+                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
+                </div>
+              </div>
+              <div class="result-items-item">
+                <ul>
+                  <li
+                    v-for="(user, index) in projectResult"
+                    v-show="index < 3"
+                    :key="index"
+                    class="result-item-list"
+                    @click="goProjectDetail(index, user)"
+                    v-html="user"
+                  ></li>
+                </ul>
+              </div>
+            </div> -->
             <div v-show="projectData.length" class="search-result-items">
               <div class="result-items-title">
                 <div class="items-title-name">

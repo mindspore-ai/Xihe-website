@@ -264,16 +264,17 @@ function confirmClick() {
   }
 }
 
-const deleteRelate = ref(false);
+/* const deleteRelate = ref(false);
 function cancelClick() {
   deleteRelate.value = false;
-}
+} */
 
 // 删除数据集、模型
 function deleteClick(item) {
-  if (item[1] === 'related_datasets') {
+  console.log('item: ', item);
+  if (item.type === 'dataset') {
     deleteDataset(
-      { id: item[0].id, owner: item[0].owner.name },
+      { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
@@ -285,9 +286,9 @@ function deleteClick(item) {
       emit('on-click');
       // }
     });
-  } else if (item[1] === 'related_models') {
+  } else if (item.type === 'model') {
     deleteModel(
-      { id: item[0].id, owner: item[0].owner.name },
+      { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
@@ -470,7 +471,7 @@ function toggleDelDlg(flag) {
         </div>
         <div class="download-data-right">
           <h4 class="download-title">{{ i18n.fork }}</h4>
-          <span class="download-count">{{ detailData.fork }}</span>
+          <span class="download-count">{{ detailData.fork_count }}</span>
         </div>
       </div>
       <!-- 添加数据集 -->
@@ -486,20 +487,14 @@ function toggleDelDlg(flag) {
           </p>
         </div>
         <div class="dataset-box">
-          <no-relate
-            v-if="
-              !detailData.related_datasets ||
-              !detailData.related_datasets.length
-            "
-            :relate-name="'dataset'"
-          ></no-relate>
           <relate-card
-            :detail-data="detailData"
+            v-if="detailData.related_datasets"
+            :detail-data="detailData.related_datasets"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetasetClick"
-            @cancel="cancelClick"
           ></relate-card>
+          <no-relate v-else :relate-name="'dataset'"></no-relate>
         </div>
       </div>
       <!-- 删除相关弹框 -->
@@ -519,18 +514,14 @@ function toggleDelDlg(flag) {
             {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
           </p>
         </div>
-        <no-relate
-          v-if="
-            !detailData.related_models || detailData.related_models.length === 0
-          "
-          :relate-name="'model'"
-        ></no-relate>
         <relate-card
-          :detail-data="detailData"
+          v-if="detailData.related_models"
+          :detail-data="detailData.related_models"
           :name="'related_models'"
           @delete="deleteClick"
           @jump="goDetailClick"
         ></relate-card>
+        <no-relate v-else :relate-name="'model'"></no-relate>
       </div>
     </div>
 

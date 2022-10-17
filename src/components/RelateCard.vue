@@ -16,6 +16,7 @@ const i18n = {
 };
 
 const props = defineProps({
+  // 相关数据集、模型的详情信息
   detailData: {
     type: Object,
     default: null,
@@ -29,20 +30,23 @@ const props = defineProps({
     default: false,
   },
 });
-// console.log('detailData',props.detailData);
+console.log('相关模型信息', props.detailData);
 const emit = defineEmits(['delete', 'jump', 'cancel']);
 
 function removeItemClick(item) {
-  emit('delete', [item, props.name]);
+  console.log('item: ', item);
+  // emit('delete', [item, props.name]);
+  emit('delete', item);
 }
 
 function goDetailClick(item) {
+  console.log('item: ', item);
   emit('jump', item);
 }
 
-function cancelClick() {
+/* function cancelClick() {
   emit('cancel');
-}
+} */
 
 const delRelate = ref(null);
 
@@ -54,44 +58,42 @@ watch(
 );
 </script>
 <template>
-  <div>
-    <delete-relate
+  <div v-if="detailData.length">
+    <!-- <delete-relate
       :del-relate="delRelate"
       @cancel="cancelClick"
-    ></delete-relate>
+    ></delete-relate> -->
     <div
-      v-for="item in detailData[name]"
+      v-for="item in detailData"
       :key="item"
       class="dataset-item"
       @click="goDetailClick(item)"
     >
       <o-icon
-        v-if="userInfo.userName === detailData.owner"
+        v-if="userInfo.userName === item.owner.name"
         class="remove-item"
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove
       ></o-icon>
       <div class="card-top">
-        <div v-if="item.owner" class="avatar">
+        <div class="avatar">
           <img :src="item.owner.avatar_id" />
         </div>
 
-        <p v-if="item.owner" class="nick-name">
-          {{ item.owner.name }}/{{ item.name }}
-        </p>
+        <p class="nick-name">{{ item.owner.name }}/{{ item.name }}</p>
       </div>
       <div class="dataset-bottom">
         <div class="download" :title="i18n.download">
           <o-icon><icon-download></icon-download></o-icon>
-          {{ detailData.download_count }}
+          {{ item.download_count }}
         </div>
         <div class="heart" title="👍">
           <o-icon><icon-heart></icon-heart></o-icon>
-          {{ detailData.download_count }}
+          {{ item.like_count }}
         </div>
         <div class="update-time" :title="i18n.uploadTime">
           <o-icon> <icon-time></icon-time></o-icon>
-          {{ detailData.updated_at.split(' ')[0] }}
+          {{ item.update_at }}
         </div>
       </div>
     </div>

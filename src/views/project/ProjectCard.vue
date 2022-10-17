@@ -49,6 +49,7 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+console.log('项目详情信息: ', detailData);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -220,7 +221,7 @@ function confirmClick() {
 
 // 删除关联仓库
 function deleteClick(item) {
-  console.log(item);
+  // console.log(item);
   // let projectId = detailData.value.id;
   // let modifyParams = {
   //   relate_infer_datasets: [],
@@ -277,7 +278,6 @@ function getReadMeFile() {
   try {
     if (detailData.value.type === 'Gradio') {
       getGuide().then((tree) => {
-        console.log('tree: ', tree);
         README = tree.data;
         codeString2.value = README;
         result2.value = mkit.render(codeString2.value);
@@ -285,7 +285,6 @@ function getReadMeFile() {
     } else {
       getGitlabTree(encodeURIComponent(''), detailData.value.repo_id)
         .then((tree) => {
-          console.log('tree2222: ', tree);
           README = tree.filter((item) => {
             return item.name === 'README.md';
           });
@@ -301,7 +300,7 @@ function getReadMeFile() {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
       /* findFile(
         `xihe-obj/projects/${route.params.user}/${routerParams.name}/`
@@ -751,19 +750,14 @@ onUnmounted(() => {
           </p>
         </div>
         <div class="dataset-box">
-          <no-relate
-            v-if="
-              !detailData.related_datasets ||
-              !detailData.related_datasets.length
-            "
-            :relate-name="'dataset'"
-          ></no-relate>
           <relate-card
-            :detail-data="detailData"
+            v-if="detailData.related_datasets"
+            :detail-data="detailData.related_datasets"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetasetClick"
-          ></relate-card>
+          ></relate-card
+          ><no-relate v-else :relate-name="'dataset'"></no-relate>
         </div>
       </div>
       <!-- 添加模型 -->
@@ -778,16 +772,14 @@ onUnmounted(() => {
             {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
           </p>
         </div>
-        <no-relate
-          v-if="!detailData.related_models || !detailData.related_models.length"
-          :relate-name="'model'"
-        ></no-relate>
         <relate-card
-          :detail-data="detailData"
+          v-if="detailData.related_models"
+          :detail-data="detailData.related_models"
           :name="'related_models'"
           @delete="deleteClick"
           @jump="goDetailClick"
         ></relate-card>
+        <no-relate v-else :relate-name="'model'"></no-relate>
       </div>
     </div>
 

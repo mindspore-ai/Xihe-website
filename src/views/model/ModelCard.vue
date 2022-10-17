@@ -33,6 +33,7 @@ const isShow1 = ref(false);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+console.log('模型详情信息: ', detailData);
 const emit = defineEmits(['on-click']);
 
 const pushParams = {
@@ -197,11 +198,11 @@ function emptyClick(ind) {
     });
   }
 }
-// TODO:子组件传路径，统一跳转
 function goDetailClick(val) {
   router.push(`/datasets/${val.owner.name}/${val.name}`);
 }
 function goProjectClick(val) {
+  console.log('val: ', val);
   router.push(`/projects/${val.owner.name}/${val.name}`);
 }
 // 文本监听
@@ -287,17 +288,14 @@ watch(
           </p>
         </div>
         <div class="dataset-box">
-          <no-relate
-            v-if="!detailData.related_datasets"
-            relate-name="dataset"
-          ></no-relate>
           <relate-card
-            v-else
-            :detail-data="detailData"
+            v-if="detailData.related_datasets"
+            :detail-data="detailData.related_datasets"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetailClick"
           ></relate-card>
+          <no-relate v-else relate-name="dataset"></no-relate>
         </div>
       </div>
       <!-- 项目 -->
@@ -305,17 +303,14 @@ watch(
         <div class="add-title">
           <h4 class="title">{{ i18n.relatedItem }}</h4>
         </div>
-        <no-relate
-          v-if="!detailData.related_projects"
-          relate-name="project"
-        ></no-relate>
         <project-relate-card
-          v-else
-          :detail-data="detailData"
+          v-if="detailData.related_projects"
+          :detail-data="detailData.related_projects"
           :name="'related_projects'"
           @delete="deleteClick"
           @jump="goProjectClick"
-        ></project-relate-card>
+        ></project-relate-card
+        ><no-relate v-else relate-name="project"></no-relate>
       </div>
     </div>
 

@@ -81,7 +81,9 @@ let query = reactive({
   name: detailData.name,
 });
 
-detailData.is_private ? (visibleIndex.value = 0) : (visibleIndex.value = 1);
+detailData.repo_type === 'private'
+  ? (visibleIndex.value = 0)
+  : (visibleIndex.value = 1);
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -94,10 +96,9 @@ function getVisiableSelect(value) {
     ? (visibleValue.value = true)
     : (visibleValue.value = false);
 }
-
-console.log('数据集详情数据: ', detailData);
+debugger;
+// console.log('数据集详情数据: ', detailData);
 async function confirmRename(formEl) {
-  console.log(11111111);
   if (!formEl) return;
   if (!query.name.trim()) {
     return false;
@@ -105,24 +106,22 @@ async function confirmRename(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       try {
-        modifyDataset(query, detailData.value.owner, detailData.value.id).then(
-          (res) => {
-            console.log('res: ', res);
-            detailData.name = res.data.name;
-            ElMessage({
-              type: 'success',
-              message: '仓库信息更新成功',
-            });
-            router.push({
-              name: 'datasetSet',
-              params: {
-                user: routerParams.user,
-                name: detailData.name,
-              },
-            });
-            routerParams.name = detailData.name;
-          }
-        );
+        modifyDataset(query, detailData.owner, detailData.id).then((res) => {
+          // console.log('res: ', res);
+          detailData.name = res.data.name;
+          ElMessage({
+            type: 'success',
+            message: '仓库信息更新成功',
+          });
+          router.push({
+            name: 'datasetSet',
+            params: {
+              user: routerParams.user,
+              name: detailData.name,
+            },
+          });
+          routerParams.name = detailData.name;
+        });
 
         /* let pathQuery = {
           new_path: `xihe-obj/datasets/${route.params.user}/${query.name}/`,
@@ -181,7 +180,7 @@ function confirmPrivate() {
     description.value = res.data.desc;
     ElMessage({
       type: 'success',
-      message: res.msg,
+      message: '修改成功',
     });
     /* } else {
       ElMessage({

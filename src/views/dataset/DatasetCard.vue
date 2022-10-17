@@ -16,6 +16,7 @@ import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';
 
 import { downloadObs, findFile } from '@/api/api-obs';
+import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
 
 const router = useRouter();
@@ -30,7 +31,6 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log('数据集详情信息: ', detailData);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -58,7 +58,26 @@ route.hash ? getReadMeFile() : '';
 // 获取README文件
 function getReadMeFile() {
   try {
-    findFile(
+    getGitlabTree(encodeURIComponent(''), detailData.value.repo_id)
+      .then((tree) => {
+        README = tree.filter((item) => {
+          return item.name === 'README.md';
+        });
+        if (README[0]) {
+          getGitlabFileRaw('README.md', detailData.value.repo_id).then(
+            (res) => {
+              res ? (codeString.value = res) : '';
+              result.value = mkit.render(codeString.value);
+            }
+          );
+        } else {
+          codeString.value = '';
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    /* findFile(
       `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`
     ).then((tree) => {
       if (
@@ -78,7 +97,7 @@ function getReadMeFile() {
           codeString.value = '';
         }
       }
-    });
+    }); */
   } catch (error) {
     console.error(error);
   }

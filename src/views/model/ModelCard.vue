@@ -12,6 +12,7 @@ import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
 import { addDataset, deleteDataset, modifyProjectAdd } from '@/api/api-model';
 import { downloadObs, findFile } from '@/api/api-obs';
+import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData, useUserInfoStore } from '@/stores';
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -62,7 +63,26 @@ const i18n = {
 // 获取README文件
 function getReadMeFile() {
   try {
-    findFile(`xihe-obj/models/${route.params.user}/${route.params.name}/`).then(
+    getGitlabTree(encodeURIComponent(''), detailData.value.repo_id)
+      .then((tree) => {
+        README = tree.filter((item) => {
+          return item.name === 'README.md';
+        });
+        if (README[0]) {
+          getGitlabFileRaw('README.md', detailData.value.repo_id).then(
+            (res) => {
+              res ? (codeString.value = res) : '';
+              result.value = mkit.render(codeString.value);
+            }
+          );
+        } else {
+          codeString.value = '';
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    /* findFile(`xihe-obj/models/${route.params.user}/${route.params.name}/`).then(
       (tree) => {
         if (
           tree.status === 200 &&
@@ -82,7 +102,7 @@ function getReadMeFile() {
           }
         }
       }
-    );
+    ); */
   } catch (error) {
     console.error(error);
   }
@@ -133,8 +153,9 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
+  console.log('item: ', item);
   let projectId = detailData.value.id;
-  if (item[1] === 'related_datasets') {
+  if (item.type === 'dataset') {
     // let modifyParams = {
     //   relate_datasets: [],
     // };
@@ -144,7 +165,7 @@ function deleteClick(item) {
     //   }
     // });
     deleteDataset(
-      { id: item[0].id, owner: item[0].owner.name },
+      { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
@@ -156,7 +177,8 @@ function deleteClick(item) {
       emit('on-click');
       // }
     });
-  } else {
+  }
+  /* else {
     let modifyParams = {
       relate_projects: [],
     };
@@ -175,7 +197,7 @@ function deleteClick(item) {
       }
     });
     return false;
-  }
+  } */
 }
 
 function goEditor() {

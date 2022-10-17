@@ -221,6 +221,7 @@ function confirmClick() {
 
 // 删除关联仓库
 function deleteClick(item) {
+  console.log('item: ', item);
   // console.log(item);
   // let projectId = detailData.value.id;
   // let modifyParams = {
@@ -229,14 +230,14 @@ function deleteClick(item) {
   // let modelParams = {
   //   relate_infer_models: [],
   // };
-  if (item[1] === 'related_datasets') {
+  if (item.type === 'dataset') {
     // detailData.value.relate_infer_datasets_list.forEach((child) => {
     //   if (item[0].id !== child.id) {
     //     modifyParams.relate_infer_datasets.push(child.id);
     //   }
     // });
     deleteDataset(
-      { id: item[0].id, owner: item[0].owner.name },
+      { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
@@ -248,14 +249,14 @@ function deleteClick(item) {
       emit('on-click');
       // }
     });
-  } else if (item[1] === 'related_models') {
+  } else if (item.type === 'model') {
     // detailData.value.relate_infer_models_list.forEach((child) => {
     //   if (item[0].id !== child.id) {
     //     modelParams.relate_infer_models.push(child.id);
     //   }
     // });
     deleteModel(
-      { id: item[0].id, owner: item[0].owner.name },
+      { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {

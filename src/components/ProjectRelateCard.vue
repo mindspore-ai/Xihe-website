@@ -25,10 +25,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['delete', 'jump']);
-console.log('相关项目信息', props.detailData);
 
 function goDetailClick(item) {
-  console.log('item: ', item);
   emit('jump', item);
 }
 </script>

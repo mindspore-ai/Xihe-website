@@ -61,20 +61,27 @@ function create(formEl) {
       console.log(valid);
       // let newList = JSON.parse(JSON.stringify(query));
       // newList.protocol = [newList.protocol];
-      createModelStore(query).then((res) => {
-        if (res.data) {
-          ElMessage({
-            type: 'success',
-            message: '创建成功',
-          });
-          router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
-        } else {
+      createModelStore(query)
+        .then((res) => {
+          if (res.data) {
+            ElMessage({
+              type: 'success',
+              message: '创建成功',
+            });
+            router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
+          } else {
+            ElMessage({
+              type: 'error',
+              message: '文件名重复，或文件名不合规',
+            });
+          }
+        })
+        .catch((err) => {
           ElMessage({
             type: 'error',
             message: '文件名重复，或文件名不合规',
           });
-        }
-      });
+        });
     } else {
       console.error('error submit!');
       return false;

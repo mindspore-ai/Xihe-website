@@ -21,47 +21,47 @@ const tdtkey = '3a696e02b3d443d903ed577690be0c8b'; //Fix:http://lbs.tianditu.gov
 //天地图URL配置
 const TDTURL_CONFIG = {
   TDT_IMG_W:
-    'http://{s}.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图影像服务地址(墨卡托投影)
   TDT_VEC_W:
-    'http://{s}.tianditu.gov.cn/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图矢量地图服务(墨卡托投影)
   TDT_CIA_W:
-    'http://{s}.tianditu.gov.cn/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default.jpg&tk=' +
     tdtkey, //在线天地图影像中文标记服务(墨卡托投影)
   TDT_CVA_W:
-    'http://{s}.tianditu.gov.cn/cva_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/cva_w/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default.jpg&tk=' +
     tdtkey, //在线天地图矢量中文标记服务(墨卡托投影)
   TDT_IMG_C:
-    'http://{s}.tianditu.gov.cn/img_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/img_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=img&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图影像服务地址(经纬度)
   TDT_VEC_C:
-    'http://{s}.tianditu.gov.cn/vec_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/vec_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=vec&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图矢量地图服务(经纬度)
   TDT_CIA_C:
-    'http://{s}.tianditu.gov.cn/cia_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/cia_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=cia&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图影像中文标记服务(经纬度)
   TDT_CVA_C:
-    'http://{s}.tianditu.gov.cn/cva_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/cva_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=cva&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图矢量中文标记服务(经纬度)
   TDT_IBO_C:
-    'http://{s}.tianditu.gov.cn/ibo_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
+    'https://{s}.tianditu.gov.cn/ibo_c/wmts?service=wmts&request=GetTile&version=1.0.0' +
     '&LAYER=cva&tileMatrixSet=c&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}' +
     '&style=default&format=tiles&tk=' +
     tdtkey, //在线天地图全球境界服务(经纬度)
@@ -117,7 +117,8 @@ const defaultProvider = new Cesium.WebMapTileServiceImageryProvider({
 const TDT_IMG_C_P = new Cesium.ProviderViewModel({
   name: '天地图影像',
   tooltip: '天地图影像',
-  iconUrl: '', //Fix:cesium地图来源选择处显示的图标存储路径
+  iconUrl:
+    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/tianditu.png', //Fix:cesium地图来源选择处显示的图标存储路径
   creationFunction: function () {
     let wmts = new Cesium.WebMapTileServiceImageryProvider({
       // url: TDTURL_CONFIG.TDT_VEC_C, // 矢量地图

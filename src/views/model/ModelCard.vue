@@ -99,8 +99,8 @@ function confirmAdd() {
   params.owner = paramsArr[0];
   params.name = paramsArr[1];
   // 训练数据集添加
-  addDataset(params, detailData.value.owner, detailData.value.id).then(
-    (res) => {
+  addDataset(params, detailData.value.owner, detailData.value.id)
+    .then((res) => {
       if (res.data.length === 0) {
         ElMessage({
           type: 'error',
@@ -126,8 +126,14 @@ function confirmAdd() {
         // }
         // });
       }
-    }
-  );
+    })
+    .catch((err) => {
+      addSearch.value = '';
+      ElMessage({
+        type: 'error',
+        message: '未查询到数据',
+      });
+    });
   isShow.value = false;
 }
 

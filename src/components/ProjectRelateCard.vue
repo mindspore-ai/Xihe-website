@@ -10,7 +10,8 @@ const i18n = {
   uploadTime: '上传时间',
 };
 
-defineProps({
+const props = defineProps({
+  // 相关项目的详情信息
   detailData: {
     type: Object,
     default: () => {
@@ -24,15 +25,17 @@ defineProps({
 });
 
 const emit = defineEmits(['delete', 'jump']);
+console.log('相关项目信息', props.detailData);
 
 function goDetailClick(item) {
+  console.log('item: ', item);
   emit('jump', item);
 }
 </script>
 <template>
-  <div>
+  <div v-if="detailData.length">
     <div
-      v-for="item in detailData[name]"
+      v-for="item in detailData"
       :key="item"
       class="project-item"
       @click="goDetailClick(item)"
@@ -66,11 +69,11 @@ function goDetailClick(item) {
         </div>
         <div class="project-bottom-right">
           <o-icon><icon-heart></icon-heart></o-icon>
-          {{ detailData.download_count }}
+          {{ item.like_count }}
 
           <div class="update-time" :title="i18n.uploadTime">
             <o-icon> <icon-time></icon-time></o-icon>
-            {{ detailData.updated_at.split(' ')[0] }}
+            {{ item.update_at }}
           </div>
         </div>
       </div>

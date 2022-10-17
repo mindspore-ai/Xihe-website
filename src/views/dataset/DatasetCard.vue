@@ -30,6 +30,7 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+console.log('数据集详情信息: ', detailData);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -175,36 +176,25 @@ watch(
       <div class="dataset-data">
         <div class="title">{{ i18n.dataset }}</div>
         <div class="dataset-box">
-          <no-relate
-            v-if="
-              !detailData.related_models ||
-              detailData.related_models.length === 0
-            "
-            relate-name="model"
-          ></no-relate>
           <relate-card
-            :detail-data="detailData"
+            v-if="detailData.related_models"
+            :detail-data="detailData.related_models"
             :name="'related_models'"
             @jump="handleDetailClick"
           ></relate-card>
+          <no-relate v-else relate-name="model"></no-relate>
         </div>
       </div>
       <!-- 相关项目 -->
       <div class="related-project">
         <div class="title">{{ i18n.relatedItem }}</div>
-        <no-relate
-          v-if="
-            !detailData.related_projects ||
-            detailData.related_projects.length === 0
-          "
-          relate-name="project"
-        ></no-relate>
         <project-relate-card
-          v-else
-          :detail-data="detailData"
+          v-if="detailData.related_projects"
+          :detail-data="detailData.related_projects"
           :name="'related_projects'"
           @jump="handleProjectClick"
         ></project-relate-card>
+        <no-relate v-else relate-name="project"></no-relate>
       </div>
     </div>
   </div>

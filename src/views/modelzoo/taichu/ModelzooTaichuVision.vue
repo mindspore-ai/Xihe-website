@@ -112,7 +112,7 @@ function handleUploadImg(url) {
 
       // 图片上传
       uploadVqaPicture(formData).then((res) => {
-        console.log(res);
+        // console.log(res);
         uploadPictureUrl.value = res.data.path;
         msgList.value.push({
           message: '',

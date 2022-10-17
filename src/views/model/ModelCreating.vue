@@ -58,7 +58,7 @@ function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log(valid);
+      // console.log(valid);
       // let newList = JSON.parse(JSON.stringify(query));
       // newList.protocol = [newList.protocol];
       createModelStore(query)

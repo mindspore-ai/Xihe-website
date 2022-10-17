@@ -280,7 +280,7 @@ function getLike() {
   };
   getUserDig(params)
     .then((res) => {
-      console.log('点赞、收藏结果: ', res);
+      // console.log('点赞、收藏结果: ', res);
       getDetailData();
     })
     .catch((err) => {
@@ -297,7 +297,7 @@ function cancelLike() {
   };
   cancelCollection(params).then((res) => {
     detailData.value.liked = false;
-    console.log('取消收藏结果: ', res);
+    // console.log('取消收藏结果: ', res);
     getDetailData();
   });
 }

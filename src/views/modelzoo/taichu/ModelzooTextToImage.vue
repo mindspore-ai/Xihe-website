@@ -133,7 +133,7 @@ function startRatiocnate1() {
       getMultiplePicture({
         desc: inferenceText.value,
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
         inferUrlList.value = res.data.pictures;
       });
 

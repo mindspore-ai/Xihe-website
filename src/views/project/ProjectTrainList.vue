@@ -67,6 +67,7 @@ let timer = null;
 // 获取训练列表
 function getTrainList() {
   trainList(projectId).then((res) => {
+    console.log('res: ', res);
     trainData.value = res.data.data;
     // console.log('trainData: ', trainData);
     if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {

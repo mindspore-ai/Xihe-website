@@ -34,7 +34,6 @@ const isShow1 = ref(false);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log('模型详情信息: ', detailData);
 const emit = defineEmits(['on-click']);
 
 const pushParams = {
@@ -80,7 +79,7 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     /* findFile(`xihe-obj/models/${route.params.user}/${route.params.name}/`).then(
       (tree) => {
@@ -159,7 +158,6 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
-  console.log('item: ', item);
   let projectId = detailData.value.id;
   if (item.type === 'dataset') {
     // let modifyParams = {
@@ -230,7 +228,7 @@ function goDetailClick(val) {
   router.push(`/datasets/${val.owner.name}/${val.name}`);
 }
 function goProjectClick(val) {
-  console.log('val: ', val);
+  // console.log('val: ', val);
   router.push(`/projects/${val.owner.name}/${val.name}`);
 }
 // 文本监听

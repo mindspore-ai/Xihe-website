@@ -75,7 +75,7 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
     /* findFile(
       `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`

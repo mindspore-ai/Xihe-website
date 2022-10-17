@@ -108,7 +108,6 @@ function getWatch(name) {
     try {
       let params = { account: name };
       getFollowing(params).then((res) => {
-        console.log('关注他人: ', res);
         userInfoStore.followingCount++;
         getFollowList();
       });
@@ -138,7 +137,6 @@ function cancelWatch(name) {
     try {
       let params = { account: name };
       cancelFollowing(params).then((res) => {
-        console.log('取消关注结果: ', res);
         // TODO:取消关注更新数据
         userInfoStore.followingCount--;
         getFollowList();

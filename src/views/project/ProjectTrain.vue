@@ -41,7 +41,7 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log('项目详情: ', detailData.value);
+// console.log('项目详情: ', detailData.value);
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
@@ -167,7 +167,7 @@ function confirmAdd() {
   } else {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    console.log('params: ', params);
+    // console.log('params: ', params);
 
     addDataset(params, detailData.value.owner, detailData.value.id).then(
       (res) => {
@@ -271,7 +271,6 @@ function cancelClick() {
 
 // 删除数据集、模型
 function deleteClick(item) {
-  console.log('item: ', item);
   if (item.type === 'dataset') {
     deleteDataset(
       { id: item.id, owner: item.owner.name },
@@ -324,7 +323,7 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
     // findFile(

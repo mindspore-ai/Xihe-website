@@ -6,7 +6,7 @@ import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { ElMessage } from 'element-plus';
-import { createTrainProject, getProjectData } from '@/api/api-project';
+import { createTrainProject } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
@@ -21,25 +21,48 @@ const route = useRoute();
 const router = useRouter();
 const queryRef = ref(null);
 const detailData = ref([]);
-// const isloading = ref(true);
 
 const form = reactive({
-  job_name: '',
-  code_dir: '',
-  frameworks: {
-    framework_type: 'MPI',
-    framework_version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
-  },
-  log_url: '',
-  inputs: '',
-  hypeparameters: '',
+  name: '',
   SDK: 'ModelArts',
+  code_dir: '',
   boot_file: '',
-  train_instance_type: 'modelarts.p3.large.public',
-  job_description: '',
-  outputs: '',
-  env_variables: '',
+  compute: {
+    type: 'MPI',
+    version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
+    flavor: 'modelarts.p3.large.public',
+  },
+  datasets: [
+    {
+      File: '', //模型或数据集的文件路径
+      key: '', //引用这个模型或数据集的参数
+      name: '', //数据集或模型仓库的名称
+      owner: '', //数据集或模型仓库的拥有者
+    },
+  ],
+  desc: '',
+  evn: [
+    /* {
+      key: '',
+      value: '',
+    }, */
+  ],
+  hyperparameter: [
+    /* {
+      key: '',
+      value: '',
+    }, */
+  ],
+  models: [
+    {
+      File: '',
+      key: '',
+      name: '',
+      owner: '',
+    },
+  ],
 });
+
 // 三级联动数据
 const selectData = reactive({
   com1: 'MindSpore',
@@ -117,7 +140,7 @@ function change1(val) {
     let a = optionData.com1.find((item) => {
       return item.value === val;
     });
-    form.frameworks.framework_type = a.content;
+    form.compute.type = a.content;
     selectData.com2 = optionData.com2[val][0].value; //根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
     change2(); //控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
   } else {
@@ -132,13 +155,13 @@ function change2() {
     let b = optionData.com2[selectData.com1].find((item) => {
       return item.value === val;
     });
-    form.frameworks.framework_version = b.content;
+    form.compute.version = b.content;
 
     selectData.com3 = optionData.com3[val][0].value;
     let c = optionData.com3[selectData.com2].find((item) => {
       return item.value === selectData.com3;
     });
-    form.train_instance_type = c.content;
+    form.compute.flavor = c.content;
   } else {
     selectData.com3 = '';
   }
@@ -210,38 +233,48 @@ async function confirmCreating(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let inputs = {},
-        outputs = {},
-        hypeparameters = {},
-        env_variables = {};
+      /* let models = {},
+        datasets = {},
+        hyperparameter = {},
+        evn = {};
       try {
-        inputs = JSON.parse(form.inputs);
-        outputs = JSON.parse(form.outputs);
-        hypeparameters = JSON.parse(form.hypeparameters);
-        env_variables = JSON.parse(form.env_variables);
+        models = JSON.parse(form.models);
+        datasets = JSON.parse(form.datasets);
+        hyperparameter = JSON.parse(form.hyperparameter);
+        evn = JSON.parse(form.evn);
       } catch (e) {
         // console.error(e);
+      } */
+      if (form.models[0].name === '') {
+        form.models = [];
+      }
+      if (form.datasets[0].name === '') {
+        form.datasets = [];
       }
       let params = {
-        job_name: form.job_name,
-        code_dir: form.code_dir,
-        frameworks: {
-          framework_type: form.frameworks.framework_type,
-          framework_version: form.frameworks.framework_version,
-        },
-        log_url: form.log_url,
-        inputs: inputs,
-        hypeparameters: hypeparameters,
+        name: form.name,
         SDK: form.SDK,
+        code_dir: form.code_dir,
         boot_file: form.boot_file,
-        train_instance_type: form.train_instance_type,
-        job_description: form.job_description,
-        outputs: outputs,
-        env_variables: env_variables,
+        compute: {
+          type: form.compute.type,
+          version: form.compute.version,
+          flavor: form.compute.flavor,
+        },
+        models: form.models,
+        datasets: form.datasets,
+        desc: form.desc,
+        evn: form.evn,
+        hyperparameter: form.hyperparameter,
+        // inputs: inputs,
+        // train_instance_type: form.train_instance_type,
+        // outputs: outputs,
       };
       // params.inputs = inputs;
       // params.outputs = outputs;
+      console.log('route.query.id: ', route.query.id);
       createTrainProject(params, route.query.id).then((res) => {
+        console.log('res: ', res);
         if (res.status === 200) {
           ElMessage({
             type: 'success',
@@ -268,7 +301,7 @@ async function confirmCreating(formEl) {
   });
   await verify(
     formEl,
-    'job_name',
+    'name',
     '训练名称为1-8位且只包含大小写字母、数字、下划线格式,请重新输入'
   );
   await verify(
@@ -279,9 +312,9 @@ async function confirmCreating(formEl) {
   await verify(
     formEl,
     'boot_file',
-    '启动文件名只能包含数字，字母，下划线，且为.py文件,请重新输入'
+    '启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件,请重新输入'
   );
-  await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
+  // await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
 }
 
 // 校验输入框里的内容是否为json格式
@@ -304,16 +337,17 @@ const checkBootfile = (rule, value, callback) => {
   } else {
     // 判断数组的第一个元素只含有数字，字母，下划线
     let arr = value.split('.');
-    if (arr[0].match(/^[a-zA-Z0-9_]+$/) && arr[1] === 'py') {
+    if (arr[0].match(/^[a-zA-Z0-9_/]+$/) && arr[1] === 'py') {
       callback();
     } else {
-      callback(new Error('启动文件名只能包含数字，字母，下划线，且为.py文件'));
+      callback(
+        new Error('启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件')
+      );
     }
   }
 };
-
 const rules = reactive({
-  job_name: [
+  name: [
     {
       required: true,
       message: '必填项',
@@ -348,29 +382,22 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
-  // frameworks: [
+  // compute: [
   //   {
   //     required: true,
   //     message: '必填项',
   //     trigger: 'blur',
   //   },
   // ],
-  log_url: [
+  /* log_url: [
     {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
     { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
-  ],
-  // train_instance_type: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  inputs: [
+  ], */
+  /*   inputs: [
     {
       validator: checkJson,
       trigger: 'blur',
@@ -381,14 +408,14 @@ const rules = reactive({
       validator: checkJson,
       trigger: 'blur',
     },
-  ],
-  // hypeparameters: [
+  ], */
+  // hyperparameter: [
   //   {
   //     validator: checkJson,
   //     trigger: 'blur',
   //   },
   // ],
-  // env_variables: [
+  // evn: [
   //   {
   //     validator: checkJson,
   //     trigger: 'blur',
@@ -430,12 +457,22 @@ const rules = reactive({
                 <div class="item-title">
                   <icon-necessary></icon-necessary><span>训练名称</span>
                 </div>
-                <el-form-item prop="job_name">
-                  <el-input
-                    v-model="form.job_name"
-                    placeholder="请输入训练名"
-                  />
+                <el-form-item prop="name">
+                  <el-input v-model="form.name" placeholder="请输入训练名" />
                 </el-form-item>
+              </div>
+              <div class="createfile-form-item">
+                <div class="item-title">
+                  <icon-necessary></icon-necessary><span>训练平台</span>
+                </div>
+                <el-form-item prop="SDK">
+                  <el-select v-model="form.SDK" placeholder="请选择">
+                    <el-option label="ModelArts" value="ModelArts" />
+                  </el-select>
+                </el-form-item>
+                <!-- <el-form-item>
+                  <el-input v-model="form.SDK" placeholder="请输入训练平台" />
+                </el-form-item> -->
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
@@ -451,63 +488,67 @@ const rules = reactive({
               </div>
               <div class="createfile-form-item">
                 <div class="item-title">
-                  <icon-necessary></icon-necessary><span>框架版本</span>
+                  <icon-necessary></icon-necessary><span>启动文件</span>
                 </div>
-                <el-form-item prop="frameworks">
-                  <el-select
-                    v-model="selectData.com1"
-                    placeholder="请选择"
-                    style="width: 30%; margin-right: 3%"
-                    @change="change1"
-                  >
-                    <el-option
-                      v-for="x in optionData.com1"
-                      :key="x.value"
-                      :value="x.value"
-                      :label="x.name"
-                    ></el-option>
-                  </el-select>
-                  <el-select
-                    v-model="selectData.com2"
-                    placeholder="请选择"
-                    style="width: 67%"
-                    @change="change2"
-                  >
-                    <el-option
-                      v-for="x in optionData.com2[selectData.com1]"
-                      :key="x.value"
-                      :value="x.value"
-                      :label="x.name"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>日志路径</span>
-                </div>
-                <el-form-item
-                  placeholder="请输入训练日志输出路径"
-                  prop="log_url"
-                >
+                <el-form-item prop="boot_file">
                   <el-input
-                    v-model="form.log_url"
-                    placeholder="请输入训练日志输出路径"
+                    v-model="form.boot_file"
+                    placeholder="请输入文件名"
                   />
                 </el-form-item>
               </div>
-              <!-- TODO:新增 -->
-              <div class="createfile-form-item">
+              <div class="createfile-form-item frameworks">
                 <div class="item-title">
-                  <icon-necessary></icon-necessary><span>模型</span>
+                  <icon-necessary></icon-necessary><span>框架版本</span>
                 </div>
-                <el-form-item placeholder="请输入模型名" prop="log_url">
-                  <el-input v-model="form.log_url" placeholder="请输入模型名" />
+                <el-form-item prop="compute">
+                  <div class="version">
+                    <el-select
+                      v-model="selectData.com1"
+                      placeholder="请选择"
+                      style="width: 30%; margin-right: 3%"
+                      @change="change1"
+                    >
+                      <el-option
+                        v-for="x in optionData.com1"
+                        :key="x.value"
+                        :value="x.value"
+                        :label="x.name"
+                      ></el-option>
+                    </el-select>
+                    <el-select
+                      v-model="selectData.com2"
+                      placeholder="请选择"
+                      style="width: 67%"
+                      @change="change2"
+                    >
+                      <el-option
+                        v-for="x in optionData.com2[selectData.com1]"
+                        :key="x.value"
+                        :value="x.value"
+                        :label="x.name"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div class="resource">
+                    <span class="item-title">
+                      <icon-necessary></icon-necessary><span>计算资源</span>
+                    </span>
+                    <el-select v-model="selectData.com3" placeholder="请选择">
+                      <el-option
+                        v-for="x in optionData.com3[selectData.com2]"
+                        :key="x.value"
+                        :value="x.value"
+                        :label="x.name"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </el-form-item>
               </div>
-              <!-- <div class="createfile-form-item">
+              <div class="createfile-form-item">
                 <div class="item-title">
-                  <span class="item-title-text">输入</span>
+                  <!-- <icon-necessary></icon-necessary> -->
+                  <span class="item-title-text">模型</span>
                   <el-popover
                     placement="bottom-start"
                     :width="372"
@@ -519,32 +560,64 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <div>
-                      输入数据配置：在您的算法代码中需要解析的输入参数，比如预训练模型的路径，训练数据集的路径等。
-                      <br />格式为：
-                      <div style="color: red">
-                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"input_url":
-                        &lt;解析参数对应的值1&gt;, <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;"name":&lt;解析参数名称1&gt;
-                        <br />&nbsp;&nbsp;},{
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"input_url":
-                        &lt;解析参数对应的值2&gt;,
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                        &lt;解析参数名称2&gt; <br />}, ... ]
-                      </div>
-                      注意{}末尾不能有逗号
-                    </div>
+                    <div>模型提示</div>
                   </el-popover>
                 </div>
-                <el-form-item prop="inputs">
+                <!-- prop="model" -->
+                <el-form-item placeholder="请输入模型名" class="model">
                   <el-input
-                    id="inputs"
-                    v-model="form.inputs"
-                    type="textarea"
-                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
+                    v-model="form.models[0].owner"
+                    placeholder="请输入用户名"
+                  />
+                  <el-input
+                    v-model="form.models[0].name"
+                    placeholder="请输入模型名"
+                  />
+                  <el-input
+                    v-model="form.models[0].key"
+                    placeholder="请输入引用参数"
                   />
                 </el-form-item>
-              </div> -->
+              </div>
+              <div class="createfile-form-item">
+                <div class="item-title">
+                  <!-- <icon-necessary></icon-necessary> -->
+                  <span class="item-title-text">数据集</span>
+                  <el-popover
+                    placement="bottom-start"
+                    :width="372"
+                    trigger="hover"
+                    :teleported="true"
+                  >
+                    <template #reference>
+                      <o-icon style="font-size: 18px"
+                        ><icon-poppver></icon-poppver
+                      ></o-icon>
+                    </template>
+                    <div>数据集提示</div>
+                  </el-popover>
+                </div>
+                <el-form-item
+                  placeholder="请输入模型名"
+                  prop="dataset"
+                  class="model"
+                >
+                  <el-input
+                    v-model="form.datasets[0].owner"
+                    placeholder="请输入用户名"
+                  />
+                  <el-input
+                    v-model="form.datasets[0].name"
+                    placeholder="请输入数据集名"
+                  />
+                  <el-input
+                    v-model="form.datasets[0].key"
+                    placeholder="请输入引用参数"
+                  />
+                </el-form-item>
+              </div>
+            </div>
+            <div class="createfile-form-right">
               <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">超参</span>
@@ -578,115 +651,13 @@ const rules = reactive({
                 </div>
                 <el-form-item>
                   <el-input
-                    v-model="form.hypeparameters"
+                    v-model="form.hyperparameter"
+                    hyperparameter
                     type="textarea"
                     placeholder="请输入内容，格式为[{'':''},{'':''}]"
                   />
                 </el-form-item>
               </div>
-            </div>
-            <div class="createfile-form-right">
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>训练平台</span>
-                </div>
-                <el-form-item prop="SDK">
-                  <el-select v-model="form.SDK" placeholder="请选择">
-                    <el-option label="ModelArts" value="ModelArts" />
-                  </el-select>
-                </el-form-item>
-                <!-- <el-form-item>
-                  <el-input v-model="form.SDK" placeholder="请输入训练平台" />
-                </el-form-item> -->
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>启动文件</span>
-                </div>
-                <el-form-item prop="boot_file">
-                  <el-input
-                    v-model="form.boot_file"
-                    placeholder="请输入文件名"
-                  />
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>计算资源</span>
-                </div>
-                <el-form-item prop="train_instance_type">
-                  <el-select v-model="selectData.com3" placeholder="请选择">
-                    <el-option
-                      v-for="x in optionData.com3[selectData.com2]"
-                      :key="x.value"
-                      :value="x.value"
-                      :label="x.name"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <span>描述</span>
-                </div>
-                <el-form-item placeholder="请输入描述">
-                  <el-input
-                    v-model="form.job_description"
-                    placeholder="请输入描述"
-                  />
-                </el-form-item>
-              </div>
-              <!-- TODO:新增 -->
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <span>数据集</span>
-                </div>
-                <el-form-item placeholder="请输入数据集名">
-                  <el-input
-                    v-model="form.job_description"
-                    placeholder="请输入数据集名"
-                  />
-                </el-form-item>
-              </div>
-              <!-- <div class="createfile-form-item">
-                <div class="item-title">
-                  <span class="item-title-text">输出</span>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    :teleported="true"
-                  >
-                    <template #reference>
-                      <o-icon style="font-size: 18px"
-                        ><icon-poppver></icon-poppver
-                      ></o-icon>
-                    </template>
-                    <div>
-                      输出数据配置：在您的算法代码中需要解析的输出参数，比如保存预训练模型的路径等。
-                      <br />格式为：
-                      <div style="color: red">
-                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"output_dir":
-                        &lt;解析参数对应的值1&gt;, <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;"name":&lt;解析参数名称1&gt;
-                        <br />&nbsp;&nbsp;},{
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"output_dir":
-                        &lt;解析参数对应的值2&gt;,
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                        &lt;解析参数名称2&gt; <br />}, ... ]
-                      </div>
-                      注意{}末尾不能有逗号
-                    </div>
-                  </el-popover>
-                </div>
-                <el-form-item prop="outputs">
-                  <el-input
-                    v-model="form.outputs"
-                    type="textarea"
-                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
-                  />
-                </el-form-item>
-              </div> -->
               <div class="createfile-form-item">
                 <div class="item-title">
                   <span class="item-title-text">环境变量</span>
@@ -716,9 +687,22 @@ const rules = reactive({
                 </div>
                 <el-form-item>
                   <el-input
-                    v-model="form.env_variables"
+                    v-model="form.evn"
                     type="textarea"
                     placeholder="请输入内容，格式为{'':''},为json格式"
+                  />
+                </el-form-item>
+              </div>
+              <div class="createfile-form-item">
+                <div class="item-title">
+                  <span>描述</span>
+                </div>
+                <el-form-item placeholder="请输入描述">
+                  <el-input
+                    v-model="form.desc"
+                    style="height: 98px"
+                    type="textarea"
+                    placeholder="请输入描述"
                   />
                 </el-form-item>
               </div>
@@ -727,16 +711,9 @@ const rules = reactive({
         </div>
 
         <div class="createfile-content-action">
+          <!-- form.train_instance_type && -->
           <o-button
-            v-if="
-              form.job_name &&
-              form.code_dir &&
-              form.frameworks &&
-              form.log_url &&
-              form.SDK &&
-              form.train_instance_type &&
-              form.boot_file
-            "
+            v-if="form.name && form.code_dir && form.boot_file && form.compute"
             class="confim"
             type="primary"
             loading
@@ -839,6 +816,20 @@ const rules = reactive({
               // }
             }
           }
+          .frameworks {
+            position: relative;
+            .version {
+              margin-bottom: 26px;
+            }
+            .resource {
+              width: 100%;
+              .item-title {
+                position: absolute;
+                top: 50px;
+                left: -80px;
+              }
+            }
+          }
         }
         .createfile-form-right {
           .createfile-form-item {
@@ -897,9 +888,20 @@ const rules = reactive({
       }
       .el-textarea {
         width: 100% !important;
-        height: 276px;
+        height: 284px;
         .el-textarea__inner {
           height: 100%;
+        }
+      }
+    }
+  }
+  .model {
+    .el-form-item__content {
+      .el-input {
+        width: 100%;
+        margin-bottom: 26px;
+        &:last-child {
+          margin-bottom: 0px;
         }
       }
     }

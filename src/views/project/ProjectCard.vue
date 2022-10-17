@@ -49,7 +49,6 @@ let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log('项目详情信息: ', detailData);
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -235,7 +234,6 @@ function confirmClick() {
 
 // 删除关联仓库
 function deleteClick(item) {
-  console.log('item: ', item);
   // console.log(item);
   // let projectId = detailData.value.id;
   // let modifyParams = {

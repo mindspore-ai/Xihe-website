@@ -124,8 +124,8 @@ function confirmAdd() {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
 
-    addDataset(params, detailData.value.owner, detailData.value.id).then(
-      (res) => {
+    addDataset(params, detailData.value.owner, detailData.value.id)
+      .then((res) => {
         if (res.data.length === 0) {
           ElMessage({
             type: 'error',
@@ -154,8 +154,15 @@ function confirmAdd() {
           // });
           // detailData.value.related_datasets.push(res.data);
         }
-      }
-    );
+      })
+      .catch((err) => {
+        isShow.value = false;
+        addSearch.value = '';
+        ElMessage({
+          type: 'error',
+          message: '未查询到数据',
+        });
+      });
   }
 }
 // 模型添加
@@ -194,8 +201,8 @@ function confirmClick() {
   } else {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    addModel(params, detailData.value.owner, detailData.value.id).then(
-      (res) => {
+    addModel(params, detailData.value.owner, detailData.value.id)
+      .then((res) => {
         // let modifyParams = {
         //   related_models: [],
         // };
@@ -214,8 +221,15 @@ function confirmClick() {
         addSearch.value = '';
         //   }
         // });
-      }
-    );
+      })
+      .catch((err) => {
+        isShow1.value = false;
+        addSearch.value = '';
+        ElMessage({
+          type: 'error',
+          message: '未查询到数据',
+        });
+      });
   }
 }
 

@@ -14,6 +14,7 @@ specifiers:
   eslint-plugin-vue: ^8.6.0
   highlight.js: ^11.5.1
   husky: ^7.0.4
+  js-base64: ^3.7.2
   lodash: ^4.17.21
   markdown-it: ^12.3.2
   markdown-it-anchor: ^8.6.4
@@ -43,6 +44,7 @@ dependencies:
   cesium: 1.98.1
   element-plus: 2.1.10_vue@3.2.33
   highlight.js: 11.5.1
+  js-base64: 3.7.2
   lodash: 4.17.21
   markdown-it: 12.3.2
   markdown-it-anchor: registry.npmmirror.com/markdown-it-anchor/8.6.4_markdown-it@12.3.2
@@ -1330,6 +1332,10 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
+
+  /js-base64/3.7.2:
+    resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
 
   /js-yaml/4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}

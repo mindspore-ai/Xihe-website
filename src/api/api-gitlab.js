@@ -52,26 +52,25 @@ export function creatModelRepo(params) {
 // 获取仓库详情
 export function getRepoDetailByName(params) {
   const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
-  // console.log('url: ', url);
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 //上传文件
 export async function uploadFileGitlab(params, path) {
-  const url = `/repo/projects/${
+  const url = `/server/repo/${params.name}/${
     params.id
-  }/repository/files/${encodeURIComponent(path)}`;
-  return request.post(url, params, await getGitlabConfig()).then((res) => {
+  }/file/${encodeURIComponent(path)}`;
+  return request.post(url, params, await getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 //更新上传文件
-export async function editorFileGitlab(params, path) {
-  const url = `/repo/projects/${
+export async function editorFileGitlab(params) {
+  const url = `/server/repo/${params.name}/${
     params.id
-  }/repository/files/${encodeURIComponent(path)}`;
-  return request.put(url, params, await getGitlabConfig()).then((res) => {
+  }/file/${encodeURIComponent(params.path)}`;
+  return request.put(url, params, await getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -83,20 +82,14 @@ export async function getGitlabTree(path, id) {
   });
 }
 // 删除文件
-export async function deleteFile(path, id) {
-  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
-    path
-  )}`;
-  const params = {
-    branch: 'main',
-    commit_message: 'delete file',
-  };
-
-  return request
-    .delete(url, { params, ...(await getGitlabConfig()) })
-    .then((res) => {
-      return res.data;
-    });
+export async function deleteFile(params) {
+  console.log(params);
+  const url = `/server/repo/${params.name}/${
+    params.id
+  }/file/${encodeURIComponent(params.path)}`;
+  return request.delete(url, await getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 // 删除文件夹
 export async function deleteFolder(actions, id) {
@@ -119,6 +112,7 @@ export async function getGitlabFileDetail(path, id) {
     return res.data;
   });
 }
+
 // gitlab 原文件下载
 export async function getGitlabFileRaw(path, id) {
   const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(

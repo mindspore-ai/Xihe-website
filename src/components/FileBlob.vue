@@ -91,38 +91,14 @@ function previewFile(path, id) {
       showBlob.value = false;
     }
   });
-  // getDownLoadToken({ objkey }).then((res) => {
-  //   reopt.url = res.data.signedUrl;
-  //   reopt.responseType = 'blob';
-  //   downloadFileObs(reopt).then((res) => {
-  //     rawBlob.value = res;
-  //     let reader = new FileReader();
-  //     reader.readAsText(res, 'utf-8');
-  //     reader.onload = function () {
-  //       if (
-  //         suffix.value === 'md' ||
-  //         suffix.value === 'json' ||
-  //         suffix.value === 'py' ||
-  //         suffix.value === 'txt' ||
-  //         suffix.value === 'log' ||
-  //         !reader.result.includes('�')
-  //       ) {
-  //         rawData.value = reader.result;
-  //         // md文件不需加```
-  //         suffix.value === 'md'
-  //           ? (codeString.value = reader.result)
-  //           : (codeString.value =
-  //               '```' + suffix.value + ' \n' + reader.result + '\n```');
-  //       } else {
-  //         showBlob.value = false;
-  //       }
-  //     };
-  //   });
-  // });
 }
 
-async function headleDelFile(path, id) {
-  deleteFile(path, id).then(() => {
+async function headleDelFile(path) {
+  deleteFile({
+    name: routerParams.name,
+    path: path,
+    id: repoDetailData.value.id,
+  }).then(() => {
     ElMessage({
       type: 'success',
       message: '删除成功',
@@ -153,12 +129,6 @@ getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
     previewFile(fileData.value.file_path, repoDetailData.value.repo_id);
   }
 });
-
-// findFile(path).then((res) => {
-//   if (res.status === 200 && res.data.children.length) {
-//     fileData.value = res.data.children[0];
-//   }
-// });
 
 function goRaw(blob) {
   const blobs = new Blob([blob], { type: 'text/plain;charset=utf-8' });

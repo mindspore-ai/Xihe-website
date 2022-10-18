@@ -497,7 +497,7 @@ export default class ExampleCesium {
 
     // Sync the position of the slider with the split position
     var slider = document.getElementById('slider') as any;
-    slider.style.display = 'block';
+    // slider.style.display = 'block';
 
     this.viewer.scene.splitPosition =
       (slider.offsetLeft - 0) / slider.parentElement.offsetWidth;

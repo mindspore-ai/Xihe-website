@@ -250,8 +250,7 @@ export function modifyModelAdd(params, projectId) {
  * @returns
  */
 export function trainList(projectId) {
-  // console.log('projectId: ', projectId);
-  const url = `/server/train/project/${projectId}/training/`;
+  const url = `/server/train/project/${projectId}/training`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });

@@ -73,7 +73,6 @@ async function handleDrawClick() {
 }
 
 function handleCompareClick() {
-  // console.log(1);
   isShowSlider.value = !isShowSlider.value;
 }
 // 下载图片
@@ -111,6 +110,7 @@ onMounted(() => {
     </div>
     <div class="luojia-bottom">
       <div ref="cesiumContainer" class="map-container">
+        <!-- 对比分割线 -->
         <div id="slider" class="slider"></div>
 
         <div class="select-button button-wrap" @click="handleDrawClick">
@@ -364,7 +364,7 @@ onMounted(() => {
 .slider {
   position: absolute;
   top: 0px;
-  left: -3500px;
+  // left: -3500px;
   z-index: 9999;
   width: 5px;
   height: 100%;

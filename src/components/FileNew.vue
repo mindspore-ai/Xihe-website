@@ -92,21 +92,13 @@ async function upLoadObs(formEl) {
       if (routerParams.contents.length) {
         path = `${routerParams.contents.join('/')}/${path}`;
       }
-      // let blob = new Blob([query.textValue], {
-      //   type: 'text/plain;charset=utf-8',
-      // });
-      // let file = new File([blob], query.fileName, {
-      //   type: 'text/plain;charset=utf-8',
-      //   lastModified: Date.now(),
-      // });
+
       uploadFileGitlab(
         {
-          branch: 'main',
-          author_email: userInfoStore.email,
-          author_name: userInfoStore.userName,
+          name: routerParams.name,
           content: query.textValue,
           commit_message: `created ${query.folderName}`,
-          id: repoDetailData.value.repo_id,
+          id: repoDetailData.value.id,
         },
         path
       ).then(() => {

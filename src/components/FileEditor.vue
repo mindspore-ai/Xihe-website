@@ -73,21 +73,12 @@ function previewFile(path, id) {
 }
 
 async function uploadGitlab() {
-  // 构造文件对象
-  // let blob = new Blob([codeString.value], {
-  //   type: 'text/plain;charset=utf-8',
-  // });
-  // let file = new File([blob], fileData.name, {
-  //   type: 'text/plain;charset=utf-8',
-  //   lastModified: Date.now(),
-  // });
   await editorFileGitlab(
     {
-      branch: 'main',
-      author_email: userInfoStore.email,
-      author_name: userInfoStore.userName,
+      name: routerParams.name,
       content: codeString.value,
-      id: repoDetailData.value.repo_id,
+      path: path,
+      id: repoDetailData.value.id,
       commit_message: description.value || `edit ${fileData.file_name}`,
     },
     path

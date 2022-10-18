@@ -102,18 +102,18 @@ const optionData = reactive({
         name: 'GPU:1*NVIDIA-V100(32GB)|CPU:8核 64GB 3200 GB',
         content: 'modelarts.p3.large.public',
       },
-      {
+      /* {
         value: 'A12',
         name: 'GPU:8*NVIDIA-V100(32GB)|CPU:72核 512GB 3200 GB',
         content: 'modelarts.p3.8xlarge.public',
-      },
+      }, */
     ],
     B1: [
-      {
+      /* {
         value: 'B11',
         name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
         content: 'modelarts.kat1.8xlarge.public',
-      },
+      }, */
       {
         value: 'B12',
         name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
@@ -121,11 +121,11 @@ const optionData = reactive({
       },
     ],
     B2: [
-      {
+      /* {
         value: 'B21',
         name: 'Ascend: 8*Ascend 910(32GB) | ARM: 192核 768GB 3200GB',
         content: 'modelarts.kat1.8xlarge.public',
-      },
+      }, */
       {
         value: 'B22',
         name: 'Ascend: 1*Ascend 910(32GB) | ARM: 24核 96GB 3200GB',
@@ -275,25 +275,25 @@ async function confirmCreating(formEl) {
       console.log('route.query.id: ', route.query.id);
       createTrainProject(params, route.query.id).then((res) => {
         console.log('res: ', res);
-        if (res.status === 200) {
-          ElMessage({
-            type: 'success',
-            message: '创建训练实例成功',
-            center: true,
+        // if (res.status === 200) {
+        ElMessage({
+          type: 'success',
+          message: '创建训练实例成功',
+          center: true,
+        });
+        setTimeout(() => {
+          router.push({
+            name: 'projectTrainList',
           });
-          setTimeout(() => {
-            router.push({
-              name: 'projectTrainList',
-            });
-          }, 500);
-        } else {
+        }, 500);
+        /*  } else {
           ElMessage({
             type: 'error',
             message: res.msg,
             duration: 5000,
             center: true,
           });
-        }
+        } */
       });
     } else {
       return false;
@@ -571,7 +571,7 @@ const rules = reactive({
                   />
                   <el-input
                     v-model="form.models[0].name"
-                    placeholder="请输入模型名"
+                    placeholder="请输入模型名（以model-开头）"
                   />
                   <el-input
                     v-model="form.models[0].key"
@@ -598,7 +598,7 @@ const rules = reactive({
                   </el-popover>
                 </div>
                 <el-form-item
-                  placeholder="请输入模型名"
+                  placeholder="请输入数据集名"
                   prop="dataset"
                   class="model"
                 >
@@ -608,7 +608,7 @@ const rules = reactive({
                   />
                   <el-input
                     v-model="form.datasets[0].name"
-                    placeholder="请输入数据集名"
+                    placeholder="请输入数据集名（以dataset-开头）"
                   />
                   <el-input
                     v-model="form.datasets[0].key"

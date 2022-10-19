@@ -91,19 +91,20 @@ function sendMessage() {
   });
 }
 
-// 换一批"请输入foundation_type和counts"
-function refreshTags() {
+// 获取示例
+function handleGetExamples() {
   getExapmles({ foundation_type: 2, counts: 5 }).then((res) => {
     if (res.status === 200) {
-      res.data.forEach((item, index) => {
-        examples.forEach((it, i) => {
-          if (index === i) {
-            it.text = item;
-          }
-        });
+      res.data.forEach((item, i) => {
+        examples[i].text = item;
       });
     }
   });
+}
+
+// 换一批"请输入foundation_type和counts"
+function refreshTags() {
+  handleGetExamples();
 }
 
 function handleTextChange() {
@@ -141,6 +142,8 @@ watch(
 );
 
 onMounted(() => {
+  handleGetExamples();
+
   document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
       //回车执行查询
@@ -154,7 +157,6 @@ onMounted(() => {
     <div class="vision-box">
       <div class="title">
         <span>对话生成（Dialogue Generation）</span>
-        <!-- <span class="new-tag">new</span> -->
       </div>
 
       <p class="description">
@@ -191,7 +193,7 @@ onMounted(() => {
           <el-input
             id="inpMsg"
             v-model="inputMsg"
-            placeholder="请用简体中文输入问题，不超过30个字"
+            placeholder="请用简体中文输入问题或选择下方样例，不超过30个字"
             style="width: 100%"
             maxlength="30"
             @input="handleTextChange"

@@ -58,7 +58,7 @@ watch(
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
             >大模型</el-breadcrumb-item
           >
-          <el-breadcrumb-item>CodeGeex</el-breadcrumb-item>
+          <el-breadcrumb-item>CodeGeeX</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
 

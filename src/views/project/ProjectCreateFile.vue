@@ -245,12 +245,7 @@ async function confirmCreating(formEl) {
       } catch (e) {
         // console.error(e);
       } */
-      if (form.models[0].name === '') {
-        form.models = [];
-      }
-      if (form.datasets[0].name === '') {
-        form.datasets = [];
-      }
+
       let params = {
         name: form.name,
         SDK: form.SDK,
@@ -272,6 +267,20 @@ async function confirmCreating(formEl) {
       };
       // params.inputs = inputs;
       // params.outputs = outputs;
+      if (
+        params.models[0].owner === '' ||
+        params.models[0].name ||
+        params.models[0].key
+      ) {
+        params.models = [];
+      }
+      if (
+        params.datasets[0].owner === '' ||
+        params.datasets[0].name ||
+        params.datasets[0].key
+      ) {
+        params.datasets = [];
+      }
       console.log('route.query.id: ', route.query.id);
       createTrainProject(params, route.query.id).then((res) => {
         console.log('res: ', res);
@@ -302,7 +311,7 @@ async function confirmCreating(formEl) {
   await verify(
     formEl,
     'name',
-    '训练名称为1-8位且只包含大小写字母、数字、下划线格式,请重新输入'
+    '训练名称为5-50位且只包含大小写字母、数字、下划线格式,请重新输入'
   );
   await verify(
     formEl,
@@ -354,8 +363,8 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      pattern: /^[a-zA-Z0-9_]{0,8}$/,
-      message: '请输入一个1-8位且只包含大小写字母、数字、下划线的名称',
+      pattern: /^[a-zA-Z0-9_]{5,50}$/,
+      message: '请输入一个5-50位且只包含大小写字母、数字、下划线的名称',
       trigger: 'blur',
     },
   ],
@@ -381,6 +390,13 @@ const rules = reactive({
       trigger: 'blur',
     },
     { validator: checkBootfile, trigger: 'blur' },
+  ],
+  modelName: [
+    {
+      pattern: /^[a-zA-Z0-9_]{5,50}$/,
+      message: '请输入以 / 结尾的路径格式5-50',
+      trigger: 'blur',
+    },
   ],
   // compute: [
   //   {
@@ -569,6 +585,7 @@ const rules = reactive({
                     v-model="form.models[0].owner"
                     placeholder="请输入用户名"
                   />
+
                   <el-input
                     v-model="form.models[0].name"
                     placeholder="请输入模型名（以model-开头）"
@@ -804,7 +821,7 @@ const rules = reactive({
             position: relative;
             .item-title {
               position: absolute;
-              transform: translateY(38%);
+              transform: translateY(50%);
               display: flex;
               align-items: center;
               .item-title-text {
@@ -883,6 +900,9 @@ const rules = reactive({
       .el-input {
         width: 100%;
       }
+      /* .el-form-item {
+        margin-bottom: 0px;
+      } */
       .el-select {
         width: 100%;
       }

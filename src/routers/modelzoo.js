@@ -100,8 +100,25 @@ export default [
     path: '/modelzoo/pangu',
     name: 'pangu',
     component: () => {
-      return import('@/views/modelzoo/ModelzooPangu.vue');
+      return import('@/views/modelzoo/pangu/ThePangu.vue');
     },
+    children: [
+      {
+        path: '',
+        name: 'panguExperience',
+        component: () => {
+          return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'panguIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
+        },
+      },
+      // :TODO: 路由
+    ],
   },
   // 鹏程.神农
   {

@@ -210,8 +210,7 @@ console.log(getHeaderConfig().headers);
 // const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${projectId}/training`,
-  [],
-  getHeaderConfig()
+  [getHeaderConfig().headers['private-token']]
 );
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
@@ -221,7 +220,7 @@ socket.onopen = function () {
 
 // // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到服务器的消息', event);
+  console.log('收到服务器的消息', JSON.parse(event.data).data);
   //   trainData.value = JSON.parse(event.data).data;
   //   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
   //     clearInterval(timer);

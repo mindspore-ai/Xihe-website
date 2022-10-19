@@ -5,7 +5,7 @@ import ExampleCesium from '@/shared/modelzoo/luojia/example-cesium';
 import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img';
 
 import IconSelect from '~icons/app/luojia-select';
-import IconCompare from '~icons/app/luojia-compare';
+// import IconCompare from '~icons/app/luojia-compare';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
@@ -35,7 +35,7 @@ const gridData = [
   },
 ];
 
-const isShowSlider = ref(false);
+// const isShowSlider = ref(false);
 
 const isSelected = ref(false);
 const cesiumContainer = ref('');
@@ -72,9 +72,9 @@ async function handleDrawClick() {
   }
 }
 
-function handleCompareClick() {
-  isShowSlider.value = !isShowSlider.value;
-}
+// function handleCompareClick() {
+//   isShowSlider.value = !isShowSlider.value;
+// }
 // 下载图片
 // function handleImgDownload() {
 //   if (tblob.value) {
@@ -119,12 +119,12 @@ onMounted(() => {
         </div>
 
         <div class="result-button button-wrap">
-          <div @click="handleCompareClick">
+          <!-- <div @click="handleCompareClick">
             <o-icon><icon-compare></icon-compare></o-icon>
             <span>开启对比</span>
           </div>
 
-          <span class="divider"></span>
+          <span class="divider"></span> -->
 
           <div @click="dialogTableVisible = true">
             <o-icon><icon-history></icon-history></o-icon>

@@ -16,7 +16,7 @@ import warningImg from '@/assets/icons/warning.png';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
-
+import { LOGIN_KEYS } from '@/shared/login';
 import { useRouter, useRoute } from 'vue-router';
 import { useFileData, useUserInfoStore } from '@/stores';
 import {
@@ -65,20 +65,20 @@ goHome();
 
 let timer = null;
 // 获取训练列表
-function getTrainList() {
-  trainList(projectId).then((res) => {
-    console.log('res: ', res);
-    trainData.value = res.data.data;
-    // console.log('trainData: ', trainData);
-    if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
-      timer = setInterval(() => {
-        socket.send(JSON.stringify({ pk: detailData.value.id }));
-      }, 1000);
-    } else {
-    }
-  });
-}
-getTrainList();
+// function getTrainList() {
+//   trainList(projectId).then((res) => {
+//     console.log('res: ', res);
+//     trainData.value = res.data.data;
+//     // console.log('trainData: ', trainData);
+//     // if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
+//     //   timer = setInterval(() => {
+//     //     socket.send(JSON.stringify({ pk: detailData.value.id }));
+//     //   }, 1000);
+//     // } else {
+//     // }
+//   });
+// }
+// getTrainList();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -193,46 +193,62 @@ function resetClick(val) {
 //   });
 // }
 
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+console.log(getHeaderConfig().headers);
+
 // wss://xihe.test.osinfra.cn/wss/train_task
-const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
-// 创建好连接之后自动触发（ 服务端执行self.accept() )
+// const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
+const socket = new WebSocket(
+  `wss://${DOMAIN}/server/train/project/${projectId}/training`,
+  [getHeaderConfig().headers['private-token']]
+);
+// // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
-  // console.log('服务器已连接');
+  console.log('服务器已连接');
   socket.send(JSON.stringify({ pk: detailData.value.id }));
 };
 
-// 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+// // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  // console.log('收到服务器的消息');
-  trainData.value = JSON.parse(event.data).data;
-
-  if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
-    clearInterval(timer);
-  }
+  console.log('收到服务器的消息', JSON.parse(event.data).data);
+  //   trainData.value = JSON.parse(event.data).data;
+  //   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
+  //     clearInterval(timer);
+  //   }
 };
 
-// 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function () {
-//   console.log('服务器主动断开');
-// };
+// // 服务端主动断开连接时，这个方法也被触发。
+socket.onclose = function () {
+  console.log('服务器主动断开');
+};
 
-// function closeConn() {
-//   socket.close(); // 向服务端发送断开连接的请求
+// // function closeConn() {
+// //   socket.close(); // 向服务端发送断开连接的请求
+// // }
+
+// // 页面刷新
+// function reloadPage() {
+//   socket.close();
 // }
 
-// 页面刷新
-function reloadPage() {
-  socket.close();
-}
+// onMounted(() => {
+//   window.addEventListener('beforeunload', () => reloadPage());
+// });
 
-onMounted(() => {
-  window.addEventListener('beforeunload', () => reloadPage());
-});
-
-onUnmounted(() => {
-  socket.close();
-  clearInterval(timer);
-});
+// onUnmounted(() => {
+//   socket.close();
+//   clearInterval(timer);
+// });
 </script>
 <template>
   <div class="train-list">

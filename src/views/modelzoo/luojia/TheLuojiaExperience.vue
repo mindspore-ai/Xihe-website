@@ -423,7 +423,7 @@ onMounted(() => {
 .slider {
   position: absolute;
   top: 0px;
-  // left: -3500px;
+  left: -3500px;
   z-index: 9999;
   width: 5px;
   height: 100%;

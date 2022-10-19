@@ -302,7 +302,7 @@ onMounted(() => {
     display: none;
   }
   :deep(.cesium-viewer-toolbar) {
-    right: 330px;
+    right: 234px;
     top: 16px;
     .cesium-svgPath-svg {
       width: 20px;
@@ -329,6 +329,7 @@ onMounted(() => {
   align-items: center;
   padding: 8px;
   font-size: 14px;
+  line-height: 16px;
   cursor: pointer;
   .o-icon {
     margin-right: 8px;
@@ -348,7 +349,7 @@ onMounted(() => {
   div {
     display: flex;
     align-items: center;
-    line-height: 18px;
+    line-height: 16px;
   }
   .divider {
     // align-self: center;

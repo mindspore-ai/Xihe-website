@@ -204,8 +204,6 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-console.log(getHeaderConfig().headers);
-
 // wss://xihe.test.osinfra.cn/wss/train_task
 // const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 const socket = new WebSocket(

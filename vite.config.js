@@ -49,6 +49,10 @@ export default defineConfig({
     https: true,
     port: '9999',
     proxy: {
+      '/api/v1/': {
+        target: 'https://xihe-dev.test.osinfra.cn/',
+        changeOrigin: true,
+      },
       '/api': {
         target: 'https://xihebackend.test.osinfra.cn/',
         changeOrigin: true,

@@ -96,10 +96,10 @@ export function getMultiplePicture(params) {
  * 更换以文生图样例
  * @returns
  */
-export function getExampleTags() {
-  const url = `/api/foundation/taichu_opt`;
+export function getExampleTags(params) {
+  const url = `/api/foundation/random_description`;
   return request
-    .get(url, getHeaderConfig())
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })

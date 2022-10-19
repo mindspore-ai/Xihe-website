@@ -234,7 +234,7 @@ socket.onclose = function () {
 // //   socket.close(); // 向服务端发送断开连接的请求
 // // }
 
-// // 页面刷新
+// 页面刷新
 // function reloadPage() {
 //   socket.close();
 // }
@@ -243,10 +243,10 @@ socket.onclose = function () {
 //   window.addEventListener('beforeunload', () => reloadPage());
 // });
 
-// onUnmounted(() => {
-//   socket.close();
-//   clearInterval(timer);
-// });
+onUnmounted(() => {
+  socket.close();
+  clearInterval(timer);
+});
 </script>
 <template>
   <div class="train-list">

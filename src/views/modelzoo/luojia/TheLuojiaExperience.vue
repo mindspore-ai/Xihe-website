@@ -113,9 +113,13 @@ onMounted(() => {
         <!-- 对比分割线 -->
         <div id="slider" class="slider"></div>
 
-        <div class="select-button button-wrap" @click="handleDrawClick">
+        <div class="select-button" @click="handleDrawClick">
           <o-icon><icon-select></icon-select></o-icon>
           <span>{{ isSelected ? '结束选区' : '开始选区' }}</span>
+          <div class="select-tip">
+            左键选点，右键确定矩形
+            <div class="triangle"></div>
+          </div>
         </div>
 
         <div class="result-button button-wrap">
@@ -302,7 +306,7 @@ onMounted(() => {
     display: none;
   }
   :deep(.cesium-viewer-toolbar) {
-    right: 330px;
+    right: 234px;
     top: 16px;
     .cesium-svgPath-svg {
       width: 20px;
@@ -329,16 +333,71 @@ onMounted(() => {
   align-items: center;
   padding: 8px;
   font-size: 14px;
+  line-height: 16px;
+  position: absolute;
+  z-index: 100;
+  top: 16px;
   cursor: pointer;
   .o-icon {
     margin-right: 8px;
   }
-  position: absolute;
-  z-index: 100;
-  top: 16px;
+  &:hover {
+    color: #66e6ff;
+  }
 }
 .select-button {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
+  z-index: 100;
+  top: 16px;
   left: 16px;
+  .o-icon {
+    margin-right: 8px;
+  }
+  position: absolute;
+  &:hover {
+    color: #66e6ff;
+    .o-icon {
+      color: #66e6ff;
+    }
+    .select-tip {
+      display: block;
+    }
+  }
+}
+.select-tip {
+  position: absolute;
+  top: 52px;
+  left: 0px;
+  width: 152px;
+  z-index: 100;
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+  display: none;
+  .triangle {
+    position: absolute;
+    top: -16px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(0, 0, 0, 0.5);
+  }
 }
 
 .result-button {
@@ -348,7 +407,7 @@ onMounted(() => {
   div {
     display: flex;
     align-items: center;
-    line-height: 18px;
+    line-height: 16px;
   }
   .divider {
     // align-self: center;

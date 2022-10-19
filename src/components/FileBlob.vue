@@ -65,8 +65,13 @@ const suffix = ref('');
 const inputDom = ref(null);
 const showDel = ref(false);
 
-function previewFile(path, id) {
-  getGitlabFileRaw(path, id).then((res) => {
+function previewFile() {
+  getGitlabFileRaw({
+    user: routerParams.user,
+    path: fileData.value.file_path,
+    id: repoDetailData.value.id,
+    name: routerParams.name,
+  }).then((res) => {
     if (
       suffix.value === 'md' ||
       suffix.value === 'json' ||
@@ -233,7 +238,14 @@ watch(
           </div>
           <div
             class="file-operation-item"
-            @click="downloadFile(fileData.file_path, repoDetailData.repo_id)"
+            @click="
+              downloadFile({
+                user: routerParams.user,
+                path: fileData.file_path,
+                id: repoDetailData.id,
+                name: routerParams.name,
+              })
+            "
           >
             <o-icon><icon-download></icon-download></o-icon
             ><span class="text">{{ i18n.download }}</span>
@@ -249,7 +261,14 @@ watch(
       <div v-else class="big-file">
         文件太大或格式不支持展示但你仍然可以<span
           class="download"
-          @click="downloadFile(fileData.file_path, repoDetailData.repo_id)"
+          @click="
+            downloadFile({
+              user: routerParams.user,
+              path: fileData.file_path,
+              id: repoDetailData.id,
+              name: routerParams.name,
+            })
+          "
           >下载 </span
         ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
       </div>

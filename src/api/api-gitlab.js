@@ -1,4 +1,6 @@
 import { request } from '@/shared/axios';
+import { Base64 } from 'js-base64';
+
 import { useUserInfoStore, useLoginStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
@@ -58,18 +60,16 @@ export function getRepoDetailByName(params) {
 }
 //上传文件
 export async function uploadFileGitlab(params, path) {
-  const url = `/server/repo/${params.name}/${
-    params.id
-  }/file/${encodeURIComponent(path)}`;
+  const url = `/server/repo/${params.name}/file/${encodeURIComponent(path)}`;
   return request.post(url, params, await getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 //更新上传文件
 export async function editorFileGitlab(params) {
-  const url = `/server/repo/${params.name}/${
-    params.id
-  }/file/${encodeURIComponent(params.path)}`;
+  const url = `/server/repo/${params.name}/file/${encodeURIComponent(
+    params.path
+  )}`;
   return request.put(url, params, await getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -83,10 +83,9 @@ export async function getGitlabTree(path, id) {
 }
 // 删除文件
 export async function deleteFile(params) {
-  console.log(params);
-  const url = `/server/repo/${params.name}/${
-    params.id
-  }/file/${encodeURIComponent(params.path)}`;
+  const url = `/server/repo/${params.name}/file/${encodeURIComponent(
+    params.path
+  )}`;
   return request.delete(url, await getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -114,12 +113,20 @@ export async function getGitlabFileDetail(path, id) {
 }
 
 // gitlab 原文件下载
-export async function getGitlabFileRaw(path, id) {
-  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
-    path
-  )}/raw?ref=main`;
-
-  return request.get(url, await getGitlabConfig()).then((res) => {
+export async function getGitlabFileRaw(params) {
+  const url = `/server/repo/${params.user}//${
+    params.name
+  }/file/${encodeURIComponent(params.path)}/preview`;
+  return request.get(url, await getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+// gitlab 原文件下载
+export async function getGitlabFile(params) {
+  const url = `/server/repo/${params.user}//${
+    params.name
+  }/file/${encodeURIComponent(params.path)}`;
+  return request.get(url, await getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -156,16 +163,20 @@ export async function findAllFileByPath(fullPath, path) {
   });
 }
 
-export function downloadFile(path, id) {
-  getGitlabFileRaw(path, id).then((res) => {
-    let blob = new Blob([res], { type: 'text/plain;charset=UTF-8' });
-    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
-    let href = window.URL.createObjectURL(blob); // 创建下载的链接
-    downloadElement.href = href;
-    downloadElement.download = path; // 下载后文件名
-    document.body.appendChild(downloadElement);
-    downloadElement.click(); // 点击下载
-    document.body.removeChild(downloadElement); // 下载完成移除元素
-    window.URL.revokeObjectURL(href);
+export function downloadFile(params) {
+  getGitlabFile(params).then((res) => {
+    if (res?.data?.content) {
+      let blob = new Blob([Base64.toUint8Array(res?.data?.content).buffer], {
+        type: 'text/plain;charset=UTF-8',
+      });
+      let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+      let href = window.URL.createObjectURL(blob); // 创建下载的链接
+      // downloadElement.href = href;
+      // downloadElement.download = params.path; // 下载后文件名
+      // document.body.appendChild(downloadElement);
+      // downloadElement.click(); // 点击下载
+      // document.body.removeChild(downloadElement); // 下载完成移除元素
+      // window.URL.revokeObjectURL(href);
+    }
   });
 }

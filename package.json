@@ -17,6 +17,7 @@
     "cesium": "^1.98.1",
     "element-plus": "^2.1.10",
     "highlight.js": "^11.5.1",
+    "js-base64": "^3.7.2",
     "lodash": "^4.17.21",
     "markdown-it": "^12.3.2",
     "markdown-it-anchor": "^8.6.4",
@@ -26,6 +27,7 @@
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.13",
     "sass": "^1.50.0",
+    "swiper": "^8.4.4",
     "vue": "^3.2.25",
     "vue-clipboard3": "^2.0.0",
     "vue-router": "^4.0.14"

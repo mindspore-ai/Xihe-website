@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { Base64 } from 'js-base64';
 
 // import ODialog from '@/components/ODialog.vue';
 
@@ -28,7 +29,6 @@ import {
   getGitlabCommit,
   deleteFolder,
   getGitlabToken,
-  getGitlabFileDetail,
   findAllFileByPath,
   downloadFile,
 } from '@/api/api-gitlab';
@@ -181,11 +181,9 @@ function creatFolter(formEl) {
     if (valid) {
       uploadFileGitlab(
         {
-          branch: 'main',
-          author_email: userInfoStore.email,
-          author_name: userInfoStore.userName,
+          name: routerParams.name,
+          id: repoDetailData.value.id,
           content: '',
-          id: repoDetailData.value.repo_id,
           commit_message: `created ${query.folderName}`,
         },
         path
@@ -209,7 +207,7 @@ function cancelCreate() {
   query.folderName = '';
 }
 
-function deleteFolderClick(folderName, id) {
+function deleteFolderClick(folderName) {
   let path = folderName;
   if (contents.length) {
     path = `${contents.join('/')}/${folderName}`;
@@ -245,7 +243,11 @@ function deleteFolderClick(folderName, id) {
       }
     );
   } else {
-    deleteFile(path, id).then(() => {
+    deleteFile({
+      name: routerParams.name,
+      path: path,
+      id: repoDetailData.value.id,
+    }).then(() => {
       getFilesByPath();
       ElMessage({
         type: 'success',
@@ -340,7 +342,7 @@ watch(
         </tr>
         <template v-if="filesList.length">
           <tr
-            v-for="(item, index) in filesList"
+            v-for="item in filesList"
             :key="item.download_path"
             :class="{ 'folder-item': item.type === 'tree' }"
             class="tree-table-item"

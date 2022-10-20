@@ -28,10 +28,9 @@ import {
   deleteFolder,
   findAllFileByPath,
   downloadFile,
-  getTree,
 } from '@/api/api-gitlab';
 
-import { changeByte, formatDateTime } from '@/shared/utils';
+import { changeByte } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -102,22 +101,18 @@ let query = reactive({
 async function getDetailData(path) {
   try {
     // gitlab
-    // await getGitlabTree({
-    //   user: routerParams.user,
-    //   path: path,
-    //   id: repoDetailData.value.id,
-    //   name: routerParams.name,
-    // }).then((res) => {
-    //   if (res?.data) {
-    //     filesList.value = res.data;
-    //   }
-    // });
-    getTree().then((res) => {
-      filesList.value = res;
+    await getGitlabTree({
+      user: routerParams.user,
+      path: path,
+      id: repoDetailData.value.id,
+      name: routerParams.name,
+    }).then((res) => {
+      if (res?.data) {
+        filesList.value = res.data;
+      }
     });
-    // await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
-    //   commitData.value = res;
-    //   console.log(res);
+    // getTree().then((res) => {
+    //   filesList.value = res;
     // });
   } catch (error) {
     console.error(error);
@@ -161,7 +156,7 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
-  let contents = [...routerParams.contents, decodeURI(item.file_name)];
+  let contents = [...routerParams.contents, decodeURI(item.name)];
   let targetRoute = null;
   if (!item.is_dir) {
     targetRoute = `${prop.moduleName}FileBlob`;
@@ -359,8 +354,7 @@ watch(
               <router-link :to="goBlob(item)" class="inner-box">
                 <o-icon v-if="!item.is_dir"><icon-file></icon-file> </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
-                <!-- <span>{{ item.name }}</span> -->
-                <span>{{ item.file_name }}</span>
+                <span>{{ item.name }}</span>
               </router-link>
             </td>
             <td
@@ -390,7 +384,6 @@ watch(
             <td class="tree-table-item-from" :title="item.commit_title_html">
               <div class="inner-box">
                 <span v-if="item.IsLFSFile">LFS</span>
-                <div>{{ item.commit_title_html }}</div>
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
@@ -405,7 +398,7 @@ watch(
             </td>
             <td class="tree-table-item-time">
               <div class="inner-box">
-                {{ formatDateTime(item.commit.committed_date) }}
+                {{ item.time_pass }}
               </div>
             </td>
           </tr>

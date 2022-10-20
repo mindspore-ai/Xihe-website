@@ -32,14 +32,17 @@ const form = reactive({
     version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
     flavor: 'modelarts.p3.large.public',
   },
-  datasets: [
+  /* datasets: [
     {
       File: '', //模型或数据集的文件路径
       key: '', //引用这个模型或数据集的参数
       name: '', //数据集或模型仓库的名称
       owner: '', //数据集或模型仓库的拥有者
     },
-  ],
+  ], */
+  datasetsKey: '',
+  datasetsName: '',
+  datasetsOwner: '',
   desc: '',
   evn: [
     /* {
@@ -53,14 +56,18 @@ const form = reactive({
       value: '',
     }, */
   ],
-  models: [
+  /* models: [
     {
       File: '',
       key: '',
       name: '',
       owner: '',
     },
-  ],
+  ], */
+  modelsKey: '',
+  modelsName: '',
+  modelsOwner: '',
+  desc: '',
 });
 
 // 三级联动数据
@@ -245,7 +252,20 @@ async function confirmCreating(formEl) {
       } catch (e) {
         // console.error(e);
       } */
-
+      let models = [
+          {
+            key: form.modelsKey,
+            name: form.modelsName,
+            owner: form.modelsOwner,
+          },
+        ],
+        datasets = [
+          {
+            key: form.datasetsKey,
+            name: form.datasetsName,
+            owner: form.datasetsOwner,
+          },
+        ];
       let params = {
         name: form.name,
         SDK: form.SDK,
@@ -256,8 +276,8 @@ async function confirmCreating(formEl) {
           version: form.compute.version,
           flavor: form.compute.flavor,
         },
-        models: form.models,
-        datasets: form.datasets,
+        models: models,
+        datasets: datasets,
         desc: form.desc,
         evn: form.evn,
         hyperparameter: form.hyperparameter,
@@ -265,25 +285,26 @@ async function confirmCreating(formEl) {
         // train_instance_type: form.train_instance_type,
         // outputs: outputs,
       };
+      // console.log(params);
       // params.inputs = inputs;
       // params.outputs = outputs;
       if (
         params.models[0].owner === '' ||
-        params.models[0].name ||
-        params.models[0].key
+        params.models[0].name === '' ||
+        params.models[0].key === ''
       ) {
         params.models = [];
       }
       if (
         params.datasets[0].owner === '' ||
-        params.datasets[0].name ||
-        params.datasets[0].key
+        params.datasets[0].name === '' ||
+        params.datasets[0].key === ''
       ) {
         params.datasets = [];
       }
-      console.log('route.query.id: ', route.query.id);
+      // console.log('route.query.id: ', route.query.id);
       createTrainProject(params, route.query.id).then((res) => {
-        console.log('res: ', res);
+        // console.log('res: ', res);
         // if (res.status === 200) {
         ElMessage({
           type: 'success',
@@ -323,6 +344,9 @@ async function confirmCreating(formEl) {
     'boot_file',
     '启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件,请重新输入'
   );
+  await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
+  await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
+
   // await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
 }
 
@@ -391,10 +415,17 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
-  modelName: [
+  modelsName: [
     {
-      pattern: /^[a-zA-Z0-9_]{5,50}$/,
-      message: '请输入以 / 结尾的路径格式5-50',
+      pattern: /^model-/,
+      message: '请输入model-开头的模型名',
+      trigger: 'blur',
+    },
+  ],
+  datasetsName: [
+    {
+      pattern: /^dataset-/,
+      message: '请输入dataset-开头的数据集名',
       trigger: 'blur',
     },
   ],
@@ -576,22 +607,33 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <div>模型提示</div>
+                    <div>
+                      <span style="color: red">用户名: </span>
+                      模型仓库的拥有者。<br />
+                      <span style="color: red">模型名: </span>
+                      模型仓库的名称。（以model-开头）<br />
+                      <span style="color: red">引用参数: </span>
+                      用户要引用这个模型的参数。<br />
+                    </div>
                   </el-popover>
                 </div>
                 <!-- prop="model" -->
-                <el-form-item placeholder="请输入模型名" class="model">
+                <el-form-item
+                  prop="modelsName"
+                  placeholder="请输入模型名"
+                  class="model"
+                >
                   <el-input
-                    v-model="form.models[0].owner"
+                    v-model="form.modelsOwner"
                     placeholder="请输入用户名"
                   />
 
                   <el-input
-                    v-model="form.models[0].name"
+                    v-model="form.modelsName"
                     placeholder="请输入模型名（以model-开头）"
                   />
                   <el-input
-                    v-model="form.models[0].key"
+                    v-model="form.modelsKey"
                     placeholder="请输入引用参数"
                   />
                 </el-form-item>
@@ -611,24 +653,31 @@ const rules = reactive({
                         ><icon-poppver></icon-poppver
                       ></o-icon>
                     </template>
-                    <div>数据集提示</div>
+                    <div>
+                      <span style="color: red">用户名: </span>
+                      数据集仓库的拥有者。<br />
+                      <span style="color: red">数据集名: </span>
+                      数据集仓库的名称。（以dataset-开头）<br />
+                      <span style="color: red">引用参数: </span>
+                      用户要引用这个数据集的参数。<br />
+                    </div>
                   </el-popover>
                 </div>
                 <el-form-item
                   placeholder="请输入数据集名"
-                  prop="dataset"
+                  prop="datasetsName"
                   class="model"
                 >
                   <el-input
-                    v-model="form.datasets[0].owner"
+                    v-model="form.datasetsOwner"
                     placeholder="请输入用户名"
                   />
                   <el-input
-                    v-model="form.datasets[0].name"
+                    v-model="form.datasetsName"
                     placeholder="请输入数据集名（以dataset-开头）"
                   />
                   <el-input
-                    v-model="form.datasets[0].key"
+                    v-model="form.datasetsKey"
                     placeholder="请输入引用参数"
                   />
                 </el-form-item>
@@ -916,13 +965,18 @@ const rules = reactive({
     }
   }
   .model {
+    margin-bottom: 0px;
+
     .el-form-item__content {
       .el-input {
         width: 100%;
         margin-bottom: 26px;
-        &:last-child {
+        /* &:last-child {
           margin-bottom: 0px;
-        }
+        } */
+      }
+      .el-form-item__error {
+        top: calc(100% + -75px);
       }
     }
   }

@@ -61,6 +61,7 @@ async function upLoad(param) {
   await fileToBase64(param.file, function (content) {
     uploadFileGitlab(
       {
+        encoding: 'base64',
         name: routerParams.name,
         content: content.split(',')[1],
         commit_message: description.value || `upload ${param.file.name}`,

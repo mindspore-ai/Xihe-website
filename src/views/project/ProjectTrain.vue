@@ -306,18 +306,26 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    getGitlabTree(encodeURIComponent('train/'), detailData.value.repo_id)
+    getGitlabTree({
+      user: routerParams.user,
+      path: 'train',
+      id: detailData.value.id,
+      name: routerParams.name,
+    })
       .then((tree) => {
-        README = tree.filter((item) => {
-          return item.name === 'README.md';
+        README = tree?.data?.filter((item) => {
+          return item.Name === 'README.md';
         });
         if (README[0]) {
-          getGitlabFileRaw('train/README.md', detailData.value.repo_id).then(
-            (res) => {
-              res ? (codeString.value = res) : '';
-              result.value = mkit.render(codeString.value);
-            }
-          );
+          getGitlabFileRaw({
+            user: routerParams.user,
+            path: 'train/README.md',
+            id: detailData.value.id,
+            name: routerParams.name,
+          }).then((res) => {
+            res ? (codeString.value = res) : '';
+            result.value = mkit.render(codeString.value);
+          });
         } else {
           codeString.value = '';
         }

@@ -30,17 +30,14 @@ const props = defineProps({
     default: false,
   },
 });
-console.log('相关模型信息', props.detailData);
 const emit = defineEmits(['delete', 'jump', 'cancel']);
 
 function removeItemClick(item) {
-  // console.log('删除item: ', item);
   // emit('delete', [item, props.name]);
   emit('delete', item);
 }
 
 function goDetailClick(item) {
-  console.log('跳转详情item: ', item);
   emit('jump', item);
 }
 

@@ -77,7 +77,7 @@ function pathClick(index) {
 }
 function downloadAll() {
   gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
-    console.log(res);
+    // console.log(res);
   });
 }
 </script>

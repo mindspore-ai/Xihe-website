@@ -351,7 +351,7 @@ async function confirmCreating(formEl) {
 }
 
 // 校验输入框里的内容是否为json格式
-const checkJson = (rule, value, callback) => {
+/* const checkJson = (rule, value, callback) => {
   if (value === '') {
     callback();
   } else {
@@ -362,7 +362,7 @@ const checkJson = (rule, value, callback) => {
       callback(new Error('请输入正确的json格式内容'));
     }
   }
-};
+}; */
 
 const checkBootfile = (rule, value, callback) => {
   if (value === '') {
@@ -436,26 +436,6 @@ const rules = reactive({
   //     trigger: 'blur',
   //   },
   // ],
-  /* log_url: [
-    {
-      required: true,
-      message: '必填项',
-      trigger: 'blur',
-    },
-    { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
-  ], */
-  /*   inputs: [
-    {
-      validator: checkJson,
-      trigger: 'blur',
-    },
-  ],
-  outputs: [
-    {
-      validator: checkJson,
-      trigger: 'blur',
-    },
-  ], */
   // hyperparameter: [
   //   {
   //     validator: checkJson,

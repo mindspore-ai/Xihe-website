@@ -73,7 +73,6 @@ const showInvitationTip = computed(() => {
 });
 
 function goSetting(item) {
-  console.log('item.id: ', item.id);
   router.push(`/settings/${item.id}`);
 }
 

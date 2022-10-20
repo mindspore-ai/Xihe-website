@@ -96,7 +96,7 @@ function getVisiableSelect(value) {
     ? (visibleValue.value = true)
     : (visibleValue.value = false);
 }
-debugger;
+// debugger;
 // console.log('数据集详情数据: ', detailData);
 async function confirmRename(formEl) {
   if (!formEl) return;

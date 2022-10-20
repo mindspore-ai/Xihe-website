@@ -49,14 +49,15 @@ const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^[^\u4e00-\u9fa5]{3,64}$/g,
-      message: '暂不支持中文字符，且长度为3-64个字符',
+      pattern: /^[^\u4e00-\u9fa5]{5,42}$/g,
+      message: '暂不支持中文字符，且长度为5-42个字符',
       trigger: 'blur',
     },
     {
-      // 不能含有:*?\<>|等特殊字符
-      pattern: /^[^\*/?\\<>|:;]{3,64}$/g,
-      message: '不能含有:/*?<>|等特殊字符',
+      // 不能含有:;*?\<>|等特殊字符
+      // pattern: /^[^\*/?\\<>|:;]$/g,
+      pattern: /^[^\*/?\\<>|:;]*$/g,
+      message: '不能含有:/\\*;?<>|等特殊字符',
       trigger: 'blur',
     },
     {
@@ -225,7 +226,8 @@ onMounted(() => {});
             <el-input
               v-model="proList.name"
               :placeholder="i18n.input_proName"
-              :rules="[
+            ></el-input>
+            <!--  :rules="[
                 { required: true, message: '必填项', trigger: 'blur' },
                 {
                   pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
@@ -242,8 +244,7 @@ onMounted(() => {});
                   message: '格式不正确',
                   trigger: 'blur',
                 },
-              ]"
-            ></el-input>
+              ]" -->
             <el-popover
               placement="bottom-start"
               :width="372"
@@ -257,13 +258,13 @@ onMounted(() => {});
               <div>- 仓库名目前只支持英文</div>
               <div>
                 - 仓库名名称不能以英文句号(<span class="remind">.</span
-                >)开头或结尾，且不能包含以下字符<span class="remind"
-                  >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                >)开头或结尾，且不能包含以下字符:<span class="remind">
+                  :&nbsp;/&nbsp;\&nbsp;*&nbsp;;&nbsp;?&nbsp;&lt;&nbsp;&gt;&nbsp;|</span
                 >
               </div>
               <div>
-                -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-                  class="remind"
+                -&nbsp;仓库名建议简短<span class="remind">(5-42个字符)</span
+                >，仓库下的文件或文件夹绝对路径长度<span class="remind"
                   >不能超过1000字符</span
                 >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
               </div>

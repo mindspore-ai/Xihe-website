@@ -60,7 +60,7 @@ export function getRepoDetailByName(params) {
 }
 //上传文件
 export async function uploadFileGitlab(params, path) {
-  const url = `/server/repo/${params.name}/file/${encodeURIComponent(path)}`;
+  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(path)}`;
   return request.post(url, params, await getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -75,9 +75,11 @@ export async function editorFileGitlab(params) {
   });
 }
 // 获取 gitlab 树
-export async function getGitlabTree(path, id) {
-  const url = `/repo/projects/${id}/repository/tree?path=${path}&per_page=100`;
-  return request.get(url, await getGitlabConfig()).then((res) => {
+export async function getGitlabTree(params) {
+  const url = `/server/repo/${params.user}/${
+    params.name
+  }/files?path=${encodeURIComponent(params.path)}`;
+  return request.get(url, await getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
@@ -114,7 +116,7 @@ export async function getGitlabFileDetail(path, id) {
 
 // gitlab 原文件下载
 export async function getGitlabFileRaw(params) {
-  const url = `/server/repo/${params.user}//${
+  const url = `/server/repo/${params.user}/${
     params.name
   }/file/${encodeURIComponent(params.path)}/preview`;
   return request.get(url, await getHeaderConfig()).then((res) => {
@@ -171,12 +173,12 @@ export function downloadFile(params) {
       });
       let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
       let href = window.URL.createObjectURL(blob); // 创建下载的链接
-      // downloadElement.href = href;
-      // downloadElement.download = params.path; // 下载后文件名
-      // document.body.appendChild(downloadElement);
-      // downloadElement.click(); // 点击下载
-      // document.body.removeChild(downloadElement); // 下载完成移除元素
-      // window.URL.revokeObjectURL(href);
+      downloadElement.href = href;
+      downloadElement.download = params.path; // 下载后文件名
+      document.body.appendChild(downloadElement);
+      downloadElement.click(); // 点击下载
+      document.body.removeChild(downloadElement); // 下载完成移除元素
+      window.URL.revokeObjectURL(href);
     }
   });
 }

@@ -104,13 +104,20 @@ let query = reactive({
 async function getDetailData(path) {
   try {
     // gitlab
-    await getGitlabTree(path, repoDetailData.value.repo_id).then((res) => {
-      filesList.value = res;
+    await getGitlabTree({
+      user: routerParams.user,
+      path: path,
+      id: repoDetailData.value.id,
+      name: routerParams.name,
+    }).then((res) => {
+      if (res?.data) {
+        filesList.value = res.data;
+      }
     });
-    await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
-      commitData.value = res;
-      console.log(res);
-    });
+    // await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
+    //   commitData.value = res;
+    //   console.log(res);
+    // });
   } catch (error) {
     console.error(error);
   }
@@ -346,20 +353,18 @@ watch(
             :class="{ 'folder-item': item.type === 'tree' }"
             class="tree-table-item"
           >
-            <td class="tree-table-item-name" :title="item.name">
+            <td class="tree-table-item-name" :title="item.Name">
               <router-link :to="goBlob(item)" class="inner-box">
-                <o-icon v-if="item.type === 'blob'"
-                  ><icon-file></icon-file>
-                </o-icon>
+                <o-icon v-if="!item.IsDir"><icon-file></icon-file> </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
-                <span>{{ item.name }}</span>
+                <span>{{ item.Name }}</span>
               </router-link>
             </td>
             <td
               class="tree-table-item-download"
               width="10%"
               @click="
-                item.type === 'blob' &&
+                item.IsDir &&
                   downloadFile({
                     path: item.path,
                     id: repoDetailData.id,

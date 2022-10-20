@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import protocol from '../../../config/protocol';
+import { trainSdk, inferSdk, projectPhotos } from '../../../config/protocol';
 import { getModelTags, setNewProject } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
@@ -76,9 +77,9 @@ const rules = reactive({
 });
 
 const nameList = ref([]);
-const projectPhotos = ref([]);
-const trainSdk = ref([]);
-const inferSdk = ref([]);
+// const projectPhotos = ref([]);
+// const trainSdk = ref([]);
+// const inferSdk = ref([]);
 // const protocol = ref([]);
 
 nameList.value.push(userInfo.userName);
@@ -157,22 +158,23 @@ function setProject() {
     });
 }
 // TODO:项目封面，项目类型以及训练平台的数据
-getModelTags().then((res) => {
-  console.log(res.data);
-  projectPhotos.value = res.data.projects_photo;
-  projectPhotos.value.forEach((item) => {
-    item.is_active = false;
-  });
-  projectPhotos.value[0].is_active = true;
-  protocol.value = res.data.licenses;
-  trainSdk.value = res.data.train_sdk;
-  inferSdk.value = res.data.infer_sdk;
+// getModelTags().then((res) => {
 
-  proList.type = inferSdk.value[0].name;
-  proList.training = trainSdk.value[0].name;
-  proList.protocol = protocol.value[0].name;
-  proList.repo_type = 'public';
-});
+// projectPhotos.value = res.data.projects_photo;
+// projectPhotos.value.forEach((item) => {
+//   item.is_active = false;
+// });
+projectPhotos[0].is_active = true;
+// protocol.value = res.data.licenses;
+// trainSdk.value = res.data.train_sdk;
+// inferSdk.value = res.data.infer_sdk;
+
+proList.type = inferSdk[0].name;
+proList.training = trainSdk[0].name;
+proList.protocol = protocol[0].name;
+proList.repo_type = 'public';
+// console.log('1', trainSdk, '2', projectPhotos);
+// });
 onMounted(() => {});
 </script>
 

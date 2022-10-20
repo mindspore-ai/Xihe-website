@@ -32,3 +32,30 @@ export default [
   { id: 31, name: 'bsd-3-clause-clear' },
   { id: 32, name: 'mpl-2.0' },
 ];
+export const trainSdk = [{ id: 1, name: '"ModelArts"' }];
+export const inferSdk = [
+  { id: 1, name: 'Gradio' },
+  { id: 2, name: 'Static' },
+];
+export const projectPhotos = [
+  {
+    id: 1,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg1.png',
+    is_active: true,
+  },
+  {
+    id: 2,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg2.png',
+    is_active: false,
+  },
+  {
+    id: 3,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg3.png',
+    is_active: false,
+  },
+  {
+    id: 4,
+    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg4.png',
+    is_active: false,
+  },
+];

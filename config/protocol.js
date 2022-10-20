@@ -32,7 +32,7 @@ export default [
   { id: 31, name: 'bsd-3-clause-clear' },
   { id: 32, name: 'mpl-2.0' },
 ];
-export const trainSdk = [{ id: 1, name: '"ModelArts"' }];
+export const trainSdk = [{ id: 1, name: 'ModelArts' }];
 export const inferSdk = [
   { id: 1, name: 'Gradio' },
   { id: 2, name: 'Static' },

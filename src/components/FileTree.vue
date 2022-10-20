@@ -24,15 +24,12 @@ import {
   getGitlabTree,
   deleteFile,
   uploadFileGitlab,
-  getGitlabFileRaw,
-  getGitlabCommit,
   deleteFolder,
-  getGitlabToken,
   findAllFileByPath,
   downloadFile,
 } from '@/api/api-gitlab';
 
-import { changeByte, dataURLtoBlob, fileToBase64 } from '@/shared/utils';
+import { changeByte } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -61,7 +58,6 @@ const pushParams = {
   contents: routerParams.contents,
 };
 const filesList = ref([]);
-const commitData = ref([]);
 const prop = defineProps({
   moduleName: {
     type: String,
@@ -160,9 +156,9 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
-  let contents = [...routerParams.contents, decodeURI(item.Name)];
+  let contents = [...routerParams.contents, decodeURI(item.name)];
   let targetRoute = null;
-  if (!item.IsDir) {
+  if (!item.is_dir) {
     targetRoute = `${prop.moduleName}FileBlob`;
   } else {
     targetRoute = `${prop.moduleName}File`;
@@ -350,23 +346,23 @@ watch(
           <tr
             v-for="item in filesList"
             :key="item.download_path"
-            :class="{ 'folder-item': !item.IsDir }"
+            :class="{ 'folder-item': !item.is_dir }"
             class="tree-table-item"
           >
-            <td class="tree-table-item-name" :title="item.Name">
+            <td class="tree-table-item-name" :title="item.name">
               <router-link :to="goBlob(item)" class="inner-box">
-                <o-icon v-if="!item.IsDir"><icon-file></icon-file> </o-icon>
+                <o-icon v-if="!item.is_dir"><icon-file></icon-file> </o-icon>
                 <o-icon v-else><icon-folder></icon-folder> </o-icon>
-                <span>{{ item.Name }}</span>
+                <span>{{ item.name }}</span>
               </router-link>
             </td>
             <td
               class="tree-table-item-download"
               width="10%"
               @click="
-                !item.IsDir &&
+                !item.is_dir &&
                   downloadFile({
-                    path: item.Name,
+                    path: item.path,
                     id: repoDetailData.id,
                     name: routerParams.name,
                     user: routerParams.user,
@@ -384,7 +380,7 @@ watch(
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
-                  @click="toggleDelDlg(true, item.Name, item.IsDir)"
+                  @click="toggleDelDlg(true, item.name, item.is_dir)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
                     <icon-remove></icon-remove>

@@ -15,7 +15,6 @@ import NoRelate from '@/components/NoRelate.vue';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';
 
-import { downloadObs, findFile } from '@/api/api-obs';
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
 
@@ -66,7 +65,7 @@ function getReadMeFile() {
     })
       .then((tree) => {
         README = tree?.data?.filter((item) => {
-          return item.Name === 'README.md';
+          return item.name === 'README.md';
         });
         if (README[0]) {
           getGitlabFileRaw({

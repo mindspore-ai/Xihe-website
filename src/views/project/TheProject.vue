@@ -327,7 +327,6 @@ function getProject() {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
     projectData.value = res.data;
-    console.log(projectData);
   });
 }
 

@@ -63,7 +63,6 @@ getUserCollection(userInfo.value.userName).then((res) => {
 });
 
 function goDetail(item) {
-  console.log('item: ', item);
   if (item.resource.type.indexOf('model') !== -1) {
     router.push({
       path: `/models/${item.resource.owner.name}/${item.resource.name}`,

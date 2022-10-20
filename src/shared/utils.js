@@ -75,7 +75,7 @@ export function dataURLtoBlob(dataurl) {
   let array = arr[0].match(/:(.*?);/);
   let mime = (array && array.length > 1 ? array[1] : '') || '';
   // 去掉url的头，并转化为byte
-  console.log(arr);
+  // console.log(arr);
   let bytes = decodeURIComponent(
     escape(window.atob(arr[1].replace(/-/g, '+').replace(/_/g, '/')))
   );

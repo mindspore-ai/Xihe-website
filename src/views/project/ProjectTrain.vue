@@ -313,6 +313,7 @@ function getReadMeFile() {
       name: routerParams.name,
     })
       .then((tree) => {
+        console.log('tree: ', tree);
         README = tree?.data?.filter((item) => {
           return item.Name === 'README.md';
         });

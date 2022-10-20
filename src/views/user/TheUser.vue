@@ -20,6 +20,7 @@ import { goAuthorize } from '@/shared/login';
 import { getFollowing, cancelFollowing } from '@/api/api-user';
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
+// console.log('userInfoStore: ', userInfoStore);
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
@@ -228,6 +229,8 @@ function getFollow(name) {
         userInfo.value.isFollower = true;
         userInfo.value.fansCount++;
         currentFansList.value.unshift(loginUserInfo);
+        // console.log('currentFansList: ', currentFansList);
+        userInfoStore.followingCount++;
       });
     } catch (error) {
       console.error(error);
@@ -243,6 +246,8 @@ function cancelFollow(name) {
       currentFansList.value.splice(0, 1);
       userInfo.value.isFollower = false;
       userInfo.value.fansCount--;
+      // console.log('fansCount: ', userInfo.value.fansCount);
+      userInfoStore.followingCount--;
     });
   } catch (error) {
     console.error(error);

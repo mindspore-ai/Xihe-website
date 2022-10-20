@@ -87,7 +87,7 @@ export function modifyModel(params, owner, id) {
  */
 export function modifyTags(params, owner, id) {
   const url = `/server/model/${owner}/${id}/tags`;
-  console.log(params, owner, id);
+  // console.log(params, owner, id);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {
@@ -160,7 +160,7 @@ export function createModelStore(params) {
       return res.data;
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
 }
 /**

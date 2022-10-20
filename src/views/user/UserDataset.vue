@@ -53,7 +53,7 @@ function goDetail(user, modelName) {
 }
 function getDatasetData() {
   getUserDatasetData(query, userInfo.value.userName).then((res) => {
-    console.log('个人数据集数据: ', res);
+    // console.log('个人数据集数据: ', res);
     if (res.data.total) {
       if (res.count > 10) {
         emit('domChange', 76);

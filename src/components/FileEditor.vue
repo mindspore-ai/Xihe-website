@@ -52,8 +52,13 @@ let fileData = reactive({});
 const description = ref('');
 
 const codeString = ref('');
-function previewFile(path, id) {
-  getGitlabFileRaw(path, id).then((res) => {
+function previewFile() {
+  getGitlabFileRaw({
+    user: routerParams.user,
+    path: fileData.file_path,
+    id: repoDetailData.value.id,
+    name: routerParams.name,
+  }).then((res) => {
     suffix.value === 'json'
       ? (codeString.value = JSON.stringify(res, null, '\t'))
       : (codeString.value = res);

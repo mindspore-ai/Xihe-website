@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { Base64 } from 'js-base64';
 
 // import ODialog from '@/components/ODialog.vue';
 
@@ -361,7 +360,12 @@ watch(
               width="10%"
               @click="
                 item.type === 'blob' &&
-                  downloadFile(item.path, repoDetailData.repo_id)
+                  downloadFile({
+                    path: item.path,
+                    id: repoDetailData.id,
+                    name: routerParams.name,
+                    user: routerParams.user,
+                  })
               "
             >
               <div class="inner-box">

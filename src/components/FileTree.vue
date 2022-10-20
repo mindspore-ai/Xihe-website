@@ -160,9 +160,9 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
-  let contents = [...routerParams.contents, decodeURI(item.name)];
+  let contents = [...routerParams.contents, decodeURI(item.Name)];
   let targetRoute = null;
-  if (item.type === 'blob') {
+  if (!item.IsDir) {
     targetRoute = `${prop.moduleName}FileBlob`;
   } else {
     targetRoute = `${prop.moduleName}File`;
@@ -350,7 +350,7 @@ watch(
           <tr
             v-for="item in filesList"
             :key="item.download_path"
-            :class="{ 'folder-item': item.type === 'tree' }"
+            :class="{ 'folder-item': !item.IsDir }"
             class="tree-table-item"
           >
             <td class="tree-table-item-name" :title="item.Name">
@@ -364,9 +364,9 @@ watch(
               class="tree-table-item-download"
               width="10%"
               @click="
-                item.IsDir &&
+                !item.IsDir &&
                   downloadFile({
-                    path: item.path,
+                    path: item.Name,
                     id: repoDetailData.id,
                     name: routerParams.name,
                     user: routerParams.user,
@@ -380,11 +380,11 @@ watch(
             </td>
             <td class="tree-table-item-from" :title="item.description">
               <div class="inner-box">
-                <!-- <span>{{ commitData[index].message }}</span> -->
+                <span v-if="item.IsLFSFile">LFS</span>
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
-                  @click="toggleDelDlg(true, item.name, item.type === 'tree')"
+                  @click="toggleDelDlg(true, item.Name, item.IsDir)"
                 >
                   <o-icon @click="creatFolter(queryRef)">
                     <icon-remove></icon-remove>

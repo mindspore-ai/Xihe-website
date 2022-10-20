@@ -66,9 +66,12 @@ const inputDom = ref(null);
 const showDel = ref(false);
 
 function previewFile() {
+  path.match(/[^.]+$/)
+    ? (suffix.value = path.match(/[^.]+$/)[0])
+    : (suffix.value = 'py');
   getGitlabFileRaw({
     user: routerParams.user,
-    path: fileData.value.file_path,
+    path: path,
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
@@ -92,6 +95,7 @@ function previewFile() {
         codeString.value =
           '```' + suffix.value + ' \n' + rawData.value + '\n```';
       }
+      showBlob.value = true;
     } else {
       showBlob.value = false;
     }
@@ -124,16 +128,17 @@ function goEditor() {
   });
 }
 
-getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
-  fileData.value = res;
-  fileData.value.file_name.match(/[^.]+$/)
-    ? (suffix.value = fileData.value.file_name.match(/[^.]+$/)[0])
-    : (suffix.value = 'py');
-  if (fileData.value.size < 524288) {
-    showBlob.value = true;
-    previewFile(fileData.value.file_path, repoDetailData.value.repo_id);
-  }
-});
+previewFile();
+// getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
+//   fileData.value = res;
+//   fileData.value.file_name.match(/[^.]+$/)
+//     ? (suffix.value = fileData.value.file_name.match(/[^.]+$/)[0])
+//     : (suffix.value = 'py');
+//   if (fileData.value.size < 524288) {
+//     showBlob.value = true;
+
+//   }
+// });
 
 function goRaw(blob) {
   const blobs = new Blob([blob], { type: 'text/plain;charset=utf-8' });

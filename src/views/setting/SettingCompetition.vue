@@ -10,7 +10,6 @@ const competitionDatas = ref([]); //所有的比赛
 const competitionDatas2 = ref([]); //进行中的比赛
 const competitionDatas3 = ref([]); //已结束的比赛
 
-debugger;
 // 获取用户参加的所以比赛
 function getCompetitons() {
   getAllCompetition().then((res) => {

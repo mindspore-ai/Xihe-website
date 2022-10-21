@@ -323,6 +323,12 @@ onMounted(() => {
     background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
   }
+  :deep(.cesium-viewer-fullscreenContainer) {
+    display: none !important;
+  }
+  :deep(.cesium-widget-credits) {
+    display: none !important;
+  }
 }
 .button-wrap {
   color: #fff;

@@ -81,8 +81,8 @@ export default [
         },
       },
       {
-        path: 'test',
-        name: 'codegeexTest',
+        path: 'experience',
+        name: 'test',
         redirect: '/modelzoo/codegeex',
       },
     ],

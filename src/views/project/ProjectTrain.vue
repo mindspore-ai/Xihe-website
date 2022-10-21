@@ -315,7 +315,7 @@ function getReadMeFile() {
       .then((tree) => {
         console.log('tree: ', tree);
         README = tree?.data?.filter((item) => {
-          return item.Name === 'README.md';
+          return item.name === 'README.md';
         });
         if (README[0]) {
           getGitlabFileRaw({

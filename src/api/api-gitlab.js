@@ -67,7 +67,7 @@ export async function uploadFileGitlab(params, path) {
 }
 //更新上传文件
 export async function editorFileGitlab(params) {
-  const url = `/server/repo/${params.name}/file/${encodeURIComponent(
+  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(
     params.path
   )}`;
   return request.put(url, params, await getHeaderConfig()).then((res) => {
@@ -76,7 +76,7 @@ export async function editorFileGitlab(params) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(params) {
-  const url = `/server/repo/${params.user}/${
+  const url = `/api/v1/repo/${params.user}/${
     params.name
   }/files?path=${encodeURIComponent(params.path)}`;
   return request.get(url, await getHeaderConfig()).then((res) => {
@@ -85,7 +85,7 @@ export async function getGitlabTree(params) {
 }
 // 删除文件
 export async function deleteFile(params) {
-  const url = `/server/repo/${params.name}/file/${encodeURIComponent(
+  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(
     params.path
   )}`;
   return request.delete(url, await getHeaderConfig()).then((res) => {
@@ -116,7 +116,7 @@ export async function getGitlabFileDetail(path, id) {
 
 // gitlab 原文件下载
 export async function getGitlabFileRaw(params) {
-  const url = `/server/repo/${params.user}/${
+  const url = `/api/v1/repo/${params.user}/${
     params.name
   }/file/${encodeURIComponent(params.path)}/preview`;
   return request.get(url, await getHeaderConfig()).then((res) => {
@@ -125,7 +125,7 @@ export async function getGitlabFileRaw(params) {
 }
 // gitlab 原文件下载
 export async function getGitlabFile(params) {
-  const url = `/server/repo/${params.user}//${
+  const url = `/api/v1/repo/${params.user}//${
     params.name
   }/file/${encodeURIComponent(params.path)}`;
   return request.get(url, await getHeaderConfig()).then((res) => {

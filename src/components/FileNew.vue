@@ -117,34 +117,6 @@ async function upLoadObs(formEl) {
           },
         });
       });
-      // handleUpload(
-      //   {
-      //     file,
-      //     path,
-      //     isEdit: false,
-      //     description: query.description || `create ${query.fileName}`,
-      //   },
-      //   null,
-      //   function () {
-      //     ElMessage({
-      //       type: 'success',
-      //       message: '新建成功！你可点击“文件-编辑”编辑该文件。',
-      //     });
-      //     // 上传成功跳转详情页
-      //     let contents = [
-      //       ...route.params.contents,
-      //       ...query.fileName.split('/'),
-      //     ];
-      //     router.push({
-      //       name: `${prop.moduleName}FileBlob`,
-      //       params: {
-      //         user: route.params.user,
-      //         name: route.params.name,
-      //         contents,
-      //       },
-      //     });
-      //   }
-      // );
     } else {
       console.error('error submit!');
       return false;

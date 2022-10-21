@@ -10,8 +10,7 @@ import NoRelate from '@/components/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-import { addDataset, deleteDataset, modifyProjectAdd } from '@/api/api-model';
-import { downloadObs, findFile } from '@/api/api-obs';
+import { addDataset, deleteDataset } from '@/api/api-model';
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData, useUserInfoStore } from '@/stores';
 import { handleMarkdown } from '@/shared/markdown';
@@ -70,7 +69,7 @@ function getReadMeFile() {
     })
       .then((tree) => {
         README = tree?.data?.filter((item) => {
-          return item.Name === 'README.md';
+          return item.name === 'README.md';
         });
         if (README[0]) {
           getGitlabFileRaw({
@@ -89,27 +88,6 @@ function getReadMeFile() {
       .catch((err) => {
         console.error(err);
       });
-    /* findFile(`xihe-obj/models/${route.params.user}/${route.params.name}/`).then(
-      (tree) => {
-        if (
-          tree.status === 200 &&
-          tree.data.children &&
-          tree.data.children.length
-        ) {
-          README = tree.data.children.filter((item) => {
-            return item.name === 'README.md';
-          });
-          if (README[0]) {
-            downloadObs(README[0].path).then((res) => {
-              res ? (codeString.value = res) : '';
-            });
-            result.value = mkit.render(codeString.value);
-          } else {
-            codeString.value = '';
-          }
-        }
-      }
-    ); */
   } catch (error) {
     console.error(error);
   }

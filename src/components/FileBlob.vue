@@ -44,7 +44,7 @@ const router = useRouter();
 const route = useRoute();
 
 let routerParams = router.currentRoute.value.params;
-const path = `${routerParams.contents.join('/')}`;
+const path = ref(`${routerParams.contents.join('/')}`);
 
 const i18n = {
   viewRawCode: '查看源代码',
@@ -66,12 +66,12 @@ const inputDom = ref(null);
 const showDel = ref(false);
 
 function previewFile() {
-  path.match(/[^.]+$/)
-    ? (suffix.value = path.match(/[^.]+$/)[0])
+  path.value.match(/[^.]+$/)
+    ? (suffix.value = path.value.match(/[^.]+$/)[0])
     : (suffix.value = 'py');
   getGitlabFileRaw({
     user: routerParams.user,
-    path: path,
+    path: path.value,
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
@@ -203,10 +203,10 @@ watch(
       </div>
     </div>
     <div class="editing-card">
-      <div v-if="fileData" class="file">
+      <div class="file">
         <div class="file-operation">
-          <o-icon><files></files></o-icon
-          ><span class="text">{{ fileData.description }}</span>
+          <o-icon><files></files></o-icon>
+          <!-- <span class="text">{{ fileData.description }}</span> -->
         </div>
         <div class="file-operation">
           <div
@@ -246,7 +246,7 @@ watch(
             @click="
               downloadFile({
                 user: routerParams.user,
-                path: fileData.file_path,
+                path: path,
                 id: repoDetailData.id,
                 name: routerParams.name,
               })
@@ -269,7 +269,7 @@ watch(
           @click="
             downloadFile({
               user: routerParams.user,
-              path: fileData.file_path,
+              path: path,
               id: repoDetailData.id,
               name: routerParams.name,
             })
@@ -278,12 +278,7 @@ watch(
         ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
       </div>
     </div>
-    <o-dialog
-      v-if="fileData"
-      :show="showDel"
-      :close="false"
-      @close-click="toggleDelDlg(false)"
-    >
+    <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
       <template #head>
         <div class="dlg-title" :style="{ textAlign: 'center' }">
           <img :src="warningImg" alt="" />
@@ -298,7 +293,7 @@ watch(
           width: '640px',
         }"
       >
-        {{ i18n.delete.description }} {{ fileData.file_name }} 吗？
+        {{ i18n.delete.description }} {{ path }} 吗？
       </div>
       <template #foot>
         <div
@@ -316,7 +311,7 @@ watch(
           >
           <o-button
             type="primary"
-            @click="headleDelFile(fileData.file_path, repoDetailData.repo_id)"
+            @click="headleDelFile(path, repoDetailData.repo_id)"
             >{{ i18n.delete.confirm }}</o-button
           >
         </div>

@@ -1,16 +1,22 @@
 <script setup>
-import OButton from '@/components/OButton.vue';
-import ODialog from '@/components/ODialog.vue';
-import IconNecessary from '~icons/app/necessary.svg';
-
 import { ref, reactive } from 'vue';
 import { useUserInfoStore } from '@/stores';
-import {
-  getUserPhone,
-  setUserPhone,
-  keepUserPhone,
-  changeUserPhone,
-} from '@/api/api-user';
+
+import { setUserPhone, keepUserPhone, changeUserPhone } from '@/api/api-user';
+import { getGitlabToken } from '@/api/api-gitlab';
+import useClipboard from 'vue-clipboard3';
+
+import OButton from '@/components/OButton.vue';
+import ODialog from '@/components/ODialog.vue';
+import OIcon from '@/components/OIcon.vue';
+
+import IconNecessary from '~icons/app/necessary.svg';
+import IconCopy from '~icons/app/copy-nickname';
+import { ElMessage } from 'element-plus';
+
+const { toClipboard } = useClipboard();
+
+const gitlabToken = ref('');
 
 // 绑定手机号
 const showPhoneDlg = ref(false);
@@ -20,6 +26,18 @@ const ruleForm = reactive({
   code: '',
 });
 
+const handleCopy = async () => {
+  try {
+    await toClipboard(gitlabToken.value);
+    ElMessage({
+      type: 'success',
+      message: '复制成功',
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 function togglePhoneDlg(flag) {
   if (flag === undefined) {
     showPhoneDlg.value = !showPhoneDlg.value;
@@ -27,17 +45,20 @@ function togglePhoneDlg(flag) {
     showPhoneDlg.value = flag;
   }
 }
+getGitlabToken().then((res) => {
+  gitlabToken.value = res?.data?.token;
+});
 //获取手机号
 const userInfoStore = useUserInfoStore();
 const phoneExhibition = ref('');
-try {
-  getUserPhone(userInfoStore.id).then((res) => {
-    if (res.data) {
-      userInfoStore.phone = res.data;
-      phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
-    }
-  });
-} catch {}
+// try {
+//   getUserPhone(userInfoStore.id).then((res) => {
+//     if (res.data) {
+//       userInfoStore.phone = res.data;
+//       phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
+//     }
+//   });
+// } catch {}
 //获取验证码
 function setPhone(formEl) {
   if (!formEl) return;
@@ -155,6 +176,21 @@ function resetForm(formEl) {
         class="setting-input"
       ></el-input>
       <p class="setting-tip">用户名不可修改</p>
+    </div>
+  </div>
+  <div class="setting-box">
+    <p class="setting-title">TOKEN</p>
+    <div class="setting-content">
+      <div class="inline-content">
+        <el-input
+          v-model="gitlabToken"
+          disabled
+          class="setting-input"
+        ></el-input>
+        <o-icon class="icon-copy" @click="handleCopy"
+          ><icon-copy></icon-copy
+        ></o-icon>
+      </div>
     </div>
   </div>
   <!-- <div class="setting-box">
@@ -300,6 +336,19 @@ function resetForm(formEl) {
 
   .setting-content {
     margin-top: 16px;
+    .inline-content {
+      display: flex;
+      align-items: center;
+      .icon-copy {
+        cursor: pointer;
+        margin-left: 16px;
+        font-size: 24px;
+        color: #555;
+        &:hover {
+          color: #0d8dff;
+        }
+      }
+    }
     .dlg-body-list {
       // display: flex;
       // justify-content: space-between;

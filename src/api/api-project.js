@@ -261,7 +261,7 @@ export function trainList(projectId) {
  * @returns
  */
 export function stopTrain(projectId, trainId) {
-  const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
+  const url = `/server/train/project/${projectId}/training/${trainId}`;
   return request.put(url, null, getHeaderConfig()).then((res) => {
     return res;
   });
@@ -272,8 +272,8 @@ export function stopTrain(projectId, trainId) {
  * @returns
  */
 export function rebuildTrain(projectId, trainId) {
-  const url = `/api/projects/${projectId}/train/trainins/${trainId}/rebuild/`;
-  return request.put(url, null, getHeaderConfig()).then((res) => {
+  const url = `/server/train/project/${projectId}/training/${trainId}`;
+  return request.post(url, null, getHeaderConfig()).then((res) => {
     return res;
   });
 }
@@ -283,10 +283,27 @@ export function rebuildTrain(projectId, trainId) {
  * @returns
  */
 export function deleteTainList(projectId, trainId) {
-  const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
+  const url = `/server/train/project/${projectId}/training/${trainId}`;
   return request.delete(url, getHeaderConfig()).then((res) => {
     return res;
   });
+}
+
+/**
+ * 获得训练日志数据
+ * @returns
+ */
+export function getTrainLog(params) {
+  const { projectId, trainId } = params;
+  const url = `/server/train/project/${projectId}/training/${trainId}`;
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
 }
 
 /* 选择配置文件创建训练实例
@@ -308,23 +325,6 @@ export function projectFork(owner, projectId) {
   // console.log(url);
   return request
     .post(url, null, getHeaderConfig())
-    .then((res) => {
-      return res;
-    })
-    .catch((e) => {
-      return e;
-    });
-}
-
-/**
- * 获得训练日志数据
- * @returns
- */
-export function getTrainLog(params) {
-  const { projectId, trainId } = params;
-  const url = `/api/projects/${projectId}/train/trainins/${trainId}`;
-  return request
-    .get(url, params, getHeaderConfig())
     .then((res) => {
       return res;
     })

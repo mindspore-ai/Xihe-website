@@ -19,6 +19,8 @@ import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 import IconWarning from '~icons/app/warning';
 
+import { LOGIN_KEYS } from '@/shared/login';
+
 import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -73,11 +75,6 @@ const rules = reactive({
       message: '请输入例如[0.01, 0.02, 0.03]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
   momentum: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -86,11 +83,6 @@ const rules = reactive({
       message: '请输入例如[0.9, 0.99]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[([1-9]\d*|0\.[1-9]\d*)+\,+[1-9]\d*\.\d*|0\.\d*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
   batch_size: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -99,11 +91,6 @@ const rules = reactive({
       message: '请输入例如[32,64]的字段',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^\[((\d+\,)+\d+)*\]$/,
-    //   message: '格式不正确',
-    //   trigger: 'blur',
-    // },
   ],
 });
 
@@ -139,78 +126,97 @@ function getTrainLogData() {
     trainId: route.params.trainId,
   };
   getTrainLog(trainLogParams).then((res) => {
-    if (res.status === 200) {
-      repoContent.value = res.data.data.db_path;
-      form.desc = res.data.data.log.content;
-      form.name = res.data.data.insance_name;
-      trainDetail.value = res.data.data;
-      if (trainDetail.value.metrics) {
-        query.learning_rate = JSON.parse(
-          trainDetail.value.metrics
-        ).learning_rate;
-        query.momentum = JSON.parse(trainDetail.value.metrics).momentum;
-        query.batch_size = JSON.parse(trainDetail.value.metrics).batch_size;
-      } else {
-      }
+    console.log(res);
+    // if (res.status === 200) {
+    //   repoContent.value = res.data.data.db_path;
+    //   form.desc = res.data.data.log.content;
+    //   form.name = res.data.data.insance_name;
+    //   trainDetail.value = res.data.data;
 
-      if (trainDetail.value.status === 'Running') {
-        isDisabled.value = true;
-        isDisabled1.value = true;
-        showEvaBtn1.value = false;
-        showEvaBtn.value = false;
-        timer = setInterval(() => {
-          socket.send(
-            JSON.stringify({
-              pk: detailData.value.id,
-              train_id: route.params.trainId,
-              is_log: false,
-            })
-          );
-        }, 1000);
-        timer1 = setInterval(() => {
-          socket.send(
-            JSON.stringify({
-              pk: detailData.value.id,
-              train_id: route.params.trainId,
-              is_log: true,
-            })
-          );
-        }, 10000);
-      } else {
-      }
-    }
+    //   if (trainDetail.value.metrics) {
+    //     query.learning_rate = JSON.parse(
+    //       trainDetail.value.metrics
+    //     ).learning_rate;
+    //     query.momentum = JSON.parse(trainDetail.value.metrics).momentum;
+    //     query.batch_size = JSON.parse(trainDetail.value.metrics).batch_size;
+    //   } else {
+    //   }
+
+    //   if (trainDetail.value.status === 'Running') {
+    //     isDisabled.value = true;
+    //     isDisabled1.value = true;
+    //     showEvaBtn1.value = false;
+    //     showEvaBtn.value = false;
+    //     timer = setInterval(() => {
+    //       socket.send(
+    //         JSON.stringify({
+    //           pk: detailData.value.id,
+    //           train_id: route.params.trainId,
+    //           is_log: false,
+    //         })
+    //       );
+    //     }, 1000);
+
+    //     timer1 = setInterval(() => {
+    //       socket.send(
+    //         JSON.stringify({
+    //           pk: detailData.value.id,
+    //           train_id: route.params.trainId,
+    //           is_log: true,
+    //         })
+    //       );
+    //     }, 10000);
+    //   }
+    // }
   });
 }
 getTrainLogData();
 
-const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+const socket = new WebSocket(
+  `wss://${DOMAIN}/server/train/project/${detailData.value.id}/training/${route.params.trainId}`,
+  [getHeaderConfig().headers['private-token']]
+);
 
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
 socket.onopen = function () {
-  socket.send(
-    JSON.stringify({
-      pk: detailData.value.id,
-      train_id: route.params.trainId,
-      is_log: false,
-    })
-  );
+  // socket.send(
+  //   JSON.stringify({
+  //     pk: detailData.value.id,
+  //     train_id: route.params.trainId,
+  //     is_log: false,
+  //   })
+  // );
 };
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  if (event.data.substring(0, 3) === 'log') {
-    form.desc = event.data.substring(4);
-  } else {
-    trainDetail.value = JSON.parse(event.data).data;
-    if (trainDetail.value.status !== 'Running') {
-      isDisabled.value = false;
-      showEvaBtn.value = true;
-      showEvaBtn1.value = true;
-      clearInterval(timer);
-      // setTimeout(closeConn(), 10000);
-      setTimeout(clearInterval(timer1), 10000);
-    }
-  }
+  console.log('收到消息', JSON.parse(event.data).data);
+  trainDetail.value = JSON.parse(event.data).data;
+  form.name = trainDetail.value.name;
+  // if (event.data.substring(0, 3) === 'log') {
+  //   form.desc = event.data.substring(4);
+  // } else {
+  //   trainDetail.value = JSON.parse(event.data).data;
+  //   if (trainDetail.value.status !== 'Running') {
+  //     isDisabled.value = false;
+  //     showEvaBtn.value = true;
+  //     showEvaBtn1.value = true;
+  //     clearInterval(timer);
+  //     // setTimeout(closeConn(), 10000);
+  //     setTimeout(clearInterval(timer1), 10000);
+  //   }
+  // }
 };
 
 function closeConn() {
@@ -222,51 +228,51 @@ function reloadPage() {
   closeConn();
 }
 
-const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
+// const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
 // ws.onopen = function () {
 //   console.log('服务器已连接');
 // };
 
-ws.onclose = function () {
-  clearInterval(timer2);
-};
+// ws.onclose = function () {
+//   clearInterval(timer2);
+// };
 
-ws.onmessage = function (event) {
-  if (
-    JSON.parse(event.data).status === 200 &&
-    JSON.parse(event.data).msg === '运行中'
-  ) {
-    ElMessage({
-      type: 'success',
-      message: '自动评估完成！点击查看报告查看。',
-    });
-    showAnaButton.value = false;
-    showGoButton.value = true;
+// ws.onmessage = function (event) {
+//   if (
+//     JSON.parse(event.data).status === 200 &&
+//     JSON.parse(event.data).msg === '运行中'
+//   ) {
+//     ElMessage({
+//       type: 'success',
+//       message: '自动评估完成！点击查看报告查看。',
+//     });
+//     showAnaButton.value = false;
+//     showGoButton.value = true;
 
-    showAnaButton1.value = false;
-    showGoButton1.value = true;
+//     showAnaButton1.value = false;
+//     showGoButton1.value = true;
 
-    evaluateUrl.value = JSON.parse(event.data).data.url;
+//     evaluateUrl.value = JSON.parse(event.data).data.url;
 
-    clearInterval(timer2);
-    clearInterval(timer3);
-  } else if (
-    JSON.parse(event.data).status === -1 &&
-    JSON.parse(event.data).msg === '启动失败'
-  ) {
-    ElMessage({
-      type: 'error',
-      message: JSON.parse(event.data).msg,
-    });
-    showEvaBtn.value = true;
-    showAnaButton.value = false;
-    clearInterval(timer2);
-    clearInterval(timer3);
-  } else {
-    // showEvaBtn.value = true;
-    // showAnaButton.value = false;
-  }
-};
+//     clearInterval(timer2);
+//     clearInterval(timer3);
+//   } else if (
+//     JSON.parse(event.data).status === -1 &&
+//     JSON.parse(event.data).msg === '启动失败'
+//   ) {
+//     ElMessage({
+//       type: 'error',
+//       message: JSON.parse(event.data).msg,
+//     });
+//     showEvaBtn.value = true;
+//     showAnaButton.value = false;
+//     clearInterval(timer2);
+//     clearInterval(timer3);
+//   } else {
+//     showEvaBtn.value = true;
+//     showAnaButton.value = false;
+//   }
+// };
 
 // 自动评估
 function saveSetting() {
@@ -427,7 +433,7 @@ watch(
         <ul class="train-log-detail-info">
           <li class="info-list">
             <div class="info-list-title">创建时间</div>
-            <div class="info-list-detail">{{ trainDetail.create_time }}</div>
+            <div class="info-list-detail">{{ trainDetail.created_at }}</div>
           </li>
           <li class="info-list">
             <div class="info-list-title">运行状态</div>
@@ -450,7 +456,7 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">运行时长</div>
-            <div class="info-list-detail">{{ trainDetail.runtime }}</div>
+            <div class="info-list-detail">{{ trainDetail.duration }}</div>
           </li>
           <li class="info-list">
             <div class="info-list-title">AI引擎</div>

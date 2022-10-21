@@ -16,6 +16,7 @@ import warningImg from '@/assets/icons/warning.png';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
+
 import { LOGIN_KEYS } from '@/shared/login';
 import { useRouter, useRoute } from 'vue-router';
 import { useFileData, useUserInfoStore } from '@/stores';
@@ -65,20 +66,20 @@ goHome();
 
 let timer = null;
 // 获取训练列表
-// function getTrainList() {
-//   trainList(projectId).then((res) => {
-//     console.log('res: ', res);
-//     trainData.value = res.data.data;
-//     // console.log('trainData: ', trainData);
-//     // if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
-//     //   timer = setInterval(() => {
-//     //     socket.send(JSON.stringify({ pk: detailData.value.id }));
-//     //   }, 1000);
-//     // } else {
-//     // }
-//   });
-// }
-// getTrainList();
+function getTrainList() {
+  trainList(projectId).then((res) => {
+    console.log('res: ', res);
+    trainData.value = res.data.data;
+    // console.log('trainData: ', trainData);
+    // if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
+    //   timer = setInterval(() => {
+    //     socket.send(JSON.stringify({ pk: detailData.value.id }));
+    //   }, 1000);
+    // } else {
+    // }
+  });
+}
+getTrainList();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -115,6 +116,7 @@ function showDelClick(val) {
 
 // 删除
 function deleteTrainList(id) {
+  console.log('projectId : ' + projectId, 'id : ' + id);
   deleteTainList(projectId, id).then((res) => {
     if (res.status === 200) {
       getTrainList();
@@ -184,14 +186,15 @@ function resetClick(val) {
   }
 }
 
-// function goTrainLog(trainId) {
-//   router.push({
-//     name: 'projectTrainLog',
-//     params: {
-//       trainId: trainId,
-//     },
-//   });
-// }
+function goTrainLog(trainId) {
+  console.log('trainId: ' + trainId);
+  router.push({
+    name: 'projectTrainLog',
+    params: {
+      trainId: trainId,
+    },
+  });
+}
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -219,7 +222,7 @@ socket.onopen = function () {
 // // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   console.log('收到服务器的消息', JSON.parse(event.data).data);
-  //   trainData.value = JSON.parse(event.data).data;
+  trainData.value = JSON.parse(event.data).data;
   //   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
   //     clearInterval(timer);
   //   }
@@ -260,24 +263,24 @@ onUnmounted(() => {
       <el-table-column label="训练名称/ID" width="220">
         <template #default="scope">
           <div>
-            <!-- <span class="train-name" @click="goTrainLog(scope.row.train_id)">{{
-              scope.row.instance_name
-            }}</span> -->
-            <router-link
+            <span class="train-name" @click="goTrainLog(scope.row.id)">{{
+              scope.row.name
+            }}</span>
+            <!-- <router-link
               class="train-name"
               :to="{
                 name: 'projectTrainLog',
                 params: { trainId: scope.row.train_id },
               }"
               >{{ scope.row.instance_name }}</router-link
-            >
+            > -->
           </div>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="178">
         <template #default="scope">
           <div class="status-box">
-            <o-icon v-if="scope.row.status === 'Completed'"
+            <!-- <o-icon v-if="scope.row.status === 'Completed'"
               ><icon-finished></icon-finished
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Terminated'"
@@ -288,28 +291,29 @@ onUnmounted(() => {
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Failed'"
               ><icon-failed></icon-failed
-            ></o-icon>
+            ></o-icon> -->
             {{ scope.row.status }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="运行时长" width="178" prop="runtime">
+
+      <el-table-column label="运行时长" width="178" prop="duration">
       </el-table-column>
+
       <el-table-column label="描述" width="618">
         <template #default="scope">
-          <!-- 删除 -->
           <DeleteTrain
             :list-id="listId"
             :show-del="showDel"
             @click="delClick"
           />
-          <!-- 终止 -->
+
           <StopTrain
             :train-id="trainId"
             :show-stop="showStop"
             @click="quitClick"
           />
-          <!-- 重建 -->
+
           <ResetTrain
             :reset-id="resetedId"
             :show-reset="showReset"
@@ -317,23 +321,23 @@ onUnmounted(() => {
           />
           <div class="description">
             <div class="description-content">
-              {{ scope.row.description }}
+              {{ scope.row.desc }}
             </div>
             <div class="hide-box">
               <div class="tools-box">
                 <div
                   v-if="scope.row.status !== 'Completed'"
                   class="tools"
-                  @click="showStopClick(scope.row.status, scope.row.train_id)"
+                  @click="showStopClick(scope.row.status, scope.row.id)"
                 >
                   <o-icon><icon-stop></icon-stop></o-icon>
                   <p>终止</p>
                 </div>
-                <div class="tools" @click="showResetClick(scope.row.train_id)">
+                <div class="tools" @click="showResetClick(scope.row.id)">
                   <o-icon><icon-rebuild></icon-rebuild></o-icon>
                   <p>重建</p>
                 </div>
-                <div class="tools" @click="showDelClick(scope.row.train_id)">
+                <div class="tools" @click="showDelClick(scope.row.id)">
                   <o-icon><icon-remove></icon-remove></o-icon>
                   <p>删除</p>
                 </div>
@@ -342,6 +346,7 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column>
+
       <!-- <el-table-column label="参数文件" width="203">
         <template #default="scope">
           <div>
@@ -351,7 +356,8 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column> -->
-      <el-table-column label="更新时间" prop="create_time" width="214">
+
+      <el-table-column label="更新时间" prop="created_at" width="214">
       </el-table-column>
     </el-table>
     <div v-else class="instance-box">

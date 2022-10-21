@@ -16,7 +16,6 @@ const visitorInfoStore = useVisitorInfoStore();
 
 const route = useRoute();
 const router = useRouter();
-// let bool = userInfoStore.userName === route.query.userName;
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;

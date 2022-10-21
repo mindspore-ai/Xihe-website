@@ -196,7 +196,7 @@ function goCode() {
     <!-- 轮播图 -->
     <swiper
       :modules="modules"
-      :pagination="true"
+      :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
     >

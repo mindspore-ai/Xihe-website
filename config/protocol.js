@@ -37,7 +37,7 @@ export const inferSdk = [
   { id: 1, name: 'Gradio' },
   { id: 2, name: 'Static' },
 ];
-export const projectPhotos = [
+export const projectPhoto = [
   {
     id: 1,
     url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg1.png',

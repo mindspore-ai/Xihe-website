@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import protocol from '../../../config/protocol';
-import { trainSdk, inferSdk, projectPhotos } from '../../../config/protocol';
+import { trainSdk, inferSdk, projectPhoto } from '../../../config/protocol';
 import { getModelTags, setNewProject } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
@@ -78,7 +78,7 @@ const rules = reactive({
 });
 
 const nameList = ref([]);
-// const projectPhotos = ref([]);
+const projectPhotos = ref(projectPhoto);
 // const trainSdk = ref([]);
 // const inferSdk = ref([]);
 // const protocol = ref([]);
@@ -165,7 +165,7 @@ function setProject() {
 // projectPhotos.value.forEach((item) => {
 //   item.is_active = false;
 // });
-projectPhotos[0].is_active = true;
+projectPhotos.value[0].is_active = true;
 // protocol.value = res.data.licenses;
 // trainSdk.value = res.data.train_sdk;
 // inferSdk.value = res.data.infer_sdk;

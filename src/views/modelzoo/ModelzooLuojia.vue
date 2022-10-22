@@ -26,7 +26,7 @@ function enterLuoJiaSet() {
       <div class="luojia-title">
         <img src="@/assets/imgs/modelzoo2.png" alt="" />
         <div class="luojia-title-intro">
-          <p class="headline">武汉.Luojia</p>
+          <p class="headline">武汉.LuoJia</p>
           <p class="text">
             由武汉大学与华为昇腾AI团队联合研发，是遥感领域首个国产化自主可控的遥感专用机器学习框架，针对遥感数据像幅尺寸大、数据通道多、尺度变化大等特性，
             具备内存可扩展、尺度通道灵活创建、数据通道自主优选、框架与数据协同处理的特点。可兼容已有深度学习框架，
@@ -57,7 +57,7 @@ function enterLuoJiaSet() {
         <p class="sketch-content">
           LuoJiaSET是遥感领域满足OGC标准的大规模遥感影像样本库，其制定了支持全球范围的遥感影像样本分类标准、标注规范，建立涵盖不同遥感任务的统一分类体系，形成样本要素的采集要求、内容和流程规范，可支持多级别、多类型遥感影像样本库的采集、制作、管理、共享、应用。针对当前现有样本数据集面临的问题：1）分类体系不统一。2）样本数据集传感器种类单一，通常样本库都是全色或者RGB彩色，缺少高光谱、红外、SAR遥感影像的样本；且通常是二维数据，缺乏三维数据。3）现有数据空间跨度有限、时间覆盖不均，导致模型泛化能力弱。4）样本集受标注人员水平限制，质量参差不齐。LuoJiaSET建立统一类别体系，提供大量数据集，其覆盖范围广、时间跨度大、涵盖传感器种类多，同时提供标准化的标注工具，大幅提升影像标注效率。
         </p>
-        <h4 class="center">Luojia系列总体架构</h4>
+        <h4 class="center">LuoJia系列总体架构</h4>
         <img
           class="architecture-img"
           src="@/assets/imgs/luojia/luojia-1.png"

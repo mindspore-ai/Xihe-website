@@ -60,7 +60,7 @@ const i18n = {
     quickStartLabel: '立即体验',
     modelzoo1: '紫东.太初',
     introduce1: '全球首个三模态千亿参数大模型',
-    modelzoo2: '武大.Luojia',
+    modelzoo2: '武大.LuoJia',
     introduce2: '全球首个遥感专用框架及最大遥感样本库',
     modelzoo3: 'CodeGeeX',
     introduce3: '一个具有130亿参数的多编程语言代码生成预训练模型',

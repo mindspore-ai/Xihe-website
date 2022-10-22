@@ -87,7 +87,7 @@ export default [
       },
     ],
   },
-  // 武大.Luojia
+  // 武大.LuoJia
   {
     path: '/modelzoo/luojia',
     name: 'luojia',

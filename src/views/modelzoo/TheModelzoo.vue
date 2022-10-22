@@ -2,7 +2,7 @@
 import ModelzooCard from '@/components/ModelzooCard.vue';
 
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
-import luojia from '@/assets/imgs/modelzoo/Luojia.png';
+import luojia from '@/assets/imgs/modelzoo/luojia.png';
 import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';

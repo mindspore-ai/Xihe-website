@@ -189,7 +189,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     .editor {
-      height: 738px;
+      height: 740px;
       border-radius: 0 0 16px 16px;
     }
 

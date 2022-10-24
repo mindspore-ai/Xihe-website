@@ -51,6 +51,7 @@ export const routes = [
         component: () => {
           return import('@/views/model/ModelCreating.vue');
         },
+        meta: { isPrivate: true },
       },
       {
         path: 'datasets',
@@ -58,6 +59,7 @@ export const routes = [
         component: () => {
           return import('@/views/dataset/DatasetCreating.vue');
         },
+        meta: { isPrivate: true },
       },
       {
         path: 'projects',
@@ -65,6 +67,7 @@ export const routes = [
         component: () => {
           return import('@/views/project/ProjectCreating.vue');
         },
+        meta: { isPrivate: true },
       },
     ],
   },

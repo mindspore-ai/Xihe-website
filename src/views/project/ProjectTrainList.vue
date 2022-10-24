@@ -65,21 +65,6 @@ function goHome() {
 goHome();
 
 let timer = null;
-// 获取训练列表
-function getTrainList() {
-  trainList(projectId).then((res) => {
-    console.log('res: ', res);
-    // trainData.value = res.data.data;
-    // console.log('trainData: ', trainData);
-    // if (trainData.value.findIndex((item) => item.status === 'Running') !== -1) {
-    //   timer = setInterval(() => {
-    //     socket.send(JSON.stringify({ pk: detailData.value.id }));
-    //   }, 1000);
-    // } else {
-    // }
-  });
-}
-// getTrainList();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -214,30 +199,33 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-// wss://xihe.test.osinfra.cn/wss/train_task
-// const socket = new WebSocket(`wss://${DOMAIN}/wss/train_task`);
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${projectId}/training`,
   [getHeaderConfig().headers['private-token']]
 );
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )
-socket.onopen = function () {
-  console.log('服务器已连接');
-  socket.send(JSON.stringify({ pk: detailData.value.id }));
-};
-
+// socket.onopen = function () {
+//   console.log('服务器已连接');
+//   socket.send(JSON.stringify({ pk: detailData.value.id }));
+// };
+const btnShow = ref(false);
 // // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   console.log('收到服务器的消息', JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
+  let bool = trainData.value.some((item) => item.status === 'scheduling');
+  // console.log(bool);
+  if (bool) {
+    btnShow.value = true;
+  }
   //   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
   //     clearInterval(timer);
   //   }
 };
 // // 服务端主动断开连接时，这个方法也被触发。
-socket.onclose = function () {
-  console.log('服务器主动断开');
-};
+// socket.onclose = function () {
+//   console.log('服务器主动断开');
+// };
 
 // // function closeConn() {
 // //   socket.close(); // 向服务端发送断开连接的请求
@@ -261,7 +249,7 @@ onUnmounted(() => {
   <div class="train-list">
     <div class="list-top">
       <p class="title">训练列表</p>
-      <o-button type="primary" @click="goSelectFile">
+      <o-button type="primary" :disabled="btnShow" @click="goSelectFile">
         <span>创建训练实例</span>
       </o-button>
     </div>

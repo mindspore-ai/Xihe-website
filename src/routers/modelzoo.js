@@ -109,6 +109,11 @@ export default [
           return import('@/views/modelzoo/luojia/TheLuojiaIntroduce.vue');
         },
       },
+      {
+        path: 'experience',
+        name: 'luojiaTest',
+        redirect: '/modelzoo/luojia',
+      },
     ],
   },
   // 鹏程.盘古
@@ -116,8 +121,29 @@ export default [
     path: '/modelzoo/pangu',
     name: 'pangu',
     component: () => {
-      return import('@/views/modelzoo/ModelzooPangu.vue');
+      return import('@/views/modelzoo/pangu/ThePangu.vue');
     },
+    children: [
+      {
+        path: '',
+        name: 'panguExperience',
+        component: () => {
+          return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'panguIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
+        },
+      },
+      {
+        path: 'experience',
+        name: 'pangutest',
+        redirect: '/modelzoo/pangu',
+      },
+    ],
   },
   // 鹏程.神农
   {

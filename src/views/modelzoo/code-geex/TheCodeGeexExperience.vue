@@ -99,8 +99,6 @@ function hanleGenerateCode() {
     n: 1,
     lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
-    // console.log(res);
-
     if (res.status === 200) {
       isDisabled.value = false;
 

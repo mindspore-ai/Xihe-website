@@ -42,6 +42,7 @@ const ruleRef = ref(null);
 
 const trainDetail = ref({});
 const repoContent = ref('');
+const configurationInfo = ref({});
 
 let timer = null;
 let timer1 = null;
@@ -170,7 +171,7 @@ function getTrainLogData() {
     // }
   });
 }
-getTrainLogData();
+// getTrainLogData();
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -189,34 +190,15 @@ const socket = new WebSocket(
 );
 
 // 创建好连接之后自动触发（ 服务端执行self.accept() )
-socket.onopen = function () {
-  // socket.send(
-  //   JSON.stringify({
-  //     pk: detailData.value.id,
-  //     train_id: route.params.trainId,
-  //     is_log: false,
-  //   })
-  // );
-};
+socket.onopen = function () {};
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到消息', JSON.parse(event.data).data);
-  trainDetail.value = JSON.parse(event.data).data;
-  form.name = trainDetail.value.name;
-  // if (event.data.substring(0, 3) === 'log') {
-  //   form.desc = event.data.substring(4);
-  // } else {
-  //   trainDetail.value = JSON.parse(event.data).data;
-  //   if (trainDetail.value.status !== 'Running') {
-  //     isDisabled.value = false;
-  //     showEvaBtn.value = true;
-  //     showEvaBtn1.value = true;
-  //     clearInterval(timer);
-  //     // setTimeout(closeConn(), 10000);
-  //     setTimeout(clearInterval(timer1), 10000);
-  //   }
-  // }
+  nextTick(() => {
+    trainDetail.value = JSON.parse(event.data).data;
+    form.name = trainDetail.value.name;
+    configurationInfo.value = trainDetail.value.compute;
+  });
 };
 
 function closeConn() {
@@ -422,7 +404,7 @@ watch(
       </div>
       <div class="train-log-desc">
         <el-input id="txt" v-model="form.desc" type="textarea" readonly />
-        <img v-if="!form.desc" src="@/assets/gifs/loading.gif" alt="" />
+        <!-- <img v-if="!form.desc" src="@/assets/gifs/loading.gif" alt="" /> -->
       </div>
     </div>
     <div class="train-log-detail">
@@ -460,7 +442,9 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">AI引擎</div>
-            <div class="info-list-detail">{{ trainDetail.engine_name }}</div>
+            <div class="info-list-detail">
+              {{ configurationInfo.version }}
+            </div>
           </li>
           <li class="info-list">
             <div class="info-list-title">计算节点个数</div>
@@ -468,7 +452,7 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">规格</div>
-            <div class="info-list-detail">{{ trainDetail.flavor }}</div>
+            <div class="info-list-detail">{{ configurationInfo.flavor }}</div>
           </li>
           <!-- <li class="info-list">
             <div class="info-list-title">输入参数文件</div>

@@ -79,7 +79,7 @@ function getTrainList() {
     // }
   });
 }
-getTrainList();
+// getTrainList();
 
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
@@ -234,7 +234,6 @@ socket.onmessage = function (event) {
   //     clearInterval(timer);
   //   }
 };
-
 // // 服务端主动断开连接时，这个方法也被触发。
 socket.onclose = function () {
   console.log('服务器主动断开');
@@ -266,7 +265,11 @@ onUnmounted(() => {
         <span>创建训练实例</span>
       </o-button>
     </div>
-    <el-table v-if="trainData.length" :data="trainData" style="width: 100%">
+    <el-table
+      v-if="trainData && trainData.length"
+      :data="trainData"
+      style="width: 100%"
+    >
       <el-table-column label="训练名称/ID" width="220">
         <template #default="scope">
           <div>

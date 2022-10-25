@@ -10,6 +10,8 @@ import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
 
+import { handleLuojiaInfer } from '@/api/api-modelzoo';
+
 const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
 const gridData = [
@@ -44,6 +46,13 @@ const nowModelName = ref('高德影像');
 const zoomlv = ref(18);
 const tblob = ref(null);
 
+// TODO:测试新后台接口
+function handleTestApi() {
+  handleLuojiaInfer({ username: 'shengbo' }).then((res) => {
+    console.log(res);
+  });
+}
+
 async function handleDrawClick() {
   // console.log(viewer);
   isSelected.value = !isSelected.value;
@@ -53,7 +62,6 @@ async function handleDrawClick() {
   if (!isSelected.value) {
     // 获取矩形框坐标
     const location = viewer.value.drawer.getAnsShapeRectCoor();
-    // console.log(location);
     const ltpoint = [location.west, location.north];
     const rbpoint = [location.east, location.south];
     tblob.value = await rectToImg(
@@ -116,7 +124,7 @@ onMounted(() => {
         <div class="select-button" @click="handleDrawClick">
           <o-icon><icon-select></icon-select></o-icon>
           <span>{{ isSelected ? '结束选区' : '开始选区' }}</span>
-          <div class="select-tip">
+          <div v-if="isSelected" class="select-tip">
             左键选点，右键确定矩形
             <div class="triangle"></div>
           </div>
@@ -138,7 +146,7 @@ onMounted(() => {
 
         <div class="start-button button-wrap">
           <o-icon><icon-start></icon-start></o-icon>
-          <span>开始识别</span>
+          <span @click="handleTestApi">开始识别</span>
         </div>
       </div>
     </div>
@@ -278,6 +286,7 @@ onMounted(() => {
 
 :deep(.el-dialog) {
   --el-dialog-margin-top: 30vh;
+  z-index: 1000;
   .el-dialog__headerbtn {
     top: 16px;
     right: 16px;
@@ -392,7 +401,7 @@ onMounted(() => {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
-  display: none;
+  // display: none;
   .triangle {
     position: absolute;
     top: -16px;
@@ -430,7 +439,7 @@ onMounted(() => {
   position: absolute;
   top: 0px;
   left: -3500px;
-  z-index: 9999;
+  z-index: 100;
   width: 5px;
   height: 100%;
   background-color: #d3d3d3;

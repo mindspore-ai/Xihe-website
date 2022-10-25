@@ -1,7 +1,7 @@
-window.CESIUM_BASE_URL = '/luojiaNet/static/Cesium/';
+window.CESIUM_BASE_URL = '/modelzoo/luojia/';
 
 import * as Cesium from 'cesium';
-// import '@/pages/static/Cesium/Widgets/widgets.css';
+import '@/shared/styles/cesium/widgets.css';
 import { DrawRect, guid } from './drawrect';
 
 //初始视角更改

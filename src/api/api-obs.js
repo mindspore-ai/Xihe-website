@@ -158,10 +158,89 @@ export function getCode(id, module) {
  * @returns
  */
 export function getVqaAsToken(path) {
-  const url = `/api/base/getas_wh/?path=${path}`;
+  const url = `/api/base/getas_wh/?path=${path}&bucket_name=vqa`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
+}
+
+/**
+ * 获取AK SK(LuoJia)
+ * @returns
+ */
+export function getLuoJiaAsToken(path) {
+  const url = `/api/base/getas_wh/?path=${path}&bucket_name=luojianet`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+// LuoJia 上传图片封装
+export async function handleLuoJiaUpload(
+  params,
+  progressCallback,
+  successCallback
+) {
+  // 验证文件名合法性
+  let { path, file, isEdit, description } = params;
+  try {
+    if (!isEdit) {
+      await fileVerify({ path }).then((res) => {
+        if (res.status === 200) {
+          isEdit = true;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
+        }
+      });
+    }
+    // 编辑文件不验证文件名
+    if (isEdit) {
+      // 验证成功获取AK SK 上传obs
+      await getLuoJiaAsToken(path).then((res) => {
+        if (res.status === 200) {
+          res = res.data;
+          let obsClient = new ObsClient({
+            access_key_id: res.access_key,
+            secret_access_key: res.secret_key,
+            security_token: res.security_token,
+            server: 'https://obs.cn-central-221.ovaijisuan.com',
+            timeout: 1800,
+          });
+          obsClient.putObject(
+            {
+              Bucket: res.bucket_name,
+              Key: path,
+              SourceFile: file,
+              ProgressCallback: progressCallback || null,
+              Metadata: {
+                description,
+              },
+              ContentDisposition: 'attachment', // 文件直接下载
+            },
+            function (err, result) {
+              if (err) {
+                ElMessage({
+                  type: 'error',
+                  message: err,
+                });
+              } else if (result.CommonMsg.Status === 200) {
+                successCallback();
+              }
+            }
+          );
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 //VQA上传图片方法封装

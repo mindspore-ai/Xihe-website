@@ -92,8 +92,29 @@ export default [
     path: '/modelzoo/luojia',
     name: 'luojia',
     component: () => {
-      return import('@/views/modelzoo/ModelzooLuojia.vue');
+      return import('@/views/modelzoo/luojia/TheLuoJia.vue');
     },
+    children: [
+      {
+        path: '',
+        name: 'luojiaExperience',
+        component: () => {
+          return import('@/views/modelzoo/luojia/TheLuojiaExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'luojiaIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/luojia/TheLuojiaIntroduce.vue');
+        },
+      },
+      {
+        path: 'experience',
+        name: 'luojiaTest',
+        redirect: '/modelzoo/luojia',
+      },
+    ],
   },
   // 鹏程.盘古
   {
@@ -117,7 +138,11 @@ export default [
           return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
         },
       },
-      // :TODO: 路由
+      {
+        path: 'experience',
+        name: 'panguTest',
+        redirect: '/modelzoo/pangu',
+      },
     ],
   },
   // 鹏程.神农

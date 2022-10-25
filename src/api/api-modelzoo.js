@@ -140,18 +140,6 @@ export function handleVqaInference(params) {
     });
 }
 
-// export function handleVqaInference(params) {
-//   const url = `/api/foundation/taichu_vqa`;
-//   return request
-//     .post(url, params, getHeaderConfig())
-//     .then((res) => {
-//       return res.data;
-//     })
-//     .catch((e) => {
-//       return e;
-//     });
-// }
-
 /**
  * VQA文字审核
  * @returns

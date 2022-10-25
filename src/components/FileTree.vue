@@ -17,6 +17,7 @@ import IconCircleClose from '~icons/app/circle-close';
 import IconRemove from '~icons/app/remove';
 
 import warningImg from '@/assets/icons/warning.png';
+import LfsImg from '@/assets/icons/lfs.png';
 
 // import { findFile, createFolder, deleteFolder } from '@/api/api-obs';
 
@@ -276,8 +277,8 @@ watch(
   <div v-if="!repoDetailData.is_empty" class="tree">
     <table class="tree-table">
       <col width="330px" />
-      <col width="120px" />
-      <col width="670px" />
+      <col width="250px" />
+      <col width="540px" />
       <col width="200px" />
       <tbody style="100%">
         <tr class="tree-head">
@@ -358,7 +359,7 @@ watch(
             </td>
             <td
               class="tree-table-item-download"
-              width="10%"
+              width="25%"
               @click="
                 !item.is_dir &&
                   downloadFile({
@@ -372,6 +373,12 @@ watch(
               <div class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span class="size">{{ changeByte(item.size) }}</span>
+                <img
+                  v-if="item.is_lfs_file"
+                  :src="LfsImg"
+                  alt=""
+                  class="is-lfs"
+                />
               </div>
             </td>
             <td class="tree-table-item-from" :title="item.description">
@@ -556,6 +563,7 @@ watch(
       }
       td {
         overflow: hidden;
+        flex-shrink: 0;
         word-wrap: break-word;
         border-bottom: 1px solid #e5e5e5;
         .inner-box {
@@ -596,6 +604,7 @@ watch(
         .inner-box {
           justify-content: space-between;
           .delete-folder {
+            position: absolute;
             display: none;
             cursor: pointer;
             padding-right: 50px;
@@ -622,6 +631,10 @@ watch(
         color: #999;
         .inner-box {
           padding: 0 24px;
+          .is-lfs {
+            margin-left: 8px;
+            width: 64px;
+          }
         }
         span {
           line-height: 18px;

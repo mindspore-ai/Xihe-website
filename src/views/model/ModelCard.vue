@@ -71,7 +71,7 @@ function getReadMeFile() {
         README = tree?.data?.filter((item) => {
           return item.name === 'README.md';
         });
-        if (README[0]) {
+        if (README && README.length) {
           getGitlabFileRaw({
             user: routerParams.user,
             path: 'README.md',

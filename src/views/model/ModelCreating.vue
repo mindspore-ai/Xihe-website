@@ -130,6 +130,7 @@ function create(formEl) {
         prop="name"
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
+          // 后端5-44
           {
             pattern: /^[^\u4e00-\u9fa5]{5,42}$/g,
             message: '暂不支持中文字符，且长度为5-42个字符',

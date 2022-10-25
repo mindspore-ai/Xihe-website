@@ -17,9 +17,8 @@ import {
   editorFileGitlab,
 } from '@/api/api-gitlab';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useFileData } from '@/stores';
 
-const userInfoStore = useUserInfoStore();
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -59,22 +58,11 @@ function previewFile() {
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
-    suffix.value === 'json'
+    typeof res === 'object'
       ? (codeString.value = JSON.stringify(res, null, '\t'))
       : (codeString.value = res);
     isShowEditor.value = true;
   });
-  // getDownLoadToken(params).then((res) => {
-  //   reopt.url = res.data.signedUrl;
-  //   downloadFileObs(reopt).then((res) => {
-  //     let reader = new FileReader();
-  //     reader.readAsText(res, 'utf-8');
-  //     reader.onload = function () {
-  //       codeString.value = reader.result;
-  //       isShow.value = true;
-  //     };
-  //   });
-  // });
 }
 
 async function uploadGitlab() {
@@ -93,31 +81,10 @@ async function uploadGitlab() {
       message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
     });
   });
-  // await handleUpload(
-  //   {
-  //     file,
-  //     path,
-  //     isEdit: true,
-  //     description: description.value || `edit ${fileData.name}`,
-  //   },
-  //   null,
-  //   function () {
-  //     ElMessage({
-  //       type: 'success',
-  //       message: '保存成功！你可点击“文件-编辑”再次编辑该文件。',
-  //     });
-  //   }
-  // );
+
   pathClick(route.params.contents.length);
 }
 
-// findFile(path).then((res) => {
-//   if (res.status && res.data && res.data.children.length) {
-//     fileData = res.data.children[0];
-//     description.value = `edit ${fileData.name}`;
-//     downLoad(fileData.path);
-//   }
-// });
 getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
   fileData = res;
   suffix.value = fileData.file_name.match(/[^.]+$/)[0];

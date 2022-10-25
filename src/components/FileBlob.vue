@@ -15,12 +15,7 @@ import { changeByte } from '@/shared/utils';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import {
-  getGitlabFileDetail,
-  getGitlabFileRaw,
-  downloadFile,
-  deleteFile,
-} from '@/api/api-gitlab';
+import { getGitlabFileRaw, downloadFile, deleteFile } from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
 import { useFileData } from '@/stores';
 
@@ -75,7 +70,11 @@ function previewFile() {
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
-    if (
+    if (typeof res === 'object') {
+      rawData.value = JSON.stringify(res, null, '\t');
+      codeString.value = '```json \n' + rawData.value + '\n```';
+      showBlob.value = true;
+    } else if (
       suffix.value === 'md' ||
       suffix.value === 'json' ||
       suffix.value === 'py' ||
@@ -85,12 +84,8 @@ function previewFile() {
     ) {
       rawData.value = res;
       // md文件不需加```
-      //json数据需特殊处理
       if (suffix.value === 'md') {
         codeString.value = res;
-      } else if (suffix.value === 'json') {
-        rawData.value = JSON.stringify(res, null, '\t');
-        codeString.value = '```json \n' + rawData.value + '\n```';
       } else {
         codeString.value =
           '```' + suffix.value + ' \n' + rawData.value + '\n```';

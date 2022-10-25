@@ -1,19 +1,28 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import useClipboard from 'vue-clipboard3';
+
 import OButton from '@/components/OButton.vue';
 import FileTree from './FileTree.vue';
 
 import IconDownload from '~icons/app/download';
 import IconPlus from '~icons/app/plus';
-import { gitlabDownloadAll } from '@/api/api-gitlab';
+import IconCopy from '~icons/app/copy-nickname';
 
+import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
+
+const { toClipboard } = useClipboard();
 const router = useRouter();
 const route = useRoute();
+let routerParams = route.params;
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
+const gitCloneUrl = ref(
+  `https://source-xihe.test.osinfra.cn/${routerParams.user}/${routerParams.name}.git`
+);
 const prop = defineProps({
   moduleName: {
     type: String,
@@ -58,9 +67,22 @@ const i18n = {
       },
     },
   ],
-  downloadAll: '下载全部',
+  downloadAll: '下载/克隆',
+  downloadZip: '下载ZIP',
   addNew: '添加',
 };
+const handleCopy = async () => {
+  try {
+    await toClipboard(gitCloneUrl.value);
+    ElMessage({
+      type: 'success',
+      message: '复制成功',
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 function pathClick(index) {
   let contents = '';
   if (route.params.contents) {
@@ -77,7 +99,7 @@ function pathClick(index) {
 }
 function downloadAll() {
   gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
-    // console.log(res);
+    console.log(res);
   });
 }
 </script>
@@ -105,12 +127,34 @@ function downloadAll() {
         </div>
       </div>
       <div class="file-top-right">
-        <o-button class="download-all" @click="downloadAll"
-          ><a>{{ i18n.downloadAll }}</a>
-          <template #suffix>
-            <o-icon><icon-download></icon-download></o-icon>
-          </template>
-        </o-button>
+        <div class="o-popper">
+          <el-popover :width="360" trigger="click" :teleported="false">
+            <template #reference>
+              <o-button class="download-all"
+                ><a>{{ i18n.downloadAll }}</a>
+              </o-button>
+            </template>
+            <div class="clone-download">
+              <div class="clone-repo">
+                <h5>HTTPS:</h5>
+                <el-input v-model="gitCloneUrl" disabled>
+                  <template #suffix>
+                    <o-icon @click="handleCopy"><icon-copy></icon-copy></o-icon>
+                  </template>
+                </el-input>
+              </div>
+              <div class="download-zip">
+                <o-button size="small" class="download-all" @click="downloadAll"
+                  ><a>{{ i18n.downloadZip }}</a>
+                  <template #suffix>
+                    <o-icon><icon-download></icon-download></o-icon>
+                  </template>
+                </o-button>
+              </div>
+            </div>
+          </el-popover>
+        </div>
+
         <el-dropdown v-if="repoDetailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}
@@ -159,6 +203,53 @@ $theme: #0d8dff;
     }
     &-right {
       display: flex;
+      .el-popover {
+        --el-popover-padding: 16px;
+        .clone-download {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .clone-repo {
+            margin-bottom: 16px;
+            width: 100%;
+            border-bottom: 1px solid #e5e5e5;
+            h5 {
+              font-weight: 500;
+              color: #000;
+              font-size: 14px;
+            }
+            .el-input {
+              padding: 8px 0 16px;
+              width: 100%;
+              :deep(.el-input__wrapper) {
+                padding: 6px 8px !important;
+              }
+              .o-icon {
+                cursor: pointer;
+                font-size: 16px;
+                color: #555;
+                &:hover {
+                  color: #0d8dff;
+                }
+              }
+            }
+          }
+          .download-zip {
+            .o-button {
+              padding: 4px 10px !important;
+              min-width: 0;
+              a {
+                line-height: 18px;
+                font-size: 12px;
+              }
+            }
+            .o-icon {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+
       .add-new {
         margin-left: 24px;
       }

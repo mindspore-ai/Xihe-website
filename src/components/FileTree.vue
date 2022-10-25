@@ -555,10 +555,14 @@ watch(
       }
       .check-name {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         padding: 0 30px;
         span {
+          margin: 0;
           cursor: pointer;
+        }
+        span:nth-child(1) {
+          margin-right: 16px;
         }
       }
       td {

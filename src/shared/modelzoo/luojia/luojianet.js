@@ -1,7 +1,7 @@
-window.CESIUM_BASE_URL = '/modelzoo/luojia/';
+window.CESIUM_BASE_URL = '/lib/Cesium/';
 
 import * as Cesium from 'cesium';
-import '@/shared/styles/cesium/widgets.css';
+import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
 
 //初始视角更改
@@ -343,18 +343,16 @@ export default class ExampleCesium {
 
   //控制是否展示信息框
   showInfo(bool) {
-    const infoBoxContainer = document.getElementsByClassName(
-      'cesium-infoBox'
-    )[0] ;
+    const infoBoxContainer =
+      document.getElementsByClassName('cesium-infoBox')[0];
 
     infoBoxContainer.style.display = bool ? 'block' : 'none';
   }
 
   //控制是否展示细节信息框
   showInfoDetails(bool) {
-    const infoBoxContainer = document.getElementsByClassName(
-      'cesium-infoBox'
-    )[0];
+    const infoBoxContainer =
+      document.getElementsByClassName('cesium-infoBox')[0];
 
     infoBoxContainer.className = bool
       ? 'cesium-infoBox cesium-infoBox-bodyless cesium-infoBox-visible'

@@ -282,12 +282,12 @@ const BING_IMG_P = new Cesium.ProviderViewModel({
  * 定义展示的控件以及功能
  */
 export default class ExampleCesium {
-  container: HTMLElement;
-  viewer: Cesium.Viewer;
-  drawer: DrawRect;
-  imglay?: Cesium.ImageryLayer;
+  container;
+  viewer;
+  drawer;
+  imglay;
 
-  constructor(container: HTMLElement) {
+  constructor(container) {
     this.container = container;
 
     this.viewer = new Cesium.Viewer(this.container, {
@@ -309,10 +309,10 @@ export default class ExampleCesium {
   }
 
   //获取搜索的图像
-  setImagery(name: string) {
+  setImagery(name) {
     const models =
       this.viewer.baseLayerPicker.viewModel.imageryProviderViewModels;
-    const filter = (ele: Cesium.ProviderViewModel) => {
+    const filter = (ele) => {
       return ele.name == name;
     };
     const ans = models.filter(filter);
@@ -342,19 +342,19 @@ export default class ExampleCesium {
   }
 
   //控制是否展示信息框
-  showInfo(bool: boolean) {
+  showInfo(bool) {
     const infoBoxContainer = document.getElementsByClassName(
       'cesium-infoBox'
-    )[0] as HTMLElement;
+    )[0] ;
 
     infoBoxContainer.style.display = bool ? 'block' : 'none';
   }
 
   //控制是否展示细节信息框
-  showInfoDetails(bool: boolean) {
+  showInfoDetails(bool) {
     const infoBoxContainer = document.getElementsByClassName(
       'cesium-infoBox'
-    )[0] as HTMLElement;
+    )[0];
 
     infoBoxContainer.className = bool
       ? 'cesium-infoBox cesium-infoBox-bodyless cesium-infoBox-visible'
@@ -362,7 +362,7 @@ export default class ExampleCesium {
 
     const infoBoxTitle = document.getElementsByClassName(
       'cesium-infoBox-title'
-    )[0] as HTMLElement;
+    )[0];
 
     infoBoxTitle.innerHTML = 'rect';
 
@@ -370,17 +370,12 @@ export default class ExampleCesium {
   }
 
   //在矩形框内展示图片
-  setImage(image: HTMLImageElement) {
+  setImage(image) {
     this.drawer.setImage(image);
   }
 
   //在对应位置绘制图像(图像将紧贴三维地球)
-  setImageAsLayerWithCoor(
-    image: HTMLImageElement,
-    coor: any[],
-    outline: boolean = true,
-    fill: boolean = false
-  ) {
+  setImageAsLayerWithCoor(image, coor, outline, fill) {
     const layers = this.viewer.scene.imageryLayers;
     const viewer = this.viewer;
     const temprect = Cesium.Rectangle.fromDegrees(
@@ -417,7 +412,7 @@ export default class ExampleCesium {
     imglay.splitDirection = Cesium.SplitDirection.LEFT;
 
     // Sync the position of the slider with the split position
-    var slider = document.getElementById('slider') as any;
+    var slider = document.getElementById('slider');
     slider.style.display = 'block';
 
     this.viewer.scene.splitPosition =
@@ -438,7 +433,7 @@ export default class ExampleCesium {
     this.viewer.scene.splitPosition = 0.5;
     var moveActive = false;
 
-    function move(movement: { endPosition: { x: any } }) {
+    function move(movement) {
       if (!moveActive) {
         return;
       }
@@ -477,7 +472,7 @@ export default class ExampleCesium {
   }
 
   //在对应位置绘制图像
-  setImageAsLayer(image: HTMLImageElement) {
+  setImageAsLayer(image) {
     let layers = this.viewer.scene.imageryLayers;
 
     let viewer = this.viewer;
@@ -496,7 +491,7 @@ export default class ExampleCesium {
     imglay.splitDirection = Cesium.SplitDirection.LEFT;
 
     // Sync the position of the slider with the split position
-    var slider = document.getElementById('slider') as any;
+    var slider = document.getElementById('slider');
     // slider.style.display = 'block';
 
     this.viewer.scene.splitPosition =
@@ -518,7 +513,7 @@ export default class ExampleCesium {
     viewer.scene.splitPosition = 0.5;
     var moveActive = false;
 
-    function move(movement: { endPosition: { x: any } }) {
+    function move(movement) {
       if (!moveActive) {
         return;
       }

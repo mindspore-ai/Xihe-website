@@ -134,6 +134,7 @@ function successCallback() {
 
 // 样例
 function selectImage(val) {
+  console.log(val);
   if (!userInfoStore.id) {
     goAuthorize();
   } else {
@@ -141,6 +142,7 @@ function selectImage(val) {
       isClick.value = false;
 
       imgUrl.value = getImage(val);
+      console.log(imgUrl.value);
 
       formData.delete('file');
       formData = new FormData();
@@ -154,6 +156,7 @@ function selectImage(val) {
             type: 'image/png',
             lastModified: Date.now(),
           });
+          console.log(file);
 
           fileList.value = [];
           fileList.value[0] = { raw: file }; // formData.append('blob', file);

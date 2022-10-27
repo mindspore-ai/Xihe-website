@@ -141,3 +141,35 @@ export function handlePanguInfer(params) {
       return e;
     });
 }
+
+/**
+ * LuoJia推理
+ * @returns
+ */
+export function handleLuoJiaInfer(params) {
+  const url = '/api/foundation/luojianet';
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * LuoJia推理记录
+ * @returns
+ */
+export function handleLuoJiaHistory() {
+  const url = '/api/foundation/luojianet';
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

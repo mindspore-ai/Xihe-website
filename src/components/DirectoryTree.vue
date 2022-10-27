@@ -1,91 +1,33 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { ref, computed, watch, reactive } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 // import OButton from '@/components/OButton.vue';
 // import FileTree from './FileTree.vue';
-import IconModel from '~icons/app/model-blue';
-import IconDataset from '~icons/app/dataset-blue';
 import IconProject from '~icons/app/project-tree';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
-import IconCircleCheck from '~icons/app/circle-check';
-import IconCircleClose from '~icons/app/circle-close';
-// import IconDownload from '~icons/app/download';
-// import IconPlus from '~icons/app/plus';
-// import { gitlabDownloadAll } from '@/api/api-gitlab';
-import { ElMessage } from 'element-plus';
-import {
-  getGitlabTree,
-  deleteFile,
-  uploadFileGitlab,
-  deleteFolder,
-  findAllFileByPath,
-} from '@/api/api-gitlab';
+import { getGitlabTree } from '@/api/api-gitlab';
 
-import { useUserInfoStore, useFileData } from '@/stores';
-
-const fileName = ref('');
-const isFolder = ref(false);
-let queryRef = ref(null);
+// import { useFileData } from '@/stores';
 
 const router = useRouter();
 const route = useRoute();
-const repoDetailData = computed(() => {
-  return useFileData().fileStoreData;
+const props = defineProps({
+  repoDetail: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
 });
-const showFolder = computed(() => {
-  return useFileData().showCreateFolder;
-});
+console.log('仓库详情数据: ', props.repoDetail);
 
 let routerParams = router.currentRoute.value.params;
 let contents = routerParams.contents;
-const showDel = ref(false);
-const pushParams = {
-  user: routerParams.user,
-  name: routerParams.name,
-  contents: routerParams.contents,
-};
 const filesList = ref([]);
-const prop = defineProps({
-  moduleName: {
-    type: String,
-    default: '',
-  },
-});
-
-const i18n = {
-  name: '名称',
-  description: '描述',
-  download: '下载',
-  uploadReadMe: ['当前无文件，点击', '新建文件', '或', '上传文件'],
-  emptyVisited: '该用户还未上传任何文件',
-  delete: {
-    title: '删除模型',
-    description: '此操作不可逆，确定删除',
-    btnText: '删除',
-    cancel: '取消',
-    confirm: '确认',
-  },
-};
-
-const rules = reactive({
-  folderName: [
-    { required: true, message: '禁止为空', trigger: 'blur' },
-    {
-      pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -._]{1,120}$/,
-      message:
-        '禁止包含以下字符：“?”、“、”、“╲”、“/”、“*”、““”、“”“、“<”、“>”、“|”',
-      trigger: 'blur',
-    },
-  ],
-});
-
-let query = reactive({
-  folderName: '',
-  description: '',
-  textValue: '',
-});
+// console.log('route: ', router);
+// 获取目录树的内容（表格数据）
 async function getDetailData(path) {
   console.log('path: ', path);
   try {
@@ -93,7 +35,7 @@ async function getDetailData(path) {
     await getGitlabTree({
       user: routerParams.user,
       path: path,
-      id: repoDetailData.value.id,
+      id: repoDetail.value.id,
       name: routerParams.name,
     }).then((res) => {
       if (res.data) {
@@ -137,10 +79,13 @@ function goBlob(item) {
     },
   };
 }
+// console.log('route: ', route);
+// console.log('router: ', router);
 
 watch(
   () => route.fullPath,
   () => {
+    console.log('route.fullPath: ', route.fullPath);
     if (router.currentRoute.value.name === `projectFile`) {
       getFilesByPath();
     }
@@ -168,13 +113,15 @@ function pathClick(index) {
   });
 }
 </script>
+
 <template>
   <div class="model-file">
     <div class="file-top">
       <div class="file-top-left">
         <div class="file-path">
           <div class="item-path" @click="pathClick()">
-            {{ repoDetailData.name }}
+            <!-- {{ repoDetailData.name }} -->
+            {{ repoDetail.name }}
           </div>
           <div
             v-for="(item, index) in route.params.contents"
@@ -191,8 +138,8 @@ function pathClick(index) {
       <!-- v-if="!repoDetailData.is_empty" -->
       <div class="tree">
         <table class="tree-table">
-          <col width="330px" />
-          <col width="670px" />
+          <!-- <col width="330px" />
+          <col width="670px" /> -->
           <tbody style="100%">
             <tr class="tree-head">
               <td>
@@ -200,17 +147,11 @@ function pathClick(index) {
                   <o-icon>
                     <icon-project></icon-project>
                   </o-icon>
-                  <span
-                    class="tree-head-left-name"
-                    :title="repoDetailData.desc"
-                    >{{ i18n.name }}</span
-                  >
+                  <span class="tree-head-left-name">名称</span>
                 </div>
               </td>
               <td class="tree-head-right">
-                <div class="inner-box">
-                  {{ i18n.description }}
-                </div>
+                <div class="inner-box">描述</div>
               </td>
             </tr>
             <template v-if="filesList.length">
@@ -278,7 +219,7 @@ $theme: #0d8dff;
         &-left {
           display: flex;
           align-items: center;
-          height: 56px;
+          height: 48px;
           &-name {
             padding-left: 6px;
             color: #555;
@@ -290,12 +231,12 @@ $theme: #0d8dff;
         }
         &-right {
           padding-right: 70px;
-          height: 56px;
+          height: 48px;
         }
       }
       &-table {
         padding: 0 24px;
-        width: 100%;
+        width: 100% !important;
         border: 1px solid #e5e5e5;
         background-color: #fff;
         table-layout: fixed;
@@ -305,7 +246,7 @@ $theme: #0d8dff;
           width: inherit;
         }
         tr {
-          height: 56px;
+          height: 48px;
           transition: all 0.3s;
           &:hover {
             background: #f7f8fa;

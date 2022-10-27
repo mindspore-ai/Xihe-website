@@ -76,7 +76,7 @@ export async function editorFileGitlab(params) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(params) {
-  // console.log('params: ', params);
+  console.log('params: ', params);
   const url = `/api/v1/repo/${params.user}/${
     params.name
   }/files?path=${encodeURIComponent(params.path)}`;

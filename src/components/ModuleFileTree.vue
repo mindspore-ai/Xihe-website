@@ -183,6 +183,14 @@ function downloadAll() {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
+:deep(.el-popover) {
+  inset: 0 auto auto -70px !important;
+  --el-popover-padding: 16px;
+  .el-popper__arrow {
+    display: block;
+    left: 70px !important;
+  }
+}
 .model-file {
   .file-top {
     display: flex;
@@ -249,7 +257,6 @@ $theme: #0d8dff;
           }
         }
       }
-
       .add-new {
         margin-left: 24px;
       }

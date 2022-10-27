@@ -267,6 +267,7 @@ function deleteFolderClick(folderName) {
 watch(
   () => route.fullPath,
   () => {
+    console.log('route.fullPath: ', route.fullPath);
     if (router.currentRoute.value.name === `${prop.moduleName}File`) {
       getFilesByPath();
     }

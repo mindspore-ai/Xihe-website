@@ -10,6 +10,7 @@ import { createTrainProject } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
+import OButton from '@/components/OButton.vue';
 
 const userInfoStore = useUserInfoStore();
 
@@ -21,6 +22,7 @@ const route = useRoute();
 const router = useRouter();
 const queryRef = ref(null);
 const detailData = ref([]);
+const showDir = ref(false);
 
 const form = reactive({
   name: '',
@@ -195,10 +197,9 @@ function getDetailData() {
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
-      // console.log('res: ', res);
       // if (res.results.status === 200) {
       detailData.value = res.data;
-      // console.log('detailData.value: ', detailData.value);
+      // console.log('项目仓库详情数据: ', detailData.value);
 
       // }
     });
@@ -207,15 +208,15 @@ function getDetailData() {
   }
 }
 getDetailData();
-// 跳转到选择文件创建训练实例页
-function goSelectFile() {
+// 跳转到选择文件创建训练实例页TODO:暂时注释
+/* function goSelectFile() {
   router.push({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
     query: {
       id: detailData.value.id,
     },
   });
-}
+} */
 // 按顺序校验表单数据是否校验通过
 function verify(node, code, message) {
   return new Promise((resolve, reject) => {
@@ -302,9 +303,7 @@ async function confirmCreating(formEl) {
       ) {
         params.datasets = [];
       }
-      // console.log('route.query.id: ', route.query.id);
       createTrainProject(params, route.query.id).then((res) => {
-        // console.log('res: ', res);
         // if (res.status === 200) {
         ElMessage({
           type: 'success',
@@ -449,6 +448,10 @@ const rules = reactive({
   //   },
   // ],
 });
+
+function confirmSelect() {
+  showDir.value = false;
+}
 </script>
 <template>
   <div class="createfile">
@@ -461,9 +464,10 @@ const rules = reactive({
         <div class="createfile-content-title">
           <div class="createfile-content-title-left">创建训练实例</div>
           <div class="createfile-content-title-right">
-            <div class="selectfile-option" @click="goSelectFile">
+            <!-- TODO:暂时关闭入口 -->
+            <!-- <div class="selectfile-option" @click="goSelectFile">
               选择配置文件
-            </div>
+            </div> -->
             <div class="createfile-option">创建配置文件</div>
           </div>
         </div>
@@ -507,10 +511,13 @@ const rules = reactive({
                 </div>
 
                 <el-form-item prop="code_dir">
-                  <el-input
-                    v-model="form.code_dir"
-                    placeholder="请输入训练代码目录"
-                  />
+                  <div class="option">
+                    <el-input
+                      v-model="form.code_dir"
+                      placeholder="请输入训练代码目录"
+                    />
+                    <!-- <o-button @click="showDir = true">选择</o-button> -->
+                  </div>
                 </el-form-item>
               </div>
               <div class="createfile-form-item">
@@ -518,10 +525,13 @@ const rules = reactive({
                   <icon-necessary></icon-necessary><span>启动文件</span>
                 </div>
                 <el-form-item prop="boot_file">
-                  <el-input
-                    v-model="form.boot_file"
-                    placeholder="请输入文件名"
-                  />
+                  <div class="option">
+                    <el-input
+                      v-model="form.boot_file"
+                      placeholder="请输入文件名"
+                    />
+                    <!-- <o-button>选择</o-button> -->
+                  </div>
                 </el-form-item>
               </div>
               <div class="createfile-form-item frameworks">
@@ -771,6 +781,38 @@ const rules = reactive({
       </div>
     </div>
   </div>
+  <!-- <o-dialog :show="showDir" :close="false">
+    <template #head>
+      <div class="dlg-title" :style="{ textAlign: 'center' }">代码目录</div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 12px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      <directory-tree :repo-detail="detailData"></directory-tree>
+      11111
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '16px',
+        }"
+      >
+        <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+          >取消</o-button
+        >
+        <o-button type="primary" @click="confirmSelect">确定</o-button>
+      </div>
+    </template>
+  </o-dialog> -->
 </template>
 
 <style lang="scss" scoped>
@@ -861,6 +903,16 @@ const rules = reactive({
               //   font-size: 30px;
               // }
             }
+            .option {
+              width: 100%;
+              height: 36px;
+              display: flex;
+              .o-button {
+                min-width: 80px;
+                padding: 5px 28px;
+                margin-left: 8px;
+              }
+            }
           }
           .frameworks {
             position: relative;
@@ -919,7 +971,7 @@ const rules = reactive({
     }
     // width: 39%;
     .el-form-item__content {
-      width: 80%;
+      width: 100%;
       .el-form-item__error {
         white-space: nowrap;
         // transform: translateY(-50%);

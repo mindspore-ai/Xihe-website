@@ -399,7 +399,7 @@ watch(
   <div class="train-log">
     <div class="train-log-form">
       <div class="train-log-name">
-        <span>训练日志</span>
+        <span>训练名称</span>
         <el-input v-model="form.name" disabled> </el-input>
       </div>
       <div class="train-log-desc">

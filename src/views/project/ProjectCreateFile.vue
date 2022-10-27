@@ -190,15 +190,16 @@ function goTrain() {
   });
 }
 // 获得项目详情数据
-function getDetailData() {
+async function getDetailData() {
   try {
-    getRepoDetailByName({
+    await getRepoDetailByName({
       user: route.params.user,
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
       // if (res.results.status === 200) {
       detailData.value = res.data;
+
       // console.log('项目仓库详情数据: ', detailData.value);
 
       // }
@@ -452,6 +453,9 @@ const rules = reactive({
 function confirmSelect() {
   showDir.value = false;
 }
+function toggleDlg() {
+  showDir.value = true;
+}
 </script>
 <template>
   <div class="createfile">
@@ -516,7 +520,7 @@ function confirmSelect() {
                       v-model="form.code_dir"
                       placeholder="请输入训练代码目录"
                     />
-                    <!-- <o-button @click="showDir = true">选择</o-button> -->
+                    <!-- <o-button @click="toggleDlg">选择</o-button> -->
                   </div>
                 </el-form-item>
               </div>
@@ -781,7 +785,7 @@ function confirmSelect() {
       </div>
     </div>
   </div>
-  <!-- <o-dialog :show="showDir" :close="false">
+  <o-dialog :show="showDir" :close="false">
     <template #head>
       <div class="dlg-title" :style="{ textAlign: 'center' }">代码目录</div>
     </template>
@@ -794,7 +798,11 @@ function confirmSelect() {
         width: '640px',
       }"
     >
-      <directory-tree :repo-detail="detailData"></directory-tree>
+      <!--  <directory-tree
+        v-if="detailData.id"
+        :repo-detail="detailData"
+        :show-dir="showDir"
+      ></directory-tree> -->
       11111
     </div>
     <template #foot>
@@ -812,7 +820,7 @@ function confirmSelect() {
         <o-button type="primary" @click="confirmSelect">确定</o-button>
       </div>
     </template>
-  </o-dialog> -->
+  </o-dialog>
 </template>
 
 <style lang="scss" scoped>

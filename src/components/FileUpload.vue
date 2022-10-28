@@ -12,12 +12,11 @@ import IconUpload from '~icons/app/upload';
 
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useFileData } from '@/stores';
 import { fileToBase64 } from '@/shared/utils';
 
 const router = useRouter();
 const route = useRoute();
-const userInfo = useUserInfoStore();
 
 const routerParams = router.currentRoute.value.params;
 const repoDetailData = computed(() => {
@@ -45,12 +44,6 @@ const i18n = {
 };
 const Progress = ref(0);
 
-// 进度条
-// function callback(transferredAmount, totalAmount) {
-//   Progress.value = parseFloat(
-//     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
-//   );
-// }
 // gitlab 上传
 async function upLoad(param) {
   let path = `${param.file.name}`;

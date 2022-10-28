@@ -78,7 +78,8 @@ function goSelectFile() {
   } else { */
   // 点击在新页签打开
   let routerData = router.resolve({
-    path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
+    // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     query: {
       id: detailData.value.id,
     },
@@ -179,7 +180,7 @@ function resetClick(val) {
 }
 
 function goTrainLog(trainId) {
-  console.log('trainId: ' + trainId);
+  // console.log('trainId: ' + trainId);
   router.push({
     name: 'projectTrainLog',
     params: {
@@ -200,7 +201,7 @@ function getHeaderConfig() {
 }
 
 const socket = new WebSocket(
-  `wss://${DOMAIN}/server/train/project/${projectId}/training`,
+  `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`,
   [getHeaderConfig().headers['private-token']]
 );
 // // 创建好连接之后自动触发（ 服务端执行self.accept() )

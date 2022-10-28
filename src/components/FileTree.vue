@@ -17,6 +17,7 @@ import IconCircleClose from '~icons/app/circle-close';
 import IconRemove from '~icons/app/remove';
 
 import warningImg from '@/assets/icons/warning.png';
+import LfsImg from '@/assets/icons/lfs.png';
 
 // import { findFile, createFolder, deleteFolder } from '@/api/api-obs';
 
@@ -110,9 +111,8 @@ async function getDetailData(path) {
         filesList.value = res.data;
       }
     });
-    // await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
-    //   commitData.value = res;
-    //   console.log(res);
+    // getTree().then((res) => {
+    //   filesList.value = res;
     // });
   } catch (error) {
     console.error(error);
@@ -262,6 +262,7 @@ function deleteFolderClick(folderName) {
 watch(
   () => route.fullPath,
   () => {
+    console.log('route.fullPath: ', route.fullPath);
     if (router.currentRoute.value.name === `${prop.moduleName}File`) {
       getFilesByPath();
     }
@@ -276,8 +277,8 @@ watch(
   <div v-if="!repoDetailData.is_empty" class="tree">
     <table class="tree-table">
       <col width="330px" />
-      <col width="120px" />
-      <col width="670px" />
+      <col width="250px" />
+      <col width="540px" />
       <col width="200px" />
       <tbody style="100%">
         <tr class="tree-head">
@@ -358,7 +359,7 @@ watch(
             </td>
             <td
               class="tree-table-item-download"
-              width="10%"
+              width="25%"
               @click="
                 !item.is_dir &&
                   downloadFile({
@@ -372,9 +373,15 @@ watch(
               <div class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span class="size">{{ changeByte(item.size) }}</span>
+                <img
+                  v-if="item.is_lfs_file"
+                  :src="LfsImg"
+                  alt=""
+                  class="is-lfs"
+                />
               </div>
             </td>
-            <td class="tree-table-item-from" :title="item.description">
+            <td class="tree-table-item-from" :title="item.commit_title_html">
               <div class="inner-box">
                 <span v-if="item.IsLFSFile">LFS</span>
                 <div
@@ -548,14 +555,19 @@ watch(
       }
       .check-name {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         padding: 0 30px;
         span {
+          margin: 0;
           cursor: pointer;
+        }
+        span:nth-child(1) {
+          margin-right: 16px;
         }
       }
       td {
         overflow: hidden;
+        flex-shrink: 0;
         word-wrap: break-word;
         border-bottom: 1px solid #e5e5e5;
         .inner-box {
@@ -592,10 +604,13 @@ watch(
         }
       }
       &-from {
+        position: relative;
         color: #555;
         .inner-box {
           justify-content: space-between;
           .delete-folder {
+            position: absolute;
+            right: 0;
             display: none;
             cursor: pointer;
             padding-right: 50px;
@@ -622,6 +637,10 @@ watch(
         color: #999;
         .inner-box {
           padding: 0 24px;
+          .is-lfs {
+            margin-left: 8px;
+            width: 64px;
+          }
         }
         span {
           line-height: 18px;

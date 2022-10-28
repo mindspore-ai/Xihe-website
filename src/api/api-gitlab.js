@@ -76,6 +76,7 @@ export async function editorFileGitlab(params) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(params) {
+  console.log('params: ', params);
   const url = `/api/v1/repo/${params.user}/${
     params.name
   }/files?path=${encodeURIComponent(params.path)}`;
@@ -149,6 +150,7 @@ export function getGitlabCommit(path, id) {
     return res.data;
   });
 }
+
 // 递归查询所有文件
 export async function findAllFileByPath(fullPath, path) {
   const url = `/graphql/api/graphql`;
@@ -165,6 +167,13 @@ export async function findAllFileByPath(fullPath, path) {
   });
 }
 
+// test
+export async function getTree() {
+  const url = `/graphql/888/project-firstProject/-/refs/main/logs_tree/?format=json&offset=0`;
+  return request.get(url).then((res) => {
+    return res.data;
+  });
+}
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {
     if (res?.data?.content) {

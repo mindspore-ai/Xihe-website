@@ -95,8 +95,9 @@ route.hash ? getReadMeFile() : '';
   trainList(detailData.value.id).then((res) => {
     trainListData.value = res.data.data;
   });
-} */
-// getTrainList();
+  console.log('trainListData.value: ', trainListData.value);
+}
+getTrainList(); */
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   /* if (trainListData.value.length === 5) {
@@ -109,7 +110,8 @@ function goSelectFile() {
   } else { */
   // 点击在新页签打开
   let routerData = router.resolve({
-    path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
+    // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     query: {
       id: detailData.value.id,
     },
@@ -313,11 +315,10 @@ function getReadMeFile() {
       name: routerParams.name,
     })
       .then((tree) => {
-        console.log('tree: ', tree);
         README = tree?.data?.filter((item) => {
           return item.name === 'README.md';
         });
-        if (README[0]) {
+        if (README && README.length) {
           getGitlabFileRaw({
             user: routerParams.user,
             path: 'train/README.md',

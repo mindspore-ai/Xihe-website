@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo } from '@/api/api-user';
 import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
+import { LOGIN_STATUS } from '@/shared/login';
 
 import user from './user';
 import model from './model';
@@ -10,6 +11,8 @@ import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
 import competition from './competition';
+
+export let fromPath = '';
 
 export const routes = [
   // 主页
@@ -44,6 +47,16 @@ export const routes = [
     component: () => {
       return import('@/views/TheCreating.vue');
     },
+    beforeEnter: async (to, from, next) => {
+      fromPath = from.path;
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: '404',
+        };
+      }
+      next();
+    },
     children: [
       {
         path: 'models',
@@ -51,7 +64,6 @@ export const routes = [
         component: () => {
           return import('@/views/model/ModelCreating.vue');
         },
-        meta: { isPrivate: true },
       },
       {
         path: 'datasets',
@@ -59,7 +71,6 @@ export const routes = [
         component: () => {
           return import('@/views/dataset/DatasetCreating.vue');
         },
-        meta: { isPrivate: true },
       },
       {
         path: 'projects',
@@ -67,7 +78,6 @@ export const routes = [
         component: () => {
           return import('@/views/project/ProjectCreating.vue');
         },
-        meta: { isPrivate: true },
       },
     ],
   },

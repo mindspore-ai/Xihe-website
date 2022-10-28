@@ -42,7 +42,6 @@ const emit = defineEmits(['getlivecount', 'domChange']);
 
 // 获得动态页面数据
 getUserLive(userInfo.value.userName).then((res) => {
-  // console.log('动态信息: ', res);
   if (res.data) {
     liveCount.value = res.data.length;
     liveData.value = res.data;
@@ -131,7 +130,7 @@ getCount();
           <livecard
             v-else
             :card-data="item"
-            class="card-list-item-content2"
+            class="card-list-item-content"
             @click="goDetail(item)"
           ></livecard>
         </div>
@@ -184,7 +183,7 @@ getCount();
             margin-left: 24px;
           }
         }
-        .card-list-item-content2 {
+        .card-list-item-content {
           // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           &:hover {
             box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);

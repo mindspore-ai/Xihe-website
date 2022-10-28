@@ -105,13 +105,22 @@ function init(item) {
 
   instance.revealLine(count.value);
 }
-
+// const sendCode = ref('');
 function hanleGenerateCode() {
+  // const len = tabsList.value[activeIndex.value].code.length;
+  // const str = tabsList.value[activeIndex.value].code.substring(len - 2);
+
+  // if (str === '\n' || str === '\t') {
+  //   sendCode.value = tabsList.value[activeIndex.value].code;
+  // } else {
+  //   sendCode.value = tabsList.value[activeIndex.value].code + '\n';
+  // }
+
   isDisabled.value = true;
   handleGenerateCode({
     content: tabsList.value[activeIndex.value].code,
-    n: 1,
-    lang: tabsList.value[activeIndex.value].name,
+    // n: 1,
+    // lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
     if (res.status === 200) {
       isDisabled.value = false;

@@ -197,6 +197,7 @@ socket.onmessage = function (event) {
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     form.name = trainDetail.value.name;
+    form.desc = trainDetail.value.log;
     configurationInfo.value = trainDetail.value.compute;
   });
 };

@@ -47,6 +47,7 @@ const i18n = {
   delete: {
     describe1: '确定删除这个团队吗？',
     describe2: '退出当前团队比赛成绩会重置，请重新上传结果',
+    describe3: '删除当前团队会退出决赛，确定删除这个团队吗？',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
@@ -516,7 +517,11 @@ function toggleQuitDlg(flag) {
         width: '640px',
       }"
     >
-      {{ i18n.delete.describe1 }}
+      {{
+        userComData.competitionData.competition_period === '初赛'
+          ? i18n.delete.describe1
+          : i18n.delete.describe3
+      }}
     </div>
     <template #foot>
       <div

@@ -109,38 +109,41 @@ async function upLoad(param) {
       togglePhoneDlg(false);
       Progress.value = '';
       fileList.value = [];
-      handleSubmit({ file_name: param.name }, route.path.split('/')[2]).then(
-        (res) => {
-          if (res.status === 200) {
-            // ElMessage({
-            //   type: 'success',
-            //   message: '上传成功,正在自动评分中！',
-            // });
-            handleScoring({ file_name: param.name }, teamId.value).then(
-              (res) => {
-                if (res.status === 200) {
-                  ElMessage({
-                    type: 'success',
-                    message: '上传成功,正在自动评分中！',
-                  });
-                  getIndividual(teamId.value);
-                } else {
-                  ElMessage({
-                    type: 'error',
-                    message: res.msg,
-                  });
-                  getIndividual(teamId.value);
-                }
-              }
-            );
-          } else {
-            ElMessage({
-              type: 'error',
-              message: res.msg,
-            });
-          }
+      handleSubmit(
+        {
+          file_name: param.name,
+          competition_id: route.path.split('/')[2],
+          period: 2,
+        },
+        route.path.split('/')[2]
+      ).then((res) => {
+        if (res.status === 200) {
+          // ElMessage({
+          //   type: 'success',
+          //   message: '上传成功,正在自动评分中！',
+          // });
+          handleScoring({ file_name: param.name }, teamId.value).then((res) => {
+            if (res.status === 200) {
+              ElMessage({
+                type: 'success',
+                message: '上传成功,正在自动评分中！',
+              });
+              getIndividual(teamId.value);
+            } else {
+              ElMessage({
+                type: 'error',
+                message: res.msg,
+              });
+              getIndividual(teamId.value);
+            }
+          });
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
         }
-      );
+      });
     }
   );
 }
@@ -290,6 +293,13 @@ function handelSubmit() {
     ElMessage({
       type: 'error',
       message: '您今天已经提交过了哦~',
+    });
+  } else if (
+    detailData.value.competition_period !== detailData1.value.competition_period
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '初赛阶段已结束',
     });
   } else {
     // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {

@@ -410,7 +410,7 @@ function saveInfo(formEl) {
       <o-button v-if="!agree" disabled type="secondary">{{
         i18n.save
       }}</o-button>
-      <o-button v-else type="primary" @click="saveInfo(queryRef)">{{
+      <o-button v-else disabled type="primary" @click="saveInfo(queryRef)">{{
         i18n.save
       }}</o-button>
     </div>

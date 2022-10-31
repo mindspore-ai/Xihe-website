@@ -42,8 +42,9 @@ export function getAllCompetition(params) {
  * @returns
  */
 export function getRank(id) {
-  const url = `/api/competitions/competition_ranklist/${id}`;
-  return request.get(url).then((res) => {
+  const url = `/api/competitions/competition_ranklist`;
+  console.log(id);
+  return request.post(url, id).then((res) => {
     return res.data;
   });
 }
@@ -184,8 +185,8 @@ export function addProject(params) {
  * 队长提交结果
  * @returns
  */
-export function handleSubmit(params, pk) {
-  const url = `/api/competitions/commit_result/${pk}`;
+export function handleSubmit(params) {
+  const url = `/api/competitions/commit_result/`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

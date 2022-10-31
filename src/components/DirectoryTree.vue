@@ -26,7 +26,7 @@ const props = defineProps({
   },
 });
 // console.log('仓库详情数据: ', props.repoDetail);
-console.log('仓库详情数据: ', props.optionType);
+// console.log('类型: ', props.optionType);
 
 const dirPath = ref(''); // 自定义路径
 const headContents = ref([]); // 头部路径，数组
@@ -52,7 +52,7 @@ async function getDetailData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         filesList.value = res.data;
-        console.log('获取文件目录树结果: ', filesList.value);
+        // console.log('获取文件目录树结果: ', filesList.value);
       }
     });
   } catch (error) {
@@ -122,7 +122,6 @@ function handleChange(item) {
 
 <template>
   <div class="model-file">
-    <!-- <div class="title">代码目录钱钱钱</div> -->
     <div class="file-top">
       <div class="file-top-left">
         <div class="file-path">
@@ -170,24 +169,24 @@ function handleChange(item) {
                 :key="index"
                 class="tree-table-item"
               >
-                <div style="width: 100%">
+                <td>
                   <el-radio-group v-model="radio" @change="handleChange">
                     <el-radio :label="item.name">
-                      <td class="tree-table-item-name" :title="item.name">
-                        <div class="inner-box" @click="goBlob(item)">
-                          <o-icon v-if="!item.is_dir"
-                            ><icon-file></icon-file>
-                          </o-icon>
-                          <o-icon v-else><icon-folder></icon-folder> </o-icon>
-                          <span>{{ item.name }}</span>
-                        </div>
-                      </td>
-                      <td class="tree-table-item-time">
-                        <div class="inner-box">描述~~~</div>
-                      </td>
+                      <!-- <td class="tree-table-item-name" :title="item.name"> -->
+                      <div class="inner-box" @click="goBlob(item)">
+                        <o-icon v-if="!item.is_dir"
+                          ><icon-file></icon-file>
+                        </o-icon>
+                        <o-icon v-else><icon-folder></icon-folder> </o-icon>
+                        <span>{{ item.name }}</span>
+                      </div>
+                      <!-- </td> -->
                     </el-radio>
                   </el-radio-group>
-                </div>
+                </td>
+                <td class="tree-table-item-time">
+                  <div class="inner-box">描述~~~</div>
+                </td>
               </tr>
               <!--  <tr
                 v-for="(item, index) in filesList"
@@ -288,12 +287,6 @@ $theme: #0d8dff;
           transition: all 0.3s;
           &:hover {
             background: #f7f8fa;
-            .delete-folder {
-              display: flex;
-            }
-            .is-visitor {
-              display: none;
-            }
           }
           /* .el-radio-group {
             // width: 100% !important;
@@ -305,14 +298,6 @@ $theme: #0d8dff;
               width: 100%;
             }
           } */
-          .check-name {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 30px;
-            span {
-              cursor: pointer;
-            }
-          }
           td {
             overflow: hidden;
             word-wrap: break-word;
@@ -354,22 +339,6 @@ $theme: #0d8dff;
             color: #555;
             .inner-box {
               justify-content: space-between;
-              .delete-folder {
-                display: none;
-                cursor: pointer;
-                padding-right: 50px;
-                flex-direction: column;
-                color: #33b3ff;
-                justify-content: center;
-                align-items: center;
-                .o-icon {
-                  font-size: 16px;
-                }
-                span {
-                  padding-top: 5px;
-                  font-size: 12px;
-                }
-              }
             }
           }
           &-time {
@@ -412,16 +381,26 @@ $theme: #0d8dff;
 // .tree-table-item {
 // width: 700px;
 :deep(.el-radio-group) {
-  // width: 100% !important;
-  width: 640px;
+  width: 100% !important;
+  // width: 640px;
   height: 48px;
-
   // background-color: #bfa;
+
   .el-radio {
-    width: 100%;
+    // width: 100%;
+    height: 100%;
     .el-radio__label {
       display: inline-block;
       width: 100%;
+      width: 270px;
+      height: 100%;
+      display: flex;
+      .tree-table-item-name {
+        height: 100%;
+        width: 100%;
+        // height: 47px;
+        line-height: 47px;
+      }
       // width: 640px !important;
       // background-color: #bfa;
     }

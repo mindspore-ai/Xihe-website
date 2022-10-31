@@ -98,21 +98,10 @@ export function handleVqaInference(params) {
  * CodeGeex 生成代码
  * @returns
  */
-// export function handleGenerateCode(params) {
-//   const url = `/api/foundation/CodeGeeX`;
-//   return request
-//     .post(url, params, getHeaderConfig())
-//     .then((res) => {
-//       return res.data;
-//     })
-//     .catch((e) => {
-//       return e;
-//     });
-// }
 export function handleGenerateCode(params) {
   const url = `/api/foundation/CodeGeeX`;
   return request
-    .put(url, params, getHeaderConfig())
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })
@@ -120,6 +109,17 @@ export function handleGenerateCode(params) {
       return e;
     });
 }
+// export function handleGenerateCode(params) {
+//   const url = `/api/foundation/CodeGeeX`;
+//   return request
+//     .put(url, params, getHeaderConfig())
+//     .then((res) => {
+//       return res.data;
+//     })
+//     .catch((e) => {
+//       return e;
+//     });
+// }
 
 /**
  * 盘古获取随机示例

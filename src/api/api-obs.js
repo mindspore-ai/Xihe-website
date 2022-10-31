@@ -206,7 +206,7 @@ export async function handleLuoJiaUpload(
             access_key_id: res.access_key,
             secret_access_key: res.secret_key,
             security_token: res.security_token,
-            server: 'https://obs.cn-central-221.ovaijisua.com',
+            server: 'https://obs.cn-central-221.ovaijisuan.com',
             timeout: 1800,
           });
           obsClient.putObject(

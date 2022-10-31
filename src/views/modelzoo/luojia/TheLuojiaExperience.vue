@@ -8,6 +8,7 @@ import IconSelect from '~icons/app/luojia-select';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
+import gif from '@/assets/gifs/loading.gif';
 
 import { useUserInfoStore } from '@/stores';
 import { handleLuoJiaUpload } from '@/api/api-obs';
@@ -33,20 +34,26 @@ const nowModelName = ref('高德影像');
 const zoomlv = ref(18);
 const tblob = ref(null);
 
-function handleDrawClick() {
+const location = ref(null);
+
+const loadingText = ref('');
+const isShow = ref(false);
+const isInfer = ref(false);
+
+async function handleDrawClick() {
   isSelected.value = !isSelected.value;
   //  开始选区/结束选区
   isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
-}
 
-async function handleInferClick() {
   if (!isSelected.value) {
-    // 获取矩形框坐标
     try {
-      const location = viewer.value.drawer.getAnsShapeRectCoor();
+      location.value = viewer.value.drawer.getAnsShapeRectCoor();
 
-      const ltpoint = [location.west, location.north];
-      const rbpoint = [location.east, location.south];
+      const ltpoint = [location.value.west, location.value.north];
+      const rbpoint = [location.value.east, location.value.south];
+
+      isShow.value = true;
+      loadingText.value = '获取图片中';
 
       tblob.value = await rectToImg(
         ltpoint,
@@ -54,28 +61,61 @@ async function handleInferClick() {
         zoomlv.value,
         nowModelName.value
       );
-      handleLuoJiaUpload(
-        {
-          path: `infer/${userInfoStore.userName}/input.png`,
-          file: tblob.value,
-          isEdit: false,
-          description: '',
-        },
-        null,
-        successCallback
-      );
+
+      isShow.value = false;
+      isInfer.value = true;
+      loadingText.value = '';
     } catch (err) {
       ElMessage({
         type: 'warning',
         message: '请选择区域',
       });
-      return;
     }
   }
 }
+// 1. 未选区域，点击识别提示，不发请求
+// 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
+function handleInferClick() {
+  if (loadingText.value === '获取图片中') {
+    ElMessage({
+      type: 'warning',
+      message: '获取图片中，请稍等...',
+    });
+    return;
+  }
 
+  if (isInfer.value) {
+    isShow.value = true;
+    loadingText.value = '上传图片中，请耐心等待';
+    // 上传图片到obs;
+    handleLuoJiaUpload(
+      {
+        path: `infer/${userInfoStore.userName}/input.png`,
+        file: tblob.value,
+        isEdit: false,
+        description: '',
+      },
+      null,
+      successCallback
+    );
+  } else if (!isInfer.value) {
+    ElMessage({
+      type: 'warning',
+      message: '请先框选，再开始识别',
+    });
+  } else if (isSelected.value && !isInfer.value) {
+    ElMessage({
+      type: 'warning',
+      message: '请先结束框选，再开始识别',
+    });
+  }
+}
+
+// obs图片上传成功的回调
 function successCallback() {
+  loadingText.value = '推理中，请耐心等待';
   handleLuoJiaInfer({ username: userInfoStore.userName }).then((res) => {
+    isShow.value = false;
     const aurl = res.data;
     const tempimg = document.createElement('img');
     tempimg.src = aurl;
@@ -132,7 +172,7 @@ onMounted(() => {
     <div class="luojia-top">
       <p class="type">目标检测（Object Detection）</p>
       <p class="desc">
-        指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。
+        指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。<br />
       </p>
     </div>
     <div class="luojia-bottom">
@@ -140,7 +180,7 @@ onMounted(() => {
         <!-- 对比分割线 -->
         <div id="slider" class="slider"></div>
 
-        <div class="select-button" @click="handleDrawClick">
+        <div v-if="!isShow" class="select-button" @click="handleDrawClick">
           <o-icon><icon-select></icon-select></o-icon>
           <span>{{ isSelected ? '结束选区' : '开始选区' }}</span>
           <div v-if="isSelected" class="select-tip">
@@ -159,6 +199,11 @@ onMounted(() => {
         <div class="start-button button-wrap">
           <o-icon><icon-start></icon-start></o-icon>
           <span @click="handleInferClick">开始识别</span>
+        </div>
+
+        <div v-if="isShow" class="loading-box">
+          <img :src="gif" alt="" />
+          <p>{{ loadingText }}</p>
         </div>
       </div>
     </div>
@@ -317,12 +362,25 @@ onMounted(() => {
 }
 .map-container {
   position: relative;
-  :deep(.cesium-toolbar-button) {
-    display: none;
-  }
+
   :deep(.cesium-viewer-toolbar) {
-    right: 234px;
+    right: 156px;
     top: 16px;
+
+    .cesium-toolbar-button {
+      border: none;
+      background: none;
+      &:nth-child(1) {
+        display: none;
+      }
+    }
+    .cesium-home-button {
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .cesium-baseLayerPicker-selected {
+      display: none;
+    }
+
     .cesium-svgPath-svg {
       width: 20px;
       height: 20px;
@@ -345,6 +403,26 @@ onMounted(() => {
     display: none !important;
   }
 }
+.loading-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  img {
+    width: 68px;
+  }
+  p {
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 22px;
+  }
+}
 .button-wrap {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -358,6 +436,9 @@ onMounted(() => {
   position: absolute;
   z-index: 100;
   top: 16px;
+  &:hover {
+    box-shadow: 0 0 8px #fff;
+  }
   cursor: pointer;
   .o-icon {
     margin-right: 8px;
@@ -380,6 +461,9 @@ onMounted(() => {
   z-index: 100;
   top: 16px;
   left: 16px;
+  &:hover {
+    box-shadow: 0 0 8px #fff;
+  }
   .o-icon {
     margin-right: 8px;
   }

@@ -4,6 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 import IconBack from '~icons/app/back.svg';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
+import IconAddList from '~icons/app/add-list';
+// import IconAddBlue from '~icons/app/add-blue';
+import IconRemove from '~icons/app/remove';
 
 import { ElMessage } from 'element-plus';
 import { createTrainProject } from '@/api/api-project';
@@ -11,6 +14,10 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
+import ModelList from '@/components/ModelList.vue';
+import DatasetList from '@/components/DatasetList.vue';
+import HyperparamsList from '@/components/HyperparamsList.vue';
+import EnvironmentList from '@/components/EnvironmentList.vue';
 
 const userInfoStore = useUserInfoStore();
 
@@ -23,6 +30,22 @@ const router = useRouter();
 const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);
+// 用于获取子组件元素
+const model = ref([]);
+const dataset = ref([]);
+const hyperparams = ref([]);
+const environment = ref([]);
+
+const modelId = ref(0);
+const datasetId = ref(0);
+const hyperparamsId = ref(0);
+const environmentId = ref(0);
+
+const modelList = reactive([]); //模型列表
+const datasetList = reactive([]); //数据集列表
+const hyperparamsList = reactive([]); //超参列表
+const environmentList = reactive([]); //环境变量列表
+// const hyperparamsList = reactive([{ id: 1, key: 'key值', value: 'value值' }]);
 
 const form = reactive({
   name: '',
@@ -34,22 +57,12 @@ const form = reactive({
     version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
     flavor: 'modelarts.p3.large.public',
   },
-  /* datasets: [
-    {
+  datasets: [
+    /* {
       File: '', //模型或数据集的文件路径
       key: '', //引用这个模型或数据集的参数
       name: '', //数据集或模型仓库的名称
       owner: '', //数据集或模型仓库的拥有者
-    },
-  ], */
-  datasetsKey: '',
-  datasetsName: '',
-  datasetsOwner: '',
-  desc: '',
-  evn: [
-    /* {
-      key: '',
-      value: '',
     }, */
   ],
   hyperparameter: [
@@ -58,17 +71,20 @@ const form = reactive({
       value: '',
     }, */
   ],
-  /* models: [
-    {
+  env: [
+    /* {
+      key: '',
+      value: '',
+    }, */
+  ],
+  models: [
+    /* {
       File: '',
       key: '',
       name: '',
       owner: '',
-    },
-  ], */
-  modelsKey: '',
-  modelsName: '',
-  modelsOwner: '',
+    }, */
+  ],
   desc: '',
 });
 
@@ -190,16 +206,15 @@ function goTrain() {
   });
 }
 // 获得项目详情数据
-async function getDetailData() {
+function getDetailData() {
   try {
-    await getRepoDetailByName({
+    getRepoDetailByName({
       user: route.params.user,
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
       // if (res.results.status === 200) {
       detailData.value = res.data;
-
       // console.log('项目仓库详情数据: ', detailData.value);
 
       // }
@@ -240,34 +255,39 @@ function verify(node, code, message) {
 async function confirmCreating(formEl) {
   // 如果表单为空，返回
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate((valid, fields) => {
+    // console.log('valid: ', valid);
     if (valid) {
       /* let models = {},
         datasets = {},
         hyperparameter = {},
-        evn = {};
+        env = {};
       try {
         models = JSON.parse(form.models);
         datasets = JSON.parse(form.datasets);
         hyperparameter = JSON.parse(form.hyperparameter);
-        evn = JSON.parse(form.evn);
+        env = JSON.parse(form.env);
       } catch (e) {
         // console.error(e);
       } */
-      let models = [
-          {
-            key: form.modelsKey,
-            name: form.modelsName,
-            owner: form.modelsOwner,
-          },
-        ],
-        datasets = [
-          {
-            key: form.datasetsKey,
-            name: form.datasetsName,
-            owner: form.datasetsOwner,
-          },
-        ];
+      // 获取模型数据
+      // debugger;
+      console.log('model.value: ', model.value);
+      model.value.forEach((element) => {
+        form.models.push(element.modelData);
+      });
+      dataset.value.forEach((element) => {
+        form.datasets.push(element.datasetData);
+      });
+      // 获取超参数据
+      hyperparams.value.forEach((element) => {
+        form.hyperparameter.push(element.hyperparamsData);
+      });
+      // 获取环境变量数据
+      environment.value.forEach((element) => {
+        form.env.push(element.environmentData);
+      });
+
       let params = {
         name: form.name,
         SDK: form.SDK,
@@ -278,32 +298,12 @@ async function confirmCreating(formEl) {
           version: form.compute.version,
           flavor: form.compute.flavor,
         },
-        models: models,
-        datasets: datasets,
+        models: form.models,
+        datasets: form.datasets,
         desc: form.desc,
-        evn: form.evn,
+        env: form.env,
         hyperparameter: form.hyperparameter,
-        // inputs: inputs,
-        // train_instance_type: form.train_instance_type,
-        // outputs: outputs,
       };
-      // console.log(params);
-      // params.inputs = inputs;
-      // params.outputs = outputs;
-      if (
-        params.models[0].owner === '' ||
-        params.models[0].name === '' ||
-        params.models[0].key === ''
-      ) {
-        params.models = [];
-      }
-      if (
-        params.datasets[0].owner === '' ||
-        params.datasets[0].name === '' ||
-        params.datasets[0].key === ''
-      ) {
-        params.datasets = [];
-      }
       createTrainProject(params, route.query.id).then((res) => {
         // if (res.status === 200) {
         ElMessage({
@@ -326,6 +326,7 @@ async function confirmCreating(formEl) {
         } */
       });
     } else {
+      // console.log('fields: ', fields);
       return false;
     }
   });
@@ -344,25 +345,9 @@ async function confirmCreating(formEl) {
     'boot_file',
     '启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件,请重新输入'
   );
-  await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
-  await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
-
-  // await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
+  // await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
+  // await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
 }
-
-// 校验输入框里的内容是否为json格式
-/* const checkJson = (rule, value, callback) => {
-  if (value === '') {
-    callback();
-  } else {
-    try {
-      JSON.parse(value);
-      callback();
-    } catch (e) {
-      callback(new Error('请输入正确的json格式内容'));
-    }
-  }
-}; */
 
 const checkBootfile = (rule, value, callback) => {
   if (value === '') {
@@ -415,7 +400,7 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
-  modelsName: [
+  /* modelsName: [
     {
       pattern: /^model-/,
       message: '请输入model-开头的模型名',
@@ -428,32 +413,89 @@ const rules = reactive({
       message: '请输入dataset-开头的数据集名',
       trigger: 'blur',
     },
-  ],
-  // compute: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // hyperparameter: [
-  //   {
-  //     validator: checkJson,
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // evn: [
-  //   {
-  //     validator: checkJson,
-  //     trigger: 'blur',
-  //   },
-  // ],
+  ], */
 });
 
-function confirmSelect() {
-  showDir.value = false;
+// 添加输入模型TODO:id值
+function addModel() {
+  let item = { id: modelId.value, key: 'key值', value: 'value值' };
+  modelList.push(item);
+  modelId.value++;
+  // console.log('modelList11111: ', modelList);
 }
-function toggleDlg() {
+
+// 添加输入数据集
+function addDataset() {
+  let item = { id: datasetId.value, key: 'key值', value: 'value值' };
+  datasetList.push(item);
+  datasetId.value++;
+}
+// 添加超参
+function addHyperparams() {
+  let item = { id: hyperparamsId.value, key: 'key值', value: 'value值' };
+  hyperparamsList.push(item);
+  hyperparamsId.value++;
+}
+// 添加环境变量
+function addEnvironment() {
+  let item = { id: environmentId.value, key: 'key值', value: 'value值' };
+  environmentList.push(item);
+  environmentId.value++;
+  // console.log('environmentList: ', environmentList);
+}
+
+// 删除输入模型
+function deleteModel(item) {
+  let index = modelList.indexOf(item);
+  modelList.splice(index, 1);
+}
+// 删除数据集
+function deleteDataset(item) {
+  let index = datasetList.indexOf(item);
+  datasetList.splice(index, 1);
+}
+// 删除超参
+function deleteHyperparams(item) {
+  let index = hyperparamsList.indexOf(item);
+  hyperparamsList.splice(index, 1);
+}
+// 删除环境变量
+function deleteEnvironment(item) {
+  let index = environmentList.indexOf(item);
+  environmentList.splice(index, 1);
+}
+
+const codeDir = ref(''); // 代码目录
+const bootFile = ref(''); //启动文件
+const codeDirInt = ref(null); //代码目录输入框
+const bootFileInt = ref(null); //启动文件输入框
+function handleClick(item) {
+  console.log('item: ', item);
+  codeDir.value = item.join('/') + '/';
+}
+
+function confirmSelect(type) {
+  showDir.value = false;
+  if (type === 'directory') {
+    form.code_dir = codeDir.value;
+    codeDirInt.value.focus();
+    console.log('codeDirInt.value: ', codeDirInt.value);
+  } else {
+    form.boot_file = bootFile.value;
+    bootFileInt.value.focus();
+  }
+}
+
+// 选择类型
+const option = ref('');
+// 选择目录
+function selectDir(item) {
+  option.value = item;
+  showDir.value = true;
+}
+// 选择文件
+function selectFile(item) {
+  option.value = item;
   showDir.value = true;
 }
 </script>
@@ -486,285 +528,315 @@ function toggleDlg() {
             :rules="rules"
             label-width="80px"
             label-position="left"
+            hide-required-asterisk
           >
-            <div class="createfile-form-left">
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>训练名称</span>
-                </div>
-                <el-form-item prop="name">
-                  <el-input v-model="form.name" placeholder="请输入训练名" />
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>训练平台</span>
-                </div>
-                <el-form-item prop="SDK">
-                  <el-select v-model="form.SDK" placeholder="请选择">
-                    <el-option label="ModelArts" value="ModelArts" />
-                  </el-select>
-                </el-form-item>
-                <!-- <el-form-item>
-                  <el-input v-model="form.SDK" placeholder="请输入训练平台" />
-                </el-form-item> -->
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>代码目录</span>
-                </div>
-
-                <el-form-item prop="code_dir">
-                  <div class="option">
-                    <el-input
-                      v-model="form.code_dir"
-                      placeholder="请输入训练代码目录"
-                    />
-                    <!-- <o-button @click="toggleDlg">选择</o-button> -->
+            <!-- 表单上侧 -->
+            <div class="form-wrap-top">
+              <div class="form-top">
+                <div class="createfile-form-item">
+                  <div class="item-title">
+                    <o-icon><icon-necessary></icon-necessary></o-icon>
                   </div>
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>启动文件</span>
+                  <el-form-item prop="name" label="训练名称">
+                    <el-input v-model="form.name" placeholder="请输入训练名" />
+                  </el-form-item>
                 </div>
-                <el-form-item prop="boot_file">
-                  <div class="option">
-                    <el-input
-                      v-model="form.boot_file"
-                      placeholder="请输入文件名"
-                    />
-                    <!-- <o-button>选择</o-button> -->
+                <div class="createfile-form-item">
+                  <div class="item-title">
+                    <o-icon><icon-necessary></icon-necessary></o-icon>
                   </div>
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item frameworks">
-                <div class="item-title">
-                  <icon-necessary></icon-necessary><span>框架版本</span>
-                </div>
-                <el-form-item prop="compute">
-                  <div class="version">
-                    <el-select
-                      v-model="selectData.com1"
-                      placeholder="请选择"
-                      style="width: 30%; margin-right: 3%"
-                      @change="change1"
-                    >
-                      <el-option
-                        v-for="x in optionData.com1"
-                        :key="x.value"
-                        :value="x.value"
-                        :label="x.name"
-                      ></el-option>
+                  <el-form-item prop="SDK" label="训练平台">
+                    <el-select v-model="form.SDK" placeholder="请选择">
+                      <el-option label="ModelArts" value="ModelArts" />
                     </el-select>
-                    <el-select
-                      v-model="selectData.com2"
-                      placeholder="请选择"
-                      style="width: 67%"
-                      @change="change2"
-                    >
-                      <el-option
-                        v-for="x in optionData.com2[selectData.com1]"
-                        :key="x.value"
-                        :value="x.value"
-                        :label="x.name"
-                      ></el-option>
-                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="createfile-form-item">
+                  <div class="item-title">
+                    <o-icon><icon-necessary></icon-necessary></o-icon>
                   </div>
-                  <div class="resource">
-                    <span class="item-title">
-                      <icon-necessary></icon-necessary><span>计算资源</span>
-                    </span>
-                    <el-select v-model="selectData.com3" placeholder="请选择">
-                      <el-option
-                        v-for="x in optionData.com3[selectData.com2]"
-                        :key="x.value"
-                        :value="x.value"
-                        :label="x.name"
-                      ></el-option>
-                    </el-select>
-                  </div>
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <!-- <icon-necessary></icon-necessary> -->
-                  <span class="item-title-text">模型</span>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    :teleported="true"
-                  >
-                    <template #reference>
-                      <o-icon style="font-size: 18px"
-                        ><icon-poppver></icon-poppver
-                      ></o-icon>
-                    </template>
-                    <div>
-                      <span style="color: red">用户名: </span>
-                      模型仓库的拥有者。<br />
-                      <span style="color: red">模型名: </span>
-                      模型仓库的名称。（以model-开头）<br />
-                      <span style="color: red">引用参数: </span>
-                      用户要引用这个模型的参数。<br />
+                  <el-form-item prop="code_dir" label="代码目录">
+                    <div class="option">
+                      <el-input
+                        ref="codeDirInt"
+                        v-model="form.code_dir"
+                        placeholder="请输入代码目录"
+                      />
+                      <!-- <o-button @click="selectDir('directory')"
+                        >选择目录</o-button
+                      > -->
                     </div>
-                  </el-popover>
+                  </el-form-item>
                 </div>
-                <!-- prop="model" -->
-                <el-form-item
-                  prop="modelsName"
-                  placeholder="请输入模型名"
-                  class="model"
-                >
-                  <el-input
-                    v-model="form.modelsOwner"
-                    placeholder="请输入用户名"
-                  />
-
-                  <el-input
-                    v-model="form.modelsName"
-                    placeholder="请输入模型名（以model-开头）"
-                  />
-                  <el-input
-                    v-model="form.modelsKey"
-                    placeholder="请输入引用参数"
-                  />
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <!-- <icon-necessary></icon-necessary> -->
-                  <span class="item-title-text">数据集</span>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    :teleported="true"
-                  >
-                    <template #reference>
-                      <o-icon style="font-size: 18px"
-                        ><icon-poppver></icon-poppver
-                      ></o-icon>
-                    </template>
-                    <div>
-                      <span style="color: red">用户名: </span>
-                      数据集仓库的拥有者。<br />
-                      <span style="color: red">数据集名: </span>
-                      数据集仓库的名称。（以dataset-开头）<br />
-                      <span style="color: red">引用参数: </span>
-                      用户要引用这个数据集的参数。<br />
+                <div class="createfile-form-item">
+                  <div class="item-title">
+                    <o-icon><icon-necessary></icon-necessary></o-icon>
+                  </div>
+                  <el-form-item prop="boot_file" label="启动文件">
+                    <div class="option">
+                      <el-input
+                        ref="bootFileInt"
+                        v-model="form.boot_file"
+                        placeholder="请输入启动文件"
+                      />
+                      <!-- <o-button @click="selectFile('file')">选择文件</o-button> -->
                     </div>
-                  </el-popover>
+                  </el-form-item>
                 </div>
-                <el-form-item
-                  placeholder="请输入数据集名"
-                  prop="datasetsName"
-                  class="model"
-                >
-                  <el-input
-                    v-model="form.datasetsOwner"
-                    placeholder="请输入用户名"
-                  />
-                  <el-input
-                    v-model="form.datasetsName"
-                    placeholder="请输入数据集名（以dataset-开头）"
-                  />
-                  <el-input
-                    v-model="form.datasetsKey"
-                    placeholder="请输入引用参数"
-                  />
-                </el-form-item>
+                <div class="createfile-form-item frameworks">
+                  <div class="item-title">
+                    <icon-necessary></icon-necessary>
+                    <!-- <span>框架版本</span> -->
+                  </div>
+                  <!-- prop="compute" -->
+                  <el-form-item label="框架版本">
+                    <div class="version">
+                      <el-select
+                        v-model="selectData.com1"
+                        placeholder="请选择"
+                        style="width: 30%; margin-right: 3%"
+                        @change="change1"
+                      >
+                        <el-option
+                          v-for="x in optionData.com1"
+                          :key="x.value"
+                          :value="x.value"
+                          :label="x.name"
+                        ></el-option>
+                      </el-select>
+                      <el-select
+                        v-model="selectData.com2"
+                        placeholder="请选择"
+                        style="width: 67%"
+                        @change="change2"
+                      >
+                        <el-option
+                          v-for="x in optionData.com2[selectData.com1]"
+                          :key="x.value"
+                          :value="x.value"
+                          :label="x.name"
+                        ></el-option>
+                      </el-select>
+                    </div>
+                    <div class="resource">
+                      <span class="item-title">
+                        <icon-necessary></icon-necessary><span>计算资源</span>
+                      </span>
+                      <el-select v-model="selectData.com3" placeholder="请选择">
+                        <el-option
+                          v-for="x in optionData.com3[selectData.com2]"
+                          :key="x.value"
+                          :value="x.value"
+                          :label="x.name"
+                        ></el-option>
+                      </el-select>
+                    </div>
+                  </el-form-item>
+                </div>
+                <div class="createfile-form-item">
+                  <el-form-item label="描述">
+                    <el-input
+                      v-model="form.desc"
+                      style="height: 98px"
+                      type="textarea"
+                      placeholder="请输入描述"
+                    />
+                  </el-form-item>
+                </div>
               </div>
             </div>
-            <div class="createfile-form-right">
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <span class="item-title-text">超参</span>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    :teleported="true"
-                  >
-                    <template #reference>
-                      <o-icon style="font-size: 18px"
-                        ><icon-poppver></icon-poppver
-                      ></o-icon>
-                    </template>
-                    <div>
-                      在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
-                      <br />格式为：
-                      <div style="color: red">
-                        [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                        &lt;解析参数对应的值1&gt;, <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;"value":&lt;解析参数名称1&gt;
-                        <br />&nbsp;&nbsp;},{
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                        &lt;解析参数对应的值2&gt;,
-                        <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
-                        &lt;解析参数名称2&gt; <br />}, ... ]
+            <!-- 表单下侧 -->
+            <div class="form-wrap-bottom">
+              <div class="form-bottom">
+                <div class="createfile-form-item">
+                  <div class="item-icon">
+                    <el-popover
+                      placement="bottom-start"
+                      :width="372"
+                      trigger="hover"
+                      :teleported="true"
+                    >
+                      <template #reference>
+                        <o-icon style="font-size: 18px"
+                          ><icon-poppver></icon-poppver
+                        ></o-icon>
+                      </template>
+                      <div>
+                        <span style="color: red">引用参数: </span>
+                        用户要引用这个模型的参数。<br />
+                        <span style="color: red">用户名: </span>
+                        模型仓库的拥有者。<br />
+                        <span style="color: red">模型名: </span>
+                        模型仓库的名称。（以model-开头）<br />
                       </div>
-                      注意{}末尾不能有逗号
-                    </div>
-                  </el-popover>
-                </div>
-                <el-form-item>
-                  <el-input
-                    v-model="form.hyperparameter"
-                    hyperparameter
-                    type="textarea"
-                    placeholder="请输入内容，格式为[{'':''},{'':''}]"
-                  />
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <span class="item-title-text">环境变量</span>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    :teleported="true"
+                    </el-popover>
+                  </div>
+                  <!-- prop="model" -->
+                  <el-form-item
+                    placeholder="请输入模型名"
+                    class="model"
+                    label="输入模型"
                   >
-                    <template #reference>
-                      <o-icon style="font-size: 18px"
-                        ><icon-poppver></icon-poppver
-                      ></o-icon>
-                    </template>
-                    <div>
-                      格式为：
-                      <div style="color: red">
-                        { <br />&nbsp;&nbsp;&nbsp;&nbsp;"环境变量1":
-                        &lt;"环境变量值1"&gt;, <br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;"环境变量n":&lt;"环境变量值n"&gt;
-                        <br />&nbsp;&nbsp;}
+                    <div
+                      v-for="item in modelList"
+                      :key="item.id"
+                      class="model-list"
+                    >
+                      <model-list ref="model"></model-list>
+                      <div class="delete-btn" @click="deleteModel(item)">
+                        <o-icon class="remove-icon"
+                          ><icon-remove></icon-remove
+                        ></o-icon>
                       </div>
-                      注意{}末尾不能有逗号,且只能是双引号
                     </div>
-                  </el-popover>
+                    <div class="addModel" @click="addModel">
+                      <o-icon> <icon-add-list></icon-add-list> </o-icon>
+                      <span>添加训练输入模型</span>
+                    </div>
+                  </el-form-item>
                 </div>
-                <el-form-item>
-                  <el-input
-                    v-model="form.evn"
-                    type="textarea"
-                    placeholder="请输入内容，格式为{'':''},为json格式"
-                  />
-                </el-form-item>
-              </div>
-              <div class="createfile-form-item">
-                <div class="item-title">
-                  <span>描述</span>
+                <div class="createfile-form-item">
+                  <div class="item-icon">
+                    <el-popover
+                      placement="bottom-start"
+                      :width="372"
+                      trigger="hover"
+                      :teleported="true"
+                    >
+                      <template #reference>
+                        <o-icon style="font-size: 18px"
+                          ><icon-poppver></icon-poppver
+                        ></o-icon>
+                      </template>
+                      <div>
+                        <span style="color: red">引用参数: </span>
+                        用户要引用这个数据集的参数。<br />
+                        <span style="color: red">用户名: </span>
+                        数据集仓库的拥有者。<br />
+                        <span style="color: red">数据集名: </span>
+                        数据集仓库的名称。（以dataset-开头）<br />
+                      </div>
+                    </el-popover>
+                  </div>
+                  <el-form-item
+                    placeholder="请输入数据集名"
+                    class="dataset"
+                    label="输入数据集"
+                  >
+                    <div
+                      v-for="item in datasetList"
+                      :key="item.id"
+                      class="model-list"
+                    >
+                      <dataset-list ref="dataset"></dataset-list>
+                      <div class="delete-btn" @click="deleteDataset(item)">
+                        <o-icon class="train-icon"
+                          ><icon-remove></icon-remove
+                        ></o-icon>
+                      </div>
+                    </div>
+                    <div class="addModel" @click="addDataset">
+                      <o-icon>
+                        <icon-add-list></icon-add-list>
+                      </o-icon>
+                      <span>添加训练输入数据集</span>
+                    </div>
+                  </el-form-item>
                 </div>
-                <el-form-item placeholder="请输入描述">
-                  <el-input
-                    v-model="form.desc"
-                    style="height: 98px"
-                    type="textarea"
-                    placeholder="请输入描述"
-                  />
-                </el-form-item>
+                <div class="createfile-form-item">
+                  <div class="item-icon">
+                    <el-popover
+                      placement="bottom-start"
+                      :width="372"
+                      trigger="hover"
+                      :teleported="true"
+                    >
+                      <template #reference>
+                        <o-icon style="font-size: 18px"
+                          ><icon-poppver></icon-poppver
+                        ></o-icon>
+                      </template>
+                      <div>
+                        在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
+                        <br />格式为：
+                        <div style="color: red">
+                          [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                          &lt;解析参数对应的值1&gt;, <br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;"value":&lt;解析参数名称1&gt;
+                          <br />&nbsp;&nbsp;},{
+                          <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                          &lt;解析参数对应的值2&gt;,
+                          <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
+                          &lt;解析参数名称2&gt; <br />}, ... ]
+                        </div>
+                        注意{}末尾不能有逗号
+                      </div>
+                    </el-popover>
+                  </div>
+                  <el-form-item label="超参" class="hyperparams">
+                    <div
+                      v-for="item in hyperparamsList"
+                      :key="item.id"
+                      class="model-list"
+                    >
+                      <hyperparams-list ref="hyperparams"></hyperparams-list>
+                      <div class="delete-btn" @click="deleteHyperparams(item)">
+                        <o-icon class="train-icon">
+                          <icon-remove></icon-remove>
+                        </o-icon>
+                      </div>
+                    </div>
+                    <div class="addModel" @click="addHyperparams">
+                      <o-icon> <icon-add-list></icon-add-list> </o-icon>
+                      <span>添加超参</span>
+                    </div>
+                  </el-form-item>
+                </div>
+                <div class="createfile-form-item">
+                  <div class="item-icon">
+                    <el-popover
+                      placement="bottom-start"
+                      :width="372"
+                      trigger="hover"
+                      :teleported="true"
+                    >
+                      <template #reference>
+                        <o-icon style="font-size: 18px"
+                          ><icon-poppver></icon-poppver
+                        ></o-icon>
+                      </template>
+                      <div>
+                        格式为：
+                        <div style="color: red">
+                          { <br />&nbsp;&nbsp;&nbsp;&nbsp;"环境变量1":
+                          &lt;"环境变量值1"&gt;, <br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;"环境变量n":&lt;"环境变量值n"&gt;
+                          <br />&nbsp;&nbsp;}
+                        </div>
+                        注意{}末尾不能有逗号,且只能是双引号
+                      </div>
+                    </el-popover>
+                  </div>
+                  <el-form-item label="环境变量" class="environment">
+                    <div
+                      v-for="item in environmentList"
+                      :key="item.id"
+                      class="model-list"
+                    >
+                      <environment-list ref="environment"></environment-list>
+                      <div class="delete-btn" @click="deleteEnvironment(item)">
+                        <o-icon class="train-icon">
+                          <icon-remove></icon-remove>
+                        </o-icon>
+                      </div>
+                    </div>
+                    <div class="addModel" @click="addEnvironment">
+                      <o-icon> <icon-add-list></icon-add-list> </o-icon>
+                      <span>添加环境变量</span>
+                    </div>
+                  </el-form-item>
+                </div>
               </div>
             </div>
           </el-form>
@@ -787,7 +859,16 @@ function toggleDlg() {
   </div>
   <o-dialog :show="showDir" :close="false">
     <template #head>
-      <div class="dlg-title" :style="{ textAlign: 'center' }">代码目录</div>
+      <div
+        v-if="option === 'directory'"
+        class="dlg-title"
+        :style="{ textAlign: 'center' }"
+      >
+        代码目录
+      </div>
+      <div v-else class="dlg-title" :style="{ textAlign: 'center' }">
+        启动文件
+      </div>
     </template>
     <div
       class="dlg-body"
@@ -798,12 +879,13 @@ function toggleDlg() {
         width: '640px',
       }"
     >
-      <!--  <directory-tree
+      <!-- 弹窗的目录子组件 -->
+      <directory-tree
         v-if="detailData.id"
         :repo-detail="detailData"
-        :show-dir="showDir"
-      ></directory-tree> -->
-      11111
+        :option-type="option"
+        @handle="handleClick"
+      ></directory-tree>
     </div>
     <template #foot>
       <div
@@ -817,13 +899,18 @@ function toggleDlg() {
         <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
           >取消</o-button
         >
-        <o-button type="primary" @click="confirmSelect">确定</o-button>
+        <o-button type="primary" @click="confirmSelect(option)">确定</o-button>
       </div>
     </template>
   </o-dialog>
 </template>
 
 <style lang="scss" scoped>
+.train-icon {
+  &:hover {
+    color: rgba(13, 141, 255, 1);
+  }
+}
 .createfile {
   max-width: 100%;
   // height: 100%;
@@ -891,62 +978,87 @@ function toggleDlg() {
       }
       .createfile-form-wrap {
         .el-form {
-          display: flex;
+          // display: flex;
           // display: grid;
-          justify-content: space-between;
+          // justify-content: space-between;
         }
-        .createfile-form-left {
-          .createfile-form-item {
-            position: relative;
-            .item-title {
-              position: absolute;
-              transform: translateY(50%);
-              display: flex;
-              align-items: center;
-              .item-title-text {
-                vertical-align: middle;
-                margin-right: 4px;
-              }
-              // .o-icon .el-tooltip__trigger{
-              //   font-size: 30px;
-              // }
-            }
-            .option {
-              width: 100%;
-              height: 36px;
-              display: flex;
-              .o-button {
-                min-width: 80px;
-                padding: 5px 28px;
-                margin-left: 8px;
-              }
-            }
-          }
-          .frameworks {
-            position: relative;
-            .version {
-              margin-bottom: 26px;
-            }
-            .resource {
-              width: 100%;
+        // 表单上侧
+        .form-wrap-top {
+          padding-bottom: 14px;
+          border-bottom: 1px solid #d8d8d8;
+          .form-top {
+            width: 70%;
+            margin: 0 auto;
+            .createfile-form-item {
+              position: relative;
               .item-title {
                 position: absolute;
-                top: 50px;
-                left: -80px;
+                top: 50%;
+                transform: translateY(-40%);
+                font-size: 8px;
+
+                /* .item-title-text {
+                  vertical-align: middle;
+                  margin-right: 4px;
+                } */
+                // .o-icon .el-tooltip__trigger{
+                //   font-size: 30px;
+                // }
+              }
+              .option {
+                width: 100%;
+                height: 36px;
+                display: flex;
+                .o-button {
+                  min-width: 80px;
+                  padding: 5px 28px;
+                  margin-left: 8px;
+                }
+              }
+            }
+            .frameworks {
+              position: relative;
+              .item-title {
+                position: absolute;
+                top: 0;
+                transform: translateY(75%);
+                span {
+                  margin-left: 2px;
+                }
+              }
+              .version {
+                margin-bottom: 26px;
+              }
+              .resource {
+                width: 100%;
+                .item-title {
+                  position: absolute;
+                  top: 50%;
+                  left: -140px;
+                  transform: translateY(50%);
+                  span {
+                    margin-left: 2px;
+                    font-size: 14px;
+                  }
+                }
               }
             }
           }
         }
-        .createfile-form-right {
-          .createfile-form-item {
-            .item-title {
-              position: absolute;
-              transform: translateY(38%);
-              display: flex;
-              align-items: center;
-              .item-title-text {
-                vertical-align: middle;
-                margin-right: 4px;
+        // 表单下侧
+        .form-wrap-bottom {
+          margin-top: 40px;
+          .form-bottom {
+            width: 70%;
+            margin: 0 auto;
+            .createfile-form-item {
+              position: relative;
+              margin-top: 27px;
+              .item-icon {
+                position: absolute;
+                top: 7px;
+                left: 85px;
+                // transform: translateY(-50%);
               }
             }
           }
@@ -970,16 +1082,28 @@ function toggleDlg() {
 :deep(.el-form) {
   font-size: 14px;
   color: #555;
-  // display: grid;
+  width: 100%;
   .el-form-item {
     margin-bottom: 26px;
-    width: 560px;
-    @media (max-width: 1440px) {
+    margin-left: 10px;
+    // width: 560px;
+    /* @media (max-width: 1440px) {
       width: 500px;
-    }
+    } */
     // width: 39%;
+    .el-form-item__label {
+      width: 100px !important;
+    }
     .el-form-item__content {
-      width: 100%;
+      // width: 100%;
+      width: 546px;
+      max-width: 546px;
+      margin-left: 30px;
+      .o-icon {
+        // width: 16px;
+        // height: 16px;
+        font-size: 16px;
+      }
       .el-form-item__error {
         white-space: nowrap;
         // transform: translateY(-50%);
@@ -1003,21 +1127,62 @@ function toggleDlg() {
         }
       }
     }
+    .el-form-item__label::before {
+      width: 18px;
+      height: 18px;
+    }
   }
-  .model {
+  // 输入模型
+  .model,
+  .dataset,
+  .hyperparams,
+  .environment {
     margin-bottom: 0px;
 
     .el-form-item__content {
-      .el-input {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      .addModel {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #000;
+        cursor: pointer;
+        &:hover {
+          color: #0d8dff;
+        }
+        span {
+          margin-left: 4px;
+        }
+      }
+      .model-list {
+        width: 100%;
+        position: relative;
+        .delete-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-80%);
+          right: -24px;
+          display: flex;
+          cursor: pointer;
+          .o-icon {
+            font-size: 20px;
+          }
+          .remove-icon {
+            &:hover {
+              color: blue;
+            }
+          }
+        }
+      }
+      /* .el-input {
         width: 100%;
         margin-bottom: 26px;
-        /* &:last-child {
-          margin-bottom: 0px;
-        } */
       }
       .el-form-item__error {
         top: calc(100% + -75px);
-      }
+      } */
     }
   }
 }

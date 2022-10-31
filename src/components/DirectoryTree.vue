@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 // import OButton from '@/components/OButton.vue';
 // import FileTree from './FileTree.vue';
@@ -8,8 +8,6 @@ import IconProject from '~icons/app/project-tree';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import { getGitlabTree } from '@/api/api-gitlab';
-
-// import { useFileData } from '@/stores';
 
 const router = useRouter();
 const route = useRoute();
@@ -20,75 +18,61 @@ const props = defineProps({
       return {};
     },
   },
+  optionType: {
+    type: String,
+    default: () => {
+      return '';
+    },
+  },
 });
-console.log('仓库详情数据: ', props.repoDetail);
+// console.log('仓库详情数据: ', props.repoDetail);
+// console.log('类型: ', props.optionType);
+
+const dirPath = ref(''); // 自定义路径
+const headContents = ref([]); // 头部路径，数组
+const bootFile = ref('');
+const radio = ref();
 
 let routerParams = router.currentRoute.value.params;
-let contents = routerParams.contents;
-const filesList = ref([]);
-// console.log('route: ', router);
+// let contents = routerParams.contents;
+const filesList = ref([]); //文件树内容
+
+const emit = defineEmits(['handle']);
+
 // 获取目录树的内容（表格数据）
-async function getDetailData(path) {
-  console.log('path: ', path);
+async function getDetailData(dirPath2) {
+  // console.log('dirPath路径222: ', dirPath2);
   try {
     // gitlab
     await getGitlabTree({
       user: routerParams.user,
-      path: path,
-      id: repoDetail.value.id,
+      path: dirPath2,
+      id: props.repoDetail.id,
       name: routerParams.name,
     }).then((res) => {
       if (res.data) {
         filesList.value = res.data;
-        console.log('filesList.value: ', filesList.value);
+        // console.log('获取文件目录树结果: ', filesList.value);
       }
     });
-    // await getGitlabCommit(path, repoDetailData.value.repo_id).then((res) => {
-    //   commitData.value = res;
-    //   console.log(res);
-    // });
   } catch (error) {
     console.error(error);
   }
 }
-
-function getFilesByPath() {
-  routerParams = router.currentRoute.value.params;
-  contents = routerParams.contents;
-  if (contents && contents.length) {
-    getDetailData(`${contents.join('/')}/`);
+function getFilesByPath(item) {
+  // 不是根目录下
+  if (item) {
+    getDetailData(item + '/');
   } else {
     // 根目录下
-    getDetailData('');
+    getDetailData(item);
   }
 }
-function goBlob(item) {
-  let contents = [...routerParams.contents, decodeURI(item.name)];
-  let targetRoute = null;
-  if (!item.is_dir) {
-    targetRoute = `projectFileBlob`;
-  } else {
-    targetRoute = `projectFile`;
-  }
-  return {
-    name: targetRoute,
-    params: {
-      user: routerParams.user,
-      name: routerParams.name,
-      contents,
-    },
-  };
-}
-// console.log('route: ', route);
-// console.log('router: ', router);
 
 watch(
-  () => route.fullPath,
+  () => dirPath.value,
   () => {
-    console.log('route.fullPath: ', route.fullPath);
-    if (router.currentRoute.value.name === `projectFile`) {
-      getFilesByPath();
-    }
+    getFilesByPath(dirPath.value);
   },
   {
     immediate: true,
@@ -96,21 +80,43 @@ watch(
   }
 );
 
-// TODO:点击选择目录
-function pathClick(index) {
-  let contents = '';
-  if (route.params.contents) {
-    // console.log('route.params.contents: ', route.params.contents);
-    contents = route.params.contents.splice(0, index);
+// 头部点击选择目录
+function pathClick(item) {
+  if (item) {
+    // console.log('点击头部参数: ', item);
+    let index = headContents.value.indexOf(item);
+    let arr = headContents.value.slice(0, index + 1);
+    let str = arr.join('/') + '/';
+    getDetailData(str);
+    headContents.value = headContents.value.slice(0, index + 1);
+  } else {
+    getDetailData('');
+    headContents.value = [];
   }
-  router.push({
-    name: `projectFile`,
-    params: {
-      user: route.params.user,
-      name: route.params.name,
-      contents,
-    },
-  });
+}
+
+// 点击文件夹或者文件
+function goBlob(item) {
+  // 如果是文件夹
+  if (item.is_dir) {
+    // console.log('是文件夹');
+    // dirPath.value = dirPath.value + `${item.path}`;
+    dirPath.value = item.path;
+    let lastPath = dirPath.value.split('/').slice(-1).toString();
+    headContents.value.push(lastPath);
+    emit('handle', headContents.value);
+  } else {
+    // :TODO:
+    return;
+    console.log('不是是文件夹', item);
+    // headContents.value.push(item.name);
+    // emit('handle', headContents.value);
+    console.log('dirPath.value: ', dirPath.value);
+  }
+}
+
+function handleChange(item) {
+  console.log('item: ', item);
 }
 </script>
 
@@ -119,15 +125,16 @@ function pathClick(index) {
     <div class="file-top">
       <div class="file-top-left">
         <div class="file-path">
+          <!-- <div v-if="optionType === 'directory'" class="current-path"> -->
+          <div class="current-path">当前路径 :</div>
           <div class="item-path" @click="pathClick()">
-            <!-- {{ repoDetailData.name }} -->
             {{ repoDetail.name }}
           </div>
           <div
-            v-for="(item, index) in route.params.contents"
-            :key="item"
+            v-for="(item, index) in headContents"
+            :key="index"
             class="item-path"
-            @click="pathClick(index + 1)"
+            @click="pathClick(item)"
           >
             /{{ item }}
           </div>
@@ -155,28 +162,50 @@ function pathClick(index) {
               </td>
             </tr>
             <template v-if="filesList.length">
+              <!-- TODO:单选框 -->
+
               <tr
-                v-for="item in filesList"
-                :key="item.download_path"
+                v-for="(item, index) in filesList"
+                :key="index"
+                class="tree-table-item"
+              >
+                <td>
+                  <el-radio-group v-model="radio" @change="handleChange">
+                    <el-radio :label="item.name">
+                      <!-- <td class="tree-table-item-name" :title="item.name"> -->
+                      <div class="inner-box" @click="goBlob(item)">
+                        <o-icon v-if="!item.is_dir"
+                          ><icon-file></icon-file>
+                        </o-icon>
+                        <o-icon v-else><icon-folder></icon-folder> </o-icon>
+                        <span>{{ item.name }}</span>
+                      </div>
+                      <!-- </td> -->
+                    </el-radio>
+                  </el-radio-group>
+                </td>
+                <td class="tree-table-item-time">
+                  <div class="inner-box">描述~~~</div>
+                </td>
+              </tr>
+              <!--  <tr
+                v-for="(item, index) in filesList"
+                :key="index"
                 class="tree-table-item"
               >
                 <td class="tree-table-item-name" :title="item.name">
-                  <router-link :to="goBlob(item)" class="inner-box">
+                  <div class="inner-box" @click="goBlob(item)">
                     <o-icon v-if="!item.is_dir"
                       ><icon-file></icon-file>
                     </o-icon>
                     <o-icon v-else><icon-folder></icon-folder> </o-icon>
                     <span>{{ item.name }}</span>
-                  </router-link>
-                </td>
-                <td class="tree-table-item-time">
-                  <div class="inner-box">
-                    <!-- TODO:确实描述字段 -->
-                    描述~~~
-                    {{ item.path }}
                   </div>
                 </td>
-              </tr>
+                <td class="tree-table-item-time">
+                  <div class="inner-box">描述~~~</div>
+                </td>
+              </tr> -->
             </template>
             <!-- TODO:如果没有数据 -->
           </tbody>
@@ -199,8 +228,14 @@ $theme: #0d8dff;
       .file-path {
         display: flex;
         font-size: 18px;
+        .current-path {
+          color: #000;
+          margin-right: 6px;
+          font-weight: 500;
+        }
         .item-path {
           cursor: pointer;
+          color: #555;
           &:hover {
             text-decoration: underline;
           }
@@ -246,25 +281,23 @@ $theme: #0d8dff;
           width: inherit;
         }
         tr {
+          width: 100%;
           height: 48px;
+          font-size: 14px;
           transition: all 0.3s;
           &:hover {
             background: #f7f8fa;
-            .delete-folder {
-              display: flex;
-            }
-            .is-visitor {
-              display: none;
-            }
           }
-          .check-name {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 30px;
-            span {
-              cursor: pointer;
+          /* .el-radio-group {
+            // width: 100% !important;
+            width: 640px;
+            height: 48px;
+
+            background-color: #bfa;
+            .el-radio {
+              width: 100%;
             }
-          }
+          } */
           td {
             overflow: hidden;
             word-wrap: break-word;
@@ -306,22 +339,6 @@ $theme: #0d8dff;
             color: #555;
             .inner-box {
               justify-content: space-between;
-              .delete-folder {
-                display: none;
-                cursor: pointer;
-                padding-right: 50px;
-                flex-direction: column;
-                color: #33b3ff;
-                justify-content: center;
-                align-items: center;
-                .o-icon {
-                  font-size: 16px;
-                }
-                span {
-                  padding-top: 5px;
-                  font-size: 12px;
-                }
-              }
             }
           }
           &-time {
@@ -361,4 +378,33 @@ $theme: #0d8dff;
   margin-right: 6px;
   font-size: 24px;
 }
+// .tree-table-item {
+// width: 700px;
+:deep(.el-radio-group) {
+  width: 100% !important;
+  // width: 640px;
+  height: 48px;
+  // background-color: #bfa;
+
+  .el-radio {
+    // width: 100%;
+    height: 100%;
+    .el-radio__label {
+      display: inline-block;
+      width: 100%;
+      width: 270px;
+      height: 100%;
+      display: flex;
+      .tree-table-item-name {
+        height: 100%;
+        width: 100%;
+        // height: 47px;
+        line-height: 47px;
+      }
+      // width: 640px !important;
+      // background-color: #bfa;
+    }
+  }
+}
+// }
 </style>

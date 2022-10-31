@@ -178,7 +178,8 @@ export function getLuoJiaAsToken(path) {
 export async function handleLuoJiaUpload(
   params,
   progressCallback,
-  successCallback
+  successCallback,
+  failedCallback
 ) {
   // 验证文件名合法性
   let { path, file, isEdit, description } = params;
@@ -205,7 +206,7 @@ export async function handleLuoJiaUpload(
             access_key_id: res.access_key,
             secret_access_key: res.secret_key,
             security_token: res.security_token,
-            server: 'https://obs.cn-central-221.ovaijisuan.com',
+            server: 'https://obs.cn-central-221.ovaijisua.com',
             timeout: 1800,
           });
           obsClient.putObject(
@@ -225,6 +226,7 @@ export async function handleLuoJiaUpload(
                   type: 'error',
                   message: err,
                 });
+                failedCallback();
               } else if (result.CommonMsg.Status === 200) {
                 successCallback();
               }

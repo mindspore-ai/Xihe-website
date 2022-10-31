@@ -8,6 +8,12 @@ import IconSelect from '~icons/app/luojia-select';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
+import IconFirst from '~icons/app/luojia-process-1';
+import IconSecond from '~icons/app/luojia-process-2';
+import IconThird from '~icons/app/luojia-process-3';
+import IconFourth from '~icons/app/luojia-process-4';
+import IconFive from '~icons/app/luojia-process-5';
+
 import gif from '@/assets/gifs/loading.gif';
 
 import { useUserInfoStore } from '@/stores';
@@ -96,7 +102,8 @@ function handleInferClick() {
         description: '',
       },
       null,
-      successCallback
+      successCallback,
+      failedCallback
     );
   } else if (!isInfer.value) {
     ElMessage({
@@ -109,6 +116,11 @@ function handleInferClick() {
       message: '请先结束框选，再开始识别',
     });
   }
+}
+
+// obs上传失败的回调
+function failedCallback() {
+  isShow.value = false;
 }
 
 // obs图片上传成功的回调
@@ -174,6 +186,28 @@ onMounted(() => {
       <p class="desc">
         指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。<br />
       </p>
+
+      <div class="process">
+        <p>操作流程:</p>
+        <p>
+          <o-icon><icon-first></icon-first></o-icon><span>点击开始选区-></span>
+        </p>
+        <p>
+          <o-icon><icon-second></icon-second></o-icon
+          ><span>左键俩次选点-></span>
+        </p>
+        <p>
+          <o-icon><icon-third></icon-third></o-icon><span>右键取消-></span>
+        </p>
+        <p>
+          <o-icon><icon-fourth></icon-fourth></o-icon
+          ><span>点击取消选区-></span>
+        </p>
+        <p>
+          <o-icon><icon-five></icon-five></o-icon
+          ><span>点击开始识别（请耐心等待1分钟左右）</span>
+        </p>
+      </div>
     </div>
     <div class="luojia-bottom">
       <div ref="cesiumContainer" class="map-container">
@@ -205,6 +239,9 @@ onMounted(() => {
           <img :src="gif" alt="" />
           <p>{{ loadingText }}</p>
         </div>
+      </div>
+      <div class="tip">
+        温馨提示：第一次加载较慢，注意不要长时间停留在本界面，可能会导致电脑卡顿。
       </div>
     </div>
     <!-- 列表 -->
@@ -536,6 +573,28 @@ onMounted(() => {
 }
 .luojia {
   &-top {
+    .process {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        color: #555555;
+        line-height: 22px;
+        display: flex;
+        align-items: center;
+        margin-right: 4px;
+        &:first-child {
+          color: #000000;
+          font-weight: 600;
+        }
+        .o-icon {
+          font-size: 17px;
+          margin-right: 4px;
+        }
+      }
+    }
     .type {
       font-size: 20px;
       font-weight: normal;
@@ -552,7 +611,14 @@ onMounted(() => {
     }
   }
   &-bottom {
-    margin-top: 40px;
+    margin-top: 24px;
+    .tip {
+      font-size: 14px;
+      font-weight: 400;
+      color: #555555;
+      line-height: 22px;
+      margin-top: 16px;
+    }
   }
 }
 </style>

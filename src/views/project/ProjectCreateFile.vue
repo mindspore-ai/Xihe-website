@@ -31,10 +31,10 @@ const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);
 // 用于获取子组件元素
-const model = ref(null);
-const dataset = ref(null);
-const hyperparams = ref(null);
-const environment = ref(null);
+const model = ref([]);
+const dataset = ref([]);
+const hyperparams = ref([]);
+const environment = ref([]);
 
 const modelId = ref(0);
 const datasetId = ref(0);
@@ -255,7 +255,8 @@ function verify(node, code, message) {
 async function confirmCreating(formEl) {
   // 如果表单为空，返回
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate((valid, fields) => {
+    // console.log('valid: ', valid);
     if (valid) {
       /* let models = {},
         datasets = {},
@@ -270,6 +271,8 @@ async function confirmCreating(formEl) {
         // console.error(e);
       } */
       // 获取模型数据
+      // debugger;
+      console.log('model.value: ', model.value);
       model.value.forEach((element) => {
         form.models.push(element.modelData);
       });
@@ -278,7 +281,6 @@ async function confirmCreating(formEl) {
       });
       // 获取超参数据
       hyperparams.value.forEach((element) => {
-        console.log('element: ', element.hyperparamsData);
         form.hyperparameter.push(element.hyperparamsData);
       });
       // 获取环境变量数据
@@ -302,20 +304,6 @@ async function confirmCreating(formEl) {
         env: form.env,
         hyperparameter: form.hyperparameter,
       };
-      /*  if (
-        params.models[0].owner === '' ||
-        params.models[0].name === '' ||
-        params.models[0].key === ''
-      ) {
-        params.models = [];
-      }
-      if (
-        params.datasets[0].owner === '' ||
-        params.datasets[0].name === '' ||
-        params.datasets[0].key === ''
-      ) {
-        params.datasets = [];
-      } */
       createTrainProject(params, route.query.id).then((res) => {
         // if (res.status === 200) {
         ElMessage({
@@ -338,6 +326,7 @@ async function confirmCreating(formEl) {
         } */
       });
     } else {
+      // console.log('fields: ', fields);
       return false;
     }
   });
@@ -356,25 +345,9 @@ async function confirmCreating(formEl) {
     'boot_file',
     '启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件,请重新输入'
   );
-  await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
-  await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
-
-  // await verify(formEl, 'log_url', '日志路径为以 / 结尾的路径格式，请重新输入');
+  // await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
+  // await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
 }
-
-// 校验输入框里的内容是否为json格式
-/* const checkJson = (rule, value, callback) => {
-  if (value === '') {
-    callback();
-  } else {
-    try {
-      JSON.parse(value);
-      callback();
-    } catch (e) {
-      callback(new Error('请输入正确的json格式内容'));
-    }
-  }
-}; */
 
 const checkBootfile = (rule, value, callback) => {
   if (value === '') {
@@ -427,7 +400,7 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
-  modelsName: [
+  /* modelsName: [
     {
       pattern: /^model-/,
       message: '请输入model-开头的模型名',
@@ -440,26 +413,7 @@ const rules = reactive({
       message: '请输入dataset-开头的数据集名',
       trigger: 'blur',
     },
-  ],
-  // compute: [
-  //   {
-  //     required: true,
-  //     message: '必填项',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // hyperparameter: [
-  //   {
-  //     validator: checkJson,
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // env: [
-  //   {
-  //     validator: checkJson,
-  //     trigger: 'blur',
-  //   },
-  // ],
+  ], */
 });
 
 // 添加输入模型TODO:id值
@@ -467,7 +421,7 @@ function addModel() {
   let item = { id: modelId.value, key: 'key值', value: 'value值' };
   modelList.push(item);
   modelId.value++;
-  console.log('modelList11111: ', modelList);
+  // console.log('modelList11111: ', modelList);
 }
 
 // 添加输入数据集
@@ -487,7 +441,7 @@ function addEnvironment() {
   let item = { id: environmentId.value, key: 'key值', value: 'value值' };
   environmentList.push(item);
   environmentId.value++;
-  console.log('environmentList: ', environmentList);
+  // console.log('environmentList: ', environmentList);
 }
 
 // 删除输入模型
@@ -518,7 +472,6 @@ const bootFileInt = ref(null); //启动文件输入框
 function handleClick(item) {
   console.log('item: ', item);
   codeDir.value = item.join('/') + '/';
-  // console.log('1111: ', codeDir.value);
 }
 
 function confirmSelect(type) {
@@ -635,7 +588,8 @@ function selectFile(item) {
                     <icon-necessary></icon-necessary>
                     <!-- <span>框架版本</span> -->
                   </div>
-                  <el-form-item prop="compute" label="框架版本">
+                  <!-- prop="compute" -->
+                  <el-form-item label="框架版本">
                     <div class="version">
                       <el-select
                         v-model="selectData.com1"
@@ -680,7 +634,7 @@ function selectFile(item) {
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <el-form-item placeholder="请输入描述" label="描述">
+                  <el-form-item label="描述">
                     <el-input
                       v-model="form.desc"
                       style="height: 98px"
@@ -719,7 +673,6 @@ function selectFile(item) {
                   </div>
                   <!-- prop="model" -->
                   <el-form-item
-                    prop="modelsName"
                     placeholder="请输入模型名"
                     class="model"
                     label="输入模型"
@@ -730,14 +683,13 @@ function selectFile(item) {
                       class="model-list"
                     >
                       <model-list ref="model"></model-list>
-                      <div class="deleteBtn" @click="deleteModel(item)">
+                      <div class="delete-btn" @click="deleteModel(item)">
                         <o-icon class="remove-icon"
                           ><icon-remove></icon-remove
                         ></o-icon>
                       </div>
                     </div>
                     <div class="addModel" @click="addModel">
-                      <!-- <o-icon> <icon-add-blue></icon-add-blue> </o-icon> -->
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加训练输入模型</span>
                     </div>
@@ -768,7 +720,6 @@ function selectFile(item) {
                   </div>
                   <el-form-item
                     placeholder="请输入数据集名"
-                    prop="datasetsName"
                     class="dataset"
                     label="输入数据集"
                   >
@@ -778,13 +729,14 @@ function selectFile(item) {
                       class="model-list"
                     >
                       <dataset-list ref="dataset"></dataset-list>
-                      <div class="deleteBtn" @click="deleteDataset(item)">
-                        <o-icon><icon-remove></icon-remove></o-icon>
+                      <div class="delete-btn" @click="deleteDataset(item)">
+                        <o-icon class="train-icon"
+                          ><icon-remove></icon-remove
+                        ></o-icon>
                       </div>
                     </div>
                     <div class="addModel" @click="addDataset">
-                      <!-- <o-icon> <icon-add-blue></icon-add-blue> </o-icon> -->
-                      <o-icon class="train-icon">
+                      <o-icon>
                         <icon-add-list></icon-add-list>
                       </o-icon>
                       <span>添加训练输入数据集</span>
@@ -828,12 +780,13 @@ function selectFile(item) {
                       class="model-list"
                     >
                       <hyperparams-list ref="hyperparams"></hyperparams-list>
-                      <div class="deleteBtn" @click="deleteHyperparams(item)">
-                        <o-icon><icon-remove></icon-remove></o-icon>
+                      <div class="delete-btn" @click="deleteHyperparams(item)">
+                        <o-icon class="train-icon">
+                          <icon-remove></icon-remove>
+                        </o-icon>
                       </div>
                     </div>
                     <div class="addModel" @click="addHyperparams">
-                      <!-- <o-icon> <icon-add-blue></icon-add-blue> </o-icon> -->
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加超参</span>
                     </div>
@@ -872,12 +825,13 @@ function selectFile(item) {
                       class="model-list"
                     >
                       <environment-list ref="environment"></environment-list>
-                      <div class="deleteBtn" @click="deleteEnvironment(item)">
-                        <o-icon><icon-remove></icon-remove></o-icon>
+                      <div class="delete-btn" @click="deleteEnvironment(item)">
+                        <o-icon class="train-icon">
+                          <icon-remove></icon-remove>
+                        </o-icon>
                       </div>
                     </div>
                     <div class="addModel" @click="addEnvironment">
-                      <!-- <o-icon> <icon-add-blue></icon-add-blue> </o-icon> -->
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加环境变量</span>
                     </div>
@@ -954,7 +908,7 @@ function selectFile(item) {
 <style lang="scss" scoped>
 .train-icon {
   &:hover {
-    color: blue;
+    color: rgba(13, 141, 255, 1);
   }
 }
 .createfile {
@@ -1205,7 +1159,7 @@ function selectFile(item) {
       .model-list {
         width: 100%;
         position: relative;
-        .deleteBtn {
+        .delete-btn {
           position: absolute;
           top: 50%;
           transform: translateY(-80%);

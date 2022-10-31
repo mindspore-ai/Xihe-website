@@ -16,7 +16,8 @@ import { getRank } from '@/api/api-competition';
 const route = useRoute();
 
 const tableData = ref([]);
-getRank(route.path.split('/')[2]).then((res) => {
+const tableData2 = ref([]);
+getRank({ competition_id: route.path.split('/')[2], period: 1 }).then((res) => {
   tableData.value = res.data;
   tableData.value.forEach((element) => {
     element.create_time = element.create_time.split('T')[0];
@@ -28,6 +29,14 @@ function change(s) {
   if (s === '1') {
     tabs.value[0].classList.remove('tabs-left');
     tabs.value[1].classList.add('tabs-right');
+    getRank({ competition_id: route.path.split('/')[2], period: 2 }).then(
+      (res) => {
+        tableData2.value = res.data;
+        tableData2.value.forEach((element) => {
+          element.create_time = element.create_time.split('T')[0];
+        });
+      }
+    );
   } else {
     tabs.value[1].classList.remove('tabs-right');
     tabs.value[0].classList.add('tabs-left');
@@ -80,10 +89,10 @@ nextTick(() => {
       <template #label>
         <div class="tabs-item">决赛排行榜</div>
       </template>
-      <div v-if="false" class="rank-page">
+      <div v-if="tableData2.length" class="rank-page">
         <!-- <div class="rank-header">排行榜</div> -->
         <div class="rank-body">
-          <el-table :data="tableData">
+          <el-table :data="tableData2">
             <el-table-column prop="date" label="排名">
               <template #default="scope">
                 <img v-if="scope.$index === 0" :src="firstImg" alt="" />
@@ -98,7 +107,7 @@ nextTick(() => {
             <el-table-column prop="group_name" label="参赛团队" />
             <el-table-column label="分数">
               <template #default="scope">
-                <div class="score">{{ tableData[scope.$index].score }}</div>
+                <div class="score">{{ tableData2[scope.$index].score }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="create_time" label="提交时间" width="210" />

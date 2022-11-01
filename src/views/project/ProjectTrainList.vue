@@ -43,7 +43,9 @@ const listId = ref(null);
 const trainId = ref(null);
 const resetedId = ref(null);
 const tips = ref(false);
+const btnShow = ref(false);
 const description = ref('');
+
 const i18n = {
   description1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
@@ -52,10 +54,21 @@ const i18n = {
   confirm: '确定',
 };
 
-// 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
   if (!isAuthentic.value) {
@@ -64,33 +77,36 @@ function goHome() {
 }
 goHome();
 
-let timer = null;
-
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
-  /* if (trainListData.value.length === 5) {
-    describe.value = i18n.describe2;
-    showTip.value = true;
-    // 判断每一项的status是否为Running,如果有，则不能创建训练实例
-  } else if (trainListData.value.some((item) => item.status === 'Running')) {
-    describe.value = i18n.describe1;
-    showTip.value = true;
-  } else { */
-  // 点击在新页签打开
   let routerData = router.resolve({
-    // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     query: {
       id: detailData.value.id,
     },
   });
   window.open(routerData.href, '_blank');
-  // router.push({
-  //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-  //   query: {
-  //     id: detailData.value.id,
-  //   },
-  // });
+}
+
+function getTrainList() {
+  trainList(projectId).then((res) => {
+    trainData.value = res.data.data;
+    console.log(trainData.value);
+    // 列表为空可以创建实例
+    if (trainData.value === null) {
+      btnShow.value = true;
+    } else {
+      let bool = trainData.value.some(
+        (item) => item.status === 'scheduling' || 'Running'
+      );
+      // 调度和运行状态不能创建实例
+      if (bool) {
+        btnShow.value = false;
+      } else {
+        btnShow.value = true;
+      }
+    }
+  });
 }
 
 function toggleDelDlg(flag) {
@@ -111,7 +127,8 @@ function showDelClick(val) {
 function deleteTrainList(id) {
   console.log('projectId : ' + projectId, 'id : ' + id);
   deleteTainList(projectId, id).then((res) => {
-    if (res.status === 200) {
+    console.log(res);
+    if (res.status === 204) {
       getTrainList();
       showDel.value = false;
     }
@@ -130,9 +147,9 @@ function delClick(val) {
 const showStop = ref(false);
 function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
-    if (res.status === 200) {
+    console.log(res);
+    if (res.status === 202) {
       getTrainList();
-      clearInterval(timer);
       showStop.value = false;
     }
   });
@@ -171,7 +188,8 @@ function resetClick(val) {
     showReset.value = false;
   } else {
     rebuildTrain(projectId, val).then((res) => {
-      if (res.status === 200) {
+      console.log(res);
+      if (res.status === 202) {
         showReset.value = false;
         getTrainList();
       }
@@ -180,7 +198,6 @@ function resetClick(val) {
 }
 
 function goTrainLog(trainId) {
-  // console.log('trainId: ' + trainId);
   router.push({
     name: 'projectTrainLog',
     params: {
@@ -189,48 +206,23 @@ function goTrainLog(trainId) {
   });
 }
 
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`,
   [getHeaderConfig().headers['private-token']]
 );
-// // 创建好连接之后自动触发（ 服务端执行self.accept() )
-// socket.onopen = function () {
-//   console.log('服务器已连接');
-//   socket.send(JSON.stringify({ pk: detailData.value.id }));
-// };
-const btnShow = ref(false);
+
 // // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   console.log('收到服务器的消息', JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
-  let bool = trainData.value.some((item) => item.status === 'scheduling');
-  // console.log(bool);
-  if (bool) {
-    btnShow.value = true;
-  }
-  //   if (trainData.value.findIndex((item) => item.status === 'Running') === -1) {
-  //     clearInterval(timer);
-  //   }
-};
-// // 服务端主动断开连接时，这个方法也被触发。
-// socket.onclose = function () {
-//   console.log('服务器主动断开');
-// };
 
-// // function closeConn() {
-// //   socket.close(); // 向服务端发送断开连接的请求
-// // }
+  if (trainData.value) {
+    let bool = trainData.value.some((item) => item.status === 'scheduling');
+    if (bool) {
+      btnShow.value = true;
+    }
+  }
+};
 
 // 页面刷新
 // function reloadPage() {
@@ -243,7 +235,6 @@ socket.onmessage = function (event) {
 
 onUnmounted(() => {
   socket.close();
-  clearInterval(timer);
 });
 </script>
 <template>
@@ -279,7 +270,7 @@ onUnmounted(() => {
       <el-table-column label="状态" width="178">
         <template #default="scope">
           <div class="status-box">
-            <!-- <o-icon v-if="scope.row.status === 'Completed'"
+            <o-icon v-if="scope.row.status === 'Completed'"
               ><icon-finished></icon-finished
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Terminated'"
@@ -290,7 +281,7 @@ onUnmounted(() => {
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Failed'"
               ><icon-failed></icon-failed
-            ></o-icon> -->
+            ></o-icon>
             {{ scope.row.status }}
           </div>
         </template>

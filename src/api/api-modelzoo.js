@@ -140,18 +140,6 @@ export function handleVqaInference(params) {
     });
 }
 
-// export function handleVqaInference(params) {
-//   const url = `/api/foundation/taichu_vqa`;
-//   return request
-//     .post(url, params, getHeaderConfig())
-//     .then((res) => {
-//       return res.data;
-//     })
-//     .catch((e) => {
-//       return e;
-//     });
-// }
-
 /**
  * VQA文字审核
  * @returns
@@ -175,6 +163,38 @@ export function handleTextRview(params) {
  */
 export function handleGenerateCode(params) {
   const url = `/api/foundation/CodeGeeX`;
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 盘古推理（测试）
+ * @returns
+ */
+export function handlePanguInfer(params) {
+  const url = '/test/pangu';
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * LuoJia推理（测试）
+ * @returns
+ */
+export function handleLuojiaInfer(params) {
+  const url = '/test/luojia';
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {

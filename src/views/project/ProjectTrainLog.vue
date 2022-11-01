@@ -449,13 +449,13 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">计算节点个数</div>
-            <div class="info-list-detail">{{ trainDetail.node_count }}</div>
+            <div class="info-list-detail">1</div>
           </li>
           <li class="info-list">
             <div class="info-list-title">规格</div>
             <div class="info-list-detail">{{ configurationInfo.flavor }}</div>
           </li>
-          <!-- <li class="info-list">
+          <li class="info-list">
             <div class="info-list-title">输入参数文件</div>
             <div
               class="info-list-detail document"
@@ -463,7 +463,7 @@ watch(
             >
               {{ trainDetail.config_path }}
             </div>
-          </li> -->
+          </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="goLogFile">

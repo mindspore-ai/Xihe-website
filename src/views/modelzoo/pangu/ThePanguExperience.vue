@@ -8,7 +8,7 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 
-import { handleTextRview } from '@/api/api-modelzoo';
+import { handleTextRview, handlePanguInfer } from '@/api/api-modelzoo';
 
 const userInfoStore = useUserInfoStore();
 
@@ -31,7 +31,7 @@ const msgList = ref([
     type: 0,
     isLoading: false,
   },
-]); 
+]);
 
 avatarUrl.value = userInfoStore.avatar;
 
@@ -67,18 +67,19 @@ function sendMessage() {
       });
 
       handlePanguInfer({ question: inputMsg.value }).then((res) => {
-        if (res.status === 200) {
-          msgList.value.push({
-            message: res.data,
-            type: 0,
-            isLoading: false,
-          });
-        } else if (res.status === -1) {
-          ElMessage({
-            type: 'error',
-            message: res.msg,
-          });
-        }
+        // TODO: 状态码处理
+        // if (res.status === 200) {
+        msgList.value.push({
+          message: res.result,
+          type: 0,
+          isLoading: false,
+        });
+        // } else if (res.status === -1) {
+        //   ElMessage({
+        //     type: 'error',
+        //     message: res.msg,
+        //   });
+        // }
       });
 
       inputMsg.value = '';

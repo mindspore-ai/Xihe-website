@@ -299,7 +299,7 @@ function handelSubmit() {
   ) {
     ElMessage({
       type: 'error',
-      message: '初赛阶段已结束',
+      message: '您未进入决赛，无法提交结果！',
     });
   } else {
     // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {

@@ -391,9 +391,12 @@ function toggleQuitDlg(flag) {
                   v-model="form1.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="fountTeam(queryRef1)">{{
-                  i18n.createTeam
-                }}</o-button>
+                <o-button
+                  disabled
+                  type="primary"
+                  @click="fountTeam(queryRef1)"
+                  >{{ i18n.createTeam }}</o-button
+                >
               </el-form-item>
             </el-form>
           </div>
@@ -410,7 +413,7 @@ function toggleQuitDlg(flag) {
                   v-model="form2.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="addTeam(queryRef2)">{{
+                <o-button disabled type="primary" @click="addTeam(queryRef2)">{{
                   i18n.joinTeam
                 }}</o-button>
               </el-form-item>
@@ -440,9 +443,13 @@ function toggleQuitDlg(flag) {
           v-if="userInfoStore.userName == teamData.leader_name.name"
           class="header-button"
         >
-          <OButton class="delete" size="small" @click="showDel = true">{{
-            i18n.delete.btnText
-          }}</OButton>
+          <OButton
+            disabled
+            class="delete"
+            size="small"
+            @click="showDel = true"
+            >{{ i18n.delete.btnText }}</OButton
+          >
           <OButton type="primary" size="small" @click="showEdit = true">{{
             i18n.edit
           }}</OButton>

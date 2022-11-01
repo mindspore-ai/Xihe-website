@@ -126,10 +126,6 @@ nextTick(() => {
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-tabs__header) {
-  background-color: #fff;
-  border: 0;
-}
 :deep(.el-tabs__content) {
   padding: 0;
 }
@@ -137,48 +133,55 @@ nextTick(() => {
   margin: 30px 80px 0;
   border-radius: 32px 32px 0 0;
 }
-:deep(.el-tabs__nav) {
-  width: 100%;
-  background: #fff;
 
-  .el-tabs__item {
-    width: 50%;
-    padding: 0 !important;
-    margin: 0 !important;
+.el-tabs {
+  :deep(.el-tabs__header.is-top) {
+    background-color: #fff;
     border: 0;
-    color: #ffffff;
-    height: 80px;
-    font-size: 24px;
+    .el-tabs__nav {
+      width: 100%;
+      background: #fff;
 
-    .tabs-item {
-      background-color: #e5e5e5;
-      height: 100%;
-      text-align: center;
-      line-height: 80px;
+      .el-tabs__item {
+        width: 50%;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0;
+        color: #ffffff;
+        height: 80px;
+        font-size: 24px;
+
+        .tabs-item {
+          background-color: #e5e5e5;
+          height: 100%;
+          text-align: center;
+          line-height: 80px;
+        }
+        .tabs-left {
+          background-image: url(@/assets/imgs/rank-bg.png);
+          background-position: 100%;
+          background-size: cover;
+          border-radius: 0 0 0 -21px;
+          box-shadow: 1px 3px 10px rgba(0, 0, 0, 100%);
+        }
+        .tabs-right {
+          background-image: url(@/assets/imgs/rank-bg1.png);
+          background-position: 0;
+          background-size: cover;
+          // box-shadow: 1px 3px 10px rgba(0, 0, 0, 20%);
+        }
+        &:not(.is-disabled):hover {
+          color: #ffffff;
+        }
+      }
+      .el-tabs__item.is-active {
+        color: #ffffff;
+        border: 0;
+        // background-image: url(@/assets/imgs/rank-bg.png);
+        // background-position: 100%;
+        // background-size: cover;
+      }
     }
-    .tabs-left {
-      background-image: url(@/assets/imgs/rank-bg.png);
-      background-position: 100%;
-      background-size: cover;
-      border-radius: 0 0 0 -21px;
-      box-shadow: 1px 3px 10px rgba(0, 0, 0, 100%);
-    }
-    .tabs-right {
-      background-image: url(@/assets/imgs/rank-bg1.png);
-      background-position: 0;
-      background-size: cover;
-      // box-shadow: 1px 3px 10px rgba(0, 0, 0, 20%);
-    }
-    &:not(.is-disabled):hover {
-      color: #ffffff;
-    }
-  }
-  .el-tabs__item.is-active {
-    color: #ffffff;
-    border: 0;
-    // background-image: url(@/assets/imgs/rank-bg.png);
-    // background-position: 100%;
-    // background-size: cover;
   }
 }
 .rank-page {

@@ -43,7 +43,6 @@ export function getAllCompetition(params) {
  */
 export function getRank(id) {
   const url = `/api/competitions/competition_ranklist`;
-  console.log(id);
   return request.post(url, id).then((res) => {
     return res.data;
   });

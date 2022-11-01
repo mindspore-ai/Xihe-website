@@ -37,13 +37,15 @@ function change(s) {
         });
       }
     );
-  } else {
+  } else if (s === '0') {
     tabs.value[1].classList.remove('tabs-right');
     tabs.value[0].classList.add('tabs-left');
   }
 }
 nextTick(() => {
   tabs.value = document.querySelectorAll('.tabs-item');
+  tabs.value[1].classList.remove('tabs-right');
+  tabs.value[0].classList.add('tabs-left');
 });
 </script>
 <template>

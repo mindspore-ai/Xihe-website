@@ -469,12 +469,13 @@ function deleteEnvironment(item) {
 
 // 子组件点击
 function handleClick(item) {
+  console.log('item: ', item);
   if (option.value === 'directory') {
     codeDir.value = item.join('/') + '/';
     // console.log('代码目录: ', codeDir.value);
   } else {
     bootFile.value = item;
-    // console.log('启动文件: ', bootFile.value);
+    console.log('启动文件: ', bootFile.value);
     showbtn.value = true;
   }
 }
@@ -915,10 +916,7 @@ function selectFile(item) {
           <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
             >取消</o-button
           >
-          <o-button
-            v-if="showbtn && (option === 'file' || option === 'directory')"
-            type="primary"
-            @click="confirmSelect(option)"
+          <o-button v-if="showbtn" type="primary" @click="confirmSelect(option)"
             >确定</o-button
           >
           <o-button v-else type="secondary">确定</o-button>

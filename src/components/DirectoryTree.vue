@@ -26,7 +26,7 @@ const props = defineProps({
   },
 });
 // console.log('仓库详情数据: ', props.repoDetail);
-// console.log('类型: ', props.optionType);
+console.log('类型: ', props.optionType);
 
 const dirPath = ref(''); // 自定义路径
 const headContents = ref([]); // 头部路径，最终代码目录路径
@@ -51,7 +51,7 @@ async function getDetailData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         filesList.value = res.data;
-        // console.log('获取文件目录树结果: ', filesList.value);
+        console.log('获取文件目录树结果: ', filesList.value);
       }
     });
   } catch (error) {
@@ -98,11 +98,16 @@ function pathClick(item) {
 function goBlob(item) {
   // 如果是文件夹
   if (item.is_dir) {
-    dirPath.value = item.path;
-    let lastPath = dirPath.value.split('/').slice(-1).toString();
-    headContents.value.push(lastPath);
-    // console.log('headContents.value: ', headContents.value);
-    emit('handle', headContents.value);
+    if (props.optionType === 'directory') {
+      dirPath.value = item.path;
+      let lastPath = dirPath.value.split('/').slice(-1).toString();
+      headContents.value.push(lastPath);
+      emit('handle', headContents.value);
+    } else {
+      dirPath.value = item.path;
+      let lastPath = dirPath.value.split('/').slice(-1).toString();
+      headContents.value.push(lastPath);
+    }
 
     // 取头部数组headContents的最后一位
     /* let headLastPath = '';
@@ -259,45 +264,6 @@ function handleFile(item) {
 <style lang="scss" scoped>
 $theme: #0d8dff;
 
-:deep(.el-table) {
-  border: 1px solid #ccc;
-  // 头部样式
-  .el-table__header {
-    // padding: 12px;
-    tr {
-      height: 48px;
-      color: #555;
-      th {
-        &:first-child {
-          padding-left: 12px;
-        }
-      }
-    }
-  }
-  // 主体样式
-  // .el-table__body-wrapper {
-  // padding: 0 12px;
-  .el-table__body {
-    color: #555;
-    // 行
-    .el-table__row {
-      // border-bottom: 1px solid red !important;
-      height: 48px;
-      .el-table_1_column_1 {
-        padding-left: 12px;
-        .cell {
-          display: flex;
-          .file-blob {
-            display: flex;
-            padding-left: 8px;
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
-  // }
-}
 .model-file {
   .file-top {
     display: flex;
@@ -468,6 +434,47 @@ $theme: #0d8dff;
     }
   }
 }
+
+:deep(.el-table) {
+  border: 1px solid #ccc;
+  // 头部样式
+  .el-table__header {
+    // padding: 12px;
+    tr {
+      height: 48px;
+      color: #555;
+      th {
+        &:first-child {
+          padding-left: 12px;
+        }
+      }
+    }
+  }
+  // 主体样式
+  // .el-table__body-wrapper {
+  // padding: 0 12px;
+  .el-table__body {
+    color: #555;
+    // 行
+    .el-table__row {
+      // border-bottom: 1px solid red !important;
+      height: 48px;
+      .el-table_1_column_1 {
+        padding-left: 12px;
+        .cell {
+          display: flex;
+          .file-blob {
+            display: flex;
+            padding-left: 8px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  // }
+}
+
 .o-icon {
   margin-right: 6px;
   font-size: 24px;

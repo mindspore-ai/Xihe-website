@@ -352,9 +352,9 @@ export function startInference(params) {
 }
 export function startInference2(params) {
   // const { projectId } = params;
-  const url = `/api/projects/${params}/inference/infertask/`;
+  const url = `/server/inference/projects/${params.owner}/${params.pid}`;
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, null, getHeaderConfig())
     .then((res) => {
       return res;
     })

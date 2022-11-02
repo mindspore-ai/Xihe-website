@@ -21,8 +21,6 @@ import IconWarning from '~icons/app/warning';
 
 import { LOGIN_KEYS } from '@/shared/login';
 
-import { ElMessage } from 'element-plus';
-
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const showEvaBtn = ref(true);
@@ -51,6 +49,7 @@ let timer3 = null;
 
 const route = useRoute();
 const router = useRouter();
+
 const i18n = {
   title: '评估',
   desc: '训练日志可视化，请按顺序输入超参数范围，目前只支持LossMonitor, 详情请参考文档，更多的参数评估请选用自定义评估',
@@ -63,13 +62,14 @@ const i18n = {
 };
 
 const query = reactive({
-  learning_rate: '',
-  momentum: '',
-  batch_size: '',
+  learning_rate_scope: '',
+  momentum_scope: '',
+  batch_size_scope: '',
+  type: 'standard',
 });
 
 const rules = reactive({
-  learning_rate: [
+  learning_rate_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
       pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
@@ -77,7 +77,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  momentum: [
+  momentum_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
       pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
@@ -85,7 +85,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  batch_size: [
+  batch_size_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
       pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
@@ -257,38 +257,68 @@ function reloadPage() {
 //   }
 // };
 
+const requestData = ref({
+  learning_rate_scope: [],
+  batch_size_scope: [],
+  momentum_scope: [],
+  type: 'standard',
+});
+
 // 自动评估
 function saveSetting() {
-  ruleRef.value.validate((valid) => {
-    if (valid) {
-      autoEvaluate(query, detailData.value.id, route.params.trainId).then(
-        (res) => {
-          if (
-            res.data.status === 200 &&
-            res.data.msg === '创建日志可视化成功'
-          ) {
-            showEvaBtn.value = false;
-            showAnaButton.value = true;
-            ws.send(JSON.stringify({ pk: detailData.value.id }));
-            timer3 = setInterval(() => {
-              ws.send(JSON.stringify({ pk: detailData.value.id }));
-            }, 10000);
-          } else if (res.data.status === -1) {
-            ElMessage({
-              type: 'error',
-              message: res.data.msg,
-            });
-          }
-        }
-      );
-    } else {
-      // ElMessage({
-      //   type: 'error',
-      //   message: '请按要求输入信息',
-      // });
-    }
+  console.log(query.learning_rate_scope.split(','));
+  requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
+
+  requestData.value.momentum_scope = query.momentum_scope.split(',');
+
+  requestData.value.batch_size_scope = query.batch_size_scope.split(',');
+
+  autoEvaluate(
+    requestData.value,
+    detailData.value.id,
+    route.params.trainId
+  ).then((res) => {
+    console.log(res);
+    requestData.value = {
+      learning_rate_scope: [],
+      batch_size_scope: [],
+      momentum_scope: [],
+    };
   });
 }
+
+// function saveSetting() {
+//   ruleRef.value.validate((valid) => {
+//     if (valid) {
+//       autoEvaluate(query, detailData.value.id, route.params.trainId).then(
+//         (res) => {
+//           console.log(res);
+//           // if (
+//           //   res.data.status === 200 &&
+//           //   res.data.msg === '创建日志可视化成功'
+//           // ) {
+//           //   showEvaBtn.value = false;
+//           //   showAnaButton.value = true;
+//           //   ws.send(JSON.stringify({ pk: detailData.value.id }));
+//           //   timer3 = setInterval(() => {
+//           //     ws.send(JSON.stringify({ pk: detailData.value.id }));
+//           //   }, 10000);
+//           // } else if (res.data.status === -1) {
+//           //   ElMessage({
+//           //     type: 'error',
+//           //     message: res.data.msg,
+//           //   });
+//           // }
+//         }
+//       );
+//     } else {
+//       // ElMessage({
+//       //   type: 'error',
+//       //   message: '请按要求输入信息',
+//       // });
+//     }
+//   });
+// }
 
 // 自定义评估
 function handleAssessment() {
@@ -505,19 +535,19 @@ watch(
                     prop="learning_rate"
                   >
                     <el-input
-                      v-model="query.learning_rate"
+                      v-model="query.learning_rate_scope"
                       :placeholder="i18n.learning.placeholder"
                     ></el-input>
                   </el-form-item>
                   <el-form-item :label="i18n.momentum.name" prop="momentum">
                     <el-input
-                      v-model="query.momentum"
+                      v-model="query.momentum_scope"
                       :placeholder="i18n.momentum.placeholder"
                     ></el-input>
                   </el-form-item>
                   <el-form-item :label="i18n.batch.name" prop="batch_size">
                     <el-input
-                      v-model="query.batch_size"
+                      v-model="query.batch_size_scope"
                       :placeholder="i18n.batch.placeholder"
                     ></el-input>
                   </el-form-item>

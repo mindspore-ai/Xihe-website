@@ -49,7 +49,7 @@ defineExpose({ modelData });
 <style lang="scss" scoped>
 .model-params {
   padding: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   background-color: #f5f6f8;
   position: relative;
 

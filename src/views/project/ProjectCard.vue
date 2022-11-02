@@ -510,7 +510,7 @@ if (detailData.value.owner === userInfo.userName) {
   // findFile(`xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`)
   getGitlabTree({
     user: routerParams.user,
-    path: '/train',
+    path: '/train/trainDir',
     id: detailData.value.id,
     name: routerParams.name,
   }).then((res) => {
@@ -518,7 +518,8 @@ if (detailData.value.owner === userInfo.userName) {
     let apppy = res?.data?.filter((item) => {
       return item.name === 'app.py';
     });
-    if (apppy) {
+    // if (apppy) {
+    try {
       canStart.value = true;
       if (detailData.value.sdk_name === 'Gradio' && canStart.value) {
         socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
@@ -570,6 +571,8 @@ if (detailData.value.owner === userInfo.userName) {
           }
         };
       }
+    } catch {
+      console.log('canStart', canStart.value);
     }
   });
 } else {

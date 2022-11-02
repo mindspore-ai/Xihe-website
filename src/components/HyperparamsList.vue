@@ -17,7 +17,7 @@ defineExpose({ hyperparamsData });
 .hyper-params {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   span {
     margin-left: 8px;
     margin-right: 8px;

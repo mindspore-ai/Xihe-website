@@ -27,8 +27,8 @@ import {
 } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
-
 import { getBaseInfo } from '@/api/api-shared';
+import { goAuthorize } from '@/shared/login';
 
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -340,18 +340,22 @@ function addTagClick() {
 
 // 点赞(收藏)
 function getLike() {
-  let params = {
-    name: detailData.value.name,
-    owner: detailData.value.owner,
-  };
-  getUserDig(params)
-    .then((res) => {
-      getDetailData();
-    })
-    .catch((err) => {
-      throw err;
-    });
-  // }
+  // TODO:未登录时？？？
+  if (!userInfoStore.id) {
+    goAuthorize();
+  } else {
+    let params = {
+      name: detailData.value.name,
+      owner: detailData.value.owner,
+    };
+    getUserDig(params)
+      .then((res) => {
+        getDetailData();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 }
 
 // 取消收藏

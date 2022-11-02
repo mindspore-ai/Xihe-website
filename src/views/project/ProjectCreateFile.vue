@@ -30,6 +30,13 @@ const router = useRouter();
 const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);
+const codeDir = ref(''); // 代码目录
+const bootFile = ref(''); //启动文件
+const codeDirInt = ref(null); //代码目录输入框
+const bootFileInt = ref(null); //启动文件输入框
+const option = ref(''); // 选择类型
+const showbtn = ref(false); //是否弹窗确定按钮
+
 // 用于获取子组件元素
 const model = ref([]);
 const dataset = ref([]);
@@ -255,8 +262,7 @@ function verify(node, code, message) {
 async function confirmCreating(formEl) {
   // 如果表单为空，返回
   if (!formEl) return;
-  formEl.validate((valid, fields) => {
-    // console.log('valid: ', valid);
+  formEl.validate((valid) => {
     if (valid) {
       /* let models = {},
         datasets = {},
@@ -272,7 +278,6 @@ async function confirmCreating(formEl) {
       } */
       // 获取模型数据
       // debugger;
-      console.log('model.value: ', model.value);
       model.value.forEach((element) => {
         form.models.push(element.modelData);
       });
@@ -326,7 +331,6 @@ async function confirmCreating(formEl) {
         } */
       });
     } else {
-      // console.log('fields: ', fields);
       return false;
     }
   });
@@ -421,7 +425,6 @@ function addModel() {
   let item = { id: modelId.value, key: 'key值', value: 'value值' };
   modelList.push(item);
   modelId.value++;
-  // console.log('modelList11111: ', modelList);
 }
 
 // 添加输入数据集
@@ -441,7 +444,6 @@ function addEnvironment() {
   let item = { id: environmentId.value, key: 'key值', value: 'value值' };
   environmentList.push(item);
   environmentId.value++;
-  // console.log('environmentList: ', environmentList);
 }
 
 // 删除输入模型
@@ -465,29 +467,30 @@ function deleteEnvironment(item) {
   environmentList.splice(index, 1);
 }
 
-const codeDir = ref(''); // 代码目录
-const bootFile = ref(''); //启动文件
-const codeDirInt = ref(null); //代码目录输入框
-const bootFileInt = ref(null); //启动文件输入框
+// 子组件点击
 function handleClick(item) {
-  console.log('item: ', item);
-  codeDir.value = item.join('/') + '/';
+  if (option.value === 'directory') {
+    codeDir.value = item.join('/') + '/';
+    // console.log('代码目录: ', codeDir.value);
+  } else {
+    bootFile.value = item;
+    // console.log('启动文件: ', bootFile.value);
+    showbtn.value = true;
+  }
 }
 
+// 确定选择
 function confirmSelect(type) {
   showDir.value = false;
   if (type === 'directory') {
     form.code_dir = codeDir.value;
     codeDirInt.value.focus();
-    console.log('codeDirInt.value: ', codeDirInt.value);
   } else {
     form.boot_file = bootFile.value;
     bootFileInt.value.focus();
   }
 }
 
-// 选择类型
-const option = ref('');
 // 选择目录
 function selectDir(item) {
   option.value = item;
@@ -560,11 +563,9 @@ function selectFile(item) {
                       <el-input
                         ref="codeDirInt"
                         v-model="form.code_dir"
-                        placeholder="请输入代码目录"
+                        placeholder="请选择代码目录"
                       />
-                      <!-- <o-button @click="selectDir('directory')"
-                        >选择目录</o-button
-                      > -->
+                      <o-button @click="selectDir('directory')">选择</o-button>
                     </div>
                   </el-form-item>
                 </div>
@@ -577,16 +578,15 @@ function selectFile(item) {
                       <el-input
                         ref="bootFileInt"
                         v-model="form.boot_file"
-                        placeholder="请输入启动文件"
+                        placeholder="请选择启动文件（.py结尾的文件）"
                       />
-                      <!-- <o-button @click="selectFile('file')">选择文件</o-button> -->
+                      <o-button @click="selectFile('file')">选择</o-button>
                     </div>
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item frameworks">
                   <div class="item-title">
                     <icon-necessary></icon-necessary>
-                    <!-- <span>框架版本</span> -->
                   </div>
                   <!-- prop="compute" -->
                   <el-form-item label="框架版本">
@@ -657,7 +657,7 @@ function selectFile(item) {
                       :teleported="true"
                     >
                       <template #reference>
-                        <o-icon style="font-size: 18px"
+                        <o-icon style="font-size: 20px"
                           ><icon-poppver></icon-poppver
                         ></o-icon>
                       </template>
@@ -672,11 +672,7 @@ function selectFile(item) {
                     </el-popover>
                   </div>
                   <!-- prop="model" -->
-                  <el-form-item
-                    placeholder="请输入模型名"
-                    class="model"
-                    label="输入模型"
-                  >
+                  <el-form-item class="model" label="输入模型">
                     <div
                       v-for="item in modelList"
                       :key="item.id"
@@ -684,7 +680,7 @@ function selectFile(item) {
                     >
                       <model-list ref="model"></model-list>
                       <div class="delete-btn" @click="deleteModel(item)">
-                        <o-icon class="remove-icon"
+                        <o-icon class="train-icon"
                           ><icon-remove></icon-remove
                         ></o-icon>
                       </div>
@@ -704,7 +700,7 @@ function selectFile(item) {
                       :teleported="true"
                     >
                       <template #reference>
-                        <o-icon style="font-size: 18px"
+                        <o-icon style="font-size: 20px"
                           ><icon-poppver></icon-poppver
                         ></o-icon>
                       </template>
@@ -718,11 +714,7 @@ function selectFile(item) {
                       </div>
                     </el-popover>
                   </div>
-                  <el-form-item
-                    placeholder="请输入数据集名"
-                    class="dataset"
-                    label="输入数据集"
-                  >
+                  <el-form-item class="dataset" label="输入数据集">
                     <div
                       v-for="item in datasetList"
                       :key="item.id"
@@ -744,6 +736,20 @@ function selectFile(item) {
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
+                  <el-form-item label="训练输出">
+                    <span style="line-height: 22px"
+                      >若你要支持训练输出，需在训练代码中指定参数名为output_path，并将训练生成的文件保存在该参数路径下。</span
+                    >
+                  </el-form-item>
+                </div>
+                <div class="createfile-form-item">
+                  <el-form-item label="评估">
+                    <span style="line-height: 22px"
+                      >若你要支持评估，需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
+                    </span>
+                  </el-form-item>
+                </div>
+                <div class="createfile-form-item">
                   <div class="item-icon">
                     <el-popover
                       placement="bottom-start"
@@ -752,13 +758,14 @@ function selectFile(item) {
                       :teleported="true"
                     >
                       <template #reference>
-                        <o-icon style="font-size: 18px"
+                        <o-icon style="font-size: 20px"
                           ><icon-poppver></icon-poppver
                         ></o-icon>
                       </template>
                       <div>
                         在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
-                        <br />格式为：
+                        <br />
+                        <!-- 格式为：
                         <div style="color: red">
                           [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
                           &lt;解析参数对应的值1&gt;, <br />
@@ -769,7 +776,7 @@ function selectFile(item) {
                           <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
                           &lt;解析参数名称2&gt; <br />}, ... ]
                         </div>
-                        注意{}末尾不能有逗号
+                        注意{}末尾不能有逗号 -->
                       </div>
                     </el-popover>
                   </div>
@@ -801,7 +808,7 @@ function selectFile(item) {
                       :teleported="true"
                     >
                       <template #reference>
-                        <o-icon style="font-size: 18px"
+                        <o-icon style="font-size: 20px"
                           ><icon-poppver></icon-poppver
                         ></o-icon>
                       </template>
@@ -896,10 +903,26 @@ function selectFile(item) {
           paddingBottom: '16px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
-          >取消</o-button
-        >
-        <o-button type="primary" @click="confirmSelect(option)">确定</o-button>
+        <div v-if="option === 'directory'">
+          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+            >取消</o-button
+          >
+          <o-button type="primary" @click="confirmSelect(option)"
+            >确定</o-button
+          >
+        </div>
+        <div v-if="option === 'file'">
+          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+            >取消</o-button
+          >
+          <o-button
+            v-if="showbtn && (option === 'file' || option === 'directory')"
+            type="primary"
+            @click="confirmSelect(option)"
+            >确定</o-button
+          >
+          <o-button v-else type="secondary">确定</o-button>
+        </div>
       </div>
     </template>
   </o-dialog>
@@ -908,7 +931,7 @@ function selectFile(item) {
 <style lang="scss" scoped>
 .train-icon {
   &:hover {
-    color: rgba(13, 141, 255, 1);
+    color: #0d8dff;
   }
 }
 .createfile {
@@ -1056,7 +1079,7 @@ function selectFile(item) {
               margin-top: 27px;
               .item-icon {
                 position: absolute;
-                top: 7px;
+                top: 5px;
                 left: 85px;
                 // transform: translateY(-50%);
               }
@@ -1098,7 +1121,7 @@ function selectFile(item) {
       // width: 100%;
       width: 546px;
       max-width: 546px;
-      margin-left: 30px;
+      margin-left: 28px;
       .o-icon {
         // width: 16px;
         // height: 16px;
@@ -1107,7 +1130,7 @@ function selectFile(item) {
       .el-form-item__error {
         white-space: nowrap;
         // transform: translateY(-50%);
-        top: calc(100% + 9px);
+        top: calc(100% + 12px);
         left: 0;
       }
       .el-input {
@@ -1163,17 +1186,17 @@ function selectFile(item) {
           position: absolute;
           top: 50%;
           transform: translateY(-80%);
-          right: -24px;
+          right: -30px;
           display: flex;
           cursor: pointer;
           .o-icon {
-            font-size: 20px;
+            font-size: 24px;
           }
-          .remove-icon {
+          /* .remove-icon {
             &:hover {
               color: blue;
             }
-          }
+          } */
         }
       }
       /* .el-input {

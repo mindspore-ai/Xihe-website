@@ -94,7 +94,7 @@ function getTrainList() {
     console.log(trainData.value);
     // 列表为空可以创建实例
     if (trainData.value === null) {
-      btnShow.value = true;
+      btnShow.value = false;
     } else {
       let bool = trainData.value.some(
         (item) => item.status === 'scheduling' || 'Running'

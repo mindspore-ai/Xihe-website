@@ -469,13 +469,13 @@ function deleteEnvironment(item) {
 
 // 子组件点击
 function handleClick(item) {
-  console.log('item: ', item);
+  // console.log('item: ', item);
   if (option.value === 'directory') {
     codeDir.value = item.join('/') + '/';
     // console.log('代码目录: ', codeDir.value);
   } else {
     bootFile.value = item;
-    console.log('启动文件: ', bootFile.value);
+    // console.log('启动文件: ', bootFile.value);
     showbtn.value = true;
   }
 }

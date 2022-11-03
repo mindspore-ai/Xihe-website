@@ -22,6 +22,7 @@ import { getUserDig, cancelCollection } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
@@ -110,6 +111,7 @@ onBeforeRouteLeave(() => {
 });
 
 let modelTags = ref([]);
+// 模型详情数据
 function getDetailData() {
   try {
     getRepoDetailByName({
@@ -134,7 +136,7 @@ function getDetailData() {
         //   device_target_list,
         //   model_format_list,
       } = detailData.value;
-      // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+      isDigged.value = detailData.value.liked;
 
       // modelTags.value = [
       //   ...licenses_list,
@@ -402,42 +404,41 @@ function handleTabClick(item) {
   );
 }
 
-// 点赞
-/* function digClick() {
-  reopt.url = `/api/models/${detailData.value.id}/digg`;
-  reopt.headers = { Authorization: 'Bearer ' + userInfoStore.token };
-  getUserDig(reopt).then((res) => {
-    if (res.data.status === 200) {
-      getDetailData();
+function handleModelLike() {
+  let params = {
+    name: detailData.value.name,
+    owner: detailData.value.owner,
+  };
+  if (!userInfoStore.id) {
+    // 如未登录
+    goAuthorize();
+  } else {
+    if (!isDigged.value) {
+      // 点赞(收藏)
+      getUserDig(params)
+        .then((res) => {
+          console.log('收藏结果: ', res);
+          if (res.status === 201) {
+            getDetailData();
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } else {
+      // 取消收藏
+      cancelCollection(params)
+        .then((res) => {
+          console.log('取消收藏结果: ', res);
+          if (res.status === 204) {
+            getDetailData();
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
     }
-  });
-} */
-// 点赞(收藏)
-function getLike() {
-  let params = {
-    name: detailData.value.name,
-    owner: detailData.value.owner,
-  };
-  getUserDig(params)
-    .then((res) => {
-      getDetailData();
-    })
-    .catch((err) => {
-      throw err;
-    });
-  // }
-}
-
-// 取消收藏
-function cancelLike() {
-  let params = {
-    name: detailData.value.name,
-    owner: detailData.value.owner,
-  };
-  cancelCollection(params).then((res) => {
-    detailData.value.liked = false;
-    getDetailData();
-  });
+  }
 }
 
 // 复制用户名
@@ -492,7 +493,7 @@ watch(
     <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
-          <!-- //TODO: -->
+          <!-- TODO:缺少模型拥有者头像字段 -->
           <img :src="userInfoStore.avatar" alt="" />
         </div>
         <router-link :to="{ path: `/${route.params.user}` }">
@@ -506,7 +507,13 @@ watch(
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>
         <div v-if="userInfoStore.userName !== detailData.owner">
-          <div v-if="detailData.liked" class="loves">
+          <o-heart
+            :is-digged="isDigged"
+            :dig-count="detailData.like_count"
+            class="loves"
+            @click="handleModelLike"
+          ></o-heart>
+          <!-- <div v-if="detailData.liked" class="loves">
             <o-heart
               :is-digged="!isDigged"
               :dig-count="detailData.like_count"
@@ -519,7 +526,7 @@ watch(
               :dig-count="detailData.like_count"
               @click="getLike"
             ></o-heart>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="label-box">

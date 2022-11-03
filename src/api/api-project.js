@@ -45,7 +45,7 @@ export function getProjectData(params, name) {
 export function getUserDig(params) {
   const url = `/server/user/like`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
+    return res;
   });
 }
 /**
@@ -58,7 +58,7 @@ export function cancelCollection(params) {
   return request
     .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
     .then((res) => {
-      return res.data;
+      return res;
     });
 }
 

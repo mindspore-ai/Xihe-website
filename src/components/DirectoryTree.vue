@@ -26,9 +26,9 @@ const props = defineProps({
   },
 });
 // console.log('仓库详情数据: ', props.repoDetail);
-console.log('类型: ', props.optionType);
+// console.log('类型: ', props.optionType);
 
-const dirPath = ref(''); // 自定义路径
+const dirPath = ref(''); // 自定义路径，末尾不带/
 const headContents = ref([]); // 头部路径，最终代码目录路径
 // const bootFile = ref('');
 // const radio = ref();
@@ -51,7 +51,7 @@ async function getDetailData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         filesList.value = res.data;
-        console.log('获取文件目录树结果: ', filesList.value);
+        // console.log('获取文件目录树结果: ', filesList.value);
       }
     });
   } catch (error) {
@@ -80,16 +80,19 @@ watch(
 );
 
 // 头部点击选择目录
-function pathClick(item) {
+function pathClick(item, index) {
   if (item) {
-    let index = headContents.value.indexOf(item);
     let arr = headContents.value.slice(0, index + 1);
-    let str = arr.join('/') + '/';
+    // let str = arr.join('/') + '/';
+    let str = arr.join('/');
+    dirPath.value = str; //再次请求数据
     headContents.value = headContents.value.slice(0, index + 1);
     emit('handle', headContents.value);
-    getDetailData(str);
+    // getDetailData(str);
   } else {
-    getDetailData('');
+    // 返回根目录
+    // getDetailData('');、
+    dirPath.value = '';
     headContents.value = [];
   }
 }
@@ -100,6 +103,7 @@ function goBlob(item) {
   if (item.is_dir) {
     if (props.optionType === 'directory') {
       dirPath.value = item.path;
+      console.log('dirPath值变化了: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
       emit('handle', headContents.value);
@@ -124,7 +128,6 @@ function goBlob(item) {
     } else {
       //  headContents.value.splice(-1);
       // headContents.value.push(lastPath); 
-      console.log('headContents.value: ', headContents.value);
       emit('handle', headContents.value);
     } */
   } else {
@@ -162,7 +165,7 @@ function handleFile(item) {
             v-for="(item, index) in headContents"
             :key="index"
             class="item-path"
-            @click="pathClick(item)"
+            @click="pathClick(item, index)"
           >
             /{{ item }}
           </div>

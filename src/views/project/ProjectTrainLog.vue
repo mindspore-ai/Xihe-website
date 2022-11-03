@@ -56,10 +56,10 @@ const i18n = {
   desc: '训练日志可视化，请按顺序输入超参数范围，目前只支持LossMonitor, 详情请参考文档，更多的参数评估请选用自定义评估',
   learning: {
     name: 'learning_rate',
-    placeholder: '请输入例如[0.01, 0.02, 0.03]的字段',
+    placeholder: '请输入例如0.01, 0.02, 0.03的字段',
   },
-  momentum: { name: 'momentum', placeholder: '请输入例如[0.9,0.99]的字段' },
-  batch: { name: 'batch_size', placeholder: '请输入例如 [32, 64]的字段' },
+  momentum: { name: 'momentum', placeholder: '请输入例如0.9, 0.99的字段' },
+  batch: { name: 'batch_size', placeholder: '请输入例如 32, 64的字段' },
 };
 
 const query = reactive({
@@ -73,24 +73,25 @@ const rules = reactive({
   learning_rate_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
-      message: '请输入例如[0.01, 0.02, 0.03]的字段',
+      // pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
+      pattern: /^[0-9]+([.]{1}[0-9]+){0,1}(,\s*[0-9]+([.]{1}[0-9]+){0,1})*$/,
+      message: '请输入例如0.01, 0.02, 0.03的字段',
       trigger: 'blur',
     },
   ],
   momentum_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
-      message: '请输入例如[0.9, 0.99]的字段',
+      pattern: /^[0-9]+([.]{1}[0-9]+){0,1}(,\s*[0-9]+([.]{1}[0-9]+){0,1})*$/,
+      message: '请输入例如0.9, 0.99的字段',
       trigger: 'blur',
     },
   ],
   batch_size_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
-      message: '请输入例如[32,64]的字段',
+      pattern: /^[1-9]\d*(,[1-9]\d*)*$/,
+      message: '请输入例如32, 64的字段',
       trigger: 'blur',
     },
   ],
@@ -549,20 +550,26 @@ watch(
                 >
                   <el-form-item
                     :label="i18n.learning.name"
-                    prop="learning_rate"
+                    prop="learning_rate_scope"
                   >
                     <el-input
                       v-model="query.learning_rate_scope"
                       :placeholder="i18n.learning.placeholder"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item :label="i18n.momentum.name" prop="momentum">
+                  <el-form-item
+                    :label="i18n.momentum.name"
+                    prop="momentum_scope"
+                  >
                     <el-input
                       v-model="query.momentum_scope"
                       :placeholder="i18n.momentum.placeholder"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item :label="i18n.batch.name" prop="batch_size">
+                  <el-form-item
+                    :label="i18n.batch.name"
+                    prop="batch_size_scope"
+                  >
                     <el-input
                       v-model="query.batch_size_scope"
                       :placeholder="i18n.batch.placeholder"

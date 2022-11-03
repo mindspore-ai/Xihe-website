@@ -45,7 +45,7 @@ export function getProjectData(params, name) {
 export function getUserDig(params) {
   const url = `/server/user/like`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
+    return res;
   });
 }
 /**
@@ -58,7 +58,7 @@ export function cancelCollection(params) {
   return request
     .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
     .then((res) => {
-      return res.data;
+      return res;
     });
 }
 
@@ -352,9 +352,9 @@ export function startInference(params) {
 }
 export function startInference2(params) {
   // const { projectId } = params;
-  const url = `/api/projects/${params}/inference/infertask/`;
+  const url = `/server/inference/project/${params.owner}/${params.pid}`;
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, null, getHeaderConfig())
     .then((res) => {
       return res;
     })

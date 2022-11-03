@@ -195,7 +195,7 @@ ownerName.value.push(userInfoStore.userName);
 
 const isForkShow = ref();
 // let timer = null;
-// 详情数据
+// 项目详情数据
 function getDetailData() {
   try {
     getRepoDetailByName({
@@ -223,9 +223,9 @@ function getDetailData() {
       }
 
       // digCount.value = detailData.value.type;
+      isDigged.value = detailData.value.liked;
 
       const { training, tags } = detailData.value;
-      // isDigged.value = detailData.value.digg.includes(userInfoStore.id);
       modelTags.value = [];
       headTags.value = [];
       if (tags) {
@@ -338,36 +338,42 @@ function addTagClick() {
   // getDetailData();
 }
 
-// 点赞(收藏)
-function getLike() {
-  // TODO:未登录时？？？
-  if (!userInfoStore.id) {
-    goAuthorize();
-  } else {
-    let params = {
-      name: detailData.value.name,
-      owner: detailData.value.owner,
-    };
-    getUserDig(params)
-      .then((res) => {
-        getDetailData();
-      })
-      .catch((err) => {
-        throw err;
-      });
-  }
-}
-
-// 取消收藏
-function cancelLike() {
+// 点赞，取消点赞
+function handleProjectLike() {
   let params = {
     name: detailData.value.name,
     owner: detailData.value.owner,
   };
-  cancelCollection(params).then((res) => {
-    detailData.value.liked = false;
-    getDetailData();
-  });
+  if (!userInfoStore.id) {
+    // 如未登录
+    goAuthorize();
+  } else {
+    if (!isDigged.value) {
+      // 点赞(收藏)
+      getUserDig(params)
+        .then((res) => {
+          console.log('收藏结果: ', res);
+          if (res.status === 201) {
+            getDetailData();
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } else {
+      // 取消收藏
+      cancelCollection(params)
+        .then((res) => {
+          console.log('取消收藏结果: ', res);
+          if (res.status === 204) {
+            getDetailData();
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
+  }
 }
 
 // 删除
@@ -678,7 +684,8 @@ watch(
         <div>
           <div class="card-head-1">
             <div class="avatar">
-              <!-- <img :src="detailData.owner_name.avatar_url" alt="" /> -->
+              <!-- TODO:缺少项目拥有者头像字段 -->
+              <img :src="userInfoStore.avatar" alt="" />
             </div>
 
             <router-link :to="{ path: `/${route.params.user}` }">
@@ -692,20 +699,12 @@ watch(
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
             <div v-if="userInfoStore.userName !== detailData.owner">
-              <div v-if="detailData.liked" class="loves">
-                <o-heart
-                  :is-digged="!isDigged"
-                  :dig-count="detailData.like_count"
-                  @click="cancelLike"
-                ></o-heart>
-              </div>
-              <div v-else class="loves">
-                <o-heart
-                  :is-digged="isDigged"
-                  :dig-count="detailData.like_count"
-                  @click="getLike"
-                ></o-heart>
-              </div>
+              <o-heart
+                :is-digged="isDigged"
+                :dig-count="detailData.like_count"
+                class="loves"
+                @click="handleProjectLike"
+              ></o-heart>
             </div>
           </div>
           <div class="label-box">

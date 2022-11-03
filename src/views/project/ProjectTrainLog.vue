@@ -20,6 +20,7 @@ import IconFailed from '~icons/app/failed';
 import IconWarning from '~icons/app/warning';
 
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -184,6 +185,8 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
+const isDone = ref(false);
+
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${detailData.value.id}/training/${route.params.trainId}`,
   [getHeaderConfig().headers['private-token']]
@@ -199,6 +202,7 @@ socket.onmessage = function (event) {
     form.name = trainDetail.value.name;
     form.desc = trainDetail.value.log;
     configurationInfo.value = trainDetail.value.compute;
+    isDone.value = trainDetail.value.is_done;
   });
 };
 
@@ -256,6 +260,24 @@ function reloadPage() {
 //     showAnaButton.value = false;
 //   }
 // };
+const evaluate_id = ref('1');
+
+const ws = new WebSocket(
+  `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${evaluate_id.value}`,
+  [getHeaderConfig().headers['private-token']]
+);
+
+ws.onopen = function () {
+  console.log('websocket已连接');
+};
+
+ws.onmessage = function (event) {
+  // 推理出url 断开websocket
+  if (JSON.parse(event.data).access_url) {
+    evaluateUrl.value = JSON.parse(event.data).access_url;
+    ws.close();
+  }
+};
 
 const requestData = ref({
   learning_rate_scope: [],
@@ -279,6 +301,16 @@ function saveSetting() {
     route.params.trainId
   ).then((res) => {
     console.log(res);
+
+    if (res.status === 201) {
+      // evaluate_id.value = res.data.evaluate_id;
+    } else {
+      ElMessage({
+        type: 'error',
+        message: res.msg,
+      });
+    }
+
     requestData.value = {
       learning_rate_scope: [],
       batch_size_scope: [],
@@ -290,27 +322,7 @@ function saveSetting() {
 // function saveSetting() {
 //   ruleRef.value.validate((valid) => {
 //     if (valid) {
-//       autoEvaluate(query, detailData.value.id, route.params.trainId).then(
-//         (res) => {
-//           console.log(res);
-//           // if (
-//           //   res.data.status === 200 &&
-//           //   res.data.msg === '创建日志可视化成功'
-//           // ) {
-//           //   showEvaBtn.value = false;
-//           //   showAnaButton.value = true;
-//           //   ws.send(JSON.stringify({ pk: detailData.value.id }));
-//           //   timer3 = setInterval(() => {
-//           //     ws.send(JSON.stringify({ pk: detailData.value.id }));
-//           //   }, 10000);
-//           // } else if (res.data.status === -1) {
-//           //   ElMessage({
-//           //     type: 'error',
-//           //     message: res.data.msg,
-//           //   });
-//           // }
-//         }
-//       );
+//
 //     } else {
 //       // ElMessage({
 //       //   type: 'error',
@@ -324,25 +336,30 @@ function saveSetting() {
 function handleAssessment() {
   showEvaBtn1.value = false;
   isDisabled1.value = true;
+  // let params = {
+  //   db_path: repoContent.value,
+  // };
+
   let params = {
-    db_path: repoContent.value,
+    type: 'custom',
   };
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
-      if (res.status === 200) {
-        isDisabled1.value = false;
-        showAnaButton1.value = true;
-        timer2 = setInterval(() => {
-          ws.send(
-            JSON.stringify({
-              pk: detailData.value.id,
-              train_id: route.params.trainId,
-              is_cust: true,
-            })
-          );
-        }, 10000);
-      } else {
-      }
+      console.log(res);
+      // if (res.status === 200) {
+      //   isDisabled1.value = false;
+      //   showAnaButton1.value = true;
+      //   timer2 = setInterval(() => {
+      //     ws.send(
+      //       JSON.stringify({
+      //         pk: detailData.value.id,
+      //         train_id: route.params.trainId,
+      //         is_cust: true,
+      //       })
+      //     );
+      //   }, 10000);
+      // } else {
+      // }
     }
   );
 }
@@ -582,9 +599,10 @@ watch(
                 </div>
               </div>
             </div>
+
             <div v-if="showContent1">
               <!-- 无Aim代码 -->
-              <div v-if="!trainDetail.db_path" class="no-aim">
+              <div v-if="trainDetail.db_path" class="no-aim">
                 <p>
                   <o-icon><icon-warning></icon-warning></o-icon>
                 </p>
@@ -594,7 +612,7 @@ watch(
                 <p class="no-aim-bottom" @click="addAssessCode">添加评估代码</p>
               </div>
               <!-- 有Aim代码 -->
-              <div v-if="trainDetail.db_path" class="have-aim">
+              <div v-if="!trainDetail.db_path" class="have-aim">
                 <p>
                   该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
                 </p>

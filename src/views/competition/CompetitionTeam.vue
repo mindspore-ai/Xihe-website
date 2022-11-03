@@ -450,14 +450,22 @@ function toggleQuitDlg(flag) {
             @click="showDel = true"
             >{{ i18n.delete.btnText }}</OButton
           >
-          <OButton type="primary" size="small" @click="showEdit = true">{{
-            i18n.edit
-          }}</OButton>
+          <OButton
+            disabled
+            type="primary"
+            size="small"
+            @click="showEdit = true"
+            >{{ i18n.edit }}</OButton
+          >
         </div>
         <div v-else class="quit-button">
-          <OButton type="primary" size="small" @click="showQuit = true">{{
-            i18n.quit
-          }}</OButton>
+          <OButton
+            disabled
+            type="primary"
+            size="small"
+            @click="showQuit = true"
+            >{{ i18n.quit }}</OButton
+          >
         </div>
       </div>
       <el-table :data="teamMemberData" style="width: 100%">

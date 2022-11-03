@@ -471,7 +471,7 @@ onMounted(() => {
   font-size: 14px;
   line-height: 16px;
   position: absolute;
-  z-index: 100;
+  z-index: 99;
   top: 16px;
   &:hover {
     box-shadow: 0 0 8px #fff;
@@ -495,7 +495,7 @@ onMounted(() => {
   font-size: 14px;
   line-height: 16px;
   cursor: pointer;
-  z-index: 100;
+  z-index: 99;
   top: 16px;
   left: 16px;
   &:hover {

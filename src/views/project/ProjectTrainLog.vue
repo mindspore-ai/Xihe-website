@@ -161,7 +161,7 @@ function reloadPage() {
   closeConn();
 }
 
-const evaluate_id = ref('');
+// const evaluate_id = ref('');
 
 const requestData = ref({
   learning_rate_scope: [],
@@ -204,12 +204,14 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
+        console.log(res);
+        console.log(res.data);
         if (res.data) {
-          evaluate_id.value = res.data.evaluate_id;
+          // evaluate_id.value = res.data.evaluate_id;
 
-          console.log('evaluate_id :', evaluate_id.value);
+          console.log('evaluate_id :', res.data.evaluate_id);
 
-          setEvaluateWebscoket(evaluate_id.value);
+          setEvaluateWebscoket(res.data.evaluate_id);
         } else {
           ElMessage({
             type: 'error',

@@ -71,7 +71,6 @@ const rules = reactive({
   learning_rate_scope: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      // pattern: /^\[\s*\d+\.?\d*\s*(,\s*\d+\.?\d*\s*)*\]$|^\[\s*\]$/,
       pattern: /^[0-9]+([.]{1}[0-9]+){0,1}(,\s*[0-9]+([.]{1}[0-9]+){0,1})*$/,
       message: '请输入例如0.01, 0.02, 0.03的字段',
       trigger: 'blur',
@@ -161,8 +160,6 @@ function reloadPage() {
   closeConn();
 }
 
-// const evaluate_id = ref('');
-
 const requestData = ref({
   learning_rate_scope: [],
   batch_size_scope: [],
@@ -204,18 +201,12 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
-        console.log(res);
-        console.log(res.data);
-        if (res.data) {
-          // evaluate_id.value = res.data.evaluate_id;
-
-          console.log('evaluate_id :', res.data.evaluate_id);
-
-          setEvaluateWebscoket(res.data.evaluate_id);
+        if (res.status === 201) {
+          setEvaluateWebscoket(res.data.data.evaluate_id);
         } else {
           ElMessage({
             type: 'error',
-            message: res.msg,
+            message: res.data.data.msg,
           });
         }
 

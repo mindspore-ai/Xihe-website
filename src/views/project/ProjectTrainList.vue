@@ -100,11 +100,7 @@ function getTrainList() {
         (item) => item.status === 'scheduling' || 'Running'
       );
       // 调度和运行状态不能创建实例
-      if (bool) {
-        btnShow.value = false;
-      } else {
-        btnShow.value = true;
-      }
+      btnShow.value = bool;
     }
   });
 }
@@ -212,7 +208,7 @@ const socket = new WebSocket(
   [getHeaderConfig().headers['private-token']]
 );
 
-// // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+// 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   console.log('收到服务器的消息', JSON.parse(event.data).data);
   trainData.value = JSON.parse(event.data).data;
@@ -221,11 +217,8 @@ socket.onmessage = function (event) {
     let bool = trainData.value.some(
       (item) => item.status === 'scheduling' || 'Running'
     );
-    if (bool) {
-      btnShow.value = true;
-    } else {
-      btnShow.value = false;
-    }
+
+    btnShow.value = bool;
   }
 };
 
@@ -281,7 +274,7 @@ onUnmounted(() => {
             <o-icon v-if="scope.row.status === 'Terminated'"
               ><icon-stopped></icon-stopped
             ></o-icon>
-            <o-icon v-if="scope.row.status === 'Running' || 'scheduling'"
+            <o-icon v-if="scope.row.status === 'Running'"
               ><icon-runing></icon-runing
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Failed'"
@@ -321,7 +314,7 @@ onUnmounted(() => {
             <div class="hide-box">
               <div class="tools-box">
                 <div
-                  v-if="scope.row.status !== 'Completed'"
+                  v-if="scope.row.status === 'Running' || 'scheduling'"
                   class="tools"
                   @click="showStopClick(scope.row.status, scope.row.id)"
                 >

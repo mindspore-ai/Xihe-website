@@ -224,9 +224,9 @@ const requestData = ref({
   type: 'standard',
 });
 
-function setEvaluateWebscoket() {
+function setEvaluateWebscoket(id) {
   const ws = new WebSocket(
-    `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${evaluate_id.value}`,
+    `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
     [getHeaderConfig().headers['private-token']]
   );
 
@@ -260,7 +260,8 @@ function saveSetting() {
       ).then((res) => {
         if (res.status === 201) {
           evaluate_id.value = res.data.evaluate_id;
-          setEvaluateWebscoket();
+          console.log('evaluate_id :', evaluate_id.value);
+          setEvaluateWebscoket(evaluate_id.value);
         } else {
           ElMessage({
             type: 'error',
@@ -411,7 +412,7 @@ watch(
               <o-icon v-if="trainDetail.status === 'Running'"
                 ><icon-runing></icon-runing
               ></o-icon>
-              <o-icon v-if="trainDetail.status === 'schedule_failed'"
+              <o-icon v-if="trainDetail.status === 'Failed'"
                 ><icon-failed></icon-failed
               ></o-icon>
 

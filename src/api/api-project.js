@@ -416,18 +416,6 @@ export function getGuide() {
  * 自动评估
  * @returns
  */
-// export function autoEvaluate(params, projectId, trainId) {
-//   const url = `/api/projects/${projectId}/train/trainins/${trainId}/logvisual/`;
-//   return request
-//     .post(url, params, getHeaderConfig())
-//     .then((res) => {
-//       return res;
-//     })
-//     .catch((e) => {
-//       return e;
-//     });
-// }
-
 export function autoEvaluate(params, projectId, trainId) {
   const url = `/server/evaluate/project/${projectId}/training/${trainId}/evaluate`;
   return request

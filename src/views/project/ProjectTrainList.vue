@@ -184,12 +184,13 @@ function showResetClick(val) {
 }
 
 function resetClick(val) {
+  console.log(val);
   if (val === 1) {
     showReset.value = false;
   } else {
     rebuildTrain(projectId, val).then((res) => {
       console.log(res);
-      if (res.status === 202) {
+      if (res.status === 201) {
         showReset.value = false;
         getTrainList();
       }
@@ -217,9 +218,13 @@ socket.onmessage = function (event) {
   trainData.value = JSON.parse(event.data).data;
 
   if (trainData.value) {
-    let bool = trainData.value.some((item) => item.status === 'scheduling');
+    let bool = trainData.value.some(
+      (item) => item.status === 'scheduling' || 'Running'
+    );
     if (bool) {
       btnShow.value = true;
+    } else {
+      btnShow.value = false;
     }
   }
 };
@@ -276,7 +281,7 @@ onUnmounted(() => {
             <o-icon v-if="scope.row.status === 'Terminated'"
               ><icon-stopped></icon-stopped
             ></o-icon>
-            <o-icon v-if="scope.row.status === 'Running'"
+            <o-icon v-if="scope.row.status === 'Running' || 'scheduling'"
               ><icon-runing></icon-runing
             ></o-icon>
             <o-icon v-if="scope.row.status === 'Failed'"

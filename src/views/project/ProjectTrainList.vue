@@ -210,14 +210,15 @@ const socket = new WebSocket(
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到服务器的消息', JSON.parse(event.data).data);
+  console.log('websocket列表消息', JSON.parse(event.data).data);
+
   trainData.value = JSON.parse(event.data).data;
 
   if (trainData.value) {
     let bool = trainData.value.some(
       (item) => item.status === 'scheduling' || 'Running'
     );
-
+    console.log('是否是scheduling或Running：', bool);
     btnShow.value = bool;
   }
 };

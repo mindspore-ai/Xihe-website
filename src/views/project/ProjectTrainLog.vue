@@ -40,7 +40,6 @@ const showContent1 = ref(false);
 const ruleRef = ref(null);
 
 const trainDetail = ref({});
-const repoContent = ref('');
 const configurationInfo = ref({});
 
 let timer = null;
@@ -120,59 +119,6 @@ goHome();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-
-// 获得训练日志页面数据
-function getTrainLogData() {
-  const trainLogParams = {
-    projectId: detailData.value.id,
-    trainId: route.params.trainId,
-  };
-  getTrainLog(trainLogParams).then((res) => {
-    console.log(res);
-    // if (res.status === 200) {
-    //   repoContent.value = res.data.data.db_path;
-    //   form.desc = res.data.data.log.content;
-    //   form.name = res.data.data.insance_name;
-    //   trainDetail.value = res.data.data;
-
-    //   if (trainDetail.value.metrics) {
-    //     query.learning_rate = JSON.parse(
-    //       trainDetail.value.metrics
-    //     ).learning_rate;
-    //     query.momentum = JSON.parse(trainDetail.value.metrics).momentum;
-    //     query.batch_size = JSON.parse(trainDetail.value.metrics).batch_size;
-    //   } else {
-    //   }
-
-    //   if (trainDetail.value.status === 'Running') {
-    //     isDisabled.value = true;
-    //     isDisabled1.value = true;
-    //     showEvaBtn1.value = false;
-    //     showEvaBtn.value = false;
-    //     timer = setInterval(() => {
-    //       socket.send(
-    //         JSON.stringify({
-    //           pk: detailData.value.id,
-    //           train_id: route.params.trainId,
-    //           is_log: false,
-    //         })
-    //       );
-    //     }, 1000);
-
-    //     timer1 = setInterval(() => {
-    //       socket.send(
-    //         JSON.stringify({
-    //           pk: detailData.value.id,
-    //           train_id: route.params.trainId,
-    //           is_log: true,
-    //         })
-    //       );
-    //     }, 10000);
-    //   }
-    // }
-  });
-}
-// getTrainLogData();
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -258,9 +204,11 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
-        if (res.status === 201) {
+        if (res.data) {
           evaluate_id.value = res.data.evaluate_id;
+
           console.log('evaluate_id :', evaluate_id.value);
+
           setEvaluateWebscoket(evaluate_id.value);
         } else {
           ElMessage({

@@ -46,7 +46,6 @@ const configurationInfo = ref({});
 let timer = null;
 let timer1 = null;
 let timer2 = null;
-let timer3 = null;
 
 const route = useRoute();
 const router = useRouter();
@@ -216,69 +215,7 @@ function reloadPage() {
   closeConn();
 }
 
-// const ws = new WebSocket(`wss://${DOMAIN}/wss/logvisual`);
-// ws.onopen = function () {
-//   console.log('服务器已连接');
-// };
-
-// ws.onclose = function () {
-//   clearInterval(timer2);
-// };
-
-// ws.onmessage = function (event) {
-//   if (
-//     JSON.parse(event.data).status === 200 &&
-//     JSON.parse(event.data).msg === '运行中'
-//   ) {
-//     ElMessage({
-//       type: 'success',
-//       message: '自动评估完成！点击查看报告查看。',
-//     });
-//     showAnaButton.value = false;
-//     showGoButton.value = true;
-
-//     showAnaButton1.value = false;
-//     showGoButton1.value = true;
-
-//     evaluateUrl.value = JSON.parse(event.data).data.url;
-
-//     clearInterval(timer2);
-//     clearInterval(timer3);
-//   } else if (
-//     JSON.parse(event.data).status === -1 &&
-//     JSON.parse(event.data).msg === '启动失败'
-//   ) {
-//     ElMessage({
-//       type: 'error',
-//       message: JSON.parse(event.data).msg,
-//     });
-//     showEvaBtn.value = true;
-//     showAnaButton.value = false;
-//     clearInterval(timer2);
-//     clearInterval(timer3);
-//   } else {
-//     showEvaBtn.value = true;
-//     showAnaButton.value = false;
-//   }
-// };
-const evaluate_id = ref('1');
-
-const ws = new WebSocket(
-  `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${evaluate_id.value}`,
-  [getHeaderConfig().headers['private-token']]
-);
-
-ws.onopen = function () {
-  console.log('websocket已连接');
-};
-
-ws.onmessage = function (event) {
-  // 推理出url 断开websocket
-  if (JSON.parse(event.data).access_url) {
-    evaluateUrl.value = JSON.parse(event.data).access_url;
-    ws.close();
-  }
-};
+const evaluate_id = ref('');
 
 const requestData = ref({
   learning_rate_scope: [],
@@ -287,59 +224,69 @@ const requestData = ref({
   type: 'standard',
 });
 
+function setEvaluateWebscoket() {
+  const ws = new WebSocket(
+    `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${evaluate_id.value}`,
+    [getHeaderConfig().headers['private-token']]
+  );
+
+  ws.onopen = function () {
+    console.log('websocket已连接');
+  };
+
+  ws.onmessage = function (event) {
+    // 推理出url 断开websocket
+    if (JSON.parse(event.data).access_url) {
+      evaluateUrl.value = JSON.parse(event.data).access_url;
+      ws.close();
+    }
+  };
+}
+
 // 自动评估
 function saveSetting() {
-  console.log(query.learning_rate_scope.split(','));
   requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
 
   requestData.value.momentum_scope = query.momentum_scope.split(',');
 
   requestData.value.batch_size_scope = query.batch_size_scope.split(',');
 
-  autoEvaluate(
-    requestData.value,
-    detailData.value.id,
-    route.params.trainId
-  ).then((res) => {
-    console.log(res);
+  ruleRef.value.validate((valid) => {
+    if (valid) {
+      autoEvaluate(
+        requestData.value,
+        detailData.value.id,
+        route.params.trainId
+      ).then((res) => {
+        if (res.status === 201) {
+          evaluate_id.value = res.data.evaluate_id;
+          setEvaluateWebscoket();
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
+        }
 
-    if (res.status === 201) {
-      // evaluate_id.value = res.data.evaluate_id;
+        requestData.value = {
+          learning_rate_scope: [],
+          batch_size_scope: [],
+          momentum_scope: [],
+        };
+      });
     } else {
       ElMessage({
         type: 'error',
-        message: res.msg,
+        message: '请按要求输入信息',
       });
     }
-
-    requestData.value = {
-      learning_rate_scope: [],
-      batch_size_scope: [],
-      momentum_scope: [],
-    };
   });
 }
 
-// function saveSetting() {
-//   ruleRef.value.validate((valid) => {
-//     if (valid) {
-//
-//     } else {
-//       // ElMessage({
-//       //   type: 'error',
-//       //   message: '请按要求输入信息',
-//       // });
-//     }
-//   });
-// }
-
 // 自定义评估
 function handleAssessment() {
-  showEvaBtn1.value = false;
-  isDisabled1.value = true;
-  // let params = {
-  //   db_path: repoContent.value,
-  // };
+  // showEvaBtn1.value = false;
+  // isDisabled1.value = true;
 
   let params = {
     type: 'custom',
@@ -347,20 +294,6 @@ function handleAssessment() {
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
       console.log(res);
-      // if (res.status === 200) {
-      //   isDisabled1.value = false;
-      //   showAnaButton1.value = true;
-      //   timer2 = setInterval(() => {
-      //     ws.send(
-      //       JSON.stringify({
-      //         pk: detailData.value.id,
-      //         train_id: route.params.trainId,
-      //         is_cust: true,
-      //       })
-      //     );
-      //   }, 10000);
-      // } else {
-      // }
     }
   );
 }
@@ -478,7 +411,7 @@ watch(
               <o-icon v-if="trainDetail.status === 'Running'"
                 ><icon-runing></icon-runing
               ></o-icon>
-              <o-icon v-if="trainDetail.status === 'Failed'"
+              <o-icon v-if="trainDetail.status === 'schedule_failed'"
                 ><icon-failed></icon-failed
               ></o-icon>
 
@@ -623,14 +556,14 @@ watch(
                 <p>
                   该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
                 </p>
-                <el-form>
+                <!-- <el-form>
                   <el-form-item label="repo">
                     <el-input
                       v-model="repoContent"
                       placeholder="train/db/"
                     ></el-input>
                   </el-form-item>
-                </el-form>
+                </el-form> -->
                 <div class="info-btn">
                   <o-button
                     v-if="showEvaBtn1"

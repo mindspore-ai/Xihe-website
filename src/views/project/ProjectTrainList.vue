@@ -88,23 +88,6 @@ function goSelectFile() {
   window.open(routerData.href, '_blank');
 }
 
-function getTrainList() {
-  trainList(projectId).then((res) => {
-    trainData.value = res.data.data;
-    console.log(trainData.value);
-    // 列表为空可以创建实例
-    if (trainData.value === null) {
-      btnShow.value = false;
-    } else {
-      let bool = trainData.value.some(
-        (item) => item.status === 'scheduling' || item.status === 'Running'
-      );
-      // 调度和运行状态不能创建实例
-      btnShow.value = bool;
-    }
-  });
-}
-
 function toggleDelDlg(flag) {
   if (flag === undefined) {
     tips.value = !tips.value;
@@ -188,8 +171,8 @@ function resetClick(val) {
       console.log(res);
       if (res.status === 201) {
         showReset.value = false;
-        // getTrainList();
-        setWebsocket();
+        getTrainList();
+        // setWebsocket();
       }
     });
   }
@@ -201,6 +184,24 @@ function goTrainLog(trainId) {
     params: {
       trainId: trainId,
     },
+  });
+}
+
+function getTrainList() {
+  trainList(projectId).then((res) => {
+    trainData.value = res.data.data;
+    console.log(trainData.value);
+    // 列表为空可以创建实例
+    if (!trainData.value) {
+      btnShow.value = false;
+    } else {
+      btnShow.value = trainData.value.some(
+        (item) => item.status === 'scheduling' || item.status === 'Running'
+      );
+      setWebsocket(
+        `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+      );
+    }
   });
 }
 
@@ -228,6 +229,7 @@ function setWebsocket(url) {
 
   return socket;
 }
+
 const socket = setWebsocket(
   `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
 );

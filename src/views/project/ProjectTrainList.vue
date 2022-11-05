@@ -189,6 +189,7 @@ function resetClick(val) {
       if (res.status === 201) {
         showReset.value = false;
         getTrainList();
+        setWebsocket();
       }
     });
   }
@@ -203,31 +204,33 @@ function goTrainLog(trainId) {
   });
 }
 
-const socket = new WebSocket(
-  `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`,
-  [getHeaderConfig().headers['private-token']]
-);
+function setWebsocket() {
+  const socket = new WebSocket(
+    `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`,
+    [getHeaderConfig().headers['private-token']]
+  );
 
-// 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-socket.onmessage = function (event) {
-  console.log('websocket列表消息', JSON.parse(event.data).data);
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    console.log('websocket列表消息', JSON.parse(event.data).data);
 
-  trainData.value = JSON.parse(event.data).data;
-  console.log('trainData :', trainData.value);
+    trainData.value = JSON.parse(event.data).data;
+    console.log('trainData :', trainData.value);
 
-  trainData.value.forEach((item) => {
-    console.log(item);
-  });
+    trainData.value.forEach((item) => {
+      console.log(item);
+    });
 
-  if (trainData.value) {
-    let bool = trainData.value.some(
-      (item) => item.status === 'scheduling' || item.status === 'Running'
-    );
-    console.log('是否是scheduling或Running：', bool);
-    btnShow.value = bool;
-  }
-};
-
+    if (trainData.value) {
+      let bool = trainData.value.some(
+        (item) => item.status === 'scheduling' || item.status === 'Running'
+      );
+      console.log('是否是scheduling或Running：', bool);
+      btnShow.value = bool;
+    }
+  };
+}
+setWebsocket();
 // 页面刷新
 // function reloadPage() {
 //   socket.close();

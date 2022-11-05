@@ -219,13 +219,13 @@ socket.onmessage = function (event) {
     console.log(item);
   });
 
-  // if (trainData.value) {
-  //   let bool = trainData.value.some(
-  //     (item) => item.status === 'scheduling' || 'Running'
-  //   );
-  //   console.log('是否是scheduling或Running：', bool);
-  //   btnShow.value = bool;
-  // }
+  if (trainData.value) {
+    let bool = trainData.value.some(
+      (item) => item.status === 'scheduling' || item.status === 'Running'
+    );
+    console.log('是否是scheduling或Running：', bool);
+    btnShow.value = bool;
+  }
 };
 
 // 页面刷新

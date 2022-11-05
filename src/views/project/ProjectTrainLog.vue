@@ -43,12 +43,11 @@ const ruleRef = ref(null);
 const trainDetail = ref({});
 const configurationInfo = ref({});
 
-let timer = null;
-let timer1 = null;
-let timer2 = null;
-
 const route = useRoute();
 const router = useRouter();
+
+console.log(router);
+console.log(route.path);
 
 const i18n = {
   title: '评估',
@@ -152,13 +151,9 @@ socket.onmessage = function (event) {
   });
 };
 
-function closeConn() {
-  socket.close(); // 向服务端发送断开连接的请求
-}
-
 // 页面刷新
 function reloadPage() {
-  closeConn();
+  socket.close();
 }
 
 const requestData = ref({
@@ -312,10 +307,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  closeConn();
-  clearInterval(timer);
-  clearInterval(timer1);
-  clearInterval(timer2);
+  socket.close();
 });
 
 watch(

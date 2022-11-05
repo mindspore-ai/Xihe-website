@@ -215,13 +215,17 @@ socket.onmessage = function (event) {
   trainData.value = JSON.parse(event.data).data;
   console.log('trainData :', trainData.value);
 
-  if (trainData.value) {
-    let bool = trainData.value.some(
-      (item) => item.status === 'scheduling' || 'Running'
-    );
-    console.log('是否是scheduling或Running：', bool);
-    btnShow.value = bool;
-  }
+  trainData.value.forEach((item) => {
+    console.log(item);
+  });
+
+  // if (trainData.value) {
+  //   let bool = trainData.value.some(
+  //     (item) => item.status === 'scheduling' || 'Running'
+  //   );
+  //   console.log('是否是scheduling或Running：', bool);
+  //   btnShow.value = bool;
+  // }
 };
 
 // 页面刷新

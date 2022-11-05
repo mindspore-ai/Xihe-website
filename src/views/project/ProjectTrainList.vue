@@ -26,6 +26,7 @@ import {
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -167,15 +168,71 @@ function resetClick(val) {
   if (val === 1) {
     showReset.value = false;
   } else {
-    rebuildTrain(projectId, val).then((res) => {
-      console.log(res);
-      if (res.status === 201) {
-        showReset.value = false;
-        getTrainList();
-        // setWebsocket();
-      }
-    });
+    if (trainData.value.length >= 5) {
+      ElMessage({
+        type: 'warning',
+        message: '最多创建5条训练',
+      });
+    } else {
+      rebuildTrain(projectId, val).then((res) => {
+        console.log(res);
+        if (res.status === 201) {
+          showReset.value = false;
+          getTrainList();
+        }
+      });
+    }
   }
+}
+function formatSeconds(value) {
+  //  秒
+  let second = parseInt(value);
+  //  分
+  let minute = 0;
+  //  小时
+  let hour = 0;
+  //  天
+  //  let day = 0
+  //  如果秒数大于60，将秒数转换成整数
+  if (second > 60) {
+    //  获取分钟，除以60取整数，得到整数分钟
+    minute = parseInt(second / 60);
+    //  获取秒数，秒数取佘，得到整数秒数
+    second = parseInt(second % 60);
+    //  如果分钟大于60，将分钟转换成小时
+    if (minute > 60) {
+      //  获取小时，获取分钟除以60，得到整数小时
+      hour = parseInt(minute / 60);
+      //  获取小时后取佘的分，获取分钟除以60取佘的分
+      minute = parseInt(minute % 60);
+      //  如果小时大于24，将小时转换成天
+      //  if (hour > 23) {
+      //    //  获取天数，获取小时除以24，得到整天数
+      //    day = parseInt(hour / 24)
+      //    //  获取天数后取余的小时，获取小时除以24取余的小时
+      //    hour = parseInt(hour % 24)
+      //  }
+    }
+  }
+  let result;
+  if (parseInt(second) < 10 && parseInt(second) > 0) {
+    result = '0' + parseInt(second);
+  } else if (parseInt(second) === 0) {
+    result = '' + parseInt(second);
+  } else {
+    result = '' + parseInt(second);
+  }
+
+  // let result = '' + parseInt(second);
+  if (minute > 0) {
+    result = '' + parseInt(minute) + ':' + result;
+  }
+  if (hour > 0) {
+    result = '' + parseInt(hour) + ':' + result;
+  }
+
+  console.log('result：', result);
+  return result;
 }
 
 function goTrainLog(trainId) {
@@ -186,6 +243,7 @@ function goTrainLog(trainId) {
     },
   });
 }
+
 let socket;
 function getTrainList() {
   trainList(projectId).then((res) => {
@@ -195,9 +253,15 @@ function getTrainList() {
     if (!trainData.value) {
       btnShow.value = false;
     } else {
-      btnShow.value = trainData.value.some(
+      let bool = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
       );
+      if (bool || trainData.value.length >= 5) {
+        btnShow.value = true;
+      } else {
+        btnShow.value = false;
+      }
+
       socket = setWebsocket(
         `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
       );
@@ -323,7 +387,12 @@ onUnmounted(() => {
         </template>
       </el-table-column>
 
-      <el-table-column label="运行时长" width="178" prop="duration">
+      <el-table-column label="运行时长" width="178">
+        <template #default="scope">
+          <div>
+            {{ formatSeconds(scope.row.duration) }}
+          </div>
+        </template>
       </el-table-column>
 
       <el-table-column label="描述" width="618">

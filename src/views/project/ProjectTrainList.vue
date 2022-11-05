@@ -188,7 +188,7 @@ function resetClick(val) {
       console.log(res);
       if (res.status === 201) {
         showReset.value = false;
-        getTrainList();
+        // getTrainList();
         setWebsocket();
       }
     });
@@ -204,44 +204,41 @@ function goTrainLog(trainId) {
   });
 }
 
-function setWebsocket() {
-  const socket = new WebSocket(
-    `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`,
-    [getHeaderConfig().headers['private-token']]
-  );
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [
+    getHeaderConfig().headers['private-token'],
+  ]);
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
     console.log('websocket列表消息', JSON.parse(event.data).data);
 
     trainData.value = JSON.parse(event.data).data;
-    console.log('trainData :', trainData.value);
-
-    trainData.value.forEach((item) => {
-      console.log(item);
-    });
 
     if (trainData.value) {
-      let bool = trainData.value.some(
+      btnShow.value = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
       );
-      console.log('是否是scheduling或Running：', bool);
-      btnShow.value = bool;
     }
   };
-}
-setWebsocket();
-// 页面刷新
-// function reloadPage() {
-//   socket.close();
-// }
 
-// onMounted(() => {
-//   window.addEventListener('beforeunload', () => reloadPage());
-// });
+  socket.onclose = function () {
+    console.log('服务器已经断开');
+  };
+
+  return socket;
+}
+const socket = setWebsocket(
+  `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+);
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', () => socket.close());
+});
 
 onUnmounted(() => {
-  socket.close();
+  socket && socket.close();
 });
 </script>
 <template>

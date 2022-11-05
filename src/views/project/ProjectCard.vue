@@ -30,6 +30,17 @@ import {
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
+import { LOGIN_KEYS } from '@/shared/login';
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -431,7 +442,8 @@ function start() {
 function start2() {
   // if (socket.value) {
   socket.value = new WebSocket(
-    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
+    [getHeaderConfig().headers['private-token']]
   );
   socket.value.onopen = function () {
     console.log('连接成功');
@@ -527,67 +539,67 @@ if (detailData.value.owner === userInfo.userName) {
     let apppy = res?.data?.filter((item) => {
       return item.name === 'app.py';
     });
-    if (apppy) {
-      try {
-        canStart.value = true;
-        // if (detailData.value.type === 'Gradio' && canStart.value) {
-        //   socket.value = new WebSocket(
-        //     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-        //   );
-        //   socket.value.onopen = function () {
-        //     // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-        //     // clearInterval(timer);
-        //     // timer = setInterval(() => {
-        //     //   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-        //     // }, 10000);
-        //     console.log('连接成功');
-        //   };
-        //   socket.value.onmessage = function (event) {
-        //     console.log(event);
-        //     msg.value = JSON.parse(event.data).msg;
-        //     if (!!JSON.parse(event.data).data) {
-        //       failLog.value = '';
-        //       clientSrc.value = JSON.parse(event.data).data.url;
-        //       closeConn(); //断开连接
-        //     } else {
-        //       if (
-        //         JSON.parse(event.data).msg === '启动失败' ||
-        //         JSON.parse(event.data).msg === '文件收集失败'
-        //       ) {
-        //         msg.value = '启动失败';
-        //         closeConn(); //断开连接
-        //         stopInference(detailData.value.id); //删除任务
-        //         // if (failLog.value) {
-        //         loading.value = false;
-        //         getLog(detailData.value.id).then((res) => {
-        //           if (res.data.data) {
-        //             failLog.value = res.data.data.replace(/\n/g, '<br>');
-        //             failLog.value = `<span> ${failLog.value}</span>`;
-        //           }
-        //           loading.value = true;
-        //         });
-        //         // }
-        //         ElMessage({
-        //           type: 'error',
-        //           message: '程序错误，请检查文件后重试',
-        //         });
-        //       } else if (JSON.parse(event.data).msg === '任务已销毁') {
-        //         stopInference(detailData.value.id); //删除任务
-        //         closeConn(); //断开连接
-        //         ElMessage({
-        //           type: 'error',
-        //           message: '当前任务已结束，请重新启动',
-        //         });
-        //       } //else if (JSON.parse(event.data).msg === '未启动') {
-        //       //closeConn(); //断开连接
-        //       // }
-        //     }
-        //   };
-        // }
-      } catch {
-        console.log('canStart', canStart.value);
-      }
+    // if (apppy) {
+    try {
+      canStart.value = true;
+      // if (detailData.value.type === 'Gradio' && canStart.value) {
+      //   socket.value = new WebSocket(
+      //     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+      //   );
+      //   socket.value.onopen = function () {
+      //     // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+      //     // clearInterval(timer);
+      //     // timer = setInterval(() => {
+      //     //   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+      //     // }, 10000);
+      //     console.log('连接成功');
+      //   };
+      //   socket.value.onmessage = function (event) {
+      //     console.log(event);
+      //     msg.value = JSON.parse(event.data).msg;
+      //     if (!!JSON.parse(event.data).data) {
+      //       failLog.value = '';
+      //       clientSrc.value = JSON.parse(event.data).data.url;
+      //       closeConn(); //断开连接
+      //     } else {
+      //       if (
+      //         JSON.parse(event.data).msg === '启动失败' ||
+      //         JSON.parse(event.data).msg === '文件收集失败'
+      //       ) {
+      //         msg.value = '启动失败';
+      //         closeConn(); //断开连接
+      //         stopInference(detailData.value.id); //删除任务
+      //         // if (failLog.value) {
+      //         loading.value = false;
+      //         getLog(detailData.value.id).then((res) => {
+      //           if (res.data.data) {
+      //             failLog.value = res.data.data.replace(/\n/g, '<br>');
+      //             failLog.value = `<span> ${failLog.value}</span>`;
+      //           }
+      //           loading.value = true;
+      //         });
+      //         // }
+      //         ElMessage({
+      //           type: 'error',
+      //           message: '程序错误，请检查文件后重试',
+      //         });
+      //       } else if (JSON.parse(event.data).msg === '任务已销毁') {
+      //         stopInference(detailData.value.id); //删除任务
+      //         closeConn(); //断开连接
+      //         ElMessage({
+      //           type: 'error',
+      //           message: '当前任务已结束，请重新启动',
+      //         });
+      //       } //else if (JSON.parse(event.data).msg === '未启动') {
+      //       //closeConn(); //断开连接
+      //       // }
+      //     }
+      //   };
+      // }
+    } catch {
+      console.log('canStart', canStart.value);
     }
+    // }
   });
 } else {
   if (detailData.value.status_name === '可运行') {

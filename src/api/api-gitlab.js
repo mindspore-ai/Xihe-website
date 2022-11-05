@@ -126,7 +126,7 @@ export async function getGitlabFileRaw(params) {
 }
 // gitlab 原文件下载
 export async function getGitlabFile(params) {
-  const url = `/api/v1/repo/${params.user}//${
+  const url = `/api/v1/repo/${params.user}/${
     params.name
   }/file/${encodeURIComponent(params.path)}`;
   return request.get(url, await getHeaderConfig()).then((res) => {
@@ -176,18 +176,25 @@ export async function getTree() {
 }
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {
+    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let href = null;
     if (res?.data?.content) {
       let blob = new Blob([Base64.toUint8Array(res?.data?.content).buffer], {
         type: 'text/plain;charset=UTF-8',
       });
-      let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
-      let href = window.URL.createObjectURL(blob); // 创建下载的链接
+      href = window.URL.createObjectURL(blob); // 创建下载的链接
       downloadElement.href = href;
       downloadElement.download = params.path; // 下载后文件名
-      document.body.appendChild(downloadElement);
-      downloadElement.click(); // 点击下载
-      document.body.removeChild(downloadElement); // 下载完成移除元素
-      window.URL.revokeObjectURL(href);
+    } else if (res?.download_url) {
+      downloadElement.href = res.download_url;
+      // document.body.appendChild(downloadElement);
+      // downloadElement.click(); // 点击下载
+      // document.body.removeChild(downloadElement); // 下载完成移除元素
     }
+    downloadElement.download = params.path; // 下载后文件名
+    document.body.appendChild(downloadElement);
+    downloadElement.click(); // 点击下载
+    document.body.removeChild(downloadElement); // 下载完成移除元素
+    window.URL.revokeObjectURL(href);
   });
 }

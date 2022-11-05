@@ -142,6 +142,7 @@ socket.onopen = function () {};
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
+  console.log('收到消息', JSON.parse(event.data).data);
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     form.name = trainDetail.value.name;

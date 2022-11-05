@@ -117,6 +117,8 @@ let queryData = reactive({
   name: null,
   page_num: 1,
   count_per_page: 10,
+  tags: null, //标签
+  sort_by: null, //排序规则
   // task: null,
   // task_cate: null,
   // libraries: null,
@@ -362,7 +364,13 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  queryData.order = item.value;
+  if (item.value === 'download') {
+    queryData.sort_by = 'download_count';
+  } else if (item.value === 'name') {
+    queryData.sort_by = 'first_letter';
+  } else if (item.value === '-update_time') {
+    queryData.sort_by = 'update_time';
+  }
 }
 function getModel() {
   getModelData(queryData).then((res) => {

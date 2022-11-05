@@ -12,8 +12,6 @@ import dataset from './dataset';
 import project from './project';
 import competition from './competition';
 
-export let fromPath = '';
-
 export const routes = [
   // 主页
   {
@@ -48,7 +46,6 @@ export const routes = [
       return import('@/views/TheCreating.vue');
     },
     beforeEnter: async (to, from, next) => {
-      fromPath = from.path;
       const logingStore = useLoginStore();
       if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
         return {

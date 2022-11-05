@@ -90,9 +90,11 @@ const radioList = ref({});
 const keyWord = ref('');
 
 let query = reactive({
-  name: null,
-  page_num: 1,
-  count_per_page: 10,
+  page_num: 1, //分页
+  count_per_page: 12, //每页数量
+  name: null, //项目名
+  tags: null, //标签
+  sort_by: null, //排序规则
   // task: null, //应用分类
   // task_cate: null /* 一级分类 */,
   // libraries: null,
@@ -122,6 +124,7 @@ function backCondition() {
 
 // 应用分类--多选
 function sortsClick(index, index2) {
+  console.log('index, index2: ', index, index2);
   renderSorts.value[index].haveActive = true;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
@@ -174,21 +177,17 @@ function conditionClick(index, index2) {
 //查询
 function goSearch(render) {
   let time = 0;
-  let taskCate = [];
-  let tagLists = [];
+  // let taskCate = [];
+  let tagList = [];
   query.page_num = 1;
   render.forEach((item) => {
+    console.log('item: ', item);
     time = 0;
     item.condition.forEach((value) => {
       if (value.isActive) {
-        if (item.title.key === 'task') {
-          taskCate.push(value.id);
-          query.task_cate = taskCate.join(',');
-        } else if (item.title.key === 'tags') {
-          tagLists.push(value.id);
-          query.tags = tagLists.join(',');
-        } else {
-          query[item.title.key] = value.id;
+        if (item.title.key === 0) {
+          tagList.push(value.kind);
+          query.tags = tagList.join(',');
         }
       } else {
         time += 1;
@@ -283,29 +282,37 @@ function clearSortItem(index) {
 
 // 二级标签查询
 function handleTagSearch(date) {
-  let taskId = [];
+  let tagList = [];
   date.forEach((item) => {
-    item.items.forEach((it) => {
-      if (it.isActive === true) {
-        taskId.push(it.id);
+    item.items.forEach((val) => {
+      console.log('val: ', val);
+      if (val.isActive === true) {
+        tagList.push(val.name);
       }
     });
   });
-  if (taskId.length > 0) {
-    query.task = taskId.join(',');
+  if (tagList.length > 0) {
+    query.tags = tagList.join(',');
   } else {
-    query.task = null;
+    query.tags = null;
   }
 }
 
 function dropdownClick(item) {
-  query.order = item.value;
+  console.log('item: ', item);
+  if (item.value === 'download') {
+    query.sort_by = 'download_count';
+  } else if (item.value === 'name') {
+    query.sort_by = 'first_letter';
+  } else if (item.value === '-update_time') {
+    query.sort_by = 'update_time';
+  }
 }
 
 function getDataset() {
   getDatasetData(query).then((res) => {
     modelCount.value = res.data.total;
-    console.log(res.data.total);
+    // console.log(res.data.total);
     if (modelCount.value / query.count_per_page < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }

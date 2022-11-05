@@ -12,12 +12,9 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import protocol from '../../../config/protocol';
 import { createModelStore, getModelTags } from '@/api/api-model';
 import { useRouter } from 'vue-router';
-import { fromPath } from '@/routers/index';
-
 
 const router = useRouter();
 const userInfo = useUserInfoStore();
-console.log('fromPath: ', fromPath);
 
 const i18n = {
   homePage: '个人主页',

@@ -530,7 +530,7 @@ function selectFile(item) {
             ref="queryRef"
             :model="form"
             :rules="rules"
-            label-width="80px"
+            label-width="100px"
             label-position="left"
             hide-required-asterisk
           >
@@ -766,7 +766,7 @@ function selectFile(item) {
                       <div>
                         在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
                         <br />
-                        格式为：
+                        <!-- 格式为：
                         <div style="color: red">
                           [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
                           &lt;解析参数对应的值1&gt;, <br />
@@ -777,7 +777,7 @@ function selectFile(item) {
                           <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
                           &lt;解析参数名称2&gt; <br />}, ... ]
                         </div>
-                        注意{}末尾不能有逗号
+                        注意{}末尾不能有逗号 -->
                       </div>
                     </el-popover>
                   </div>
@@ -1111,32 +1111,22 @@ function selectFile(item) {
     /* @media (max-width: 1440px) {
       width: 500px;
     } */
-    // width: 39%;
-    .el-form-item__label {
-      width: 100px !important;
-    }
     .el-form-item__content {
       // width: 100%;
       width: 546px;
       max-width: 546px;
-      margin-left: 28px;
+      margin-left: 27px;
       .o-icon {
-        // width: 16px;
-        // height: 16px;
         font-size: 16px;
       }
       .el-form-item__error {
         white-space: nowrap;
-        // transform: translateY(-50%);
         top: calc(100% + 12px);
         left: 0;
       }
       .el-input {
         width: 100%;
       }
-      /* .el-form-item {
-        margin-bottom: 0px;
-      } */
       .el-select {
         width: 100%;
       }
@@ -1190,11 +1180,6 @@ function selectFile(item) {
           .o-icon {
             font-size: 24px;
           }
-          /* .remove-icon {
-            &:hover {
-              color: blue;
-            }
-          } */
         }
       }
       /* .el-input {

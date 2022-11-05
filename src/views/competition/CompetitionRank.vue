@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 
 // import IconArrowDown from '~icons/app/arrow-down.svg';
 
@@ -16,50 +16,176 @@ import { getRank } from '@/api/api-competition';
 const route = useRoute();
 
 const tableData = ref([]);
-getRank(route.path.split('/')[2]).then((res) => {
+const tableData2 = ref([]);
+getRank({ competition_id: route.path.split('/')[2], period: 1 }).then((res) => {
   tableData.value = res.data;
   tableData.value.forEach((element) => {
     element.create_time = element.create_time.split('T')[0];
   });
   // console.log(tableData.value)hli
 });
+const tabs = ref();
+function change(s) {
+  if (s === '1') {
+    tabs.value[0].classList.remove('tabs-left');
+    tabs.value[1].classList.add('tabs-right');
+    getRank({ competition_id: route.path.split('/')[2], period: 2 }).then(
+      (res) => {
+        tableData2.value = res.data;
+        tableData2.value.forEach((element) => {
+          element.create_time = element.create_time.split('T')[0];
+        });
+      }
+    );
+  } else if (s === '0') {
+    tabs.value[1].classList.remove('tabs-right');
+    tabs.value[0].classList.add('tabs-left');
+  }
+}
+nextTick(() => {
+  tabs.value = document.querySelectorAll('.tabs-item');
+  tabs.value[1].classList.remove('tabs-right');
+  tabs.value[0].classList.add('tabs-left');
+});
 </script>
 <template>
-  <div v-if="tableData.length" class="rank-page">
-    <div class="rank-header">排行榜</div>
-    <div class="rank-body">
-      <el-table :data="tableData">
-        <el-table-column prop="date" label="排名">
-          <template #default="scope">
-            <img v-if="scope.$index === 0" :src="firstImg" alt="" />
-            <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
-            <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
-            <div v-else-if="scope.$index < 9" class="num">
-              {{ '0' + (scope.$index + 1) }}
-            </div>
-            <div v-else class="num">{{ scope.$index + 1 }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="group_name" label="参赛团队" />
-        <el-table-column label="分数">
-          <template #default="scope">
-            <div class="score">{{ tableData[scope.$index].score }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="create_time" label="提交时间" width="210" />
-        <!-- <template v-if="tableData" #append>
+  <el-tabs type="border-card" @tab-change="change">
+    <el-tab-pane>
+      <template #label>
+        <div class="tabs-item tabs-left">初赛排行榜</div>
+      </template>
+      <div v-if="tableData.length" class="rank-page">
+        <!-- <div class="rank-header">排行榜</div> -->
+        <div class="rank-body">
+          <el-table :data="tableData">
+            <el-table-column prop="date" label="排名">
+              <template #default="scope">
+                <img v-if="scope.$index === 0" :src="firstImg" alt="" />
+                <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
+                <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
+                <div v-else-if="scope.$index < 9" class="num">
+                  {{ '0' + (scope.$index + 1) }}
+                </div>
+                <div v-else class="num">{{ scope.$index + 1 }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="group_name" label="参赛团队" />
+            <el-table-column label="分数">
+              <template #default="scope">
+                <div class="score">{{ tableData[scope.$index].score }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="create_time" label="提交时间" width="210" />
+            <!-- <template v-if="tableData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
         </template> -->
-      </el-table>
-    </div>
-  </div>
-  <div v-else class="empty">
-    <img :src="emptyImg" alt="" />
-    <p>当前为选拔阶段，暂无排行榜</p>
-  </div>
+          </el-table>
+        </div>
+      </div>
+      <div v-else class="empty">
+        <img :src="emptyImg" alt="" />
+        <p>当前为选拔阶段，暂无排行榜</p>
+      </div>
+    </el-tab-pane>
+    <el-tab-pane>
+      <template #label>
+        <div class="tabs-item">决赛排行榜</div>
+      </template>
+      <div v-if="tableData2.length" class="rank-page">
+        <!-- <div class="rank-header">排行榜</div> -->
+        <div class="rank-body">
+          <el-table :data="tableData2">
+            <el-table-column prop="date" label="排名">
+              <template #default="scope">
+                <img v-if="scope.$index === 0" :src="firstImg" alt="" />
+                <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
+                <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
+                <div v-else-if="scope.$index < 9" class="num">
+                  {{ '0' + (scope.$index + 1) }}
+                </div>
+                <div v-else class="num">{{ scope.$index + 1 }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="group_name" label="参赛团队" />
+            <el-table-column label="分数">
+              <template #default="scope">
+                <div class="score">{{ tableData2[scope.$index].score }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="create_time" label="提交时间" width="210" />
+            <!-- <template v-if="tableData" #append>
+          查看全部<OIcon><IconArrowDown /></OIcon>
+        </template> -->
+          </el-table>
+        </div>
+      </div>
+      <div v-else class="empty">
+        <img :src="emptyImg" alt="" />
+        <p>暂无决赛排行榜</p>
+      </div>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <style lang="scss" scoped>
+:deep(.el-tabs__content) {
+  padding: 0;
+}
+:deep(.el-tabs__nav-wrap) {
+  margin: 30px 80px 0;
+  border-radius: 32px 32px 0 0;
+}
+
+.el-tabs {
+  :deep(.el-tabs__header.is-top) {
+    background-color: #fff;
+    border: 0;
+    .el-tabs__nav {
+      width: 100%;
+      background: #fff;
+
+      .el-tabs__item {
+        width: 50%;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0;
+        color: #ffffff;
+        height: 80px;
+        font-size: 24px;
+
+        .tabs-item {
+          background-color: #e5e5e5;
+          height: 100%;
+          text-align: center;
+          line-height: 80px;
+        }
+        .tabs-left {
+          background-image: url(@/assets/imgs/rank-bg.png);
+          background-position: 100%;
+          background-size: cover;
+          border-radius: 0 0 0 -21px;
+          box-shadow: 1px 3px 10px rgba(0, 0, 0, 100%);
+        }
+        .tabs-right {
+          background-image: url(@/assets/imgs/rank-bg1.png);
+          background-position: 0;
+          background-size: cover;
+          // box-shadow: 1px 3px 10px rgba(0, 0, 0, 20%);
+        }
+        &:not(.is-disabled):hover {
+          color: #ffffff;
+        }
+      }
+      .el-tabs__item.is-active {
+        color: #ffffff;
+        border: 0;
+        // background-image: url(@/assets/imgs/rank-bg.png);
+        // background-position: 100%;
+        // background-size: cover;
+      }
+    }
+  }
+}
 .rank-page {
   max-width: 1472px;
   img {
@@ -89,6 +215,7 @@ getRank(route.path.split('/')[2]).then((res) => {
       .el-table__header {
         font-size: 18px;
         line-height: 26px;
+        border: 0;
         .cell {
           margin: 24px 40px;
         }
@@ -163,7 +290,7 @@ getRank(route.path.split('/')[2]).then((res) => {
   flex-direction: column;
   align-items: center;
   padding: 120px 16px;
-  background-color: #f5f6f8;
+  background-color: #fff;
   img {
     width: 280px;
   }

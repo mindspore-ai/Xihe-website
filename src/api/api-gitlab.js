@@ -185,8 +185,8 @@ export function downloadFile(params) {
       href = window.URL.createObjectURL(blob); // 创建下载的链接
       downloadElement.href = href;
       downloadElement.download = params.path; // 下载后文件名
-    } else if (res?.download_url) {
-      downloadElement.href = res.download_url;
+    } else if (res?.data.download_url) {
+      downloadElement.href = res.data.download_url;
       // document.body.appendChild(downloadElement);
       // downloadElement.click(); // 点击下载
       // document.body.removeChild(downloadElement); // 下载完成移除元素

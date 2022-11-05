@@ -101,6 +101,25 @@ const form = reactive({
 });
 const userInfoStore = useUserInfoStore();
 
+// 转换时间
+function formatSeconds(value) {
+  let theTime = value; //秒
+  let middle = 0; //分
+  let hour = 0; //小时
+  if (theTime > 59) {
+    middle = parseInt(theTime / 60);
+    theTime = parseInt(theTime % 60);
+  }
+  if (middle > 59) {
+    hour = parseInt(middle / 60);
+    middle = parseInt(middle % 60);
+  }
+  theTime < 10 ? (theTime = '0' + theTime) : (theTime = theTime);
+  middle < 10 ? (middle = '0' + middle) : (middle = middle);
+  hour < 10 ? (hour = '0' + hour) : (hour = hour);
+  return hour + ':' + middle + ':' + theTime;
+}
+
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -145,7 +164,11 @@ socket.onmessage = function (event) {
   console.log('收到消息', JSON.parse(event.data).data);
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
-    form.name = trainDetail.value.name;
+    trainDetail.value.status === 'Completed'
+      ? (isEvaluating.value = false)
+      : (isEvaluating.value = true);
+
+    isEvaluating.value = form.name = trainDetail.value.name;
     form.desc = trainDetail.value.log;
     configurationInfo.value = trainDetail.value.compute;
     isDone.value = trainDetail.value.is_done;
@@ -177,11 +200,19 @@ function setEvaluateWebscoket(id) {
   ws.onmessage = function (event) {
     // 推理出url 断开websocket
     if (JSON.parse(event.data).access_url) {
+      btnContent.value = '查看报告';
+      isEvaluating.value = false;
+      isEvaluated.value = true;
+
       evaluateUrl.value = JSON.parse(event.data).access_url;
       ws.close();
     }
   };
 }
+
+const btnContent = ref('开始评估');
+const isEvaluating = ref(false);
+const isEvaluated = ref(false);
 
 // 自动评估
 function saveSetting() {
@@ -193,6 +224,9 @@ function saveSetting() {
 
   ruleRef.value.validate((valid) => {
     if (valid) {
+      btnContent.value = '评估中...';
+      isEvaluating.value = true;
+
       autoEvaluate(
         requestData.value,
         detailData.value.id,
@@ -201,6 +235,9 @@ function saveSetting() {
         if (res.status === 201) {
           setEvaluateWebscoket(res.data.data.evaluate_id);
         } else {
+          btnContent.value = '开始评估';
+          isEvaluating.value = false;
+
           ElMessage({
             type: 'error',
             message: res.data.data.msg,
@@ -262,21 +299,15 @@ function goAimPage() {
 
 // 跳到评估页面
 function goToPage() {
-  // window.open(`${evaluateUrl.value}`);
-  // router.push({
+  console.log('跳转到webui新页面');
+  // 点击在新页签打开
+  // let routerData = router.resolve({
   //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
   //   query: {
   //     url: evaluateUrl.value,
   //   },
   // });
-  // 点击在新页签打开
-  let routerData = router.resolve({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
-    query: {
-      url: evaluateUrl.value,
-    },
-  });
-  window.open(routerData.href, '_blank');
+  // window.open(routerData.href, '_blank');
 }
 
 // 日志详情
@@ -346,25 +377,64 @@ watch(
           <li class="info-list">
             <div class="info-list-title">运行状态</div>
             <div class="info-list-detail">
-              <o-icon v-if="trainDetail.status === 'Completed'"
-                ><icon-finished></icon-finished
-              ></o-icon>
-              <o-icon v-if="trainDetail.status === 'Terminated'"
-                ><icon-stopped></icon-stopped
-              ></o-icon>
-              <o-icon v-if="trainDetail.status === 'Running'"
-                ><icon-runing></icon-runing
-              ></o-icon>
-              <o-icon v-if="trainDetail.status === 'Failed'"
-                ><icon-failed></icon-failed
-              ></o-icon>
+              <div class="status-box">
+                <div
+                  v-if="trainDetail.status === 'Completed'"
+                  class="status-item"
+                >
+                  <o-icon><icon-finished></icon-finished></o-icon>
+                  <span>{{ trainDetail.status }}</span>
+                </div>
 
-              {{ trainDetail.status }}
+                <div
+                  v-if="trainDetail.status === 'Terminated'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <span>{{ trainDetail.status }}</span>
+                </div>
+
+                <div
+                  v-if="
+                    trainDetail.status === 'Running' ||
+                    trainDetail.status === 'scheduling'
+                  "
+                  class="status-item"
+                >
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span>
+                    {{
+                      trainDetail.status === 'scheduling'
+                        ? '启动中'
+                        : trainDetail.status
+                    }}</span
+                  >
+                </div>
+
+                <div
+                  v-if="
+                    trainDetail.status === 'Failed' ||
+                    trainDetail.status === 'schedule_failed'
+                  "
+                  class="status-item"
+                >
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>
+                    {{
+                      trainDetail.status === 'schedule_failed'
+                        ? '启动失败'
+                        : trainDetail.status
+                    }}
+                  </span>
+                </div>
+              </div>
             </div>
           </li>
           <li class="info-list">
             <div class="info-list-title">运行时长</div>
-            <div class="info-list-detail">{{ trainDetail.duration }}</div>
+            <div class="info-list-detail">
+              {{ formatSeconds(trainDetail.duration) }}
+            </div>
           </li>
           <li class="info-list">
             <div class="info-list-title">AI引擎</div>
@@ -473,30 +543,16 @@ watch(
 
                 <div class="info-btn">
                   <o-button
-                    v-if="showEvaBtn"
+                    v-if="!isEvaluated"
+                    :disabled="isEvaluating"
                     type="primary"
                     @click="saveSetting"
-                    >开始评估</o-button
+                    >{{ btnContent }}</o-button
                   >
-                  <o-button
-                    v-if="isDisabled"
-                    disabled
-                    type="primary"
-                    @click="saveSetting"
-                    >开始评估</o-button
-                  >
-                  <o-button
-                    v-if="showAnaButton"
-                    disabled
-                    type="primary"
-                    @click="saveSetting"
-                    >评估中...</o-button
-                  >
-                  <!-- <a :href="`${evaluateUrl}`" onclick="return false"> -->
-                  <o-button v-if="showGoButton" type="primary" @click="goToPage"
+
+                  <o-button v-if="isEvaluated" type="primary" @click="goToPage"
                     >查看报告</o-button
                   >
-                  <!-- </a> -->
                 </div>
               </div>
             </div>
@@ -515,7 +571,7 @@ watch(
               <!-- 有Aim代码 -->
               <div v-if="!trainDetail.db_path" class="have-aim">
                 <p>
-                  该路径为系统自动读取的repo路径，请确认repo路径是否为Aim仓库路径，可进行修改
+                  请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码
                 </p>
                 <!-- <el-form>
                   <el-form-item label="repo">
@@ -528,13 +584,14 @@ watch(
                 <div class="info-btn">
                   <o-button
                     v-if="showEvaBtn1"
+                    :disabled="isEvaluating"
                     type="primary"
                     @click="handleAssessment"
                     >开始评估</o-button
                   >
-                  <o-button v-if="isDisabled1" disabled type="primary"
+                  <!-- <o-button v-if="isDisabled1" disabled type="primary"
                     >开始评估</o-button
-                  >
+                  > -->
                   <o-button v-if="showAnaButton1" disabled type="primary"
                     >评估中...</o-button
                   >
@@ -752,6 +809,17 @@ watch(
         &-detail {
           display: flex;
           align-items: center;
+          .status-box {
+            .status-item {
+              display: flex;
+              align-items: center;
+              line-height: 23px;
+            }
+
+            .o-icon {
+              margin-right: 8px;
+            }
+          }
           .o-icon {
             margin-right: 8px;
           }

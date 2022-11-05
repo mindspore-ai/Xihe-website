@@ -53,7 +53,7 @@ onMounted(() => {
     model: Model,
     tabSize: 2,
     automaticLayout: true,
-    // scrollBeyondLastLine: false,
+    wordWrap: 'on',
   });
 
   instance.onDidChangeModelContent(() => {

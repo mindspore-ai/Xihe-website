@@ -18,6 +18,7 @@ import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
 import IconWarning from '~icons/app/warning';
+import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
@@ -236,6 +237,14 @@ function handleAssessment() {
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
       console.log(res);
+      if (res.status === 201) {
+        setEvaluateWebscoket(res.data.data.evaluate_id);
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res.data.data.msg,
+        });
+      }
     }
   );
 }
@@ -379,7 +388,7 @@ watch(
             <div class="info-list-detail">{{ configurationInfo.flavor }}</div>
           </li>
           <li class="info-list">
-            <div class="info-list-title">输入参数文件</div>
+            <div class="info-list-title">日志文件</div>
             <div
               class="info-list-detail document"
               @click="goJsonFile(trainDetail.config_path)"
@@ -388,7 +397,24 @@ watch(
             </div>
           </li>
           <li class="info-list">
-            <div class="info-list-title">日志文件</div>
+            <div class="info-list-title">
+              <span class="train-output">训练输出</span>
+              <el-popover
+                placement="bottom-start"
+                :width="372"
+                trigger="hover"
+                :teleported="true"
+              >
+                <template #reference>
+                  <o-icon style="font-size: 20px"
+                    ><icon-poppver></icon-poppver
+                  ></o-icon>
+                </template>
+                <div class="icon-tip" style="font-size: 12px">
+                  在解析参数output_path下生成的文件，一般为训练输出的权重文件或者是训练保存的图片。
+                </div>
+              </el-popover>
+            </div>
             <div class="info-list-detail document" @click="goLogFile">
               {{ trainDetail.log_file }}
             </div>
@@ -724,6 +750,7 @@ watch(
           }
         }
       }
+
       .info-list {
         margin-top: 24px;
         color: #555;
@@ -739,6 +766,17 @@ watch(
         &-title {
           width: 110px;
           font-size: 16px;
+          display: flex;
+          align-items: center;
+          .train-output {
+            margin-right: 4px;
+          }
+          .icon-tip {
+            padding: 24px 16px;
+            font-size: 12px;
+            color: #555555;
+            line-height: 20px;
+          }
         }
         &-detail {
           font-size: 14px;

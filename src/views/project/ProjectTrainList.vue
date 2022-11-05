@@ -97,7 +97,7 @@ function getTrainList() {
       btnShow.value = false;
     } else {
       let bool = trainData.value.some(
-        (item) => item.status === 'scheduling' || 'Running'
+        (item) => item.status === 'scheduling' || item.status === 'Running'
       );
       // 调度和运行状态不能创建实例
       btnShow.value = bool;

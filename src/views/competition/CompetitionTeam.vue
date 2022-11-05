@@ -47,6 +47,7 @@ const i18n = {
   delete: {
     describe1: '确定删除这个团队吗？',
     describe2: '退出当前团队比赛成绩会重置，请重新上传结果',
+    describe3: '删除当前团队会退出决赛，确定删除这个团队吗？',
     btnText: '删除',
     cancel: '取消',
     confirm: '确认',
@@ -390,9 +391,12 @@ function toggleQuitDlg(flag) {
                   v-model="form1.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="fountTeam(queryRef1)">{{
-                  i18n.createTeam
-                }}</o-button>
+                <o-button
+                  disabled
+                  type="primary"
+                  @click="fountTeam(queryRef1)"
+                  >{{ i18n.createTeam }}</o-button
+                >
               </el-form-item>
             </el-form>
           </div>
@@ -409,7 +413,7 @@ function toggleQuitDlg(flag) {
                   v-model="form2.teamName"
                   placeholder="请输入团队名"
                 ></el-input>
-                <o-button type="primary" @click="addTeam(queryRef2)">{{
+                <o-button disabled type="primary" @click="addTeam(queryRef2)">{{
                   i18n.joinTeam
                 }}</o-button>
               </el-form-item>
@@ -439,17 +443,29 @@ function toggleQuitDlg(flag) {
           v-if="userInfoStore.userName == teamData.leader_name.name"
           class="header-button"
         >
-          <OButton class="delete" size="small" @click="showDel = true">{{
-            i18n.delete.btnText
-          }}</OButton>
-          <OButton type="primary" size="small" @click="showEdit = true">{{
-            i18n.edit
-          }}</OButton>
+          <OButton
+            disabled
+            class="delete"
+            size="small"
+            @click="showDel = true"
+            >{{ i18n.delete.btnText }}</OButton
+          >
+          <OButton
+            disabled
+            type="primary"
+            size="small"
+            @click="showEdit = true"
+            >{{ i18n.edit }}</OButton
+          >
         </div>
         <div v-else class="quit-button">
-          <OButton type="primary" size="small" @click="showQuit = true">{{
-            i18n.quit
-          }}</OButton>
+          <OButton
+            disabled
+            type="primary"
+            size="small"
+            @click="showQuit = true"
+            >{{ i18n.quit }}</OButton
+          >
         </div>
       </div>
       <el-table :data="teamMemberData" style="width: 100%">
@@ -516,7 +532,11 @@ function toggleQuitDlg(flag) {
         width: '640px',
       }"
     >
-      {{ i18n.delete.describe1 }}
+      {{
+        userComData.competitionData.competition_period === '初赛'
+          ? i18n.delete.describe1
+          : i18n.delete.describe3
+      }}
     </div>
     <template #foot>
       <div

@@ -110,10 +110,11 @@ const radioList = ref({});
 const keyWord = ref('');
 
 const queryData = reactive({
-  page_num: 1,
-  count_per_page: 12,
-  name: null,
-  tags: null,
+  page_num: 1, //分页
+  count_per_page: 12, //每页数量
+  name: null, //项目名
+  tags: null, //标签
+  sort_by: null, //排序规则
   // task_cate: null,
   // task: null,
   // licenses: null,
@@ -140,7 +141,9 @@ function backCondition() {
 
 // 多选(应用分类，其他)
 function sortsClick(index, index2) {
+  // console.log('renderSorts: ', renderSorts.value);
   renderSorts.value[index].haveActive = true;
+  // queryData.tags = tag.kind;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
     !renderSorts.value[index].condition[index2].isActive;
@@ -151,7 +154,7 @@ function clearItem1(index) {
   renderSorts.value[index].condition.forEach((item) => {
     item.isActive = false;
   });
-  queryData['task_cate'] = null;
+  queryData.tags = null;
 }
 
 function othersClick(index, index2) {
@@ -209,6 +212,7 @@ function checkAllClick(item, index) {
 }
 
 function radioClick(detail, list) {
+  console.log('detail, list: ', detail, list);
   list.condition.forEach((item) => {
     item.isSelected = true;
   });
@@ -234,11 +238,14 @@ function radioClick(detail, list) {
 
 // 分类二级标签
 function sortTagClick(index, index2) {
+  console.log('二级标签index2: ', index, index2);
+  // console.log('moreSortTags.value: ', moreSortTags.value);
   moreSortTags.value[index].haveActive = true;
   moreSortTags.value[index].items.forEach((item) => {
     item.isSelected = true;
   });
   moreSortTags.value[index].items[index2].isSelected = false;
+
   if (moreSortTags.value[index].items[index2].isActive === true) {
     moreSortTags.value[index].items[index2].isActive =
       !moreSortTags.value[index].items[index2].isActive;
@@ -264,40 +271,45 @@ function clearSortItem(index) {
 }
 // 二级标签查询
 function searchTags(date) {
-  let taskId = [];
+  console.log('date: ', date);
+  let tagList = [];
   date.forEach((item) => {
-    item.items.forEach((it) => {
-      if (it.isActive === true) {
-        taskId.push(it.id);
+    item.items.forEach((val) => {
+      console.log('val: ', val);
+      if (val.isActive === true) {
+        tagList.push(val.name);
       }
     });
   });
-  if (taskId.length > 0) {
-    queryData.task = taskId.join(',');
+  if (tagList.length > 0) {
+    queryData.tags = tagList.join(',');
   } else {
-    queryData.task = null;
+    queryData.tags = null;
   }
 }
 
 //查询
 function goSearch(render) {
+  console.log('查询函数render: ', render);
   let time = 0;
   queryData.page_num = 1;
-  let taskCate = [];
-  let tagLists = [];
+  // let taskCate = [];
+  let tagList = [];
   render.forEach((item) => {
+    console.log('item: ', item);
     time = 0;
     item.condition.forEach((value) => {
+      console.log('value: ', value);
       if (value.isActive) {
-        if (item.title.key === 'task') {
-          taskCate.push(value.id);
-          queryData.task_cate = taskCate.join(',');
-        } else if (item.title.key === 'tags') {
-          tagLists.push(value.id);
+        tagList.push(value.kind);
+        queryData.tags = tagList.join(',');
+        /*  if (item.title.key === 0) {
+          tagLists.push(value.kind);
           queryData.tags = tagLists.join(',');
-        } else {
-          queryData[item.title.key] = value.id;
-        }
+        } else if (item.title.key === 1) {
+          tagLists.push(value.kind);
+          queryData.tags = tagLists.join(',');
+        } */
       } else {
         time += 1;
       }
@@ -313,10 +325,12 @@ function goSearch(render) {
 }
 
 function dropdownClick(item) {
-  if (item.value === 'update_time') {
-    queryData.order = '-' + item.value;
-  } else {
-    queryData.order = item.value;
+  if (item.value === 'download') {
+    queryData.sort_by = 'download_count';
+  } else if (item.value === 'name') {
+    queryData.sort_by = 'first_letter';
+  } else if (item.value === '-update_time') {
+    queryData.sort_by = 'update_time';
   }
 }
 
@@ -327,7 +341,7 @@ function getProject() {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
     projectData.value = res.data;
-    console.log(projectData.value);
+    // console.log('项目列表数据', projectData.value);
   });
 }
 

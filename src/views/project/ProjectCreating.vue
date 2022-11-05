@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { fromPath } from '@/routers/index';
+// import { fromPath } from '@/routers/index';
 
 import protocol from '../../../config/protocol';
 import { trainSdk, inferSdk, projectPhoto } from '../../../config/protocol';
@@ -15,13 +15,12 @@ import IconNecessary from '~icons/app/necessary.svg';
 import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-console.log('fromPath: ', fromPath);
 const userInfo = useUserInfoStore();
 const router = useRouter();
-const option = ref('');
-fromPath === '/projects'
+// const option = ref('');
+/* fromPath === '/projects'
   ? (option.value = '项目')
-  : (option.value = '个人主页');
+  : (option.value = '个人主页'); */
 const i18n = {
   create: '新建项目',
   owner: '拥有者',
@@ -192,23 +191,18 @@ onMounted(() => {});
 <template>
   <div class="create">
     <div class="link">
-      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)"
-          >个人主页</span
-        ><span class="arrow">&gt;</span
-        ><span class="createPlaceholder">{{ i18n.create }}</span> -->
       <el-breadcrumb :separator-icon="ArrowRight">
-        <!-- TODO: -->
-        <!-- <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }">{{
-          option
-        }}</el-breadcrumb-item> -->
-        <el-breadcrumb-item
+        <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
+          >个人主页</el-breadcrumb-item
+        >
+        <!-- <el-breadcrumb-item
           :to="{
             path: `/${
               fromPath === '/projects' ? 'projects' : userInfo.userName
             }`,
           }"
           >{{ option }}</el-breadcrumb-item
-        >
+        > -->
         <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
       </el-breadcrumb>
     </div>

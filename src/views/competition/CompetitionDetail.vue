@@ -173,7 +173,12 @@ getDetailData();
               <div class="right-immediate">
                 <div class="right-wrap">
                   <div v-if="competitionData.status_name === '进行中'">
-                    <OButton type="primary" animation @click="goApplication">
+                    <OButton
+                      :disabled="competitionData.competition_period==='决赛'"
+                      type="primary"
+                      animation
+                      @click="goApplication"
+                    >
                       立即报名
                     </OButton>
                   </div>
@@ -229,7 +234,12 @@ getDetailData();
               <div class="right-immediate">
                 <div class="right-wrap">
                   <div v-if="competitionData.status_name === '进行中'">
-                    <OButton type="primary" animation @click="goApplication">
+                    <OButton
+                      :disabled="competitionData.competition_period==='决赛'"
+                      type="primary"
+                      animation
+                      @click="goApplication"
+                    >
                       立即报名
                     </OButton>
                   </div>

@@ -766,7 +766,7 @@ function selectFile(item) {
                       <div>
                         在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
                         <br />
-                        <!-- 格式为：
+                        格式为：
                         <div style="color: red">
                           [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
                           &lt;解析参数对应的值1&gt;, <br />
@@ -777,7 +777,7 @@ function selectFile(item) {
                           <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
                           &lt;解析参数名称2&gt; <br />}, ... ]
                         </div>
-                        注意{}末尾不能有逗号 -->
+                        注意{}末尾不能有逗号
                       </div>
                     </el-popover>
                   </div>

@@ -274,27 +274,41 @@ onUnmounted(() => {
       <el-table-column label="状态" width="178">
         <template #default="scope">
           <div class="status-box">
-            <o-icon v-if="scope.row.status === 'Completed'"
-              ><icon-finished></icon-finished
-            ></o-icon>
-            <o-icon v-if="scope.row.status === 'Terminated'"
-              ><icon-stopped></icon-stopped
-            ></o-icon>
-            <o-icon
+            <div v-if="scope.row.status === 'Completed'">
+              <o-icon><icon-finished></icon-finished></o-icon>
+              {{ scope.row.status }}
+            </div>
+
+            <div v-if="scope.row.status === 'Terminated'">
+              <o-icon><icon-stopped></icon-stopped></o-icon>
+              {{ scope.row.status }}
+            </div>
+
+            <div
               v-if="
                 scope.row.status === 'Running' ||
                 scope.row.status === 'scheduling'
               "
-              ><icon-runing></icon-runing
-            ></o-icon>
-            <o-icon
+            >
+              <o-icon><icon-runing></icon-runing></o-icon>
+              {{
+                scope.row.status === 'scheduling' ? '启动中' : scope.row.status
+              }}
+            </div>
+
+            <div
               v-if="
                 scope.row.status === 'Failed' ||
                 scope.row.status === 'schedule_failed'
               "
-              ><icon-failed></icon-failed
-            ></o-icon>
-            {{ scope.row.status }}
+            >
+              <o-icon><icon-failed></icon-failed></o-icon>
+              {{
+                scope.row.status === 'schedule_failed'
+                  ? '启动失败'
+                  : scope.row.status
+              }}
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -510,8 +524,8 @@ onUnmounted(() => {
         }
       }
       .status-box {
-        display: flex;
-        align-items: center;
+        // display: flex;
+        // align-items: center;
         .o-icon {
           margin-right: 8px;
         }

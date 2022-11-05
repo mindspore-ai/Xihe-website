@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-import ExampleCesium from '@/shared/modelzoo/luojia/example-cesium';
+import ExampleCesium from '@/shared/modelzoo/luojia/luojianet.js';
 import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img';
 
 import IconSelect from '~icons/app/luojia-select';

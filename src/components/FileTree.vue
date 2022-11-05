@@ -189,15 +189,22 @@ function creatFolter(formEl) {
           commit_message: `created ${query.folderName}`,
         },
         path
-      ).then(() => {
-        useFileData().setShowFolder(false);
-        getFilesByPath();
-        query.folderName = '';
-        ElMessage({
-          type: 'success',
-          message: '新建成功！',
+      )
+        .then(() => {
+          useFileData().setShowFolder(false);
+          getFilesByPath();
+          query.folderName = '';
+          ElMessage({
+            type: 'success',
+            message: '新建成功！',
+          });
+        })
+        .catch((err) => {
+          ElMessage({
+            type: 'error',
+            message: err.message,
+          });
         });
-      });
     } else {
       console.error('error submit!');
       return false;
@@ -345,6 +352,7 @@ watch(
         <template v-if="filesList.length">
           <tr
             v-for="item in filesList"
+            v-show="!/.*[\u4e00-\u9fa5]+.*$/.test(item.name)"
             :key="item.download_path"
             :class="{ 'folder-item': !item.is_dir }"
             class="tree-table-item"

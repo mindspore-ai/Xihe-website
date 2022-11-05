@@ -186,7 +186,7 @@ function goTrainLog(trainId) {
     },
   });
 }
-
+let socket;
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
@@ -198,7 +198,7 @@ function getTrainList() {
       btnShow.value = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
       );
-      setWebsocket(
+      socket = setWebsocket(
         `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
       );
     }
@@ -230,7 +230,7 @@ function setWebsocket(url) {
   return socket;
 }
 
-const socket = setWebsocket(
+socket = setWebsocket(
   `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
 );
 

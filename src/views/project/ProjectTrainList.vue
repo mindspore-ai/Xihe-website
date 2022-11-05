@@ -274,14 +274,14 @@ onUnmounted(() => {
       <el-table-column label="状态" width="178">
         <template #default="scope">
           <div class="status-box">
-            <div v-if="scope.row.status === 'Completed'">
+            <div v-if="scope.row.status === 'Completed'" class="status-item">
               <o-icon><icon-finished></icon-finished></o-icon>
-              {{ scope.row.status }}
+              <span>{{ scope.row.status }}</span>
             </div>
 
-            <div v-if="scope.row.status === 'Terminated'">
+            <div v-if="scope.row.status === 'Terminated'" class="status-item">
               <o-icon><icon-stopped></icon-stopped></o-icon>
-              {{ scope.row.status }}
+              <span>{{ scope.row.status }}</span>
             </div>
 
             <div
@@ -289,11 +289,16 @@ onUnmounted(() => {
                 scope.row.status === 'Running' ||
                 scope.row.status === 'scheduling'
               "
+              class="status-item"
             >
               <o-icon><icon-runing></icon-runing></o-icon>
-              {{
-                scope.row.status === 'scheduling' ? '启动中' : scope.row.status
-              }}
+              <span>
+                {{
+                  scope.row.status === 'scheduling'
+                    ? '启动中'
+                    : scope.row.status
+                }}</span
+              >
             </div>
 
             <div
@@ -301,13 +306,16 @@ onUnmounted(() => {
                 scope.row.status === 'Failed' ||
                 scope.row.status === 'schedule_failed'
               "
+              class="status-item"
             >
               <o-icon><icon-failed></icon-failed></o-icon>
-              {{
-                scope.row.status === 'schedule_failed'
-                  ? '启动失败'
-                  : scope.row.status
-              }}
+              <span>
+                {{
+                  scope.row.status === 'schedule_failed'
+                    ? '启动失败'
+                    : scope.row.status
+                }}
+              </span>
             </div>
           </div>
         </template>
@@ -524,8 +532,12 @@ onUnmounted(() => {
         }
       }
       .status-box {
-        // display: flex;
-        // align-items: center;
+        .status-item {
+          display: flex;
+          align-items: center;
+          line-height: 23px;
+        }
+
         .o-icon {
           margin-right: 8px;
         }

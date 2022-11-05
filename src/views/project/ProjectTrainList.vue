@@ -280,10 +280,18 @@ onUnmounted(() => {
             <o-icon v-if="scope.row.status === 'Terminated'"
               ><icon-stopped></icon-stopped
             ></o-icon>
-            <o-icon v-if="scope.row.status === 'Running'"
+            <o-icon
+              v-if="
+                scope.row.status === 'Running' ||
+                scope.row.status === 'scheduling'
+              "
               ><icon-runing></icon-runing
             ></o-icon>
-            <o-icon v-if="scope.row.status === 'Failed'"
+            <o-icon
+              v-if="
+                scope.row.status === 'Failed' ||
+                scope.row.status === 'schedule_failed'
+              "
               ><icon-failed></icon-failed
             ></o-icon>
             {{ scope.row.status }}
@@ -320,7 +328,10 @@ onUnmounted(() => {
             <div class="hide-box">
               <div class="tools-box">
                 <div
-                  v-if="scope.row.status === 'Running' || 'scheduling'"
+                  v-if="
+                    scope.row.status === 'Running' ||
+                    scope.row.status === 'scheduling'
+                  "
                   class="tools"
                   @click="showStopClick(scope.row.status, scope.row.id)"
                 >

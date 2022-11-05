@@ -114,17 +114,18 @@ const modalName = ref('');
 const keyWord = ref('');
 
 let queryData = reactive({
-  search: null,
-  page: 1,
-  size: 10,
-  task: null,
-  task_cate: null,
-  libraries: null,
-  licenses: null,
-  model_format: null,
-  device_target: null,
-  relate_datasets: null,
-  order: null,
+  name: null,
+  page_num: 1,
+  count_per_page: 10,
+  // task: null,
+  // task_cate: null,
+  // libraries: null,
+  // licenses: null,
+  // model_format: null,
+  // device_target: null,
+  // relate_datasets: null,
+  // order: null,
+  tags: null,
 });
 
 // queryData.search = route.query.search;
@@ -333,7 +334,7 @@ function handleTagSearch(date) {
 function goSearch(render) {
   let time = 0;
   let taskCate = [];
-  queryData.page = 1;
+  queryData.page_num = 1;
   render.forEach((item) => {
     time = 0;
     item.condition.forEach((value) => {
@@ -365,11 +366,11 @@ function dropdownClick(item) {
 }
 function getModel() {
   getModelData(queryData).then((res) => {
-    modelCount.value = res.count;
-    if (modelCount.value / queryData.size < 8) {
+    modelCount.value = res.data.total;
+    if (modelCount.value / queryData.count_per_page < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
-    modelData.value = res.results.data;
+    modelData.value = res.data;
   });
 }
 
@@ -447,11 +448,11 @@ function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  queryData.size = val;
+  queryData.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
-  queryData.page = val;
+  queryData.page_num = val;
   document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
@@ -472,8 +473,8 @@ function goNewModel() {
   }
 }
 function getKeyWord() {
-  queryData.page = 1;
-  queryData.search = keyWord.value;
+  queryData.page_num = 1;
+  queryData.name = keyWord.value;
 }
 
 // watch(
@@ -489,8 +490,8 @@ function getKeyWord() {
 watch(
   () => route.query.search,
   () => {
-    queryData.search = route.query.search;
-    keyWord.value = queryData.search;
+    queryData.name = route.query.search;
+    keyWord.value = queryData.name;
     debounceSearch();
   },
   {
@@ -707,18 +708,18 @@ onUnmounted(() => {
             </div>
           </div>
 
-          <div v-if="modelData.length" class="card-list">
+          <div v-if="modelData.projects" class="card-list">
             <o-card
-              v-for="item in modelData"
+              v-for="item in modelData.projects"
               :key="item.id"
               :card-data="item"
-              @click="goDetail(item.owner_name.name, item.name)"
+              @click="goDetail(item.owner, item.name)"
             ></o-card>
             <div v-if="modelCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[10, 20, 50]"
-                :current-page="queryData.page"
-                :page-size="queryData.size"
+                :current-page="queryData.page_num"
+                :page-size="queryData.count_per_page"
                 :total="modelCount"
                 :layout="layout"
                 @size-change="handleSizeChange"

@@ -110,15 +110,15 @@ const radioList = ref({});
 const keyWord = ref('');
 
 const queryData = reactive({
-  page: 1,
-  size: 12,
-  search: null,
+  page_num: 1,
+  count_per_page: 12,
+  name: null,
   tags: null,
-  task_cate: null,
-  task: null,
-  licenses: null,
-  train_sdk: null,
-  infer_sdk: null,
+  // task_cate: null,
+  // task: null,
+  // licenses: null,
+  // train_sdk: null,
+  // infer_sdk: null,
 });
 // queryData.search = route.query.search;
 
@@ -282,7 +282,7 @@ function searchTags(date) {
 //查询
 function goSearch(render) {
   let time = 0;
-  queryData.page = 1;
+  queryData.page_num = 1;
   let taskCate = [];
   let tagLists = [];
   render.forEach((item) => {
@@ -322,11 +322,12 @@ function dropdownClick(item) {
 
 function getProject() {
   getProjectData(queryData).then((res) => {
-    projectCount.value = res.count;
+    projectCount.value = res.data.total;
     if (projectCount.value / 10 < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
     projectData.value = res.data;
+    console.log(projectData.value);
   });
 }
 
@@ -383,7 +384,7 @@ function getModelTag() {
           isSelected: false,
         };
       });
-      console.log(item.condition[0].items);
+      // console.log(item.condition[0].items);
       item.num = index;
     });
   });
@@ -413,11 +414,11 @@ function handleSizeChange(val) {
   if (projectCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  queryData.size = val;
+  queryData.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
-  queryData.page = val;
+  queryData.page_num = val;
   toTop();
 }
 
@@ -425,16 +426,16 @@ function toTop() {
   document.documentElement.scrollTop = 0;
 }
 function getKeyWord() {
-  queryData.page = 1;
-  queryData.search = keyWord.value;
+  queryData.page_num = 1;
+  queryData.name = keyWord.value;
 }
 
 // 二次点击数据集，跳转刷新数据集页面数据
 watch(
   () => route.query.search,
   () => {
-    queryData.search = route.query.search;
-    keyWord.value = queryData.search;
+    queryData.name = route.query.search;
+    keyWord.value = queryData.name;
     debounceSearch();
   },
   {
@@ -699,9 +700,9 @@ onUnmounted(() => {
             </div>
           </div>
 
-          <div v-if="projectData" class="card-list">
+          <div v-if="projectData.projects" class="card-list">
             <div
-              v-for="item in projectData"
+              v-for="item in projectData.projects"
               :key="item.id"
               class="pro-card"
               @click="goDetail(item.owner, item.name)"
@@ -722,7 +723,7 @@ onUnmounted(() => {
               <div class="card-bottom">
                 <div class="info">
                   <div class="info-avata">
-                    <!-- <img :src="item.owner_name.avatar_url" alt="" /> -->
+                    <img :src="item.avatar_id" alt="" />
                   </div>
                   <div class="info-name">
                     {{ item.owner }}
@@ -741,8 +742,8 @@ onUnmounted(() => {
             <div v-if="projectCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[12, 24, 60]"
-                :current-page="queryData.page"
-                :page-size="queryData.size"
+                :current-page="queryData.page_num"
+                :page-size="queryData.count_per_page"
                 :total="projectCount"
                 :layout="layout"
                 @size-change="handleSizeChange"

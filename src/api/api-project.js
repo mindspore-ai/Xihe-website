@@ -19,18 +19,13 @@ function getHeaderConfig() {
  * 获取项目页面数据（筛选）
  * @returns
  */
-export function getProjectData(params, name) {
-  const url = `/server/project/${name}`;
-  let header = getHeaderConfig();
+export function getProjectData(params) {
+  const url = `/server/project`;
+  // let header = getHeaderConfig();
   // 登录之后携带token
-  return request
-    .get(url, {
-      params,
-      ...header,
-    })
-    .then((res) => {
-      return res.data;
-    });
+  return request.get(url, { params }).then((res) => {
+    return res.data;
+  });
 }
 
 /**
@@ -116,7 +111,7 @@ export function getModelTags() {
   });
 }
 export function getTags() {
-  const url = `/server/tags/project`;
+  const url = `/server/tags/global_project`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

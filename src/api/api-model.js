@@ -43,7 +43,7 @@ export function getSortData() {
  * @returns
  */
 export function getModelData(params) {
-  const url = `/api/models/`;
+  const url = `/server/model`;
   let header = getHeaderConfig();
   // 登录之后携带token
   return request
@@ -108,7 +108,7 @@ export function getModelTags() {
   });
 }
 export function getTags() {
-  const url = `/server/tags/model`;
+  const url = `/server/tags/global_model`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

@@ -74,7 +74,7 @@ if (props.cardType === 'model') {
   >
     <div class="card-top">
       <div class="portrait">
-        <img :src="avatarImg" alt="" />
+        <img :src="cardData.avatar_id" alt="" />
       </div>
       <div v-if="cardData.owner" class="nickname">
         {{ cardData.owner }}

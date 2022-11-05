@@ -17,7 +17,7 @@ import { useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
 
-import { getModelData, getModelTags } from '@/api/api-model';
+import { getModelData, getTags } from '@/api/api-model';
 
 const userInfoStore = useUserInfoStore();
 
@@ -143,12 +143,13 @@ function backCondition() {
 // 多选-->处理器，文件格式，框架，训练数据集，其他;-->应用分类 ，协议单选
 function conditionClick(index, index2, detail) {
   renderCondition.value[index].haveActive = true;
-  if (renderCondition.value[index].title.key === 'task') {
+  if (renderCondition.value[index].title.text === '应用分类') {
     if (detail.isActive === true) {
       detail.isActive = !detail.isActive;
+      console.log(renderCondition.value[index].condition);
       renderCondition.value[index].condition.forEach((item) => {
         item.isSelected = false;
-        item.task_list.forEach((it) => {
+        item.items.forEach((it) => {
           it.isSelected = false;
           it.isActive = false;
         });
@@ -163,11 +164,11 @@ function conditionClick(index, index2, detail) {
       // 一级二级联动
       renderCondition.value[index].condition.forEach((item, i) => {
         if (index2 === i) {
-          item.task_list.forEach((it) => {
+          item.items.forEach((it) => {
             it.isSelected = false;
           });
         } else {
-          item.task_list.forEach((child) => {
+          item.items.forEach((child) => {
             child.isSelected = true;
             child.isActive = false;
           });
@@ -194,9 +195,9 @@ function conditionClick(index, index2, detail) {
       });
     }
   } else {
-    renderCondition.value[index].condition[index2].isActive =
-      !renderCondition.value[index].condition[index2].isActive;
-    let bool = renderCondition.value[index].condition.every(
+    renderCondition.value[index].condition[0].items[index2].isActive =
+      !renderCondition.value[index].condition[0].items[index2].isActive;
+    let bool = renderCondition.value[index].condition[0].items.every(
       (item) => item.isActive === false
     );
     if (bool) {
@@ -223,7 +224,7 @@ function clearItem(index) {
 
 // 查看全部标签
 function checkAllClick(item, index) {
-  if (item.title.key === 'task') {
+  if (item.title.text === '应用分类') {
     showDetail.value = true;
   } else {
     showTags.value = true;
@@ -267,39 +268,32 @@ function radioClick(detail, list) {
 // 分类二级标签
 function sortTagClick(index, index2) {
   renderCondition.value[0].condition.forEach((item) => {
-    item.task_list.forEach((it) => {
+    item.items.forEach((it) => {
       it.isSelected = true;
     });
   });
-  renderCondition.value[0].condition[index].task_list[
-    index2
-  ].isSelected = false;
+  renderCondition.value[0].condition[index].items[index2].isSelected = false;
   if (
-    renderCondition.value[0].condition[index].task_list[index2].isActive ===
-    true
+    renderCondition.value[0].condition[index].items[index2].isActive === true
   ) {
-    renderCondition.value[0].condition[index].task_list[
-      index2
-    ].isActive = false;
+    renderCondition.value[0].condition[index].items[index2].isActive = false;
     renderCondition.value[0].condition.forEach((item) => {
       item.isActive = false;
       item.isSelected = false;
-      item.task_list.forEach((it) => {
+      item.items.forEach((it) => {
         it.isSelected = false;
       });
     });
   } else {
     renderCondition.value[0].haveActive = true;
     renderCondition.value[0].condition.forEach((item) => {
-      item.task_list.forEach((it) => {
+      item.items.forEach((it) => {
         it.isActive = false;
         it.isSelected = true;
       });
     });
-    renderCondition.value[0].condition[index].task_list[index2].isActive = true;
-    renderCondition.value[0].condition[index].task_list[
-      index2
-    ].isSelected = false;
+    renderCondition.value[0].condition[index].items[index2].isActive = true;
+    renderCondition.value[0].condition[index].items[index2].isSelected = false;
     renderCondition.value[0].condition.forEach((data) => {
       data.isActive = false;
       data.isSelected = true;
@@ -404,20 +398,35 @@ function getModelTag() {
   //   });
   //   item.num = index;
   // });
-  getModelTags().then((res) => {
+  getTags().then((res) => {
+    i18n.screenCondition = res.data.map((item, index) => {
+      return {
+        title: {
+          text: item.domain,
+          key: index,
+        },
+        haveActive: false,
+        condition: [],
+      };
+    });
     i18n.screenCondition.forEach((item) => {
-      res.data[item.title.key].forEach((it) => {
-        if (item.title.key === 'task') {
-          it.isActive = false;
-          it.isSelected = false;
-          it.task_list.forEach((child) => {
-            child.isSelected = false;
-            child.isActive = false;
-          });
-        } else {
-          it.isActive = false;
-          it.isSelected = false;
-        }
+      res.data[item.title.key].items.forEach((it) => {
+        // if (item.title.text === '应用分类') {
+        it.isActive = false;
+        it.isSelected = false;
+        it.items = it.items.map((child) => {
+          // child.isSelected = false;
+          // child.isActive = false;
+          return {
+            name: child,
+            isSelected: false,
+            isActive: false,
+          };
+        });
+        // } else {
+        //   it.isActive = false;
+        //   it.isSelected = false;
+        // }
         item.condition.push(it);
       });
     });
@@ -544,9 +553,9 @@ onUnmounted(() => {
           :key="item.id"
           class="condition-item"
         >
-          <div v-if="radioList.title.key === 'task'">
+          <div v-if="radioList.title.text === '应用分类'">
             <div class="condition-title">
-              <span>{{ item.name }}</span>
+              <span>{{ item.kind }}</span>
               <div
                 v-if="item.haveActive"
                 class="clear"
@@ -558,7 +567,7 @@ onUnmounted(() => {
             </div>
             <div class="condition-box-all">
               <div
-                v-for="(detail, index2) in item.task_list"
+                v-for="(detail, index2) in item.items"
                 :key="detail"
                 class="condition-detail"
                 :class="{
@@ -605,7 +614,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-
+      <!-- 一级标签 -->
       <div v-show="showCondition" class="condition">
         <div
           v-for="(item, index) in renderCondition"
@@ -619,9 +628,28 @@ onUnmounted(() => {
               <span>{{ i18n.clear }}</span>
             </div>
           </div>
-          <div class="condition-box">
+          <!-- 应用分类一级标签 -->
+          <div v-if="item.title.text === '应用分类'" class="condition-box">
             <div
               v-for="(detail, index2) in item.condition"
+              :key="detail"
+              class="condition-detail"
+              :class="{
+                'condition-active1': detail.isActive === true,
+                'condition-active': detail.isSelected === true,
+              }"
+              @click="conditionClick(index, index2, detail)"
+            >
+              {{ detail.kind }}
+              <o-icon class="icon-x">
+                <icon-x></icon-x>
+              </o-icon>
+            </div>
+          </div>
+          <!-- 其他标签 -->
+          <div v-else class="condition-box">
+            <div
+              v-for="(detail, index2) in item.condition[0].items"
               :key="detail"
               class="condition-detail"
               :class="{
@@ -637,7 +665,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div
-            v-if="renderCondition[index].condition.length >= 7"
+            v-if="renderCondition[index].condition.length >= 5"
             class="radio-all"
           >
             <div class="check-all-modal"></div>

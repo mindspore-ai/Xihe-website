@@ -15,7 +15,7 @@ import IconBack from '~icons/app/back';
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 import { useUserInfoStore } from '@/stores';
 
-import { getModelTags } from '@/api/api-model';
+import { getTags } from '@/api/api-dataset';
 import { getDatasetData } from '@/api/api-dataset';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
@@ -159,9 +159,9 @@ function conditionClick(index, index2) {
       });
     }
   } else {
-    renderCondition.value[index].condition[index2].isActive =
-      !renderCondition.value[index].condition[index2].isActive;
-    let bool = renderCondition.value[index].condition.every(
+    renderCondition.value[index].condition[0].items[index2].isActive =
+      !renderCondition.value[index].condition[0].items[index2].isActive;
+    let bool = renderCondition.value[index].condition[0].items.every(
       (item) => item.isActive === false
     );
     if (bool) {
@@ -253,21 +253,21 @@ function radioClick(detail, list) {
 // 分类二级标签
 function sortTagClick(index, index2) {
   moreSortTags.value[index].haveActive = true;
-  moreSortTags.value[index].task_list.forEach((item) => {
+  moreSortTags.value[index].items.forEach((item) => {
     item.isSelected = true;
   });
-  moreSortTags.value[index].task_list[index2].isSelected = false;
-  if (moreSortTags.value[index].task_list[index2].isActive === true) {
-    moreSortTags.value[index].task_list[index2].isActive =
-      !moreSortTags.value[index].task_list[index2].isActive;
+  moreSortTags.value[index].items[index2].isSelected = false;
+  if (moreSortTags.value[index].items[index2].isActive === true) {
+    moreSortTags.value[index].items[index2].isActive =
+      !moreSortTags.value[index].items[index2].isActive;
     moreSortTags.value[index].haveActive = false;
-    moreSortTags.value[index].task_list.forEach((item) => {
+    moreSortTags.value[index].items.forEach((item) => {
       item.isSelected = false;
     });
   } else {
-    moreSortTags.value[index].task_list.forEach((single) => {
+    moreSortTags.value[index].items.forEach((single) => {
       single.isActive = false;
-      moreSortTags.value[index].task_list[index2].isActive = true;
+      moreSortTags.value[index].items[index2].isActive = true;
     });
   }
   handleTagSearch(moreSortTags.value);
@@ -285,7 +285,7 @@ function clearSortItem(index) {
 function handleTagSearch(date) {
   let taskId = [];
   date.forEach((item) => {
-    item.task_list.forEach((it) => {
+    item.items.forEach((it) => {
       if (it.isActive === true) {
         taskId.push(it.id);
       }
@@ -312,34 +312,61 @@ function getDataset() {
   });
 }
 function getModelTag() {
-  getModelTags(query).then((res) => {
+  getTags(query).then((res) => {
+    i18n.screenCondition = res.data.map((item, index) => {
+      return {
+        title: {
+          text: item.domain,
+          key: index,
+        },
+        haveActive: false,
+        condition: [],
+      };
+    });
     i18n.screenCondition.forEach((item) => {
-      res.data[item.title.key].forEach((it) => {
+      res.data[item.title.key].items.forEach((it) => {
         it.isActive = false;
         item.condition.push(it);
       });
     });
+    // renderCondition.value = i18n.screenCondition.splice(1, 3);
+    // renderCondition.value.forEach((item, index) => {
+    //   item.showTagsAll = false;
+    //   item.condition.forEach((it) => {
+    //     it.isSelected = false;
+    //   });
+    //   item.num = index;
+    // });
+    let ind;
+    res.data.forEach((item, index) => {
+      if (item.domain === '应用分类') ind = index;
+    });
+    renderSorts.value = i18n.screenCondition.splice(ind, 1);
 
-    renderCondition.value = i18n.screenCondition.splice(1, 3);
-
+    renderCondition.value = i18n.screenCondition;
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
-      item.condition.forEach((it) => {
-        it.isSelected = false;
+      item.condition[0].items = item.condition[0].items.map((it) => {
+        // it.isSelected = false;
+        return {
+          name: it,
+          isSelected: false,
+        };
       });
       item.num = index;
     });
-
-    renderSorts.value = i18n.screenCondition.splice(0, 1);
 
     //应用分类二级菜单查看全部
     moreSortTags.value = renderSorts.value[0].condition;
 
     moreSortTags.value.forEach((sort) => {
       sort.haveActive = false;
-      sort.task_list.forEach((tag) => {
-        tag.isActive = false;
-        tag.isSelected = false;
+      sort.items = sort.items.map((tag) => {
+        return {
+          name: tag,
+          isActive: false,
+          isSelected: false,
+        };
       });
       // sort.condition = sort.task_list;
     });
@@ -454,7 +481,7 @@ onUnmounted(() => {
           class="condition-item"
         >
           <div class="condition-title">
-            <span>{{ item.name }}</span>
+            <span>{{ item.kind }}</span>
             <div
               v-if="item.haveActive"
               class="clear"
@@ -467,7 +494,7 @@ onUnmounted(() => {
 
           <div class="condition-box-all">
             <div
-              v-for="(detail, index2) in item.task_list"
+              v-for="(detail, index2) in item.items"
               :key="detail"
               class="condition-detail"
               :class="{
@@ -541,7 +568,7 @@ onUnmounted(() => {
               :class="[{ 'condition-active1': tag.isActive }]"
               @click="sortsClick(index, index2)"
             >
-              {{ tag.name }}
+              {{ tag.kind }}
               <o-icon class="icon-x"><icon-x></icon-x></o-icon>
             </div>
             <!-- <p class="check-all" @click="moreClick">查看全部</p> -->
@@ -567,7 +594,7 @@ onUnmounted(() => {
           </div>
           <div class="condition-box">
             <div
-              v-for="(detail, index2) in item.condition"
+              v-for="(detail, index2) in item.condition[0].items"
               :key="detail"
               class="condition-detail"
               :class="{

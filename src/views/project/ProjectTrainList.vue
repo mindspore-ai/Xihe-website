@@ -184,6 +184,7 @@ function resetClick(val) {
     }
   }
 }
+
 function formatSeconds(value) {
   let theTime = value; //秒
   let middle = 0; //分

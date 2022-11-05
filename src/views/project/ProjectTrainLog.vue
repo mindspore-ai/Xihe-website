@@ -168,7 +168,7 @@ socket.onmessage = function (event) {
       ? (isEvaluating.value = false)
       : (isEvaluating.value = true);
 
-    isEvaluating.value = form.name = trainDetail.value.name;
+    form.name = trainDetail.value.name;
     form.desc = trainDetail.value.log;
     configurationInfo.value = trainDetail.value.compute;
     isDone.value = trainDetail.value.is_done;

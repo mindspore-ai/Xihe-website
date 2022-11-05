@@ -213,6 +213,7 @@ socket.onmessage = function (event) {
   console.log('websocket列表消息', JSON.parse(event.data).data);
 
   trainData.value = JSON.parse(event.data).data;
+  console.log('trainData :', trainData.value);
 
   if (trainData.value) {
     let bool = trainData.value.some(

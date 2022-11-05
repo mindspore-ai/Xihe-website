@@ -43,7 +43,7 @@ export function getSortData() {
  * @returns
  */
 export function getDatasetData(params) {
-  const url = `/api/datasets/`;
+  const url = `/server/dataset`;
   let header = getHeaderConfig();
   // 登录之后携带token
   if (getUserInfo().token) {
@@ -128,7 +128,7 @@ export function getModelTags() {
   });
 }
 export function getTags() {
-  const url = `/server/tags/dataset`;
+  const url = `/server/tags/global_dataset`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

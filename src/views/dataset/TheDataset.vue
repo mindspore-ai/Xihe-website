@@ -90,17 +90,17 @@ const radioList = ref({});
 const keyWord = ref('');
 
 let query = reactive({
-  search: null,
-  page: 1,
-  size: 10,
-  task: null, //应用分类
-  task_cate: null /* 一级分类 */,
-  libraries: null,
-  licenses: null, //协议
-  model_format: null,
-  device_target: null,
-  relate_datasets: null,
-  order: null,
+  name: null,
+  page_num: 1,
+  count_per_page: 10,
+  // task: null, //应用分类
+  // task_cate: null /* 一级分类 */,
+  // libraries: null,
+  // licenses: null, //协议
+  // model_format: null,
+  // device_target: null,
+  // relate_datasets: null,
+  // order: null,
   tags: null, //其他
 });
 
@@ -176,7 +176,7 @@ function goSearch(render) {
   let time = 0;
   let taskCate = [];
   let tagLists = [];
-  query.page = 1;
+  query.page_num = 1;
   render.forEach((item) => {
     time = 0;
     item.condition.forEach((value) => {
@@ -304,11 +304,12 @@ function dropdownClick(item) {
 
 function getDataset() {
   getDatasetData(query).then((res) => {
-    modelCount.value = res.count;
-    if (modelCount.value / query.size < 8) {
+    modelCount.value = res.data.total;
+    console.log(res.data.total);
+    if (modelCount.value / query.count_per_page < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }
-    modelData.value = res.results.data;
+    modelData.value = res.data;
   });
 }
 function getModelTag() {
@@ -390,11 +391,11 @@ function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
-  query.size = val;
+  query.count_per_page = val;
 }
 
 function handleCurrentChange(val) {
-  query.page = val;
+  query.page_num = val;
   toTop();
 }
 function toTop() {
@@ -408,16 +409,16 @@ function goNewModel() {
   }
 }
 function getKeyWord() {
-  query.page = 1;
-  query.search = keyWord.value;
+  query.page_num = 1;
+  query.name = keyWord.value;
 }
 
 // 二次点击数据集，跳转刷新数据集页面数据
 watch(
   () => route.query.search,
   () => {
-    query.search = route.query.search;
-    keyWord.value = query.search;
+    query.name = route.query.search;
+    keyWord.value = query.name;
     debounceSearch();
   },
   {
@@ -652,19 +653,19 @@ onUnmounted(() => {
               </el-dropdown>
             </div>
           </div>
-          <div v-if="modelData.length" class="card-list">
+          <div v-if="modelData.projects" class="card-list">
             <o-card
-              v-for="item in modelData"
+              v-for="item in modelData.projects"
               :key="item.id"
               :card-data="item"
               card-type="dataset"
-              @click="goDetail(item.owner_name.name, item.name)"
+              @click="goDetail(item.owner, item.name)"
             ></o-card>
             <div v-if="modelCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[10, 20, 50]"
-                :current-page="query.page"
-                :page-size="query.size"
+                :current-page="query.page_num"
+                :page-size="query.count_per_page"
                 :total="modelCount"
                 :layout="layout"
                 @size-change="handleSizeChange"

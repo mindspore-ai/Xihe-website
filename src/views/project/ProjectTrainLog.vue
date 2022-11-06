@@ -312,7 +312,7 @@ function handleAssessment() {
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
       console.log(res);
-      if (res.status === 201) {
+      if (res.status === 201 && res.data.data) {
         setEvaluateWebscoket(res.data.data.evaluate_id);
       } else {
         ElMessage({
@@ -348,12 +348,12 @@ function goToPage() {
 }
 
 // 下载输出
-function goLogFile() {
-  let a = document.createElement('a');
-  a.download = 'log';
-  a.href = logUrl;
-  a.click();
-}
+// function goLogFile() {
+//   let a = document.createElement('a');
+//   a.download = 'log';
+//   a.href = logUrl;
+//   a.click();
+// }
 
 // function goJsonFile() {
 //   let a = document.createElement('a');
@@ -497,8 +497,8 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            <div class="info-list-detail document" @click="goLogFile">
-              {{ logUrl }}
+            <div class="info-list-detail document">
+              <a :href="logUrl" target="_blank">{{ logUrl }}</a>
             </div>
           </li>
           <li class="info-list">
@@ -850,6 +850,7 @@ watch(
         align-items: center;
         &-detail {
           display: flex;
+          flex: 1;
           align-items: center;
           .status-box {
             .status-item {
@@ -891,8 +892,11 @@ watch(
           margin-left: 32px;
           overflow: hidden;
           text-overflow: ellipsis;
-          white-space: nowrap;
+          // white-space: nowrap;
           cursor: pointer;
+          a {
+            color: #0d8dff;
+          }
         }
       }
       // .info-btn {

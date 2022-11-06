@@ -27,11 +27,11 @@ const settingItems = [
     label: '账户安全',
     icon: IconLock,
   },
-  {
-    id: 'email',
-    label: '邮件',
-    icon: IconEmail,
-  },
+  // {
+  //   id: 'email',
+  //   label: '邮件',
+  //   icon: IconEmail,
+  // },
   {
     id: 'competition',
     label: '我的比赛',

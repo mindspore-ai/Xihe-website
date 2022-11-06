@@ -127,7 +127,7 @@ export function getUserProjectData(params, name) {
  * @returns
  */
 export function setUserData(params) {
-  const url = '/api/users/';
+  const url = '/server/user';
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

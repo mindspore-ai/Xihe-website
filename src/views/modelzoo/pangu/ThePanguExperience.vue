@@ -54,39 +54,43 @@ function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
   // 审核文本
-  handleTextRview({ is_img: false, content: inputMsg.value }).then((res) => {
-    if (res.status === 200) {
+  // handleTextRview({ is_img: false, content: inputMsg.value }).then((res) => {
+  //   if (res.status === 200) {
+  msgList.value.push({
+    message: inputMsg.value,
+    type: 1,
+    isLoading: true,
+  });
+
+  examples.forEach((item) => {
+    item.isSelected = false;
+  });
+
+  handlePanguInfer({ question: inputMsg.value }).then((res) => {
+    console.log(res);
+    // TODO: 状态码处理
+    if (res.status === 201) {
+      msgList.value.forEach((item) => (item.isLoading = false));
+
       msgList.value.push({
-        message: inputMsg.value,
-        type: 1,
+        message: res.data.data.answer,
+        type: 0,
         isLoading: false,
       });
+    } else {
+      msgList.value.forEach((item) => (item.isLoading = false));
 
-      examples.forEach((item) => {
-        item.isSelected = false;
+      ElMessage({
+        type: 'error',
+        message: res.data.msg,
       });
-
-      handlePanguInfer({ question: inputMsg.value }).then((res) => {
-        console.log(res);
-        // TODO: 状态码处理
-        if (res.status === 201) {
-          msgList.value.push({
-            message: res.data.data.answer,
-            type: 0,
-            isLoading: false,
-          });
-        } else {
-          ElMessage({
-            type: 'error',
-            message: res.data.msg,
-          });
-        }
-      });
-
-      inputMsg.value = '';
     }
   });
+
+  inputMsg.value = '';
 }
+//   });
+// }
 
 // 获取示例
 function handleGetExamples() {

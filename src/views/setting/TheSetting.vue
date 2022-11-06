@@ -37,11 +37,11 @@ const settingItems = [
     label: '我的比赛',
     icon: IconTrophy,
   },
-  {
-    id: 'invitation',
-    label: '我的邀请',
-    icon: IconInvitation,
-  },
+  // {
+  //   id: 'invitation',
+  //   label: '我的邀请',
+  //   icon: IconInvitation,
+  // },
 ];
 
 const activeId = ref(route.path.split('/')[2] || 'profile');

@@ -1,3 +1,5 @@
+import whiteListApi from '@/whitelist/whitelist-api';
+
 export default (err) => {
   const { response } = err;
 
@@ -6,12 +8,21 @@ export default (err) => {
     err.message = '有response但没有response.status的情况';
   }
   err.code = response.status;
+
+  const isFilteredErr =
+    whiteListApi.indexOf(response.config.url) !== -1 || response.status === 400;
+  if (isFilteredErr) {
+    err.message = response.data?.message || '';
+    err.filterd = true;
+    return err;
+  }
+
   switch (response.status) {
     case 200:
       err.message = '错误响应也会有状态码为200的情况';
       break;
     case 400:
-      err.message = response.data?.msg || '请求出错(400)';
+      err.message = '请求出错(400)';
       break;
     case 401:
       err.message = '请重新登录(401)';
@@ -46,5 +57,6 @@ export default (err) => {
     default:
       err.message = `连接出错，状态码：(${err.response.status})!`;
   }
+
   return err;
 };

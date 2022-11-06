@@ -1,5 +1,5 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS } from '@/shared/login';
+import { LOGIN_KEYS, saveUserAuth } from '@/shared/login';
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -18,9 +18,14 @@ function getHeaderConfig() {
  */
 export function queryUserToken(params) {
   const url = `/server/login`;
-  return request.get(url, { params }).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { params })
+    .then((res) => {
+      return res.data;
+    })
+    .catch(() => {
+      saveUserAuth();
+    });
 }
 
 /**
@@ -31,9 +36,14 @@ export async function queryUserInfo(params) {
   const { token, userName } = params;
   if (token) {
     const url = `/server/user`;
-    return request.get(url, getHeaderConfig()).then((res) => {
-      return res.data;
-    });
+    return request
+      .get(url, getHeaderConfig())
+      .then((res) => {
+        return res.data;
+      })
+      .catch(() => {
+        saveUserAuth();
+      });
   } else if (userName) {
     const url = `/server/user?account=${userName}`;
     return request.get(url, getHeaderConfig()).then((res) => {

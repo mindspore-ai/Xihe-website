@@ -12,6 +12,8 @@ import dataset from './dataset';
 import project from './project';
 import competition from './competition';
 
+import whitelistRouter from '@/whitelist/whitelist-router';
+
 export const routes = [
   // 主页
   {
@@ -142,27 +144,27 @@ router.beforeEach(async (to, from) => {
   const userInfoStore = useUserInfoStore();
 
   // 运营活动-用户邀请
-  if (to.path === '/' && to.query && to.query.invited) {
-    if (loginStore.isLogined) {
-      window.history.replaceState({}, '', '/');
-      to.query = {};
-      to.fullPath = '/';
-    } else {
-      const userName = to.query.invited;
-      const res = await queryUserInfo({ userName });
-      if (res.status === 200) {
-        window.history.replaceState({}, '', '/');
-        to.query = {};
-        to.fullPath = '/';
-        localStorage.setItem('XIHE_INVITED', userName);
-        goAuthorize();
-      } else {
-        window.history.replaceState({}, '', '/');
-        to.query = {};
-        to.fullPath = '/';
-      }
-    }
-  }
+  // if (to.path === '/' && to.query && to.query.invited) {
+  //   if (loginStore.isLogined) {
+  //     window.history.replaceState({}, '', '/');
+  //     to.query = {};
+  //     to.fullPath = '/';
+  //   } else {
+  //     const userName = to.query.invited;
+  //     const res = await queryUserInfo({ userName });
+  //     if (res.status === 200) {
+  //       window.history.replaceState({}, '', '/');
+  //       to.query = {};
+  //       to.fullPath = '/';
+  //       localStorage.setItem('XIHE_INVITED', userName);
+  //       goAuthorize();
+  //     } else {
+  //       window.history.replaceState({}, '', '/');
+  //       to.query = {};
+  //       to.fullPath = '/';
+  //     }
+  //   }
+  // }
 
   // 如已登录，直接进入
   if (loginStore.isLogined) {
@@ -179,16 +181,7 @@ router.beforeEach(async (to, from) => {
   }
 
   // 白名单中路由可直接进入
-  const whiteList = [
-    'models',
-    'datasets',
-    'projects',
-    'modelzoo',
-    'privacy',
-    'legal',
-    '404',
-  ];
-  if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {
+  if (to.path === '/' || whitelistRouter.indexOf(to.name) !== -1) {
     doLogin();
     return true;
   }

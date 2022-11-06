@@ -206,14 +206,14 @@ function resetForm(formEl) {
   </div> -->
 
   <div class="setting-box">
-    <p class="setting-title">手机号码</p>
+    <!-- <p class="setting-title">手机号码</p> -->
     <div v-if="userInfoStore.phone" class="setting-content">
       <el-input v-model="phoneExhibition" disabled></el-input>
     </div>
     <div class="setting-content">
-      <OButton class="setting-btn" @click="togglePhoneDlg(true)"
+      <!-- <OButton class="setting-btn" @click="togglePhoneDlg(true)"
         >{{ userInfoStore.phone ? '更换' : '绑定' }}手机号码</OButton
-      >
+      > -->
       <ODialog
         :show="showPhoneDlg"
         :close="false"

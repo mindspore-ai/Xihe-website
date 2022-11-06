@@ -93,10 +93,17 @@ function create(formEl) {
           // }
         })
         .catch((err) => {
-          ElMessage({
-            type: 'error',
-            message: '输入的内容有误',
-          });
+          if (err.message === 'unsupported protocol') {
+            ElMessage({
+              type: 'error',
+              message: '暂不支持该协议',
+            });
+          } else {
+            ElMessage({
+              type: 'error',
+              message: '文件名重复，或文件名不合规',
+            });
+          }
         });
     } else {
       console.error('error submit!');

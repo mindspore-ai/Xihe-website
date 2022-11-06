@@ -416,13 +416,13 @@ watch(
 );
 const failLog = ref('');
 const loading = ref(true);
-getLog(detailData.value.id).then((res) => {
-  if (res.data.data) {
-    failLog.value = res.data.data.replace(/\n/g, '<br>');
-    failLog.value = `<span> ${failLog.value}</span>`;
-  }
-  loading.value = true;
-});
+// getLog(detailData.value.id).then((res) => {
+//   if (res.data.data) {
+//     failLog.value = res.data.data.replace(/\n/g, '<br>');
+//     failLog.value = `<span> ${failLog.value}</span>`;
+//   }
+//   loading.value = true;
+// });
 //判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
@@ -433,10 +433,13 @@ const clientSrc = ref('');
 let timer = null;
 // 游客启动推理
 function start() {
-  startInference(detailData.value.id).then((res) => {
-    if (res.data.status === 200) msg.value = '启动中';
-    // socket.send(JSON.stringify({ pk: detailData.value.id }));
-  });
+  // startInference(detailData.value.id).then((res) => {
+  //   if (res.data.status === 200) msg.value = '启动中';
+  // socket.send(JSON.stringify({ pk: detailData.value.id }));
+  // });
+  socket.value = new WebSocket(
+    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+  );
 }
 //拥有者启动推理
 function start2() {
@@ -602,41 +605,45 @@ if (detailData.value.owner === userInfo.userName) {
     // }
   });
 } else {
-  if (detailData.value.status_name === '可运行') {
-    socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
-    socket.value.onopen = function () {
-      socket.value.send(
-        JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
-      );
-      clearInterval(timer);
-      timer = setInterval(() => {
-        socket.value.send(
-          JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
-        );
-      }, 10000);
-    };
-    socket.value.onmessage = function (event) {
-      msg.value = JSON.parse(event.data).msg;
-      if (!!JSON.parse(event.data).data) {
-        clientSrc.value = JSON.parse(event.data).data.url;
-        closeConn(); //断开连接
-      } else {
-        if (JSON.parse(event.data).msg === '未启动') {
-          start();
-        } else if (JSON.parse(event.data).msg === '任务已销毁') {
-          stopInference(detailData.value.id).then((res) => {
-            if (res.data.status === 200) {
-              ElMessage({
-                type: 'error',
-                message: '当前任务已结束，正在准备重启',
-              });
-              start();
-            }
-          }); //删除任务
-        }
-      }
-    };
-  }
+  // if (detailData.value.status_name === '可运行') {
+  socket.value = new WebSocket(
+    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+  );
+  socket.value.onopen = function () {
+    // socket.value.send(
+    //   JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+    // );
+    // clearInterval(timer);
+    // timer = setInterval(() => {
+    //   socket.value.send(
+    //     JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+    //   );
+    // }, 10000);
+    console.log('连接成功');
+  };
+  socket.value.onmessage = function (event) {
+    console.log(event);
+    // msg.value = JSON.parse(event.data).msg;
+    // if (!!JSON.parse(event.data).data) {
+    //   clientSrc.value = JSON.parse(event.data).data.url;
+    //   closeConn(); //断开连接
+    // } else {
+    //   if (JSON.parse(event.data).msg === '未启动') {
+    //     start();
+    //   } else if (JSON.parse(event.data).msg === '任务已销毁') {
+    //     stopInference(detailData.value.id).then((res) => {
+    //       if (res.data.status === 200) {
+    //         ElMessage({
+    //           type: 'error',
+    //           message: '当前任务已结束，正在准备重启',
+    //         });
+    //         start();
+    //       }
+    //     }); //删除任务
+    //   }
+    // }
+  };
+  // }
 }
 
 // if (socket.value) {

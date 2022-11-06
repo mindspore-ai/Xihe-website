@@ -63,24 +63,31 @@ function create(formEl) {
       // newList.protocol = [newList.protocol];
       createModelStore(query)
         .then((res) => {
-          if (res.data) {
+          // if (res.data) {
+          ElMessage({
+            type: 'success',
+            message: '创建成功',
+          });
+          router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
+          // } else {
+          //   ElMessage({
+          //     type: 'error',
+          //     message: '文件名重复，或文件名不合规',
+          //   });
+          // }
+        })
+        .catch((err) => {
+          if (err.message === 'unsupported protocol') {
             ElMessage({
-              type: 'success',
-              message: '创建成功',
+              type: 'error',
+              message: '暂不支持该协议',
             });
-            router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
           } else {
             ElMessage({
               type: 'error',
               message: '文件名重复，或文件名不合规',
             });
           }
-        })
-        .catch((err) => {
-          ElMessage({
-            type: 'error',
-            message: '文件名重复，或文件名不合规',
-          });
         });
     } else {
       console.error('error submit!');

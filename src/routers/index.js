@@ -12,6 +12,8 @@ import dataset from './dataset';
 import project from './project';
 import competition from './competition';
 
+import whitelistRouter from '@/whitelist/whitelist-router';
+
 export const routes = [
   // 主页
   {
@@ -179,16 +181,7 @@ router.beforeEach(async (to, from) => {
   }
 
   // 白名单中路由可直接进入
-  const whiteList = [
-    'models',
-    'datasets',
-    'projects',
-    'modelzoo',
-    'privacy',
-    'legal',
-    '404',
-  ];
-  if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {
+  if (to.path === '/' || whitelistRouter.indexOf(to.name) !== -1) {
     doLogin();
     return true;
   }

@@ -113,7 +113,7 @@ export function getExampleTags(params) {
  * @returns
  */
 export function uploadVqaPicture(params) {
-  const url = `/server/bigmodel/upload_picture`;
+  const url = `/server/bigmodel/vqa_upload_picture`;
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
@@ -190,7 +190,7 @@ export function handlePanguInfer(params) {
 }
 
 /**
- * LuoJia推理
+ * LuoJia上传图片
  * @returns
  */
 export function handleLuojiaUploadPic(params) {

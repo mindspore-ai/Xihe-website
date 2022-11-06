@@ -46,8 +46,12 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
-const logUrl = ref('');
-const outputUrl = ref('');
+const logUrl = ref(
+  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-log/1667733185/modelarts-job-05b0ff8e-6de1-4392-8774-09c739233719-worker-0.log?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE\u0026Expires=1667741907\u0026Signature=xw6EEGeqii9mM7HScuCiE%2FFO0BI%3D'
+);
+const outputUrl = ref(
+  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-output/1667733185.tar.gz?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE\u0026Expires=1667741907\u0026Signature=90Y7Nhs3o1Dvqbfrg9s7hAzdc1U%3D'
+);
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -356,22 +360,19 @@ function goToPage() {
 }
 
 // 下载输出
-function goLogFile() {
-  let a = document.createElement('a');
-  a.download = 'output';
-  a.href = outputUrl;
-  a.click();
-}
+// function goLogFile() {
+//   let a = document.createElement('a');
+//   // a.download = 'log';
+//   a.href = logUrl;
+//   a.click();
+// }
 
-function goJsonFile() {
-  console.log(1);
-  let a = document.createElement('a');
-  a.download = 'log';
-
-  a.href = logUrl;
-
-  a.click();
-}
+// function goJsonFile() {
+//   let a = document.createElement('a');
+//   a.download = 'output';
+//   a.href = outputUrl;
+//   a.click();
+// }
 
 function handleChangeClick() {
   if (showContent.value) {
@@ -508,8 +509,8 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            <div class="info-list-detail document" @click="goJsonFile()">
-              {{ logUrl }}
+            <div class="info-list-detail document">
+              <a :href="logUrl" target="_blank"> {{ logUrl }}</a>
             </div>
           </li>
           <li class="info-list">
@@ -531,8 +532,8 @@ watch(
                 </div>
               </el-popover>
             </div>
-            <div class="info-list-detail document" @click="goLogFile">
-              {{ outputUrl }}
+            <div class="info-list-detail document">
+              <a :href="outputUrl">{{ outputUrl }}</a>
             </div>
           </li>
 

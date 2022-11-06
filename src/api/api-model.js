@@ -154,14 +154,9 @@ export function addDownloadRecord(id) {
  */
 export function createModelStore(params) {
   const url = `/server/model`;
-  return request
-    .post(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 添加相关数据集（查询数据集信息）

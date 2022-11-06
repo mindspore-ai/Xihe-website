@@ -135,6 +135,7 @@ function setProject() {
         type: 'success',
         message: '创建成功',
       });
+      console.log(res.data);
       router.push(`/projects/${userInfo.userName}/${res.data.name}`);
       // } else if (
       //   res.data.name &&
@@ -157,10 +158,17 @@ function setProject() {
       // }
     })
     .catch((err) => {
-      ElMessage({
-        type: 'error',
-        message: '文件名重复，或文件名不合规',
-      });
+      if (err.message === 'unsupported protocol') {
+        ElMessage({
+          type: 'error',
+          message: '暂不支持该协议',
+        });
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '文件名重复，或文件名不合规',
+        });
+      }
     });
 }
 // TODO:项目封面，项目类型以及训练平台的数据

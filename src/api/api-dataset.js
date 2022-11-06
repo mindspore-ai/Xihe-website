@@ -71,9 +71,6 @@ export function createDataset(params) {
     .post(url, JSON.stringify(params), getHeaderConfig())
     .then((res) => {
       return res.data;
-    })
-    .catch((err) => {
-      console.error(err);
     });
 }
 /**

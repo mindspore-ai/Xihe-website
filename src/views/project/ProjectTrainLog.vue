@@ -46,6 +46,9 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
+const logUrl = ref('');
+const outputUrl = ref('');
+
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -165,6 +168,10 @@ function handleGetLog() {
     type: 'log',
   }).then((res) => {
     console.log(res);
+    if (res.status === 202) {
+      logUrl.value = res.data.data.log_url;
+    } else {
+    }
   });
 }
 
@@ -176,6 +183,10 @@ function handleGetOutput() {
     type: 'output',
   }).then((res) => {
     console.log(res);
+    if (res.status === 202) {
+      outputUrl.value = res.data.data.log_url;
+    } else {
+    }
   });
 }
 
@@ -344,11 +355,19 @@ function goToPage() {
   // window.open(routerData.href, '_blank');
 }
 
-// 日志详情
+// 下载输出
 function goLogFile() {
-  router.push(
-    `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/tree/train/log/`
-  );
+  let a = document.createElement('a');
+  a.download = 'output';
+  a.href = outputUrl;
+  a.click();
+}
+
+function goJsonFile() {
+  let a = document.createElement('a');
+  a.download = 'log';
+  a.href = logUrl;
+  a.click();
 }
 
 function handleChangeClick() {
@@ -486,11 +505,8 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            <div
-              class="info-list-detail document"
-              @click="goJsonFile(trainDetail.config_path)"
-            >
-              {{ trainDetail.config_path }}
+            <div class="info-list-detail document" @click="goJsonFile()">
+              {{ logUrl }}
             </div>
           </li>
           <li class="info-list">
@@ -513,7 +529,7 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document" @click="goLogFile">
-              {{ trainDetail.log_file }}
+              {{ outputUrl }}
             </div>
           </li>
 

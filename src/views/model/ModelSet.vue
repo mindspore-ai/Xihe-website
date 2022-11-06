@@ -300,7 +300,7 @@ function toggleDelDlg(flag) {
         <o-button @click="confirmRename(queryRef)">{{
           i18n.rename.btnText
         }}</o-button>
-        <h4 class="setting-title">{{ i18n.delete.title }} <el-divider /></h4>
+        <div class="setting-title">{{ i18n.delete.title }} <el-divider /></div>
         <p class="setting-tip">{{ i18n.delete.describe }}</p>
         <o-button class="delete-btn" status="error" @click="showDel = true">{{
           i18n.delete.btnText

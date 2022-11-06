@@ -19,8 +19,6 @@ import IconRemove from '~icons/app/remove';
 import warningImg from '@/assets/icons/warning.png';
 import LfsImg from '@/assets/icons/lfs.png';
 
-// import { findFile, createFolder, deleteFolder } from '@/api/api-obs';
-
 import {
   getGitlabTree,
   deleteFile,
@@ -30,7 +28,7 @@ import {
   downloadFile,
 } from '@/api/api-gitlab';
 
-import { changeByte } from '@/shared/utils';
+// import { changeByte } from '@/shared/utils';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
@@ -85,9 +83,19 @@ const rules = reactive({
   folderName: [
     { required: true, message: '禁止为空', trigger: 'blur' },
     {
-      pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -._]{1,120}$/,
+      pattern: /^[^\u4e00-\u9fa5]+$/,
+      message: '不支持中文文件名',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^[^%#]+$/,
+      message: '禁止特殊字符',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^[a-zA-Z0-9 -._%]{1,120}$/,
       message:
-        '禁止包含以下字符：“?”、“、”、“╲”、“/”、“*”、““”、“”“、“<”、“>”、“|”',
+        '禁止包含以下字符：“?”、“、”、“╲”、“/”、“*”、““”、“”“、“<”、“>”、“|”、“%”',
       trigger: 'blur',
     },
   ],
@@ -106,14 +114,20 @@ async function getDetailData(path) {
       path: path,
       id: repoDetailData.value.id,
       name: routerParams.name,
-    }).then((res) => {
-      if (res?.data) {
-        filesList.value = res.data;
-      }
-    });
-    // getTree().then((res) => {
-    //   filesList.value = res;
-    // });
+    })
+      .then((res) => {
+        if (res?.data) {
+          filesList.value = res.data;
+        } else {
+          filesList.value = [];
+        }
+      })
+      .catch((err) => {
+        ElMessage({
+          type: 'error',
+          message: err.message,
+        });
+      });
   } catch (error) {
     console.error(error);
   }
@@ -189,22 +203,15 @@ function creatFolter(formEl) {
           commit_message: `created ${query.folderName}`,
         },
         path
-      )
-        .then(() => {
-          useFileData().setShowFolder(false);
-          getFilesByPath();
-          query.folderName = '';
-          ElMessage({
-            type: 'success',
-            message: '新建成功！',
-          });
-        })
-        .catch((err) => {
-          ElMessage({
-            type: 'error',
-            message: err.message,
-          });
+      ).then(() => {
+        useFileData().setShowFolder(false);
+        getFilesByPath();
+        query.folderName = '';
+        ElMessage({
+          type: 'success',
+          message: '新建成功！',
         });
+      });
     } else {
       console.error('error submit!');
       return false;
@@ -221,6 +228,7 @@ function deleteFolderClick(folderName) {
   if (contents.length) {
     path = `${contents.join('/')}/${folderName}`;
   }
+  // 删除文件夹
   if (isFolder.value) {
     findAllFileByPath(`${routerParams.user}/${routerParams.name}`, path).then(
       (res) => {
@@ -377,9 +385,10 @@ watch(
                   })
               "
             >
-              <div class="inner-box">
+              <div v-show="!item.is_dir" class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
-                <span class="size">{{ changeByte(item.size) }}</span>
+                <!-- <span class="size">{{ changeByte(item.size) }}</span> -->
+                <span class="size">download</span>
                 <img
                   v-if="item.is_lfs_file"
                   :src="LfsImg"
@@ -390,7 +399,6 @@ watch(
             </td>
             <td class="tree-table-item-from" :title="item.commit_title_html">
               <div class="inner-box">
-                <span v-if="item.IsLFSFile">LFS</span>
                 <div
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"

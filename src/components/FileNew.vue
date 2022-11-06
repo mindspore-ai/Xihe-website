@@ -13,9 +13,8 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
-import { useUserInfoStore, useFileData } from '@/stores';
+import { useFileData } from '@/stores';
 
-const userInfoStore = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 const prop = defineProps({
@@ -28,7 +27,6 @@ const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
 const routerParams = router.currentRoute.value.params;
-let currentContents = null;
 
 const i18n = {
   modelUpload: {
@@ -51,7 +49,12 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      pattern: /^[a-zA-Z0-9\u4e00-\u9fa5 -./_]{1,210}$/,
+      pattern: /^[^\u4e00-\u9fa5]+$/,
+      message: '不支持中文文件名',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^[a-zA-Z0-9 -./_]{1,210}$/,
       message: '文件名中禁止特殊字符',
       trigger: 'blur',
     },
@@ -73,12 +76,6 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-if (routerParams.contents.length) {
-  currentContents =
-    `${routerParams.name}/${routerParams.contents.join('/')}/` || '';
-} else {
-  currentContents = `${routerParams.name}/`;
-}
 
 function getFileDescription() {
   query.description = `add ${query.fileName}`;

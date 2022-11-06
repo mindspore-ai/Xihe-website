@@ -3,6 +3,8 @@ import handleResponse from './handleResponse';
 import handleError from './handleError';
 import setConfig from './setConfig';
 
+import { useLoadingState } from '@/stores/index';
+
 import { ElLoading } from 'element-plus';
 import { saveUserAuth } from '@/shared/login';
 /**
@@ -27,6 +29,7 @@ let pendingPool = new Map();
 const requestInterceptorId = request.interceptors.request.use(
   (config) => {
     if (loadingCount === 0 && !config.url.includes('fork')) {
+      useLoadingState().setloadingState(true);
       loadingInstance = ElLoading.service({
         fullscreen: true,
         text: 'Loading',
@@ -59,6 +62,7 @@ const responseInterceptorId = request.interceptors.response.use(
   (response) => {
     loadingCount--;
     if (loadingCount === 0 && loadingInstance) {
+      useLoadingState().setloadingState(false);
       loadingInstance.close();
       loadingInstance = null;
     }
@@ -70,8 +74,9 @@ const responseInterceptorId = request.interceptors.response.use(
   },
   // 对异常响应处理
   (err) => {
+    useLoadingState().setloadingState(false);
     loadingInstance.close();
-
+    loadingCount = 0;
     const { config } = request;
     if (!axios.isCancel(err)) {
       pendingPool.delete(config.url);
@@ -93,7 +98,9 @@ const responseInterceptorId = request.interceptors.response.use(
 
       // 错误信息err传入isCancel方法，可以判断请求是否被取消
       if (axios.isCancel(err)) {
-        throw new axios.Cancel(err.message || `请求'${request.config.url}'被取消`);
+        throw new axios.Cancel(
+          err.message || `请求'${request.config.url}'被取消`
+        );
       } else if (err.stack && err.stack.includes('timeout')) {
         err.message = '请求超时!';
       } else {

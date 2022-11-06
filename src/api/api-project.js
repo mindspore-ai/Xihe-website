@@ -289,9 +289,22 @@ export function deleteTainList(projectId, trainId) {
  * 获得训练日志数据
  * @returns
  */
+// export function getTrainLog(params) {
+//   const { projectId, trainId } = params;
+//   const url = `/server/train/project/${projectId}/training/${trainId}`;
+//   return request
+//     .get(url, getHeaderConfig())
+//     .then((res) => {
+//       return res;
+//     })
+//     .catch((e) => {
+//       return e;
+//     });
+// }
+
 export function getTrainLog(params) {
-  const { projectId, trainId } = params;
-  const url = `/server/train/project/${projectId}/training/${trainId}`;
+  const { projectId, trainId, type } = params;
+  const url = `/server/train/project/${projectId}/training/${trainId}/result/${type}`;
   return request
     .get(url, getHeaderConfig())
     .then((res) => {

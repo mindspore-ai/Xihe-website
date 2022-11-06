@@ -46,8 +46,21 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
-console.log(router);
-console.log(route.path);
+// 当前项目的详情数据
+const detailData = computed(() => {
+  return useFileData().fileStoreData;
+});
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
 
 const i18n = {
   title: '评估',
@@ -133,24 +146,40 @@ function goHome() {
 }
 goHome();
 
-// 当前项目的详情数据
-const detailData = computed(() => {
-  return useFileData().fileStoreData;
-});
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
 const isDone = ref(false);
 
+const params = {
+  projectId: detailData.value.id,
+  trainId: route.params.trainId,
+  type: 'log',
+};
+
+getTrainLog(params).then((res) => {
+  console.log(res);
+});
+// 获取日志
+function handleGetLog() {
+  getTrainLog({
+    projectId: detailData.value.id,
+    trainId: route.params.trainId,
+    type: 'log',
+  }).then((res) => {
+    console.log(res);
+  });
+}
+
+// 获取输出
+function handleGetOutput() {
+  getTrainLog({
+    projectId: detailData.value.id,
+    trainId: route.params.trainId,
+    type: 'output',
+  }).then((res) => {
+    console.log(res);
+  });
+}
+
+// 日志
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${detailData.value.id}/training/${route.params.trainId}`,
   [getHeaderConfig().headers['private-token']]
@@ -172,6 +201,10 @@ socket.onmessage = function (event) {
     form.desc = trainDetail.value.log;
     configurationInfo.value = trainDetail.value.compute;
     isDone.value = trainDetail.value.is_done;
+    if (isDone.value) {
+      handleGetLog();
+      handleGetOutput();
+    }
   });
 };
 
@@ -187,6 +220,7 @@ const requestData = ref({
   type: 'standard',
 });
 
+// 评估
 function setEvaluateWebscoket(id) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,

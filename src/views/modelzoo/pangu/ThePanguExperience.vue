@@ -17,12 +17,39 @@ const sendBtn = ref(null);
 
 const avatarUrl = ref('');
 
-const examples = reactive([
+const lists = [
+  { text: '一只狗在骑摩托车', isSelected: false },
+  { text: '宇宙中扭曲的空间与黑洞', isSelected: false },
+  { text: '赛博朋克的汽车在飞', isSelected: false },
+  { text: '清晨的湖面倒映着天空', isSelected: false },
+  { text: '两个女生在沙滩上', isSelected: false },
+  { text: '小孩踢足球', isSelected: false },
+  { text: '夜晚的星空', isSelected: false },
+  { text: '梵高的星空', isSelected: false },
+  { text: '蓝天白云', isSelected: false },
+  { text: '一只可爱的猫坐在草坪上', isSelected: false },
+  { text: '摩天大楼', isSelected: false },
+  { text: '一架飞机', isSelected: false },
+  { text: '日落湖边', isSelected: false },
+  { text: '汉堡和薯条', isSelected: false },
+  { text: '一只橘猫在阳台跳舞', isSelected: false },
   { text: '人间四月芳菲尽', isSelected: false },
-  { text: '中国的首都是哪里', isSelected: false },
-  { text: '上联：一年四季春常在', isSelected: false },
+  { text: '黄梅时节家家雨', isSelected: false },
   { text: '千山鸟飞绝', isSelected: false },
+  { text: '中国的首都是哪里', isSelected: false },
   { text: '足球起源于哪里', isSelected: false },
+  { text: '四川的省会是哪里', isSelected: false },
+  { text: '一年四季春常在', isSelected: false },
+  { text: '欢天喜地度佳节', isSelected: false },
+  { text: '五湖四海皆春色', isSelected: false },
+];
+
+const examples = ref([
+  { text: '一只狗在骑摩托车', isSelected: false },
+  { text: '宇宙中扭曲的空间与黑洞', isSelected: false },
+  { text: '赛博朋克的汽车在飞', isSelected: false },
+  { text: '清晨的湖面倒映着天空', isSelected: false },
+  { text: '两个女生在沙滩上', isSelected: false },
 ]);
 
 const msgList = ref([
@@ -53,16 +80,13 @@ window.addEventListener('resize', onResize);
 function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
-  // 审核文本
-  // handleTextRview({ is_img: false, content: inputMsg.value }).then((res) => {
-  //   if (res.status === 200) {
   msgList.value.push({
     message: inputMsg.value,
     type: 1,
     isLoading: true,
   });
 
-  examples.forEach((item) => {
+  examples.value.forEach((item) => {
     item.isSelected = false;
   });
 
@@ -89,27 +113,18 @@ function sendMessage() {
 
   inputMsg.value = '';
 }
-//   });
-// }
 
-// 获取示例
-function handleGetExamples() {
-  // getExapmles({ foundation_type: 2, counts: 5 }).then((res) => {
-  //   if (res.status === 200) {
-  //     res.data.forEach((item, i) => {
-  //       examples[i].text = item;
-  //     });
-  //   }
-  // });
-}
-
-// 换一批"请输入foundation_type和counts"
+// 换一批
 function refreshTags() {
-  handleGetExamples();
+  let counts = Math.floor(Math.random() * 20);
+  examples.value = [];
+  for (let i = counts; i <= counts + 5; i++) {
+    examples.value.push(lists[i]);
+  }
 }
 
 function handleTextChange() {
-  examples.forEach((item) => {
+  examples.value.forEach((item) => {
     if (item.text === inputMsg.value) {
       item.isSelected = true;
     } else {
@@ -122,7 +137,7 @@ function handleTextChange() {
 function handleTagClick(val) {
   val.isSelected = !val.isSelected;
 
-  examples.forEach((item) => {
+  examples.value.forEach((item) => {
     item.isSelected = false;
     val.isSelected = true;
     inputMsg.value = val.text;
@@ -143,7 +158,7 @@ watch(
 );
 
 onMounted(() => {
-  handleGetExamples();
+  // handleGetExamples();
 
   document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
@@ -536,7 +551,9 @@ onMounted(() => {
       justify-content: space-between;
       .examples {
         margin-top: 8px;
+        flex: 1;
         display: flex;
+        flex-wrap: wrap;
         &-item {
           padding: 7px 12px;
           border-radius: 8px;
@@ -560,6 +577,7 @@ onMounted(() => {
         display: flex;
         align-items: center;
         padding-top: 24px;
+        width: 60px;
         cursor: pointer;
         p {
           font-size: 10px;

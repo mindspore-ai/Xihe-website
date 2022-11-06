@@ -212,6 +212,77 @@ export function getVqaAsToken(path) {
   });
 }
 
+// LuoJia 上传图片封装
+export async function handleLuoJiaUpload(
+  params,
+  progressCallback,
+  successCallback,
+  failedCallback
+) {
+  // 验证文件名合法性
+  let { path, file, isEdit, description } = params;
+  try {
+    if (!isEdit) {
+      await fileVerify({ path }).then((res) => {
+        if (res.status === 200) {
+          isEdit = true;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
+        }
+      });
+    }
+    // 编辑文件不验证文件名
+    if (isEdit) {
+      // 验证成功获取AK SK 上传obs
+      await getLuoJiaAsToken(path).then((res) => {
+        if (res.status === 200) {
+          res = res.data;
+          let obsClient = new ObsClient({
+            access_key_id: res.access_key,
+            secret_access_key: res.secret_key,
+            security_token: res.security_token,
+            server: 'https://obs.cn-central-221.ovaijisuan.com',
+            timeout: 1800,
+          });
+          obsClient.putObject(
+            {
+              Bucket: res.bucket_name,
+              Key: path,
+              SourceFile: file,
+              ProgressCallback: progressCallback || null,
+              Metadata: {
+                description,
+              },
+              ContentDisposition: 'attachment', // 文件直接下载
+            },
+            function (err, result) {
+              if (err) {
+                ElMessage({
+                  type: 'error',
+                  message: err,
+                });
+                failedCallback();
+              } else if (result.CommonMsg.Status === 200) {
+                successCallback();
+              }
+            }
+          );
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.msg,
+          });
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 //VQA上传图片方法封装
 export async function handleVqaUpload(
   params,

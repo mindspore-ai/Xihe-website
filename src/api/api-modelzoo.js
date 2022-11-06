@@ -178,11 +178,11 @@ export function handleGenerateCode(params) {
  * @returns
  */
 export function handlePanguInfer(params) {
-  const url = '/test/pangu';
+  const url = '/server/bigmodel/pangu';
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
-      return res.data;
+      return res;
     })
     .catch((e) => {
       return e;
@@ -190,13 +190,45 @@ export function handlePanguInfer(params) {
 }
 
 /**
- * LuoJia推理（测试）
+ * LuoJia推理
  * @returns
  */
-export function handleLuojiaInfer(params) {
-  const url = '/test/luojia';
+export function handleLuojiaUploadPic(params) {
+  const url = '/server/bigmodel/luojia_upload_picture';
   return request
     .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * LuoJia推理
+ * @returns
+ */
+export function handleLuoJiaInfer() {
+  const url = '/server/bigmodel/luojia';
+  return request
+    .post(url, null, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * LuoJia推理记录
+ * @returns
+ */
+export function handleLuoJiaHistory() {
+  const url = '/api/foundation/luojianet';
+  return request
+    .get(url, getHeaderConfig())
     .then((res) => {
       return res.data;
     })

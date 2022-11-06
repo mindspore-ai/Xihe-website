@@ -67,19 +67,20 @@ function sendMessage() {
       });
 
       handlePanguInfer({ question: inputMsg.value }).then((res) => {
+        console.log(res);
         // TODO: 状态码处理
-        // if (res.status === 200) {
-        msgList.value.push({
-          message: res.result,
-          type: 0,
-          isLoading: false,
-        });
-        // } else if (res.status === -1) {
-        //   ElMessage({
-        //     type: 'error',
-        //     message: res.msg,
-        //   });
-        // }
+        if (res.status === 201) {
+          msgList.value.push({
+            message: res.data.data.answer,
+            type: 0,
+            isLoading: false,
+          });
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.data.msg,
+          });
+        }
       });
 
       inputMsg.value = '';

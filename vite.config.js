@@ -74,13 +74,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/graphql/, ''),
       },
-
-      //TODO: 测试盘古
-      '/test/': {
-        target: 'https://cvesa.test.osinfra.cn/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/test/, ''),
-      },
     },
   },
 });

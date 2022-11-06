@@ -1,8 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
 
-import { ElMessage } from 'element-plus';
-
 import OButton from '@/components/OButton.vue';
 
 import IconDownload from '~icons/app/download';
@@ -10,7 +8,6 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import {
   getInferencePicture,
-  getExampleTags,
   getSinglePicture,
   getMultiplePicture,
 } from '@/api/api-modelzoo';
@@ -35,7 +32,41 @@ window.addEventListener('resize', onResize);
 
 const inferUrlList = ref([]);
 
-const exampleList = reactive([
+const lists = [
+  { name: '一只狗在骑摩托车', isSelected: false },
+  { name: '宇宙中扭曲的空间与黑洞', isSelected: false },
+  { name: '赛博朋克的汽车在飞', isSelected: false },
+  { name: '清晨的湖面倒映着天空', isSelected: false },
+  { name: '两个女生在沙滩上', isSelected: false },
+  { name: '小孩踢足球', isSelected: false },
+  { name: '夜晚的星空', isSelected: false },
+  { name: '梵高的星空', isSelected: false },
+  { name: '蓝天白云', isSelected: false },
+  { name: '一只可爱的猫坐在草坪上', isSelected: false },
+  { name: '摩天大楼', isSelected: false },
+  { name: '一架飞机', isSelected: false },
+  { name: '日落湖边', isSelected: false },
+  { name: '汉堡和薯条', isSelected: false },
+  { name: '一只橘猫在阳台跳舞', isSelected: false },
+];
+
+// 随机选取五个样例
+function getRandom(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
+
+const exampleList = ref([
   { name: '蓝天白云', isSelected: false },
   { name: '一只狗在骑摩托车', isSelected: false },
   { name: '两个女生在沙滩上', isSelected: false },
@@ -49,7 +80,7 @@ const inputValue = ref(null);
 
 function resetInferText() {
   inferenceText.value = '';
-  exampleList.forEach((item) => {
+  exampleList.value.forEach((item) => {
     item.isSelected = false;
   });
   inputValue.value.focus();
@@ -209,7 +240,7 @@ function downLoadPictures() {
 
 function selectTag(val) {
   val.isSelected = !val.isSelected;
-  exampleList.forEach((item) => {
+  exampleList.value.forEach((item) => {
     item.isSelected = false;
     val.isSelected = true;
     inferenceText.value = val.name;
@@ -217,7 +248,7 @@ function selectTag(val) {
 }
 
 function handleTextChange() {
-  exampleList.forEach((item) => {
+  exampleList.value.forEach((item) => {
     if (item.name === inferenceText.value) {
       item.isSelected = true;
     } else {
@@ -231,26 +262,9 @@ const handleNameChange = (val) => {
   return val;
 };
 
-function getExampleLists() {
-  getExampleTags({ foundation_type: 1, counts: 6 }).then((res) => {
-    if (res.status === 200) {
-      res.data.forEach((item, index) => {
-        exampleList.forEach((it, i) => {
-          if (index === i) {
-            it.name = item;
-          }
-        });
-      });
-    }
-  });
-}
-getExampleLists();
-
 function refreshTags() {
-  exampleList.forEach((item) => {
-    item.isSelected = false;
-  });
-  getExampleLists();
+  exampleList.value = getRandom(lists, 6);
+  console.log(exampleList.value);
 }
 </script>
 <template>

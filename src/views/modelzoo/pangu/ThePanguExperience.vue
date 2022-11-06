@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, nextTick, reactive } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -8,7 +8,7 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 
-import { handleTextRview, handlePanguInfer } from '@/api/api-modelzoo';
+import { handlePanguInfer } from '@/api/api-modelzoo';
 
 const userInfoStore = useUserInfoStore();
 
@@ -18,21 +18,6 @@ const sendBtn = ref(null);
 const avatarUrl = ref('');
 
 const lists = [
-  { text: '一只狗在骑摩托车', isSelected: false },
-  { text: '宇宙中扭曲的空间与黑洞', isSelected: false },
-  { text: '赛博朋克的汽车在飞', isSelected: false },
-  { text: '清晨的湖面倒映着天空', isSelected: false },
-  { text: '两个女生在沙滩上', isSelected: false },
-  { text: '小孩踢足球', isSelected: false },
-  { text: '夜晚的星空', isSelected: false },
-  { text: '梵高的星空', isSelected: false },
-  { text: '蓝天白云', isSelected: false },
-  { text: '一只可爱的猫坐在草坪上', isSelected: false },
-  { text: '摩天大楼', isSelected: false },
-  { text: '一架飞机', isSelected: false },
-  { text: '日落湖边', isSelected: false },
-  { text: '汉堡和薯条', isSelected: false },
-  { text: '一只橘猫在阳台跳舞', isSelected: false },
   { text: '人间四月芳菲尽', isSelected: false },
   { text: '黄梅时节家家雨', isSelected: false },
   { text: '千山鸟飞绝', isSelected: false },
@@ -45,12 +30,28 @@ const lists = [
 ];
 
 const examples = ref([
-  { text: '一只狗在骑摩托车', isSelected: false },
-  { text: '宇宙中扭曲的空间与黑洞', isSelected: false },
-  { text: '赛博朋克的汽车在飞', isSelected: false },
-  { text: '清晨的湖面倒映着天空', isSelected: false },
-  { text: '两个女生在沙滩上', isSelected: false },
+  { text: '人间四月芳菲尽', isSelected: false },
+  { text: '黄梅时节家家雨', isSelected: false },
+  { text: '千山鸟飞绝', isSelected: false },
+  { text: '中国的首都是哪里', isSelected: false },
+  { text: '足球起源于哪里', isSelected: false },
 ]);
+
+// 随机选取五个样例
+function getRandom(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
 
 const msgList = ref([
   {
@@ -93,7 +94,7 @@ function sendMessage() {
   handlePanguInfer({ question: inputMsg.value }).then((res) => {
     console.log(res);
     // TODO: 状态码处理
-    if (res.status === 201) {
+    if (res.status === 201 && res.data.data) {
       msgList.value.forEach((item) => (item.isLoading = false));
 
       msgList.value.push({
@@ -116,11 +117,7 @@ function sendMessage() {
 
 // 换一批
 function refreshTags() {
-  let counts = Math.floor(Math.random() * 20);
-  examples.value = [];
-  for (let i = counts; i <= counts + 5; i++) {
-    examples.value.push(lists[i]);
-  }
+  examples.value = getRandom(lists, 5);
 }
 
 function handleTextChange() {

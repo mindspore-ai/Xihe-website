@@ -2,6 +2,7 @@
 // import { watch } from 'vue';
 import IconHeart from '~icons/app/heart';
 import IconDigged from '~icons/app/digged';
+import { useUserInfoStore } from '@/stores';
 
 const props = defineProps({
   isDigged: {
@@ -15,6 +16,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['click']);
+const userInfoStore = useUserInfoStore();
 
 function onClick(e) {
   emit('click', e);
@@ -29,8 +31,13 @@ function onClick(e) {
       ]"
       @click="onClick"
     >
-      <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
-      <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
+      <div v-if="!userInfoStore.id">
+        <o-icon><icon-heart></icon-heart></o-icon>
+      </div>
+      <div v-else>
+        <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
+        <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
+      </div>
       <span>{{ props.digCount }}</span>
     </div>
   </div>

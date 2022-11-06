@@ -18,7 +18,6 @@ import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
 import protocol from '../../../config/protocol';
 import {
-  getProjectData,
   modifyTags,
   getTags,
   getUserDig,
@@ -203,7 +202,6 @@ function getDetailData() {
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
-      console.log('res: ', res);
       let storeData = res.data;
       // console.log('项目详情数据: ', res.data);
       // 判断仓库是否属于自己
@@ -340,6 +338,7 @@ function addTagClick() {
 }
 
 // 点赞，取消点赞
+console.log('userInfoStore.id: ', userInfoStore.id);
 function handleProjectLike() {
   let params = {
     name: detailData.value.name,

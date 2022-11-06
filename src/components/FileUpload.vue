@@ -80,8 +80,12 @@ function onChange() {
   description.value = `upload ${fileList.value[0].name}`;
 }
 function beforeUpload(rawFile) {
-  if (rawFile.size / 1024 / 1024 / 1024 > 5) {
-    ElMessage.warning('文件过大，文件不得超过5GB，请重新选择文件。');
+  if (!/^[^\u4e00-\u9fa5]+$/.test(rawFile.name)) {
+    ElMessage.warning('不支持中文文件名');
+    return false;
+  }
+  if (rawFile.size / 1024 / 1024 > 1) {
+    ElMessage.warning('web端暂只支持1MB以内文件上传，请使用git上传');
     return false;
   }
   return true;

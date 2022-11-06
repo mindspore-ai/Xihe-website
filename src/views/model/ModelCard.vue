@@ -284,13 +284,13 @@ watch(
     </div>
     <div class="right-data">
       <div class="download-data">
-        <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+        <div class="download-title">{{ i18n.recentDownload }}</div>
         <!-- <span class="download-count">{{ detailData.download_count }}</span> -->
       </div>
       <!-- 添加数据集 -->
       <div class="dataset-data">
         <div class="add-title">
-          <h4 class="title">{{ i18n.dataset }}</h4>
+          <div class="title">{{ i18n.dataset }}</div>
           <p
             v-if="userInfo.userName === detailData.owner"
             class="add"
@@ -313,7 +313,7 @@ watch(
       <!-- 项目 -->
       <div class="related-project">
         <div class="add-title">
-          <h4 class="title">{{ i18n.relatedItem }}</h4>
+          <div class="title">{{ i18n.relatedItem }}</div>
         </div>
         <project-relate-card
           v-if="detailData.related_projects"

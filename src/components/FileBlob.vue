@@ -15,7 +15,13 @@ import { changeByte } from '@/shared/utils';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import { getGitlabFileRaw, downloadFile, deleteFile } from '@/api/api-gitlab';
+import { useLoadingState } from '@/stores/index';
+import {
+  getGitlabFileRaw,
+  downloadFile,
+  deleteFile,
+  getGitlabTree,
+} from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
 import { useFileData } from '@/stores';
 
@@ -26,10 +32,13 @@ const prop = defineProps({
   },
 });
 
-// let detailData = reactive(useFileData().fileStoreData);
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
+const loadingStateData = computed(() => {
+  return useLoadingState().loadingState;
+});
+
 const fileData = ref();
 const mkit = handleMarkdown();
 const codeString = ref('');
@@ -96,6 +105,8 @@ function previewFile() {
     }
   });
 }
+getGitlabTree();
+previewFile();
 
 async function headleDelFile(path) {
   deleteFile({
@@ -122,18 +133,6 @@ function goEditor() {
     },
   });
 }
-
-previewFile();
-// getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
-//   fileData.value = res;
-//   fileData.value.file_name.match(/[^.]+$/)
-//     ? (suffix.value = fileData.value.file_name.match(/[^.]+$/)[0])
-//     : (suffix.value = 'py');
-//   if (fileData.value.size < 524288) {
-//     showBlob.value = true;
-
-//   }
-// });
 
 function goRaw(blob) {
   const blobs = new Blob([blob], { type: 'text/plain;charset=utf-8' });
@@ -201,7 +200,7 @@ watch(
       <div class="file">
         <div class="file-operation">
           <o-icon><files></files></o-icon>
-          <!-- <span class="text">{{ fileData.description }}</span> -->
+          <span class="text">{{ repoDetailData.desc }}</span>
         </div>
         <div class="file-operation">
           <div
@@ -253,24 +252,30 @@ watch(
         </div>
       </div>
       <div
-        v-if="showBlob"
-        v-highlight
-        class="blank markdown-file"
-        v-html="result"
-      ></div>
-      <div v-else class="big-file">
-        文件太大或格式不支持展示但你仍然可以<span
-          class="download"
-          @click="
-            downloadFile({
-              user: routerParams.user,
-              path: path,
-              id: repoDetailData.id,
-              name: routerParams.name,
-            })
-          "
-          >下载 </span
-        ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
+        v-loading="loadingStateData"
+        background="#fff"
+        class="loading-template"
+      >
+        <div
+          v-if="showBlob"
+          v-highlight
+          class="blank markdown-file"
+          v-html="result"
+        ></div>
+        <div v-else class="big-file">
+          文件太大或格式不支持展示但你仍然可以<span
+            class="download"
+            @click="
+              downloadFile({
+                user: routerParams.user,
+                path: path,
+                id: repoDetailData.id,
+                name: routerParams.name,
+              })
+            "
+            >下载 </span
+          ><span v-if="fileData"> ({{ changeByte(fileData.size) }}) </span>
+        </div>
       </div>
     </div>
     <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
@@ -316,6 +321,13 @@ watch(
 </template>
 
 <style lang="scss" scoped>
+.loading-template {
+  :deep(.el-loading-mask) {
+    .el-loading-spinner {
+      display: none;
+    }
+  }
+}
 .file-editing {
   background-color: #f5f6f8;
   max-width: 1472px;
@@ -394,6 +406,9 @@ watch(
           text-decoration: underline;
         }
       }
+    }
+    .loading-template {
+      min-height: calc(100vh - 420px);
     }
   }
 }

@@ -164,6 +164,19 @@ export const useFileData = defineStore('file', {
     },
   },
 });
+// 是否有在进行中的请求
+export const useLoadingState = defineStore('loading', {
+  state: () => {
+    return {
+      loadingState: false,
+    };
+  },
+  actions: {
+    setloadingState(data) {
+      this.loadingState = data;
+    },
+  },
+});
 
 // 基础信息
 export const useBaseData = defineStore('baseInfo', {

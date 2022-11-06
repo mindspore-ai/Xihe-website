@@ -618,7 +618,20 @@ function forkCreateClick() {
 }
 
 function forkClick() {
-  forkShow.value = true;
+  // forkShow.value = true;
+  // loadingShow.value = true;
+  projectFork(detailData.value.owner, detailData.value.id)
+    .then(() => {
+      // loadingShow.value = false;
+      router.push(`/projects/${userInfoStore.userName}/${forkForm.storeName}`);
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '暂不能fork该项目',
+        center: true,
+      });
+    });
 }
 
 watch(
@@ -718,7 +731,12 @@ watch(
             </div>
           </div>
         </div>
-        <div v-if="loginStore.isLogined && isForkShow">
+        <!-- <div v-if="loginStore.isLogined && isForkShow"> -->
+        <div
+          v-if="
+            loginStore.isLogined && userInfoStore.userName !== detailData.owner
+          "
+        >
           <o-button @click="forkClick">
             <div class="fork-btn">
               <o-icon><icon-fork></icon-fork></o-icon> Fork

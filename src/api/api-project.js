@@ -319,14 +319,9 @@ export function createTrainProject(params, projectId) {
 export function projectFork(owner, projectId) {
   const url = `/server/project/${owner}/${projectId}`;
   // console.log(url);
-  return request
-    .post(url, null, getHeaderConfig())
-    .then((res) => {
-      return res;
-    })
-    .catch((e) => {
-      return e;
-    });
+  return request.post(url, null, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**

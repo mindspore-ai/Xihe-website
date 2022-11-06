@@ -155,15 +155,6 @@ goHome();
 
 const isDone = ref(false);
 
-const params = {
-  projectId: detailData.value.id,
-  trainId: route.params.trainId,
-  type: 'log',
-};
-
-getTrainLog(params).then((res) => {
-  console.log(res);
-});
 // 获取日志
 function handleGetLog() {
   getTrainLog({
@@ -172,7 +163,7 @@ function handleGetLog() {
     type: 'log',
   }).then((res) => {
     console.log(res);
-    if (res.status === 202) {
+    if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
     } else {
     }
@@ -187,7 +178,7 @@ function handleGetOutput() {
     type: 'output',
   }).then((res) => {
     console.log(res);
-    if (res.status === 202) {
+    if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
     } else {
     }
@@ -208,17 +199,19 @@ socket.onmessage = function (event) {
   console.log('收到消息', JSON.parse(event.data).data);
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
-    trainDetail.value.status === 'Completed'
-      ? (isEvaluating.value = false)
-      : (isEvaluating.value = true);
+    if (trainDetail.value) {
+      trainDetail.value.status === 'Completed'
+        ? (isEvaluating.value = false)
+        : (isEvaluating.value = true);
 
-    form.name = trainDetail.value.name;
-    form.desc = trainDetail.value.log;
-    configurationInfo.value = trainDetail.value.compute;
-    isDone.value = trainDetail.value.is_done;
-    if (isDone.value) {
-      handleGetLog();
-      handleGetOutput();
+      form.name = trainDetail.value.name;
+      form.desc = trainDetail.value.log;
+      configurationInfo.value = trainDetail.value.compute;
+      isDone.value = trainDetail.value.is_done;
+      if (isDone.value) {
+        handleGetLog();
+        handleGetOutput();
+      }
     }
   });
 };
@@ -281,7 +274,7 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
-        if (res.status === 201) {
+        if (res.status === 201 && res.data.data) {
           setEvaluateWebscoket(res.data.data.evaluate_id);
         } else {
           btnContent.value = '开始评估';
@@ -331,11 +324,6 @@ function handleAssessment() {
   );
 }
 
-// 添加评估代码
-// function addAssessCode() {
-//   router.push();
-// }
-
 // 跳转到Aim嵌入页面
 function goAimPage() {
   router.push({
@@ -360,12 +348,12 @@ function goToPage() {
 }
 
 // 下载输出
-// function goLogFile() {
-//   let a = document.createElement('a');
-//   // a.download = 'log';
-//   a.href = logUrl;
-//   a.click();
-// }
+function goLogFile() {
+  let a = document.createElement('a');
+  a.download = 'log';
+  a.href = logUrl;
+  a.click();
+}
 
 // function goJsonFile() {
 //   let a = document.createElement('a');
@@ -509,8 +497,8 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            <div class="info-list-detail document">
-              <a :href="logUrl" target="_blank"> {{ logUrl }}</a>
+            <div class="info-list-detail document" @click="goLogFile">
+              {{ logUrl }}
             </div>
           </li>
           <li class="info-list">

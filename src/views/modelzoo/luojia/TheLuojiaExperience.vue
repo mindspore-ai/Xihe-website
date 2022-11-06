@@ -17,7 +17,6 @@ import IconFive from '~icons/app/luojia-process-5';
 import gif from '@/assets/gifs/loading.gif';
 
 import { useUserInfoStore } from '@/stores';
-import { handleLuoJiaUpload } from '@/api/api-obs';
 import {
   handleLuoJiaInfer,
   handleLuoJiaHistory,
@@ -103,7 +102,7 @@ function handleInferClick() {
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
       console.log(res);
-      if (res.status === 201) {
+      if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;

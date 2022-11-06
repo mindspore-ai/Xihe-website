@@ -249,9 +249,6 @@ function setWebsocket(url) {
     trainData.value = JSON.parse(event.data).data;
 
     if (trainData.value) {
-      // btnShow.value = trainData.value.some(
-      //   (item) => item.status === 'scheduling' || item.status === 'Running'
-      // );
       let bool = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
       );

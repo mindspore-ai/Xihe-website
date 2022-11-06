@@ -364,9 +364,12 @@ function goLogFile() {
 }
 
 function goJsonFile() {
+  console.log(1);
   let a = document.createElement('a');
   a.download = 'log';
+
   a.href = logUrl;
+
   a.click();
 }
 

@@ -53,9 +53,9 @@ function getUrlParam(url = window.location.search) {
 
 // code换token
 async function getUserToken(params) {
-  if (localStorage.getItem('XIHE_INVITED')) {
-    params.invited = localStorage.getItem('XIHE_INVITED');
-  }
+  // if (localStorage.getItem('XIHE_INVITED')) {
+  //   params.invited = localStorage.getItem('XIHE_INVITED');
+  // }
   try {
     await queryUserToken(params);
     // 去掉url中的code
@@ -126,7 +126,7 @@ export function saveUserAuth(token) {
     const userInfoStore = useUserInfoStore();
     userInfoStore.$reset();
   } else {
-    localStorage.removeItem('XIHE_INVITED');
+    // localStorage.removeItem('XIHE_INVITED');
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
   }
 }

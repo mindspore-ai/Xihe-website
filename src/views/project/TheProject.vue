@@ -141,14 +141,13 @@ function backCondition() {
 
 // 多选(应用分类，其他)
 function sortsClick(index, index2) {
-  // console.log('renderSorts: ', renderSorts.value);
   renderSorts.value[index].haveActive = true;
-  // queryData.tags = tag.kind;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
     !renderSorts.value[index].condition[index2].isActive;
   goSearch(renderSorts.value);
 }
+//清除应用分类所有的标签
 function clearItem1(index) {
   renderSorts.value[index].haveActive = false;
   renderSorts.value[index].condition.forEach((item) => {
@@ -160,6 +159,8 @@ function clearItem1(index) {
 function othersClick(index, index2) {
   otherCondition.value[index].haveActive = true;
   // 高亮
+  otherCondition.value[index].condition[index2].isActive =
+    !otherCondition.value[index].condition[index2].isActive;
   otherCondition.value[index].condition[0].items[index2].isActive =
     !otherCondition.value[index].condition[0].items[index2].isActive;
   goSearch(otherCondition.value);
@@ -212,7 +213,6 @@ function checkAllClick(item, index) {
 }
 
 function radioClick(detail, list) {
-  console.log('detail, list: ', detail, list);
   list.condition.forEach((item) => {
     item.isSelected = true;
   });
@@ -238,7 +238,6 @@ function radioClick(detail, list) {
 
 // 分类二级标签
 function sortTagClick(index, index2) {
-  console.log('二级标签index2: ', index, index2);
   // console.log('moreSortTags.value: ', moreSortTags.value);
   moreSortTags.value[index].haveActive = true;
   moreSortTags.value[index].items.forEach((item) => {
@@ -261,6 +260,7 @@ function sortTagClick(index, index2) {
   }
   searchTags(moreSortTags.value);
 }
+// 二级目录的清除
 function clearSortItem(index) {
   moreSortTags.value[index].haveActive = false;
   moreSortTags.value[index].items.forEach((item) => {
@@ -271,11 +271,10 @@ function clearSortItem(index) {
 }
 // 二级标签查询
 function searchTags(date) {
-  console.log('date: ', date);
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
-      console.log('val: ', val);
+      // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
       }
@@ -290,35 +289,36 @@ function searchTags(date) {
 
 //查询
 function goSearch(render) {
-  console.log('查询函数render: ', render);
   let time = 0;
   queryData.page_num = 1;
   // let taskCate = [];
-  let tagList = [];
+  // let tagLists = [];
   render.forEach((item) => {
-    console.log('item: ', item);
     time = 0;
+    let tagLists = [];
     item.condition.forEach((value) => {
-      console.log('value: ', value);
       if (value.isActive) {
-        tagList.push(value.kind);
-        queryData.tags = tagList.join(',');
-        /*  if (item.title.key === 0) {
+        if (item.title.key === 0) {
           tagLists.push(value.kind);
           queryData.tags = tagLists.join(',');
         } else if (item.title.key === 1) {
-          tagLists.push(value.kind);
-          queryData.tags = tagLists.join(',');
-        } */
+          value.items.forEach((val) => {
+            if (val.isActive) {
+              tagLists.push(val.name);
+              queryData.tags = tagLists.join(',');
+            }
+          });
+        }
       } else {
         time += 1;
       }
     });
     if (time === item.condition.length) {
-      queryData[item.title.key] = null; // 所有都未选不传
+      // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key === 'task') {
-        queryData['task_cate'] = null;
+      if (item.title.key === 0) {
+        // queryData['tags'] = null;
+        queryData.tags = null;
       }
     }
   });
@@ -588,6 +588,7 @@ onUnmounted(() => {
               class="clear"
               @click="clearItem1(index)"
             >
+              <!-- 清除应用分类所有的标签 -->
               <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
               <span>{{ i18n.clear }}</span>
             </div>

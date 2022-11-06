@@ -127,7 +127,6 @@ let queryData = reactive({
   // device_target: null,
   // relate_datasets: null,
   // order: null,
-  tags: null,
 });
 
 // queryData.search = route.query.search;
@@ -145,11 +144,13 @@ function backCondition() {
 
 // 多选-->处理器，文件格式，框架，训练数据集，其他;-->应用分类 ，协议单选
 function conditionClick(index, index2, detail) {
+  // console.log('一个大分类下的一级分类: ', detail);
   renderCondition.value[index].haveActive = true;
   if (renderCondition.value[index].title.text === '应用分类') {
+    // console.log('关闭应用分类一级标签');
+    // 清除应用分类一级分类
     if (detail.isActive === true) {
       detail.isActive = !detail.isActive;
-      console.log(renderCondition.value[index].condition);
       renderCondition.value[index].condition.forEach((item) => {
         item.isSelected = false;
         item.items.forEach((it) => {
@@ -158,6 +159,7 @@ function conditionClick(index, index2, detail) {
         });
       });
     } else {
+      // 点击应用分类一级标签
       renderCondition.value[index].condition.forEach((item) => {
         item.isActive = false;
         item.isSelected = true;
@@ -178,25 +180,6 @@ function conditionClick(index, index2, detail) {
         }
       });
     }
-  } else if (renderCondition.value[index].title.key === 'licenses') {
-    renderCondition.value[index].condition.forEach((item) => {
-      item.isSelected = true;
-    });
-    renderCondition.value[index].condition[index2].isSelected = false;
-
-    if (renderCondition.value[index].condition[index2].isActive === true) {
-      renderCondition.value[index].condition[index2].isActive =
-        !renderCondition.value[index].condition[index2].isActive;
-      renderCondition.value[index].condition.forEach((item) => {
-        item.isSelected = false;
-      });
-      renderCondition.value[index].haveActive = false;
-    } else {
-      renderCondition.value[index].condition.forEach((single) => {
-        single.isActive = false;
-        renderCondition.value[index].condition[index2].isActive = true;
-      });
-    }
   } else {
     renderCondition.value[index].condition[0].items[index2].isActive =
       !renderCondition.value[index].condition[0].items[index2].isActive;
@@ -209,6 +192,7 @@ function conditionClick(index, index2, detail) {
   }
   goSearch(renderCondition.value);
 }
+// 清除应用分类所有的标签
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
   renderCondition.value[index].condition.forEach((item) => {
@@ -308,6 +292,7 @@ function sortTagClick(index, index2) {
 }
 
 function clearSortItem(index) {
+  // console.log('index: ', index);
   moreSortTags.value[index].haveActive = false;
   moreSortTags.value[index].task_list.forEach((item) => {
     item.isActive = false;
@@ -319,45 +304,52 @@ function clearSortItem(index) {
 function handleTagSearch(date) {
   let taskId = [];
   date.forEach((item) => {
-    item.task_list.forEach((it) => {
+    // console.log('item: ', item);
+    item.items.forEach((it) => {
       if (it.isActive === true) {
-        taskId.push(it.id);
+        taskId.push(it.name);
       }
     });
   });
   if (taskId.length > 0) {
-    queryData.task = taskId.join(',');
+    // console.log('taskId: ', taskId);
+    queryData.tags = taskId.join(',');
   } else {
-    queryData.task = null;
+    queryData.tags = null;
   }
 }
 
 //查询
 function goSearch(render) {
   let time = 0;
-  let taskCate = [];
+  let tagLists = [];
   queryData.page_num = 1;
   render.forEach((item) => {
     time = 0;
+    // console.log('分类下的一级标签: ', item.condition);
     item.condition.forEach((value) => {
+      // console.log('value: ', value);
       if (value.isActive) {
-        if (item.title.key === 'task') {
-          queryData.task_cate = value.id;
-        } else if (item.title.key === 'licenses') {
-          queryData[item.title.key] = value.id;
-        } else {
-          taskCate.push(value.id);
-          queryData[item.title.key] = taskCate.join(',');
+        // console.log('四种分类的key: ', item.title.key);
+        if (item.title.key === 0) {
+          tagLists.push(value.kind);
+          queryData.tags = tagLists.join(',');
         }
       } else {
         time += 1;
+        value.items.forEach((val) => {
+          if (val.isActive) {
+            tagLists.push(val.name);
+            queryData.tags = tagLists.join(',');
+          }
+        });
       }
     });
     if (time === item.condition.length) {
-      queryData[item.title.key] = null; // 所有都未选不传
+      // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key === 'task') {
-        queryData['task_cate'] = null;
+      if (item.title.key === 0) {
+        queryData.tags = null;
       }
     }
   });

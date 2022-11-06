@@ -124,19 +124,20 @@ function backCondition() {
 
 // 应用分类--多选
 function sortsClick(index, index2) {
-  console.log('index, index2: ', index, index2);
   renderSorts.value[index].haveActive = true;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
     !renderSorts.value[index].condition[index2].isActive;
   goSearch(renderSorts.value);
 }
+// 清除所有的应用分类
 function clearItem1(index) {
+  // console.log('index: ', index);
   renderSorts.value[index].haveActive = false;
   renderSorts.value[index].condition.forEach((item) => {
     item.isActive = false;
   });
-  query['task_cate'] = null;
+  query.tags = null;
 }
 
 //数据集/其他（多选）--协议单选
@@ -181,7 +182,6 @@ function goSearch(render) {
   let tagList = [];
   query.page_num = 1;
   render.forEach((item) => {
-    console.log('item: ', item);
     time = 0;
     item.condition.forEach((value) => {
       if (value.isActive) {
@@ -194,10 +194,10 @@ function goSearch(render) {
       }
     });
     if (time === item.condition.length) {
-      query[item.title.key] = null; // 所有都未选不传
+      // query[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key === 'task') {
-        query['task_cate'] = null;
+      if (item.title.key === 0) {
+        query.tags = null;
       }
     }
   });
@@ -271,9 +271,10 @@ function sortTagClick(index, index2) {
   }
   handleTagSearch(moreSortTags.value);
 }
+// 清除应用分类二级的所有标签
 function clearSortItem(index) {
   moreSortTags.value[index].haveActive = false;
-  moreSortTags.value[index].task_list.forEach((item) => {
+  moreSortTags.value[index].items.forEach((item) => {
     item.isActive = false;
     item.isSelected = false;
   });
@@ -285,7 +286,7 @@ function handleTagSearch(date) {
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
-      console.log('val: ', val);
+      // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
       }
@@ -299,7 +300,6 @@ function handleTagSearch(date) {
 }
 
 function dropdownClick(item) {
-  console.log('item: ', item);
   if (item.value === 'download') {
     query.sort_by = 'download_count';
   } else if (item.value === 'name') {
@@ -501,6 +501,7 @@ onUnmounted(() => {
           </div>
 
           <div class="condition-box-all">
+            <!-- 点击应用分类二级 -->
             <div
               v-for="(detail, index2) in item.items"
               :key="detail"
@@ -558,6 +559,7 @@ onUnmounted(() => {
         >
           <div class="condition-title">
             <span>{{ item.title.text }}</span>
+            <!-- 清除所有的应用分类 -->
             <div
               v-if="item.haveActive"
               class="clear"
@@ -588,6 +590,7 @@ onUnmounted(() => {
         </div>
 
         <!-- 数据集大小 licenses（单选） 其它 -->
+        <!-- 无数据 -->
         <div
           v-for="(item, index) in renderCondition"
           :key="item"

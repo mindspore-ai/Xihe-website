@@ -168,11 +168,11 @@ function handleGetLog() {
     console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
-      console.log(logUrl.value);
+
       let i1 = logUrl.value.indexOf('modelarts');
       let i2 = logUrl.value.indexOf('.log');
-      console.log(i1, i2);
-      logName.value = outputUrl.value.substring(i1, i2 + 4);
+
+      logName.value = logUrl.value.substring(i1, i2 + 4);
       console.log(logName.value);
     } else {
     }
@@ -192,7 +192,7 @@ function handleGetOutput() {
 
       let i1 = outputUrl.value.indexOf('train-output/');
       let i2 = outputUrl.value.indexOf('.gz');
-      console.log(i1, i2);
+
       outputName.value = outputUrl.value.substring(i1 + 13, i2);
       console.log(outputName.value);
     } else {

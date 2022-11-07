@@ -26,7 +26,6 @@ import {
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -34,10 +33,26 @@ const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+
 const projectId = detailData.value.id;
 const trainData = ref([]);
 const listId = ref(null);
@@ -54,21 +69,6 @@ const i18n = {
     '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
   confirm: '确定',
 };
-
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
@@ -223,7 +223,6 @@ function getTrainList() {
       } else {
         btnShow.value = false;
       }
-
       socket = setWebsocket(
         `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
       );
@@ -239,7 +238,6 @@ function setWebsocket(url) {
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
     trainData.value = JSON.parse(event.data).data;
-
     if (trainData.value) {
       let bool = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
@@ -251,7 +249,6 @@ function setWebsocket(url) {
       }
     }
   };
-
   return socket;
 }
 

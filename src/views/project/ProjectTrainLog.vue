@@ -256,13 +256,14 @@ function setEvaluateWebscoket(id) {
 
       evaluateUrl.value = JSON.parse(event.data).access_url;
       ws.close();
-    } else if (JSON.parse(event.data).event) {
+    } else if (JSON.parse(event.data).error) {
       btnContent.value = '开始评估';
       isEvaluating.value = false;
       ElMessage({
         type: 'error',
         message: JSON.parse(event.data).error,
       });
+      ws.close();
     }
   };
 }

@@ -6,7 +6,7 @@ import setConfig from './setConfig';
 import { useLoadingState } from '@/stores/index';
 
 import { ElLoading } from 'element-plus';
-import { doLogin, saveUserAuth } from '@/shared/login';
+import { goAuthorize, saveUserAuth } from '@/shared/login';
 /**
  * intactRequest是只在axios基础上更改了请求配置。
  * 而request是基于axios创建的实例，实例只有常见的数据请求方法，没有axios.isCancel/ axios.CancelToken等方法，
@@ -90,7 +90,7 @@ const responseInterceptorId = request.interceptors.response.use(
       // token过期，重新登录
       if (err.code === 401) {
         saveUserAuth();
-        doLogin();
+        goAuthorize();
       }
     } else {
       // 没有response(没有状态码)的情况

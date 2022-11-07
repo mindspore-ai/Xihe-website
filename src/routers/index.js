@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import { doLogin, goAuthorize } from '@/shared/login';
-import { queryUserInfo } from '@/api/api-user';
+import { doLogin } from '@/shared/login';
 import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
 import { LOGIN_STATUS } from '@/shared/login';
 

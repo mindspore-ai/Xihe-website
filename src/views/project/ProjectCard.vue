@@ -534,7 +534,7 @@ if (detailData.value.owner === userInfo.userName) {
   // findFile(`xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`)
   getGitlabTree({
     user: routerParams.user,
-    path: 'train/trainDir',
+    path: 'inference',
     id: detailData.value.id,
     name: routerParams.name,
   }).then((res) => {

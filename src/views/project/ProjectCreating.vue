@@ -135,7 +135,6 @@ function setProject() {
         type: 'success',
         message: '创建成功',
       });
-      console.log(res.data);
       router.push(`/projects/${userInfo.userName}/${res.data.name}`);
       // } else if (
       //   res.data.name &&

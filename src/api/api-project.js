@@ -75,14 +75,9 @@ export function setNewProject(params) {
 export function modifyProject(params, owner, id) {
   const url = `/server/project/${owner}/${id}`;
   // console.log(params);
-  return request
-    .put(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 修改项目标签

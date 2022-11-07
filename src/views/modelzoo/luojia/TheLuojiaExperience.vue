@@ -198,6 +198,7 @@ onMounted(() => {
       </p>
 
       <div class="process">
+        <span class="title">操作流程：</span>
         <span>①&nbsp;选择区域-></span>
         <span>②&nbsp;点击左上角开始选区按钮-></span>
         <span>③&nbsp;左键选择区域角点-></span>
@@ -239,9 +240,7 @@ onMounted(() => {
           <p>{{ loadingText }}</p>
         </div>
       </div>
-      <div class="tip">
-        温馨提示：第一次加载较慢，注意不要长时间停留在本界面，可能会导致电脑卡顿。
-      </div>
+      <div class="tip">温馨提示：加载较慢，请耐心等待，或刷新重试。</div>
     </div>
     <!-- 列表 -->
     <el-dialog v-model="dialogTableVisible" title="历史记录">
@@ -337,9 +336,7 @@ onMounted(() => {
       color: #0d8dff;
     }
   }
-  // th.el-table__cell.is-leaf {
-  //   border-bottom: none;
-  // }
+
   tr {
     background: #fff;
     position: relative;
@@ -581,6 +578,10 @@ onMounted(() => {
       line-height: 28px;
       font-weight: 400;
       color: #555555;
+      .title {
+        color: #000000;
+        font-weight: 600;
+      }
       span {
         margin-left: 4px;
       }

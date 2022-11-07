@@ -348,12 +348,12 @@ function goToPage() {
 }
 
 // 下载输出
-// function goLogFile() {
-//   let a = document.createElement('a');
-//   a.download = 'log';
-//   a.href = logUrl;
-//   a.click();
-// }
+function downloadLogFile() {
+  let a = document.createElement('a');
+  a.download = 'log';
+  a.href = logUrl;
+  a.click();
+}
 
 // function goJsonFile() {
 //   let a = document.createElement('a');
@@ -497,8 +497,8 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
-            <div class="info-list-detail document">
-              <a :href="logUrl" target="_blank">{{ logUrl }}</a>
+            <div class="info-list-detail document" @click="downloadLogFile">
+              <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{ logUrl }}
             </div>
           </li>
           <li class="info-list">

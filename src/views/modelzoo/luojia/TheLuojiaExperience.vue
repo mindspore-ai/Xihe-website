@@ -13,6 +13,8 @@ import IconSecond from '~icons/app/luojia-process-2';
 import IconThird from '~icons/app/luojia-process-3';
 import IconFourth from '~icons/app/luojia-process-4';
 import IconFive from '~icons/app/luojia-process-5';
+import IconSix from '~icons/app/luojia-process-6';
+import IconSeven from '~icons/app/luojia-process-7';
 
 import gif from '@/assets/gifs/loading.gif';
 
@@ -127,11 +129,19 @@ function failedCallback() {
 function successCallback() {
   loadingText.value = '推理中，请耐心等待';
   handleLuoJiaInfer({ username: userInfoStore.userName }).then((res) => {
+    console.log(res);
     isShow.value = false;
-    const aurl = res.data;
-    const tempimg = document.createElement('img');
-    tempimg.src = aurl;
-    viewer.value.setImageAsLayer(tempimg);
+    if (res.status === -1) {
+      ElMessage({
+        type: 'warning',
+        message: res.msg,
+      });
+    } else if (res.status === 200 && res.data) {
+      const aurl = res.data;
+      const tempimg = document.createElement('img');
+      tempimg.src = aurl;
+      viewer.value.setImageAsLayer(tempimg);
+    }
   });
 }
 
@@ -188,25 +198,14 @@ onMounted(() => {
       </p>
 
       <div class="process">
-        <p>操作流程:</p>
-        <p>
-          <o-icon><icon-first></icon-first></o-icon><span>点击开始选区-></span>
-        </p>
-        <p>
-          <o-icon><icon-second></icon-second></o-icon
-          ><span>左键俩次选点-></span>
-        </p>
-        <p>
-          <o-icon><icon-third></icon-third></o-icon><span>右键取消-></span>
-        </p>
-        <p>
-          <o-icon><icon-fourth></icon-fourth></o-icon
-          ><span>点击取消选区-></span>
-        </p>
-        <p>
-          <o-icon><icon-five></icon-five></o-icon
-          ><span>点击开始识别（请耐心等待1分钟左右）</span>
-        </p>
+        <span>①&nbsp;选择区域-></span>
+        <span>②&nbsp;点击左上角开始选区按钮-></span>
+        <span>③&nbsp;左键选择区域角点-></span>
+        <span>④&nbsp;再次左键选择区域另一角点-></span>
+        <span>⑤&nbsp;右键取消选区操作-></span>
+        <span>⑥&nbsp;点击左上角取消选区，获取选区图片-></span>
+        <span>⑦&nbsp;点击右上角开始识别按钮-></span>
+        <span>⑧&nbsp;请耐心等待约1分钟，可在历史记录中查看最近的一条数据</span>
       </div>
     </div>
     <div class="luojia-bottom">
@@ -574,26 +573,21 @@ onMounted(() => {
 .luojia {
   &-top {
     .process {
-      display: flex;
-      align-items: center;
+      // display: inline-flex;
+      // flex-wrap: wrap;
+      // align-items: center;
       margin-top: 8px;
-      p {
-        font-size: 14px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 22px;
-        display: flex;
-        align-items: center;
-        margin-right: 4px;
-        &:first-child {
-          color: #000000;
-          font-weight: 600;
-        }
-        .o-icon {
-          font-size: 17px;
-          margin-right: 4px;
-        }
+      font-size: 14px;
+      line-height: 28px;
+      font-weight: 400;
+      color: #555555;
+      span {
+        margin-left: 4px;
       }
+      // .o-icon {
+      //   font-size: 17px;
+      //   margin-right: 4px;
+      // }
     }
     .type {
       font-size: 20px;

@@ -3,13 +3,11 @@ import { ref, reactive } from 'vue';
 
 import { request } from '@/shared/axios';
 
-import { ElMessage } from 'element-plus';
-
 import OButton from '@/components/OButton.vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
 
-import { uploadModelzooPic, getExampleTags } from '@/api/api-modelzoo';
+import { uploadModelzooPic } from '@/api/api-modelzoo';
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -74,14 +72,14 @@ const onResize = () => {
 };
 window.addEventListener('resize', onResize);
 
-const exampleList = reactive([
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-]);
+// const exampleList = reactive([
+//   { name: '', isSelected: false },
+//   { name: '', isSelected: false },
+//   { name: '', isSelected: false },
+//   { name: '', isSelected: false },
+//   { name: '', isSelected: false },
+//   { name: '', isSelected: false },
+// ]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
@@ -166,20 +164,20 @@ function customUpload() {
 
 const activeNames1 = ref(['1']);
 
-function getExampleLists() {
-  getExampleTags().then((res) => {
-    if (res.status === 200) {
-      res.data.forEach((item, index) => {
-        exampleList.forEach((it, i) => {
-          if (index === i) {
-            it.name = item;
-          }
-        });
-      });
-    }
-  });
-}
-getExampleLists();
+// function getExampleLists() {
+//   getExampleTags().then((res) => {
+//     if (res.status === 200) {
+//       res.data.forEach((item, index) => {
+//         exampleList.forEach((it, i) => {
+//           if (index === i) {
+//             it.name = item;
+//           }
+//         });
+//       });
+//     }
+//   });
+// }
+// getExampleLists();
 </script>
 <template>
   <div class="model-page">

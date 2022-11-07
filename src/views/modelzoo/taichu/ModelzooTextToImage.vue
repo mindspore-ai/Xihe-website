@@ -164,14 +164,18 @@ function startRatiocnate1() {
       getMultiplePicture({
         desc: inferenceText.value,
       }).then((res) => {
-        inferUrlList.value = res.data.pictures;
+        if (res.data) {
+          inferUrlList.value = res.data.pictures;
+        }
       });
     } else {
       getSinglePicture({
         desc: inferenceText.value,
       }).then((res) => {
         inferUrlList.value = [];
-        inferUrlList.value.push(res.data.picture + '?' + new Date());
+        if (res.data) {
+          inferUrlList.value.push(res.data.picture + '?' + new Date());
+        }
       });
     }
   } else {

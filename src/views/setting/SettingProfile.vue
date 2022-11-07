@@ -74,23 +74,23 @@ function saveData() {
     avatar_id: avatar.value,
   }).then((res) => {
     // console.log(res);
-    if (res.status === 200) {
-      userInfoStore.nickName = nickName.value;
-      userInfoStore.description = userDescription.value;
-      userInfoStore.avatar =
-        filterData.value.user_avatar[checkedAvatar.value - 1].url;
-      ElMessage({
-        type: 'success',
-        message: res.msg,
-        center: true,
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-        center: true,
-      });
-    }
+    // if (res.status === 200) {
+    userInfoStore.nickName = nickName.value;
+    userInfoStore.description = userDescription.value;
+    userInfoStore.avatar =
+      filterData.value.user_avatar[checkedAvatar.value - 1].url;
+    ElMessage({
+      type: 'success',
+      message: '个人信息更新成功',
+      center: true,
+    });
+    // } else {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: res.msg,
+    //     center: true,
+    //   });
+    // }
   });
 }
 function selectAvatar(id) {

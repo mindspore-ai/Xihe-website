@@ -19,6 +19,8 @@ const sendBtn = ref(null);
 
 const avatarUrl = ref('');
 
+avatarUrl.value = userInfoStore.avatar;
+
 const lists = [
   { text: '人间四月芳菲尽', isSelected: false },
   { text: '黄梅时节家家雨', isSelected: false },
@@ -39,6 +41,14 @@ const examples = ref([
   { text: '足球起源于哪里', isSelected: false },
 ]);
 
+const msgList = ref([
+  {
+    message: '请输入一个具体的问题，模型会生成对应答案。',
+    type: 0,
+    isLoading: false,
+  },
+]);
+
 // 随机选取五个样例
 function getRandom(arr, count) {
   let shuffled = arr.slice(0),
@@ -55,15 +65,10 @@ function getRandom(arr, count) {
   return shuffled.slice(min);
 }
 
-const msgList = ref([
-  {
-    message: '请输入一个具体的问题，模型会生成对应答案。',
-    type: 0,
-    isLoading: false,
-  },
-]);
-
-avatarUrl.value = userInfoStore.avatar;
+// 换一批
+function refreshTags() {
+  examples.value = getRandom(lists, 5);
+}
 
 const screenWidth = ref(
   window.innerWidth ||
@@ -98,7 +103,6 @@ function sendMessage() {
 
     handlePanguInfer({ question: inputMsg.value }).then((res) => {
       console.log(res);
-      // TODO: 状态码处理
       if (res.status === 201 && res.data.data) {
         msgList.value.forEach((item) => (item.isLoading = false));
 
@@ -119,11 +123,6 @@ function sendMessage() {
 
     inputMsg.value = '';
   }
-}
-
-// 换一批
-function refreshTags() {
-  examples.value = getRandom(lists, 5);
 }
 
 function handleTextChange() {

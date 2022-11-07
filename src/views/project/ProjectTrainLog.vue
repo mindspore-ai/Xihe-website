@@ -169,6 +169,7 @@ function handleGetLog() {
 
       logName.value = logUrl.value.substring(i1, i2 + 4);
     } else {
+      logName.value = '';
     }
   });
 }
@@ -188,6 +189,7 @@ function handleGetOutput() {
 
       outputName.value = outputUrl.value.substring(i1 + 13, i2);
     } else {
+      outputName.value = '';
     }
   });
 }
@@ -234,6 +236,9 @@ const requestData = ref({
   type: 'standard',
 });
 
+const btnContent = ref('开始评估');
+const isEvaluating = ref(false);
+const isEvaluated = ref(false);
 // 评估
 function setEvaluateWebscoket(id) {
   const ws = new WebSocket(
@@ -250,13 +255,16 @@ function setEvaluateWebscoket(id) {
 
       evaluateUrl.value = JSON.parse(event.data).access_url;
       ws.close();
+    } else {
+      btnContent.value = '开始评估';
+      isEvaluating.value = false;
+      ElMessage({
+        type: 'error',
+        message: JSON.parse(event.data).error,
+      });
     }
   };
 }
-
-const btnContent = ref('开始评估');
-const isEvaluating = ref(false);
-const isEvaluated = ref(false);
 
 // 自动评估
 function saveSetting() {
@@ -270,7 +278,6 @@ function saveSetting() {
     if (valid) {
       btnContent.value = '评估中...';
       isEvaluating.value = true;
-
       autoEvaluate(
         requestData.value,
         detailData.value.id,
@@ -288,7 +295,6 @@ function saveSetting() {
             message: res.data.data.msg,
           });
         }
-
         requestData.value = {
           learning_rate_scope: [],
           batch_size_scope: [],
@@ -350,21 +356,13 @@ function goToPage() {
   // window.open(routerData.href, '_blank');
 }
 
-// 下载输出
-// function downloadLogFile() {
-//   let a = document.createElement('a');
-//   a.download = 'log.txt';
-//   a.href = logUrl;
-//   a.click();
-// }
-
 const downloadBlob = (blob, fileName) => {
   try {
     const href = window.URL.createObjectURL(blob); //创建下载的链接
     if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
-      // 谷歌浏览器 创建a标签 添加download属性下载
+      // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
       downloadElement.target = '_blank';
@@ -398,13 +396,6 @@ async function downloadLogFile() {
     });
   return data;
 }
-
-// function goJsonFile() {
-//   let a = document.createElement('a');
-//   a.download = 'output';
-//   a.href = outputUrl;
-//   a.click();
-// }
 
 function handleChangeClick() {
   if (showContent.value) {
@@ -450,7 +441,6 @@ watch(
       </div>
       <div class="train-log-desc">
         <el-input id="txt" v-model="form.desc" type="textarea" readonly />
-        <!-- <img v-if="!form.desc" src="@/assets/gifs/loading.gif" alt="" /> -->
       </div>
     </div>
     <div class="train-log-detail">

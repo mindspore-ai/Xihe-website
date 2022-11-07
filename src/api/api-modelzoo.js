@@ -145,12 +145,25 @@ export function handleTextRview(params) {
  * CodeGeex 生成代码
  * @returns
  */
+// export function handleGenerateCode(params) {
+//   const url = `/api/foundation/CodeGeeX`;
+//   return request
+//     .post(url, params, getHeaderConfig())
+//     .then((res) => {
+//       return res.data;
+//     })
+//     .catch((e) => {
+//       return e;
+//     });
+// }
+
 export function handleGenerateCode(params) {
-  const url = `/api/foundation/CodeGeeX`;
+  const url = `/server/bigmodel/codegeex`;
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
-      return res.data;
+      console.log(res);
+      return res;
     })
     .catch((e) => {
       return e;

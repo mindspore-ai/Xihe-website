@@ -102,22 +102,23 @@ function hanleGenerateCode() {
     isDisabled.value = true;
     handleGenerateCode({
       content: tabsList.value[activeIndex.value].code,
-      n: 1,
+      result_num: 1,
       lang: tabsList.value[activeIndex.value].name,
     }).then((res) => {
-      if (res.status === 200) {
+      if (res.status === 201 && res.data.data) {
         isDisabled.value = false;
 
         tabsList.value[activeIndex.value].code =
-          tabsList.value[activeIndex.value].code + res.data;
+          tabsList.value[activeIndex.value].code + res.data.data.answer;
 
         instance.dispose();
         init(tabsList.value[activeIndex.value]);
-      } else if (res.status === -1) {
+      } else {
         ElMessage({
           type: 'error',
-          message: res.msg,
+          message: res,
         });
+        isDisabled.value = false;
       }
     });
   }

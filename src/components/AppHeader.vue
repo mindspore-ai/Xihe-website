@@ -189,19 +189,23 @@ onUnmounted(() => {
 function getSearch() {
   query.name = keyword.value;
   try {
-    getSearchData(query).then((res) => {
-      if (res.status === 200) {
-        queryData.value = res.data;
-        // 模型、数据集、项目的搜索结果数量
-        modelCount.value = res.data[0].count;
-        datasetCount.value = res.data[1].count;
-        projectCount.value = res.data[2].count;
-        // 模型、数据集、项目的搜索结果
-        modelData.value = res.data[0].data;
-        datasetData.value = res.data[1].data;
-        projectData.value = res.data[2].data;
-      }
-    });
+    if (query.name) {
+      getSearchData(query).then((res) => {
+        if (res.status === 200) {
+          queryData.value = res.data.data;
+          // 模型、数据集、项目的搜索结果数量
+          modelCount.value = res.data.data.model.total;
+          datasetCount.value = res.data.data.dataset.total;
+          projectCount.value = res.data.data.project.total;
+          // 模型、数据集、项目的搜索结果
+          modelData.value = res.data.data.model.top;
+          datasetData.value = res.data.data.dataset.top;
+          projectData.value = res.data.data.project.top;
+        }
+      });
+    } else {
+      return;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -269,7 +273,7 @@ function goFirstResult() {
     return;
   } else {
     router.push({
-      path: `/${pathName.value}/${firstData.value.owner_name.name}/${firstData.value.name}`,
+      path: `/${pathName.value}/${firstData.value.owner}/${firstData.value.name}`,
     });
     emptyValue();
   }
@@ -290,26 +294,25 @@ function getProject(keyword) {
 }
 
 // 跳转到模型、数据集、项目的详情页
-function goModelDetail(index, name) {
-  // console.log(modelData.value[index], name);
+function goModelDetail(index, model) {
   // 解析name的html标签，获得里面的内容
-  const str = name.replace(/<[^>]+>/g, '');
+  const str = model.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/models/${modelData.value[index].owner_name.name}/${str}`,
+    path: `/models/${modelData.value[index].owner}/${str}`,
   });
   emptyValue();
 }
-function goDatasetDetail(index, name) {
-  const str = name.replace(/<[^>]+>/g, '');
+function goDatasetDetail(index, dataset) {
+  const str = dataset.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/datasets/${datasetData.value[index].owner_name.name}/${str}`,
+    path: `/datasets/${datasetData.value[index].owner}/${str}`,
   });
   emptyValue();
 }
-function goProjectDetail(index, name) {
-  const str = name.replace(/<[^>]+>/g, '');
+function goProjectDetail(index, project) {
+  const str = project.replace(/<[^>]+>/g, '');
   router.push({
-    path: `/projects/${projectData.value[index].owner_name.name}/${str}`,
+    path: `/projects/${projectData.value[index].owner}/${str}`,
   });
   emptyValue();
 }

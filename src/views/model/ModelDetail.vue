@@ -417,7 +417,6 @@ function handleModelLike() {
       // 点赞(收藏)
       getUserDig(params)
         .then((res) => {
-          console.log('收藏结果: ', res);
           if (res.status === 201) {
             getDetailData();
           }
@@ -429,7 +428,6 @@ function handleModelLike() {
       // 取消收藏
       cancelCollection(params)
         .then((res) => {
-          console.log('取消收藏结果: ', res);
           if (res.status === 204) {
             getDetailData();
           }

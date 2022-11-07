@@ -119,14 +119,6 @@ let queryData = reactive({
   count_per_page: 10,
   tags: null, //标签
   sort_by: null, //排序规则
-  // task: null,
-  // task_cate: null,
-  // libraries: null,
-  // licenses: null,
-  // model_format: null,
-  // device_target: null,
-  // relate_datasets: null,
-  // order: null,
 });
 
 // queryData.search = route.query.search;

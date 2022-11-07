@@ -5,9 +5,8 @@ import { request } from '@/shared/axios';
  * @returns
  */
 export function getSearchData(params) {
-  const url = `/api/base/search/`;
-  // const url = `/api/base/search/?name=${params}`;
+  const url = `/server/search`;
   return request.get(url, { params }).then((res) => {
-    return res.data;
+    return res;
   });
 }

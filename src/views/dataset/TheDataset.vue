@@ -95,15 +95,6 @@ let query = reactive({
   name: null, //项目名
   tags: null, //标签
   sort_by: null, //排序规则
-  // task: null, //应用分类
-  // task_cate: null /* 一级分类 */,
-  // libraries: null,
-  // licenses: null, //协议
-  // model_format: null,
-  // device_target: null,
-  // relate_datasets: null,
-  // order: null,
-  tags: null, //其他
 });
 
 // query.search = route.query.search;
@@ -124,6 +115,8 @@ function backCondition() {
 
 // 应用分类--多选
 function sortsClick(index, index2) {
+  console.log('点击应用分类: ');
+
   renderSorts.value[index].haveActive = true;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
@@ -186,6 +179,7 @@ function goSearch(render) {
     item.condition.forEach((value) => {
       if (value.isActive) {
         if (item.title.key === 0) {
+          console.log(1111111111);
           tagList.push(value.kind);
           query.tags = tagList.join(',');
         }

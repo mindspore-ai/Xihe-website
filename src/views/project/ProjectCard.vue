@@ -532,7 +532,7 @@ function stop() {
 const socket = ref(null);
 
 //拥有者判断是否有app.py，非拥有者判断启动状态
-
+canStart.value = true;
 if (detailData.value.owner === userInfo.userName) {
   console.log(detailData.value.owner, userInfo.userName);
   // findFile(`xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`)

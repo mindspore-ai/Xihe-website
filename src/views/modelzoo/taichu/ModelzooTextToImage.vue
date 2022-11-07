@@ -264,7 +264,6 @@ const handleNameChange = (val) => {
 
 function refreshTags() {
   exampleList.value = getRandom(lists, 6);
-  console.log(exampleList.value);
 }
 </script>
 <template>

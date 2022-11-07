@@ -12,7 +12,7 @@ import IconDescribe from '~icons/app/describe';
 import IconEdit from '~icons/app/edit-file';
 
 import {
-  getGitlabFileDetail,
+  getGitlabTree,
   getGitlabFileRaw,
   editorFileGitlab,
 } from '@/api/api-gitlab';
@@ -25,7 +25,6 @@ const repoDetailData = computed(() => {
 const isShowEditor = ref(false);
 const router = useRouter();
 const route = useRoute();
-const suffix = ref('');
 let routerParams = route.params;
 let path = routerParams.contents.join('/');
 
@@ -54,7 +53,7 @@ const codeString = ref('');
 function previewFile() {
   getGitlabFileRaw({
     user: routerParams.user,
-    path: fileData.file_path,
+    path: path,
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
@@ -72,7 +71,7 @@ async function uploadGitlab() {
       content: codeString.value,
       path: path,
       id: repoDetailData.value.id,
-      commit_message: description.value || `edit ${fileData.file_name}`,
+      commit_message: description.value || `edit ${fileData.name}`,
     },
     path
   ).then(() => {
@@ -84,15 +83,36 @@ async function uploadGitlab() {
 
   pathClick(route.params.contents.length);
 }
-
-getGitlabFileDetail(path, repoDetailData.value.repo_id).then((res) => {
-  fileData = res;
-  suffix.value = fileData.file_name.match(/[^.]+$/)[0];
-  description.value = `edit ${fileData.file_name}`;
-  if (fileData.size < 524288) {
-    previewFile(fileData.file_path, repoDetailData.value.repo_id);
+function verifyFile() {
+  const parentDirectory = path.includes('/')
+    ? path
+        .split('/')
+        .splice(0, path.split('/').length - 1)
+        .join('/')
+    : '';
+  try {
+    getGitlabTree({
+      user: routerParams.user,
+      path: parentDirectory,
+      id: repoDetailData.value.id,
+      name: routerParams.name,
+    }).then((tree) => {
+      const treeItem = tree?.data?.filter((item) => {
+        return item.path === path;
+      });
+      if (treeItem?.length && !treeItem[0].is_lfs_file) {
+        fileData = treeItem[0];
+        previewFile();
+      } else {
+        router.push('/notfound');
+      }
+    });
+  } catch (error) {
+    console.error(error);
   }
-});
+}
+verifyFile();
+
 function pathClick(index) {
   let routerName = '';
   route.params.contents.length === index
@@ -132,7 +152,7 @@ function pathClick(index) {
         <o-icon> <icon-edit></icon-edit> </o-icon>
         <span>{{ i18n.modelUpload.uploadTitle }}</span>
       </div>
-      <div class="upload-body">
+      <div class="upload-body" :class="isShowEditor ? '' : 'border'">
         <o-editor
           v-if="isShowEditor"
           v-model="codeString"
@@ -140,11 +160,12 @@ function pathClick(index) {
           :model-value="codeString"
         ></o-editor>
       </div>
-      <div class="add-describe tip-text">
+      <div v-if="false" class="add-describe tip-text">
         <o-icon> <icon-describe></icon-describe> </o-icon>
         <span>{{ i18n.modelUpload.addDescribe }}</span>
       </div>
       <o-input
+        v-if="false"
         v-model="description"
         size="fill"
         :placeholder="i18n.modelUpload.placeholder"
@@ -198,6 +219,7 @@ function pathClick(index) {
       }
     }
     .upload-body {
+      min-height: 275px;
       margin-bottom: 24px;
       .main-editor {
         padding: 8px 10px;
@@ -209,6 +231,9 @@ function pathClick(index) {
           border: 1px solid #3d8df7;
         }
       }
+    }
+    .border {
+      border: 1px solid #999;
     }
     .upload-bottom {
       display: flex;

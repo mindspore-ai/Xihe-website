@@ -400,6 +400,7 @@ watch(
             <td class="tree-table-item-from" :title="item.commit_title_html">
               <div class="inner-box">
                 <div
+                  v-if="!item.is_dir"
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
                   @click="toggleDelDlg(true, item.name, item.is_dir)"

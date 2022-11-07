@@ -157,11 +157,12 @@ onMounted(() => {
         </el-upload>
         <el-progress v-if="Progress" :percentage="Progress" />
       </div>
-      <div class="add-describe tip-text">
+      <div v-if="false" class="add-describe tip-text">
         <o-icon> <icon-describe></icon-describe> </o-icon>
         <span>{{ i18n.modelUpload.addDescribe }}</span>
       </div>
       <o-input
+        v-if="false"
         v-model="description"
         size="fill"
         :placeholder="i18n.modelUpload.placeholder"

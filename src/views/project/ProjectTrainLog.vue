@@ -168,11 +168,12 @@ function handleGetLog() {
     console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
-
+      console.log(logUrl.value);
       let i1 = logUrl.value.indexOf('modelarts');
       let i2 = logUrl.value.indexOf('.log');
-
+      console.log(i1, i2);
       logName.value = substring(i1, i2 + 4);
+      console.log(logName.value);
     } else {
     }
   });
@@ -191,8 +192,9 @@ function handleGetOutput() {
 
       let i1 = outputUrl.value.indexOf('train-output/');
       let i2 = outputUrl.value.indexOf('.gz');
-
+      console.log(i1, i2);
       outputName.value = substring(i1 + 13, i2);
+      console.log(outputName.value);
     } else {
     }
   });
@@ -546,7 +548,7 @@ watch(
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
               <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{
-                logName === '' ? '训练中' : logName
+                logUrl === '' ? '训练中' : logName
               }}
             </div>
           </li>
@@ -571,7 +573,7 @@ watch(
             </div>
             <div class="info-list-detail document">
               <a :href="outputUrl">{{
-                outputName === '' ? '训练中' : outputName
+                outputUrl === '' ? '训练中' : outputName
               }}</a>
             </div>
           </li>
@@ -939,7 +941,7 @@ watch(
         }
         .document {
           color: #0d8dff;
-          border-bottom: 1px solid #0d8dff;
+          // border-bottom: 1px solid #0d8dff;
           margin-left: 32px;
           overflow: hidden;
           text-overflow: ellipsis;

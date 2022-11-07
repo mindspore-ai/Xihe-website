@@ -82,15 +82,15 @@ watch(
       <div class="dataset-bottom">
         <div class="download" :title="i18n.download">
           <o-icon><icon-download></icon-download></o-icon>
-          {{ detailData.download_count }}
+          {{ item.download_count }}
         </div>
         <div class="heart" title="👍">
           <o-icon><icon-heart></icon-heart></o-icon>
-          {{ detailData.download_count }}
+          {{ item.digg_count }}
         </div>
         <div class="update-time" :title="i18n.uploadTime">
           <o-icon> <icon-time></icon-time></o-icon>
-          {{ detailData.update_date_time.split(' ')[0] }}
+          {{ item.update_time.split(' ')[0] }}
         </div>
       </div>
     </div>

@@ -119,10 +119,10 @@ function hanleGenerateCode() {
   isDisabled.value = true;
   handleGenerateCode({
     content: tabsList.value[activeIndex.value].code,
-    n: 1,
-    lang: tabsList.value[activeIndex.value].name,
+    // n: 1,
+    // lang: tabsList.value[activeIndex.value].name,
   }).then((res) => {
-    if (res.status === 200) {
+    if (res.status === 200 && res.data) {
       isDisabled.value = false;
 
       tabsList.value[activeIndex.value].code =

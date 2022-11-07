@@ -452,7 +452,11 @@ function start2() {
     console.log('连接成功');
   };
   socket.value.onmessage = function (event) {
-    console.log(event);
+    console.log('111', JSON.parse(event.data));
+    console.log('333', JSON.parse(event));
+    if (JSON.parse(event.data).msg) {
+      console.log('222', JSON.parse(event.data).msg);
+    }
   };
   // startInference2({
   //   owner: detailData.value.owner,
@@ -518,12 +522,12 @@ function start2() {
 
 //停止推理
 function stop() {
-  stopInference(detailData.value.id).then(() => {
-    // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-    // closeConn();
-    // clearInterval(timer);
-    msg.value = '';
-  });
+  // stopInference(detailData.value.id).then(() => {
+  // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+  // closeConn();
+  // clearInterval(timer);
+  msg.value = '';
+  // });
 }
 const socket = ref(null);
 

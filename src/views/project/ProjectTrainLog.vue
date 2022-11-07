@@ -256,7 +256,7 @@ function setEvaluateWebscoket(id) {
 
       evaluateUrl.value = JSON.parse(event.data).access_url;
       ws.close();
-    } else {
+    } else if (JSON.parse(event.data).event) {
       btnContent.value = '开始评估';
       isEvaluating.value = false;
       ElMessage({
@@ -286,7 +286,12 @@ function saveSetting() {
       ).then((res) => {
         console.log('自动评估', res);
         if (res.status === 201 && res.data.data) {
-          setEvaluateWebscoket(res.data.data.evaluate_id);
+          if (!res.data.data.access_url && !res.data.data.error) {
+            setEvaluateWebscoket(res.data.data.evaluate_id);
+          } else {
+            btnContent.value = '开始评估';
+            isEvaluating.value = false;
+          }
         } else {
           btnContent.value = '开始评估';
           isEvaluating.value = false;

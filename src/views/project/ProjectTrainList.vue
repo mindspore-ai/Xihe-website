@@ -334,7 +334,7 @@ onUnmounted(() => {
               <span>
                 {{
                   scope.row.status === 'scheduling'
-                    ? '启动中'
+                    ? 'Running'
                     : scope.row.status
                 }}</span
               >
@@ -351,7 +351,7 @@ onUnmounted(() => {
               <span>
                 {{
                   scope.row.status === 'schedule_failed'
-                    ? '启动失败'
+                    ? 'Failed'
                     : scope.row.status
                 }}
               </span>

@@ -77,7 +77,7 @@ export function getSinglePicture(params) {
 }
 
 /**
- * 上传紫东太初大模型以文生图(生成一张图片)
+ * 上传紫东太初大模型以文生图
  * @returns
  */
 export function getMultiplePicture(params) {

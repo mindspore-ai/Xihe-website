@@ -164,28 +164,8 @@ function startRatiocnate1() {
       getMultiplePicture({
         desc: inferenceText.value,
       }).then((res) => {
-        // console.log(res);
         inferUrlList.value = res.data.pictures;
       });
-
-      // getInferencePicture({
-      //   content: inferenceText.value,
-      //   img_type: '3img',
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     inferUrlList.value = res.data.output_image_url;
-      //   } else if (res.status === -2) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   } else if (res.status === -1) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   }
-      // });
     } else {
       getSinglePicture({
         desc: inferenceText.value,
@@ -193,25 +173,6 @@ function startRatiocnate1() {
         inferUrlList.value = [];
         inferUrlList.value.push(res.data.picture + '?' + new Date());
       });
-
-      // getInferencePicture({
-      //   content: inferenceText.value,
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     inferUrlList.value = [];
-      //     inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
-      //   } else if (res.status === -2) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   } else if (res.status === -1) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   }
-      // });
     }
   } else {
     ElMessage({

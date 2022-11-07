@@ -11,6 +11,7 @@ import {
   getSinglePicture,
   getMultiplePicture,
 } from '@/api/api-modelzoo';
+import { ElMessage } from 'element-plus';
 
 const form = reactive({
   type: [],
@@ -94,21 +95,15 @@ function startRatiocnate() {
     )
   ) {
     loading1.value = true;
-    getInferencePicture({
-      content: inferenceText.value,
+    getSinglePicture({
+      desc: inferenceText.value,
     }).then((res) => {
-      if (res.status === 200) {
-        inferUrlList.value = [];
-        // inferUrl.value = res.data.output_image_url + '?' + new Date();
-        inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
-      } else if (res.status === -2) {
+      inferUrlList.value = [];
+      if (res.data) {
+        inferUrlList.value.push(res.data.picture + '?' + new Date());
+      } else {
         ElMessage({
-          type: 'warning',
-          message: res.msg,
-        });
-      } else if (res.status === -1) {
-        ElMessage({
-          type: 'warning',
+          type: 'error',
           message: res.msg,
         });
       }
@@ -127,20 +122,14 @@ function startRatiocnateMo() {
       inferenceText.value
     )
   ) {
-    getInferencePicture({
-      content: inferenceText.value,
-      img_type: '3img',
+    getMultiplePicture({
+      desc: inferenceText.value,
     }).then((res) => {
-      if (res.status === 200) {
-        inferUrlList.value = res.data.output_image_url;
-      } else if (res.status === -2) {
+      if (res.data) {
+        inferUrlList.value = res.data.pictures;
+      } else {
         ElMessage({
-          type: 'warning',
-          message: res.msg,
-        });
-      } else if (res.status === -1) {
-        ElMessage({
-          type: 'warning',
+          type: 'error',
           message: res.msg,
         });
       }
@@ -153,7 +142,6 @@ function startRatiocnateMo() {
   }
 }
 
-// 生成三张图片
 function startRatiocnate1() {
   if (
     /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
@@ -166,6 +154,11 @@ function startRatiocnate1() {
       }).then((res) => {
         if (res.data) {
           inferUrlList.value = res.data.pictures;
+        } else {
+          // ElMessage({
+          //   type: 'error',
+          //   message: res.msg,
+          // });
         }
       });
     } else {
@@ -175,6 +168,11 @@ function startRatiocnate1() {
         inferUrlList.value = [];
         if (res.data) {
           inferUrlList.value.push(res.data.picture + '?' + new Date());
+        } else {
+          // ElMessage({
+          //   type: 'error',
+          //   message: res.msg,
+          // });
         }
       });
     }

@@ -286,12 +286,22 @@ function saveSetting() {
         route.params.trainId
       ).then((res) => {
         console.log('自动评估', res);
-        if (res.status === 201 && res.data.data) {
-          if (!res.data.data.access_url && !res.data.data.error) {
-            setEvaluateWebscoket(res.data.data.evaluate_id);
-          } else {
+
+        if (res.status === 201) {
+          if (res.data.data.error) {
             btnContent.value = '开始评估';
             isEvaluating.value = false;
+            ElMessage({
+              type: 'error',
+              message: res.data.data.error,
+            });
+          } else if (res.data.data.access_url) {
+            btnContent.value = '查看报告';
+            isEvaluating.value = false;
+            isEvaluated.value = true;
+            evaluateUrl.value = res.data.data.access_url;
+          } else {
+            setEvaluateWebscoket(res.data.data.evaluate_id);
           }
         } else {
           btnContent.value = '开始评估';
@@ -302,6 +312,7 @@ function saveSetting() {
             message: res.data.data.msg,
           });
         }
+
         requestData.value = {
           learning_rate_scope: [],
           batch_size_scope: [],

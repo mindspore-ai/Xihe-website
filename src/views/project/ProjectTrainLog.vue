@@ -174,6 +174,8 @@ function handleGetLog() {
       console.log(logUrl.value.indexOf('modelarts'));
       console.log(logUrl.value.indexOf('.log'));
       console.log(logUrl.value.substring(110, 169 + 4));
+      let i1 = logUrl.value.indexOf('modelarts');
+      let i2 = logUrl.value.indexOf('.log');
 
       logName.value = logUrl.value.substring(i1, i2 + 4);
       console.log('logName:', logName.value);

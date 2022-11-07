@@ -1,21 +1,21 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
+
+import { useLoginStore } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 import OButton from '@/components/OButton.vue';
 
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
 
-import {
-  getInferencePicture,
-  getSinglePicture,
-  getMultiplePicture,
-} from '@/api/api-modelzoo';
-import { ElMessage } from 'element-plus';
+import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 
 const form = reactive({
   type: [],
 });
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const screenWidth = ref(
   window.innerWidth ||
@@ -143,44 +143,48 @@ function startRatiocnateMo() {
 }
 
 function startRatiocnate1() {
-  if (
-    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
-      inferenceText.value
-    )
-  ) {
-    if (form.type.length) {
-      getMultiplePicture({
-        desc: inferenceText.value,
-      }).then((res) => {
-        if (res.data) {
-          inferUrlList.value = res.data.pictures;
-        } else {
-          // ElMessage({
-          //   type: 'error',
-          //   message: res.msg,
-          // });
-        }
-      });
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    if (
+      /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+        inferenceText.value
+      )
+    ) {
+      if (form.type.length) {
+        getMultiplePicture({
+          desc: inferenceText.value,
+        }).then((res) => {
+          if (res.data) {
+            inferUrlList.value = res.data.pictures;
+          } else {
+            // ElMessage({
+            //   type: 'error',
+            //   message: res.msg,
+            // });
+          }
+        });
+      } else {
+        getSinglePicture({
+          desc: inferenceText.value,
+        }).then((res) => {
+          inferUrlList.value = [];
+          if (res.data) {
+            inferUrlList.value.push(res.data.picture + '?' + new Date());
+          } else {
+            // ElMessage({
+            //   type: 'error',
+            //   message: res.msg,
+            // });
+          }
+        });
+      }
     } else {
-      getSinglePicture({
-        desc: inferenceText.value,
-      }).then((res) => {
-        inferUrlList.value = [];
-        if (res.data) {
-          inferUrlList.value.push(res.data.picture + '?' + new Date());
-        } else {
-          // ElMessage({
-          //   type: 'error',
-          //   message: res.msg,
-          // });
-        }
+      ElMessage({
+        type: 'warning',
+        message: '请输入中文描述',
       });
     }
-  } else {
-    ElMessage({
-      type: 'warning',
-      message: '请输入中文描述',
-    });
   }
 }
 

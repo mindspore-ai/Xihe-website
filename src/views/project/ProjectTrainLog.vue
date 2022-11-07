@@ -49,10 +49,6 @@ const router = useRouter();
 const logUrl = ref('');
 const outputUrl = ref('');
 
-console.log(logUrl.value.indexOf('modelarts'));
-console.log(logUrl.value.indexOf('.log'));
-console.log(logUrl.value.substring(110, 169 + 4));
-
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -165,7 +161,6 @@ function handleGetLog() {
     trainId: route.params.trainId,
     type: 'log',
   }).then((res) => {
-    console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
 
@@ -173,7 +168,6 @@ function handleGetLog() {
       let i2 = logUrl.value.indexOf('.log');
 
       logName.value = logUrl.value.substring(i1, i2 + 4);
-      console.log('logName:', logName.value);
     } else {
     }
   });
@@ -186,7 +180,6 @@ function handleGetOutput() {
     trainId: route.params.trainId,
     type: 'output',
   }).then((res) => {
-    console.log(res);
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
@@ -194,7 +187,6 @@ function handleGetOutput() {
       let i2 = outputUrl.value.indexOf('.gz');
 
       outputName.value = outputUrl.value.substring(i1 + 13, i2);
-      console.log(outputName.value);
     } else {
     }
   });
@@ -211,7 +203,6 @@ socket.onopen = function () {};
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到消息', JSON.parse(event.data).data);
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     if (trainDetail.value) {
@@ -250,10 +241,6 @@ function setEvaluateWebscoket(id) {
     [getHeaderConfig().headers['private-token']]
   );
 
-  ws.onopen = function () {
-    console.log('websocket已连接');
-  };
-
   ws.onmessage = function (event) {
     // 推理出url 断开websocket
     if (JSON.parse(event.data).access_url) {
@@ -289,6 +276,7 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
+        console.log('自动评估', res);
         if (res.status === 201 && res.data.data) {
           setEvaluateWebscoket(res.data.data.evaluate_id);
         } else {
@@ -326,7 +314,7 @@ function handleAssessment() {
   };
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
-      console.log(res);
+      console.log('自定义评估', res);
       if (res.status === 201 && res.data.data) {
         setEvaluateWebscoket(res.data.data.evaluate_id);
       } else {
@@ -387,7 +375,7 @@ const downloadBlob = (blob, fileName) => {
       window.URL.revokeObjectURL(href); // 释放掉blob对象
     }
   } catch (e) {
-    console.log('下载失败');
+    console.error(e);
   }
 };
 
@@ -404,7 +392,6 @@ async function downloadLogFile() {
   let data = await fetch(url)
     .then((response) => response.blob())
     .then((res) => {
-      console.log(res);
       let blod = new Blob([res]);
       let name = 'log.txt';
       downloadBlob(blod, name);

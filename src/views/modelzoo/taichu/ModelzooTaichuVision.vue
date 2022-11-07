@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch, nextTick, computed } from 'vue';
 
 import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore,useLoginStore } from '@/stores';
 
 import {
   handleTextRview,
@@ -16,6 +16,7 @@ import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 
 const userInfoStore = useUserInfoStore();
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const inp = ref(null);
 const inputMsg = ref('');
@@ -193,49 +194,53 @@ const latestIndex = ref(0);
 function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
-  if (isClick.value) {
-    isClick.value = false;
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    if (isClick.value) {
+      isClick.value = false;
 
-    msgList.value.push({
-      message: inputMsg.value,
-      type: 1,
-      url: '',
-      isPicture: false,
-      isLoading: true,
-    });
+      msgList.value.push({
+        message: inputMsg.value,
+        type: 1,
+        url: '',
+        isPicture: false,
+        isLoading: true,
+      });
 
-    latestIndex.value = msgList.value.length;
+      latestIndex.value = msgList.value.length;
 
-    sendList.value.push(inputMsg.value);
+      sendList.value.push(inputMsg.value);
 
-    if (!srcList.value.length) {
-      setTimeout(() => {
-        msgList.value.push({
-          message: '请选择一张图片。',
-          type: 0,
-          url: '',
-          isPicture: false,
-        });
-      }, 300);
-    } else {
-      handleVqaInference({
-        picture: uploadPictureUrl.value,
-        question: inputMsg.value,
-      }).then((res) => {
-        msgList.value[latestIndex.value - 1].isLoading = false;
-
-        if (res.data) {
+      if (!srcList.value.length) {
+        setTimeout(() => {
           msgList.value.push({
-            message: res.data.answer,
+            message: '请选择一张图片。',
             type: 0,
             url: '',
             isPicture: false,
           });
-        }
-      });
-    }
+        }, 300);
+      } else {
+        handleVqaInference({
+          picture: uploadPictureUrl.value,
+          question: inputMsg.value,
+        }).then((res) => {
+          msgList.value[latestIndex.value - 1].isLoading = false;
 
-    inputMsg.value = '';
+          if (res.data) {
+            msgList.value.push({
+              message: res.data.answer,
+              type: 0,
+              url: '',
+              isPicture: false,
+            });
+          }
+        });
+      }
+
+      inputMsg.value = '';
+    }
   }
 
   setTimeout(() => {

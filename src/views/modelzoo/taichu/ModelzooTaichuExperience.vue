@@ -2,8 +2,6 @@
 import { request } from '@/shared/axios';
 import { ref, reactive } from 'vue';
 
-import { ElMessage } from 'element-plus';
-
 import OButton from '@/components/OButton.vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';

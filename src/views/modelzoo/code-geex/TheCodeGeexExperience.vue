@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
-import OButton from '@/components/OButton.vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
 import { handleGenerateCode } from '@/api/api-modelzoo.js';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
 
 import * as monaco from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/python/python.contribution';
@@ -11,9 +12,11 @@ import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'
 
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { ElMessage } from 'element-plus';
+
+import OButton from '@/components/OButton.vue';
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const tabsList = ref([
   {
@@ -93,27 +96,31 @@ function init(item) {
 const isDisabled = ref(false);
 
 function hanleGenerateCode() {
-  isDisabled.value = true;
-  handleGenerateCode({
-    content: tabsList.value[activeIndex.value].code,
-    n: 1,
-    lang: tabsList.value[activeIndex.value].name,
-  }).then((res) => {
-    if (res.status === 200) {
-      isDisabled.value = false;
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    isDisabled.value = true;
+    handleGenerateCode({
+      content: tabsList.value[activeIndex.value].code,
+      n: 1,
+      lang: tabsList.value[activeIndex.value].name,
+    }).then((res) => {
+      if (res.status === 200) {
+        isDisabled.value = false;
 
-      tabsList.value[activeIndex.value].code =
-        tabsList.value[activeIndex.value].code + res.data;
+        tabsList.value[activeIndex.value].code =
+          tabsList.value[activeIndex.value].code + res.data;
 
-      instance.dispose();
-      init(tabsList.value[activeIndex.value]);
-    } else if (res.status === -1) {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    }
-  });
+        instance.dispose();
+        init(tabsList.value[activeIndex.value]);
+      } else if (res.status === -1) {
+        ElMessage({
+          type: 'error',
+          message: res.msg,
+        });
+      }
+    });
+  }
 }
 
 onMounted(() => {

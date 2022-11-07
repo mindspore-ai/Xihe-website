@@ -1,5 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 
 import ExampleCesium from '@/shared/modelzoo/luojia/luojianet.js';
 import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img.js';
@@ -16,15 +19,14 @@ import IconFive from '~icons/app/luojia-process-5';
 
 import gif from '@/assets/gifs/loading.gif';
 
-import { useUserInfoStore } from '@/stores';
 import {
   handleLuoJiaInfer,
   handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
-import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
@@ -56,30 +58,34 @@ async function handleDrawClick() {
   isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
 
   if (!isSelected.value) {
-    try {
-      location.value = viewer.value.drawer.getAnsShapeRectCoor();
+    if (!isLogined.vlaue) {
+      goAuthorize();
+    } else {
+      try {
+        location.value = viewer.value.drawer.getAnsShapeRectCoor();
 
-      const ltpoint = [location.value.west, location.value.north];
-      const rbpoint = [location.value.east, location.value.south];
+        const ltpoint = [location.value.west, location.value.north];
+        const rbpoint = [location.value.east, location.value.south];
 
-      isShow.value = true;
-      loadingText.value = '获取图片中';
+        isShow.value = true;
+        loadingText.value = '获取图片中';
 
-      tblob.value = await rectToImg(
-        ltpoint,
-        rbpoint,
-        zoomlv.value,
-        nowModelName.value
-      );
+        tblob.value = await rectToImg(
+          ltpoint,
+          rbpoint,
+          zoomlv.value,
+          nowModelName.value
+        );
 
-      isShow.value = false;
-      isInfer.value = true;
-      loadingText.value = '';
-    } catch (err) {
-      ElMessage({
-        type: 'warning',
-        message: '请选择区域',
-      });
+        isShow.value = false;
+        isInfer.value = true;
+        loadingText.value = '';
+      } catch (err) {
+        ElMessage({
+          type: 'warning',
+          message: '请选择区域',
+        });
+      }
     }
   }
 }
@@ -101,16 +107,16 @@ function handleInferClick() {
     formData.append('picture', tblob.value);
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
-      console.log(res);
       if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          console.log(res);
-          const aurl = res.data.data.answer;
-          const tempimg = document.createElement('img');
-          tempimg.src = aurl;
-          viewer.value.setImageAsLayer(tempimg);
+          if (res.status === 201 && res.data.data) {
+            const aurl = res.data.data.answer;
+            const tempimg = document.createElement('img');
+            tempimg.src = aurl;
+            viewer.value.setImageAsLayer(tempimg);
+          }
         });
       } else {
         isShow.value = false;

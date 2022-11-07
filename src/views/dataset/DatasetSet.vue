@@ -175,20 +175,27 @@ function confirmPrivate() {
     type: visibleValue.value,
     desc: description.value,
   };
-  modifyDataset(query, detailData.owner, detailData.id).then((res) => {
-    // if (res.status === 200) {
-    description.value = res.data.desc;
-    ElMessage({
-      type: 'success',
-      message: '修改成功',
-    });
-    /* } else {
+  modifyDataset(query, detailData.owner, detailData.id)
+    .then((res) => {
+      // if (res.status === 200) {
+      description.value = res.data.desc;
+      ElMessage({
+        type: 'success',
+        message: '修改成功',
+      });
+      /* } else {
       ElMessage({
         type: 'error',
         message: res.msg,
       });
     } */
-  });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '修改失败，请待会重试',
+      });
+    });
 }
 function confirmDel() {
   deleteDataset(detailData.id).then((res) => {

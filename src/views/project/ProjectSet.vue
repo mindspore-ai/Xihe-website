@@ -160,20 +160,28 @@ function confirmPrivate() {
     desc: description.value,
   };
   // console.log(detailData.id);
-  modifyProject(query, userInfoStore.userName, detailData.id).then((res) => {
-    // if (res.status === 200) {
-    // description.value = res.data.description;
-    ElMessage({
-      type: 'success',
-      message: '项目信息更改成功',
+  modifyProject(query, userInfoStore.userName, detailData.id)
+    .then(() => {
+      // if (res.status === 200) {
+      // description.value = res.data.description;
+      ElMessage({
+        type: 'success',
+        message: '项目信息更改成功',
+      });
+      // } else {
+      //   ElMessage({
+      //     type: 'error',
+      //     message: res.msg,
+      //   });
+      // }
+    })
+    .catch(() => {
+      // console.log(err.response);
+      ElMessage({
+        type: 'error',
+        message: '修改失败，请待会重试',
+      });
     });
-    // } else {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: res.msg,
-    //   });
-    // }
-  });
 }
 
 async function confirmRename(formEl) {

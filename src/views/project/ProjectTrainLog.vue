@@ -46,9 +46,7 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
-const logUrl = ref(
-  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-log/1667733185/modelarts-job-05b0ff8e-6de1-4392-8774-09c739233719-worker-0.log?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE&Expires=1667795066&Signature=QsUqe5AScWFjOdB5J29GxtoSlbk%3D'
-);
+const logUrl = ref('');
 const outputUrl = ref('');
 
 console.log(logUrl.value.indexOf('modelarts'));
@@ -171,9 +169,6 @@ function handleGetLog() {
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
 
-      console.log(logUrl.value.indexOf('modelarts'));
-      console.log(logUrl.value.indexOf('.log'));
-      console.log(logUrl.value.substring(110, 169 + 4));
       let i1 = logUrl.value.indexOf('modelarts');
       let i2 = logUrl.value.indexOf('.log');
 
@@ -228,7 +223,7 @@ socket.onmessage = function (event) {
       form.desc = trainDetail.value.log;
       configurationInfo.value = trainDetail.value.compute;
       isDone.value = trainDetail.value.is_done;
-      if (isDone.value) {
+      if (trainDetail.value.status === 'Completed') {
         handleGetLog();
         handleGetOutput();
       }
@@ -397,6 +392,14 @@ const downloadBlob = (blob, fileName) => {
 };
 
 async function downloadLogFile() {
+  if (!logUrl.value) {
+    ElMessage({
+      type: 'warning',
+      message: '训练中',
+    });
+    return;
+  }
+
   let url = logUrl.value;
   let data = await fetch(url)
     .then((response) => response.blob())
@@ -577,9 +580,8 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document">
-              <a :href="outputUrl">{{
-                outputUrl === '' ? '训练中' : outputName
-              }}</a>
+              <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
+              <span v-else>训练中</span>
             </div>
           </li>
 

@@ -149,6 +149,11 @@ if (props.cardType === 'model') {
         width: 100%;
       }
     }
+    .model-name {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
   .label-box {
     display: flex;

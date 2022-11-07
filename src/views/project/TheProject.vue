@@ -234,7 +234,6 @@ function radioClick(detail, list) {
 
 // 分类二级标签
 function sortTagClick(index, index2) {
-  // console.log('moreSortTags.value: ', moreSortTags.value);
   moreSortTags.value[index].haveActive = true;
   moreSortTags.value[index].items.forEach((item) => {
     item.isSelected = true;
@@ -267,6 +266,7 @@ function clearSortItem(index) {
 }
 // 二级标签查询
 function searchTags(date) {
+  console.log('date: ', date);
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
@@ -287,47 +287,42 @@ function searchTags(date) {
 function goSearch(render) {
   let time = 0;
   queryData.page_num = 1;
-  // let taskCate = [];
   let tagLists = [];
-  // let requestCount = 0;
-
-  // if (requestCount > 5) {
-  //   console.log('超过5次');
-  // } else {
+  let requestCount = 0;
   render.forEach((item) => {
     time = 0;
     // let tagLists = [];
-    // console.log('item.condition: ', item.condition);
     item.condition.forEach((value) => {
-      // console.log('value: ', value);
       if (value.isActive) {
-        // requestCount++;
-        // console.log('requestCount次数: ', requestCount);
-        // if (requestCount > 5) {
-        //   console.log('超过5次了');
-        // } else {
-        if (item.title.key === 0) {
-          console.log('点击应用发送请求');
-          tagLists.push(value.kind);
-          queryData.tags = tagLists.join(',');
-        } else if (item.title.key === 1) {
-          value.items.forEach((val) => {
-            // console.log('val: ', val);
-            console.log('点击应modelarts发送请求');
+        requestCount++;
+        console.log('requestCount次数: ', requestCount);
+        if (requestCount > 5) {
+          console.log('超过5次了');
+          return;
+        } else {
+          if (item.title.key === 0) {
+            console.log('点击应用发送请求');
+            tagLists.push(value.kind);
+            queryData.tags = tagLists.join(',');
+          } else if (item.title.key === 1) {
+            value.items.forEach((val) => {
+              // console.log('val: ', val);
+              console.log('点击应modelarts发送请求');
 
-            if (val.isActive) {
-              tagLists.push(val.name);
+              if (val.isActive) {
+                tagLists.push(val.name);
 
-              if (queryData.tags) {
-                queryData.tags = queryData.tags + ',' + tagLists.join(',');
-              } else {
-                queryData.tags = tagLists.join(',');
+                if (queryData.tags) {
+                  queryData.tags = queryData.tags + ',' + tagLists.join(',');
+                } else {
+                  queryData.tags = tagLists.join(',');
+                }
               }
-            }
-          });
+            });
+          }
         }
-        // }
       } else {
+        // 取消点击
         time += 1;
       }
     });
@@ -336,10 +331,9 @@ function goSearch(render) {
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
       queryData.tags = null;
-      requestCount--;
+      // requestCount--;
     }
   });
-  // }
 }
 
 function dropdownClick(item) {
@@ -354,12 +348,15 @@ function dropdownClick(item) {
 
 function getProject() {
   getProjectData(queryData).then((res) => {
-    projectCount.value = res.data.total;
-    if (projectCount.value / 10 < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+    if (res.status === 200) {
+      // console.log('res: ', res.data);
+      projectCount.value = res.data.data.total;
+      if (projectCount.value / 10 < 8) {
+        layout.value = layout.value.split(',').splice(0, 4).join(',');
+      }
+      projectData.value = res.data.data;
+      // console.log('项目列表数据', projectData.value);
     }
-    projectData.value = res.data;
-    // console.log('项目列表数据', projectData.value);
   });
 }
 
@@ -738,6 +735,9 @@ onUnmounted(() => {
               @click="goDetail(item.owner, item.name)"
             >
               <div class="card-top">
+                <div class="description">
+                  <p>{{ item.desc }}</p>
+                </div>
                 <img
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
@@ -1067,15 +1067,47 @@ $theme: #0d8dff;
             height: 169px;
             position: relative;
             color: #fff;
+            &:hover {
+              .description {
+                display: block;
+              }
+            }
             img {
               width: 100%;
               height: 100%;
+            }
+            .description {
+              display: none;
+              position: absolute;
+              left: 50%;
+              bottom: 0;
+              transform: translateX(-50%);
+              width: 100%;
+              padding: 0 16px;
+              z-index: 1;
+              font-size: 12px;
+              color: #ffffff;
+              background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 0%,
+                #000000 100%
+              );
+
+              p {
+                line-height: 17px;
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                margin-bottom: 16px;
+              }
             }
             .title {
               display: flex;
               align-items: center;
               justify-content: center;
-              width: 90%;
+              width: 84%;
               // margin: 0 auto;
               font-size: 18px;
               position: absolute;
@@ -1083,6 +1115,11 @@ $theme: #0d8dff;
               left: 50%;
               transform: translate(-50%, -50%);
               z-index: 1;
+              span {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
             }
             .dig {
               position: absolute;

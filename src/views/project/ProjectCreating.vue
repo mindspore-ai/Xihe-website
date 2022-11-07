@@ -54,8 +54,8 @@ const rules = reactive({
     { required: true, message: '必填项', trigger: 'blur' },
     // 后端5-42
     {
-      pattern: /^[^\u4e00-\u9fa5]{5,42}$/g,
-      message: '暂不支持中文字符，且长度为5-42个字符',
+      pattern: /^[^\u4e00-\u9fa5]{5,20}$/g,
+      message: '暂不支持中文字符，且长度为5-20个字符',
       trigger: 'blur',
     },
     {
@@ -265,7 +265,7 @@ onMounted(() => {});
                   trigger: 'blur',
                 },
               ]" -->
-            <el-popover
+            <!-- <el-popover
               placement="bottom-start"
               :width="372"
               trigger="hover"
@@ -283,12 +283,13 @@ onMounted(() => {});
                 >
               </div>
               <div>
-                -&nbsp;仓库名建议简短<span class="remind">(5-42个字符)</span
+                -&nbsp;仓库名建议简短<span class="remind">(5-20个字符)</span
                 >，仓库下的文件或文件夹绝对路径长度<span class="remind"
                   >不能超过1000字符</span
                 >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
               </div>
-            </el-popover>
+            </el-popover> -->
+            <o-popper></o-popper>
           </el-form-item>
         </div>
         <!-- 项目封面 -->

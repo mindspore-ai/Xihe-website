@@ -24,7 +24,7 @@ export function getProjectData(params) {
   // let header = getHeaderConfig();
   // 登录之后携带token
   return request.get(url, { params }).then((res) => {
-    return res.data;
+    return res;
   });
 }
 

@@ -61,11 +61,11 @@ function goDetailClick(item) {
         </div>
         <div class="project-bottom-right">
           <o-icon><icon-heart></icon-heart></o-icon>
-          {{ detailData.download_count }}
+          {{ item.download_count }}
 
           <div class="update-time" :title="i18n.uploadTime">
             <o-icon> <icon-time></icon-time></o-icon>
-            {{ detailData.update_date_time.split(' ')[0] }}
+            {{ item.update_time.split(' ')[0] }}
           </div>
         </div>
       </div>

@@ -105,9 +105,7 @@ function showDelClick(val) {
 
 // 删除
 function deleteTrainList(id) {
-  console.log('projectId : ' + projectId, 'id : ' + id);
   deleteTainList(projectId, id).then((res) => {
-    console.log(res);
     if (res.status === 204) {
       getTrainList();
       showDel.value = false;
@@ -127,7 +125,6 @@ function delClick(val) {
 const showStop = ref(false);
 function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
-    console.log(res);
     if (res.status === 202) {
       getTrainList();
       showStop.value = false;
@@ -164,7 +161,6 @@ function showResetClick(val) {
 }
 
 function resetClick(val) {
-  console.log(val);
   if (val === 1) {
     showReset.value = false;
   } else {
@@ -175,7 +171,6 @@ function resetClick(val) {
       });
     } else {
       rebuildTrain(projectId, val).then((res) => {
-        console.log(res);
         if (res.status === 201) {
           showReset.value = false;
           getTrainList();
@@ -216,7 +211,6 @@ let socket;
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
-    console.log(trainData.value);
     // 列表为空可以创建实例
     if (!trainData.value) {
       btnShow.value = false;
@@ -244,8 +238,6 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
-    console.log('websocket列表消息', JSON.parse(event.data).data);
-
     trainData.value = JSON.parse(event.data).data;
 
     if (trainData.value) {
@@ -258,10 +250,6 @@ function setWebsocket(url) {
         btnShow.value = false;
       }
     }
-  };
-
-  socket.onclose = function () {
-    console.log('服务器已经断开');
   };
 
   return socket;
@@ -299,14 +287,6 @@ onUnmounted(() => {
             <span class="train-name" @click="goTrainLog(scope.row.id)">{{
               scope.row.name
             }}</span>
-            <!-- <router-link
-              class="train-name"
-              :to="{
-                name: 'projectTrainLog',
-                params: { trainId: scope.row.train_id },
-              }"
-              >{{ scope.row.instance_name }}</router-link
-            > -->
           </div>
         </template>
       </el-table-column>
@@ -315,46 +295,35 @@ onUnmounted(() => {
           <div class="status-box">
             <div v-if="scope.row.status === 'Completed'" class="status-item">
               <o-icon><icon-finished></icon-finished></o-icon>
-              <span>{{ scope.row.status }}</span>
+              <span>已完成</span>
             </div>
 
             <div v-if="scope.row.status === 'Terminated'" class="status-item">
               <o-icon><icon-stopped></icon-stopped></o-icon>
-              <span>{{ scope.row.status }}</span>
+              <span>已停止</span>
             </div>
 
-            <div
-              v-if="
-                scope.row.status === 'Running' ||
-                scope.row.status === 'scheduling'
-              "
-              class="status-item"
-            >
+            <div v-if="scope.row.status === 'Running'" class="status-item">
               <o-icon><icon-runing></icon-runing></o-icon>
-              <span>
-                {{
-                  scope.row.status === 'scheduling'
-                    ? 'Running'
-                    : scope.row.status
-                }}</span
-              >
+              <span>运行中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'scheduling'" class="status-item">
+              <o-icon><icon-runing></icon-runing></o-icon>
+              <span> 启动中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Failed'" class="status-item">
+              <o-icon><icon-failed></icon-failed></o-icon>
+              <span>训练失败</span>
             </div>
 
             <div
-              v-if="
-                scope.row.status === 'Failed' ||
-                scope.row.status === 'schedule_failed'
-              "
+              v-if="scope.row.status === 'schedule_failed'"
               class="status-item"
             >
               <o-icon><icon-failed></icon-failed></o-icon>
-              <span>
-                {{
-                  scope.row.status === 'schedule_failed'
-                    ? 'Failed'
-                    : scope.row.status
-                }}
-              </span>
+              <span> 启动失败 </span>
             </div>
           </div>
         </template>

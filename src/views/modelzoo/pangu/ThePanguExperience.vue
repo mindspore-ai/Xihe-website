@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch, nextTick, computed } from 'vue';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useLoginStore } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 import IconSend from '~icons/app/vqa-send';
 import IconRefresh from '~icons/app/refresh-taichu';
@@ -11,6 +12,7 @@ import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import { handlePanguInfer } from '@/api/api-modelzoo';
 
 const userInfoStore = useUserInfoStore();
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const inputMsg = ref('');
 const sendBtn = ref(null);
@@ -81,38 +83,42 @@ window.addEventListener('resize', onResize);
 function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
-  msgList.value.push({
-    message: inputMsg.value,
-    type: 1,
-    isLoading: true,
-  });
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    msgList.value.push({
+      message: inputMsg.value,
+      type: 1,
+      isLoading: true,
+    });
 
-  examples.value.forEach((item) => {
-    item.isSelected = false;
-  });
+    examples.value.forEach((item) => {
+      item.isSelected = false;
+    });
 
-  handlePanguInfer({ question: inputMsg.value }).then((res) => {
-    console.log(res);
-    // TODO: 状态码处理
-    if (res.status === 201 && res.data.data) {
-      msgList.value.forEach((item) => (item.isLoading = false));
+    handlePanguInfer({ question: inputMsg.value }).then((res) => {
+      console.log(res);
+      // TODO: 状态码处理
+      if (res.status === 201 && res.data.data) {
+        msgList.value.forEach((item) => (item.isLoading = false));
 
-      msgList.value.push({
-        message: res.data.data.answer,
-        type: 0,
-        isLoading: false,
-      });
-    } else {
-      msgList.value.forEach((item) => (item.isLoading = false));
+        msgList.value.push({
+          message: res.data.data.answer,
+          type: 0,
+          isLoading: false,
+        });
+      } else {
+        msgList.value.forEach((item) => (item.isLoading = false));
 
-      ElMessage({
-        type: 'error',
-        message: res.data.msg,
-      });
-    }
-  });
+        ElMessage({
+          type: 'error',
+          message: res.data.msg,
+        });
+      }
+    });
 
-  inputMsg.value = '';
+    inputMsg.value = '';
+  }
 }
 
 // 换一批

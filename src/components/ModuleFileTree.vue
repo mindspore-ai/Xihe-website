@@ -6,12 +6,13 @@ import useClipboard from 'vue-clipboard3';
 import OButton from '@/components/OButton.vue';
 import FileTree from './FileTree.vue';
 
-import IconDownload from '~icons/app/download';
+// import IconDownload from '~icons/app/download';
 import IconPlus from '~icons/app/plus';
 import IconCopy from '~icons/app/copy-nickname';
 
 import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
+const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 
 const { toClipboard } = useClipboard();
 const router = useRouter();
@@ -21,7 +22,7 @@ const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
 });
 const gitCloneUrl = ref(
-  `https://source-xihe.test.osinfra.cn/${routerParams.user}/${routerParams.name}.git`
+  `${GITLAB_ADDRESS}/${routerParams.user}/${routerParams.name}.git`
 );
 const prop = defineProps({
   moduleName: {
@@ -67,7 +68,7 @@ const i18n = {
       },
     },
   ],
-  downloadAll: '下载/克隆',
+  downloadAll: '克隆',
   downloadZip: '下载ZIP',
   addNew: '添加',
 };
@@ -97,11 +98,11 @@ function pathClick(index) {
     },
   });
 }
-function downloadAll() {
-  gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
-    console.log(res);
-  });
-}
+// function downloadAll() {
+//   gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
+//     console.log(res);
+//   });
+// }
 </script>
 <template>
   <div class="model-file">
@@ -143,14 +144,14 @@ function downloadAll() {
                   </template>
                 </el-input>
               </div>
-              <div class="download-zip">
+              <!-- <div class="download-zip">
                 <o-button size="small" class="download-all" @click="downloadAll"
                   ><a>{{ i18n.downloadZip }}</a>
                   <template #suffix>
                     <o-icon><icon-download></icon-download></o-icon>
                   </template>
                 </o-button>
-              </div>
+              </div> -->
             </div>
           </el-popover>
         </div>
@@ -218,16 +219,17 @@ $theme: #0d8dff;
           flex-direction: column;
           align-items: center;
           .clone-repo {
-            margin-bottom: 16px;
+            // margin-bottom: 16px;
             width: 100%;
-            border-bottom: 1px solid #e5e5e5;
+            // border-bottom: 1px solid #e5e5e5;
             h5 {
               font-weight: 500;
               color: #000;
               font-size: 14px;
             }
             .el-input {
-              padding: 8px 0 16px;
+              margin: 8px 0 16px;
+              margin-bottom: 0;
               width: 100%;
               :deep(.el-input__wrapper) {
                 padding: 6px 8px !important;

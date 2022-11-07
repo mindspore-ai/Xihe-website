@@ -105,8 +105,34 @@ function previewFile() {
     }
   });
 }
-getGitlabTree();
-previewFile();
+function verifyFile() {
+  const parentDirectory = path.value.includes('/')
+    ? path.value
+        .split('/')
+        .splice(0, path.value.split('/').length - 1)
+        .join('/')
+    : '';
+  try {
+    getGitlabTree({
+      user: routerParams.user,
+      path: parentDirectory,
+      id: repoDetailData.value.id,
+      name: routerParams.name,
+    }).then((tree) => {
+      const treeItem = tree?.data?.filter((item) => {
+        return item.path === path.value;
+      });
+      if (treeItem?.length && !treeItem[0].is_lfs_file) {
+        previewFile();
+      } else {
+        router.push('/notfound');
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+verifyFile();
 
 async function headleDelFile(path) {
   deleteFile({

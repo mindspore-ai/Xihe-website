@@ -247,6 +247,7 @@ function setEvaluateWebscoket(id) {
   );
 
   ws.onmessage = function (event) {
+    console.log('aim', JSON.parse(event.data));
     // 推理出url 断开websocket
     if (JSON.parse(event.data).access_url) {
       btnContent.value = '查看报告';

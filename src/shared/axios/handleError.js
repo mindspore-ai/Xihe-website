@@ -12,9 +12,9 @@ export default (err) => {
   const isFilteredErr =
     whiteListApi.indexOf(response.config.url) !== -1 ||
     response.status === 400 ||
-    request.data?.code === 'resource_not_exists';
+    response.data?.code === 'resource_not_exists';
   if (isFilteredErr) {
-    err.message = response.data?.message || '';
+    err.message = response.data?.msg || '';
     err.filterd = true;
     return err;
   }

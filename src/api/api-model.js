@@ -72,14 +72,9 @@ export function createModel(params) {
  */
 export function modifyModel(params, owner, id) {
   const url = `/server/model/${owner}/${id}`;
-  return request
-    .put(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 修改标签

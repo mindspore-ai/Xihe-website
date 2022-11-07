@@ -90,14 +90,9 @@ export function createDataset(params) {
 } */
 export function modifyDataset(params, owner, id) {
   const url = `/server/dataset/${owner}/${id}`;
-  return request
-    .put(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 删除数据集仓库

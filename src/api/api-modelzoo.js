@@ -93,22 +93,6 @@ export function getMultiplePicture(params) {
 }
 
 /**
- * 更换以文生图样例
- * @returns
- */
-export function getExampleTags(params) {
-  const url = `/api/foundation/random_description`;
-  return request
-    .post(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
-}
-
-/**
  * VQA图片上传
  * @returns
  */

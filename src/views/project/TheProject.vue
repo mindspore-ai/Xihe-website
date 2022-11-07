@@ -115,11 +115,6 @@ const queryData = reactive({
   name: null, //项目名
   tags: null, //标签
   sort_by: null, //排序规则
-  // task_cate: null,
-  // task: null,
-  // licenses: null,
-  // train_sdk: null,
-  // infer_sdk: null,
 });
 // queryData.search = route.query.search;
 
@@ -155,7 +150,7 @@ function clearItem1(index) {
   });
   queryData.tags = null;
 }
-
+// 训练平台标签
 function othersClick(index, index2) {
   otherCondition.value[index].haveActive = true;
   // 高亮
@@ -165,6 +160,7 @@ function othersClick(index, index2) {
     !otherCondition.value[index].condition[0].items[index2].isActive;
   goSearch(otherCondition.value);
 }
+// 清除训练平台标签
 function clearItem3(index) {
   otherCondition.value[index].haveActive = false;
   otherCondition.value[index].condition.forEach((item) => {
@@ -292,36 +288,58 @@ function goSearch(render) {
   let time = 0;
   queryData.page_num = 1;
   // let taskCate = [];
-  // let tagLists = [];
+  let tagLists = [];
+  // let requestCount = 0;
+
+  // if (requestCount > 5) {
+  //   console.log('超过5次');
+  // } else {
   render.forEach((item) => {
     time = 0;
-    let tagLists = [];
+    // let tagLists = [];
+    // console.log('item.condition: ', item.condition);
     item.condition.forEach((value) => {
+      // console.log('value: ', value);
       if (value.isActive) {
+        // requestCount++;
+        // console.log('requestCount次数: ', requestCount);
+        // if (requestCount > 5) {
+        //   console.log('超过5次了');
+        // } else {
         if (item.title.key === 0) {
+          console.log('点击应用发送请求');
           tagLists.push(value.kind);
           queryData.tags = tagLists.join(',');
         } else if (item.title.key === 1) {
           value.items.forEach((val) => {
+            // console.log('val: ', val);
+            console.log('点击应modelarts发送请求');
+
             if (val.isActive) {
               tagLists.push(val.name);
-              queryData.tags = tagLists.join(',');
+
+              if (queryData.tags) {
+                queryData.tags = queryData.tags + ',' + tagLists.join(',');
+              } else {
+                queryData.tags = tagLists.join(',');
+              }
             }
           });
         }
+        // }
       } else {
         time += 1;
       }
     });
     if (time === item.condition.length) {
+      console.log('取消点击');
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key === 0) {
-        // queryData['tags'] = null;
-        queryData.tags = null;
-      }
+      queryData.tags = null;
+      requestCount--;
     }
   });
+  // }
 }
 
 function dropdownClick(item) {
@@ -406,9 +424,6 @@ function getModelTag() {
 getModelTag();
 
 function goDetail(user, name) {
-  // router.push({
-  //   path: `/projects/${user}/${name}`,
-  // });
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/projects/${user}/${name}`,
@@ -649,7 +664,7 @@ onUnmounted(() => {
             <span @click="checkAllClick(item, index)">查看全部</span>
           </div>
         </div> -->
-        <!-- 其他 -->
+        <!-- 其他 训练平台-->
         <div
           v-for="(item, index) in otherCondition"
           :key="item.title"
@@ -727,7 +742,11 @@ onUnmounted(() => {
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
-                <p class="title">{{ item.name }}</p>
+                <div class="title">
+                  <span>
+                    {{ item.name }}
+                  </span>
+                </div>
                 <div class="dig">
                   <o-icon> <icon-heart></icon-heart> </o-icon
                   >{{ item.like_count }}
@@ -1053,6 +1072,11 @@ $theme: #0d8dff;
               height: 100%;
             }
             .title {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 90%;
+              // margin: 0 auto;
               font-size: 18px;
               position: absolute;
               top: 50%;

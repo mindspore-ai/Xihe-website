@@ -205,38 +205,37 @@ function sendMessage() {
     });
 
     latestIndex.value = msgList.value.length;
-    handleTextRview({ is_img: false, content: inputMsg.value }).then((res) => {
-      if (res.status === 200) {
-        sendList.value.push(inputMsg.value);
 
+    sendList.value.push(inputMsg.value);
+
+    if (!srcList.value.length) {
+      setTimeout(() => {
+        msgList.value.push({
+          message: '请选择一张图片。',
+          type: 0,
+          url: '',
+          isPicture: false,
+        });
+      }, 300);
+    } else {
+      handleVqaInference({
+        picture: uploadPictureUrl.value,
+        question: inputMsg.value,
+      }).then((res) => {
         msgList.value[latestIndex.value - 1].isLoading = false;
 
-        if (!srcList.value.length) {
-          setTimeout(() => {
-            msgList.value.push({
-              message: '请选择一张图片。',
-              type: 0,
-              url: '',
-              isPicture: false,
-            });
-          }, 300);
-        } else {
-          handleVqaInference({
-            picture: uploadPictureUrl.value,
-            question: inputMsg.value,
-          }).then((res) => {
-            msgList.value.push({
-              message: res.data.answer,
-              type: 0,
-              url: '',
-              isPicture: false,
-            });
+        if (res.data) {
+          msgList.value.push({
+            message: res.data.answer,
+            type: 0,
+            url: '',
+            isPicture: false,
           });
         }
+      });
+    }
 
-        inputMsg.value = '';
-      }
-    });
+    inputMsg.value = '';
   }
 
   setTimeout(() => {

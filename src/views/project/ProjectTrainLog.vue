@@ -46,12 +46,12 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
-const logUrl = ref(
-  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-log/1667733185/modelarts-job-05b0ff8e-6de1-4392-8774-09c739233719-worker-0.log?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE\u0026Expires=1667741907\u0026Signature=xw6EEGeqii9mM7HScuCiE%2FFO0BI%3D'
-);
-const outputUrl = ref(
-  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-output/1667733185.tar.gz?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE\u0026Expires=1667741907\u0026Signature=90Y7Nhs3o1Dvqbfrg9s7hAzdc1U%3D'
-);
+const logUrl = ref('');
+const outputUrl = ref('');
+
+console.log(outputUrl.value.indexOf('train-output/'));
+console.log(outputUrl.value.indexOf('.gz'));
+console.log(outputUrl.value.substring(89 + 13, 119));
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -155,6 +155,9 @@ goHome();
 
 const isDone = ref(false);
 
+const logName = ref('');
+const outputName = ref('');
+
 // 获取日志
 function handleGetLog() {
   getTrainLog({
@@ -165,6 +168,11 @@ function handleGetLog() {
     console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
+
+      let i1 = logUrl.value.indexOf('modelarts');
+      let i2 = logUrl.value.indexOf('.log');
+
+      logName.value = substring(i1, i2 + 4);
     } else {
     }
   });
@@ -180,6 +188,11 @@ function handleGetOutput() {
     console.log(res);
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
+
+      let i1 = outputUrl.value.indexOf('train-output/');
+      let i2 = outputUrl.value.indexOf('.gz');
+
+      outputName.value = substring(i1 + 13, i2);
     } else {
     }
   });
@@ -348,11 +361,45 @@ function goToPage() {
 }
 
 // 下载输出
-function downloadLogFile() {
-  let a = document.createElement('a');
-  a.download = 'log';
-  a.href = logUrl;
-  a.click();
+// function downloadLogFile() {
+//   let a = document.createElement('a');
+//   a.download = 'log.txt';
+//   a.href = logUrl;
+//   a.click();
+// }
+
+const downloadBlob = (blob, fileName) => {
+  try {
+    const href = window.URL.createObjectURL(blob); //创建下载的链接
+    if (window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blob, fileName);
+    } else {
+      // 谷歌浏览器 创建a标签 添加download属性下载
+      const downloadElement = document.createElement('a');
+      downloadElement.href = href;
+      downloadElement.target = '_blank';
+      downloadElement.download = fileName;
+      document.body.appendChild(downloadElement);
+      downloadElement.click(); // 点击下载
+      document.body.removeChild(downloadElement); // 下载完成移除元素
+      window.URL.revokeObjectURL(href); // 释放掉blob对象
+    }
+  } catch (e) {
+    console.log('下载失败');
+  }
+};
+
+async function downloadLogFile() {
+  let url = logUrl;
+  let data = await fetch(url)
+    .then((response) => response.blob())
+    .then((res) => {
+      console.log(res);
+      let blod = new Blob([res]);
+      let name = 'log.txt';
+      downloadBlob(blod, name);
+    });
+  return data;
 }
 
 // function goJsonFile() {
@@ -450,7 +497,7 @@ watch(
                   <span>
                     {{
                       trainDetail.status === 'scheduling'
-                        ? '启动中'
+                        ? 'Running'
                         : trainDetail.status
                     }}</span
                   >
@@ -467,7 +514,7 @@ watch(
                   <span>
                     {{
                       trainDetail.status === 'schedule_failed'
-                        ? '启动失败'
+                        ? 'Failed'
                         : trainDetail.status
                     }}
                   </span>
@@ -498,7 +545,9 @@ watch(
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
-              <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{ logUrl }}
+              <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{
+                logName === '' ? '训练中' : logName
+              }}
             </div>
           </li>
           <li class="info-list">
@@ -521,7 +570,9 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document">
-              <a :href="outputUrl">{{ outputUrl }}</a>
+              <a :href="outputUrl">{{
+                outputName === '' ? '训练中' : outputName
+              }}</a>
             </div>
           </li>
 

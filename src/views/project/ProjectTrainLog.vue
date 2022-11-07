@@ -46,12 +46,14 @@ const configurationInfo = ref({});
 const route = useRoute();
 const router = useRouter();
 
-const logUrl = ref('');
+const logUrl = ref(
+  'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com:443/xihe-repos/bbbbb/project/112/train-log/1667733185/modelarts-job-05b0ff8e-6de1-4392-8774-09c739233719-worker-0.log?AWSAccessKeyId=09GMGS9WUPVNKKM0HOIE&Expires=1667795066&Signature=QsUqe5AScWFjOdB5J29GxtoSlbk%3D'
+);
 const outputUrl = ref('');
 
-console.log(outputUrl.value.indexOf('train-output/'));
-console.log(outputUrl.value.indexOf('.gz'));
-console.log(outputUrl.value.substring(89 + 13, 119));
+console.log(logUrl.value.indexOf('modelarts'));
+console.log(logUrl.value.indexOf('.log'));
+console.log(logUrl.value.substring(110, 169 + 4));
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -168,12 +170,13 @@ function handleGetLog() {
     console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
-      console.log(logUrl.value);
-      let i1 = logUrl.value.indexOf('modelarts');
-      let i2 = logUrl.value.indexOf('.log');
-      console.log(i1, i2);
-      logName.value = outputUrl.value.substring(i1, i2 + 4);
-      console.log(logName.value);
+
+      console.log(logUrl.value.indexOf('modelarts'));
+      console.log(logUrl.value.indexOf('.log'));
+      console.log(logUrl.value.substring(110, 169 + 4));
+
+      logName.value = logUrl.value.substring(i1, i2 + 4);
+      console.log('logName:', logName.value);
     } else {
     }
   });
@@ -192,7 +195,7 @@ function handleGetOutput() {
 
       let i1 = outputUrl.value.indexOf('train-output/');
       let i2 = outputUrl.value.indexOf('.gz');
-      console.log(i1, i2);
+
       outputName.value = outputUrl.value.substring(i1 + 13, i2);
       console.log(outputName.value);
     } else {

@@ -258,6 +258,7 @@ function setEvaluateWebscoket(id, type) {
     console.log('aim', JSON.parse(event.data));
     // 推理出url 断开websocket
     if (type === 'standard') {
+      console.log('standard');
       // 自动评估
       if (JSON.parse(event.data).data.access_url) {
         btnContent.value = '查看报告';
@@ -276,6 +277,7 @@ function setEvaluateWebscoket(id, type) {
         ws.close();
       }
     } else {
+      console.log('custom');
       // 自定义评估
       if (JSON.parse(event.data).data.access_url) {
         customContent.value = '查看报告';

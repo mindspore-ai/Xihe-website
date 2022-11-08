@@ -17,7 +17,7 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
-import IconWarning from '~icons/app/warning';
+// import IconWarning from '~icons/app/warning';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
@@ -25,15 +25,6 @@ import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-const showEvaBtn = ref(true);
-const isDisabled = ref(false);
-const showAnaButton = ref(false);
-const showGoButton = ref(false);
-
-const showEvaBtn1 = ref(true);
-const isDisabled1 = ref(false);
-const showAnaButton1 = ref(false);
-const showGoButton1 = ref(false);
 const evaluateUrl = ref('');
 
 const showContent = ref(true);
@@ -400,11 +391,11 @@ function handleAssessment() {
     }
   );
 }
-
+console.log(detailData.value);
 // 跳转到Aim嵌入页面
 function goAimPage() {
   router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
     },
@@ -413,15 +404,14 @@ function goAimPage() {
 
 // 跳到评估页面
 function goToPage() {
-  console.log('跳转到webui新页面');
   // 点击在新页签打开
-  // let routerData = router.resolve({
-  //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
-  //   query: {
-  //     url: evaluateUrl.value,
-  //   },
-  // });
-  // window.open(routerData.href, '_blank');
+  let routerData = router.resolve({
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
+    query: {
+      url: evaluateUrl.value,
+    },
+  });
+  window.open(routerData.href, '_blank');
 }
 
 const downloadBlob = (blob, fileName) => {
@@ -742,7 +732,6 @@ watch(
   .info-btn {
     align-self: end;
     margin-top: 30px;
-    // padding-right: 50px;
   }
 }
 .train-log {
@@ -754,7 +743,6 @@ watch(
   background-color: #fff;
   &-form {
     width: 55%;
-    // padding-bottom: 55px;
     .train-log-name {
       span {
         margin-right: 8px;
@@ -777,7 +765,6 @@ watch(
         width: 100% !important;
         height: 100%;
         margin-top: 24px;
-        // margin-bottom: 30px;
         :deep .el-textarea__inner {
           min-height: 560px !important;
           height: 100%;
@@ -961,21 +948,15 @@ watch(
         }
         .document {
           color: #0d8dff;
-          // border-bottom: 1px solid #0d8dff;
           margin-left: 32px;
           overflow: hidden;
           text-overflow: ellipsis;
-          // white-space: nowrap;
           cursor: pointer;
           a {
             color: #0d8dff;
           }
         }
       }
-      // .info-btn {
-      //   margin-left: 140px;
-      //   margin-top: 25px;
-      // }
     }
   }
 }

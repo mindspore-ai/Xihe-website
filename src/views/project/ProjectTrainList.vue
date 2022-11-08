@@ -26,6 +26,7 @@ import {
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -156,27 +157,35 @@ function showStopClick(val, id) {
 // 重建
 const showReset = ref(false);
 function showResetClick(val) {
-  resetedId.value = val;
-  showReset.value = true;
+  let bool = trainData.value.some(
+    (item) => item.status === 'scheduling' || item.status === 'Running'
+  );
+  if (bool) {
+    ElMessage({
+      type: 'warning',
+      message: '只能有一个运行中的训练',
+    });
+  } else if (trainData.value.length >= 5) {
+    ElMessage({
+      type: 'warning',
+      message: '最多创建5条训练',
+    });
+  } else {
+    resetedId.value = val;
+    showReset.value = true;
+  }
 }
 
 function resetClick(val) {
   if (val === 1) {
     showReset.value = false;
   } else {
-    if (trainData.value.length >= 5) {
-      ElMessage({
-        type: 'warning',
-        message: '最多创建5条训练',
-      });
-    } else {
-      rebuildTrain(projectId, val).then((res) => {
-        if (res.status === 201) {
-          showReset.value = false;
-          getTrainList();
-        }
-      });
-    }
+    rebuildTrain(projectId, val).then((res) => {
+      if (res.status === 201) {
+        showReset.value = false;
+        getTrainList();
+      }
+    });
   }
 }
 
@@ -268,7 +277,13 @@ onUnmounted(() => {
 <template>
   <div class="train-list">
     <div class="list-top">
-      <p class="title">训练列表</p>
+      <div class="table-title">
+        <p class="title">训练列表</p>
+        <div class="list-tip">
+          （&nbsp;温馨提示：最多可创建5条训练，且只有一个运行中。）
+        </div>
+      </div>
+
       <o-button type="primary" :disabled="btnShow" @click="goSelectFile">
         <span>创建训练实例</span>
       </o-button>
@@ -401,6 +416,7 @@ onUnmounted(() => {
       <o-icon><icon-instance></icon-instance></o-icon>
       <p>暂无训练实例</p>
     </div>
+
     <!-- 如已有正在训练中的实例，弹窗提示 -->
     <o-dialog :show="tips" @close-click="toggleDelDlg(false)">
       <template #head>
@@ -447,12 +463,21 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .table-title {
+      display: flex;
+      .list-tip {
+        font-size: 12px;
+        font-weight: 400;
+        color: #555;
+        line-height: 26px;
+      }
+    }
     .title {
-      line-height: 24px;
       font-size: 18px;
       font-weight: 400;
       color: #000000;
       line-height: 24px;
+      margin-right: 4px;
     }
     // .o-button {
     //   padding: 12px !important;

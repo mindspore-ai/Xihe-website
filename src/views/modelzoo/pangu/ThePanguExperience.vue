@@ -102,7 +102,7 @@ function sendMessage() {
     });
 
     handlePanguInfer({ question: inputMsg.value }).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.status === 201 && res.data.data) {
         msgList.value.forEach((item) => (item.isLoading = false));
 

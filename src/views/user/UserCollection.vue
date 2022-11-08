@@ -50,7 +50,6 @@ const emit = defineEmits(['domChange']);
   }
 }); */
 getUserCollection(userInfo.value.userName).then((res) => {
-  // console.log('收藏: ', res.data);
   if (res.data) {
     collectionCount.value = res.data.length;
     collectionData.value = res.data;

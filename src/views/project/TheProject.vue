@@ -23,6 +23,7 @@ import { goAuthorize } from '@/shared/login';
 import { getProjectData, getTags } from '@/api/api-project';
 
 import { useLoginStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';
@@ -266,18 +267,24 @@ function clearSortItem(index) {
 }
 // 二级标签查询
 function searchTags(date) {
-  console.log('date: ', date);
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
-      // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
       }
     });
   });
   if (tagList.length > 0) {
-    queryData.tags = tagList.join(',');
+    if (tagList.length < 6) {
+      queryData.tags = tagList.join(',');
+    } else {
+      ElMessage({
+        message: '最多支持刷选5个标签 !',
+        type: 'warning',
+      });
+      return;
+    }
   } else {
     queryData.tags = null;
   }
@@ -287,39 +294,37 @@ function searchTags(date) {
 function goSearch(render) {
   let time = 0;
   queryData.page_num = 1;
-  let tagLists = [];
-  let requestCount = 0;
+  let tagList = [];
   render.forEach((item) => {
     time = 0;
-    // let tagLists = [];
+    // let tagList = [];
     item.condition.forEach((value) => {
       if (value.isActive) {
-        requestCount++;
-        console.log('requestCount次数: ', requestCount);
-        if (requestCount > 5) {
-          console.log('超过5次了');
-          return;
-        } else {
-          if (item.title.key === 0) {
-            console.log('点击应用发送请求');
-            tagLists.push(value.kind);
-            queryData.tags = tagLists.join(',');
-          } else if (item.title.key === 1) {
-            value.items.forEach((val) => {
-              // console.log('val: ', val);
-              console.log('点击应modelarts发送请求');
-
-              if (val.isActive) {
-                tagLists.push(val.name);
-
-                if (queryData.tags) {
-                  queryData.tags = queryData.tags + ',' + tagLists.join(',');
-                } else {
-                  queryData.tags = tagLists.join(',');
-                }
-              }
+        if (item.title.key === 0) {
+          // console.log('点击应用发送请求');
+          tagList.push(value.kind);
+          if (tagList.length < 6) {
+            queryData.tags = tagList.join(',');
+          } else {
+            ElMessage({
+              message: '最多支持5个标签刷选 !',
+              type: 'warning',
             });
+            return;
           }
+        } else if (item.title.key === 1) {
+          value.items.forEach((val) => {
+            // console.log('val: ', val);
+            if (val.isActive) {
+              tagList.push(val.name);
+
+              if (queryData.tags) {
+                queryData.tags = queryData.tags + ',' + tagList.join(',');
+              } else {
+                queryData.tags = tagList.join(',');
+              }
+            }
+          });
         }
       } else {
         // 取消点击
@@ -327,7 +332,7 @@ function goSearch(render) {
       }
     });
     if (time === item.condition.length) {
-      console.log('取消点击');
+      // console.log('取消点击');
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
       queryData.tags = null;

@@ -54,8 +54,17 @@ let formData = new FormData();
 
 async function handleDrawClick() {
   isSelected.value = !isSelected.value;
+
+  if (isSelected.value) {
+    viewer.value.removeEntities();
+    viewer.value.removeImageLayers();
+
+    viewer.value.startDrawRect();
+  } else {
+    viewer.value.stopDrawRect();
+  }
   //  开始选区/结束选区
-  isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
+  // isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
 
   if (!isSelected.value) {
     if (!isLogined.value) {
@@ -454,7 +463,7 @@ onMounted(() => {
   align-items: center;
   height: 90px;
   img {
-    width: 68px;
+    width: 60px;
   }
   p {
     font-size: 16px;

@@ -154,6 +154,20 @@ const isDone = ref(false);
 const logName = ref('');
 const outputName = ref('');
 
+const btnContent = ref('开始评估');
+const isEvaluating = ref(false);
+const isEvaluated = ref(false);
+
+const isCusEvaluating = ref(false);
+const isCusEvaluated = ref(false);
+
+const requestData = ref({
+  learning_rate_scope: [],
+  batch_size_scope: [],
+  momentum_scope: [],
+  type: 'standard',
+});
+
 // 获取日志
 function handleGetLog() {
   getTrainLog({
@@ -212,6 +226,10 @@ socket.onmessage = function (event) {
         ? (isEvaluating.value = false)
         : (isEvaluating.value = true);
 
+      trainDetail.value.status === 'Completed'
+        ? (isCusEvaluating.value = false)
+        : (isCusEvaluating.value = true);
+
       form.name = trainDetail.value.name;
       form.desc = trainDetail.value.log;
       configurationInfo.value = trainDetail.value.compute;
@@ -229,18 +247,8 @@ function reloadPage() {
   socket.close();
 }
 
-const requestData = ref({
-  learning_rate_scope: [],
-  batch_size_scope: [],
-  momentum_scope: [],
-  type: 'standard',
-});
-
-const btnContent = ref('开始评估');
-const isEvaluating = ref(false);
-const isEvaluated = ref(false);
 // 评估
-function setEvaluateWebscoket(id) {
+function setEvaluateWebscoket(id, type) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
     [getHeaderConfig().headers['private-token']]
@@ -249,21 +257,45 @@ function setEvaluateWebscoket(id) {
   ws.onmessage = function (event) {
     console.log('aim', JSON.parse(event.data));
     // 推理出url 断开websocket
-    if (JSON.parse(event.data).access_url) {
-      btnContent.value = '查看报告';
-      isEvaluating.value = false;
-      isEvaluated.value = true;
+    if (type === 'standard') {
+      // 自动评估
+      if (JSON.parse(event.data).data.access_url) {
+        btnContent.value = '查看报告';
+        isEvaluating.value = false;
+        isEvaluated.value = true;
 
-      evaluateUrl.value = JSON.parse(event.data).access_url;
-      ws.close();
-    } else if (JSON.parse(event.data).error) {
-      btnContent.value = '开始评估';
-      isEvaluating.value = false;
-      ElMessage({
-        type: 'error',
-        message: JSON.parse(event.data).error,
-      });
-      ws.close();
+        evaluateUrl.value = JSON.parse(event.data).data.access_url;
+        ws.close();
+      } else if (JSON.parse(event.data).data.error) {
+        btnContent.value = '开始评估';
+        isEvaluating.value = false;
+        ElMessage({
+          type: 'error',
+          message: JSON.parse(event.data).data.error,
+        });
+        ws.close();
+      }
+    } else {
+      // 自定义评估
+      if (JSON.parse(event.data).data.access_url) {
+        customContent.value = '查看报告';
+        isCusEvaluating.value = false;
+        isCusEvaluated.value = true;
+
+        evaluateUrl.value = JSON.parse(event.data).data.access_url;
+
+        ws.close();
+      } else if (JSON.parse(event.data).data.error) {
+        customContent.value = '开始评估';
+        isCusEvaluating.value = false;
+
+        ElMessage({
+          type: 'error',
+          message: JSON.parse(event.data).data.error,
+        });
+
+        ws.close();
+      }
     }
   };
 }
@@ -301,7 +333,7 @@ function saveSetting() {
             isEvaluated.value = true;
             evaluateUrl.value = res.data.data.access_url;
           } else {
-            setEvaluateWebscoket(res.data.data.evaluate_id);
+            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard');
           }
         } else {
           btnContent.value = '开始评估';
@@ -327,20 +359,36 @@ function saveSetting() {
     }
   });
 }
+const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {
-  // showEvaBtn1.value = false;
-  // isDisabled1.value = true;
+  customContent.value = '评估中...';
+  isCusEvaluating.value = true;
 
   let params = {
     type: 'custom',
   };
+
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
       console.log('自定义评估', res);
-      if (res.status === 201 && res.data.data) {
-        setEvaluateWebscoket(res.data.data.evaluate_id);
+      if (res.status === 201) {
+        if (res.data.data.access_url) {
+          customContent.value = '查看报告';
+          isCusEvaluating.value = false;
+          isCusEvaluated.value = true;
+          evaluateUrl.value = res.data.data.access_url;
+        } else if (res.data.data.error) {
+          customContent.value = '开始评估';
+          isCusEvaluating.value = false;
+          ElMessage({
+            type: 'error',
+            message: res.data.data.error,
+          });
+        } else {
+          setEvaluateWebscoket(res.data.data.evaluate_id, 'custom');
+        }
       } else {
         ElMessage({
           type: 'error',
@@ -550,9 +598,7 @@ watch(
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
-              <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{
-                logUrl === '' ? '训练中' : logName
-              }}
+              {{ logUrl === '' ? '训练中' : logName }}
             </div>
           </li>
           <li class="info-list">
@@ -653,54 +699,24 @@ watch(
                 </div>
               </div>
             </div>
-
+            <!-- 自定义评估 -->
             <div v-if="showContent1">
-              <!-- 无Aim代码 -->
-              <div v-if="trainDetail.db_path" class="no-aim">
-                <p>
-                  <o-icon><icon-warning></icon-warning></o-icon>
-                </p>
-                <p class="no-aim-middle">
-                  当前暂时不能进行自定义评估，你需要在训练代码中添加Aim代码，详情请参考
-                </p>
-                <p class="no-aim-bottom" @click="addAssessCode">添加评估代码</p>
-              </div>
-              <!-- 有Aim代码 -->
-              <div v-if="!trainDetail.db_path" class="have-aim">
+              <div class="have-aim">
                 <p>
                   请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码
                 </p>
-                <!-- <el-form>
-                  <el-form-item label="repo">
-                    <el-input
-                      v-model="repoContent"
-                      placeholder="train/db/"
-                    ></el-input>
-                  </el-form-item>
-                </el-form> -->
                 <div class="info-btn">
                   <o-button
-                    v-if="showEvaBtn1"
-                    :disabled="isEvaluating"
+                    v-if="!isCusEvaluated"
+                    :disabled="isCusEvaluating"
                     type="primary"
                     @click="handleAssessment"
-                    >开始评估</o-button
+                    >{{ customContent }}</o-button
                   >
-                  <!-- <o-button v-if="isDisabled1" disabled type="primary"
-                    >开始评估</o-button
-                  > -->
-                  <o-button v-if="showAnaButton1" disabled type="primary"
-                    >评估中...</o-button
-                  >
-                  <!-- <o-button
-                    v-if="showGoButton1"
-                    type="primary"
-                    @click="goAimPage"
-                    >查看报告</o-button
-                  > -->
+
                   <a :href="`${evaluateUrl}`" onclick="return false">
                     <o-button
-                      v-if="showGoButton1"
+                      v-if="isCusEvaluated"
                       type="primary"
                       @click="goAimPage"
                       >查看报告</o-button

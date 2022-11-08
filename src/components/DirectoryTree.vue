@@ -103,7 +103,7 @@ function goBlob(item) {
   if (item.is_dir) {
     if (props.optionType === 'directory') {
       dirPath.value = item.path;
-      console.log('dirPath值变化了: ', dirPath.value);
+      // console.log('dirPath值变化了: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
       emit('handle', headContents.value);

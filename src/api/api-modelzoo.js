@@ -162,7 +162,7 @@ export function handleGenerateCode(params) {
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       return res;
     })
     .catch((e) => {

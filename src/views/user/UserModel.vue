@@ -97,7 +97,6 @@ watch(
   }
 );
 watch(props, () => {
-  // console.log('props.queryData: ', props.queryData);
   query.name = props.queryData.keyWord;
   query.sort_by = props.queryData.order;
   query.page_num = 1;

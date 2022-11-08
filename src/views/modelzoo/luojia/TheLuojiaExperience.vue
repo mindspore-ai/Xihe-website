@@ -58,7 +58,7 @@ async function handleDrawClick() {
   isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
 
   if (!isSelected.value) {
-    if (!isLogined.vlaue) {
+    if (!isLogined.value) {
       goAuthorize();
     } else {
       try {

@@ -3,13 +3,9 @@ import { ref, onMounted, watch, nextTick, computed } from 'vue';
 
 import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
-import { useUserInfoStore,useLoginStore } from '@/stores';
+import { useUserInfoStore, useLoginStore } from '@/stores';
 
-import {
-  handleTextRview,
-  handleVqaInference,
-  uploadVqaPicture,
-} from '@/api/api-modelzoo';
+import { handleVqaInference, uploadVqaPicture } from '@/api/api-modelzoo';
 
 import IconSend from '~icons/app/vqa-send';
 import IconUpload from '~icons/app/modelzoo-upload';

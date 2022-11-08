@@ -269,7 +269,7 @@ export function rebuildTrain(projectId, trainId) {
 export function deleteTainList(projectId, trainId) {
   const url = `/server/train/project/${projectId}/training/${trainId}`;
   return request.delete(url, getHeaderConfig()).then((res) => {
-    console.log('res: ', res);
+    // console.log('res: ', res);
     return res;
   });
 }

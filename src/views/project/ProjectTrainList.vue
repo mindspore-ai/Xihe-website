@@ -479,9 +479,6 @@ onUnmounted(() => {
       line-height: 24px;
       margin-right: 4px;
     }
-    // .o-button {
-    //   padding: 12px !important;
-    // }
   }
   .instance-box {
     width: 100%;

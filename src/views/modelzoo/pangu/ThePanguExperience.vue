@@ -102,7 +102,6 @@ function sendMessage() {
     });
 
     handlePanguInfer({ question: inputMsg.value }).then((res) => {
-      // console.log(res);
       if (res.status === 201 && res.data.data) {
         msgList.value.forEach((item) => (item.isLoading = false));
 
@@ -314,8 +313,6 @@ onMounted(() => {
   @media screen and (max-width: 1080px) {
     padding: 16px 16px 40px;
     background-image: none;
-    // background-image: none;
-    // background: #f5f6f8;
   }
   &-box {
     margin: 0 auto;
@@ -522,7 +519,6 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // padding-right: 40px;
       @media screen and (max-width: 1080px) {
         padding-right: 0px;
         margin-top: 16px;

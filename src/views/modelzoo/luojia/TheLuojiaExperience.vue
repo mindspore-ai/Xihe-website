@@ -16,7 +16,7 @@ import gif from '@/assets/gifs/loading.gif';
 
 import {
   handleLuoJiaInfer,
-  handleLuoJiaHistory,
+  // handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
@@ -27,12 +27,12 @@ const isLogined = computed(() => useLoginStore().isLogined);
 const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
 const gridData = ref([]);
-const historyInfo = ref({
-  name: '目标识别',
-  origin: '高德地图',
-  status: '已完成',
-  create_at: '',
-});
+// const historyInfo = ref({
+//   name: '目标识别',
+//   origin: '高德地图',
+//   status: '已完成',
+//   create_at: '',
+// });
 
 const isSelected = ref(false);
 const cesiumContainer = ref('');
@@ -87,40 +87,6 @@ async function handleDrawClick() {
       }
     }
   }
-  //  开始选区/结束选区
-  // isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
-
-  // if (!isSelected.value) {
-  //   if (!isLogined.value) {
-  //     goAuthorize();
-  //   } else {
-  //     try {
-  //       location.value = viewer.value.drawer.getAnsShapeRectCoor();
-
-  //       const ltpoint = [location.value.west, location.value.north];
-  //       const rbpoint = [location.value.east, location.value.south];
-
-  //       isShow.value = true;
-  //       loadingText.value = '获取图片中';
-
-  //       tblob.value = await rectToImg(
-  //         ltpoint,
-  //         rbpoint,
-  //         zoomlv.value,
-  //         nowModelName.value
-  //       );
-
-  //       isShow.value = false;
-  //       isInfer.value = true;
-  //       loadingText.value = '';
-  //     } catch (err) {
-  //       ElMessage({
-  //         type: 'warning',
-  //         message: '请选择区域',
-  //       });
-  //     }
-  //   }
-  // }
 }
 // 1. 未选区域，点击识别提示，不发请求
 // 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求

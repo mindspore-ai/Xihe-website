@@ -520,7 +520,7 @@ watch(
                   class="status-item"
                 >
                   <o-icon><icon-finished></icon-finished></o-icon>
-                  <span>{{ trainDetail.status }}</span>
+                  <span>已完成</span>
                 </div>
 
                 <div
@@ -528,41 +528,36 @@ watch(
                   class="status-item"
                 >
                   <o-icon><icon-stopped></icon-stopped></o-icon>
-                  <span>{{ trainDetail.status }}</span>
+                  <span>已终止</span>
                 </div>
 
                 <div
-                  v-if="
-                    trainDetail.status === 'Running' ||
-                    trainDetail.status === 'scheduling'
-                  "
+                  v-if="trainDetail.status === 'Running'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <span>运行中</span>
+                </div>
+
+                <div
+                  v-if="trainDetail.status === 'scheduling'"
                   class="status-item"
                 >
                   <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>
-                    {{
-                      trainDetail.status === 'scheduling'
-                        ? 'Running'
-                        : trainDetail.status
-                    }}</span
-                  >
+                  <span> 启动中</span>
+                </div>
+
+                <div v-if="trainDetail.status === 'Failed'" class="status-item">
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span> 训练失败</span>
                 </div>
 
                 <div
-                  v-if="
-                    trainDetail.status === 'Failed' ||
-                    trainDetail.status === 'schedule_failed'
-                  "
+                  v-if="trainDetail.status === 'schedule_failed'"
                   class="status-item"
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>
-                    {{
-                      trainDetail.status === 'schedule_failed'
-                        ? 'Failed'
-                        : trainDetail.status
-                    }}
-                  </span>
+                  <span> 启动失败 </span>
                 </div>
               </div>
             </div>
@@ -886,7 +881,6 @@ watch(
         }
         :deep .el-form-item {
           margin-top: 35px;
-          // margin-top: 16px;
           &:first-child {
             margin-top: 16px;
           }

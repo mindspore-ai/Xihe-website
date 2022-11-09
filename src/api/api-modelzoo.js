@@ -83,7 +83,12 @@ export function getSinglePicture(params) {
 export function getMultiplePicture(params) {
   const url = `/server/bigmodel/multiple_pictures`;
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+      timeout: 60000,
+    })
     .then((res) => {
       return res.data;
     })

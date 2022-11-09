@@ -382,37 +382,37 @@ onMounted(() => {
   width: 160px;
   height: 160px;
   border-radius: 16px;
-  @media screen and (max-width: 1080px) {
-    width: 104px;
-    height: 108px;
-    .el-image-viewer__canvas {
-      img {
-        width: 76% !important;
-        height: 76vw;
-      }
-    }
-    .el-image-viewer__close {
-      display: none;
-    }
-    .el-image-viewer__prev {
-      left: 4px;
-      background: none;
-    }
-    .el-image-viewer__next {
-      background: none;
-      right: 4px;
-    }
-    .el-image-viewer__actions {
-      display: none;
-    }
-  }
+  // @media screen and (max-width: 1080px) {
+  //   width: 104px;
+  //   height: 108px;
+  //   .el-image-viewer__canvas {
+  //     img {
+  //       width: 76% !important;
+  //       height: 76vw;
+  //     }
+  //   }
+  //   .el-image-viewer__close {
+  //     display: none;
+  //   }
+  //   .el-image-viewer__prev {
+  //     left: 4px;
+  //     background: none;
+  //   }
+  //   .el-image-viewer__next {
+  //     background: none;
+  //     right: 4px;
+  //   }
+  //   .el-image-viewer__actions {
+  //     display: none;
+  //   }
+  // }
 }
 
 :deep(.el-input) {
   height: 48px;
-  @media screen and (max-width: 1080px) {
-    height: 29px;
-  }
+  // @media screen and (max-width: 1080px) {
+  //   height: 29px;
+  // }
   .el-input__wrapper {
     border-radius: 32px;
     background: #f5f6f8;
@@ -421,13 +421,13 @@ onMounted(() => {
     &:hover {
       box-shadow: none;
     }
-    @media screen and (max-width: 1080px) {
-      padding: 6px 16px;
-      height: 29px;
-      .el-input__inner {
-        font-size: 12px;
-      }
-    }
+    // @media screen and (max-width: 1080px) {
+    //   padding: 6px 16px;
+    //   height: 29px;
+    //   .el-input__inner {
+    //     font-size: 12px;
+    //   }
+    // }
   }
   .is-focus {
     box-shadow: none !important;
@@ -439,21 +439,21 @@ onMounted(() => {
   background-size: 100%;
   width: 100%;
   padding: 40px 64px 64px;
-  @media screen and (max-width: 1080px) {
-    padding: 16px 16px 40px;
-    // background-image: none;
-    // background: #f5f6f8;
-  }
+  // @media screen and (max-width: 1080px) {
+  //   padding: 16px 16px 40px;
+  //   // background-image: none;
+  //   // background: #f5f6f8;
+  // }
   &-box {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     padding: 40px 8px 40px 40px;
-    @media screen and (max-width: 1080px) {
-      padding: 16px 16px 24px;
-      width: 100%;
-    }
+    // @media screen and (max-width: 1080px) {
+    //   padding: 16px 16px 24px;
+    //   width: 100%;
+    // }
     .title {
       font-size: 36px;
       font-weight: 300;
@@ -462,11 +462,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      @media screen and (max-width: 1080px) {
-        font-size: 14px;
-        color: #000000;
-        line-height: 28px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   font-size: 14px;
+      //   color: #000000;
+      //   line-height: 28px;
+      // }
       .new-tag {
         display: inline-block;
         width: 44px;
@@ -475,9 +475,9 @@ onMounted(() => {
         text-align: center;
         color: #fff;
         font-size: 12px;
-        @media screen and (max-width: 1080px) {
-          display: none;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   display: none;
+        // }
       }
     }
 
@@ -487,13 +487,13 @@ onMounted(() => {
       color: #000000;
       line-height: 24px;
       margin-top: 16px;
-      @media screen and (max-width: 1080px) {
-        font-size: 12px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 18px;
-        margin-top: 8px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   font-size: 12px;
+      //   font-weight: 400;
+      //   color: #555555;
+      //   line-height: 18px;
+      //   margin-top: 8px;
+      // }
     }
 
     .chat-box {
@@ -503,10 +503,10 @@ onMounted(() => {
       margin-top: 40px;
       overflow: auto;
       padding-top: 24px;
-      @media screen and (max-width: 1080px) {
-        margin-top: 16px;
-        height: 400px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   margin-top: 16px;
+      //   height: 400px;
+      // }
       &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -529,10 +529,10 @@ onMounted(() => {
         flex-direction: row-reverse;
         margin-bottom: 24px;
         padding-right: 26px;
-        @media screen and (max-width: 1080px) {
-          margin-bottom: 16px;
-          padding-right: 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   margin-bottom: 16px;
+        //   padding-right: 16px;
+        // }
 
         .message {
           padding: 16px 24px;
@@ -544,25 +544,25 @@ onMounted(() => {
           color: #000000;
           line-height: 22px;
           position: relative;
-          @media screen and (max-width: 1080px) {
-            padding: 8px;
-            margin-left: 28px;
-            font-size: 12px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 17px;
-            border-radius: 8px 0px 8px 8px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   padding: 8px;
+          //   margin-left: 28px;
+          //   font-size: 12px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 17px;
+          //   border-radius: 8px 0px 8px 8px;
+          // }
           .msg-loading {
             position: absolute;
             left: -30px;
             width: 20px;
             height: 20px;
-            @media screen and (max-width: 1080px) {
-              width: 12px;
-              height: 12px;
-              left: -20px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 12px;
+            //   height: 12px;
+            //   left: -20px;
+            // }
           }
           .image-modal {
             min-height: 160px;
@@ -579,27 +579,27 @@ onMounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-left: 8px;
-          @media screen and (max-width: 1080px) {
-            min-width: 24px;
-            min-height: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   min-width: 24px;
+          //   min-height: 24px;
+          // }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            @media screen and (max-width: 1080px) {
-              width: 24px;
-              height: 24px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 24px;
+            //   height: 24px;
+            // }
           }
         }
       }
       .message-box-vqa {
         display: flex;
         margin-bottom: 24px;
-        @media screen and (max-width: 1080px) {
-          margin-bottom: 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   margin-bottom: 16px;
+        // }
         .message {
           padding: 16px 24px;
           background: rgba(255, 127, 13, 0.1);
@@ -609,15 +609,15 @@ onMounted(() => {
           font-weight: 400;
           color: #000000;
           line-height: 22px;
-          @media screen and (max-width: 1080px) {
-            padding: 8px;
-            margin-right: 28px;
-            font-size: 12px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 17px;
-            border-radius: 0px 8px 8px 8px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   padding: 8px;
+          //   margin-right: 28px;
+          //   font-size: 12px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 17px;
+          //   border-radius: 0px 8px 8px 8px;
+          // }
         }
 
         .avatar {
@@ -625,18 +625,18 @@ onMounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-right: 8px;
-          @media screen and (max-width: 1080px) {
-            min-width: 24px;
-            min-height: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   min-width: 24px;
+          //   min-height: 24px;
+          // }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            @media screen and (max-width: 1080px) {
-              width: 24px;
-              height: 24px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 24px;
+            //   height: 24px;
+            // }
           }
         }
       }
@@ -648,10 +648,10 @@ onMounted(() => {
       justify-content: space-between;
       align-items: center;
       padding-right: 40px;
-      @media screen and (max-width: 1080px) {
-        padding-right: 0px;
-        margin-top: 16px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   padding-right: 0px;
+      //   margin-top: 16px;
+      // }
       .input-box {
         flex: 1;
       }
@@ -660,18 +660,16 @@ onMounted(() => {
         margin-left: 24px;
         width: 48px;
         cursor: pointer;
-        @media screen and (max-width: 1080px) {
-          width: 24px;
-          margin-left: 16px;
-        }
-        // &:hover {
-        //   transform: scale(1.1);
+        // @media screen and (max-width: 1080px) {
+        //   width: 24px;
+        //   margin-left: 16px;
         // }
+
         .o-icon {
           font-size: 48px;
-          @media screen and (max-width: 1080px) {
-            font-size: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 24px;
+          // }
         }
       }
     }
@@ -682,9 +680,9 @@ onMounted(() => {
       background-color: #fff;
       justify-content: space-between;
       align-items: center;
-      @media screen and (max-width: 1080px) {
-        padding: 16px 0 0;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   padding: 16px 0 0;
+      // }
       .custom {
         display: flex;
         flex-direction: column;
@@ -696,9 +694,9 @@ onMounted(() => {
 
         .o-icon {
           font-size: 48px;
-          @media screen and (max-width: 1080px) {
-            font-size: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 24px;
+          // }
         }
 
         p {
@@ -706,12 +704,12 @@ onMounted(() => {
           font-weight: 400;
           line-height: 20px;
           margin-top: 8px;
-          @media screen and (max-width: 1080px) {
-            font-size: 9px;
-            font-weight: 400;
-            line-height: 13px;
-            margin-top: 2px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 9px;
+          //   font-weight: 400;
+          //   line-height: 13px;
+          //   margin-top: 2px;
+          // }
         }
       }
 
@@ -720,10 +718,10 @@ onMounted(() => {
         height: 106px;
         position: relative;
         cursor: pointer;
-        @media screen and (max-width: 1080px) {
-          width: 54px;
-          height: 54px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   width: 54px;
+        //   height: 54px;
+        // }
         img {
           width: 100%;
           height: 100%;

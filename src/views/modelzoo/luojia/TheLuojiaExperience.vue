@@ -8,13 +8,6 @@ import IconSelect from '~icons/app/luojia-select';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
-import IconFirst from '~icons/app/luojia-process-1';
-import IconSecond from '~icons/app/luojia-process-2';
-import IconThird from '~icons/app/luojia-process-3';
-import IconFourth from '~icons/app/luojia-process-4';
-import IconFive from '~icons/app/luojia-process-5';
-import IconSix from '~icons/app/luojia-process-6';
-import IconSeven from '~icons/app/luojia-process-7';
 
 import gif from '@/assets/gifs/loading.gif';
 

@@ -449,9 +449,9 @@ function refreshTags() {
   background-color: #fff;
   justify-content: space-between;
   align-items: center;
-  @media screen and (max-width: 768px) {
-    padding: 8px 0 24px;
-  }
+  // @media screen and (max-width: 768px) {
+  //   padding: 8px 0 24px;
+  // }
   .active {
     border: 1px solid #a0d2ff;
     .modal {
@@ -465,20 +465,20 @@ function refreshTags() {
     align-items: center;
     color: #0d8dff;
     background-color: #e7f4ff;
-    @media screen and (max-width: 768px) {
-      .o-icon {
-        font-size: 24px;
-      }
-    }
+    // @media screen and (max-width: 768px) {
+    //   .o-icon {
+    //     font-size: 24px;
+    //   }
+    // }
     p {
       font-size: 14px;
       font-weight: 400;
       line-height: 20px;
       margin-top: 8px;
-      @media screen and (max-width: 768px) {
-        font-size: 9px;
-        line-height: 13px;
-      }
+      // @media screen and (max-width: 768px) {
+      //   font-size: 9px;
+      //   line-height: 13px;
+      // }
     }
   }
   .img-list-item {
@@ -486,18 +486,18 @@ function refreshTags() {
     height: 106px;
     position: relative;
     cursor: pointer;
-    @media screen and (max-width: 768px) {
-      width: 54px;
-      height: 54px;
-      margin-right: 6px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   width: 54px;
+    //   height: 54px;
+    //   margin-right: 6px;
+    // }
     img {
       width: 100%;
       height: 100%;
-      @media screen and (max-width: 768px) {
-        width: 54px;
-        height: 54px;
-      }
+      // @media screen and (max-width: 768px) {
+      //   width: 54px;
+      //   height: 54px;
+      // }
     }
     .modal {
       position: absolute;
@@ -524,18 +524,18 @@ function refreshTags() {
   align-items: center;
   .o-icon {
     color: #ccc;
-    @media screen and (max-width: 768px) {
-      font-size: 32px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 32px;
+    // }
   }
   .upload-tip {
     font-size: 14px;
     color: #ccc;
     line-height: 22px;
     margin-top: 8px;
-    @media screen and (max-width: 768px) {
-      font-size: 12px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 12px;
+    // }
     span {
       color: #0d8dff;
     }
@@ -552,10 +552,10 @@ function refreshTags() {
     display: flex;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 768px) {
-      height: 196px;
-      border: 1px solid #acacac;
-    }
+    // @media screen and (max-width: 768px) {
+    //   height: 196px;
+    //   border: 1px solid #acacac;
+    // }
     img {
       border: 1px solid #a0d2ff;
       max-height: 100%;
@@ -568,9 +568,9 @@ function refreshTags() {
   :deep(.el-divider) {
     border: 1px solid #dbdbdb;
   }
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
 }
 
 :deep(.el-collapse) {
@@ -676,14 +676,14 @@ function refreshTags() {
     .btn-box-mobile {
       display: none;
 
-      @media screen and (max-width: 768px) {
-        display: block;
-        display: flex;
-        justify-content: center;
-        .infer-button-mobile {
-          margin-left: 8px;
-        }
-      }
+      // @media screen and (max-width: 768px) {
+      //   display: block;
+      //   display: flex;
+      //   justify-content: center;
+      //   .infer-button-mobile {
+      //     margin-left: 8px;
+      //   }
+      // }
     }
 
     :deep(.el-upload) {
@@ -733,15 +733,15 @@ function refreshTags() {
       }
     }
   }
-  @media screen and (max-width: 768px) {
-    display: block;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: block;
+  // }
 }
 .text-to-img {
   padding-top: 40px;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
   .title {
     font-weight: 300;
     color: #000000;
@@ -926,9 +926,9 @@ function refreshTags() {
   // background-color: #f5f6f8;
   width: 100%;
   padding-bottom: 64px;
-  @media screen and (max-width: 768px) {
-    padding: 16px 16px 40px;
-  }
+  // @media screen and (max-width: 768px) {
+  //   padding: 16px 16px 40px;
+  // }
   .model-wrap {
     margin: 0 auto;
     max-width: 1440px;

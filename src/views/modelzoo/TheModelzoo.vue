@@ -25,7 +25,7 @@ let i18n = {
   cardLists: [
     {
       title: 'CodeGeeX',
-      introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
+      introduce: '130亿参数的多编程语言代码生成预训练模型',
       url: codegeex,
       path: '/modelzoo/codegeex',
       openness: true,

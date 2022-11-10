@@ -196,7 +196,6 @@ onUnmounted(() => {
 .experience {
   padding: 40px;
   background: #fff;
-  // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
   &-head {
     &-title {
       font-size: 36px;
@@ -216,7 +215,6 @@ onUnmounted(() => {
   }
 
   &-body {
-    // height: 640px;
     margin-top: 24px;
     border-radius: 0 0 16px 16px;
     display: flex;
@@ -255,7 +253,6 @@ onUnmounted(() => {
       }
     }
     .editor {
-      // background: #323232;
       background-color: #1e1e1e;
 
       border-radius: 0 0 16px 16px;
@@ -267,7 +264,6 @@ onUnmounted(() => {
       .empty {
         height: 16px;
         background-color: #1e1e1e;
-        // background: #323232;
         border-radius: 0 0 16px 16px;
       }
     }

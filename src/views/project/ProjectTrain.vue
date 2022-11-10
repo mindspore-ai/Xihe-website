@@ -82,7 +82,7 @@ const i18n = {
   describe1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
   describe2:
-    '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
+    '一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
   confirm: '确认',
 };
 const describe = ref('');
@@ -314,6 +314,7 @@ function addModeClick() {
 function getReadMeFile() {
   try {
     getGitlabTree({
+      type: 'project',
       user: routerParams.user,
       path: 'train',
       id: detailData.value.id,
@@ -325,6 +326,7 @@ function getReadMeFile() {
         });
         if (README && README.length) {
           getGitlabFileRaw({
+            type: 'project',
             user: routerParams.user,
             path: 'train/README.md',
             id: detailData.value.id,

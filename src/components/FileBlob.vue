@@ -74,6 +74,7 @@ function previewFile() {
     ? (suffix.value = path.value.match(/[^.]+$/)[0])
     : (suffix.value = 'py');
   getGitlabFileRaw({
+    type: prop.moduleName,
     user: routerParams.user,
     path: path.value,
     id: repoDetailData.value.id,
@@ -105,11 +106,39 @@ function previewFile() {
     }
   });
 }
-getGitlabTree();
-previewFile();
+function verifyFile() {
+  const parentDirectory = path.value.includes('/')
+    ? path.value
+        .split('/')
+        .splice(0, path.value.split('/').length - 1)
+        .join('/')
+    : '';
+  try {
+    getGitlabTree({
+      type: prop.moduleName,
+      user: routerParams.user,
+      path: parentDirectory,
+      id: repoDetailData.value.id,
+      name: routerParams.name,
+    }).then((tree) => {
+      const treeItem = tree?.data?.filter((item) => {
+        return item.path === path.value;
+      });
+      if (treeItem?.length && !treeItem[0].is_lfs_file) {
+        previewFile();
+      } else {
+        router.push('/notfound');
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+verifyFile();
 
 async function headleDelFile(path) {
   deleteFile({
+    type: prop.moduleName,
     name: routerParams.name,
     path: path,
     id: repoDetailData.value.id,
@@ -239,6 +268,7 @@ watch(
             class="file-operation-item"
             @click="
               downloadFile({
+                type: moduleName,
                 user: routerParams.user,
                 path: path,
                 id: repoDetailData.id,
@@ -267,6 +297,7 @@ watch(
             class="download"
             @click="
               downloadFile({
+                type: moduleName,
                 user: routerParams.user,
                 path: path,
                 id: repoDetailData.id,

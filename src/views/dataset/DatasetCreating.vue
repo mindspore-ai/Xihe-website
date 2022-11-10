@@ -169,8 +169,8 @@ function checkName(rule, value, callback) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^[^\u4e00-\u9fa5]{5,42}$/g,
-            message: '暂不支持中文字符，且长度为5-42个字符',
+            pattern: /^[^\u4e00-\u9fa5]{5,30}$/g,
+            message: '暂不支持中文字符，且长度为5-30个字符',
             trigger: 'blur',
           },
           {

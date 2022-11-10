@@ -54,6 +54,7 @@ async function upLoad(param) {
   await fileToBase64(param.file, function (content) {
     uploadFileGitlab(
       {
+        type: prop.moduleName,
         base64_encoded: true,
         name: routerParams.name,
         content: content.split(',')[1],
@@ -157,11 +158,12 @@ onMounted(() => {
         </el-upload>
         <el-progress v-if="Progress" :percentage="Progress" />
       </div>
-      <div class="add-describe tip-text">
+      <div v-if="false" class="add-describe tip-text">
         <o-icon> <icon-describe></icon-describe> </o-icon>
         <span>{{ i18n.modelUpload.addDescribe }}</span>
       </div>
       <o-input
+        v-if="false"
         v-model="description"
         size="fill"
         :placeholder="i18n.modelUpload.placeholder"

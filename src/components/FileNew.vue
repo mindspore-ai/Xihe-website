@@ -92,6 +92,7 @@ async function upLoadObs(formEl) {
 
       uploadFileGitlab(
         {
+          type: prop.moduleName,
           name: routerParams.name,
           content: query.textValue,
           commit_message: `created ${query.folderName}`,
@@ -197,13 +198,13 @@ function pathClick() {
             ></o-editor>
           </div>
         </el-form-item>
-        <el-form-item class="fill" prop="description">
+        <el-form-item v-if="false" class="fill" prop="description">
           <div class="add-describe tip-text">
             <o-icon> <icon-describe></icon-describe> </o-icon>
             <span>{{ i18n.modelUpload.addDescribe }}</span>
           </div>
         </el-form-item>
-        <el-form-item class="fill" prop="description">
+        <el-form-item v-if="false" class="fill" prop="description">
           <el-input
             v-model="query.description"
             :placeholder="i18n.modelUpload.placeholder"

@@ -1,20 +1,21 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
+
+import { useLoginStore } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 import OButton from '@/components/OButton.vue';
 
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
 
-import {
-  getInferencePicture,
-  getSinglePicture,
-  getMultiplePicture,
-} from '@/api/api-modelzoo';
+import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 
 const form = reactive({
   type: [],
 });
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const screenWidth = ref(
   window.innerWidth ||
@@ -94,21 +95,15 @@ function startRatiocnate() {
     )
   ) {
     loading1.value = true;
-    getInferencePicture({
-      content: inferenceText.value,
+    getSinglePicture({
+      desc: inferenceText.value,
     }).then((res) => {
-      if (res.status === 200) {
-        inferUrlList.value = [];
-        // inferUrl.value = res.data.output_image_url + '?' + new Date();
-        inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
-      } else if (res.status === -2) {
+      inferUrlList.value = [];
+      if (res.data) {
+        inferUrlList.value.push(res.data.picture + '?' + new Date());
+      } else {
         ElMessage({
-          type: 'warning',
-          message: res.msg,
-        });
-      } else if (res.status === -1) {
-        ElMessage({
-          type: 'warning',
+          type: 'error',
           message: res.msg,
         });
       }
@@ -127,20 +122,14 @@ function startRatiocnateMo() {
       inferenceText.value
     )
   ) {
-    getInferencePicture({
-      content: inferenceText.value,
-      img_type: '3img',
+    getMultiplePicture({
+      desc: inferenceText.value,
     }).then((res) => {
-      if (res.status === 200) {
-        inferUrlList.value = res.data.output_image_url;
-      } else if (res.status === -2) {
+      if (res.data) {
+        inferUrlList.value = res.data.pictures;
+      } else {
         ElMessage({
-          type: 'warning',
-          message: res.msg,
-        });
-      } else if (res.status === -1) {
-        ElMessage({
-          type: 'warning',
+          type: 'error',
           message: res.msg,
         });
       }
@@ -153,71 +142,49 @@ function startRatiocnateMo() {
   }
 }
 
-// 生成三张图片
 function startRatiocnate1() {
-  if (
-    /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
-      inferenceText.value
-    )
-  ) {
-    if (form.type.length) {
-      getMultiplePicture({
-        desc: inferenceText.value,
-      }).then((res) => {
-        // console.log(res);
-        inferUrlList.value = res.data.pictures;
-      });
-
-      // getInferencePicture({
-      //   content: inferenceText.value,
-      //   img_type: '3img',
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     inferUrlList.value = res.data.output_image_url;
-      //   } else if (res.status === -2) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   } else if (res.status === -1) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   }
-      // });
-    } else {
-      getSinglePicture({
-        desc: inferenceText.value,
-      }).then((res) => {
-        inferUrlList.value = [];
-        inferUrlList.value.push(res.data.picture + '?' + new Date());
-      });
-
-      // getInferencePicture({
-      //   content: inferenceText.value,
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     inferUrlList.value = [];
-      //     inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
-      //   } else if (res.status === -2) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   } else if (res.status === -1) {
-      //     ElMessage({
-      //       type: 'warning',
-      //       message: res.msg,
-      //     });
-      //   }
-      // });
-    }
+  if (!isLogined.value) {
+    goAuthorize();
   } else {
-    ElMessage({
-      type: 'warning',
-      message: '请输入中文描述',
-    });
+    if (
+      /^[\u4e00-\u9fa5\s\·\~\！\@\#\￥\%\……\&\*\（\）\——\-\+\=\【\】\{\}\、\|\；\‘\’\：\“\”\《\》\？\，\。\、]+$/.test(
+        inferenceText.value
+      )
+    ) {
+      if (form.type.length) {
+        getMultiplePicture({
+          desc: inferenceText.value,
+        }).then((res) => {
+          if (res.data) {
+            inferUrlList.value = res.data.pictures;
+          } else {
+            // ElMessage({
+            //   type: 'error',
+            //   message: res.msg,
+            // });
+          }
+        });
+      } else {
+        getSinglePicture({
+          desc: inferenceText.value,
+        }).then((res) => {
+          inferUrlList.value = [];
+          if (res.data) {
+            inferUrlList.value.push(res.data.picture + '?' + new Date());
+          } else {
+            // ElMessage({
+            //   type: 'error',
+            //   message: res.msg,
+            // });
+          }
+        });
+      }
+    } else {
+      ElMessage({
+        type: 'warning',
+        message: '请输入中文描述',
+      });
+    }
   }
 }
 
@@ -264,7 +231,6 @@ const handleNameChange = (val) => {
 
 function refreshTags() {
   exampleList.value = getRandom(lists, 6);
-  console.log(exampleList.value);
 }
 </script>
 <template>
@@ -483,9 +449,9 @@ function refreshTags() {
   background-color: #fff;
   justify-content: space-between;
   align-items: center;
-  @media screen and (max-width: 768px) {
-    padding: 8px 0 24px;
-  }
+  // @media screen and (max-width: 768px) {
+  //   padding: 8px 0 24px;
+  // }
   .active {
     border: 1px solid #a0d2ff;
     .modal {
@@ -499,20 +465,20 @@ function refreshTags() {
     align-items: center;
     color: #0d8dff;
     background-color: #e7f4ff;
-    @media screen and (max-width: 768px) {
-      .o-icon {
-        font-size: 24px;
-      }
-    }
+    // @media screen and (max-width: 768px) {
+    //   .o-icon {
+    //     font-size: 24px;
+    //   }
+    // }
     p {
       font-size: 14px;
       font-weight: 400;
       line-height: 20px;
       margin-top: 8px;
-      @media screen and (max-width: 768px) {
-        font-size: 9px;
-        line-height: 13px;
-      }
+      // @media screen and (max-width: 768px) {
+      //   font-size: 9px;
+      //   line-height: 13px;
+      // }
     }
   }
   .img-list-item {
@@ -520,18 +486,18 @@ function refreshTags() {
     height: 106px;
     position: relative;
     cursor: pointer;
-    @media screen and (max-width: 768px) {
-      width: 54px;
-      height: 54px;
-      margin-right: 6px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   width: 54px;
+    //   height: 54px;
+    //   margin-right: 6px;
+    // }
     img {
       width: 100%;
       height: 100%;
-      @media screen and (max-width: 768px) {
-        width: 54px;
-        height: 54px;
-      }
+      // @media screen and (max-width: 768px) {
+      //   width: 54px;
+      //   height: 54px;
+      // }
     }
     .modal {
       position: absolute;
@@ -558,18 +524,18 @@ function refreshTags() {
   align-items: center;
   .o-icon {
     color: #ccc;
-    @media screen and (max-width: 768px) {
-      font-size: 32px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 32px;
+    // }
   }
   .upload-tip {
     font-size: 14px;
     color: #ccc;
     line-height: 22px;
     margin-top: 8px;
-    @media screen and (max-width: 768px) {
-      font-size: 12px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 12px;
+    // }
     span {
       color: #0d8dff;
     }
@@ -586,10 +552,10 @@ function refreshTags() {
     display: flex;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 768px) {
-      height: 196px;
-      border: 1px solid #acacac;
-    }
+    // @media screen and (max-width: 768px) {
+    //   height: 196px;
+    //   border: 1px solid #acacac;
+    // }
     img {
       border: 1px solid #a0d2ff;
       max-height: 100%;
@@ -602,9 +568,9 @@ function refreshTags() {
   :deep(.el-divider) {
     border: 1px solid #dbdbdb;
   }
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
 }
 
 :deep(.el-collapse) {
@@ -710,14 +676,14 @@ function refreshTags() {
     .btn-box-mobile {
       display: none;
 
-      @media screen and (max-width: 768px) {
-        display: block;
-        display: flex;
-        justify-content: center;
-        .infer-button-mobile {
-          margin-left: 8px;
-        }
-      }
+      // @media screen and (max-width: 768px) {
+      //   display: block;
+      //   display: flex;
+      //   justify-content: center;
+      //   .infer-button-mobile {
+      //     margin-left: 8px;
+      //   }
+      // }
     }
 
     :deep(.el-upload) {
@@ -767,15 +733,15 @@ function refreshTags() {
       }
     }
   }
-  @media screen and (max-width: 768px) {
-    display: block;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: block;
+  // }
 }
 .text-to-img {
   padding-top: 40px;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
   .title {
     font-weight: 300;
     color: #000000;
@@ -960,9 +926,9 @@ function refreshTags() {
   // background-color: #f5f6f8;
   width: 100%;
   padding-bottom: 64px;
-  @media screen and (max-width: 768px) {
-    padding: 16px 16px 40px;
-  }
+  // @media screen and (max-width: 768px) {
+  //   padding: 16px 16px 40px;
+  // }
   .model-wrap {
     margin: 0 auto;
     max-width: 1440px;

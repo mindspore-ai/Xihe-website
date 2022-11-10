@@ -340,7 +340,6 @@ function addTagClick() {
 }
 
 // 点赞，取消点赞
-console.log('userInfoStore.id: ', userInfoStore.id);
 function handleProjectLike() {
   let params = {
     name: detailData.value.name,
@@ -354,7 +353,6 @@ function handleProjectLike() {
       // 点赞(收藏)
       getUserDig(params)
         .then((res) => {
-          console.log('收藏结果: ', res);
           if (res.status === 201) {
             getDetailData();
           }
@@ -366,7 +364,6 @@ function handleProjectLike() {
       // 取消收藏
       cancelCollection(params)
         .then((res) => {
-          console.log('取消收藏结果: ', res);
           if (res.status === 204) {
             getDetailData();
           }
@@ -444,7 +441,6 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  // console.log({ add, remove });
   // dialogList.menuList.forEach((menu) => {
   //   if (menu.key === 'task') {
   //     queryDate[menu.key] = [];

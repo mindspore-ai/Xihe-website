@@ -1,15 +1,17 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, computed } from 'vue';
 
 import { request } from '@/shared/axios';
-
-import { ElMessage } from 'element-plus';
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
 
 import OButton from '@/components/OButton.vue';
 
 import IconUpload from '~icons/app/modelzoo-upload';
 
-import { uploadModelzooPic, getExampleTags } from '@/api/api-modelzoo';
+import { uploadModelzooPic } from '@/api/api-modelzoo';
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const imageUrl = ref('');
 const fileList = ref([]);
@@ -74,14 +76,6 @@ const onResize = () => {
 };
 window.addEventListener('resize', onResize);
 
-const exampleList = reactive([
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-  { name: '', isSelected: false },
-]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const loading = ref(false);
@@ -96,26 +90,30 @@ const getImage = (name) => {
 let formData = new FormData();
 
 function submitUpload() {
-  if (fileList.value.length === 1) {
-    analysis.value = '';
-    loading.value = true;
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    if (fileList.value.length === 1) {
+      analysis.value = '';
+      loading.value = true;
 
-    formData.delete('file');
-    formData = new FormData();
+      formData.delete('file');
+      formData = new FormData();
 
-    formData.append('picture', fileList.value[fileList.value.length - 1].raw);
+      formData.append('picture', fileList.value[fileList.value.length - 1].raw);
 
-    try {
-      uploadModelzooPic(formData).then((res) => {
-        if (res.data) {
-          analysis.value = res.data.desc;
-          loading.value = false;
-        } else {
-          loading.value = false;
-        }
-      });
-    } catch (e) {
-      console.error(e);
+      try {
+        uploadModelzooPic(formData).then((res) => {
+          if (res.data) {
+            analysis.value = res.data.desc;
+            loading.value = false;
+          } else {
+            loading.value = false;
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 }
@@ -165,21 +163,6 @@ function customUpload() {
 }
 
 const activeNames1 = ref(['1']);
-
-function getExampleLists() {
-  getExampleTags().then((res) => {
-    if (res.status === 200) {
-      res.data.forEach((item, index) => {
-        exampleList.forEach((it, i) => {
-          if (index === i) {
-            it.name = item;
-          }
-        });
-      });
-    }
-  });
-}
-getExampleLists();
 </script>
 <template>
   <div class="model-page">
@@ -345,9 +328,9 @@ getExampleLists();
   background-color: #fff;
   justify-content: space-between;
   align-items: center;
-  @media screen and (max-width: 768px) {
-    padding: 8px 0 24px;
-  }
+  // @media screen and (max-width: 768px) {
+  //   padding: 8px 0 24px;
+  // }
   .active {
     border: 1px solid #a0d2ff;
     .modal {
@@ -361,11 +344,11 @@ getExampleLists();
     align-items: center;
     color: #0d8dff;
     background-color: #e7f4ff;
-    @media screen and (max-width: 768px) {
-      .o-icon {
-        font-size: 24px;
-      }
-    }
+    // @media screen and (max-width: 768px) {
+    //   .o-icon {
+    //     font-size: 24px;
+    //   }
+    // }
     p {
       font-size: 14px;
       font-weight: 400;
@@ -382,18 +365,18 @@ getExampleLists();
     height: 106px;
     position: relative;
     cursor: pointer;
-    @media screen and (max-width: 768px) {
-      width: 54px;
-      height: 54px;
-      margin-right: 6px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   width: 54px;
+    //   height: 54px;
+    //   margin-right: 6px;
+    // }
     img {
       width: 100%;
       height: 100%;
-      @media screen and (max-width: 768px) {
-        width: 54px;
-        height: 54px;
-      }
+      // @media screen and (max-width: 768px) {
+      //   width: 54px;
+      //   height: 54px;
+      // }
     }
     .modal {
       position: absolute;
@@ -420,18 +403,18 @@ getExampleLists();
   align-items: center;
   .o-icon {
     color: #ccc;
-    @media screen and (max-width: 768px) {
-      font-size: 32px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 32px;
+    // }
   }
   .upload-tip {
     font-size: 14px;
     color: #ccc;
     line-height: 22px;
     margin-top: 8px;
-    @media screen and (max-width: 768px) {
-      font-size: 12px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   font-size: 12px;
+    // }
     span {
       color: #0d8dff;
     }
@@ -448,10 +431,10 @@ getExampleLists();
     display: flex;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 768px) {
-      height: 196px;
-      border: 1px solid #acacac;
-    }
+    // @media screen and (max-width: 768px) {
+    //   height: 196px;
+    //   border: 1px solid #acacac;
+    // }
     img {
       border: 1px solid #a0d2ff;
       max-height: 100%;
@@ -464,9 +447,9 @@ getExampleLists();
   :deep(.el-divider) {
     border: 1px solid #dbdbdb;
   }
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
 }
 
 :deep(.el-collapse) {
@@ -572,14 +555,14 @@ getExampleLists();
     .btn-box-mobile {
       display: none;
 
-      @media screen and (max-width: 768px) {
-        display: block;
-        display: flex;
-        justify-content: center;
-        .infer-button-mobile {
-          margin-left: 8px;
-        }
-      }
+      // @media screen and (max-width: 768px) {
+      //   display: block;
+      //   display: flex;
+      //   justify-content: center;
+      //   .infer-button-mobile {
+      //     margin-left: 8px;
+      //   }
+      // }
     }
 
     :deep(.el-upload) {
@@ -629,15 +612,15 @@ getExampleLists();
       }
     }
   }
-  @media screen and (max-width: 768px) {
-    display: block;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: block;
+  // }
 }
 
 .image-caption {
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  // @media screen and (max-width: 768px) {
+  //   display: none;
+  // }
 }
 .caption-top {
   display: flex;

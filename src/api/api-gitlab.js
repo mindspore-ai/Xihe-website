@@ -46,12 +46,6 @@ export function getGitlabToken() {
   });
 }
 
-export function creatModelRepo(params) {
-  const url = `/server/model`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
 // 获取仓库详情
 export function getRepoDetailByName(params) {
   const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
@@ -70,7 +64,9 @@ export function getRepoDetailByName(params) {
 }
 //上传文件
 export async function uploadFileGitlab(params, path) {
-  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(path)}`;
+  const url = `/api/v1/repo/${params.type}/${
+    params.name
+  }/file/${encodeURIComponent(path)}`;
   return request
     .post(url, params, await getHeaderConfig())
     .then((res) => {
@@ -86,9 +82,9 @@ export async function uploadFileGitlab(params, path) {
 }
 //更新上传文件
 export async function editorFileGitlab(params) {
-  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(
-    params.path
-  )}`;
+  const url = `/api/v1/repo/${params.type}/${
+    params.name
+  }/file/${encodeURIComponent(params.path)}`;
   return request
     .put(url, params, await getHeaderConfig())
     .then((res) => {
@@ -104,7 +100,7 @@ export async function editorFileGitlab(params) {
 }
 // 获取 gitlab 树
 export async function getGitlabTree(params) {
-  const url = `/api/v1/repo/${params.user}/${
+  const url = `/api/v1/repo/${params.type}/${params.user}/${
     params.name
   }/files?path=${encodeURIComponent(params.path)}`;
   return request
@@ -122,9 +118,9 @@ export async function getGitlabTree(params) {
 }
 // 删除文件
 export async function deleteFile(params) {
-  const url = `/api/v1/repo/${params.name}/file/${encodeURIComponent(
-    params.path
-  )}`;
+  const url = `/api/v1/repo/${params.type}/${
+    params.name
+  }/file/${encodeURIComponent(params.path)}`;
   return request
     .delete(url, await getHeaderConfig())
     .then((res) => {
@@ -150,28 +146,10 @@ export async function deleteFolder(actions, id) {
     return res.data;
   });
 }
-// gitlab 文件详情
-export async function getGitlabFileDetail(path, id) {
-  const url = `/repo/projects/${id}/repository/files/${encodeURIComponent(
-    path
-  )}?ref=main`;
-  return request
-    .get(url, await getGitlabConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      ElMessage({
-        type: 'error',
-        message: err.message,
-      });
-      throw new Error(err);
-    });
-}
 
-// gitlab 原文件下载
+// gitlab 文件预览 不添加下载量
 export async function getGitlabFileRaw(params) {
-  const url = `/api/v1/repo/${params.user}/${
+  const url = `/api/v1/repo/${params.type}/${params.user}/${
     params.name
   }/file/${encodeURIComponent(params.path)}/preview`;
   return request
@@ -189,7 +167,7 @@ export async function getGitlabFileRaw(params) {
 }
 // gitlab 原文件下载
 export async function getGitlabFile(params) {
-  const url = `/api/v1/repo/${params.user}/${
+  const url = `/api/v1/repo/${params.type}/${params.user}/${
     params.name
   }/file/${encodeURIComponent(params.path)}`;
   return request
@@ -212,16 +190,6 @@ export async function gitlabDownloadAll(id) {
     return res.data;
   });
 }
-export function getGitlabCommit(path, id) {
-  const url = `/repo/projects/${id}/repository/commits?path=${path}&trailers=true`;
-
-  const headers = {
-    Authorization: ' Bearer hGq8ze9XF6VDsis2t4SY',
-  };
-  return request.get(url, { headers }).then((res) => {
-    return res.data;
-  });
-}
 
 // 递归查询所有文件
 export async function findAllFileByPath(fullPath, path) {
@@ -239,13 +207,6 @@ export async function findAllFileByPath(fullPath, path) {
   });
 }
 
-// test
-export async function getTree() {
-  const url = `/graphql/888/project-firstProject/-/refs/main/logs_tree/?format=json&offset=0`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
-}
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {
     let downloadElement = document.createElement('a'); //创建一个a 虚拟标签

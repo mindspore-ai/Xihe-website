@@ -12,28 +12,19 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useFileData, useUserInfoStore } from '@/stores';
 import { getTrainLog, autoEvaluate } from '@/api/api-project';
+import { formatSeconds } from '@/shared/utils';
 
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
-import IconWarning from '~icons/app/warning';
+// import IconWarning from '~icons/app/warning';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-const showEvaBtn = ref(true);
-const isDisabled = ref(false);
-const showAnaButton = ref(false);
-const showGoButton = ref(false);
-
-const showEvaBtn1 = ref(true);
-const isDisabled1 = ref(false);
-const showAnaButton1 = ref(false);
-const showGoButton1 = ref(false);
 const evaluateUrl = ref('');
 
 const showContent = ref(true);
@@ -48,10 +39,6 @@ const router = useRouter();
 
 const logUrl = ref('');
 const outputUrl = ref('');
-
-console.log(outputUrl.value.indexOf('train-output/'));
-console.log(outputUrl.value.indexOf('.gz'));
-console.log(outputUrl.value.substring(89 + 13, 119));
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -121,25 +108,6 @@ const form = reactive({
 });
 const userInfoStore = useUserInfoStore();
 
-// 转换时间
-function formatSeconds(value) {
-  let theTime = value; //秒
-  let middle = 0; //分
-  let hour = 0; //小时
-  if (theTime > 59) {
-    middle = parseInt(theTime / 60);
-    theTime = parseInt(theTime % 60);
-  }
-  if (middle > 59) {
-    hour = parseInt(middle / 60);
-    middle = parseInt(middle % 60);
-  }
-  theTime < 10 ? (theTime = '0' + theTime) : (theTime = theTime);
-  middle < 10 ? (middle = '0' + middle) : (middle = middle);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
-  return hour + ':' + middle + ':' + theTime;
-}
-
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -155,8 +123,23 @@ goHome();
 
 const isDone = ref(false);
 
+const btnContent = ref('开始评估');
+
 const logName = ref('');
 const outputName = ref('');
+
+const isEvaluating = ref(false);
+const isEvaluated = ref(false);
+
+const isCusEvaluating = ref(false);
+const isCusEvaluated = ref(false);
+
+const requestData = ref({
+  learning_rate_scope: [],
+  batch_size_scope: [],
+  momentum_scope: [],
+  type: 'standard',
+});
 
 // 获取日志
 function handleGetLog() {
@@ -165,16 +148,15 @@ function handleGetLog() {
     trainId: route.params.trainId,
     type: 'log',
   }).then((res) => {
-    console.log(res);
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
-      console.log(logUrl.value);
+
       let i1 = logUrl.value.indexOf('modelarts');
       let i2 = logUrl.value.indexOf('.log');
-      console.log(i1, i2);
-      logName.value = outputUrl.value.substring(i1, i2 + 4);
-      console.log(logName.value);
+
+      logName.value = logUrl.value.substring(i1, i2 + 4);
     } else {
+      logName.value = '';
     }
   });
 }
@@ -186,16 +168,15 @@ function handleGetOutput() {
     trainId: route.params.trainId,
     type: 'output',
   }).then((res) => {
-    console.log(res);
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
       let i1 = outputUrl.value.indexOf('train-output/');
       let i2 = outputUrl.value.indexOf('.gz');
-      console.log(i1, i2);
+
       outputName.value = outputUrl.value.substring(i1 + 13, i2);
-      console.log(outputName.value);
     } else {
+      outputName.value = '';
     }
   });
 }
@@ -211,7 +192,6 @@ socket.onopen = function () {};
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
-  console.log('收到消息', JSON.parse(event.data).data);
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     if (trainDetail.value) {
@@ -219,11 +199,15 @@ socket.onmessage = function (event) {
         ? (isEvaluating.value = false)
         : (isEvaluating.value = true);
 
+      trainDetail.value.status === 'Completed'
+        ? (isCusEvaluating.value = false)
+        : (isCusEvaluating.value = true);
+
       form.name = trainDetail.value.name;
       form.desc = trainDetail.value.log;
       configurationInfo.value = trainDetail.value.compute;
       isDone.value = trainDetail.value.is_done;
-      if (isDone.value) {
+      if (trainDetail.value.status === 'Completed') {
         handleGetLog();
         handleGetOutput();
       }
@@ -236,40 +220,60 @@ function reloadPage() {
   socket.close();
 }
 
-const requestData = ref({
-  learning_rate_scope: [],
-  batch_size_scope: [],
-  momentum_scope: [],
-  type: 'standard',
-});
-
 // 评估
-function setEvaluateWebscoket(id) {
+function setEvaluateWebscoket(id, type) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
     [getHeaderConfig().headers['private-token']]
   );
 
-  ws.onopen = function () {
-    console.log('websocket已连接');
-  };
-
   ws.onmessage = function (event) {
+    console.log('aim', JSON.parse(event.data));
     // 推理出url 断开websocket
-    if (JSON.parse(event.data).access_url) {
-      btnContent.value = '查看报告';
-      isEvaluating.value = false;
-      isEvaluated.value = true;
+    if (type === 'standard') {
+      console.log('standard');
+      // 自动评估
+      if (JSON.parse(event.data).data.access_url) {
+        btnContent.value = '查看报告';
+        isEvaluating.value = false;
+        isEvaluated.value = true;
 
-      evaluateUrl.value = JSON.parse(event.data).access_url;
-      ws.close();
+        evaluateUrl.value = JSON.parse(event.data).data.access_url;
+        ws.close();
+      } else if (JSON.parse(event.data).data.error) {
+        btnContent.value = '开始评估';
+        isEvaluating.value = false;
+        ElMessage({
+          type: 'error',
+          message: JSON.parse(event.data).data.error,
+        });
+        ws.close();
+      }
+    } else {
+      console.log('custom');
+      // 自定义评估
+      if (JSON.parse(event.data).data.access_url) {
+        customContent.value = '查看报告';
+        isCusEvaluating.value = false;
+        isCusEvaluated.value = true;
+
+        evaluateUrl.value = JSON.parse(event.data).data.access_url;
+
+        ws.close();
+      } else if (JSON.parse(event.data).data.error) {
+        customContent.value = '开始评估';
+        isCusEvaluating.value = false;
+
+        ElMessage({
+          type: 'error',
+          message: JSON.parse(event.data).data.error,
+        });
+
+        ws.close();
+      }
     }
   };
 }
-
-const btnContent = ref('开始评估');
-const isEvaluating = ref(false);
-const isEvaluated = ref(false);
 
 // 自动评估
 function saveSetting() {
@@ -283,14 +287,29 @@ function saveSetting() {
     if (valid) {
       btnContent.value = '评估中...';
       isEvaluating.value = true;
-
       autoEvaluate(
         requestData.value,
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
-        if (res.status === 201 && res.data.data) {
-          setEvaluateWebscoket(res.data.data.evaluate_id);
+        console.log('自动评估', res);
+
+        if (res.status === 201) {
+          if (res.data.data.error) {
+            btnContent.value = '开始评估';
+            isEvaluating.value = false;
+            ElMessage({
+              type: 'error',
+              message: res.data.data.error,
+            });
+          } else if (res.data.data.access_url) {
+            btnContent.value = '查看报告';
+            isEvaluating.value = false;
+            isEvaluated.value = true;
+            evaluateUrl.value = res.data.data.access_url;
+          } else {
+            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard');
+          }
         } else {
           btnContent.value = '开始评估';
           isEvaluating.value = false;
@@ -315,20 +334,36 @@ function saveSetting() {
     }
   });
 }
+const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {
-  // showEvaBtn1.value = false;
-  // isDisabled1.value = true;
+  customContent.value = '评估中...';
+  isCusEvaluating.value = true;
 
   let params = {
     type: 'custom',
   };
+
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
-      console.log(res);
-      if (res.status === 201 && res.data.data) {
-        setEvaluateWebscoket(res.data.data.evaluate_id);
+      console.log('自定义评估', res);
+      if (res.status === 201) {
+        if (res.data.data.access_url) {
+          customContent.value = '查看报告';
+          isCusEvaluating.value = false;
+          isCusEvaluated.value = true;
+          evaluateUrl.value = res.data.data.access_url;
+        } else if (res.data.data.error) {
+          customContent.value = '开始评估';
+          isCusEvaluating.value = false;
+          ElMessage({
+            type: 'error',
+            message: res.data.data.error,
+          });
+        } else {
+          setEvaluateWebscoket(res.data.data.evaluate_id, 'custom');
+        }
       } else {
         ElMessage({
           type: 'error',
@@ -342,7 +377,7 @@ function handleAssessment() {
 // 跳转到Aim嵌入页面
 function goAimPage() {
   router.push({
-    path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
     },
@@ -351,24 +386,15 @@ function goAimPage() {
 
 // 跳到评估页面
 function goToPage() {
-  console.log('跳转到webui新页面');
   // 点击在新页签打开
-  // let routerData = router.resolve({
-  //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/projectAim`,
-  //   query: {
-  //     url: evaluateUrl.value,
-  //   },
-  // });
-  // window.open(routerData.href, '_blank');
+  let routerData = router.resolve({
+    path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
+    query: {
+      url: evaluateUrl.value,
+    },
+  });
+  window.open(routerData.href, '_blank');
 }
-
-// 下载输出
-// function downloadLogFile() {
-//   let a = document.createElement('a');
-//   a.download = 'log.txt';
-//   a.href = logUrl;
-//   a.click();
-// }
 
 const downloadBlob = (blob, fileName) => {
   try {
@@ -376,7 +402,7 @@ const downloadBlob = (blob, fileName) => {
     if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
-      // 谷歌浏览器 创建a标签 添加download属性下载
+      // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
       downloadElement.target = '_blank';
@@ -387,29 +413,30 @@ const downloadBlob = (blob, fileName) => {
       window.URL.revokeObjectURL(href); // 释放掉blob对象
     }
   } catch (e) {
-    console.log('下载失败');
+    console.error(e);
   }
 };
 
 async function downloadLogFile() {
+  if (!logUrl.value) {
+    ElMessage({
+      type: 'warning',
+      message: '训练中',
+    });
+    return;
+  }
+
   let url = logUrl.value;
   let data = await fetch(url)
     .then((response) => response.blob())
     .then((res) => {
-      console.log(res);
       let blod = new Blob([res]);
       let name = 'log.txt';
       downloadBlob(blod, name);
     });
+
   return data;
 }
-
-// function goJsonFile() {
-//   let a = document.createElement('a');
-//   a.download = 'output';
-//   a.href = outputUrl;
-//   a.click();
-// }
 
 function handleChangeClick() {
   if (showContent.value) {
@@ -455,7 +482,6 @@ watch(
       </div>
       <div class="train-log-desc">
         <el-input id="txt" v-model="form.desc" type="textarea" readonly />
-        <!-- <img v-if="!form.desc" src="@/assets/gifs/loading.gif" alt="" /> -->
       </div>
     </div>
     <div class="train-log-detail">
@@ -477,7 +503,7 @@ watch(
                   class="status-item"
                 >
                   <o-icon><icon-finished></icon-finished></o-icon>
-                  <span>{{ trainDetail.status }}</span>
+                  <span>已完成</span>
                 </div>
 
                 <div
@@ -485,41 +511,36 @@ watch(
                   class="status-item"
                 >
                   <o-icon><icon-stopped></icon-stopped></o-icon>
-                  <span>{{ trainDetail.status }}</span>
+                  <span>已终止</span>
                 </div>
 
                 <div
-                  v-if="
-                    trainDetail.status === 'Running' ||
-                    trainDetail.status === 'scheduling'
-                  "
+                  v-if="trainDetail.status === 'Running'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <span>运行中</span>
+                </div>
+
+                <div
+                  v-if="trainDetail.status === 'scheduling'"
                   class="status-item"
                 >
                   <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>
-                    {{
-                      trainDetail.status === 'scheduling'
-                        ? 'Running'
-                        : trainDetail.status
-                    }}</span
-                  >
+                  <span> 启动中</span>
+                </div>
+
+                <div v-if="trainDetail.status === 'Failed'" class="status-item">
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span> 训练失败</span>
                 </div>
 
                 <div
-                  v-if="
-                    trainDetail.status === 'Failed' ||
-                    trainDetail.status === 'schedule_failed'
-                  "
+                  v-if="trainDetail.status === 'schedule_failed'"
                   class="status-item"
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>
-                    {{
-                      trainDetail.status === 'schedule_failed'
-                        ? 'Failed'
-                        : trainDetail.status
-                    }}
-                  </span>
+                  <span> 启动失败 </span>
                 </div>
               </div>
             </div>
@@ -547,9 +568,7 @@ watch(
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
-              <!-- <a :href="logUrl">{{ logUrl }}</a> -->{{
-                logUrl === '' ? '训练中' : logName
-              }}
+              {{ logUrl === '' ? '训练中' : logName }}
             </div>
           </li>
           <li class="info-list">
@@ -572,9 +591,8 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document">
-              <a :href="outputUrl">{{
-                outputUrl === '' ? '训练中' : outputName
-              }}</a>
+              <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
+              <span v-else>训练中</span>
             </div>
           </li>
 
@@ -651,54 +669,24 @@ watch(
                 </div>
               </div>
             </div>
-
+            <!-- 自定义评估 -->
             <div v-if="showContent1">
-              <!-- 无Aim代码 -->
-              <div v-if="trainDetail.db_path" class="no-aim">
-                <p>
-                  <o-icon><icon-warning></icon-warning></o-icon>
-                </p>
-                <p class="no-aim-middle">
-                  当前暂时不能进行自定义评估，你需要在训练代码中添加Aim代码，详情请参考
-                </p>
-                <p class="no-aim-bottom" @click="addAssessCode">添加评估代码</p>
-              </div>
-              <!-- 有Aim代码 -->
-              <div v-if="!trainDetail.db_path" class="have-aim">
+              <div class="have-aim">
                 <p>
                   请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码
                 </p>
-                <!-- <el-form>
-                  <el-form-item label="repo">
-                    <el-input
-                      v-model="repoContent"
-                      placeholder="train/db/"
-                    ></el-input>
-                  </el-form-item>
-                </el-form> -->
                 <div class="info-btn">
                   <o-button
-                    v-if="showEvaBtn1"
-                    :disabled="isEvaluating"
+                    v-if="!isCusEvaluated"
+                    :disabled="isCusEvaluating"
                     type="primary"
                     @click="handleAssessment"
-                    >开始评估</o-button
+                    >{{ customContent }}</o-button
                   >
-                  <!-- <o-button v-if="isDisabled1" disabled type="primary"
-                    >开始评估</o-button
-                  > -->
-                  <o-button v-if="showAnaButton1" disabled type="primary"
-                    >评估中...</o-button
-                  >
-                  <!-- <o-button
-                    v-if="showGoButton1"
-                    type="primary"
-                    @click="goAimPage"
-                    >查看报告</o-button
-                  > -->
+
                   <a :href="`${evaluateUrl}`" onclick="return false">
                     <o-button
-                      v-if="showGoButton1"
+                      v-if="isCusEvaluated"
                       type="primary"
                       @click="goAimPage"
                       >查看报告</o-button
@@ -722,7 +710,6 @@ watch(
   .info-btn {
     align-self: end;
     margin-top: 30px;
-    // padding-right: 50px;
   }
 }
 .train-log {
@@ -734,7 +721,6 @@ watch(
   background-color: #fff;
   &-form {
     width: 55%;
-    // padding-bottom: 55px;
     .train-log-name {
       span {
         margin-right: 8px;
@@ -757,7 +743,6 @@ watch(
         width: 100% !important;
         height: 100%;
         margin-top: 24px;
-        // margin-bottom: 30px;
         :deep .el-textarea__inner {
           min-height: 560px !important;
           height: 100%;
@@ -879,7 +864,6 @@ watch(
         }
         :deep .el-form-item {
           margin-top: 35px;
-          // margin-top: 16px;
           &:first-child {
             margin-top: 16px;
           }
@@ -941,21 +925,15 @@ watch(
         }
         .document {
           color: #0d8dff;
-          // border-bottom: 1px solid #0d8dff;
           margin-left: 32px;
           overflow: hidden;
           text-overflow: ellipsis;
-          // white-space: nowrap;
           cursor: pointer;
           a {
             color: #0d8dff;
           }
         }
       }
-      // .info-btn {
-      //   margin-left: 140px;
-      //   margin-top: 25px;
-      // }
     }
   }
 }

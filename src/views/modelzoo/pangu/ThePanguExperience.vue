@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, watch, nextTick, computed } from 'vue';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useLoginStore } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 import IconSend from '~icons/app/vqa-send';
 import IconRefresh from '~icons/app/refresh-taichu';
@@ -11,11 +12,14 @@ import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import { handlePanguInfer } from '@/api/api-modelzoo';
 
 const userInfoStore = useUserInfoStore();
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const inputMsg = ref('');
 const sendBtn = ref(null);
 
 const avatarUrl = ref('');
+
+avatarUrl.value = userInfoStore.avatar;
 
 const lists = [
   { text: '人间四月芳菲尽', isSelected: false },
@@ -37,6 +41,14 @@ const examples = ref([
   { text: '足球起源于哪里', isSelected: false },
 ]);
 
+const msgList = ref([
+  {
+    message: '请输入一个具体的问题，模型会生成对应答案。',
+    type: 0,
+    isLoading: false,
+  },
+]);
+
 // 随机选取五个样例
 function getRandom(arr, count) {
   let shuffled = arr.slice(0),
@@ -53,15 +65,10 @@ function getRandom(arr, count) {
   return shuffled.slice(min);
 }
 
-const msgList = ref([
-  {
-    message: '请输入一个具体的问题，模型会生成对应答案。',
-    type: 0,
-    isLoading: false,
-  },
-]);
-
-avatarUrl.value = userInfoStore.avatar;
+// 换一批
+function refreshTags() {
+  examples.value = getRandom(lists, 5);
+}
 
 const screenWidth = ref(
   window.innerWidth ||
@@ -81,43 +88,39 @@ window.addEventListener('resize', onResize);
 function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
-  msgList.value.push({
-    message: inputMsg.value,
-    type: 1,
-    isLoading: true,
-  });
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    msgList.value.push({
+      message: inputMsg.value,
+      type: 1,
+      isLoading: true,
+    });
 
-  examples.value.forEach((item) => {
-    item.isSelected = false;
-  });
+    examples.value.forEach((item) => {
+      item.isSelected = false;
+    });
 
-  handlePanguInfer({ question: inputMsg.value }).then((res) => {
-    console.log(res);
-    // TODO: 状态码处理
-    if (res.status === 201 && res.data.data) {
-      msgList.value.forEach((item) => (item.isLoading = false));
+    handlePanguInfer({ question: inputMsg.value }).then((res) => {
+      if (res.status === 201 && res.data.data) {
+        msgList.value.forEach((item) => (item.isLoading = false));
 
-      msgList.value.push({
-        message: res.data.data.answer,
-        type: 0,
-        isLoading: false,
-      });
-    } else {
-      msgList.value.forEach((item) => (item.isLoading = false));
+        msgList.value.push({
+          message: res.data.data.answer,
+          type: 0,
+          isLoading: false,
+        });
+      } else {
+        msgList.value.forEach((item) => (item.isLoading = false));
+        // ElMessage({
+        //   type: 'error',
+        //   message: res.code,
+        // });
+      }
+    });
 
-      ElMessage({
-        type: 'error',
-        message: res.data.msg,
-      });
-    }
-  });
-
-  inputMsg.value = '';
-}
-
-// 换一批
-function refreshTags() {
-  examples.value = getRandom(lists, 5);
+    inputMsg.value = '';
+  }
 }
 
 function handleTextChange() {
@@ -306,22 +309,20 @@ onMounted(() => {
   background-size: 100%;
   width: 100%;
   padding: 40px 64px 64px;
-  @media screen and (max-width: 1080px) {
-    padding: 16px 16px 40px;
-    background-image: none;
-    // background-image: none;
-    // background: #f5f6f8;
-  }
+  // @media screen and (max-width: 1080px) {
+  //   padding: 16px 16px 40px;
+  //   background-image: none;
+  // }
   &-box {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     padding: 40px;
-    @media screen and (max-width: 1080px) {
-      padding: 16px 16px 24px;
-      width: 100%;
-    }
+    // @media screen and (max-width: 1080px) {
+    //   padding: 16px 16px 24px;
+    //   width: 100%;
+    // }
     .title {
       font-size: 36px;
       font-weight: 300;
@@ -330,23 +331,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      @media screen and (max-width: 1080px) {
-        font-size: 14px;
-        color: #000000;
-        line-height: 28px;
-      }
-      .new-tag {
-        display: inline-block;
-        width: 44px;
-        line-height: 20px;
-        background: #ff7f0d;
-        text-align: center;
-        color: #fff;
-        font-size: 12px;
-        @media screen and (max-width: 1080px) {
-          display: none;
-        }
-      }
+      // @media screen and (max-width: 1080px) {
+      //   font-size: 14px;
+      //   color: #000000;
+      //   line-height: 28px;
+      // }
     }
 
     .description {
@@ -356,13 +345,13 @@ onMounted(() => {
       line-height: 24px;
       margin-top: 16px;
       text-align: center;
-      @media screen and (max-width: 1080px) {
-        font-size: 12px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 18px;
-        margin-top: 8px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   font-size: 12px;
+      //   font-weight: 400;
+      //   color: #555555;
+      //   line-height: 18px;
+      //   margin-top: 8px;
+      // }
     }
 
     .chat-box {
@@ -372,10 +361,10 @@ onMounted(() => {
       margin-top: 40px;
       overflow: auto;
       padding-top: 24px;
-      @media screen and (max-width: 1080px) {
-        margin-top: 16px;
-        height: 400px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   margin-top: 16px;
+      //   height: 400px;
+      // }
       &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -398,10 +387,10 @@ onMounted(() => {
         flex-direction: row-reverse;
         margin-bottom: 24px;
         padding-right: 26px;
-        @media screen and (max-width: 1080px) {
-          margin-bottom: 16px;
-          padding-right: 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   margin-bottom: 16px;
+        //   padding-right: 16px;
+        // }
 
         .message {
           padding: 16px 24px;
@@ -413,34 +402,34 @@ onMounted(() => {
           color: #000000;
           line-height: 22px;
           position: relative;
-          @media screen and (max-width: 1080px) {
-            padding: 8px;
-            margin-left: 28px;
-            font-size: 12px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 17px;
-            border-radius: 8px 0px 8px 8px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   padding: 8px;
+          //   margin-left: 28px;
+          //   font-size: 12px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 17px;
+          //   border-radius: 8px 0px 8px 8px;
+          // }
           .msg-loading {
             position: absolute;
             left: -30px;
             width: 20px;
             height: 20px;
-            @media screen and (max-width: 1080px) {
-              width: 12px;
-              height: 12px;
-              left: -20px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 12px;
+            //   height: 12px;
+            //   left: -20px;
+            // }
           }
         }
 
         .message-img {
           padding: 8px;
           line-height: 0px;
-          @media screen and (max-width: 1080px) {
-            padding: 4px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   padding: 4px;
+          // }
         }
 
         .avatar {
@@ -448,27 +437,27 @@ onMounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-left: 8px;
-          @media screen and (max-width: 1080px) {
-            min-width: 24px;
-            min-height: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   min-width: 24px;
+          //   min-height: 24px;
+          // }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            @media screen and (max-width: 1080px) {
-              width: 24px;
-              height: 24px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 24px;
+            //   height: 24px;
+            // }
           }
         }
       }
       .message-box-vqa {
         display: flex;
         margin-bottom: 24px;
-        @media screen and (max-width: 1080px) {
-          margin-bottom: 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   margin-bottom: 16px;
+        // }
         .message {
           white-space: pre-wrap;
           padding: 16px 24px;
@@ -479,15 +468,15 @@ onMounted(() => {
           font-weight: 400;
           color: #000000;
           line-height: 22px;
-          @media screen and (max-width: 1080px) {
-            padding: 8px;
-            margin-right: 28px;
-            font-size: 12px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 17px;
-            border-radius: 0px 8px 8px 8px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   padding: 8px;
+          //   margin-right: 28px;
+          //   font-size: 12px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 17px;
+          //   border-radius: 0px 8px 8px 8px;
+          // }
         }
 
         .avatar {
@@ -495,18 +484,18 @@ onMounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-right: 8px;
-          @media screen and (max-width: 1080px) {
-            min-width: 24px;
-            min-height: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   min-width: 24px;
+          //   min-height: 24px;
+          // }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            @media screen and (max-width: 1080px) {
-              width: 24px;
-              height: 24px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   width: 24px;
+            //   height: 24px;
+            // }
           }
         }
       }
@@ -517,11 +506,10 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // padding-right: 40px;
-      @media screen and (max-width: 1080px) {
-        padding-right: 0px;
-        margin-top: 16px;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   padding-right: 0px;
+      //   margin-top: 16px;
+      // }
       .input-box {
         flex: 1;
       }
@@ -530,15 +518,15 @@ onMounted(() => {
         margin-left: 24px;
         width: 48px;
         cursor: pointer;
-        @media screen and (max-width: 1080px) {
-          width: 24px;
-          margin-left: 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   width: 24px;
+        //   margin-left: 16px;
+        // }
         .o-icon {
           font-size: 48px;
-          @media screen and (max-width: 1080px) {
-            font-size: 24px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 24px;
+          // }
         }
       }
     }
@@ -552,16 +540,16 @@ onMounted(() => {
         display: flex;
         flex-wrap: wrap;
         &-item {
+          font-size: 14px;
+          line-height: 18px;
+          color: #555;
           padding: 7px 12px;
+          margin-top: 16px;
+          margin-right: 10px;
           border-radius: 8px;
           border: 1px solid #dbedff;
-          box-sizing: border-box;
+          // box-sizing: border-box;
           background-color: #f3f9ff;
-          margin-top: 16px;
-          font-size: 14px;
-          color: #555;
-          margin-right: 10px;
-          line-height: 18px;
           cursor: pointer;
         }
         .active {

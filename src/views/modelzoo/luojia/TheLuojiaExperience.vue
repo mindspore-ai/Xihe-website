@@ -1,5 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 
 import ExampleCesium from '@/shared/modelzoo/luojia/luojianet.js';
 import { rectToImg } from '@/shared/modelzoo/luojia/tiles-to-img.js';
@@ -8,33 +11,28 @@ import IconSelect from '~icons/app/luojia-select';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
-import IconFirst from '~icons/app/luojia-process-1';
-import IconSecond from '~icons/app/luojia-process-2';
-import IconThird from '~icons/app/luojia-process-3';
-import IconFourth from '~icons/app/luojia-process-4';
-import IconFive from '~icons/app/luojia-process-5';
 
 import gif from '@/assets/gifs/loading.gif';
 
-import { useUserInfoStore } from '@/stores';
 import {
   handleLuoJiaInfer,
-  handleLuoJiaHistory,
+  // handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
 const gridData = ref([]);
-const historyInfo = ref({
-  name: '目标识别',
-  origin: '高德地图',
-  status: '已完成',
-  create_at: '',
-});
+// const historyInfo = ref({
+//   name: '目标识别',
+//   origin: '高德地图',
+//   status: '已完成',
+//   create_at: '',
+// });
 
 const isSelected = ref(false);
 const cesiumContainer = ref('');
@@ -52,34 +50,41 @@ let formData = new FormData();
 
 async function handleDrawClick() {
   isSelected.value = !isSelected.value;
-  //  开始选区/结束选区
-  isSelected.value ? viewer.value.startDrawRect() : viewer.value.stopDrawRect();
 
-  if (!isSelected.value) {
-    try {
-      location.value = viewer.value.drawer.getAnsShapeRectCoor();
+  if (isSelected.value) {
+    viewer.value.removeEntities();
+    viewer.value.removeImageLayers();
 
-      const ltpoint = [location.value.west, location.value.north];
-      const rbpoint = [location.value.east, location.value.south];
+    viewer.value.startDrawRect();
+  } else {
+    if (!isLogined.value) {
+      goAuthorize();
+    } else {
+      viewer.value.stopDrawRect();
+      try {
+        location.value = viewer.value.drawer.getAnsShapeRectCoor();
 
-      isShow.value = true;
-      loadingText.value = '获取图片中';
+        const ltpoint = [location.value.west, location.value.north];
+        const rbpoint = [location.value.east, location.value.south];
 
-      tblob.value = await rectToImg(
-        ltpoint,
-        rbpoint,
-        zoomlv.value,
-        nowModelName.value
-      );
+        isShow.value = true;
+        loadingText.value = '获取图片中';
 
-      isShow.value = false;
-      isInfer.value = true;
-      loadingText.value = '';
-    } catch (err) {
-      ElMessage({
-        type: 'warning',
-        message: '请选择区域',
-      });
+        tblob.value = await rectToImg(
+          ltpoint,
+          rbpoint,
+          zoomlv.value,
+          nowModelName.value
+        );
+        isShow.value = false;
+        isInfer.value = true;
+        loadingText.value = '';
+      } catch (err) {
+        ElMessage({
+          type: 'warning',
+          message: '请选择区域',
+        });
+      }
     }
   }
 }
@@ -101,16 +106,18 @@ function handleInferClick() {
     formData.append('picture', tblob.value);
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
-      console.log(res);
       if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          console.log(res);
-          const aurl = res.data.data.answer;
-          const tempimg = document.createElement('img');
-          tempimg.src = aurl;
-          viewer.value.setImageAsLayer(tempimg);
+          if (res.status === 201 && res.data.data) {
+            const aurl = res.data.data.answer;
+            const tempimg = document.createElement('img');
+            tempimg.src = aurl;
+            viewer.value.setImageAsLayer(tempimg);
+
+            // tblob.value = null;
+          }
         });
       } else {
         isShow.value = false;
@@ -157,15 +164,19 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  dialogTableVisible.value = true;
-
-  handleLuoJiaHistory().then((res) => {
-    if (res.status === 200) {
-      gridData.value = [];
-      historyInfo.value.create_at = res.create_time;
-      gridData.value.push(historyInfo.value);
-    }
+  ElMessage({
+    type: 'warning',
+    message: '开发中，敬请期待。',
   });
+  // dialogTableVisible.value = true;
+
+  // handleLuoJiaHistory().then((res) => {
+  //   if (res.status === 200) {
+  //     gridData.value = [];
+  //     historyInfo.value.create_at = res.create_time;
+  //     gridData.value.push(historyInfo.value);
+  //   }
+  // });
 }
 
 function handleDetailClick() {
@@ -186,25 +197,15 @@ onMounted(() => {
       </p>
 
       <div class="process">
-        <p>操作流程:</p>
-        <p>
-          <o-icon><icon-first></icon-first></o-icon><span>点击开始选区-></span>
-        </p>
-        <p>
-          <o-icon><icon-second></icon-second></o-icon
-          ><span>左键俩次选点-></span>
-        </p>
-        <p>
-          <o-icon><icon-third></icon-third></o-icon><span>右键取消-></span>
-        </p>
-        <p>
-          <o-icon><icon-fourth></icon-fourth></o-icon
-          ><span>点击取消选区-></span>
-        </p>
-        <p>
-          <o-icon><icon-five></icon-five></o-icon
-          ><span>点击开始识别（请耐心等待1分钟左右）</span>
-        </p>
+        <span class="title">操作流程：</span>
+        <span>①&nbsp;选择区域-></span>
+        <span>②&nbsp;点击左上角开始选区按钮-></span>
+        <span>③&nbsp;左键选择区域角点-></span>
+        <span>④&nbsp;再次左键选择区域另一角点-></span>
+        <span>⑤&nbsp;右键取消选区操作-></span>
+        <span>⑥&nbsp;点击左上角取消选区，获取选区图片-></span>
+        <span>⑦&nbsp;点击右上角开始识别按钮-></span>
+        <span>⑧&nbsp;请耐心等待约1分钟，可在历史记录中查看最近的一条数据</span>
       </div>
     </div>
     <div class="luojia-bottom">
@@ -448,7 +449,7 @@ onMounted(() => {
   align-items: center;
   height: 90px;
   img {
-    width: 68px;
+    width: 60px;
   }
   p {
     font-size: 16px;
@@ -562,7 +563,7 @@ onMounted(() => {
   position: absolute;
   top: 0px;
   left: -3500px;
-  z-index: 100;
+  z-index: 10;
   width: 5px;
   height: 100%;
   background-color: #d3d3d3;
@@ -570,25 +571,17 @@ onMounted(() => {
 .luojia {
   &-top {
     .process {
-      display: flex;
-      align-items: center;
       margin-top: 8px;
-      p {
-        font-size: 14px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 22px;
-        display: flex;
-        align-items: center;
-        margin-right: 4px;
-        &:first-child {
-          color: #000000;
-          font-weight: 600;
-        }
-        .o-icon {
-          font-size: 17px;
-          margin-right: 4px;
-        }
+      font-size: 14px;
+      line-height: 28px;
+      font-weight: 400;
+      color: #555555;
+      .title {
+        color: #000000;
+        font-weight: 600;
+      }
+      span {
+        margin-left: 4px;
       }
     }
     .type {

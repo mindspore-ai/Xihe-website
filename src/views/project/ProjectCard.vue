@@ -308,6 +308,7 @@ function getReadMeFile() {
       });
     } else {
       getGitlabTree({
+        type: 'project',
         user: routerParams.user,
         path: '',
         id: detailData.value.id,
@@ -319,6 +320,7 @@ function getReadMeFile() {
           });
           if (README[0]) {
             getGitlabFileRaw({
+              type: 'project',
               user: routerParams.user,
               path: 'README.md',
               id: detailData.value.repo_id,

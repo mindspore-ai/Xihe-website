@@ -118,65 +118,70 @@ function getDetailData() {
       user: route.params.user,
       repoName: route.params.name,
       modular: 'model',
-    }).then((res) => {
-      let storeData = res.data;
-      // 判断仓库是否属于自己
-      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
-      // 文件列表是否为空
-      if (detailData.value) {
-        storeData['is_empty'] = detailData.value.is_empty;
-      }
-      fileData.setFileData(storeData);
-      // digCount.value = detailData.value.digg_count;
-      const {
-        //   licenses_list,
-        //   libraries_list,
-        //   task_list,
-        tags,
-        //   device_target_list,
-        //   model_format_list,
-      } = detailData.value;
-      isDigged.value = detailData.value.liked;
+    })
+      .then((res) => {
+        let storeData = res.data;
+        // 判断仓库是否属于自己
+        storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+        // 文件列表是否为空
+        if (detailData.value) {
+          storeData['is_empty'] = detailData.value.is_empty;
+        }
+        fileData.setFileData(storeData);
+        // digCount.value = detailData.value.digg_count;
+        const {
+          //   licenses_list,
+          //   libraries_list,
+          //   task_list,
+          tags,
+          //   device_target_list,
+          //   model_format_list,
+        } = detailData.value;
+        isDigged.value = detailData.value.liked;
 
-      // modelTags.value = [
-      //   ...licenses_list,
-      //   ...task_list,
-      //   ...tags_list,
-      //   ...libraries_list,
-      //   ...device_target_list,
-      //   ...model_format_list,
-      // ];
-      // modelTags.value = [
-      //   ...licenses_list,
-      //   ...device_target_list,
-      //   ...model_format_list,
-      //   ...task_list,
-      //   ...tags_list,
-      //   ...libraries_list,
-      // ];
-      modelTags.value = [];
-      headTags.value = [];
-      if (tags) {
-        tags.forEach((item) => {
-          modelTags.value.push({ name: item });
-        });
-        headTags.value = modelTags.value.filter((item) => {
-          let a = protocol.map((it) => {
-            if (it.name === item.name) return false;
+        // modelTags.value = [
+        //   ...licenses_list,
+        //   ...task_list,
+        //   ...tags_list,
+        //   ...libraries_list,
+        //   ...device_target_list,
+        //   ...model_format_list,
+        // ];
+        // modelTags.value = [
+        //   ...licenses_list,
+        //   ...device_target_list,
+        //   ...model_format_list,
+        //   ...task_list,
+        //   ...tags_list,
+        //   ...libraries_list,
+        // ];
+        modelTags.value = [];
+        headTags.value = [];
+        if (tags) {
+          tags.forEach((item) => {
+            modelTags.value.push({ name: item });
           });
-          if (!a.indexOf(false)) return false;
-          else return true;
-        });
-        // console.log(headTags);
-      }
-      preStorage.value = JSON.stringify(headTags.value);
+          headTags.value = modelTags.value.filter((item) => {
+            let a = protocol.map((it) => {
+              if (it.name === item.name) return false;
+            });
+            if (!a.indexOf(false)) return false;
+            else return true;
+          });
+          // console.log(headTags);
+        }
+        preStorage.value = JSON.stringify(headTags.value);
 
-      // modelTags.value = modelTags.value.map((item) => {
-      //   return item;
-      // });
-      // headTags.value = [...modelTags.value];
-      getTagList();
-    });
+        // modelTags.value = modelTags.value.map((item) => {
+        //   return item;
+        // });
+        // headTags.value = [...modelTags.value];
+        getTagList();
+      })
+      .catch((error) => {
+        router.push('/404');
+        console.error(error);
+      });
   } catch (error) {
     router.push('/notfound');
     console.error(error);
@@ -417,7 +422,6 @@ function handleModelLike() {
       // 点赞(收藏)
       getUserDig(params)
         .then((res) => {
-          console.log('收藏结果: ', res);
           if (res.status === 201) {
             getDetailData();
           }
@@ -429,7 +433,6 @@ function handleModelLike() {
       // 取消收藏
       cancelCollection(params)
         .then((res) => {
-          console.log('取消收藏结果: ', res);
           if (res.status === 204) {
             getDetailData();
           }

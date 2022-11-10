@@ -521,6 +521,7 @@ export default class ExampleCesium {
       var splitPosition =
         (slider.offsetLeft - 0 + relativeOffset) /
         slider.parentElement.offsetWidth;
+
       slider.style.left =
         slider.parentElement.offsetWidth * splitPosition + 0 + 'px';
 

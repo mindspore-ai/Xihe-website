@@ -23,6 +23,7 @@ import { goAuthorize } from '@/shared/login';
 import { getProjectData, getTags } from '@/api/api-project';
 
 import { useLoginStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const loginStore = useLoginStore();
 // import { useUserInfoStore, useFileData } from '@/stores';
@@ -115,11 +116,6 @@ const queryData = reactive({
   name: null, //项目名
   tags: null, //标签
   sort_by: null, //排序规则
-  // task_cate: null,
-  // task: null,
-  // licenses: null,
-  // train_sdk: null,
-  // infer_sdk: null,
 });
 // queryData.search = route.query.search;
 
@@ -155,7 +151,7 @@ function clearItem1(index) {
   });
   queryData.tags = null;
 }
-
+// 训练平台标签
 function othersClick(index, index2) {
   otherCondition.value[index].haveActive = true;
   // 高亮
@@ -165,6 +161,7 @@ function othersClick(index, index2) {
     !otherCondition.value[index].condition[0].items[index2].isActive;
   goSearch(otherCondition.value);
 }
+// 清除训练平台标签
 function clearItem3(index) {
   otherCondition.value[index].haveActive = false;
   otherCondition.value[index].condition.forEach((item) => {
@@ -238,7 +235,6 @@ function radioClick(detail, list) {
 
 // 分类二级标签
 function sortTagClick(index, index2) {
-  // console.log('moreSortTags.value: ', moreSortTags.value);
   moreSortTags.value[index].haveActive = true;
   moreSortTags.value[index].items.forEach((item) => {
     item.isSelected = true;
@@ -274,14 +270,21 @@ function searchTags(date) {
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
-      // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
       }
     });
   });
   if (tagList.length > 0) {
-    queryData.tags = tagList.join(',');
+    if (tagList.length < 6) {
+      queryData.tags = tagList.join(',');
+    } else {
+      ElMessage({
+        message: '最多支持刷选5个标签 !',
+        type: 'warning',
+      });
+      return;
+    }
   } else {
     queryData.tags = null;
   }
@@ -291,35 +294,49 @@ function searchTags(date) {
 function goSearch(render) {
   let time = 0;
   queryData.page_num = 1;
-  // let taskCate = [];
-  // let tagLists = [];
+  let tagList = [];
   render.forEach((item) => {
     time = 0;
-    let tagLists = [];
+    // let tagList = [];
     item.condition.forEach((value) => {
       if (value.isActive) {
         if (item.title.key === 0) {
-          tagLists.push(value.kind);
-          queryData.tags = tagLists.join(',');
+          // console.log('点击应用发送请求');
+          tagList.push(value.kind);
+          if (tagList.length < 6) {
+            queryData.tags = tagList.join(',');
+          } else {
+            ElMessage({
+              message: '最多支持5个标签刷选 !',
+              type: 'warning',
+            });
+            return;
+          }
         } else if (item.title.key === 1) {
           value.items.forEach((val) => {
+            // console.log('val: ', val);
             if (val.isActive) {
-              tagLists.push(val.name);
-              queryData.tags = tagLists.join(',');
+              tagList.push(val.name);
+
+              if (queryData.tags) {
+                queryData.tags = queryData.tags + ',' + tagList.join(',');
+              } else {
+                queryData.tags = tagList.join(',');
+              }
             }
           });
         }
       } else {
+        // 取消点击
         time += 1;
       }
     });
     if (time === item.condition.length) {
+      // console.log('取消点击');
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      if (item.title.key === 0) {
-        // queryData['tags'] = null;
-        queryData.tags = null;
-      }
+      queryData.tags = null;
+      // requestCount--;
     }
   });
 }
@@ -336,12 +353,15 @@ function dropdownClick(item) {
 
 function getProject() {
   getProjectData(queryData).then((res) => {
-    projectCount.value = res.data.total;
-    if (projectCount.value / 10 < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+    if (res.status === 200) {
+      // console.log('res: ', res.data);
+      projectCount.value = res.data.data.total;
+      if (projectCount.value / 10 < 8) {
+        layout.value = layout.value.split(',').splice(0, 4).join(',');
+      }
+      projectData.value = res.data.data;
+      // console.log('项目列表数据', projectData.value);
     }
-    projectData.value = res.data;
-    // console.log('项目列表数据', projectData.value);
   });
 }
 
@@ -406,9 +426,6 @@ function getModelTag() {
 getModelTag();
 
 function goDetail(user, name) {
-  // router.push({
-  //   path: `/projects/${user}/${name}`,
-  // });
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/projects/${user}/${name}`,
@@ -649,7 +666,7 @@ onUnmounted(() => {
             <span @click="checkAllClick(item, index)">查看全部</span>
           </div>
         </div> -->
-        <!-- 其他 -->
+        <!-- 其他 训练平台-->
         <div
           v-for="(item, index) in otherCondition"
           :key="item.title"
@@ -723,11 +740,18 @@ onUnmounted(() => {
               @click="goDetail(item.owner, item.name)"
             >
               <div class="card-top">
+                <div class="description">
+                  <p>{{ item.desc }}</p>
+                </div>
                 <img
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
-                <p class="title">{{ item.name }}</p>
+                <div class="title">
+                  <span>
+                    {{ item.name }}
+                  </span>
+                </div>
                 <div class="dig">
                   <o-icon> <icon-heart></icon-heart> </o-icon
                   >{{ item.like_count }}
@@ -1048,17 +1072,59 @@ $theme: #0d8dff;
             height: 169px;
             position: relative;
             color: #fff;
+            &:hover {
+              .description {
+                display: block;
+              }
+            }
             img {
               width: 100%;
               height: 100%;
             }
+            .description {
+              display: none;
+              position: absolute;
+              left: 50%;
+              bottom: 0;
+              transform: translateX(-50%);
+              width: 100%;
+              padding: 0 16px;
+              z-index: 1;
+              font-size: 12px;
+              color: #ffffff;
+              background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 0%,
+                #000000 100%
+              );
+
+              p {
+                line-height: 17px;
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                margin-bottom: 16px;
+              }
+            }
             .title {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 84%;
+              // margin: 0 auto;
               font-size: 18px;
               position: absolute;
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
               z-index: 1;
+              span {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
             }
             .dig {
               position: absolute;

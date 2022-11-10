@@ -1,6 +1,11 @@
 <script setup>
 import { ref, computed, onUnmounted, onMounted } from 'vue';
 
+import { useRouter, useRoute } from 'vue-router';
+import { useFileData, useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
+import { formatSeconds } from '@/shared/utils';
+
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import IconRebuild from '~icons/app/rebuild';
@@ -17,27 +22,39 @@ import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
-import { LOGIN_KEYS } from '@/shared/login';
-import { useRouter, useRoute } from 'vue-router';
-import { useFileData, useUserInfoStore } from '@/stores';
 import {
   trainList,
   deleteTainList,
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
-
-const route = useRoute();
-const router = useRouter();
-const userInfoStore = useUserInfoStore();
 
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+const route = useRoute();
+const router = useRouter();
+const userInfoStore = useUserInfoStore();
+
 const projectId = detailData.value.id;
 const trainData = ref([]);
 const listId = ref(null);
@@ -54,21 +71,6 @@ const i18n = {
     '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
   confirm: '确定',
 };
-
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
@@ -105,9 +107,7 @@ function showDelClick(val) {
 
 // 删除
 function deleteTrainList(id) {
-  console.log('projectId : ' + projectId, 'id : ' + id);
   deleteTainList(projectId, id).then((res) => {
-    console.log(res);
     if (res.status === 204) {
       getTrainList();
       showDel.value = false;
@@ -127,7 +127,6 @@ function delClick(val) {
 const showStop = ref(false);
 function stopTrainList(id) {
   stopTrain(projectId, id).then((res) => {
-    console.log(res);
     if (res.status === 202) {
       getTrainList();
       showStop.value = false;
@@ -159,48 +158,36 @@ function showStopClick(val, id) {
 // 重建
 const showReset = ref(false);
 function showResetClick(val) {
-  resetedId.value = val;
-  showReset.value = true;
+  let bool = trainData.value.some(
+    (item) => item.status === 'scheduling' || item.status === 'Running'
+  );
+  if (bool) {
+    ElMessage({
+      type: 'warning',
+      message: '只能有一个运行中的训练',
+    });
+  } else if (trainData.value.length >= 5) {
+    ElMessage({
+      type: 'warning',
+      message: '最多创建5条训练',
+    });
+  } else {
+    resetedId.value = val;
+    showReset.value = true;
+  }
 }
 
 function resetClick(val) {
-  console.log(val);
   if (val === 1) {
     showReset.value = false;
   } else {
-    if (trainData.value.length >= 5) {
-      ElMessage({
-        type: 'warning',
-        message: '最多创建5条训练',
-      });
-    } else {
-      rebuildTrain(projectId, val).then((res) => {
-        console.log(res);
-        if (res.status === 201) {
-          showReset.value = false;
-          getTrainList();
-        }
-      });
-    }
+    rebuildTrain(projectId, val).then((res) => {
+      if (res.status === 201) {
+        showReset.value = false;
+        getTrainList();
+      }
+    });
   }
-}
-
-function formatSeconds(value) {
-  let theTime = value; //秒
-  let middle = 0; //分
-  let hour = 0; //小时
-  if (theTime > 59) {
-    middle = parseInt(theTime / 60);
-    theTime = parseInt(theTime % 60);
-  }
-  if (middle > 59) {
-    hour = parseInt(middle / 60);
-    middle = parseInt(middle % 60);
-  }
-  theTime < 10 ? (theTime = '0' + theTime) : (theTime = theTime);
-  middle < 10 ? (middle = '0' + middle) : (middle = middle);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
-  return hour + ':' + middle + ':' + theTime;
 }
 
 function goTrainLog(trainId) {
@@ -216,7 +203,6 @@ let socket;
 function getTrainList() {
   trainList(projectId).then((res) => {
     trainData.value = res.data.data;
-    console.log(trainData.value);
     // 列表为空可以创建实例
     if (!trainData.value) {
       btnShow.value = false;
@@ -229,7 +215,6 @@ function getTrainList() {
       } else {
         btnShow.value = false;
       }
-
       socket = setWebsocket(
         `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
       );
@@ -244,10 +229,7 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
-    console.log('websocket列表消息', JSON.parse(event.data).data);
-
     trainData.value = JSON.parse(event.data).data;
-
     if (trainData.value) {
       let bool = trainData.value.some(
         (item) => item.status === 'scheduling' || item.status === 'Running'
@@ -259,11 +241,6 @@ function setWebsocket(url) {
       }
     }
   };
-
-  socket.onclose = function () {
-    console.log('服务器已经断开');
-  };
-
   return socket;
 }
 
@@ -283,7 +260,13 @@ onUnmounted(() => {
 <template>
   <div class="train-list">
     <div class="list-top">
-      <p class="title">训练列表</p>
+      <div class="table-title">
+        <p class="title">训练列表</p>
+        <div class="list-tip">
+          （&nbsp;温馨提示：最多可创建5条训练，且只有一个运行中。）
+        </div>
+      </div>
+
       <o-button type="primary" :disabled="btnShow" @click="goSelectFile">
         <span>创建训练实例</span>
       </o-button>
@@ -299,14 +282,6 @@ onUnmounted(() => {
             <span class="train-name" @click="goTrainLog(scope.row.id)">{{
               scope.row.name
             }}</span>
-            <!-- <router-link
-              class="train-name"
-              :to="{
-                name: 'projectTrainLog',
-                params: { trainId: scope.row.train_id },
-              }"
-              >{{ scope.row.instance_name }}</router-link
-            > -->
           </div>
         </template>
       </el-table-column>
@@ -315,46 +290,35 @@ onUnmounted(() => {
           <div class="status-box">
             <div v-if="scope.row.status === 'Completed'" class="status-item">
               <o-icon><icon-finished></icon-finished></o-icon>
-              <span>{{ scope.row.status }}</span>
+              <span>已完成</span>
             </div>
 
             <div v-if="scope.row.status === 'Terminated'" class="status-item">
               <o-icon><icon-stopped></icon-stopped></o-icon>
-              <span>{{ scope.row.status }}</span>
+              <span>已停止</span>
             </div>
 
-            <div
-              v-if="
-                scope.row.status === 'Running' ||
-                scope.row.status === 'scheduling'
-              "
-              class="status-item"
-            >
+            <div v-if="scope.row.status === 'Running'" class="status-item">
               <o-icon><icon-runing></icon-runing></o-icon>
-              <span>
-                {{
-                  scope.row.status === 'scheduling'
-                    ? '启动中'
-                    : scope.row.status
-                }}</span
-              >
+              <span>运行中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'scheduling'" class="status-item">
+              <o-icon><icon-runing></icon-runing></o-icon>
+              <span> 启动中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Failed'" class="status-item">
+              <o-icon><icon-failed></icon-failed></o-icon>
+              <span>训练失败</span>
             </div>
 
             <div
-              v-if="
-                scope.row.status === 'Failed' ||
-                scope.row.status === 'schedule_failed'
-              "
+              v-if="scope.row.status === 'schedule_failed'"
               class="status-item"
             >
               <o-icon><icon-failed></icon-failed></o-icon>
-              <span>
-                {{
-                  scope.row.status === 'schedule_failed'
-                    ? '启动失败'
-                    : scope.row.status
-                }}
-              </span>
+              <span> 启动失败 </span>
             </div>
           </div>
         </template>
@@ -394,10 +358,7 @@ onUnmounted(() => {
             <div class="hide-box">
               <div class="tools-box">
                 <div
-                  v-if="
-                    scope.row.status === 'Running' ||
-                    scope.row.status === 'scheduling'
-                  "
+                  v-if="scope.row.status === 'Running'"
                   class="tools"
                   @click="showStopClick(scope.row.status, scope.row.id)"
                 >
@@ -418,16 +379,6 @@ onUnmounted(() => {
         </template>
       </el-table-column>
 
-      <!-- <el-table-column label="参数文件" width="203">
-        <template #default="scope">
-          <div>
-            <span class="date" @click="goDateDetail(scope.row.config_path)">
-              {{ scope.row.config_path }}</span
-            >
-          </div>
-        </template>
-      </el-table-column> -->
-
       <el-table-column label="更新时间" prop="created_at" width="214">
       </el-table-column>
     </el-table>
@@ -435,6 +386,7 @@ onUnmounted(() => {
       <o-icon><icon-instance></icon-instance></o-icon>
       <p>暂无训练实例</p>
     </div>
+
     <!-- 如已有正在训练中的实例，弹窗提示 -->
     <o-dialog :show="tips" @close-click="toggleDelDlg(false)">
       <template #head>
@@ -481,16 +433,22 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .table-title {
+      display: flex;
+      .list-tip {
+        font-size: 12px;
+        font-weight: 400;
+        color: #555;
+        line-height: 26px;
+      }
+    }
     .title {
-      line-height: 24px;
       font-size: 18px;
       font-weight: 400;
       color: #000000;
       line-height: 24px;
+      margin-right: 4px;
     }
-    // .o-button {
-    //   padding: 12px !important;
-    // }
   }
   .instance-box {
     width: 100%;

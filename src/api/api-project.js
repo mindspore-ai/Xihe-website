@@ -24,7 +24,7 @@ export function getProjectData(params) {
   // let header = getHeaderConfig();
   // 登录之后携带token
   return request.get(url, { params }).then((res) => {
-    return res.data;
+    return res;
   });
 }
 
@@ -32,11 +32,6 @@ export function getProjectData(params) {
  * 点赞(收藏)
  * @returns
  */
-/* export function getUserDig(reopt) {
-  return request(reopt).then((res) => {
-    return res;
-  });
-} */
 export function getUserDig(params) {
   const url = `/server/user/like`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
@@ -48,7 +43,6 @@ export function getUserDig(params) {
  * @returns
  */
 export function cancelCollection(params) {
-  // console.log('params: ', params);
   const url = `/server/user/like`;
   return request
     .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
@@ -281,7 +275,7 @@ export function rebuildTrain(projectId, trainId) {
 export function deleteTainList(projectId, trainId) {
   const url = `/server/train/project/${projectId}/training/${trainId}`;
   return request.delete(url, getHeaderConfig()).then((res) => {
-    console.log('res: ', res);
+    // console.log('res: ', res);
     return res;
   });
 }

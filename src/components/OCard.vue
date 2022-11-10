@@ -74,7 +74,7 @@ if (props.cardType === 'model') {
   >
     <div class="card-top">
       <div class="portrait">
-        <img :src="cardData.avatar_id" alt="" />
+        <img :src="avatarImg" alt="" />
       </div>
       <div v-if="cardData.owner" class="nickname">
         {{ cardData.owner }}
@@ -148,6 +148,11 @@ if (props.cardType === 'model') {
       img {
         width: 100%;
       }
+    }
+    .model-name {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
   .label-box {

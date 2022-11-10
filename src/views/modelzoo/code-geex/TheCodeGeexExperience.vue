@@ -1,7 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
-import OButton from '@/components/OButton.vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
 import { handleGenerateCode } from '@/api/api-modelzoo.js';
 
@@ -11,10 +9,12 @@ import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'
 
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { ElMessage } from 'element-plus';
 
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
+
+import OButton from '@/components/OButton.vue';
 const tabsList = ref([
   {
     name: 'Python',
@@ -45,6 +45,14 @@ const tabsList = ref([
 ]);
 
 const activeIndex = ref(0);
+const edit = ref();
+const count = ref(0);
+const isDisabled = ref(false);
+const endedContent = ref('');
+
+let instance = null;
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 function handleTabClick(i, item) {
   if (i === 5) return;
@@ -55,10 +63,6 @@ function handleTabClick(i, item) {
   instance.dispose();
   init(item);
 }
-
-const edit = ref();
-
-let instance = null;
 
 self.MonacoEnvironment = {
   getWorker: function (_, label) {
@@ -83,37 +87,61 @@ function init(item) {
     theme: 'vs-dark',
     fontSize: 18,
     automaticLayout: true,
+    scrollBeyondLastLine: false,
   });
 
   instance.onDidChangeModelContent(() => {
     tabsList.value[activeIndex.value].code = instance.getValue();
-  });
-}
-
-const isDisabled = ref(false);
-
-function hanleGenerateCode() {
-  isDisabled.value = true;
-  handleGenerateCode({
-    content: tabsList.value[activeIndex.value].code,
-    n: 1,
-    lang: tabsList.value[activeIndex.value].name,
-  }).then((res) => {
-    if (res.status === 200) {
+    // 1.内容为空置灰 （输入内容取消置灰） 2.推理完成置灰（增加或删除内容取消置灰；删除所有内容依旧置灰）
+    if (!tabsList.value[activeIndex.value].code) {
+      isDisabled.value = true;
+    } else if (endedContent.value === tabsList.value[activeIndex.value].code) {
+      isDisabled.value = true;
+    } else if (endedContent.value !== tabsList.value[activeIndex.value].code) {
       isDisabled.value = false;
-
-      tabsList.value[activeIndex.value].code =
-        tabsList.value[activeIndex.value].code + res.data;
-
-      instance.dispose();
-      init(tabsList.value[activeIndex.value]);
-    } else if (res.status === -1) {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
     }
   });
+
+  count.value = instance.getModel().getLineCount();
+  instance.revealLine(count.value);
+}
+
+function hanleGenerateCode() {
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    isDisabled.value = true;
+    handleGenerateCode({
+      content: tabsList.value[activeIndex.value].code,
+      result_num: 1,
+      lang: tabsList.value[activeIndex.value].name,
+    }).then((res) => {
+      if (res.status === 201 && res.data.data) {
+        let bool = res.data.data.answer.indexOf('Code generation finished');
+        if (bool !== -1) {
+          tabsList.value[activeIndex.value].code = endedContent.value =
+            tabsList.value[activeIndex.value].code +
+            res.data.data.answer.substring(2);
+
+          instance.dispose();
+          init(tabsList.value[activeIndex.value]);
+        } else {
+          isDisabled.value = false;
+          tabsList.value[activeIndex.value].code =
+            tabsList.value[activeIndex.value].code + res.data.data.answer;
+
+          instance.dispose();
+          init(tabsList.value[activeIndex.value]);
+        }
+      } else {
+        ElMessage({
+          type: 'error',
+          message: res,
+        });
+        isDisabled.value = false;
+      }
+    });
+  }
 }
 
 onMounted(() => {
@@ -146,10 +174,11 @@ onUnmounted(() => {
           {{ item.name }}
         </p>
       </div>
+      <div class="editor" style="border-radius: 0 0 16px 16px">
+        <div ref="edit" class="editor-detail"></div>
 
-      <div ref="edit" class="editor"></div>
-
-      <div class="empty" @click="getValue"></div>
+        <div class="empty" @click="getValue"></div>
+      </div>
 
       <div class="create-btn">
         <o-button
@@ -165,6 +194,9 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .experience {
+  padding: 40px;
+  background: #fff;
+  // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
   &-head {
     &-title {
       font-size: 36px;
@@ -184,16 +216,14 @@ onUnmounted(() => {
   }
 
   &-body {
+    // height: 640px;
     margin-top: 24px;
     border-radius: 0 0 16px 16px;
     display: flex;
     flex-direction: column;
-    .editor {
-      height: 740px;
-      border-radius: 0 0 16px 16px;
-    }
 
     .edit-tabs {
+      height: 64px;
       display: flex;
       background: #1e1e1e;
       border-radius: 16px 16px 0 0;
@@ -204,7 +234,7 @@ onUnmounted(() => {
       }
 
       .tab-item {
-        padding: 24px 40px;
+        padding: 15px 40px;
         font-size: 18px;
         font-weight: 400;
         color: #c0c1c0;
@@ -224,14 +254,29 @@ onUnmounted(() => {
         }
       }
     }
-    .empty {
-      height: 16px;
-      background: #323232;
+    .editor {
+      // background: #323232;
+      background-color: #1e1e1e;
+
       border-radius: 0 0 16px 16px;
+
+      .editor-detail {
+        height: 576px;
+        border-radius: 0 0 16px 16px;
+      }
+      .empty {
+        height: 16px;
+        background-color: #1e1e1e;
+        // background: #323232;
+        border-radius: 0 0 16px 16px;
+      }
     }
     .create-btn {
       align-self: flex-end;
-      margin-top: 24px;
+      margin-top: 40px;
+      .o-button {
+        width: 127px;
+      }
     }
   }
 }

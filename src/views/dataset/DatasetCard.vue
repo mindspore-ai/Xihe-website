@@ -58,6 +58,7 @@ route.hash ? getReadMeFile() : '';
 function getReadMeFile() {
   try {
     getGitlabTree({
+      type: 'dataset',
       user: routerParams.user,
       path: '',
       id: detailData.value.id,
@@ -69,6 +70,7 @@ function getReadMeFile() {
         });
         if (README && README.length) {
           getGitlabFileRaw({
+            type: 'dataset',
             user: routerParams.user,
             path: 'README.md',
             id: detailData.value.id,

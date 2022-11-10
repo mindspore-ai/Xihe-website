@@ -18,6 +18,7 @@ import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
 
 import { getModelData, getTags } from '@/api/api-model';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 
@@ -119,14 +120,6 @@ let queryData = reactive({
   count_per_page: 10,
   tags: null, //标签
   sort_by: null, //排序规则
-  // task: null,
-  // task_cate: null,
-  // libraries: null,
-  // licenses: null,
-  // model_format: null,
-  // device_target: null,
-  // relate_datasets: null,
-  // order: null,
 });
 
 // queryData.search = route.query.search;
@@ -322,7 +315,7 @@ function handleTagSearch(date) {
 //查询
 function goSearch(render) {
   let time = 0;
-  let tagLists = [];
+  let tagList = [];
   queryData.page_num = 1;
   render.forEach((item) => {
     time = 0;
@@ -332,19 +325,28 @@ function goSearch(render) {
       if (value.isActive) {
         // console.log('四种分类的key: ', item.title.key);
         if (item.title.key === 0) {
-          tagLists.push(value.kind);
-          queryData.tags = tagLists.join(',');
+          tagList.push(value.kind);
+          queryData.tags = tagList.join(',');
         }
       } else {
         time += 1;
         value.items.forEach((val) => {
           if (val.isActive) {
-            tagLists.push(val.name);
-            queryData.tags = tagLists.join(',');
+            tagList.push(val.name);
+            if (tagList.length < 6) {
+              queryData.tags = tagList.join(',');
+            } else {
+              ElMessage({
+                message: '最多支持刷选5个标签 !',
+                type: 'warning',
+              });
+              return;
+            }
           }
         });
       }
     });
+
     if (time === item.condition.length) {
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
@@ -713,6 +715,7 @@ onUnmounted(() => {
               v-for="item in modelData.projects"
               :key="item.id"
               :card-data="item"
+              :avatar-img="item.avatar_id"
               @click="goDetail(item.owner, item.name)"
             ></o-card>
             <div v-if="modelCount > 10" class="pagination">

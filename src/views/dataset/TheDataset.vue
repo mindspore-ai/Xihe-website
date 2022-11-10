@@ -19,6 +19,7 @@ import { getTags } from '@/api/api-dataset';
 import { getDatasetData } from '@/api/api-dataset';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 
@@ -95,15 +96,6 @@ let query = reactive({
   name: null, //项目名
   tags: null, //标签
   sort_by: null, //排序规则
-  // task: null, //应用分类
-  // task_cate: null /* 一级分类 */,
-  // libraries: null,
-  // licenses: null, //协议
-  // model_format: null,
-  // device_target: null,
-  // relate_datasets: null,
-  // order: null,
-  tags: null, //其他
 });
 
 // query.search = route.query.search;
@@ -124,6 +116,8 @@ function backCondition() {
 
 // 应用分类--多选
 function sortsClick(index, index2) {
+  // console.log('点击应用分类: ');
+
   renderSorts.value[index].haveActive = true;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
@@ -187,13 +181,22 @@ function goSearch(render) {
       if (value.isActive) {
         if (item.title.key === 0) {
           tagList.push(value.kind);
-          query.tags = tagList.join(',');
+          if (tagList.length < 6) {
+            query.tags = tagList.join(',');
+          } else {
+            ElMessage({
+              message: '最多支持刷选5个标签 !',
+              type: 'warning',
+            });
+            return;
+          }
         }
       } else {
         time += 1;
       }
     });
     if (time === item.condition.length) {
+      // console.log('取消点击');
       // query[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
       if (item.title.key === 0) {
@@ -289,11 +292,21 @@ function handleTagSearch(date) {
       // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
+
+        // console.log('tagList: ', tagList);
       }
     });
   });
   if (tagList.length > 0) {
-    query.tags = tagList.join(',');
+    if (tagList.length < 6) {
+      query.tags = tagList.join(',');
+    } else {
+      ElMessage({
+        message: '最多支持5个标签刷选 !',
+        type: 'warning',
+      });
+      return;
+    }
   } else {
     query.tags = null;
   }
@@ -668,6 +681,7 @@ onUnmounted(() => {
               v-for="item in modelData.projects"
               :key="item.id"
               :card-data="item"
+              :avatar-img="item.avatar_id"
               card-type="dataset"
               @click="goDetail(item.owner, item.name)"
             ></o-card>

@@ -376,12 +376,19 @@ function handleAssessment() {
 
 // 跳转到Aim嵌入页面
 function goAimPage() {
-  router.push({
+  // router.push({
+  //   path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
+  //   query: {
+  //     url: evaluateUrl.value,
+  //   },
+  // });
+  let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
     },
   });
+  window.open(routerData.href, '_blank');
 }
 
 // 跳到评估页面

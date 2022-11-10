@@ -45,22 +45,6 @@ export function uploadModelzooPic(params) {
 }
 
 /**
- * 上传紫东太初大模型以文生图
- * @returns
- */
-export function getInferencePicture(params) {
-  const url = `/api/foundation/taichu_opt`;
-  return request
-    .put(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
-}
-
-/**
  * 上传紫东太初大模型以文生图(生成一张图片)
  * @returns
  */
@@ -130,23 +114,6 @@ export function handleVqaInference(params) {
 }
 
 /**
- * VQA文字审核
- * @returns
- */
-
-export function handleTextRview(params) {
-  const url = `/api/base/content_auditing/`;
-  return request
-    .post(url, params)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
-}
-
-/**
  * CodeGeex 生成代码
  * @returns
  */
@@ -163,13 +130,18 @@ export function handleGenerateCode(params) {
 }
 
 /**
- * 盘古推理（测试）
+ * 盘古推理
  * @returns
  */
 export function handlePanguInfer(params) {
   const url = '/server/bigmodel/pangu';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+      timeout: 60000,
+    })
     .then((res) => {
       return res;
     })

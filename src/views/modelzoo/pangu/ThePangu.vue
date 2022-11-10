@@ -168,9 +168,9 @@ watch(
   }
   .taichu-content-desc {
     margin-top: 24px;
-    @media screen and (max-width: 768px) {
-      margin-top: 16px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   margin-top: 16px;
+    // }
     .o-nav {
       background: #fff;
     }
@@ -186,12 +186,12 @@ watch(
         margin: 0 auto;
         .nav-item {
           color: #555;
-          @media screen and (max-width: 1080px) {
-            font-size: 14px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 22px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 14px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 22px;
+          // }
         }
       }
       .taichu-info {

@@ -132,22 +132,22 @@ function goTaichuMore() {
 .taichu {
   min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
-  @media screen and (max-width: 1080px) {
-    padding-top: 80px;
-    padding-top: 0;
-  }
+  // @media screen and (max-width: 1080px) {
+  //   padding-top: 80px;
+  //   padding-top: 0;
+  // }
   .taichu-wrap {
     padding: 120px 16px 0px;
     margin: 0 auto;
     max-width: 1472px;
-    @media screen and (max-width: 1080px) {
-      padding: 0;
-    }
+    // @media screen and (max-width: 1080px) {
+    //   padding: 0;
+    // }
     .taichu-bread {
       margin-bottom: 40px;
-      @media screen and (max-width: 1080px) {
-        display: none;
-      }
+      // @media screen and (max-width: 1080px) {
+      //   display: none;
+      // }
       .el-breadcrumb {
         height: 21px;
         line-height: 21px;
@@ -169,25 +169,25 @@ function goTaichuMore() {
       }
     }
     .taichu-content {
-      @media screen and (max-width: 1080px) {
-        padding-top: 62px;
-        // padding-bottom: 40px;
-        // min-height: calc(100vh - 190px);
-      }
+      // @media screen and (max-width: 1080px) {
+      //   padding-top: 62px;
+      //   // padding-bottom: 40px;
+      //   // min-height: calc(100vh - 190px);
+      // }
       .taichu-content-banner {
         padding: 80px;
         background-color: #fff;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
-        @media screen and (max-width: 1080px) {
-          padding: 16px;
-          margin: 0 16px;
-        }
+        // @media screen and (max-width: 1080px) {
+        //   padding: 16px;
+        //   margin: 0 16px;
+        // }
         .content-banner-left {
           margin-right: 40px;
-          @media screen and (max-width: 1080px) {
-            display: none;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   display: none;
+          // }
           img {
             width: 416px;
             height: 100%;
@@ -200,20 +200,20 @@ function goTaichuMore() {
             font-size: 36px;
             color: #000000;
             margin-bottom: 16px;
-            @media screen and (max-width: 1080px) {
-              font-size: 16px;
-              font-weight: 300;
-              color: #000000;
-              line-height: 24px;
-              height: 24px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   font-size: 16px;
+            //   font-weight: 300;
+            //   color: #000000;
+            //   line-height: 24px;
+            //   height: 24px;
+            // }
           }
           .home-btn {
-            @media screen and (max-width: 1080px) {
-              line-height: 22px;
-              padding: 6px !important;
-              font-size: 14px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   line-height: 22px;
+            //   padding: 6px !important;
+            //   font-size: 14px;
+            // }
           }
           &-content {
             // height: 44px;
@@ -221,13 +221,13 @@ function goTaichuMore() {
             color: #555555;
             line-height: 22px;
             margin-bottom: 54px;
-            @media screen and (max-width: 1080px) {
-              font-size: 12px;
-              font-weight: 400;
-              color: #000000;
-              line-height: 18px;
-              margin-bottom: 16px;
-            }
+            // @media screen and (max-width: 1080px) {
+            //   font-size: 12px;
+            //   font-weight: 400;
+            //   color: #000000;
+            //   line-height: 18px;
+            //   margin-bottom: 16px;
+            // }
           }
         }
       }
@@ -235,10 +235,9 @@ function goTaichuMore() {
   }
   .taichu-content-desc {
     margin-top: 40px;
-    // background-color: #fff;
-    @media screen and (max-width: 768px) {
-      margin-top: 16px;
-    }
+    // @media screen and (max-width: 768px) {
+    //   margin-top: 16px;
+    // }
     .o-nav {
       background: #fff;
     }
@@ -254,12 +253,12 @@ function goTaichuMore() {
         margin: 0 auto;
         .nav-item {
           color: #555;
-          @media screen and (max-width: 1080px) {
-            font-size: 14px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 22px;
-          }
+          // @media screen and (max-width: 1080px) {
+          //   font-size: 14px;
+          //   font-weight: 400;
+          //   color: #000000;
+          //   line-height: 22px;
+          // }
         }
       }
       .taichu-info {

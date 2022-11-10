@@ -70,6 +70,7 @@ export function fileToBase64(file, callback) {
     callback(this.result);
   };
 }
+
 export function dataURLtoBlob(dataurl) {
   let arr = dataurl.split(',');
   let array = arr[0].match(/:(.*?);/);
@@ -105,4 +106,22 @@ export function formatDateTime(inputTime) {
   minute = minute < 10 ? '0' + minute : minute;
   second = second < 10 ? '0' + second : second;
   return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+}
+
+export function formatSeconds(value) {
+  let second = value; //秒
+  let minute = 0; //分
+  let hour = 0; //小时
+  if (second > 59) {
+    minute = parseInt(second / 60);
+    second = parseInt(second % 60);
+  }
+  if (minute > 59) {
+    hour = parseInt(minute / 60);
+    minute = parseInt(minute % 60);
+  }
+  second < 10 ? (second = '0' + second) : (second = second);
+  minute < 10 ? (minute = '0' + minute) : (minute = minute);
+  hour < 10 ? (hour = '0' + hour) : (hour = hour);
+  return hour + ':' + minute + ':' + second;
 }

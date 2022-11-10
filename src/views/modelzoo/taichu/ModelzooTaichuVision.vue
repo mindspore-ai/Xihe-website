@@ -287,7 +287,6 @@ onMounted(() => {
     <div class="vision-box">
       <div class="title">
         <span>视觉问答（Visual Question Answer, VQA）</span>
-        <span class="new-tag">new</span>
       </div>
 
       <p class="description">
@@ -467,18 +466,6 @@ onMounted(() => {
       //   color: #000000;
       //   line-height: 28px;
       // }
-      .new-tag {
-        display: inline-block;
-        width: 44px;
-        line-height: 20px;
-        background: #ff7f0d;
-        text-align: center;
-        color: #fff;
-        font-size: 12px;
-        // @media screen and (max-width: 1080px) {
-        //   display: none;
-        // }
-      }
     }
 
     .description {

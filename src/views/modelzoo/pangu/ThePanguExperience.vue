@@ -112,11 +112,10 @@ function sendMessage() {
         });
       } else {
         msgList.value.forEach((item) => (item.isLoading = false));
-
-        ElMessage({
-          type: 'error',
-          message: res.data.msg,
-        });
+        // ElMessage({
+        //   type: 'error',
+        //   message: res.code,
+        // });
       }
     });
 
@@ -541,16 +540,16 @@ onMounted(() => {
         display: flex;
         flex-wrap: wrap;
         &-item {
+          font-size: 14px;
+          line-height: 18px;
+          color: #555;
           padding: 7px 12px;
+          margin-top: 16px;
+          margin-right: 10px;
           border-radius: 8px;
           border: 1px solid #dbedff;
-          box-sizing: border-box;
+          // box-sizing: border-box;
           background-color: #f3f9ff;
-          margin-top: 16px;
-          font-size: 14px;
-          color: #555;
-          margin-right: 10px;
-          line-height: 18px;
           cursor: pointer;
         }
         .active {

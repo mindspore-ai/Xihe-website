@@ -23,6 +23,7 @@ import {
   getUserDig,
   cancelCollection,
   projectFork,
+  checkNames,
 } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
@@ -177,9 +178,10 @@ const rules = reactive({
       message: '格式不正确',
       trigger: 'blur',
     },
+    { validator: checkName, trigger: 'blur' },
   ],
   describe: [
-    { required: true, message: '必填项', trigger: 'blur' },
+    // { required: true, message: '必填项', trigger: 'blur' },
     { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
   ],
 });
@@ -580,31 +582,39 @@ function forkCreateClick() {
       // let projectId = detailData.value.id;
       let params = {};
       params.name = forkForm.storeName;
-      params.owner_id = userInfoStore.id;
-      params.description = forkForm.describe;
-      await getBaseInfo().then((res) => {
-        params.owner_type = res.user_type_id;
-      });
+      // params.owner_id = userInfoStore.id;
+      params.desc = forkForm.describe;
+      // await getBaseInfo().then((res) => {
+      //   params.owner_type = res.user_type_id;
+      // });
       forkShow.value = false;
       // loadingShow.value = true;
       //换后台
       // const owner1 = 's9qfqri3zpc8j2x7';
       // const id1 = '632414db7187a3b38b417660';
-      projectFork(userInfoStore.userName, detailData.value.id).then((res) => {
-        if (res.status === 200 && res.data.status === 200) {
+      projectFork(detailData.value.owner, detailData.value.id, params)
+        .then((res) => {
+          // if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
             `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );
-        } else {
-          loadingShow.value = false;
+          // } else {
+          //   loadingShow.value = false;
+          //   ElMessage({
+          //     type: 'error',
+          //     message: res.data.msg,
+          //     center: true,
+          //   });
+          // }
+        })
+        .catch(() => {
           ElMessage({
             type: 'error',
-            message: res.data.msg,
+            message: '暂不能fork该项目',
             center: true,
           });
-        }
-      });
+        });
     } else {
       ElMessage({
         type: 'error',
@@ -617,20 +627,20 @@ function forkCreateClick() {
 }
 
 function forkClick() {
-  // forkShow.value = true;
+  forkShow.value = true;
   // loadingShow.value = true;
-  projectFork(detailData.value.owner, detailData.value.id)
-    .then(() => {
-      // loadingShow.value = false;
-      router.push(`/projects/${userInfoStore.userName}/${forkForm.storeName}`);
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'error',
-        message: '暂不能fork该项目',
-        center: true,
-      });
-    });
+  // projectFork(detailData.value.owner, detailData.value.id)
+  //   .then(() => {
+  //     // loadingShow.value = false;
+  //     router.push(`/projects/${userInfoStore.userName}/${forkForm.storeName}`);
+  //   })
+  //   .catch(() => {
+  //     ElMessage({
+  //       type: 'error',
+  //       message: '暂不能fork该项目',
+  //       center: true,
+  //     });
+  //   });
 }
 
 watch(
@@ -687,6 +697,16 @@ watch(
 // function goTrain(path) {
 //   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
 // }
+function checkName(rule, value, callback) {
+  checkNames({ name: value, owner: userInfoStore.userName })
+    .then((res) => {
+      console.log(res);
+      callback();
+    })
+    .catch((err) => {
+      callback(new Error('该名称已存在'));
+    });
+}
 </script>
 
 <template>
@@ -910,13 +930,13 @@ watch(
           :label-position="tabPosition"
           hide-required-asterisk
         >
-          <el-form-item label="拥有者" prop="owner">
+          <!-- <el-form-item label="拥有者" prop="owner">
             <el-select v-model="forkForm.owner">
               <el-option v-for="item in ownerName" :key="item" :value="item">{{
                 item
               }}</el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="仓库名称" class="store-name" prop="storeName">
             <el-input
               v-model="forkForm.storeName"

@@ -67,6 +67,12 @@ export function setNewProject(params) {
     return res.data;
   });
 }
+export function checkNames(params) {
+  const url = `/server/project/${params.owner}/${params.name}/check`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 
 /**
  * 修改项目信息
@@ -324,10 +330,10 @@ export function createTrainProject(params, projectId) {
  * Fork
  * @returns
  */
-export function projectFork(owner, projectId) {
+export function projectFork(owner, projectId, params) {
   const url = `/server/project/${owner}/${projectId}`;
   // console.log(url);
-  return request.post(url, null, getHeaderConfig()).then((res) => {
+  return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

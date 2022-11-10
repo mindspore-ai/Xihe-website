@@ -153,6 +153,12 @@ export function createModelStore(params) {
     return res.data;
   });
 }
+export function checkNames(params) {
+  const url = `/server/model/${params.owner}/${params.name}/check`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 /**
  * 添加相关数据集（查询数据集信息）
  * @returns

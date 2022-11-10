@@ -73,6 +73,12 @@ export function createDataset(params) {
       return res.data;
     });
 }
+export function checkNames(params) {
+  const url = `/server/dataset/${params.owner}/${params.name}/check`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 /**
  * 修改数据集信息
  * @returns

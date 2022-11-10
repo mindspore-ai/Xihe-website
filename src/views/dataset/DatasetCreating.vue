@@ -12,7 +12,7 @@ import OButton from '@/components/OButton.vue';
 
 import protocol from '../../../config/protocol';
 // import { getModelTags } from '@/api/api-model';
-import { createDataset } from '@/api/api-dataset';
+import { createDataset, checkNames } from '@/api/api-dataset';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const userInfo = useUserInfoStore();
@@ -111,6 +111,16 @@ function create(formEl) {
     }
   });
 }
+function checkName(rule, value, callback) {
+  checkNames({ name: value, owner: userInfo.userName })
+    .then((res) => {
+      console.log(res);
+      callback();
+    })
+    .catch((err) => {
+      callback(new Error('该名称已存在'));
+    });
+}
 </script>
 
 <template>
@@ -178,6 +188,7 @@ function create(formEl) {
             message: '不能连续两个及以上中划线',
             trigger: 'blur',
           },
+          { validator: checkName, trigger: 'blur' },
         ]"
       >
         <div class="requirement">

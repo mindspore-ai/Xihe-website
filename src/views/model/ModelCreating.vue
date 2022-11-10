@@ -10,7 +10,7 @@ import OIcon from '@/components/OIcon.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import protocol from '../../../config/protocol';
-import { createModelStore, getModelTags } from '@/api/api-model';
+import { createModelStore, getModelTags, checkNames } from '@/api/api-model';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -95,6 +95,15 @@ function create(formEl) {
     }
   });
 }
+function checkName(rule, value, callback) {
+  checkNames({ name: value, owner: userInfo.userName })
+    .then(() => {
+      callback();
+    })
+    .catch(() => {
+      callback(new Error('该名称已存在'));
+    });
+}
 </script>
 
 <template>
@@ -158,6 +167,7 @@ function create(formEl) {
             message: '不能连续两个及以上中划线',
             trigger: 'blur',
           },
+          { validator: checkName, trigger: 'blur' },
         ]"
       >
         <div class="requirement">

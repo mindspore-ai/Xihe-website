@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 
 import protocol from '../../../config/protocol';
 import { trainSdk, inferSdk, projectPhoto } from '../../../config/protocol';
-import { getModelTags, setNewProject } from '@/api/api-project.js';
+import { getModelTags, setNewProject, checkNames } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -75,12 +75,23 @@ const rules = reactive({
       message: '不能连续两个及以上中划线',
       trigger: 'blur',
     },
+    { validator: checkName, trigger: 'blur' },
   ],
   desc: [
     { required: true, message: '必填项', trigger: 'blur' },
     { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
   ],
 });
+function checkName(rule, value, callback) {
+  checkNames({ name: value, owner: userInfo.userName })
+    .then((res) => {
+      console.log(res);
+      callback();
+    })
+    .catch((err) => {
+      callback(new Error('该名称已存在'));
+    });
+}
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);

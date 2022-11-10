@@ -1,6 +1,11 @@
 <script setup>
 import { ref, computed, onUnmounted, onMounted } from 'vue';
 
+import { useRouter, useRoute } from 'vue-router';
+import { useFileData, useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
+import { formatSeconds } from '@/shared/utils';
+
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import IconRebuild from '~icons/app/rebuild';
@@ -17,22 +22,19 @@ import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
 
-import { LOGIN_KEYS } from '@/shared/login';
-import { useRouter, useRoute } from 'vue-router';
-import { useFileData, useUserInfoStore } from '@/stores';
 import {
   trainList,
   deleteTainList,
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-const route = useRoute();
-const router = useRouter();
-const userInfoStore = useUserInfoStore();
+// 当前项目的详情数据
+const detailData = computed(() => {
+  return useFileData().fileStoreData;
+});
 
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -49,10 +51,9 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-// 当前项目的详情数据
-const detailData = computed(() => {
-  return useFileData().fileStoreData;
-});
+const route = useRoute();
+const router = useRouter();
+const userInfoStore = useUserInfoStore();
 
 const projectId = detailData.value.id;
 const trainData = ref([]);
@@ -187,24 +188,6 @@ function resetClick(val) {
       }
     });
   }
-}
-
-function formatSeconds(value) {
-  let theTime = value; //秒
-  let middle = 0; //分
-  let hour = 0; //小时
-  if (theTime > 59) {
-    middle = parseInt(theTime / 60);
-    theTime = parseInt(theTime % 60);
-  }
-  if (middle > 59) {
-    hour = parseInt(middle / 60);
-    middle = parseInt(middle % 60);
-  }
-  theTime < 10 ? (theTime = '0' + theTime) : (theTime = theTime);
-  middle < 10 ? (middle = '0' + middle) : (middle = middle);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
-  return hour + ':' + middle + ':' + theTime;
 }
 
 function goTrainLog(trainId) {
@@ -375,10 +358,7 @@ onUnmounted(() => {
             <div class="hide-box">
               <div class="tools-box">
                 <div
-                  v-if="
-                    scope.row.status === 'Running' ||
-                    scope.row.status === 'scheduling'
-                  "
+                  v-if="scope.row.status === 'Running'"
                   class="tools"
                   @click="showStopClick(scope.row.status, scope.row.id)"
                 >
@@ -398,16 +378,6 @@ onUnmounted(() => {
           </div>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="参数文件" width="203">
-        <template #default="scope">
-          <div>
-            <span class="date" @click="goDateDetail(scope.row.config_path)">
-              {{ scope.row.config_path }}</span
-            >
-          </div>
-        </template>
-      </el-table-column> -->
 
       <el-table-column label="更新时间" prop="created_at" width="214">
       </el-table-column>

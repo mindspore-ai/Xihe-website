@@ -12,6 +12,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useFileData, useUserInfoStore } from '@/stores';
 import { getTrainLog, autoEvaluate } from '@/api/api-project';
+import { formatSeconds } from '@/shared/utils';
 
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
@@ -21,7 +22,6 @@ import IconFailed from '~icons/app/failed';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -108,25 +108,6 @@ const form = reactive({
 });
 const userInfoStore = useUserInfoStore();
 
-// 转换时间
-function formatSeconds(value) {
-  let theTime = value; //秒
-  let middle = 0; //分
-  let hour = 0; //小时
-  if (theTime > 59) {
-    middle = parseInt(theTime / 60);
-    theTime = parseInt(theTime % 60);
-  }
-  if (middle > 59) {
-    hour = parseInt(middle / 60);
-    middle = parseInt(middle % 60);
-  }
-  theTime < 10 ? (theTime = '0' + theTime) : (theTime = theTime);
-  middle < 10 ? (middle = '0' + middle) : (middle = middle);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
-  return hour + ':' + middle + ':' + theTime;
-}
-
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -142,10 +123,11 @@ goHome();
 
 const isDone = ref(false);
 
+const btnContent = ref('开始评估');
+
 const logName = ref('');
 const outputName = ref('');
 
-const btnContent = ref('开始评估');
 const isEvaluating = ref(false);
 const isEvaluated = ref(false);
 
@@ -391,7 +373,7 @@ function handleAssessment() {
     }
   );
 }
-console.log(detailData.value);
+
 // 跳转到Aim嵌入页面
 function goAimPage() {
   router.push({
@@ -452,6 +434,7 @@ async function downloadLogFile() {
       let name = 'log.txt';
       downloadBlob(blod, name);
     });
+
   return data;
 }
 

@@ -44,6 +44,7 @@ async function getDetailData(dirPath2) {
   try {
     // gitlab
     await getGitlabTree({
+      type: 'project',
       user: routerParams.user,
       path: dirPath2,
       id: props.repoDetail.id,

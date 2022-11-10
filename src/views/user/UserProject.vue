@@ -123,7 +123,11 @@ watch(
               :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
               alt=""
             />
-            <p class="title">{{ item.name }}</p>
+            <div class="title">
+              <span>
+                {{ item.name }}
+              </span>
+            </div>
             <div class="dig">
               <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.like_count }}
             </div>
@@ -229,13 +233,31 @@ watch(
         width: 100%;
         height: 100%;
       }
-      .title {
+      /* .title {
         font-size: 18px;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 5;
+      } */
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 84%;
+        // margin: 0 auto;
+        font-size: 18px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        span {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
       }
       .dig {
         position: absolute;

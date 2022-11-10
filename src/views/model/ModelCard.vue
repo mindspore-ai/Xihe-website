@@ -62,6 +62,7 @@ const i18n = {
 function getReadMeFile() {
   try {
     getGitlabTree({
+      type: 'model',
       user: routerParams.user,
       path: '',
       id: detailData.value.id,
@@ -73,6 +74,7 @@ function getReadMeFile() {
         });
         if (README && README.length) {
           getGitlabFileRaw({
+            type: 'model',
             user: routerParams.user,
             path: 'README.md',
             id: detailData.value.id,

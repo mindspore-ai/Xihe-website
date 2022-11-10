@@ -78,7 +78,7 @@ const rules = reactive({
     { validator: checkName, trigger: 'blur' },
   ],
   desc: [
-    { required: true, message: '必填项', trigger: 'blur' },
+    // { required: true, message: '必填项', trigger: 'blur' },
     { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
   ],
 });
@@ -322,7 +322,7 @@ onMounted(() => {});
         <!-- 项目描述 -->
         <div class="form-item">
           <div class="warning">
-            <o-icon><icon-necessary></icon-necessary></o-icon>
+            <!-- <o-icon><icon-necessary></icon-necessary></o-icon> -->
           </div>
           <el-form-item :label="i18n.desc" prop="desc">
             <el-input

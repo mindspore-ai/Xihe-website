@@ -52,6 +52,7 @@ const description = ref('');
 const codeString = ref('');
 function previewFile() {
   getGitlabFileRaw({
+    type: prop.moduleName,
     user: routerParams.user,
     path: path,
     id: repoDetailData.value.id,
@@ -67,6 +68,7 @@ function previewFile() {
 async function uploadGitlab() {
   await editorFileGitlab(
     {
+      type: prop.moduleName,
       name: routerParams.name,
       content: codeString.value,
       path: path,
@@ -92,6 +94,7 @@ function verifyFile() {
     : '';
   try {
     getGitlabTree({
+      type: prop.moduleName,
       user: routerParams.user,
       path: parentDirectory,
       id: repoDetailData.value.id,

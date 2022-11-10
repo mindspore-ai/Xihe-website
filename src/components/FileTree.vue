@@ -110,6 +110,7 @@ async function getDetailData(path) {
   try {
     // gitlab
     await getGitlabTree({
+      type: prop.moduleName,
       user: routerParams.user,
       path: path,
       id: repoDetailData.value.id,
@@ -197,6 +198,7 @@ function creatFolter(formEl) {
     if (valid) {
       uploadFileGitlab(
         {
+          type: prop.moduleName,
           name: routerParams.name,
           id: repoDetailData.value.id,
           content: '',
@@ -261,6 +263,7 @@ function deleteFolderClick(folderName) {
     );
   } else {
     deleteFile({
+      type: prop.moduleName,
       name: routerParams.name,
       path: path,
       id: repoDetailData.value.id,
@@ -378,6 +381,7 @@ watch(
               @click="
                 !item.is_dir &&
                   downloadFile({
+                    type: moduleName,
                     path: item.path,
                     id: repoDetailData.id,
                     name: routerParams.name,

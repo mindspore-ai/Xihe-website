@@ -92,6 +92,7 @@ async function upLoadObs(formEl) {
 
       uploadFileGitlab(
         {
+          type: prop.moduleName,
           name: routerParams.name,
           content: query.textValue,
           commit_message: `created ${query.folderName}`,

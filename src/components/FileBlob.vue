@@ -74,6 +74,7 @@ function previewFile() {
     ? (suffix.value = path.value.match(/[^.]+$/)[0])
     : (suffix.value = 'py');
   getGitlabFileRaw({
+    type: prop.moduleName,
     user: routerParams.user,
     path: path.value,
     id: repoDetailData.value.id,
@@ -114,6 +115,7 @@ function verifyFile() {
     : '';
   try {
     getGitlabTree({
+      type: prop.moduleName,
       user: routerParams.user,
       path: parentDirectory,
       id: repoDetailData.value.id,
@@ -136,6 +138,7 @@ verifyFile();
 
 async function headleDelFile(path) {
   deleteFile({
+    type: prop.moduleName,
     name: routerParams.name,
     path: path,
     id: repoDetailData.value.id,
@@ -265,6 +268,7 @@ watch(
             class="file-operation-item"
             @click="
               downloadFile({
+                type: moduleName,
                 user: routerParams.user,
                 path: path,
                 id: repoDetailData.id,
@@ -293,6 +297,7 @@ watch(
             class="download"
             @click="
               downloadFile({
+                type: moduleName,
                 user: routerParams.user,
                 path: path,
                 id: repoDetailData.id,

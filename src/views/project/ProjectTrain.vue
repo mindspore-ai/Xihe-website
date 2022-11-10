@@ -314,6 +314,7 @@ function addModeClick() {
 function getReadMeFile() {
   try {
     getGitlabTree({
+      type: 'project',
       user: routerParams.user,
       path: 'train',
       id: detailData.value.id,
@@ -325,6 +326,7 @@ function getReadMeFile() {
         });
         if (README && README.length) {
           getGitlabFileRaw({
+            type: 'project',
             user: routerParams.user,
             path: 'train/README.md',
             id: detailData.value.id,

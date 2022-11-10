@@ -228,14 +228,9 @@ function checkName(rule, value, callback) {
         </el-popover> -->
         <o-popper></o-popper>
       </el-form-item>
-      <el-form-item
-        class="des item"
-        prop="desc"
-        :rules="{ required: true, message: '必填项', trigger: 'blur' }"
-      >
+      <el-form-item class="des item" prop="desc">
         <div>
-          <icon-necessary></icon-necessary
-          ><span>{{ i18n.datasetDescribe }}</span>
+          <span>{{ i18n.datasetDescribe }}</span>
         </div>
         <el-input
           v-model="query.desc"

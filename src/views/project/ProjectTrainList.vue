@@ -435,6 +435,7 @@ onUnmounted(() => {
     justify-content: space-between;
     .table-title {
       display: flex;
+      align-items: center;
       .list-tip {
         font-size: 12px;
         font-weight: 400;

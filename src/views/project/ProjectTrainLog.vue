@@ -421,7 +421,7 @@ async function downloadLogFile() {
   if (!logUrl.value) {
     ElMessage({
       type: 'warning',
-      message: '训练中',
+      message: '训练中,请训练完成后点击下载',
     });
     return;
   }

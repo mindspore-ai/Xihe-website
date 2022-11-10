@@ -19,7 +19,6 @@ import {
   // handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
-import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -34,11 +33,12 @@ const gridData = ref([]);
 //   create_at: '',
 // });
 
-const isSelected = ref(false);
 const cesiumContainer = ref('');
 const viewer = ref(null);
 const nowModelName = ref('高德影像');
 const zoomlv = ref(18);
+
+const isSelected = ref(false);
 const tblob = ref(null);
 
 const location = ref(null);
@@ -46,6 +46,7 @@ const location = ref(null);
 const loadingText = ref('');
 const isShow = ref(false);
 const isInfer = ref(false);
+
 let formData = new FormData();
 
 async function handleDrawClick() {
@@ -76,6 +77,7 @@ async function handleDrawClick() {
           zoomlv.value,
           nowModelName.value
         );
+
         isShow.value = false;
         isInfer.value = true;
         loadingText.value = '';
@@ -115,8 +117,6 @@ function handleInferClick() {
             const tempimg = document.createElement('img');
             tempimg.src = aurl;
             viewer.value.setImageAsLayer(tempimg);
-
-            // tblob.value = null;
           }
         });
       } else {
@@ -335,9 +335,6 @@ onMounted(() => {
       color: #0d8dff;
     }
   }
-  // th.el-table__cell.is-leaf {
-  //   border-bottom: none;
-  // }
   tr {
     background: #fff;
     position: relative;
@@ -525,7 +522,6 @@ onMounted(() => {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
-  // display: none;
   .triangle {
     position: absolute;
     top: -16px;
@@ -549,7 +545,6 @@ onMounted(() => {
     line-height: 16px;
   }
   .divider {
-    // align-self: center;
     margin: 0 7px;
     width: 1px;
     height: 17px;

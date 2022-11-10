@@ -177,11 +177,9 @@ watch(
   .codegeex-main {
     .nav-tab {
       margin-top: 16px;
-      //   background-color: #fff;
       .o-nav {
         background-color: rgba(251, 251, 251, 0.85);
         box-shadow: 0px -1px 30px 0px rgba(0, 0, 0, 0.05);
-        // border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       }
       height: 48px;
       background-color: #fbfbfb;
@@ -198,7 +196,6 @@ watch(
     .tab-content {
       padding: 40px;
       background: #fff;
-      // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     }
   }
 }

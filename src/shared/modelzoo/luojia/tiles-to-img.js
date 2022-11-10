@@ -140,8 +140,8 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
   //没有rbxy[0]+1的话会出现最后一张瓦片缺失的情况，为img未完全加载问题，稍微改了下，多了个判断
   //TODO:加载速度太慢
 
-  l1: for (let m = ltxy[0]; m <= rbxy[0] + 1; m++) {
-    for (let n = ltxy[1]; n <= rbxy[1]; n++) {
+  l1: for (let m = ltxy[0]; m <= rbxy[0] + 2; m++) {
+    for (let n = ltxy[1]; n <= rbxy[1] + 1; n++) {
       if (finflag === 1) {
         break l1;
       }
@@ -165,7 +165,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
         context?.drawImage(tempimg, (m - ltxy[0]) * 256, (n - ltxy[1]) * 256);
       };
 
-      if (m === rbxy[0] && n === rbxy[1]) {
+      if (m === rbxy[0] + 1 && n === rbxy[1] + 1) {
         finflag = 1;
       }
     }

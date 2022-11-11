@@ -35,7 +35,7 @@ const i18n = {
     uploadTitle: '上传文件',
     dragText: '拖拽文件到此处上传 或 ',
     clickText: '点击此处浏览本地文件并上传',
-    limitText: '（最大不超过5GB）',
+    limitText: '（最大不超过1MB）',
     addDescribe: '添加描述',
     placeholder: '请输入此次操作描述信息',
     cancel: '取消',

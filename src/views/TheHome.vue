@@ -4,6 +4,11 @@ import { useRouter } from 'vue-router';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Autoplay } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
@@ -28,6 +33,8 @@ import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 
 AOS.init();
+
+const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -187,26 +194,31 @@ function goCode() {
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <el-carousel trigger="click" height="480px">
-      <el-carousel-item>
+    <swiper
+      :modules="modules"
+      :pagination="{ clickable: true }"
+      :autoplay="{ disableOnInteraction: false, autoplay: true }"
+      loop
+    >
+      <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
-      </el-carousel-item>
-      <el-carousel-item>
+      </swiper-slide>
+      <swiper-slide>
         <div class="photo1 cursor" @click="goInvited"></div>
-      </el-carousel-item>
-      <!-- <el-carousel-item>
+      </swiper-slide>
+      <!-- <swiper-slide>
         <div class="photo2"></div>
-      </el-carousel-item> -->
-      <el-carousel-item>
+      </swiper-slide> -->
+      <swiper-slide>
         <div class="photo3 cursor" @click="goDetail(3)"></div>
-      </el-carousel-item>
-      <el-carousel-item>
+      </swiper-slide>
+      <swiper-slide>
         <div class="photo4 cursor" @click="goDetail(2)"></div>
-      </el-carousel-item>
-      <el-carousel-item>
+      </swiper-slide>
+      <swiper-slide>
         <div class="photo5 cursor" @click="goDetail(1)"></div>
-      </el-carousel-item>
-    </el-carousel>
+      </swiper-slide>
+    </swiper>
 
     <div class="home-content">
       <div class="wrapper">
@@ -599,7 +611,7 @@ function goCode() {
   //     }
   //   }
   // }
-  .el-carousel {
+  .swiper {
     margin-top: 80px;
     @media screen and (max-width: 1920px) {
       img {

@@ -126,6 +126,8 @@ function verifyFile() {
       });
       if (treeItem?.length && !treeItem[0].is_lfs_file) {
         previewFile();
+      } else if (treeItem?.length && treeItem[0].is_lfs_file) {
+        showBlob.value = false;
       } else {
         router.push('/notfound');
       }

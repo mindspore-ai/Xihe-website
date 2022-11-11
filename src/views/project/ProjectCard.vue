@@ -31,6 +31,7 @@ import {
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
 import { LOGIN_KEYS } from '@/shared/login';
+// import project from '@/routers/project';
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -539,6 +540,7 @@ if (detailData.value.owner === userInfo.userName) {
   console.log(detailData.value.owner, userInfo.userName);
   // findFile(`xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`)
   getGitlabTree({
+    type: 'project',
     user: routerParams.user,
     path: 'inference',
     id: detailData.value.id,

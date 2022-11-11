@@ -118,7 +118,8 @@ function checkName(rule, value, callback) {
       callback();
     })
     .catch((err) => {
-      callback(new Error('该名称已存在'));
+      // callback(new Error('该名称已存在'));
+      callback();
     });
 }
 </script>

@@ -456,10 +456,8 @@ function start2() {
   };
   socket.value.onmessage = function (event) {
     console.log('111', JSON.parse(event.data));
-    console.log('333', JSON.parse(event));
-    if (JSON.parse(event.data).msg) {
-      console.log('222', JSON.parse(event.data).msg);
-    }
+    clientSrc.value = JSON.parse(event.data).data.access_url;
+    msg.value = '运行中';
   };
   // startInference2({
   //   owner: detailData.value.owner,

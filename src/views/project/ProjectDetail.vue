@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -637,6 +637,9 @@ function forkClick() {
   //       center: true,
   //     });
   //   });
+  nextTick(() => {
+    document.querySelector('.el-input__inner').focus();
+  });
 }
 
 watch(

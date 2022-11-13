@@ -389,7 +389,7 @@ function cancelBtn() {
 }
 
 function getTagList() {
-  getTags().then((res) => {
+  getTags('dataset').then((res) => {
     renderList.value = res.data;
     dialogList.menuList = res.data.map((item, index) => {
       return { tab: item.domain, key: index };

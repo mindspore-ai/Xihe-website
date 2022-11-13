@@ -366,7 +366,7 @@ function getProject() {
 }
 
 function getModelTag() {
-  getTags().then((res) => {
+  getTags('global_project').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
       return {
         title: {

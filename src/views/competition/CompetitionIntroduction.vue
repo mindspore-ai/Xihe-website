@@ -11,7 +11,7 @@ import { getGuide } from '@/api/api-competition';
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;
 });
-console.log(comInfo);
+// console.log(comInfo);
 
 const mkit = handleMarkdown();
 const codeString = ref('');

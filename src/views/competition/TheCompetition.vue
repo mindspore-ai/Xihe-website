@@ -78,12 +78,11 @@ function getCompetitions2() {
 getCompetitions2();
 // 跳转到比赛详情页
 function goDetail(id) {
-  console.log('id: ', id);
-  /* router.push({
+  router.push({
     name: 'competitionDetail',
     params: { id: id },
-  }); */
-  router.push(`/competition/${id}`);
+  });
+  // router.push(`/competition/${id}`);
 }
 // function change(pre, next) {
 // console.log(pre, next);
@@ -135,7 +134,7 @@ function goDetail(id) {
                     火热进行中
                   </div>
                   <div
-                    v-if="item.status === 'preparing'"
+                    v-else-if="item.status === 'preparing'"
                     class="card-head-state"
                     :class="state"
                   >
@@ -154,7 +153,7 @@ function goDetail(id) {
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <!-- <div class="time">赛期：{{ item.duration }}</div> -->
+                  <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
                   <div v-if="item.status === 'in-progress'" class="right-wrap">
@@ -218,7 +217,7 @@ function goDetail(id) {
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <!-- <div class="time">赛期：{{ item.duration }}</div> -->
+                  <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
                   <div v-if="item.status === 'in-progress'" class="right-wrap">

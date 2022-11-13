@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, computed } from 'vue';
 
 // import IconArrowDown from '~icons/app/arrow-down.svg';
 
@@ -13,30 +13,36 @@ import { useRoute } from 'vue-router';
 
 import { getRank } from '@/api/api-competition';
 
+import { useCompetitionData } from '@/stores';
+
+const comInfo = computed(() => {
+  return useCompetitionData().competitionData;
+});
+// console.log('comInfo: ', comInfo);
+
 const route = useRoute();
 
 const tableData = ref([]);
 const tableData2 = ref([]);
-getRank({ competition_id: route.path.split('/')[2], period: 1 }).then((res) => {
+getRank({ id: comInfo.value.id, phase: 'preliminary' }).then((res) => {
   tableData.value = res.data;
-  tableData.value.forEach((element) => {
+  /* tableData.value.forEach((element) => {
     element.create_time = element.create_time.split('T')[0];
-  });
-  // console.log(tableData.value)hli
+  }); */
+  // console.log(tableData.value)
 });
 const tabs = ref();
 function change(s) {
+  let params = { id: comInfo.value.id, phase: 'final' };
   if (s === '1') {
     tabs.value[0].classList.remove('tabs-left');
     tabs.value[1].classList.add('tabs-right');
-    getRank({ competition_id: route.path.split('/')[2], period: 2 }).then(
-      (res) => {
-        tableData2.value = res.data;
-        tableData2.value.forEach((element) => {
-          element.create_time = element.create_time.split('T')[0];
-        });
-      }
-    );
+    getRank(params).then((res) => {
+      tableData2.value = res.data;
+      /* tableData2.value.forEach((element) => {
+        element.create_time = element.create_time.split('T')[0];
+      }); */
+    });
   } else if (s === '0') {
     tabs.value[1].classList.remove('tabs-right');
     tabs.value[0].classList.add('tabs-left');

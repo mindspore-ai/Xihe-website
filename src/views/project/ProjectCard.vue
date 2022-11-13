@@ -447,27 +447,38 @@ function start() {
 //拥有者启动推理
 function start2() {
   // if (socket.value) {
-  socket.value = new WebSocket(
-    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
-    [getHeaderConfig().headers['private-token']]
-  );
-  socket.value.onopen = function () {
-    console.log('连接成功');
-  };
-  socket.value.onmessage = function (event) {
-    console.log('111', JSON.parse(event.data));
-    clientSrc.value = JSON.parse(event.data).data.access_url;
-    msg.value = '运行中';
-  };
-  // startInference2({
-  //   owner: detailData.value.owner,
-  //   pid: detailData.value.id,
-  // }).then((res) => {
-  // if (res.data.status === 200) {
-  msg.value = '启动中';
-  // }
-  // socket.send(JSON.stringify({ pk: detailData.value.id }));
-  // });
+  if (detailData.value.owner === userInfo.userName) {
+    socket.value = new WebSocket(
+      `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
+      [getHeaderConfig().headers['private-token']]
+    );
+    socket.value.onopen = function () {
+      console.log('连接成功');
+    };
+    socket.value.onmessage = function (event) {
+      console.log('111', JSON.parse(event.data));
+      clientSrc.value = JSON.parse(event.data).data.access_url;
+      msg.value = '运行中';
+    };
+    // startInference2({
+    //   owner: detailData.value.owner,
+    //   pid: detailData.value.id,
+    // }).then((res) => {
+    // if (res.data.status === 200) {
+    msg.value = '启动中';
+    // }
+    // socket.send(JSON.stringify({ pk: detailData.value.id }));
+    // });
+  } else {
+    socket.value = new WebSocket(
+      `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+    );
+    socket.value.onmessage = function (event) {
+      clientSrc.value = JSON.parse(event.data).data.access_url;
+      msg.value = '运行中';
+    };
+    msg.value = '启动中';
+  }
   // } else {
   //   socket.value = new WebSocket(`wss://${DOMAIN}/wss/inference`);
   //   socket.value.onopen = function () {
@@ -525,7 +536,7 @@ function start2() {
 function stop() {
   // stopInference(detailData.value.id).then(() => {
   // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-  // closeConn();
+  closeConn();
   // clearInterval(timer);
   msg.value = '';
   // });
@@ -612,43 +623,43 @@ if (detailData.value.owner === userInfo.userName) {
   });
 } else {
   // if (detailData.value.status_name === '可运行') {
-  socket.value = new WebSocket(
-    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-  );
-  socket.value.onopen = function () {
-    // socket.value.send(
-    //   JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
-    // );
-    // clearInterval(timer);
-    // timer = setInterval(() => {
-    //   socket.value.send(
-    //     JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
-    //   );
-    // }, 10000);
-    console.log('连接成功');
-  };
-  socket.value.onmessage = function (event) {
-    console.log(event);
-    // msg.value = JSON.parse(event.data).msg;
-    // if (!!JSON.parse(event.data).data) {
-    //   clientSrc.value = JSON.parse(event.data).data.url;
-    //   closeConn(); //断开连接
-    // } else {
-    //   if (JSON.parse(event.data).msg === '未启动') {
-    //     start();
-    //   } else if (JSON.parse(event.data).msg === '任务已销毁') {
-    //     stopInference(detailData.value.id).then((res) => {
-    //       if (res.data.status === 200) {
-    //         ElMessage({
-    //           type: 'error',
-    //           message: '当前任务已结束，正在准备重启',
-    //         });
-    //         start();
-    //       }
-    //     }); //删除任务
-    //   }
-    // }
-  };
+  // socket.value = new WebSocket(
+  //   `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+  // );
+  // socket.value.onopen = function () {
+  // socket.value.send(
+  //   JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+  // );
+  // clearInterval(timer);
+  // timer = setInterval(() => {
+  //   socket.value.send(
+  //     JSON.stringify({ pk: detailData.value.id, user_type: 'guest' })
+  //   );
+  // }, 10000);
+  //   console.log('连接成功');
+  // };
+  // socket.value.onmessage = function (event) {
+  //   console.log(event);
+  // msg.value = JSON.parse(event.data).msg;
+  // if (!!JSON.parse(event.data).data) {
+  //   clientSrc.value = JSON.parse(event.data).data.url;
+  //   closeConn(); //断开连接
+  // } else {
+  //   if (JSON.parse(event.data).msg === '未启动') {
+  //     start();
+  //   } else if (JSON.parse(event.data).msg === '任务已销毁') {
+  //     stopInference(detailData.value.id).then((res) => {
+  //       if (res.data.status === 200) {
+  //         ElMessage({
+  //           type: 'error',
+  //           message: '当前任务已结束，正在准备重启',
+  //         });
+  //         start();
+  //       }
+  //     }); //删除任务
+  //   }
+  // }
+  // };
   // }
 }
 
@@ -692,8 +703,8 @@ if (detailData.value.owner === userInfo.userName) {
 function closeConn() {
   if (socket.value) {
     socket.value.close(); // 向服务端发送断开连接的请求
-    clearInterval(timer);
-    socket.value = null;
+    // clearInterval(timer);
+    // socket.value = null;
   }
 }
 onUnmounted(() => {
@@ -724,18 +735,14 @@ onUnmounted(() => {
           frameborder="0"
           :style="{ height: hasPrefix ? '100%' : '800px' }"
         ></iframe>
-        <o-button v-if="detailData.is_owner" status="error" @click="stop"
-          >停止</o-button
-        >
+        <o-button status="error" @click="stop">停止</o-button>
       </div>
       <div v-else-if="msg === '启动中'" class="markdown-body">
         <div class="loading">
           <img src="@/assets/gifs/loading.gif" alt="" />
           <p>启动大约需要5分钟,请耐心等待</p>
         </div>
-        <o-button v-if="detailData.is_owner" status="error" @click="stop"
-          >停止</o-button
-        >
+        <o-button status="error" @click="stop">停止</o-button>
       </div>
       <div
         v-else-if="
@@ -765,6 +772,9 @@ onUnmounted(() => {
         >
       </div>
       <div v-else class="upload-readme markdown-body">
+        <o-button type="primary" :disabled="!canStart" @click="start2"
+          >启动</o-button
+        >
         <div class="upload-readme-img">
           <o-icon> <icon-file></icon-file> </o-icon>
         </div>

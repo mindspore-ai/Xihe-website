@@ -208,7 +208,6 @@ export function getRank() {
  */
 export function getUserCompetition(params) {
   const url = `/server/competition`;
-  console.log('getHeaderConfig(): ', getHeaderConfig());
   return request
     .get(url, Object.assign({ params }, getHeaderConfig()))
     .then((res) => {

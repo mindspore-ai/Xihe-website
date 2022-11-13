@@ -29,6 +29,7 @@ import {
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { getBaseInfo } from '@/api/api-shared';
 import { goAuthorize } from '@/shared/login';
+import project from '@/routers/project';
 
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -501,7 +502,7 @@ function cancelBtn() {
 }
 
 function getAllTags() {
-  getTags().then((res) => {
+  getTags('project').then((res) => {
     renderList.value = res.data;
     // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
     // console.log(res.data);

@@ -23,6 +23,7 @@ import { getUserDig, cancelCollection } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 import { goAuthorize } from '@/shared/login';
+import model from '@/routers/model';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
@@ -357,7 +358,7 @@ function cancelBtn() {
   isTagShow.value = false;
 }
 function getTagList() {
-  getTags().then((res) => {
+  getTags('model').then((res) => {
     renderList.value = res.data;
     dialogList.menuList = res.data.map((item, index) => {
       return { tab: item.domain, key: index };

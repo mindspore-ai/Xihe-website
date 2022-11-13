@@ -333,7 +333,7 @@ function getDataset() {
   });
 }
 function getModelTag() {
-  getTags(query).then((res) => {
+  getTags('global_dataset').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
       return {
         title: {

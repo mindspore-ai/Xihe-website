@@ -485,7 +485,8 @@ function start2() {
     // });
   } else {
     socket.value = new WebSocket(
-      `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+      `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
+      [`visitor-${detailData.value.id}`]
     );
     socket.value.onmessage = function (event) {
       if (

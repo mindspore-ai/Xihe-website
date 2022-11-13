@@ -27,7 +27,7 @@ const tableData = ref([]);
 const tableData1 = ref([]);
 const tableData2 = ref([]);
 const tableData3 = ref([]);
-function getCompetitions() {
+/* function getCompetitions() {
   getCompetition()
     .then((res) => {
       tableData.value = res.data;
@@ -35,30 +35,55 @@ function getCompetitions() {
     .catch((err) => {
       console.error(err);
     });
-}
+} */
+// 获取进行中、已结束、未开始的比赛
 function getCompetitions1(tab) {
-  getAllCompetition(tab)
+  if (tab === '1') {
+    getAllCompetition({ status: 'preparing' }).then((res) => {
+      // console.log('未开始的比赛：', res.data);
+      if (res.status === 200) {
+        tableData1.value = res.data.data;
+      }
+    });
+  } else if (tab === '2') {
+    getAllCompetition({ status: 'done' }).then((res) => {
+      // console.log('已结束的比赛：', res.data);
+      if (res.status === 200) {
+        tableData2.value = res.data.data;
+      }
+    });
+  } else if (tab === '3') {
+    getAllCompetition({ status: 'in-progress' }).then((res) => {
+      // console.log('进行中的比赛：', res.data);
+      if (res.status === 200) {
+        tableData3.value = res.data.data;
+      }
+    });
+  }
+}
+// getCompetitions();
+// 获取所有的比赛
+function getCompetitions2() {
+  // { status: 'in-progress' }preparing
+  getAllCompetition()
     .then((res) => {
-      if (tab === '1') {
-        tableData1.value = res.data;
-      } else if (tab === '2') {
-        tableData2.value = res.data;
-      } else if (tab === '3') {
-        tableData3.value = res.data;
+      if (res.status === 200) {
+        tableData.value = res.data.data;
       }
     })
     .catch((err) => {
       console.error(err);
     });
 }
-getCompetitions();
+getCompetitions2();
 // 跳转到比赛详情页
 function goDetail(id) {
-  router.push({
+  console.log('id: ', id);
+  /* router.push({
     name: 'competitionDetail',
     params: { id: id },
-  });
-  // router.push(`/competition/${id}`)
+  }); */
+  router.push(`/competition/${id}`);
 }
 // function change(pre, next) {
 // console.log(pre, next);
@@ -89,8 +114,8 @@ function goDetail(id) {
         @tab-click="handleClick"
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
-        <el-tab-pane label="全部" name="first"
-          ><div v-if="tableData.length">
+        <el-tab-pane label="全部" name="first">
+          <div v-if="tableData">
             <div
               v-for="item in tableData"
               :key="item.id"
@@ -103,26 +128,36 @@ function goDetail(id) {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status_name === '进行中'"
+                    v-if="item.status === 'in-progress'"
                     class="card-head-state"
                     :class="state"
                   >
                     火热进行中
                   </div>
+                  <div
+                    v-if="item.status === 'preparing'"
+                    class="card-head-state"
+                    :class="state"
+                  >
+                    未开始
+                  </div>
+                  <div v-else class="card-head-state" :class="state">
+                    已结束
+                  </div>
                 </div>
                 <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
-                  {{ item.description }}
+                  {{ item.desc }}
                 </div>
                 <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期：{{ item.during }}</div>
+                  <!-- <div class="time">赛期：{{ item.duration }}</div> -->
                 </div>
                 <div class="right-immediate">
-                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                  <div v-if="item.status === 'in-progress'" class="right-wrap">
                     <OButton
                       type="primary"
                       animation
@@ -133,16 +168,16 @@ function goDetail(id) {
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
                     </OButton>
-                    <div class="number">报名人数：{{ item.user_count }}</div>
+                    <div class="number">报名人数：{{ item.count }}</div>
                   </div>
                   <div
-                    v-else-if="item.status_name === '未开始'"
+                    v-else-if="item.status === 'preparing'"
                     class="right-wrap"
                   >
                     <div class="not-started">报名未开始</div>
                   </div>
                   <div v-else class="right-wrap">
-                    <div class="not-started">报名已截至</div>
+                    <div class="not-started">报名已截止</div>
                   </div>
                 </div>
               </div>
@@ -154,7 +189,7 @@ function goDetail(id) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="3">
-          <div v-if="tableData3.length">
+          <div v-if="tableData3">
             <div
               v-for="item in tableData3"
               :key="item.id"
@@ -167,7 +202,7 @@ function goDetail(id) {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status_name === '进行中'"
+                    v-if="item.status === 'in-progress'"
                     class="card-head-state"
                     :class="state"
                   >
@@ -176,17 +211,17 @@ function goDetail(id) {
                 </div>
                 <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
-                  {{ item.description }}
+                  {{ item.desc }}
                 </div>
                 <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期：{{ item.during }}</div>
+                  <!-- <div class="time">赛期：{{ item.duration }}</div> -->
                 </div>
                 <div class="right-immediate">
-                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                  <div v-if="item.status === 'in-progress'" class="right-wrap">
                     <OButton
                       type="primary"
                       animation
@@ -197,16 +232,16 @@ function goDetail(id) {
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
                     </OButton>
-                    <div class="number">报名人数：{{ item.user_count }}</div>
+                    <div class="number">报名人数：{{ item.count }}</div>
                   </div>
                   <div
-                    v-else-if="item.status_name === '未开始'"
+                    v-else-if="item.status === 'preparing'"
                     class="right-wrap"
                   >
                     <div class="not-started">报名未开始</div>
                   </div>
                   <div v-else class="right-wrap">
-                    <div class="not-started">报名已截至</div>
+                    <div class="not-started">报名已截止</div>
                   </div>
                 </div>
               </div>
@@ -218,7 +253,7 @@ function goDetail(id) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="已结束" name="2">
-          <div v-if="tableData2.length">
+          <div v-if="tableData2">
             <div
               v-for="item in tableData2"
               :key="item.id"
@@ -231,26 +266,26 @@ function goDetail(id) {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status_name === '进行中'"
+                    v-if="item.status === 'preparing'"
                     class="card-head-state"
                     :class="state"
                   >
-                    火热进行中
+                    已结束
                   </div>
                 </div>
                 <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
-                  {{ item.description }}
+                  {{ item.desc }}
                 </div>
                 <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期：{{ item.during }}</div>
+                  <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
-                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                  <div v-if="item.status === 'in-progress'" class="right-wrap">
                     <OButton
                       type="primary"
                       animation
@@ -261,16 +296,16 @@ function goDetail(id) {
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
                     </OButton>
-                    <div class="number">报名人数：{{ item.user_count }}</div>
+                    <div class="number">报名人数：{{ item.count }}</div>
                   </div>
                   <div
-                    v-else-if="item.status_name === '未开始'"
+                    v-else-if="item.status === 'preparing'"
                     class="right-wrap"
                   >
                     <div class="not-started">报名未开始</div>
                   </div>
                   <div v-else class="right-wrap">
-                    <div class="not-started">报名已截至</div>
+                    <div class="not-started">报名已截止</div>
                   </div>
                 </div>
               </div>
@@ -282,7 +317,7 @@ function goDetail(id) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="未开始" name="1">
-          <div v-if="tableData1.length">
+          <div v-if="tableData1">
             <div
               v-for="item in tableData1"
               :key="item.id"
@@ -295,26 +330,26 @@ function goDetail(id) {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status_name === '进行中'"
+                    v-if="item.status === 'preparing'"
                     class="card-head-state"
                     :class="state"
                   >
-                    火热进行中
+                    未开始
                   </div>
                 </div>
                 <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
-                  {{ item.description }}
+                  {{ item.desc }}
                 </div>
                 <div class="card-footer">举办方：{{ item.host }}</div>
               </div>
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">奖池：￥{{ item.bonus }}</div>
-                  <div class="time">赛期：{{ item.during }}</div>
+                  <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
-                  <div v-if="item.status_name === '进行中'" class="right-wrap">
+                  <div v-if="item.status === 'in-progress'" class="right-wrap">
                     <OButton
                       type="primary"
                       animation
@@ -325,16 +360,16 @@ function goDetail(id) {
                         <OIcon><IconArrowRight /></OIcon>
                       </template>
                     </OButton>
-                    <div class="number">报名人数：{{ item.user_count }}</div>
+                    <div class="number">报名人数：{{ item.count }}</div>
                   </div>
                   <div
-                    v-else-if="item.status_name === '未开始'"
+                    v-else-if="item.status === 'preparing'"
                     class="right-wrap"
                   >
                     <div class="not-started">报名未开始</div>
                   </div>
                   <div v-else class="right-wrap">
-                    <div class="not-started">报名已截至</div>
+                    <div class="not-started">报名已截止</div>
                   </div>
                 </div>
               </div>

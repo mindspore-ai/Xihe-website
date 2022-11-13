@@ -1,31 +1,44 @@
 <script setup>
 import { ref } from 'vue';
-import { getCompetition, getAllCompetition } from '@/api/api-user';
+import { getUserCompetition } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/competition-empty.png';
 import { useRouter } from 'vue-router';
+import { useUserInfoStore } from '@/stores';
 
+const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
 const router = useRouter();
 const competitionDatas = ref([]); //所有的比赛
 const competitionDatas2 = ref([]); //进行中的比赛
 const competitionDatas3 = ref([]); //已结束的比赛
 
-// 获取用户参加的所以比赛
+// 获取用户参加的所有比赛
 function getCompetitons() {
-  getAllCompetition().then((res) => {
-    competitionDatas.value = res.data;
+  getUserCompetition({
+    mine: userInfoStore.userName,
+  }).then((res) => {
+    // console.log('res: ', res);
+    if (res.status === 200) {
+      competitionDatas.value = res.data.data;
+    }
   });
 }
 getCompetitons();
 // 获取用户进行中和已结束的比赛
 const handleClick = (tab) => {
   if (tab.props.name === 'doing') {
-    getCompetition(3).then((res) => {
-      competitionDatas2.value = res.data;
+    getUserCompetition({
+      mine: userInfoStore.userName,
+      status: 'in-progress',
+    }).then((res) => {
+      competitionDatas2.value = res.data.data;
     });
   } else if (tab.props.name === 'done') {
-    getCompetition(2).then((res) => {
-      competitionDatas3.value = res.data;
+    getUserCompetition({
+      mine: userInfoStore.userName,
+      status: 'done',
+    }).then((res) => {
+      competitionDatas3.value = res.data.data;
     });
   }
 };
@@ -44,7 +57,7 @@ function goDetail(id) {
 <template>
   <!-- 我的比赛 -->
   <div class="competition">
-    <div v-if="competitionDatas.length !== 0" class="competition-list">
+    <div v-if="competitionDatas" class="competition-list">
       <el-tabs
         v-model="activeName"
         type="card"
@@ -63,7 +76,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status_name === '进行中'" class="state doing"
+                  <span v-if="item.status === '进行中'" class="state doing"
                     >火热进行中</span
                   >
                   <span v-else class="state finished">已结束</span>
@@ -74,13 +87,13 @@ function goDetail(id) {
               </div>
               <div class="right">
                 <div class="bonus">奖池：￥{{ item.bonus }}</div>
-                <div class="time">赛期:{{ item.during }}</div>
+                <div class="time">赛期:{{ item.duration }}</div>
               </div>
             </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="doing">
-          <div v-if="competitionDatas2.length !== 0">
+          <div v-if="competitionDatas2">
             <div
               v-for="item in competitionDatas2"
               :key="item.id"
@@ -89,7 +102,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status_name === '进行中'" class="state doing"
+                  <span v-if="item.status === '进行中'" class="state doing"
                     >火热进行中</span
                   >
                 </div>
@@ -99,7 +112,7 @@ function goDetail(id) {
               </div>
               <div class="right">
                 <div class="bonus">奖池：￥{{ item.bonus }}</div>
-                <div class="time">赛期:{{ item.during }}</div>
+                <div class="time">赛期:{{ item.duration }}</div>
               </div>
             </div>
           </div>
@@ -112,7 +125,7 @@ function goDetail(id) {
         </el-tab-pane>
 
         <el-tab-pane label="已结束" name="done">
-          <div v-if="competitionDatas3.length !== 0">
+          <div v-if="competitionDatas3">
             <div
               v-for="item in competitionDatas3"
               :key="item.id"
@@ -121,7 +134,9 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span class="state finished">已结束</span>
+                  <span v-if="item.status === '已结束'" class="state finished"
+                    >已结束</span
+                  >
                 </div>
                 <div class="information">
                   <div class="host">举办方：{{ item.host }}</div>
@@ -129,7 +144,7 @@ function goDetail(id) {
               </div>
               <div class="right">
                 <div class="bonus">奖池：￥{{ item.bonus }}</div>
-                <div class="time">赛期:{{ item.during }}</div>
+                <div class="time">赛期:{{ item.duration }}</div>
               </div>
             </div>
           </div>

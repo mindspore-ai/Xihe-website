@@ -54,8 +54,8 @@ const rules = reactive({
     { required: true, message: '必填项', trigger: 'blur' },
     // 后端5-42
     {
-      pattern: /^[^\u4e00-\u9fa5]{5,30}$/g,
-      message: '暂不支持中文字符，且长度为5-30个字符',
+      pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
+      message: '暂不支持中文字符，且长度为5-35个字符',
       trigger: 'blur',
     },
     {

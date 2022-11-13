@@ -11,13 +11,13 @@ import { getGuide } from '@/api/api-competition';
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;
 });
-// console.log(comInfo);
+console.log(comInfo);
 
 const mkit = handleMarkdown();
 const codeString = ref('');
 const result = ref();
 let README = '';
-getGuide(comInfo.value.description_link)
+getGuide(comInfo.value.doc)
   .then((tree) => {
     README = tree.data;
     codeString.value = README;

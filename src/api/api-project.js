@@ -105,8 +105,8 @@ export function getModelTags() {
     return res.data;
   });
 }
-export function getTags() {
-  const url = `/server/tags/global_project`;
+export function getTags(type) {
+  const url = `/server/tags/${type}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

@@ -172,7 +172,7 @@ getDetailData();
             <div v-if="teamId === null && show" class="right1">
               <div class="right1-bonus">
                 <div class="number">奖池：￥{{ competitionData.bonus }}</div>
-                <!-- <div class="time">赛期:{{ competitionData.duration }}</div> -->
+                <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
               <div class="right-immediate">
                 <div class="right-wrap">

@@ -63,7 +63,7 @@ defineExpose({ modelData, checkParams });
       <div class="params-value">
         <div class="value-icon">
           <o-icon><icon-necessary></icon-necessary></o-icon>
-          <span>参数值（模型名以model-开头）</span>
+          <span>参数值</span>
         </div>
 
         <div class="value-input">

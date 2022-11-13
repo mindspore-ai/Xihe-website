@@ -27,6 +27,7 @@ const isAuthentic = computed(() => {
 });
 const route = useRoute();
 const router = useRouter();
+console.log('router: ', route);
 const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);

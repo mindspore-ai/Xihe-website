@@ -452,13 +452,27 @@ function start2() {
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
       [getHeaderConfig().headers['private-token']]
     );
-    socket.value.onopen = function () {
-      console.log('连接成功');
-    };
+    // socket.value.onopen = function () {
+    //   console.log('连接成功');
+    // };
     socket.value.onmessage = function (event) {
       console.log('111', JSON.parse(event.data));
-      clientSrc.value = JSON.parse(event.data).data.access_url;
-      msg.value = '运行中';
+      if (
+        JSON.parse(event.data).data &&
+        JSON.parse(event.data).data.access_url
+      ) {
+        clientSrc.value = JSON.parse(event.data).data.access_url;
+        msg.value = '运行中';
+        closeConn();
+      } else {
+        failLog.value = JSON.parse(event.data).data.error.replace(
+          /\n/g,
+          '<br />'
+        );
+        failLog.value = `<span> ${failLog.value}</span>`;
+        msg.value = '启动失败';
+        closeConn();
+      }
     };
     // startInference2({
     //   owner: detailData.value.owner,
@@ -474,8 +488,18 @@ function start2() {
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
     );
     socket.value.onmessage = function (event) {
-      clientSrc.value = JSON.parse(event.data).data.access_url;
-      msg.value = '运行中';
+      if (
+        JSON.parse(event.data).data &&
+        JSON.parse(event.data).data.access_url
+      ) {
+        clientSrc.value = JSON.parse(event.data).data.access_url;
+        msg.value = '运行中';
+        closeConn();
+      } else {
+        msg.value = '未启动';
+        canStart.value = false;
+        closeConn();
+      }
     };
     msg.value = '启动中';
   }
@@ -559,67 +583,67 @@ if (detailData.value.owner === userInfo.userName) {
     let apppy = res?.data?.filter((item) => {
       return item.name === 'app.py';
     });
-    // if (apppy) {
-    try {
-      canStart.value = true;
-      // if (detailData.value.type === 'Gradio' && canStart.value) {
-      //   socket.value = new WebSocket(
-      //     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-      //   );
-      //   socket.value.onopen = function () {
-      //     // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-      //     // clearInterval(timer);
-      //     // timer = setInterval(() => {
-      //     //   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
-      //     // }, 10000);
-      //     console.log('连接成功');
-      //   };
-      //   socket.value.onmessage = function (event) {
-      //     console.log(event);
-      //     msg.value = JSON.parse(event.data).msg;
-      //     if (!!JSON.parse(event.data).data) {
-      //       failLog.value = '';
-      //       clientSrc.value = JSON.parse(event.data).data.url;
-      //       closeConn(); //断开连接
-      //     } else {
-      //       if (
-      //         JSON.parse(event.data).msg === '启动失败' ||
-      //         JSON.parse(event.data).msg === '文件收集失败'
-      //       ) {
-      //         msg.value = '启动失败';
-      //         closeConn(); //断开连接
-      //         stopInference(detailData.value.id); //删除任务
-      //         // if (failLog.value) {
-      //         loading.value = false;
-      //         getLog(detailData.value.id).then((res) => {
-      //           if (res.data.data) {
-      //             failLog.value = res.data.data.replace(/\n/g, '<br>');
-      //             failLog.value = `<span> ${failLog.value}</span>`;
-      //           }
-      //           loading.value = true;
-      //         });
-      //         // }
-      //         ElMessage({
-      //           type: 'error',
-      //           message: '程序错误，请检查文件后重试',
-      //         });
-      //       } else if (JSON.parse(event.data).msg === '任务已销毁') {
-      //         stopInference(detailData.value.id); //删除任务
-      //         closeConn(); //断开连接
-      //         ElMessage({
-      //           type: 'error',
-      //           message: '当前任务已结束，请重新启动',
-      //         });
-      //       } //else if (JSON.parse(event.data).msg === '未启动') {
-      //       //closeConn(); //断开连接
-      //       // }
-      //     }
-      //   };
-      // }
-    } catch {
-      console.log('canStart', canStart.value);
+    if (apppy) {
+      try {
+        canStart.value = true;
+        // if (detailData.value.type === 'Gradio' && canStart.value) {
+        //   socket.value = new WebSocket(
+        //     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+        //   );
+        //   socket.value.onopen = function () {
+        //     // socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+        //     // clearInterval(timer);
+        //     // timer = setInterval(() => {
+        //     //   socket.value.send(JSON.stringify({ pk: detailData.value.id }));
+        //     // }, 10000);
+        //     console.log('连接成功');
+        //   };
+        //   socket.value.onmessage = function (event) {
+        //     console.log(event);
+        //     msg.value = JSON.parse(event.data).msg;
+        //     if (!!JSON.parse(event.data).data) {
+        //       failLog.value = '';
+        //       clientSrc.value = JSON.parse(event.data).data.url;
+        //       closeConn(); //断开连接
+        //     } else {
+        //       if (
+        //         JSON.parse(event.data).msg === '启动失败' ||
+        //         JSON.parse(event.data).msg === '文件收集失败'
+        //       ) {
+        //         msg.value = '启动失败';
+        //         closeConn(); //断开连接
+        //         stopInference(detailData.value.id); //删除任务
+        //         // if (failLog.value) {
+        //         loading.value = false;
+        //         getLog(detailData.value.id).then((res) => {
+        //           if (res.data.data) {
+        //             failLog.value = res.data.data.replace(/\n/g, '<br>');
+        //             failLog.value = `<span> ${failLog.value}</span>`;
+        //           }
+        //           loading.value = true;
+        //         });
+        //         // }
+        //         ElMessage({
+        //           type: 'error',
+        //           message: '程序错误，请检查文件后重试',
+        //         });
+        //       } else if (JSON.parse(event.data).msg === '任务已销毁') {
+        //         stopInference(detailData.value.id); //删除任务
+        //         closeConn(); //断开连接
+        //         ElMessage({
+        //           type: 'error',
+        //           message: '当前任务已结束，请重新启动',
+        //         });
+        //       } //else if (JSON.parse(event.data).msg === '未启动') {
+        //       //closeConn(); //断开连接
+        //       // }
+        //     }
+        //   };
+        // }
+      } catch {
+        console.log('canStart', canStart.value);
+      }
     }
-    // }
   });
 } else {
   // if (detailData.value.status_name === '可运行') {

@@ -15,27 +15,31 @@ function getHeaderConfig() {
 }
 
 /**
- * 获取所有或单个比赛信息
+ * 获取单个比赛信息
  * @returns
  */
 export function getCompetition(params) {
+  const url = `/server/competition/${params.id}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res;
+  });
+}
+/**
+ * 获取所有比赛信息(全部、已完成、进行中、未开始)
+ * @returns
+ */
+export function getAllCompetition(params) {
   if (params) {
-    const url = `/api/competitions/competitions/${params.id}`;
-    return request.get(url, getHeaderConfig()).then((res) => {
-      return res.data;
+    const url = `/server/competition?status=${params.status}`;
+    return request.get(url).then((res) => {
+      return res;
     });
   } else {
-    const url = `/api/competitions/competitions/`;
+    const url = `/server/competition`;
     return request.get(url).then((res) => {
-      return res.data;
+      return res;
     });
   }
-}
-export function getAllCompetition(params) {
-  const url = `/api/competitions/competitions/?status=${params}`;
-  return request.get(url).then((res) => {
-    return res.data;
-  });
 }
 /**
  * 获取排行榜信息
@@ -51,6 +55,14 @@ export function getRank(id) {
  * 获取用户所在团队id（是否报名）
  * @returns
  */
+/* export function getGroupid(id) {
+  console.log('id: ', id);
+  console.log('getHeaderConfig(): ', getHeaderConfig());
+  const url = `/server/competition/${id}/team`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+} */
 export function getGroupid(id) {
   const url = `/api/competitions/user_group_id/${id}`;
   return request.get(url, getHeaderConfig()).then((res) => {

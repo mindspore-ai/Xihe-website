@@ -203,14 +203,17 @@ export function getRank() {
   });
 }
 /**
- * 获取用户参加的所有比赛
+ * 获取用户参加的所有、进行中、已结束的比赛
  * @returns
  */
-export function getAllCompetition() {
-  const url = `/api/competitions/user_competitions`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+export function getUserCompetition(params) {
+  const url = `/server/competition`;
+  console.log('getHeaderConfig(): ', getHeaderConfig());
+  return request
+    .get(url, Object.assign({ params }, getHeaderConfig()))
+    .then((res) => {
+      return res;
+    });
 }
 /**
  * 获取用户进行中、已结束的比赛
@@ -223,7 +226,6 @@ export function getCompetition(status) {
   });
 }
 
-// TODO:换后台的接口
 /**
  * 用户动态
  * @returns

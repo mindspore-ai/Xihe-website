@@ -93,19 +93,23 @@ async function getDetailData() {
   try {
     // 获取比赛信息
     let res = await getCompetition({ id: route.params.id });
-    if (res.status === 200 && res.data.name) {
-      competitionData.value = res.data;
-      userComData.setCompetitionData(res.data);
+    // console.log('单个比赛信息res: ', res.data);
+    // debugger;
+    if (res.status === 200 && res.data.data.name) {
+      competitionData.value = res.data.data;
+      userComData.setCompetitionData(res.data.data);
+      // userComData.setTeamId(res.data.data.id);
     } else {
       router.push('/competition');
     }
-    // 获取团队id
-    let params = { id: route.params.id };
+    // 获取团队idTODO:
+    /* let params = { id: route.params.id };
     let res2 = await getGroupid(params.id);
+    console.log('团队idres2: ', res2);
     if (res2.status === 200) {
       // teamId.value = res2.group_id;
       userComData.setTeamId(res2.group_id);
-    }
+    } */
     showDetail.value = true;
   } catch (error) {
     console.error(error);
@@ -141,19 +145,19 @@ getDetailData();
                   {{ competitionData.name }}
                 </div>
                 <div
-                  v-if="competitionData.status_name === '进行中'"
+                  v-if="competitionData.status === 'in-progress'"
                   class="card-head-state doing"
                 >
                   火热进行中
                 </div>
                 <div
-                  v-if="competitionData.status_name === '未开始'"
+                  v-if="competitionData.status === 'preparing'"
                   class="card-head-state noStarted"
                 >
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status_name === '已结束'"
+                  v-if="competitionData.status === 'done'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -161,20 +165,20 @@ getDetailData();
               </div>
               <!-- <div class="card-body">{{ competitionData.description }}</div> -->
               <div class="card-body">
-                {{ competitionData.description }}
+                {{ competitionData.desc }}
               </div>
               <div class="card-footer">举办方:{{ competitionData.host }}</div>
             </div>
             <div v-if="teamId === null && show" class="right1">
               <div class="right1-bonus">
                 <div class="number">奖池：￥{{ competitionData.bonus }}</div>
-                <div class="time">赛期:{{ competitionData.during }}</div>
+                <!-- <div class="time">赛期:{{ competitionData.duration }}</div> -->
               </div>
               <div class="right-immediate">
                 <div class="right-wrap">
-                  <div v-if="competitionData.status_name === '进行中'">
+                  <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.competition_period==='决赛'"
+                      :disabled="competitionData.competition_period === '决赛'"
                       type="primary"
                       animation
                       @click="goApplication"
@@ -182,14 +186,14 @@ getDetailData();
                       立即报名
                     </OButton>
                   </div>
-                  <div v-if="competitionData.status_name === '未开始'">
+                  <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status_name === '已结束'">
+                  <div v-if="competitionData.status === 'done'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <div class="number">
-                    报名人数：{{ competitionData.user_count }}
+                    报名人数：{{ competitionData.count }}
                   </div>
                 </div>
               </div>
@@ -197,7 +201,7 @@ getDetailData();
             <div v-else class="right2">
               <div class="right2-bonus">
                 <div class="number">奖池：￥{{ competitionData.bonus }}</div>
-                <div class="time">赛期:{{ competitionData.during }}</div>
+                <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
             </div>
           </div>
@@ -208,19 +212,19 @@ getDetailData();
                   {{ competitionData.name }}
                 </div>
                 <div
-                  v-if="competitionData.status_name === '进行中'"
+                  v-if="competitionData.status === 'in-progress'"
                   class="card-head-state doing"
                 >
                   火热进行中
                 </div>
                 <div
-                  v-if="competitionData.status_name === '未开始'"
+                  v-if="competitionData.status === 'preparing'"
                   class="card-head-state noStarted"
                 >
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status_name === '已结束'"
+                  v-if="competitionData.status_name === 'done'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -229,13 +233,13 @@ getDetailData();
             </div>
             <div v-if="teamId === null && show" class="right1">
               <div v-if="teamId !== null" class="right1-bonus">
-                <div class="time">赛期:{{ competitionData.during }}</div>
+                <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
               <div class="right-immediate">
                 <div class="right-wrap">
-                  <div v-if="competitionData.status_name === '进行中'">
+                  <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.competition_period==='决赛'"
+                      :disabled="competitionData.competition_period === '决赛'"
                       type="primary"
                       animation
                       @click="goApplication"
@@ -243,10 +247,10 @@ getDetailData();
                       立即报名
                     </OButton>
                   </div>
-                  <div v-if="competitionData.status_name === '未开始'">
+                  <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status_name === '已结束'">
+                  <div v-if="competitionData.status === 'done'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <!-- <div class="number">
@@ -257,7 +261,7 @@ getDetailData();
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="time">赛期:{{ competitionData.during }}</div>
+                <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
             </div>
           </div>

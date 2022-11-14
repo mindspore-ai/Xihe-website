@@ -90,7 +90,7 @@ function previewFile() {
       suffix.value === 'py' ||
       suffix.value === 'txt' ||
       suffix.value === 'log' ||
-      !res.includes('�')
+      !res.toString().includes('�')
     ) {
       rawData.value = res;
       // md文件不需加```
@@ -356,6 +356,7 @@ watch(
 <style lang="scss" scoped>
 .loading-template {
   :deep(.el-loading-mask) {
+    z-index: 0;
     .el-loading-spinner {
       display: none;
     }

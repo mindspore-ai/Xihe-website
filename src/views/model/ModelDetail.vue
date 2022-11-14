@@ -129,6 +129,7 @@ function getDetailData() {
           storeData['is_empty'] = detailData.value.is_empty;
         }
         fileData.setFileData(storeData);
+        console.log(detailData.value);
         // digCount.value = detailData.value.digg_count;
         const {
           //   licenses_list,
@@ -492,7 +493,7 @@ watch(
 </script>
 
 <template>
-  <div v-if="detailData && detailData.id" class="model-detail">
+  <div v-if="detailData?.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="card-head wrap">
       <div class="card-head-top">

@@ -373,7 +373,7 @@ function handleAssessment() {
     }
   );
 }
-
+console.log(route.path);
 // 跳转到Aim嵌入页面
 function goAimPage() {
   // router.push({
@@ -386,6 +386,7 @@ function goAimPage() {
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
+      path: route.path,
     },
   });
   window.open(routerData.href, '_blank');
@@ -398,6 +399,7 @@ function goToPage() {
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
+      path: route.path,
     },
   });
   window.open(routerData.href, '_blank');
@@ -423,6 +425,13 @@ const downloadBlob = (blob, fileName) => {
     console.error(e);
   }
 };
+
+function handleNofileClick() {
+  ElMessage({
+    type: 'warning',
+    message: '训练中,请训练完成后点击下载',
+  });
+}
 
 async function downloadLogFile() {
   if (!logUrl.value) {
@@ -460,6 +469,10 @@ function handleChangeClick1() {
     showContent.value = false;
     showContent1.value = true;
   }
+}
+
+function changeButton() {
+  showContent.value = !showContent.value;
 }
 
 onMounted(() => {
@@ -525,7 +538,7 @@ watch(
                   v-if="trainDetail.status === 'Running'"
                   class="status-item"
                 >
-                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <o-icon><icon-runing></icon-runing></o-icon>
                   <span>运行中</span>
                 </div>
 
@@ -538,7 +551,7 @@ watch(
                 </div>
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
 
@@ -599,14 +612,14 @@ watch(
             </div>
             <div class="info-list-detail document">
               <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
-              <span v-else>训练中</span>
+              <p v-else><span @click="handleNofileClick">训练中</span></p>
             </div>
           </li>
 
           <li class="assess-box">
             <div class="assess-head">
-              <p class="assess-title">{{ i18n.title }}</p>
-              <div class="tab-container">
+              <p class="assess-title" @click="changeButton">{{ i18n.title }}</p>
+              <!-- <div class="tab-container">
                 <span
                   :class="showContent ? 'active' : ''"
                   @click="handleChangeClick"
@@ -618,7 +631,7 @@ watch(
                 >
                   自定义评估
                 </p>
-              </div>
+              </div> -->
             </div>
             <!-- 自动评估 -->
             <div v-if="showContent">
@@ -677,7 +690,7 @@ watch(
               </div>
             </div>
             <!-- 自定义评估 -->
-            <div v-if="showContent1">
+            <div v-if="!showContent">
               <div class="have-aim">
                 <p>
                   请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码

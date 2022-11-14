@@ -134,18 +134,6 @@ export async function deleteFile(params) {
       throw new Error(err);
     });
 }
-// 删除文件夹
-export async function deleteFolder(actions, id) {
-  const url = `/repo/projects/${id}/repository/commits`;
-  const params = {
-    branch: 'main',
-    commit_message: 'delete file',
-    actions: actions,
-  };
-  return request.post(url, params, await getGitlabConfig()).then((res) => {
-    return res.data;
-  });
-}
 
 // gitlab 文件预览 不添加下载量
 export async function getGitlabFileRaw(params) {
@@ -184,28 +172,12 @@ export async function getGitlabFile(params) {
     });
 }
 // 下载全部
-export async function gitlabDownloadAll(id) {
-  const url = `/repo/projects/${id}/repository/archive.zip`;
-  return request.get(url, await getGitlabConfig()).then((res) => {
-    return res.data;
-  });
-}
-
-// 递归查询所有文件
-export async function findAllFileByPath(fullPath, path) {
-  const url = `/graphql/api/graphql`;
-  const params = {
-    query:
-      'query findAllFileByPath($fullPath:ID!,$path:String)   { project(fullPath: $fullPath) { repository { tree(ref: "main", recursive: true, path:$path ){ blobs{ nodes { name type path } } } } } } ',
-    variables: {
-      path,
-      fullPath,
-    },
-  };
-  return request.post(url, params, await getGitlabConfig()).then((res) => {
-    return res.data;
-  });
-}
+// export async function gitlabDownloadAll(id) {
+//   const url = `/repo/projects/${id}/repository/archive.zip`;
+//   return request.get(url, await getGitlabConfig()).then((res) => {
+//     return res.data;
+//   });
+// }
 
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {

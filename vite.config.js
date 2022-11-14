@@ -53,26 +53,10 @@ export default defineConfig({
         target: 'https://xihe-dev.test.osinfra.cn/',
         changeOrigin: true,
       },
-      '/api': {
-        target: 'https://xihebackend.test.osinfra.cn/',
-        changeOrigin: true,
-      },
       '/server': {
         // target: 'https://xihe2.test.osinfra.cn/',
         target: 'https://xihe-dev.test.osinfra.cn/',
         changeOrigin: true,
-      },
-      '/repo': {
-        // target: 'https://xihe-dev.test.osinfra.cn/',
-        // changeOrigin: true,
-        changeOrigin: true,
-        target: 'https://gitlab.openeuler.sh/api/v4',
-        rewrite: (path) => path.replace(/^\/repo/, ''),
-      },
-      '/graphql/': {
-        target: 'https://gitlab.openeuler.sh/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/graphql/, ''),
       },
     },
   },

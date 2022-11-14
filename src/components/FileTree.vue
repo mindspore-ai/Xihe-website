@@ -23,8 +23,6 @@ import {
   getGitlabTree,
   deleteFile,
   uploadFileGitlab,
-  deleteFolder,
-  findAllFileByPath,
   downloadFile,
 } from '@/api/api-gitlab';
 
@@ -48,13 +46,19 @@ const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
 
-let routerParams = router.currentRoute.value.params;
-let contents = routerParams.contents;
+const routerParams = computed(() => {
+  return router.currentRoute.value.params;
+});
+
+const contents = computed(() => {
+  return routerParams.value.contents;
+});
+
 const showDel = ref(false);
 const pushParams = {
-  user: routerParams.user,
-  name: routerParams.name,
-  contents: routerParams.contents,
+  user: routerParams.value.user,
+  name: routerParams.value.name,
+  contents: contents.value,
 };
 const filesList = ref([]);
 const prop = defineProps({
@@ -79,6 +83,7 @@ const i18n = {
 const fileName = ref('');
 const isFolder = ref(false);
 let queryRef = ref(null);
+const isHandleDel = ref(false);
 const rules = reactive({
   folderName: [
     { required: true, message: '禁止为空', trigger: 'blur' },
@@ -111,16 +116,35 @@ async function getDetailData(path) {
     // gitlab
     await getGitlabTree({
       type: prop.moduleName,
-      user: routerParams.user,
+      user: routerParams.value.user,
       path: path,
       id: repoDetailData.value.id,
-      name: routerParams.name,
+      name: routerParams.value.name,
     })
       .then((res) => {
         if (res?.data) {
+          useFileData().fileStoreData['is_empty'] = false;
           filesList.value = res.data;
-        } else {
+        } else if (!contents.value?.length) {
+          useFileData().fileStoreData['is_empty'] = true;
           filesList.value = [];
+        } else if (isHandleDel.value) {
+          // 手动删除文件时，树为空返回上一层
+          useFileData().fileStoreData['is_empty'] = false;
+          const fatherRouter = contents.value.splice(
+            0,
+            contents.value.length - 1
+          );
+          router.push({
+            name: `${prop.moduleName}File`,
+            params: {
+              user: routerParams.value.user,
+              name: routerParams.value.name,
+              contents: fatherRouter,
+            },
+          });
+        } else {
+          router.push('/notfound');
         }
       })
       .catch((err) => {
@@ -147,15 +171,11 @@ function toggleDelDlg(flag, itemFileName, itemIsFolder) {
   }
 }
 
+// 区分手动删除文件后目录为空 与 url进入目录为空
 function getFilesByPath() {
-  routerParams = router.currentRoute.value.params;
-  contents = routerParams.contents;
-  if (contents && contents.length) {
-    getDetailData(`${contents.join('/')}/`);
-  } else {
-    // 根目录下
-    getDetailData('');
-  }
+  contents.value?.length
+    ? getDetailData(`${contents.value.join('/')}/`)
+    : getDetailData('');
 }
 function emptyClick(ind) {
   if (ind === 1) {
@@ -171,7 +191,6 @@ function emptyClick(ind) {
   }
 }
 function goBlob(item) {
-  let contents = [...routerParams.contents, decodeURI(item.name)];
   let targetRoute = null;
   if (!item.is_dir) {
     targetRoute = `${prop.moduleName}FileBlob`;
@@ -181,9 +200,9 @@ function goBlob(item) {
   return {
     name: targetRoute,
     params: {
-      user: routerParams.user,
-      name: routerParams.name,
-      contents,
+      user: routerParams.value.user,
+      name: routerParams.value.name,
+      contents: [...routerParams.value.contents, decodeURI(item.name)],
     },
   };
 }
@@ -191,15 +210,15 @@ function creatFolter(formEl) {
   if (!formEl) return;
   let path = `${query.folderName}/.keep`;
   // 非根目录下
-  if (contents.length) {
-    path = `${contents.join('/')}/${query.folderName}/.keep`;
+  if (contents.value.length) {
+    path = `${contents.value.join('/')}/${query.folderName}/.keep`;
   }
   formEl.validate((valid) => {
     if (valid) {
       uploadFileGitlab(
         {
           type: prop.moduleName,
-          name: routerParams.name,
+          name: routerParams.value.name,
           id: repoDetailData.value.id,
           content: '',
           commit_message: `created ${query.folderName}`,
@@ -227,47 +246,20 @@ function cancelCreate() {
 
 function deleteFolderClick(folderName) {
   let path = folderName;
-  if (contents.length) {
-    path = `${contents.join('/')}/${folderName}`;
+  if (contents.value.length) {
+    path = `${contents.value.join('/')}/${folderName}`;
   }
   // 删除文件夹
   if (isFolder.value) {
-    findAllFileByPath(`${routerParams.user}/${routerParams.name}`, path).then(
-      (res) => {
-        if (
-          res.data &&
-          res?.data?.project?.repository?.tree?.blobs?.nodes.length !== 100
-        ) {
-          let nodes = res.data.project.repository.tree.blobs.nodes;
-          let targetArr = new Array(nodes.length);
-          nodes.forEach((item, index) => {
-            targetArr[index] = {
-              action: 'delete',
-              file_path: item.path,
-            };
-          });
-          deleteFolder(targetArr, repoDetailData.value.repo_id).then(() => {
-            getFilesByPath();
-            ElMessage({
-              type: 'success',
-              message: '删除成功',
-            });
-          });
-        } else {
-          ElMessage({
-            type: 'error',
-            message: '出了点问题，请使用git操作',
-          });
-        }
-      }
-    );
+    return false;
   } else {
     deleteFile({
       type: prop.moduleName,
-      name: routerParams.name,
+      name: routerParams.value.name,
       path: path,
       id: repoDetailData.value.id,
     }).then(() => {
+      isHandleDel.value = true;
       getFilesByPath();
       ElMessage({
         type: 'success',

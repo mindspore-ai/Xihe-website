@@ -10,7 +10,7 @@ import FileTree from './FileTree.vue';
 import IconPlus from '~icons/app/plus';
 import IconCopy from '~icons/app/copy-nickname';
 
-import { gitlabDownloadAll } from '@/api/api-gitlab';
+// import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 

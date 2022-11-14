@@ -60,7 +60,7 @@ function previewFile() {
   }).then((res) => {
     typeof res === 'object'
       ? (codeString.value = JSON.stringify(res, null, '\t'))
-      : (codeString.value = res);
+      : (codeString.value = res.toString());
     isShowEditor.value = true;
   });
 }

@@ -20,6 +20,7 @@ import {
   handleSubmit,
   handleScoring,
   getScore,
+  getSubmissions,
 } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
@@ -210,6 +211,7 @@ watch(
   },
   { immediate: true }
 );
+getSubmissions(route.path.split('/')[2]).then((res) => {});
 async function getIndividual(id) {
   // 通过团队id获得团队信息
   let res = await getTeamInfoById(id);

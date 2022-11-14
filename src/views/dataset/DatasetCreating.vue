@@ -113,13 +113,11 @@ function create(formEl) {
 }
 function checkName(rule, value, callback) {
   checkNames({ name: value, owner: userInfo.userName })
-    .then((res) => {
-      console.log(res);
+    .then(() => {
       callback();
     })
-    .catch((err) => {
-      // callback(new Error('该名称已存在'));
-      callback();
+    .catch(() => {
+      callback(new Error('该名称已存在'));
     });
 }
 </script>

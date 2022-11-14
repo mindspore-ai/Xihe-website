@@ -4,14 +4,14 @@ import { ref, reactive, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
-import { changeTeam } from '@/api/api-competition';
-import { joinTeam } from '@/api/api-competition';
+// import { changeTeam } from '@/api/api-competition';
+// import { joinTeam } from '@/api/api-competition';
 import { getTeamInfoByName } from '@/api/api-competition';
 import { getTeamInfoById } from '@/api/api-competition';
-import { deleteTeam } from '@/api/api-competition';
-import { quitTeam } from '@/api/api-competition';
-import { removeMember } from '@/api/api-competition';
-import { transferCaptain } from '@/api/api-competition';
+// import { deleteTeam } from '@/api/api-competition';
+// import { quitTeam } from '@/api/api-competition';
+// import { removeMember } from '@/api/api-competition';
+// import { transferCaptain } from '@/api/api-competition';
 import { getGroupid } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 
@@ -126,7 +126,7 @@ const rules3 = reactive({
 });
 
 function handleClick() {}
-watch(
+/* watch(
   () => {
     return teamId.value;
   },
@@ -136,13 +136,13 @@ watch(
     }
   },
   { immediate: true }
-);
+); */
 
 // 进入页面获得is_individual值，判断是否个人参赛
 async function getIndividual(id) {
   // 通过团队id获得团队信息
   let res = await getTeamInfoById(id);
-  // console.log('res2: ', res2);
+  console.log('res2: ', res);
   if (res.status === 200) {
     teamData.value = res.data;
     teamMemberData.value = res.data.members_order_list;
@@ -150,7 +150,7 @@ async function getIndividual(id) {
     show.value = true;
   }
 }
-
+getIndividual(route.params.id);
 // 点击创建团队（修改团队）
 function fountTeam(formEl) {
   if (!formEl) return;

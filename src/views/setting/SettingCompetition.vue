@@ -76,7 +76,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status === '进行中'" class="state doing"
+                  <span v-if="item.status === 'in-progress'" class="state doing"
                     >火热进行中</span
                   >
                   <span v-else class="state finished">已结束</span>
@@ -102,7 +102,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status === '进行中'" class="state doing"
+                  <span v-if="item.status === 'in-progress'" class="state doing"
                     >火热进行中</span
                   >
                 </div>
@@ -134,7 +134,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status === '已结束'" class="state finished"
+                  <span v-if="item.status === 'done'" class="state finished"
                     >已结束</span
                   >
                 </div>

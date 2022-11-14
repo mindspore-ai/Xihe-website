@@ -7,6 +7,7 @@ import IconPoppver from '~icons/app/popover.svg';
 import IconAddList from '~icons/app/add-list';
 // import IconAddBlue from '~icons/app/add-blue';
 import IconRemove from '~icons/app/remove';
+import warningImg from '@/assets/icons/warning.png';
 
 import { ElMessage } from 'element-plus';
 import { createTrainProject } from '@/api/api-project';
@@ -27,7 +28,8 @@ const isAuthentic = computed(() => {
 });
 const route = useRoute();
 const router = useRouter();
-console.log('router: ', route);
+// console.log('router: ', route);
+const tips = ref(false); //控制创建训练弹窗
 const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);
@@ -261,6 +263,7 @@ function verify(node, code, message) {
 }
 // 确认创建训练实例
 async function confirmCreating(formEl) {
+  tips.value = false;
   // 如果表单为空，返回
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -669,7 +672,7 @@ function selectFile(item) {
                         <span style="color: red">用户名: </span>
                         模型仓库的拥有者。<br />
                         <span style="color: red">模型名: </span>
-                        模型仓库的名称。（以model-开头）<br />
+                        模型仓库的名称。<br />
                       </div>
                     </el-popover>
                   </div>
@@ -712,7 +715,7 @@ function selectFile(item) {
                         <span style="color: red">用户名: </span>
                         数据集仓库的拥有者。<br />
                         <span style="color: red">数据集名: </span>
-                        数据集仓库的名称。（以dataset-开头）<br />
+                        数据集仓库的名称。<br />
                       </div>
                     </el-popover>
                   </div>
@@ -739,16 +742,22 @@ function selectFile(item) {
                 </div>
                 <div class="createfile-form-item">
                   <el-form-item label="训练输出">
-                    <span style="line-height: 22px"
-                      >若你要支持训练输出，需在训练代码中指定参数名为output_path，并将训练生成的文件保存在该参数路径下。</span
-                    >
+                    <div class="form-item-btn">
+                      <el-switch v-model="form.isOutput" />
+                      <span style="line-height: 22px" class="btn-text"
+                        >若你要支持训练输出，需在训练代码中指定参数名为output_path，并将训练生成的文件保存在该参数路径下。</span
+                      >
+                    </div>
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <el-form-item label="评估">
-                    <span style="line-height: 22px"
-                      >若你要支持评估，需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
-                    </span>
+                  <el-form-item label="评估" class="form-item-btn">
+                    <div class="form-item-btn">
+                      <el-switch v-model="form.isEvaluate" />
+                      <span style="line-height: 22px" class="btn-text"
+                        >若你要支持评估，需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
+                      </span>
+                    </div>
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
@@ -853,12 +862,13 @@ function selectFile(item) {
 
         <div class="createfile-content-action">
           <!-- form.train_instance_type && -->
+          <!-- @click="confirmCreating(queryRef)" -->
           <o-button
             v-if="form.name && form.code_dir && form.boot_file && form.compute"
             class="confim"
             type="primary"
             loading
-            @click="confirmCreating(queryRef)"
+            @click="tips = true"
             >创建</o-button
           >
           <o-button v-else class="confim2" disabled>创建</o-button>
@@ -866,6 +876,52 @@ function selectFile(item) {
       </div>
     </div>
   </div>
+  <!-- 训练在24小时后终止提示弹窗 -->
+  <o-dialog :show="tips" :close="false" @close-click="toggleDelDlg(false)">
+    <template #head>
+      <div
+        class="dlg-title"
+        :style="{ textAlign: 'center', paddingTop: '40px' }"
+      >
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 0 30px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '640px',
+      }"
+    >
+      <div :style="{ marginBottom: '8px' }">
+        亲爱的用户您好，为保证用户使用体验，
+      </div>
+      <div>
+        单次训练时长最大为<span style="color: #0d8dff">24小时</span
+        >，请您注意使用时长哦~
+      </div>
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '46px',
+        }"
+      >
+        <o-button :style="{ marginRight: '24px' }" @click="tips = false"
+          >取消</o-button
+        >
+        <o-button type="primary" @click="confirmCreating(queryRef)"
+          >继续
+        </o-button>
+      </div>
+    </template>
+  </o-dialog>
+  <!-- 代码目录、启动文件弹窗 -->
   <o-dialog :show="showDir" :close="false">
     <template #head>
       <div
@@ -1144,7 +1200,16 @@ function selectFile(item) {
       height: 18px;
     }
   }
-  // 输入模型
+  // 输出、评估按钮
+  .form-item-btn {
+    display: flex;
+    align-items: center;
+    // font-size: 23px;
+    .btn-text {
+      margin-left: 16px;
+    }
+  }
+  // 输入模型、数据集、超参、环境变量
   .model,
   .dataset,
   .hyperparams,

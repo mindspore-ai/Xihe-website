@@ -151,10 +151,11 @@ function handleGetLog() {
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
 
-      let i1 = logUrl.value.indexOf('modelarts');
-      let i2 = logUrl.value.indexOf('.log');
+      // let i1 = logUrl.value.indexOf('modelarts');
+      // let i2 = logUrl.value.indexOf('.log');
 
-      logName.value = logUrl.value.substring(i1, i2 + 4);
+      // logName.value = logUrl.value.substring(i1, i2 + 4);
+      logName.value = 'train.log';
     } else {
       logName.value = '';
     }
@@ -171,10 +172,11 @@ function handleGetOutput() {
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
-      let i1 = outputUrl.value.indexOf('train-output/');
-      let i2 = outputUrl.value.indexOf('.gz');
+      // let i1 = outputUrl.value.indexOf('train-output/');
+      // let i2 = outputUrl.value.indexOf('.gz');
 
-      outputName.value = outputUrl.value.substring(i1 + 13, i2);
+      // outputName.value = outputUrl.value.substring(i1 + 13, i2);
+      outputName.value = 'tar.gz';
     } else {
       outputName.value = '';
     }
@@ -373,19 +375,14 @@ function handleAssessment() {
     }
   );
 }
-
+console.log(route.path);
 // 跳转到Aim嵌入页面
 function goAimPage() {
-  // router.push({
-  //   path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
-  //   query: {
-  //     url: evaluateUrl.value,
-  //   },
-  // });
   let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
+      path: route.path,
     },
   });
   window.open(routerData.href, '_blank');
@@ -398,6 +395,7 @@ function goToPage() {
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
       url: evaluateUrl.value,
+      path: route.path,
     },
   });
   window.open(routerData.href, '_blank');
@@ -424,6 +422,13 @@ const downloadBlob = (blob, fileName) => {
   }
 };
 
+function handleNofileClick() {
+  ElMessage({
+    type: 'warning',
+    message: '训练中,请训练完成后点击下载',
+  });
+}
+
 async function downloadLogFile() {
   if (!logUrl.value) {
     ElMessage({
@@ -438,28 +443,15 @@ async function downloadLogFile() {
     .then((response) => response.blob())
     .then((res) => {
       let blod = new Blob([res]);
-      let name = 'log.txt';
+      let name = 'train.log';
       downloadBlob(blod, name);
     });
 
   return data;
 }
 
-function handleChangeClick() {
-  if (showContent.value) {
-    return;
-  } else {
-    showContent.value = true;
-    showContent1.value = false;
-  }
-}
-function handleChangeClick1() {
-  if (showContent1.value) {
-    return;
-  } else {
-    showContent.value = false;
-    showContent1.value = true;
-  }
+function changeButton() {
+  showContent.value = !showContent.value;
 }
 
 onMounted(() => {
@@ -525,7 +517,7 @@ watch(
                   v-if="trainDetail.status === 'Running'"
                   class="status-item"
                 >
-                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <o-icon><icon-runing></icon-runing></o-icon>
                   <span>运行中</span>
                 </div>
 
@@ -538,7 +530,7 @@ watch(
                 </div>
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
 
@@ -599,14 +591,14 @@ watch(
             </div>
             <div class="info-list-detail document">
               <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
-              <span v-else>训练中</span>
+              <p v-else><span @click="handleNofileClick">训练中</span></p>
             </div>
           </li>
 
           <li class="assess-box">
             <div class="assess-head">
-              <p class="assess-title">{{ i18n.title }}</p>
-              <div class="tab-container">
+              <p class="assess-title" @click="changeButton">{{ i18n.title }}</p>
+              <!-- <div class="tab-container">
                 <span
                   :class="showContent ? 'active' : ''"
                   @click="handleChangeClick"
@@ -618,7 +610,7 @@ watch(
                 >
                   自定义评估
                 </p>
-              </div>
+              </div> -->
             </div>
             <!-- 自动评估 -->
             <div v-if="showContent">
@@ -677,7 +669,7 @@ watch(
               </div>
             </div>
             <!-- 自定义评估 -->
-            <div v-if="showContent1">
+            <div v-if="!showContent">
               <div class="have-aim">
                 <p>
                   请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码

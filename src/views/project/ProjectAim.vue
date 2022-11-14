@@ -8,8 +8,10 @@ const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 const aimUrl = ref('');
-aimUrl.value = route.query.url;
+const backUrl = ref('');
 
+aimUrl.value = route.query.url;
+backUrl.value = route.query.path;
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
@@ -25,7 +27,7 @@ goHome();
 
 // 返回训练页面
 function getBack() {
-  router.push(`${router.options.history.state.back}`);
+  router.push(`${backUrl.value}`);
 }
 </script>
 <template>

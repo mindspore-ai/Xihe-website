@@ -216,49 +216,6 @@ function handleFile(item) {
           <el-table-column prop="is_dir" label="描述" />
         </el-table>
 
-        <!-- <table class="tree-table">
-          <tbody style="100%">
-            <tr class="tree-head">
-              <td>
-                <div class="inner-box">
-                  <o-icon>
-                    <icon-project></icon-project>
-                  </o-icon>
-                  <span class="tree-head-left-name">名称</span>
-                </div>
-              </td>
-              <td class="tree-head-right">
-                <div class="inner-box">描述</div>
-              </td>
-            </tr>
-            <template v-if="filesList.length">
-              <tr
-                v-for="(item, index) in filesList"
-                :key="index"
-                class="tree-table-item"
-              >
-                <td class="first-radio">
-                  <input
-                    v-if="optionType === 'file' && !item.is_dir"
-                    type="radio"
-                    name="tableRadio"
-                    @click="handleFile(item)"
-                  />
-                  <div class="inner-box first-box" @click="goBlob(item)">
-                    <o-icon v-if="!item.is_dir"
-                      ><icon-file></icon-file>
-                    </o-icon>
-                    <o-icon v-else><icon-folder></icon-folder> </o-icon>
-                    <span>{{ item.name }}</span>
-                  </div>
-                </td>
-                <td class="tree-table-item-time">
-                  <div class="inner-box">描述~~~</div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table> -->
         <!-- <div v-if="!filesList.length" class="empyt-folder">空文件夹</div> -->
       </div>
     </div>

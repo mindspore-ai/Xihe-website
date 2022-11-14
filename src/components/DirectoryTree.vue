@@ -35,7 +35,7 @@ const headContents = ref([]); // 头部路径，最终代码目录路径
 
 let routerParams = router.currentRoute.value.params;
 // let contents = routerParams.contents;
-const filesList = ref([]); //文件树内容
+const filesList = ref([]); //文件树table内容
 
 const emit = defineEmits(['handle']);
 
@@ -100,8 +100,10 @@ function pathClick(item, index) {
 
 // 点击文件夹或者文件
 function goBlob(item) {
+  console.log('item: ', item);
   // 如果是文件夹
   if (item.is_dir) {
+    // 如果是代码目录弹窗
     if (props.optionType === 'directory') {
       dirPath.value = item.path;
       // console.log('dirPath值变化了: ', dirPath.value);
@@ -109,9 +111,11 @@ function goBlob(item) {
       headContents.value.push(lastPath);
       emit('handle', headContents.value);
     } else {
+      // 如果是启动文件弹窗
       dirPath.value = item.path;
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
+      console.log('headContents.value: ', headContents.value);
     }
 
     // 取头部数组headContents的最后一位

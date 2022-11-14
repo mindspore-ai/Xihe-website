@@ -573,7 +573,7 @@ const socket = ref(null);
 // if (detailData.value.owner === userInfo.userName) {
 console.log(detailData.value.owner, userInfo.userName);
 // findFile(`xihe-obj/projects/${route.params.user}/${routerParams.name}/inference/app.py`)
-debugger;
+// debugger;
 getGitlabTree({
   type: 'project',
   user: routerParams.user,

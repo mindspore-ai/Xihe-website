@@ -62,6 +62,8 @@ const form = reactive({
   SDK: 'ModelArts',
   code_dir: '',
   boot_file: '',
+  enable_aim: false,
+  enable_output: false,
   compute: {
     type: 'MPI',
     version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
@@ -302,6 +304,8 @@ async function confirmCreating(formEl) {
         SDK: form.SDK,
         code_dir: form.code_dir,
         boot_file: form.boot_file,
+        enable_aim: form.enable_aim,
+        enable_output: form.enable_output,
         compute: {
           type: form.compute.type,
           version: form.compute.version,
@@ -743,7 +747,7 @@ function selectFile(item) {
                 <div class="createfile-form-item">
                   <el-form-item label="训练输出">
                     <div class="form-item-btn">
-                      <el-switch v-model="form.isOutput" />
+                      <el-switch v-model="form.enable_output" />
                       <span style="line-height: 22px" class="btn-text"
                         >若你要支持训练输出，需在训练代码中指定参数名为output_path，并将训练生成的文件保存在该参数路径下。</span
                       >
@@ -753,7 +757,7 @@ function selectFile(item) {
                 <div class="createfile-form-item">
                   <el-form-item label="评估" class="form-item-btn">
                     <div class="form-item-btn">
-                      <el-switch v-model="form.isEvaluate" />
+                      <el-switch v-model="form.enable_aim" />
                       <span style="line-height: 22px" class="btn-text"
                         >若你要支持评估，需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
                       </span>

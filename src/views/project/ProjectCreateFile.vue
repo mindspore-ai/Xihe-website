@@ -63,7 +63,7 @@ const form = reactive({
   code_dir: '',
   boot_file: '',
   enable_aim: false,
-  enable_output: false,
+  enable_output: true,
   compute: {
     type: 'MPI',
     version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
@@ -755,11 +755,11 @@ function selectFile(item) {
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <el-form-item label="评估" class="form-item-btn">
+                  <el-form-item label="自定义评估" class="form-item-btn">
                     <div class="form-item-btn">
                       <el-switch v-model="form.enable_aim" />
                       <span style="line-height: 22px" class="btn-text"
-                        >若你要支持评估，需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
+                        >默认为标准评估，打开此按钮则支持自定义评估，且需在训练代码中指定解析参数名为aim_repo，并将aim生成的仓库保存在该参数路径下。
                       </span>
                     </div>
                   </el-form-item>

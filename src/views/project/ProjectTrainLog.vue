@@ -190,7 +190,18 @@ socket.onmessage = function (event) {
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     if (trainDetail.value) {
-      // 标准
+      form.name = trainDetail.value.name;
+      form.desc = trainDetail.value.log;
+      configurationInfo.value = trainDetail.value.compute;
+      isDone.value = trainDetail.value.is_done;
+
+      isAim.value = trainDetail.value.enable_aim;
+
+      if (trainDetail.value.status === 'Completed') {
+        handleGetLog();
+        handleGetOutput();
+      }
+
       if (
         !trainDetail.value.enable_aim &&
         trainDetail.value.status === 'Completed'
@@ -213,18 +224,6 @@ socket.onmessage = function (event) {
       // trainDetail.value.status === 'Completed'
       //   ? (isEvaluating.value = false)
       //   : (isEvaluating.value = true);
-
-      form.name = trainDetail.value.name;
-      form.desc = trainDetail.value.log;
-      configurationInfo.value = trainDetail.value.compute;
-      isDone.value = trainDetail.value.is_done;
-
-      isAim.value = trainDetail.value.enable_aim;
-
-      if (trainDetail.value.status === 'Completed') {
-        handleGetLog();
-        handleGetOutput();
-      }
     }
   });
 };

@@ -127,7 +127,7 @@ export function getModelTags() {
 }
 export function getTags(type) {
   const url = `/server/tags/${type}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
+  return request.get(url).then((res) => {
     return res.data;
   });
 }

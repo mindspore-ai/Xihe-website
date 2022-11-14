@@ -772,7 +772,9 @@ onUnmounted(() => {
       </div>
       <div
         v-else-if="
-          (msg === '未启动' || '启动失败') && failLog && detailData.is_owner
+          (msg === '未启动' || '启动失败') &&
+          failLog &&
+          detailData.owner === userInfo.userName
         "
         class="markdown-body"
       >
@@ -787,11 +789,17 @@ onUnmounted(() => {
             <div v-html="failLog"></div>
           </div>
         </div>
-        <o-button v-if="detailData.is_owner" type="primary" @click="start2"
+        <o-button
+          v-if="detailData.owner === userInfo.userName"
+          type="primary"
+          @click="start2"
           >重新启动</o-button
         >
       </div>
-      <div v-else-if="detailData.is_owner" class="markdown-body">
+      <div
+        v-else-if="detailData.owner === userInfo.userName"
+        class="markdown-body"
+      >
         <div class="markdown-file" v-html="result2"></div>
         <o-button type="primary" :disabled="!canStart" @click="start2"
           >启动</o-button
@@ -814,11 +822,16 @@ onUnmounted(() => {
     <div v-else class="left-data1">
       <div v-if="codeString" class="markdown-body">
         <div v-highlight class="markdown-file" v-html="result"></div>
-        <o-button v-if="detailData.is_owner" @click="goEditor">{{
-          i18n.editor
-        }}</o-button>
+        <o-button
+          v-if="detailData.owner === userInfo.userName"
+          @click="goEditor"
+          >{{ i18n.editor }}</o-button
+        >
       </div>
-      <div v-else-if="detailData.is_owner" class="upload-readme markdown-body">
+      <div
+        v-else-if="detailData.owner === userInfo.userName"
+        class="upload-readme markdown-body"
+      >
         <div class="upload-readme-img">
           <o-icon> <icon-add-file></icon-add-file> </o-icon>
         </div>

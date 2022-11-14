@@ -500,6 +500,10 @@ function start2() {
         msg.value = '未启动';
         canStart.value = false;
         closeConn();
+        ElMessage({
+          type: 'error',
+          message: '该项目暂不能成功启动',
+        });
       }
     };
     msg.value = '启动中';
@@ -581,10 +585,10 @@ getGitlabTree({
   id: detailData.value.id,
   name: routerParams.name,
 }).then((res) => {
-  console.log(res);
   let apppy = res?.data?.filter((item) => {
     return item.name === 'app.py';
   });
+  console.log(res);
   if (apppy) {
     try {
       canStart.value = true;

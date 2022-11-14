@@ -50,7 +50,7 @@ const navItems = reactive([
     id: 'team',
     label: '我的团队',
     href: 'team',
-    isIndividual: false,
+    isIndividual: true,
   },
   {
     id: 'leaderboard',

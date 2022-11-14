@@ -407,6 +407,7 @@ onMounted(() => {
     }
     .cesium-home-button {
       background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #444;
     }
     .cesium-baseLayerPicker-selected {
       display: none;

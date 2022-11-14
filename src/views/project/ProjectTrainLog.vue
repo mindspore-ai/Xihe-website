@@ -28,7 +28,6 @@ const DOMAIN = import.meta.env.VITE_DOMAIN;
 const evaluateUrl = ref('');
 
 const showContent = ref(true);
-const showContent1 = ref(false);
 const ruleRef = ref(null);
 
 const trainDetail = ref({});
@@ -151,10 +150,6 @@ function handleGetLog() {
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
 
-      // let i1 = logUrl.value.indexOf('modelarts');
-      // let i2 = logUrl.value.indexOf('.log');
-
-      // logName.value = logUrl.value.substring(i1, i2 + 4);
       logName.value = 'train.log';
     } else {
       logName.value = '';
@@ -172,16 +167,14 @@ function handleGetOutput() {
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
-      // let i1 = outputUrl.value.indexOf('train-output/');
-      // let i2 = outputUrl.value.indexOf('.gz');
-
-      // outputName.value = outputUrl.value.substring(i1 + 13, i2);
       outputName.value = 'tar.gz';
     } else {
       outputName.value = '';
     }
   });
 }
+const isAim = ref(null);
+// const hasAimPath = ref(null);
 
 // 日志
 const socket = new WebSocket(
@@ -197,18 +190,37 @@ socket.onmessage = function (event) {
   nextTick(() => {
     trainDetail.value = JSON.parse(event.data).data;
     if (trainDetail.value) {
-      trainDetail.value.status === 'Completed'
-        ? (isEvaluating.value = false)
-        : (isEvaluating.value = true);
+      // 标准
+      if (
+        !trainDetail.value.enable_aim &&
+        trainDetail.value.status === 'Completed'
+      ) {
+        isEvaluating.value = false;
+      } else if (
+        trainDetail.value.enable_aim &&
+        trainDetail.value.aim_path &&
+        trainDetail.value.status === 'Completed'
+      ) {
+        isEvaluating.value = false;
+      } else {
+        isEvaluating.value = true;
+      }
 
-      trainDetail.value.status === 'Completed'
-        ? (isCusEvaluating.value = false)
-        : (isCusEvaluating.value = true);
+      // {
+      //   isEvaluating.value = true;
+      // }
+
+      // trainDetail.value.status === 'Completed'
+      //   ? (isEvaluating.value = false)
+      //   : (isEvaluating.value = true);
 
       form.name = trainDetail.value.name;
       form.desc = trainDetail.value.log;
       configurationInfo.value = trainDetail.value.compute;
       isDone.value = trainDetail.value.is_done;
+
+      isAim.value = trainDetail.value.enable_aim;
+
       if (trainDetail.value.status === 'Completed') {
         handleGetLog();
         handleGetOutput();
@@ -230,10 +242,8 @@ function setEvaluateWebscoket(id, type) {
   );
 
   ws.onmessage = function (event) {
-    console.log('aim', JSON.parse(event.data));
     // 推理出url 断开websocket
     if (type === 'standard') {
-      console.log('standard');
       // 自动评估
       if (JSON.parse(event.data).data.access_url) {
         btnContent.value = '查看报告';
@@ -252,7 +262,6 @@ function setEvaluateWebscoket(id, type) {
         ws.close();
       }
     } else {
-      console.log('custom');
       // 自定义评估
       if (JSON.parse(event.data).data.access_url) {
         customContent.value = '查看报告';
@@ -294,8 +303,6 @@ function saveSetting() {
         detailData.value.id,
         route.params.trainId
       ).then((res) => {
-        console.log('自动评估', res);
-
         if (res.status === 201) {
           if (res.data.data.error) {
             btnContent.value = '开始评估';
@@ -349,7 +356,6 @@ function handleAssessment() {
 
   autoEvaluate(params, detailData.value.id, route.params.trainId).then(
     (res) => {
-      console.log('自定义评估', res);
       if (res.status === 201) {
         if (res.data.data.access_url) {
           customContent.value = '查看报告';
@@ -375,7 +381,7 @@ function handleAssessment() {
     }
   );
 }
-console.log(route.path);
+
 // 跳转到Aim嵌入页面
 function goAimPage() {
   let routerData = router.resolve({
@@ -448,10 +454,6 @@ async function downloadLogFile() {
     });
 
   return data;
-}
-
-function changeButton() {
-  showContent.value = !showContent.value;
 }
 
 onMounted(() => {
@@ -597,23 +599,10 @@ watch(
 
           <li class="assess-box">
             <div class="assess-head">
-              <p class="assess-title" @click="changeButton">{{ i18n.title }}</p>
-              <!-- <div class="tab-container">
-                <span
-                  :class="showContent ? 'active' : ''"
-                  @click="handleChangeClick"
-                  >自动评估</span
-                >
-                <p
-                  :class="showContent1 ? 'active' : ''"
-                  @click="handleChangeClick1"
-                >
-                  自定义评估
-                </p>
-              </div> -->
+              <p class="assess-title">{{ i18n.title }}</p>
             </div>
             <!-- 自动评估 -->
-            <div v-if="showContent">
+            <div v-if="!isAim">
               <p class="assess-desc">
                 {{ i18n.desc }}
               </p>
@@ -669,7 +658,7 @@ watch(
               </div>
             </div>
             <!-- 自定义评估 -->
-            <div v-if="!showContent">
+            <div v-if="isAim">
               <div class="have-aim">
                 <p>
                   请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码

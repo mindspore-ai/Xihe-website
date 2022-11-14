@@ -150,7 +150,7 @@ export default [
     path: '/modelzoo/shennong',
     name: 'shennong',
     component: () => {
-      return import('@/views/modelzoo/ModelzooShennong.vue');
+      return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');
     },
   },
 ];

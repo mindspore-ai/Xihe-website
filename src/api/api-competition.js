@@ -1,16 +1,20 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
+/* import { useUserInfoStore } from '@/stores';
 
 function getUserInfo() {
   return useUserInfoStore();
-}
+} */
+
+import { LOGIN_KEYS } from '@/shared/login';
 
 function getHeaderConfig() {
-  let headersConfig = {
-    headers: {
-      Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
-    },
-  };
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
 }
 
@@ -20,7 +24,7 @@ function getHeaderConfig() {
  */
 export function getCompetition(params) {
   const url = `/server/competition/${params.id}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
+  return request.get(url).then((res) => {
     return res;
   });
 }
@@ -56,8 +60,6 @@ export function getRank(params) {
  * @returns
  */
 /* export function getGroupid(id) {
-  console.log('id: ', id);
-  console.log('getHeaderConfig(): ', getHeaderConfig());
   const url = `/server/competition/${id}/team`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
@@ -70,7 +72,7 @@ export function getGroupid(id) {
   });
 }
 /**
- * 保存信息，确定报名
+ * 保存信息，确定报名----复赛无此功能
  * @returns
  */
 export function goCompetition(params) {
@@ -80,7 +82,7 @@ export function goCompetition(params) {
   });
 }
 /**
- * 创建团队
+ * 创建团队----复赛无此功能
  * @returns
  */
 export function createTeam(params) {
@@ -90,7 +92,7 @@ export function createTeam(params) {
   });
 }
 /**
- * 修改团队信息(点击创建团队，修改团队名)
+ * 修改团队信息(点击创建团队，修改团队名)----复赛无此功能
  * @returns
  */
 export function changeTeam(params, id) {
@@ -118,61 +120,61 @@ export function getTeamInfoByName(name, competitionId) {
 }
 // 通过比赛id获取团队信息
 export function getTeamInfoById(id) {
-  const url = `/api/competitions/groups/${id}`;
+  const url = `/server/competition/${id}/team`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 /**
- * 用户加入团队
+ * 用户加入团队----复赛无此功能
  * @returns
  */
-export function joinTeam(params) {
+/* export function joinTeam(params) {
   const url = `/api/competitions/join_group/${params.id}`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 /**
- * 删除团队
+ * 删除团队----复赛无此功能
  * @returns
  */
-export function deleteTeam(id) {
+/* export function deleteTeam(id) {
   const url = `/api/competitions/groups/${id}`;
   return request.delete(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 /**
- * 退出团队
+ * 退出团队----复赛无此功能
  * @returns
  */
-export function quitTeam(params) {
+/* export function quitTeam(params) {
   const url = `/api/competitions/leave_group/${params.id}`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 /**
- * 移除团队成员
+ * 移除团队成员----复赛无此功能
  * @returns
  */
-export function removeMember(params, id) {
+/* export function removeMember(params, id) {
   const url = `/api/competitions/groups/${id}`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 /**
- * 移交队长
+ * 移交队长----复赛无此功能
  * @returns
  */
-export function transferCaptain(params) {
+/* export function transferCaptain(params) {
   const url = `/api/competitions/groups/${params.id}`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 /**
  * 获取城市数据
  * @returns

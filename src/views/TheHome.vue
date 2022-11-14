@@ -43,7 +43,7 @@ const router = useRouter();
 //   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 
 const homeIns = ref(null);
-// const homeTitle = '昇思大模型体验平台';
+// const homeTitle = '昇思大模型平台';
 // const homeDesc = 'The Best AI Platform For MindSpore';
 const quickStartLabel = '快速开始';
 const i18n = {

@@ -819,7 +819,7 @@ function checkName(rule, value, callback) {
         </el-tabs>
       </div>
     </div>
-    <div v-if="detailData.id" class="model-detail-body">
+    <div v-if="detailData?.id" class="model-detail-body">
       <router-view
         class="wrap"
         :detail-data="detailData"

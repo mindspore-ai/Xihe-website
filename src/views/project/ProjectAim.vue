@@ -12,7 +12,6 @@ const backUrl = ref('');
 
 aimUrl.value = route.query.url;
 backUrl.value = route.query.path;
-
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;

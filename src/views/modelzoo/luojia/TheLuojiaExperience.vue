@@ -26,12 +26,12 @@ const isLogined = computed(() => useLoginStore().isLogined);
 const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
 const gridData = ref([]);
-// const historyInfo = ref({
-//   name: '目标识别',
-//   origin: '高德地图',
-//   status: '已完成',
-//   create_at: '',
-// });
+const historyInfo = ref({
+  name: '目标识别',
+  origin: '高德地图',
+  status: '已完成',
+  create_at: '2022-11-14',
+});
 
 const cesiumContainer = ref('');
 const viewer = ref(null);
@@ -164,12 +164,13 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  ElMessage({
-    type: 'warning',
-    message: '开发中，敬请期待。',
-  });
-  // dialogTableVisible.value = true;
-
+  // ElMessage({
+  //   type: 'warning',
+  //   message: '开发中，敬请期待。',
+  // });
+  dialogTableVisible.value = true;
+  gridData.value = [];
+  gridData.value.push(historyInfo.value);
   // handleLuoJiaHistory().then((res) => {
   //   if (res.status === 200) {
   //     gridData.value = [];
@@ -331,9 +332,7 @@ onMounted(() => {
   }
   .detail {
     cursor: pointer;
-    &:hover {
-      color: #0d8dff;
-    }
+    color: #0d8dff;
   }
   tr {
     background: #fff;

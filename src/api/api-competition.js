@@ -126,6 +126,17 @@ export function getTeamInfoById(id) {
   });
 }
 /**
+ * 查询团队提交记录
+ * @returns
+ */
+export function getSubmissions(id) {
+  const url = `/server/competitions/${id}/submissions`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 用户加入团队
  * 用户加入团队----复赛无此功能
  * @returns
  */

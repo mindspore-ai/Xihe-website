@@ -10,6 +10,7 @@ import ODialog from '@/components/ODialog.vue';
 
 import { getModelTags } from '@/api/api-shared';
 // import { useFilterData } from '@/stores';
+import avatarUrl from '../../../config/avatar-url';
 const filterData = ref();
 
 const userInfoStore = useUserInfoStore();
@@ -34,11 +35,11 @@ function handleSizeChange(val) {
 }
 
 try {
-  getModelTags().then((res) => {
-    filterData.value = res.data;
-    avatarCount.value = filterData.value.user_avatar.length;
-    getCheckedId(filterData.value.user_avatar);
-  });
+  // getModelTags().then((res) => {
+  filterData.value = avatarUrl;
+  avatarCount.value = filterData.value.user_avatar.length;
+  getCheckedId(filterData.value.user_avatar);
+  // });
 } catch (error) {
   console.error(error);
 }

@@ -151,10 +151,11 @@ function handleGetLog() {
     if (res.status === 202 && res.data.data) {
       logUrl.value = res.data.data.log_url;
 
-      let i1 = logUrl.value.indexOf('modelarts');
-      let i2 = logUrl.value.indexOf('.log');
+      // let i1 = logUrl.value.indexOf('modelarts');
+      // let i2 = logUrl.value.indexOf('.log');
 
-      logName.value = logUrl.value.substring(i1, i2 + 4);
+      // logName.value = logUrl.value.substring(i1, i2 + 4);
+      logName.value = 'train.log';
     } else {
       logName.value = '';
     }
@@ -171,10 +172,11 @@ function handleGetOutput() {
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
-      let i1 = outputUrl.value.indexOf('train-output/');
-      let i2 = outputUrl.value.indexOf('.gz');
+      // let i1 = outputUrl.value.indexOf('train-output/');
+      // let i2 = outputUrl.value.indexOf('.gz');
 
-      outputName.value = outputUrl.value.substring(i1 + 13, i2);
+      // outputName.value = outputUrl.value.substring(i1 + 13, i2);
+      outputName.value = 'tar.gz';
     } else {
       outputName.value = '';
     }
@@ -376,12 +378,6 @@ function handleAssessment() {
 console.log(route.path);
 // 跳转到Aim嵌入页面
 function goAimPage() {
-  // router.push({
-  //   path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
-  //   query: {
-  //     url: evaluateUrl.value,
-  //   },
-  // });
   let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {
@@ -447,28 +443,11 @@ async function downloadLogFile() {
     .then((response) => response.blob())
     .then((res) => {
       let blod = new Blob([res]);
-      let name = 'log.txt';
+      let name = 'train.log';
       downloadBlob(blod, name);
     });
 
   return data;
-}
-
-function handleChangeClick() {
-  if (showContent.value) {
-    return;
-  } else {
-    showContent.value = true;
-    showContent1.value = false;
-  }
-}
-function handleChangeClick1() {
-  if (showContent1.value) {
-    return;
-  } else {
-    showContent.value = false;
-    showContent1.value = true;
-  }
 }
 
 function changeButton() {

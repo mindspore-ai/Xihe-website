@@ -15,18 +15,18 @@ import AppFooter from '@/components/AppFooter.vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 // import homeBanner2 from '@/assets/imgs/home-banner2.png';
 // import homeBanner3 from '@/assets/imgs/home-banner3.png';
-import homePageImg from '@/assets/imgs/home-page.png';
-import digitRecognition from '@/assets/imgs/digit-recognition.png';
-import imageRcognition from '@/assets/imgs/image-rcognition.png';
-import emtionalNalysis from '@/assets/imgs/emtional-nalysis.png';
-import models1 from '@/assets/imgs/models1.png';
-import models2 from '@/assets/imgs/models2.png';
-import models3 from '@/assets/imgs/models3.png';
-import models4 from '@/assets/imgs/models4.png';
-import modelzoo1 from '@/assets/imgs/modelzoo1.png';
-import modelzoo2 from '@/assets/imgs/modelzoo2.png';
-import modelzoo3 from '@/assets/imgs/modelzoo4.png';
-import datasetPageImg from '@/assets/imgs/dataset-page.png';
+import homePageImg from '@/assets/imgs/home/home-page.png';
+import digitRecognition from '@/assets/imgs/home/digit-recognition.png';
+import imageRcognition from '@/assets/imgs/home/image-rcognition.png';
+import emtionalNalysis from '@/assets/imgs/home/emtional-nalysis.png';
+import models1 from '@/assets/imgs/home/models1.png';
+import models2 from '@/assets/imgs/home/models2.png';
+import models3 from '@/assets/imgs/home/models3.png';
+import models4 from '@/assets/imgs/home/models4.png';
+import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
+import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
+import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
+import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -203,9 +203,9 @@ function goCode() {
       <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide>
-      <swiper-slide>
+      <!-- <swiper-slide>
         <div class="photo1 cursor" @click="goInvited"></div>
-      </swiper-slide>
+      </swiper-slide> -->
       <!-- <swiper-slide>
         <div class="photo2"></div>
       </swiper-slide> -->
@@ -636,7 +636,7 @@ function goCode() {
     //   background-position: 50%;
     // }
     .photo1 {
-      background: url(@/assets/imgs/home-banner3.png);
+      background: url(@/assets/imgs/home/home-banner3.png);
       width: 100%;
       height: 480px;
       background-size: cover;
@@ -650,28 +650,28 @@ function goCode() {
     //   background-position: 50%;
     // }
     .photo3 {
-      background: url(@/assets/imgs/home-banner4.jpg);
+      background: url(@/assets/imgs/home/home-banner4.jpg);
       width: 100%;
       height: 480px;
       background-size: cover;
       background-position: 50%;
     }
     .photo4 {
-      background: url(@/assets/imgs/home-banner5.jpg);
+      background: url(@/assets/imgs/home/home-banner5.jpg);
       width: 100%;
       height: 480px;
       background-size: cover;
       background-position: 50%;
     }
     .photo5 {
-      background: url(@/assets/imgs/home-banner6.png);
+      background: url(@/assets/imgs/home/home-banner6.png);
       width: 100%;
       height: 480px;
       background-size: cover;
       background-position: 50%;
     }
     .photo6 {
-      background: url(@/assets/imgs/home-banner1.png);
+      background: url(@/assets/imgs/home/home-banner1.png);
       width: 100%;
       height: 480px;
       background-size: cover;

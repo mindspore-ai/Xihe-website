@@ -18,7 +18,6 @@ import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
 import IconRuning from '~icons/app/runing';
 import IconFailed from '~icons/app/failed';
-// import IconWarning from '~icons/app/warning';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
@@ -27,7 +26,6 @@ const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const evaluateUrl = ref('');
 
-const showContent = ref(true);
 const ruleRef = ref(null);
 
 const trainDetail = ref({});
@@ -173,57 +171,63 @@ function handleGetOutput() {
     }
   });
 }
-const isAim = ref(null);
-// const hasAimPath = ref(null);
 
+const isAim = ref(null);
 // 日志
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${detailData.value.id}/training/${route.params.trainId}`,
   [getHeaderConfig().headers['private-token']]
 );
 
-// 创建好连接之后自动触发（ 服务端执行self.accept() )
-socket.onopen = function () {};
-
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
 socket.onmessage = function (event) {
   nextTick(() => {
-    trainDetail.value = JSON.parse(event.data).data;
-    if (trainDetail.value) {
-      form.name = trainDetail.value.name;
-      form.desc = trainDetail.value.log;
-      configurationInfo.value = trainDetail.value.compute;
-      isDone.value = trainDetail.value.is_done;
+    try {
+      trainDetail.value = JSON.parse(event.data).data;
+      if (trainDetail.value) {
+        form.name = trainDetail.value.name;
+        form.desc = trainDetail.value.log;
+        configurationInfo.value = trainDetail.value.compute;
+        isDone.value = trainDetail.value.is_done;
+        isAim.value = trainDetail.value.enable_aim;
 
-      isAim.value = trainDetail.value.enable_aim;
+        // 训练未完成 true ；自定义时 aim_path为空时 true
+        if (trainDetail.value.status === 'Completed') {
+          handleGetLog();
+          handleGetOutput();
+          if (
+            (trainDetail.value.enable_aim && trainDetail.value.aim_path) ||
+            !trainDetail.value.enable_aim
+          ) {
+            isEvaluating.value = false;
+          } else {
+            isEvaluating.value = true;
+          }
+        } else {
+          isEvaluating.value = true;
+        }
+        // if (trainDetail.value.status === 'Completed') {
+        //   handleGetLog();
+        //   handleGetOutput();
+        // }
 
-      if (trainDetail.value.status === 'Completed') {
-        handleGetLog();
-        handleGetOutput();
+        // if (
+        //   !trainDetail.value.enable_aim &&
+        //   trainDetail.value.status === 'Completed'
+        // ) {
+        //   isEvaluating.value = false;
+        // } else if (
+        //   trainDetail.value.enable_aim &&
+        //   trainDetail.value.aim_path &&
+        //   trainDetail.value.status === 'Completed'
+        // ) {
+        //   isEvaluating.value = false;
+        // } else {
+        //   isEvaluating.value = true;
+        // }
       }
-
-      if (
-        !trainDetail.value.enable_aim &&
-        trainDetail.value.status === 'Completed'
-      ) {
-        isEvaluating.value = false;
-      } else if (
-        trainDetail.value.enable_aim &&
-        trainDetail.value.aim_path &&
-        trainDetail.value.status === 'Completed'
-      ) {
-        isEvaluating.value = false;
-      } else {
-        isEvaluating.value = true;
-      }
-
-      // {
-      //   isEvaluating.value = true;
-      // }
-
-      // trainDetail.value.status === 'Completed'
-      //   ? (isEvaluating.value = false)
-      //   : (isEvaluating.value = true);
+    } catch (e) {
+      console.error(e);
     }
   });
 };
@@ -243,43 +247,51 @@ function setEvaluateWebscoket(id, type) {
   ws.onmessage = function (event) {
     // 推理出url 断开websocket
     if (type === 'standard') {
-      // 自动评估
-      if (JSON.parse(event.data).data.access_url) {
-        btnContent.value = '查看报告';
-        isEvaluating.value = false;
-        isEvaluated.value = true;
+      try {
+        if (JSON.parse(event.data).data.access_url) {
+          btnContent.value = '查看报告';
+          isEvaluating.value = false;
+          isEvaluated.value = true;
 
-        evaluateUrl.value = JSON.parse(event.data).data.access_url;
-        ws.close();
-      } else if (JSON.parse(event.data).data.error) {
-        btnContent.value = '开始评估';
-        isEvaluating.value = false;
-        ElMessage({
-          type: 'error',
-          message: JSON.parse(event.data).data.error,
-        });
-        ws.close();
+          evaluateUrl.value = JSON.parse(event.data).data.access_url;
+          ws.close();
+        } else if (JSON.parse(event.data).data.error) {
+          btnContent.value = '开始评估';
+          isEvaluating.value = false;
+          ElMessage({
+            type: 'error',
+            message: JSON.parse(event.data).data.error,
+          });
+          ws.close();
+        }
+      } catch (e) {
+        console.error(e);
       }
+      // 自动评估
     } else {
-      // 自定义评估
-      if (JSON.parse(event.data).data.access_url) {
-        customContent.value = '查看报告';
-        isCusEvaluating.value = false;
-        isCusEvaluated.value = true;
+      try {
+        // 自定义评估
+        if (JSON.parse(event.data).data.access_url) {
+          customContent.value = '查看报告';
+          isCusEvaluating.value = false;
+          isCusEvaluated.value = true;
 
-        evaluateUrl.value = JSON.parse(event.data).data.access_url;
+          evaluateUrl.value = JSON.parse(event.data).data.access_url;
 
-        ws.close();
-      } else if (JSON.parse(event.data).data.error) {
-        customContent.value = '开始评估';
-        isCusEvaluating.value = false;
+          ws.close();
+        } else if (JSON.parse(event.data).data.error) {
+          customContent.value = '开始评估';
+          isCusEvaluating.value = false;
 
-        ElMessage({
-          type: 'error',
-          message: JSON.parse(event.data).data.error,
-        });
+          ElMessage({
+            type: 'error',
+            message: JSON.parse(event.data).data.error,
+          });
 
-        ws.close();
+          ws.close();
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
   };
@@ -288,15 +300,13 @@ function setEvaluateWebscoket(id, type) {
 // 自动评估
 function saveSetting() {
   requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
-
-  requestData.value.momentum_scope = query.momentum_scope.split(',');
-
   requestData.value.batch_size_scope = query.batch_size_scope.split(',');
+  requestData.value.momentum_scope = query.momentum_scope.split(',');
 
   ruleRef.value.validate((valid) => {
     if (valid) {
-      btnContent.value = '评估中...';
       isEvaluating.value = true;
+      btnContent.value = '评估中...';
       autoEvaluate(
         requestData.value,
         detailData.value.id,
@@ -304,23 +314,23 @@ function saveSetting() {
       ).then((res) => {
         if (res.status === 201) {
           if (res.data.data.error) {
-            btnContent.value = '开始评估';
             isEvaluating.value = false;
+            btnContent.value = '开始评估';
             ElMessage({
               type: 'error',
               message: res.data.data.error,
             });
           } else if (res.data.data.access_url) {
-            btnContent.value = '查看报告';
-            isEvaluating.value = false;
             isEvaluated.value = true;
+            isEvaluating.value = false;
+            btnContent.value = '查看报告';
             evaluateUrl.value = res.data.data.access_url;
           } else {
             setEvaluateWebscoket(res.data.data.evaluate_id, 'standard');
           }
         } else {
-          btnContent.value = '开始评估';
           isEvaluating.value = false;
+          btnContent.value = '开始评估';
 
           ElMessage({
             type: 'error',
@@ -346,8 +356,8 @@ const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {
-  customContent.value = '评估中...';
   isCusEvaluating.value = true;
+  customContent.value = '评估中...';
 
   let params = {
     type: 'custom',

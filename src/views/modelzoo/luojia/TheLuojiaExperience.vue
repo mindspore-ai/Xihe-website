@@ -30,7 +30,7 @@ const historyInfo = ref({
   name: '目标识别',
   origin: '高德地图',
   status: '已完成',
-  create_at: '2022-11-14',
+  create_at: '',
 });
 
 const cesiumContainer = ref('');
@@ -111,6 +111,7 @@ function handleInferClick() {
       if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
+          console.log(res);
           isShow.value = false;
           if (res.status === 201 && res.data.data) {
             const aurl = res.data.data.answer;
@@ -146,10 +147,14 @@ const outputImg = `https://luojianet.obs.cn-central-221.ovaijisuan.com/infer/${u
 
 // 下载图片
 function handleOriImgDownload() {
-  let a = document.createElement('a');
-  a.download = 'input.png';
-  a.href = inputImg;
-  a.click();
+  fetch(inputImg)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'input.png';
+      a.click();
+    });
 }
 
 function handleResImgDownload() {

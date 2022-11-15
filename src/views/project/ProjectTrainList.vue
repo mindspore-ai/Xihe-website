@@ -229,16 +229,20 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
-    trainData.value = JSON.parse(event.data).data;
-    if (trainData.value) {
-      let bool = trainData.value.some(
-        (item) => item.status === 'scheduling' || item.status === 'Running'
-      );
-      if (bool || trainData.value.length >= 5) {
-        btnShow.value = true;
-      } else {
-        btnShow.value = false;
+    try {
+      trainData.value = JSON.parse(event.data).data;
+      if (trainData.value) {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+        if (bool || trainData.value.length >= 5) {
+          btnShow.value = true;
+        } else {
+          btnShow.value = false;
+        }
       }
+    } catch (e) {
+      console.error(e);
     }
   };
   return socket;

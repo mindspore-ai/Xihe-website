@@ -111,7 +111,6 @@ function handleInferClick() {
       if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
-          console.log(res);
           isShow.value = false;
           if (res.status === 201 && res.data.data) {
             const aurl = res.data.data.answer;
@@ -253,7 +252,7 @@ onMounted(() => {
         <el-table-column property="name" label="任务类型" />
         <el-table-column property="origin" label="地图源数据" />
         <el-table-column property="status" label="状态" />
-        <el-table-column property="create_at" label="创建时间" width="220" />
+        <!-- <el-table-column property="create_at" label="创建时间" width="220" /> -->
         <el-table-column label="操作">
           <span class="detail" @click="handleDetailClick">查看详情</span>
         </el-table-column>
@@ -436,6 +435,9 @@ onMounted(() => {
     display: none;
   }
   :deep(.cesium-viewer-fullscreenContainer) {
+    display: none !important;
+  }
+  :deep(.cesium-infoBox) {
     display: none !important;
   }
 }

@@ -30,6 +30,7 @@ import OButton from '@/components/OButton.vue';
 import IconCancel2 from '~icons/app/cancelBlue.svg';
 import IconDelivery2 from '~icons/app/deliveryBlue.svg';
 const userInfoStore = useUserInfoStore();
+// console.log('userInfoStore: ', userInfoStore);
 const route = useRoute();
 const router = useRouter();
 const i18n = {
@@ -57,8 +58,9 @@ const activeName = ref('first');
 const queryRef1 = ref(null);
 const queryRef2 = ref(null);
 const queryRef3 = ref(null);
-const teamData = ref([]); //创建团队后的团队信息
-const teamMemberData = ref([]); //创建团队后的团队成员信息
+const teamData = ref([]); //团队信息
+const teamMemberData = ref([]); //团队成员信息
+const leaderData = ref([]); //队长信息
 const showDel = ref(false);
 const showEdit = ref(false);
 const showQuit = ref(false);
@@ -142,11 +144,16 @@ function handleClick() {}
 async function getIndividual(id) {
   // 通过团队id获得团队信息
   let res = await getTeamInfoById(id);
-  console.log('res2: ', res);
   if (res.status === 200) {
-    teamData.value = res.data;
-    teamMemberData.value = res.data.members_order_list;
-    is_individual.value = res.data.is_individual;
+    teamData.value = res.data.data;
+    teamMemberData.value = res.data.data.members;
+    leaderData.value = teamMemberData.value.filter((item) => {
+      // TODO:item.role换回'leader'
+      return item.role === '';
+    });
+    // is_individual.value = res.data.is_individual;
+    // 判断是否个人参赛
+    is_individual.value = teamData.value.name ? false : true;
     show.value = true;
   }
 }
@@ -426,13 +433,13 @@ function toggleQuitDlg(flag) {
       <div class="header">
         <div class="header-title">
           <div class="text">
-            我<span v-if="userInfoStore.userName == teamData.leader_name.name"
+            我<span v-if="userInfoStore.userName === leaderData[0].name"
               >创建</span
             >
             <span v-else>加入</span>的团队：{{ teamData.name }}
           </div>
           <div
-            v-if="userInfoStore.userName == teamData.leader_name.name"
+            v-if="userInfoStore.userName === leaderData[0].name"
             class="tips"
           >
             <icon-tips class="tips-icon"></icon-tips>
@@ -440,7 +447,7 @@ function toggleQuitDlg(flag) {
           </div>
         </div>
         <div
-          v-if="userInfoStore.userName == teamData.leader_name.name"
+          v-if="userInfoStore.userName === leaderData[0].name"
           class="header-button"
         >
           <OButton
@@ -477,24 +484,22 @@ function toggleQuitDlg(flag) {
           <template #default="scope">
             <div style="display: flex; align-items: center">
               <span>{{ scope.row.name }}</span>
-              <span v-if="teamData.leader_name.name === scope.row.name"
-                >(队长)</span
-              >
+              <span v-if="leaderData[0].name === scope.row.name">(队长)</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="email" label="邮箱" />
         <el-table-column
-          v-if="userInfoStore.userName == teamData.leader_name.name"
+          v-if="userInfoStore.userName == leaderData[0].name"
           prop="address"
           label="操作"
           width="350"
         >
-          <template #default="scope">
-            <div
-              v-if="teamData.leader_name.name !== scope.row.name"
-              class="operate"
-            >
+          <template
+            v-if="userComData.competitionData.phase !== 'final'"
+            #default="scope"
+          >
+            <div v-if="leaderData[0].name === scope.row.name" class="operate">
               <div class="delete" @click="deleteMember(scope.row.id)">
                 <o-icon class="del"><icon-cancel></icon-cancel></o-icon>
                 <o-icon class="del2"><icon-cancel2></icon-cancel2></o-icon>
@@ -533,7 +538,7 @@ function toggleQuitDlg(flag) {
       }"
     >
       {{
-        userComData.competitionData.competition_period === '初赛'
+        userComData.competitionData.phase !== 'final'
           ? i18n.delete.describe1
           : i18n.delete.describe3
       }}

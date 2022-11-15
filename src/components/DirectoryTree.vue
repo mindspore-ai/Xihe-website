@@ -100,7 +100,8 @@ function pathClick(item, index) {
 
 // 点击文件夹或者文件
 function goBlob(item) {
-  console.log('item: ', item);
+  // console.log('item111: ', item);
+
   // 如果是文件夹
   if (item.is_dir) {
     // 如果是代码目录弹窗
@@ -113,42 +114,33 @@ function goBlob(item) {
     } else {
       // 如果是启动文件弹窗
       dirPath.value = item.path;
+      // console.log('启动文件dirPath: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
       console.log('headContents.value: ', headContents.value);
     }
 
     // 取头部数组headContents的最后一位
-    /* let headLastPath = '';
-    headLastPath = headContents.value.pop();
-    dirPath.value = item.path;
-    let lastPath = dirPath.value.split('/').slice(-1).toString();
-    if (headLastPath === lastPath) {
-      headContents.value.splice(
-        headContents.value.indexOf(lastPath),
-        1,
-        lastPath
-      );
-      // emit('handle', headContents.value);
-    } else {
-      //  headContents.value.splice(-1);
-      // headContents.value.push(lastPath); 
-      emit('handle', headContents.value);
-    } */
+    // /* let headLastPath = '';
+    // headLastPath = headContents.value.pop();
+    // dirPath.value = item.path;
+    // let lastPath = dirPath.value.split('/').slice(-1).toString();
+    // if (headLastPath === lastPath) {
+    //   headContents.value.splice(
+    //     headContents.value.indexOf(lastPath),
+    //     1,
+    //     lastPath
+    //   );
+    //   // emit('handle', headContents.value);
+    // } else {
+    //   //  headContents.value.splice(-1);
+    //   // headContents.value.push(lastPath);
+    //   emit('handle', headContents.value);
+    // } */
   } else {
     return;
   }
 }
-
-/* function handleChange(item) {
-  if (item.is_dir) {
-    // headContents.value.push(item.path);
-    headContents.value.splice(-1, 1, item.path);
-  } else {
-    headContents.value.splice(-1);
-    // return;
-  }
-} */
 
 // 点击文件单选框
 function handleFile(item) {

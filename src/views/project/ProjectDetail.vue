@@ -708,7 +708,6 @@ watch(
 function checkName(rule, value, callback) {
   checkNames({ name: value, owner: userInfoStore.userName })
     .then((res) => {
-      console.log(res);
       callback();
     })
     .catch((err) => {
@@ -726,7 +725,7 @@ function checkName(rule, value, callback) {
           <div class="card-head-1">
             <div class="avatar">
               <!-- TODO:缺少项目拥有者头像字段 -->
-              <img :src="userInfoStore.avatar" alt="" />
+              <img :src="detailData.avatar_id" alt="" />
             </div>
 
             <router-link :to="{ path: `/${route.params.user}` }">

@@ -187,7 +187,7 @@ export function handleLuoJiaInfer() {
  * @returns
  */
 export function handleLuoJiaHistory() {
-  const url = '/api/foundation/luojianet';
+  const url = '/server/bigmodel/luojia';
   return request
     .get(url, getHeaderConfig())
     .then((res) => {

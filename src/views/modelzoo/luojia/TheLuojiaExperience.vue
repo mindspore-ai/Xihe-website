@@ -176,11 +176,12 @@ function handleHistoryClick() {
   gridData.value = [];
   gridData.value.push(historyInfo.value);
   // handleLuoJiaHistory().then((res) => {
-  //   if (res.status === 200) {
-  //     gridData.value = [];
-  //     historyInfo.value.create_at = res.create_time;
-  //     gridData.value.push(historyInfo.value);
-  //   }
+  //   console.log(res);
+  //   // if (res.status === 200) {
+  //   //   gridData.value = [];
+  //   //   historyInfo.value.create_at = res.create_time;
+  //   //   gridData.value.push(historyInfo.value);
+  //   // }
   // });
 }
 

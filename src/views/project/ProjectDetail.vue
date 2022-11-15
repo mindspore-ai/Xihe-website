@@ -164,19 +164,27 @@ const rules = reactive({
   ],
   storeName: [
     { required: true, message: '必填项', trigger: 'blur' },
+    // 后端5-42
     {
-      pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-      message: '暂不支持中文字符',
+      pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
+      message: '暂不支持中文字符，且长度为5-35个字符',
       trigger: 'blur',
     },
     {
-      pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-      message: '格式不正确',
+      // 不能含有:;*?\<>|等特殊字符
+      // pattern: /^[^\*/?\\<>|:;]$/g,
+      pattern: /^[^\*/?\\<>|:;]*$/g,
+      message: '不能含有:/\\*;?<>|等特殊字符',
       trigger: 'blur',
     },
     {
       pattern: /^[^.].*[^.]$/,
-      message: '格式不正确',
+      message: '不能以.开头或结尾',
+      trigger: 'blur',
+    },
+    {
+      pattern: /^(?!.*(-)\1+).*$/,
+      message: '不能连续两个及以上中划线',
       trigger: 'blur',
     },
     { validator: checkName, trigger: 'blur' },

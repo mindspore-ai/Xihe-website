@@ -585,9 +585,11 @@ getGitlabTree({
   id: detailData.value.id,
   name: routerParams.name,
 }).then((res) => {
-  let apppy = res?.data?.filter((item) => {
-    return item.name === 'app.py';
-  });
+  let apppy = res.data
+    ? ''
+    : res?.data?.filter((item) => {
+        return item.name === 'app.py';
+      });
   console.log(res);
   if (apppy) {
     try {

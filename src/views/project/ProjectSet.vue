@@ -333,11 +333,6 @@ function toggleDelDlg(flag) {
             :rules="[
               { required: true, message: '必填项', trigger: 'blur' },
               {
-                pattern: /^project-/,
-                message: '请输入project-开头的项目名',
-                trigger: 'blur',
-              },
-              {
                 pattern: /^[^\u4e00-\u9fa5]{13,58}$/g,
                 message: '暂不支持中文字符，且长度为5-50个字符(不含project-)',
                 trigger: 'blur',

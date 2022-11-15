@@ -130,7 +130,7 @@ export function getTeamInfoById(id) {
  * @returns
  */
 export function getSubmissions(id) {
-  const url = `/server/competitions/${id}/submissions`;
+  const url = `/server/competition/${id}/submissions`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

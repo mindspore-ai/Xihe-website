@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <script setup>
 import { ref, reactive, watch, onUnmounted, computed, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -9,6 +8,7 @@ import logoImg from '@/assets/imgs/logo.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
+import userImg from '@/assets/icons/user.png';
 import { goAuthorize, logout } from '@/shared/login';
 import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
@@ -35,9 +35,11 @@ const queryData = ref([]);
 const modelCount = ref();
 const datasetCount = ref();
 const projectCount = ref();
+const userCount = ref();
 const modelData = ref([]);
 const datasetData = ref([]);
 const projectData = ref([]);
+const userData = ref([]);
 let query = reactive({
   name: '',
 });
@@ -193,14 +195,32 @@ function getSearch() {
       getSearchData(query).then((res) => {
         if (res.status === 200) {
           queryData.value = res.data.data;
-          // 模型、数据集、项目的搜索结果数量
+          // 模型、数据集、项目、用户名的搜索结果数量
           modelCount.value = res.data.data.model.total;
           datasetCount.value = res.data.data.dataset.total;
           projectCount.value = res.data.data.project.total;
-          // 模型、数据集、项目的搜索结果
-          modelData.value = res.data.data.model.top;
-          datasetData.value = res.data.data.dataset.top;
-          projectData.value = res.data.data.project.top;
+          userCount.value = res.data.data.user.total;
+          // 模型、数据集、项目、用户名的搜索结果
+          if (modelCount.value) {
+            modelData.value = res.data.data.model.top;
+          } else {
+            modelData.value = [];
+          }
+          if (datasetCount.value) {
+            datasetData.value = res.data.data.dataset.top;
+          } else {
+            datasetData.value = [];
+          }
+          if (projectCount.value) {
+            projectData.value = res.data.data.project.top;
+          } else {
+            projectData.value = [];
+          }
+          if (userCount.value) {
+            userData.value = res.data.data.user.top;
+          } else {
+            userData.value = [];
+          }
         }
       });
     } else {
@@ -250,6 +270,12 @@ const projectResult = computed(() => {
     return heightLight(item.name, keyword.value);
   });
 });
+// 用户名搜索结果
+const userResult = computed(() => {
+  return userData.value.map((item) => {
+    return heightLight(item, keyword.value);
+  });
+});
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
@@ -257,7 +283,9 @@ const firstData = computed(() => {
     ? projectData.value[0]
     : modelData.value.length !== 0
     ? modelData.value[0]
-    : datasetData.value[0];
+    : datasetData.value.length !== 0
+    ? datasetData.value[0]
+    : userData.value[0];
 });
 // 获得当回车时需要跳转的路径
 const pathName = computed(() => {
@@ -272,9 +300,13 @@ function goFirstResult() {
   if (!firstData.value) {
     return;
   } else {
-    router.push({
-      path: `/${pathName.value}/${firstData.value.owner}/${firstData.value.name}`,
-    });
+    if (modelCount.value || projectCount.value || datasetCount.value) {
+      router.push({
+        path: `/${pathName.value}/${firstData.value.owner}/${firstData.value.name}`,
+      });
+    } else {
+      router.push(`/${firstData.value}`);
+    }
     emptyValue();
   }
 }
@@ -303,6 +335,7 @@ function goModelDetail(index, model) {
   emptyValue();
 }
 function goDatasetDetail(index, dataset) {
+  console.log('index, dataset: ', index, dataset);
   const str = dataset.replace(/<[^>]+>/g, '');
   router.push({
     path: `/datasets/${datasetData.value[index].owner}/${str}`,
@@ -314,6 +347,13 @@ function goProjectDetail(index, project) {
   router.push({
     path: `/projects/${projectData.value[index].owner}/${str}`,
   });
+  emptyValue();
+}
+function goUserDetail(index, userName) {
+  // console.log('index, project: ', index, userName);
+  const str = userName.replace(/<[^>]+>/g, '');
+  console.log('str: ', str);
+  router.push({ path: `/${str}` });
   emptyValue();
 }
 // 无输入时，输入框失去焦点收起输入框
@@ -352,36 +392,12 @@ function handleBlur() {
         <!-- 搜索结果展示 -->
         <div class="search-wrap">
           <div
-            v-if="(modelCount || datasetCount || projectCount) && keyword"
+            v-if="
+              (modelCount || datasetCount || projectCount || userCount) &&
+              keyword
+            "
             class="search-result"
           >
-            <!-- TODO:用户搜索结果 -->
-            <!-- <div v-show="userData.length" class="search-result-items">
-              <div class="result-items-title">
-                <div class="items-title-name">
-                  <img :src="userImg" alt="" />
-                  <span>用户</span>
-                </div>
-                <div class="search-result-num" @click="getuser(keyword)">
-                  <span class="related-result"
-                    >查看{{ userCount }}个相关用户</span
-                  >
-                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
-                </div>
-              </div>
-              <div class="result-items-item">
-                <ul>
-                  <li
-                    v-for="(user, index) in projectResult"
-                    v-show="index < 3"
-                    :key="index"
-                    class="result-item-list"
-                    @click="goProjectDetail(index, user)"
-                    v-html="user"
-                  ></li>
-                </ul>
-              </div>
-            </div> -->
             <div v-show="projectData.length" class="search-result-items">
               <div class="result-items-title">
                 <div class="items-title-name">
@@ -460,6 +476,32 @@ function handleBlur() {
                 </ul>
               </div>
             </div>
+            <div v-show="userData.length" class="search-result-items">
+              <div class="result-items-title">
+                <div class="items-title-name">
+                  <img :src="userImg" alt="" />
+                  <span>用户</span>
+                </div>
+                <!-- <div class="search-result-num" @click="getuser(keyword)">
+                  <span class="related-result"
+                    >查看{{ userCount }}个相关用户</span
+                  >
+                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
+                </div> -->
+              </div>
+              <div class="result-items-item">
+                <ul>
+                  <li
+                    v-for="(user, index) in userResult"
+                    v-show="index < 3"
+                    :key="index"
+                    class="result-item-list"
+                    @click="goUserDetail(index, user)"
+                    v-html="user"
+                  ></li>
+                </ul>
+              </div>
+            </div>
           </div>
           <!-- 搜索无结果 -->
           <div
@@ -467,6 +509,7 @@ function handleBlur() {
               modelCount == 0 &&
               datasetCount == 0 &&
               projectCount == 0 &&
+              userCount == 0 &&
               keyword
             "
           >
@@ -480,7 +523,7 @@ function handleBlur() {
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
           <o-input
             style="border: none"
-            placeholder="查询模型和数据集..."
+            placeholder="查询项目、模型、数据集和用户"
             class="header-right-input"
             @click="showInput"
           />

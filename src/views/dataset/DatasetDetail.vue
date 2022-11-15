@@ -501,7 +501,7 @@ watch(
     <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
-          <img :src="userInfoStore.avatar" alt="" />
+          <img :src="detailData.avatar_id" alt="" />
         </div>
         <router-link :to="{ path: `/${route.params.user}` }">
           {{ detailData.owner }} </router-link

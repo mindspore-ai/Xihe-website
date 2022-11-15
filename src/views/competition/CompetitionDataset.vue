@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 import IconDownload from '~icons/app/download';
 
@@ -10,18 +10,16 @@ import { downloadDataset } from '@/api/api-obs';
 import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
-const comInfo = computed(() => {
-  return useCompetitionData().competitionData;
-});
-const teamId = computed(() => {
+const userComData = useCompetitionData().competitionData;
+/* const teamId = computed(() => {
   return useCompetitionData().teamId;
-});
+}); */
 
 const mkit = handleMarkdown();
 const codeString = ref('');
 const result = ref();
 let README = '';
-getGuide(comInfo.value.datasets_description)
+getGuide(userComData.dataset_doc)
   .then((tree) => {
     README = tree.data;
     codeString.value = README;
@@ -30,16 +28,15 @@ getGuide(comInfo.value.datasets_description)
   .catch((err) => {
     console.error(err);
   });
-// console.log(comInfo);
 </script>
 <template>
   <div class="dataset-page">
     <div class="header">
       <!-- <div></div> -->
       <o-button
-        v-if="teamId"
+        v-if="!userComData.is_competitor"
         size="small"
-        @click="downloadDataset(comInfo.datasets_link)"
+        @click="downloadDataset(userComData.dataset_url)"
         >下载数据集
         <template #suffix>
           <o-icon><icon-download></icon-download></o-icon> </template

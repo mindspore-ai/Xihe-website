@@ -412,20 +412,6 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
-  /* modelsName: [
-    {
-      pattern: /^model-/,
-      message: '请输入model-开头的模型名',
-      trigger: 'blur',
-    },
-  ],
-  datasetsName: [
-    {
-      pattern: /^dataset-/,
-      message: '请输入dataset-开头的数据集名',
-      trigger: 'blur',
-    },
-  ], */
 });
 
 // 添加输入模型TODO:id值
@@ -477,13 +463,13 @@ function deleteEnvironment(item) {
 
 // 子组件点击
 function handleClick(item) {
-  // console.log('item: ', item);
+  console.log('点击子组件传递的值: ', item);
   if (option.value === 'directory') {
     codeDir.value = item.join('/') + '/';
-    // console.log('代码目录: ', codeDir.value);
+    console.log('代码目录: ', codeDir.value);
   } else {
     bootFile.value = item;
-    // console.log('启动文件: ', bootFile.value);
+    console.log('启动文件: ', bootFile.value);
     showbtn.value = true;
   }
 }
@@ -530,7 +516,7 @@ function selectFile(item) {
           </div>
         </div>
         <div class="createfile-content-tip">
-          你可以通过表单方式创建训练实例，若你是第一次创建训练实例，系统会默认在train/config.json下生成配置文件。详情参考
+          你可以通过表单方式创建训练实例，详情请参考
           <a href="#" style="color: #0d8dff">表单方式-创建训练实例</a>
         </div>
         <div class="createfile-form-wrap">

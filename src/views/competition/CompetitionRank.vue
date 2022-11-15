@@ -1,6 +1,5 @@
-<!-- eslint-disable prettier/prettier -->
 <script setup>
-import { ref, nextTick, computed } from 'vue';
+import { ref, nextTick } from 'vue';
 
 // import IconArrowDown from '~icons/app/arrow-down.svg';
 
@@ -9,41 +8,28 @@ import firstImg from '@/assets/imgs/first.png';
 import secondImg from '@/assets/imgs/second.png';
 import thirdImg from '@/assets/imgs/third.png';
 
-import { useRoute } from 'vue-router';
-
 import { getRank } from '@/api/api-competition';
 
 import { useCompetitionData } from '@/stores';
 
-const comInfo = computed(() => {
-  return useCompetitionData().competitionData;
-});
-// console.log('comInfo: ', comInfo);
+const comInfo = useCompetitionData().competitionData; //比赛详情
 
-const route = useRoute();
-
-const tableData = ref([]);
-const tableData2 = ref([]);
-getRank({ id: comInfo.value.id, phase: 'preliminary' }).then((res) => {
-  tableData.value = res.data;
-  /* tableData.value.forEach((element) => {
-    element.create_time = element.create_time.split('T')[0];
-  }); */
-  // console.log(tableData.value)
+const preliminaryData = ref([]); //初赛排行榜数据
+const finalData = ref([]); //决赛排行榜数据
+getRank({ id: comInfo.id, phase: 'preliminary' }).then((res) => {
+  preliminaryData.value = res.data;
 });
+
 const tabs = ref();
-function change(s) {
-  let params = { id: comInfo.value.id, phase: 'final' };
-  if (s === '1') {
+function changeTab(index) {
+  if (index === '1') {
+    let params = { id: comInfo.id, phase: 'final' };
     tabs.value[0].classList.remove('tabs-left');
     tabs.value[1].classList.add('tabs-right');
     getRank(params).then((res) => {
-      tableData2.value = res.data;
-      /* tableData2.value.forEach((element) => {
-        element.create_time = element.create_time.split('T')[0];
-      }); */
+      finalData.value = res.data;
     });
-  } else if (s === '0') {
+  } else if (index === '0') {
     tabs.value[1].classList.remove('tabs-right');
     tabs.value[0].classList.add('tabs-left');
   }
@@ -55,15 +41,15 @@ nextTick(() => {
 });
 </script>
 <template>
-  <el-tabs type="border-card" @tab-change="change">
+  <el-tabs type="border-card" @tab-change="changeTab">
     <el-tab-pane>
       <template #label>
         <div class="tabs-item tabs-left">初赛排行榜</div>
       </template>
-      <div v-if="tableData.length" class="rank-page">
+      <div v-if="preliminaryData.length" class="rank-page">
         <!-- <div class="rank-header">排行榜</div> -->
         <div class="rank-body">
-          <el-table :data="tableData">
+          <el-table :data="preliminaryData">
             <el-table-column prop="date" label="排名">
               <template #default="scope">
                 <img v-if="scope.$index === 0" :src="firstImg" alt="" />
@@ -75,14 +61,16 @@ nextTick(() => {
                 <div v-else class="num">{{ scope.$index + 1 }}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="group_name" label="参赛团队" />
+            <el-table-column prop="team_name" label="参赛团队" />
             <el-table-column label="分数">
               <template #default="scope">
-                <div class="score">{{ tableData[scope.$index].score }}</div>
+                <div class="score">
+                  {{ preliminaryData[scope.$index].score }}
+                </div>
               </template>
             </el-table-column>
-            <el-table-column prop="create_time" label="提交时间" width="210" />
-            <!-- <template v-if="tableData" #append>
+            <el-table-column prop="submit_at" label="提交时间" width="210" />
+            <!-- <template v-if="preliminaryData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
         </template> -->
           </el-table>
@@ -97,10 +85,10 @@ nextTick(() => {
       <template #label>
         <div class="tabs-item">决赛排行榜</div>
       </template>
-      <div v-if="tableData2.length" class="rank-page">
+      <div v-if="finalData.length" class="rank-page">
         <!-- <div class="rank-header">排行榜</div> -->
         <div class="rank-body">
-          <el-table :data="tableData2">
+          <el-table :data="finalData">
             <el-table-column prop="date" label="排名">
               <template #default="scope">
                 <img v-if="scope.$index === 0" :src="firstImg" alt="" />
@@ -112,14 +100,14 @@ nextTick(() => {
                 <div v-else class="num">{{ scope.$index + 1 }}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="group_name" label="参赛团队" />
+            <el-table-column prop="team_name" label="参赛团队" />
             <el-table-column label="分数">
               <template #default="scope">
-                <div class="score">{{ tableData2[scope.$index].score }}</div>
+                <div class="score">{{ finalData[scope.$index].score }}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="create_time" label="提交时间" width="210" />
-            <!-- <template v-if="tableData" #append>
+            <el-table-column prop="submit_at" label="提交时间" width="210" />
+            <!-- <template v-if="preliminaryData" #append>
           查看全部<OIcon><IconArrowDown /></OIcon>
         </template> -->
           </el-table>

@@ -706,14 +706,13 @@ watch(
 //   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
 // }
 function checkName(rule, value, callback) {
-  checkNames({ name: value, owner: userInfoStore.userName })
-    .then((res) => {
-      console.log(res);
+  checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
+    if (res.data.can_apply) {
       callback();
-    })
-    .catch((err) => {
+    } else {
       callback(new Error('该名称已存在'));
-    });
+    }
+  });
 }
 </script>
 
@@ -726,7 +725,7 @@ function checkName(rule, value, callback) {
           <div class="card-head-1">
             <div class="avatar">
               <!-- TODO:缺少项目拥有者头像字段 -->
-              <img :src="userInfoStore.avatar" alt="" />
+              <img :src="detailData.avatar_id" alt="" />
             </div>
 
             <router-link :to="{ path: `/${route.params.user}` }">

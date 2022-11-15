@@ -122,7 +122,7 @@ export function getTeamInfoByName(name, competitionId) {
 export function getTeamInfoById(id) {
   const url = `/server/competition/${id}/team`;
   return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
+    return res;
   });
 }
 /**

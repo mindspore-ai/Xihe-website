@@ -17,29 +17,29 @@ import { ElMessage } from 'element-plus';
 
 const tabsList = ref([
   {
-    name: 'Python',
-    language: 'python',
-    code: 'from typing import List \n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    """ Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    """"\n',
-  },
-  {
-    name: 'JavaScript',
-    language: 'javascript',
-    code: '/* Check if in given list of numbers, are any two numbers closer to each other than\n given threshold.\n >>> hasCloseElements([1.0, 2.0, 3.0], 0.5)\n false\n >>> hasCloseElements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n true\n */\nconst hasCloseElements = (numbers, threshold) => {',
-  },
-  {
     name: 'C++',
     language: 'c',
-    code: '/*\n Check if in given vector of numbers, are any two numbers closer to each other than\n given threshold.\n >>> has_close_elements({1.0, 2.0, 3.0}, 0.5)\n false\n >>> has_close_elements({1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n true\n */\n#include<stdio.h>\n#include<vector>\n#include<math.h>\nusing namespace std;\nbool has_close_elements(vector<float> numbers, float threshold) {',
+    code: '/*\n Check if in given vector of numbers, are any two numbers closer to each other than\n given threshold.\n >>> has_close_elements({1.0, 2.0, 3.0}, 0.5)\n false\n >>> has_close_elements({1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n true\n */\n#include<stdio.h>\n#include<vector>\n#include<math.h>\nusing namespace std;\nbool has_close_elements(vector<float> numbers, float threshold) {\n  ',
   },
   {
     name: 'Go',
     language: 'go',
-    code: 'import (\n    "math"\n)\n\n// Check if in given list of numbers, are any two numbers closer to each other than given threshold.\n// >>> HasCloseElements([]float64{1.0, 2.0, 3.0}, 0.5)\n// false\n// >>> HasCloseElements([]float64{1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n// true\nfunc HasCloseElements(numbers []float64, threshold float64) bool {',
+    code: 'import (\n    "math"\n)\n\n// Check if in given list of numbers, are any two numbers closer to each other than given threshold.\n// >>> HasCloseElements([]float64{1.0, 2.0, 3.0}, 0.5)\n// false\n// >>> HasCloseElements([]float64{1.0, 2.8, 3.0, 4.0, 5.0, 2.0}, 0.3)\n// true\nfunc HasCloseElements(numbers []float64, threshold float64) bool {\n ',
+  },
+  {
+    name: 'JavaScript',
+    language: 'javascript',
+    code: '/* Check if in given list of numbers, are any two numbers closer to each other than\n given threshold.\n >>> hasCloseElements([1.0, 2.0, 3.0], 0.5)\n false\n >>> hasCloseElements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n true\n */\nconst hasCloseElements = (numbers, threshold) => {\n  ',
+  },
+  {
+    name: 'Python',
+    language: 'python',
+    code: 'from typing import List \n\ndef has_close_elements(numbers: List[floa   t], threshold: float) -> bool:\n    """ Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    """',
   },
   {
     name: 'Java',
     language: 'java',
-    code: 'import java.util.*;\nimport java.lang.*;\n\nclass Solution {\n   /**\n   Check if in given list of numbers, are any two numbers closer to each other than given threshold.\n   >>> hasCloseElements(Arrays.asList(1.0, 2.0, 3.0), 0.5)\n   false\n   >>> hasCloseElements(Arrays.asList(1.0, 2.8, 3.0, 4.0, 5.0, 2.0), 0.3)\n   true\n   */\n\n   public boolean hasCloseElements(List<Double> numbers, double threshold) {',
+    code: 'import java.util.*;\nimport java.lang.*;\n\nclass Solution {\n  /**\n  Check if in given list of numbers, are any two numbers closer to each other than given threshold.\n  >>> hasCloseElements(Arrays.asList(1.0, 2.0, 3.0), 0.5)\n  false\n  >>> hasCloseElements(Arrays.asList(1.0, 2.8, 3.0, 4.0, 5.0, 2.0), 0.3)\n  true\n  */\n\n  public boolean hasCloseElements(List<Double> numbers, double threshold) {\n    ',
   },
   { name: '', text: '', value: '' },
 ]);
@@ -105,22 +105,12 @@ function init(item) {
 
   instance.revealLine(count.value);
 }
-// const sendCode = ref('');
+
 function hanleGenerateCode() {
-  // const len = tabsList.value[activeIndex.value].code.length;
-  // const str = tabsList.value[activeIndex.value].code.substring(len - 2);
-
-  // if (str === '\n' || str === '\t') {
-  //   sendCode.value = tabsList.value[activeIndex.value].code;
-  // } else {
-  //   sendCode.value = tabsList.value[activeIndex.value].code + '\n';
-  // }
-
   isDisabled.value = true;
   handleGenerateCode({
     content: tabsList.value[activeIndex.value].code,
-    n: 1,
-    lang: tabsList.value[activeIndex.value].name,
+    language: tabsList.value[activeIndex.value].name,
   }).then((res) => {
     if (res.status === 200 && res.data) {
       isDisabled.value = false;

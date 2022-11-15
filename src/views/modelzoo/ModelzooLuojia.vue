@@ -24,7 +24,7 @@ function enterLuoJiaSet() {
         </el-breadcrumb>
       </div>
       <div class="luojia-title">
-        <img src="@/assets/imgs/modelzoo2.png" alt="" />
+        <img src="@/assets/imgs/home/models2.png" alt="" />
         <div class="luojia-title-intro">
           <p class="headline">武汉.LuoJia</p>
           <p class="text">

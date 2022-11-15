@@ -65,7 +65,7 @@ watch(
         </el-breadcrumb>
       </div>
       <div class="luojia-title">
-        <img src="@/assets/imgs/modelzoo2.png" alt="" />
+        <img src="@/assets/imgs/home/modelzoo2.png" alt="" />
         <div class="luojia-title-intro">
           <p class="headline">武汉.Luojia</p>
           <p class="text">

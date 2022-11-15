@@ -44,7 +44,7 @@ const navItems = reactive([
     id: 'result',
     label: '结果',
     href: 'result',
-    isIndividual: false,
+    isIndividual: true,
   },
   {
     id: 'team',

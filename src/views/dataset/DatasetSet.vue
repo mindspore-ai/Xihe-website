@@ -269,11 +269,6 @@ function toggleDelDlg(flag) {
             :rules="[
               { required: true, message: '必填项', trigger: 'blur' },
               {
-                pattern: /^dataset-/,
-                message: '请输入dataset-开头的数据集名',
-                trigger: 'blur',
-              },
-              {
                 pattern: /^[^\u4e00-\u9fa5]{13,58}$/g,
                 message: '暂不支持中文字符，且长度为5-50个字符(不含dataset-)',
                 trigger: 'blur',

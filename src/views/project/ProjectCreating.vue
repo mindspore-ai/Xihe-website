@@ -83,14 +83,13 @@ const rules = reactive({
   ],
 });
 function checkName(rule, value, callback) {
-  checkNames({ name: value, owner: userInfo.userName })
-    .then((res) => {
-      console.log(res);
+  checkNames({ name: value, owner: userInfo.userName }).then((res) => {
+    if (res.data.can_apply) {
       callback();
-    })
-    .catch((err) => {
+    } else {
       callback(new Error('该名称已存在'));
-    });
+    }
+  });
 }
 
 const nameList = ref([]);

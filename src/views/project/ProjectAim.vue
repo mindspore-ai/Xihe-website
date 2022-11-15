@@ -48,7 +48,6 @@ function getBack() {
   max-width: 100%;
   min-height: calc(100vh - 280px);
   margin-top: 80px;
-  // background-color: #f5f6f8;
   &-wrap {
     max-width: 1440px;
     height: 100%;

@@ -247,11 +247,6 @@ function toggleDelDlg(flag) {
             :rules="[
               { required: true, message: '必填项', trigger: 'blur' },
               {
-                pattern: /^model-/,
-                message: '请输入model-开头的模型名',
-                trigger: 'blur',
-              },
-              {
                 pattern: /^[^\u4e00-\u9fa5]{11,58}$/g,
                 message: '暂不支持中文字符，且长度为5-50个字符(不含model-)',
                 trigger: 'blur',

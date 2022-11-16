@@ -161,9 +161,9 @@ function confirmPrivate() {
   };
   // console.log(detailData.id);
   modifyProject(query, userInfoStore.userName, detailData.id)
-    .then(() => {
+    .then((res) => {
       // if (res.status === 200) {
-      // description.value = res.data.description;
+      detailData.desc = res.data.desc;
       ElMessage({
         type: 'success',
         message: '项目信息更改成功',

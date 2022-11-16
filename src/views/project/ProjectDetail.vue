@@ -711,7 +711,6 @@ function checkName(rule, value, callback) {
     clearTimeout(time);
   }
   time = setTimeout(() => {
-    console.log(111);
     checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
       if (res.data.can_apply) {
         callback();

@@ -29,7 +29,7 @@ const props = defineProps({
 // console.log('类型: ', props.optionType);
 
 const dirPath = ref(''); // 自定义路径，末尾不带/
-const headContents = ref([]); // 头部路径，最终代码目录路径
+const headContents = ref([]); // 头部路径，最终代码目录路径(数组)
 // const bootFile = ref('');
 // const radio = ref();
 
@@ -110,14 +110,18 @@ function goBlob(item) {
       // console.log('dirPath值变化了: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
+      console.log('headContents.valu11111: ', headContents.value);
       emit('handle', headContents.value);
     } else {
       // 如果是启动文件弹窗
+      console.log('item: ', item);
       dirPath.value = item.path;
-      // console.log('启动文件dirPath: ', dirPath.value);
+      console.log('启动文件dirPath: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
       headContents.value.push(lastPath);
       console.log('headContents.value: ', headContents.value);
+
+      // 
     }
 
     // 取头部数组headContents的最后一位
@@ -144,7 +148,9 @@ function goBlob(item) {
 
 // 点击文件单选框
 function handleFile(item) {
-  emit('handle', item.name);
+  console.log('dirPath值: ', dirPath.value);
+
+  emit('handle', dirPath.value + item.name);
 }
 </script>
 

@@ -316,7 +316,7 @@ export function getTrainLog(params) {
 export function createTrainProject(params, projectId) {
   const url = `/server/train/project/${projectId}/training`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
+    return res;
   });
 }
 

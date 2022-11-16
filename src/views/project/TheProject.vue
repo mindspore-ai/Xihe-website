@@ -98,6 +98,11 @@ let i18n = {
   ],
 };
 
+const projectType = reactive([
+  { type: '精选', isActive: false, num: 3 },
+  { type: '官方', isActive: false, num: 2 },
+]);
+
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
@@ -111,10 +116,12 @@ const radioList = ref({});
 const keyWord = ref('');
 
 const queryData = reactive({
-  page_num: 1, //分页
-  count_per_page: 12, //每页数量
   name: null, //项目名
   tags: null, //标签
+  tag_kinds: null, //标签类型(应用分类)
+  level: null,
+  count_per_page: 12, //每页数量
+  page_num: 1, //分页
   sort_by: null, //排序规则
 });
 // queryData.search = route.query.search;
@@ -123,6 +130,23 @@ const debounceSearch = debounce(getProject, 500, {
   // leading: true,
   trailing: true,
 });
+
+function projectTypeClick(val) {
+  if (val.isActive) {
+    val.isActive = !val.isActive;
+    delete queryData['level'];
+  } else {
+    projectType.forEach((item) => {
+      item.isActive = false;
+    });
+    val.isActive = true;
+    if (val.type === '官方') {
+      queryData.level = 'official';
+    } else {
+      queryData.level = 'good';
+    }
+  }
+}
 
 function moreClick() {
   showDetail.value = true;
@@ -294,28 +318,34 @@ function searchTags(date) {
 function goSearch(render) {
   let time = 0;
   queryData.page_num = 1;
-  let tagList = [];
+  let tagList = []; //标签
+  let tag_kinds = []; //标签类型
   render.forEach((item) => {
     time = 0;
     // let tagList = [];
     item.condition.forEach((value) => {
       if (value.isActive) {
+        // console.log('item.title.key: ', item.title.key);
         if (item.title.key === 0) {
+          console.log('value: ', value);
           // console.log('点击应用发送请求');
-          tagList.push(value.kind);
-          if (tagList.length < 6) {
-            queryData.tags = tagList.join(',');
+          tag_kinds.push(value.kind);
+          if (tag_kinds.length < 6) {
+            queryData.tag_kinds = tag_kinds.join(',');
           } else {
             ElMessage({
-              message: '最多支持5个标签刷选 !',
+              message: '最多支持刷选5个标签 !',
               type: 'warning',
             });
             return;
           }
         } else if (item.title.key === 1) {
           value.items.forEach((val) => {
-            // console.log('val: ', val);
-            if (val.isActive) {
+            console.log('val: ', val);
+            tagList.push(val.name);
+            queryData.tags = tagList.join(',');
+
+            /* if (val.isActive) {
               tagList.push(val.name);
 
               if (queryData.tags) {
@@ -323,7 +353,7 @@ function goSearch(render) {
               } else {
                 queryData.tags = tagList.join(',');
               }
-            }
+            } */
           });
         }
       } else {
@@ -335,8 +365,7 @@ function goSearch(render) {
       // console.log('取消点击');
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
-      queryData.tags = null;
-      // requestCount--;
+      queryData.tag_kinds = null;
     }
   });
 }
@@ -592,6 +621,23 @@ onUnmounted(() => {
       </div>
 
       <div v-show="showCondition" class="condition">
+        <div class="condition-item">
+          <p class="condition-title">项目类型</p>
+          <div class="condition-box">
+            <div
+              v-for="item in projectType"
+              :key="item.num"
+              class="condition-detail"
+              :class="[{ 'condition-active1': item.isActive }]"
+              @click="projectTypeClick(item)"
+            >
+              {{ item.type }}
+              <o-icon class="icon-x">
+                <icon-x></icon-x>
+              </o-icon>
+            </div>
+          </div>
+        </div>
         <!-- 应用分类 -->
         <div
           v-for="(item, index) in renderSorts"
@@ -740,6 +786,31 @@ onUnmounted(() => {
               @click="goDetail(item.owner, item.name)"
             >
               <div class="card-top">
+                <div
+                  v-if="item.level === 'official' || item.level === 'good'"
+                  :class="item.level === 'good' ? 'mark-tag' : 'mark-tag1'"
+                >
+                  {{ item.level === 'official' ? '官方' : '精选' }}
+                </div>
+
+                <div class="description">
+                  <p>{{ item.desc }}</p>
+                </div>
+
+                <img
+                  :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
+                  alt=""
+                />
+                <p class="title">{{ item.name }}</p>
+                <div class="dig">
+                  <o-icon> <icon-heart></icon-heart> </o-icon
+                  >{{ item.like_count }}
+                </div>
+                <div class="card-modal"></div>
+              </div>
+
+              <!-- TODO: -->
+              <!-- <div class="card-top">
                 <div class="description">
                   <p>{{ item.desc }}</p>
                 </div>
@@ -757,7 +828,7 @@ onUnmounted(() => {
                   >{{ item.like_count }}
                 </div>
                 <div class="card-modal"></div>
-              </div>
+              </div> -->
 
               <div class="card-bottom">
                 <div class="info">
@@ -1050,6 +1121,29 @@ $theme: #0d8dff;
         row-gap: 24px;
         margin-top: 40px;
         position: relative;
+        .pro-card {
+          position: relative;
+          .mark-tag {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            padding: 3px 8px;
+            background: linear-gradient(326deg, #fba727 0%, #ffe1b3 100%);
+            z-index: 10;
+            font-size: 12px;
+            color: #ffffff;
+          }
+          .mark-tag1 {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            padding: 3px 8px;
+            background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
+            z-index: 10;
+            font-size: 12px;
+            color: #ffffff;
+          }
+        }
         .pagination {
           display: flex;
           justify-content: center;

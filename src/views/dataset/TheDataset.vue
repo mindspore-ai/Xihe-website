@@ -91,14 +91,15 @@ const radioList = ref({});
 const keyWord = ref('');
 
 let query = reactive({
-  page_num: 1, //分页
-  count_per_page: 12, //每页数量
   name: null, //项目名
   tags: null, //标签
+  tag_kinds: null, //标签类型(应用分类)
+  level: null, //仓库级别
+  count_per_page: 12, //每页数量
+  page_num: 1, //分页
   sort_by: null, //排序规则
 });
 
-// query.search = route.query.search;
 const debounceSearch = debounce(getDataset, 500, {
   trailing: true,
 });
@@ -172,18 +173,19 @@ function conditionClick(index, index2) {
 //查询
 function goSearch(render) {
   let time = 0;
-  // let taskCate = [];
-  let tagList = [];
   query.page_num = 1;
+  let tagList = []; //标签
+  let tag_kinds = []; //标签类型
   render.forEach((item) => {
     time = 0;
     item.condition.forEach((value) => {
       if (value.isActive) {
         if (item.title.key === 0) {
-          tagList.push(value.kind);
-          if (tagList.length < 6) {
-            query.tags = tagList.join(',');
+          tag_kinds.push(value.kind);
+          if (tag_kinds.length < 6) {
+            query.tag_kinds = tag_kinds.join(',');
           } else {
+            console.log('value.kind: ', value.kind);
             ElMessage({
               message: '最多支持刷选5个标签 !',
               type: 'warning',
@@ -200,7 +202,7 @@ function goSearch(render) {
       // query[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
       if (item.title.key === 0) {
-        query.tags = null;
+        query.tag_kinds = null;
       }
     }
   });
@@ -302,7 +304,7 @@ function handleTagSearch(date) {
       query.tags = tagList.join(',');
     } else {
       ElMessage({
-        message: '最多支持5个标签刷选 !',
+        message: '最多支持刷选5个标签 !',
         type: 'warning',
       });
       return;

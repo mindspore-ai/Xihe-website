@@ -17,7 +17,13 @@ const comInfo = useCompetitionData().competitionData; //比赛详情
 const preliminaryData = ref([]); //初赛排行榜数据
 const finalData = ref([]); //决赛排行榜数据
 getRank({ id: comInfo.id, phase: 'preliminary' }).then((res) => {
-  preliminaryData.value = res.data;
+  if (res.status === 200) {
+    if (res.data.data) {
+      preliminaryData.value = res.data.data;
+    } else {
+      preliminaryData.value = [];
+    }
+  }
 });
 
 const tabs = ref();
@@ -27,7 +33,13 @@ function changeTab(index) {
     tabs.value[0].classList.remove('tabs-left');
     tabs.value[1].classList.add('tabs-right');
     getRank(params).then((res) => {
-      finalData.value = res.data;
+      if (res.status === 200) {
+        if (res.data.data) {
+          finalData.value = res.data.data;
+        } else {
+          finalData.value = [];
+        }
+      }
     });
   } else if (index === '0') {
     tabs.value[1].classList.remove('tabs-right');

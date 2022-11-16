@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUserLive } from '@/api/api-user';
@@ -41,17 +41,32 @@ const userInfo = computed(() => {
 const emit = defineEmits(['getlivecount', 'domChange']);
 
 // 获得动态页面数据
-getUserLive(userInfo.value.userName).then((res) => {
-  if (res.data) {
-    liveCount.value = res.data.length;
-    liveData.value = res.data;
-    if (liveCount.value > 6) {
-      emit('domChange', 76);
+function getLiveData() {
+  getUserLive(userInfo.value.userName).then((res) => {
+    if (res.data) {
+      liveCount.value = res.data.length;
+      liveData.value = res.data;
+      if (liveCount.value > 6) {
+        emit('domChange', 76);
+      }
+    } else {
+      liveData.value = [];
     }
-  } else {
-    liveData.value = [];
+  });
+}
+getLiveData();
+watch(
+  () => route,
+  () => {
+    if (route.name === 'userLives' && !route.hash) {
+      getLiveData();
+    }
+  },
+  {
+    deep: true,
+    // immediate: true,
   }
-});
+);
 
 function goDetail(item) {
   if (item.resource.type.indexOf('model') !== -1) {

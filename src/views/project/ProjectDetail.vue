@@ -362,6 +362,7 @@ function handleProjectLike() {
       // 点赞(收藏)
       getUserDig(params)
         .then((res) => {
+          console.log('res: ', res);
           if (res.status === 201) {
             getDetailData();
           }

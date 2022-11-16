@@ -317,19 +317,22 @@ async function confirmCreating(formEl) {
         env: form.env,
         hyperparameter: form.hyperparameter,
       };
-      createTrainProject(params, route.query.id).then((res) => {
-        // if (res.status === 200) {
-        ElMessage({
-          type: 'success',
-          message: '创建训练实例成功',
-          center: true,
-        });
-        setTimeout(() => {
-          router.push({
-            name: 'projectTrainList',
-          });
-        }, 500);
-        /*  } else {
+      createTrainProject(params, detailData.value.id)
+        .then((res) => {
+          console.log('res: ', res);
+          if (res.status === 201) {
+            ElMessage({
+              type: 'success',
+              message: '创建训练实例成功',
+              center: true,
+            });
+            setTimeout(() => {
+              router.push({
+                name: 'projectTrainList',
+              });
+            }, 500);
+          }
+          /*  } else {
           ElMessage({
             type: 'error',
             message: res.msg,
@@ -337,7 +340,15 @@ async function confirmCreating(formEl) {
             center: true,
           });
         } */
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+          ElMessage({
+            type: 'warning',
+            message: res.msg,
+            center: true,
+          });
+        });
     } else {
       return false;
     }

@@ -115,10 +115,12 @@ const modalName = ref('');
 const keyWord = ref('');
 
 let queryData = reactive({
-  name: null,
-  page_num: 1,
-  count_per_page: 10,
+  name: null, //项目名
   tags: null, //标签
+  tag_kinds: null, //标签类型(应用分类)
+  level: null, //仓库级别
+  count_per_page: 12, //每页数量
+  page_num: 1, //分页
   sort_by: null, //排序规则
 });
 
@@ -137,7 +139,7 @@ function backCondition() {
 
 // 多选-->处理器，文件格式，框架，训练数据集，其他;-->应用分类 ，协议单选
 function conditionClick(index, index2, detail) {
-  // console.log('一个大分类下的一级分类: ', detail);
+  console.log('一个大分类下的一级分类: ', detail);
   renderCondition.value[index].haveActive = true;
   if (renderCondition.value[index].title.text === '应用分类') {
     // console.log('关闭应用分类一级标签');
@@ -315,26 +317,27 @@ function handleTagSearch(date) {
 //查询
 function goSearch(render) {
   let time = 0;
-  let tagList = [];
   queryData.page_num = 1;
+  let tagList = []; //标签
+  let tag_kinds = []; //标签类型
   render.forEach((item) => {
     time = 0;
-    // console.log('分类下的一级标签: ', item.condition);
+    console.log('分类下的一级标签: ', item.condition);
     item.condition.forEach((value) => {
       // console.log('value: ', value);
       if (value.isActive) {
         // console.log('四种分类的key: ', item.title.key);
         if (item.title.key === 0) {
-          tagList.push(value.kind);
-          queryData.tags = tagList.join(',');
+          tag_kinds.push(value.kind);
+          queryData.tag_kinds = tag_kinds.join(',');
         }
       } else {
         time += 1;
         value.items.forEach((val) => {
           if (val.isActive) {
-            tagList.push(val.name);
-            if (tagList.length < 6) {
-              queryData.tags = tagList.join(',');
+            tag_kinds.push(val.name);
+            if (tag_kinds.length < 6) {
+              queryData.tag_kinds = tag_kinds.join(',');
             } else {
               ElMessage({
                 message: '最多支持刷选5个标签 !',
@@ -351,7 +354,7 @@ function goSearch(render) {
       // queryData[item.title.key] = null; // 所有都未选不传
       item.haveActive = false;
       if (item.title.key === 0) {
-        queryData.tags = null;
+        queryData.tag_kinds = null;
       }
     }
   });

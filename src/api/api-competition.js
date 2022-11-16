@@ -52,7 +52,7 @@ export function getAllCompetition(params) {
 export function getRank(params) {
   const url = `/server/competition/${params.id}/ranking/${params.phase}`;
   return request.get(url).then((res) => {
-    return res.data;
+    return res;
   });
 }
 /**

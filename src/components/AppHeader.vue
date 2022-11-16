@@ -352,7 +352,6 @@ function goProjectDetail(index, project) {
 function goUserDetail(index, userName) {
   // console.log('index, project: ', index, userName);
   const str = userName.replace(/<[^>]+>/g, '');
-  console.log('str: ', str);
   router.push({ path: `/${str}` });
   emptyValue();
 }

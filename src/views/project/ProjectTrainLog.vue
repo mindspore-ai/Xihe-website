@@ -195,6 +195,7 @@ socket.onmessage = function (event) {
         if (trainDetail.value.status === 'Completed') {
           handleGetLog();
           handleGetOutput();
+          isCusEvaluating.value = false;
           if (
             (trainDetail.value.enable_aim && trainDetail.value.aim_path) ||
             !trainDetail.value.enable_aim
@@ -205,26 +206,8 @@ socket.onmessage = function (event) {
           }
         } else {
           isEvaluating.value = true;
+          isCusEvaluating.value = true;
         }
-        // if (trainDetail.value.status === 'Completed') {
-        //   handleGetLog();
-        //   handleGetOutput();
-        // }
-
-        // if (
-        //   !trainDetail.value.enable_aim &&
-        //   trainDetail.value.status === 'Completed'
-        // ) {
-        //   isEvaluating.value = false;
-        // } else if (
-        //   trainDetail.value.enable_aim &&
-        //   trainDetail.value.aim_path &&
-        //   trainDetail.value.status === 'Completed'
-        // ) {
-        //   isEvaluating.value = false;
-        // } else {
-        //   isEvaluating.value = true;
-        // }
       }
     } catch (e) {
       console.error(e);

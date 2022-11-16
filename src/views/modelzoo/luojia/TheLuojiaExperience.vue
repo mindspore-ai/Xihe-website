@@ -16,7 +16,7 @@ import gif from '@/assets/gifs/loading.gif';
 
 import {
   handleLuoJiaInfer,
-  // handleLuoJiaHistory,
+  handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
 
@@ -168,21 +168,18 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  // ElMessage({
-  //   type: 'warning',
-  //   message: '开发中，敬请期待。',
-  // });
   dialogTableVisible.value = true;
   gridData.value = [];
   gridData.value.push(historyInfo.value);
-  // handleLuoJiaHistory().then((res) => {
-  //   console.log(res);
-  //   // if (res.status === 200) {
-  //   //   gridData.value = [];
-  //   //   historyInfo.value.create_at = res.create_time;
-  //   //   gridData.value.push(historyInfo.value);
-  //   // }
-  // });
+  handleLuoJiaHistory().then((res) => {
+    if (res.data) {
+      gridData.value = [];
+      historyInfo.value.create_at = res.data[0].created_at;
+      gridData.value.push(historyInfo.value);
+    } else {
+      gridData.value = [];
+    }
+  });
 }
 
 function handleDetailClick() {
@@ -253,7 +250,7 @@ onMounted(() => {
         <el-table-column property="name" label="任务类型" />
         <el-table-column property="origin" label="地图源数据" />
         <el-table-column property="status" label="状态" />
-        <!-- <el-table-column property="create_at" label="创建时间" width="220" /> -->
+        <el-table-column property="create_at" label="创建时间" width="220" />
         <el-table-column label="操作">
           <span class="detail" @click="handleDetailClick">查看详情</span>
         </el-table-column>

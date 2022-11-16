@@ -740,11 +740,7 @@ watch(
                     >{{ customContent }}</o-button
                   >
 
-                  <a
-                    v-if="isCusEvaluated"
-                    :href="`${evaluateUrl}`"
-                    onclick="return false"
-                  >
+                  <a :href="`${evaluateUrl}`" onclick="return false">
                     <o-button type="primary" @click="goAimPage"
                       >查看报告</o-button
                     >

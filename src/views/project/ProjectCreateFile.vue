@@ -342,12 +342,33 @@ async function confirmCreating(formEl) {
         } */
         })
         .catch((error) => {
-          console.log(error);
-          ElMessage({
-            type: 'warning',
-            message: res.msg,
-            center: true,
-          });
+          console.log(error.response);
+          console.log(error.response.data.msg);
+          if (error.response.data.msg === "can't find repo id") {
+            ElMessage({
+              type: 'warning',
+              message: '仓库不存在',
+              center: true,
+            });
+          } else if (error.response.data.msg === 'empty key') {
+            ElMessage({
+              type: 'warning',
+              message: '请填写引用参数',
+              center: true,
+            });
+          } else if (error.response.data.msg === 'invalid user name') {
+            ElMessage({
+              type: 'warning',
+              message: '请填写用户名',
+              center: true,
+            });
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: '请填写仓库名,且长度为3-50个字符',
+              center: true,
+            });
+          }
         });
     } else {
       return false;

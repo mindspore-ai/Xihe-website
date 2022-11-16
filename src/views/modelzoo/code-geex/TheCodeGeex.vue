@@ -72,7 +72,7 @@ watch(
             <div class="codegeex-head-right-top-title">CodeGeeX</div>
             <div class="codegeex-head-right-top-content">
               CodeGeeX是一个具有130亿参数的多编程语言代码生成预训练模型，采用华为MindSpore框架实现，在鹏城实验室“鹏城云脑II”上使用1536个国产昇腾910
-              AI处理器训练而成。CodeGeexX支持十多种主流编程语言的高精度代码生成、跨语言代码翻译等功能，同时开发自动编程插件，更好的辅助程序开发和相关研究。
+              AI处理器训练而成。CodeGeeX支持十多种主流编程语言的高精度代码生成、跨语言代码翻译等功能，同时开发自动编程插件，更好的辅助程序开发和相关研究。
             </div>
           </div>
 

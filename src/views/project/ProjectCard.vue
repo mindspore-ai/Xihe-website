@@ -456,7 +456,11 @@ function start2() {
     //   console.log('连接成功');
     // };
     socket.value.onmessage = function (event) {
-      console.log('111', JSON.parse(event.data));
+      try {
+        console.log('111', event.data);
+      } catch {
+        console.log(222);
+      }
       if (
         JSON.parse(event.data).data &&
         JSON.parse(event.data).data.access_url

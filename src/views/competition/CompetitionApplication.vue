@@ -43,7 +43,7 @@ const i18n = {
   description: '描述',
   save: '保存',
   agree: '已阅读并同意',
-  statement: '《昇思大模型体验平台隐私政策声明》',
+  statement: '《昇思大模型平台隐私政策声明》',
 };
 const query = reactive({
   name: '',

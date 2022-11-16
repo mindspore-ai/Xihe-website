@@ -12,24 +12,17 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 
 import protocol from '../../../config/protocol';
-import {
-  getModelData,
-  getTags,
-  modifyModel,
-  modifyTags,
-} from '@/api/api-model';
+import { getTags, modifyTags } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 import { goAuthorize } from '@/shared/login';
-import model from '@/routers/model';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
 
 const isDigged = ref(false);
-const digCount = ref(0);
 const router = useRouter();
 const route = useRoute();
 const headTags = ref([]);
@@ -39,25 +32,10 @@ const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
 
-let reopt = {
-  method: 'PUT',
-  url: null,
-  headers: null,
-};
-
 let isTagShow = ref(false);
 const tabPosition = ref('left');
 
 let renderList = ref([]);
-let queryDate = {
-  device_target: [],
-  libraries: [],
-  licenses: [],
-  tags: [],
-  task: [],
-  task_cate: [],
-  model_format: [],
-};
 
 let dialogList = {
   head: {
@@ -130,33 +108,9 @@ function getDetailData() {
         }
         fileData.setFileData(storeData);
         console.log(detailData.value);
-        // digCount.value = detailData.value.digg_count;
-        const {
-          //   licenses_list,
-          //   libraries_list,
-          //   task_list,
-          tags,
-          //   device_target_list,
-          //   model_format_list,
-        } = detailData.value;
+        const { tags } = detailData.value;
         isDigged.value = detailData.value.liked;
 
-        // modelTags.value = [
-        //   ...licenses_list,
-        //   ...task_list,
-        //   ...tags_list,
-        //   ...libraries_list,
-        //   ...device_target_list,
-        //   ...model_format_list,
-        // ];
-        // modelTags.value = [
-        //   ...licenses_list,
-        //   ...device_target_list,
-        //   ...model_format_list,
-        //   ...task_list,
-        //   ...tags_list,
-        //   ...libraries_list,
-        // ];
         modelTags.value = [];
         headTags.value = [];
         if (tags) {
@@ -170,14 +124,9 @@ function getDetailData() {
             if (!a.indexOf(false)) return false;
             else return true;
           });
-          // console.log(headTags);
         }
         preStorage.value = JSON.stringify(headTags.value);
 
-        // modelTags.value = modelTags.value.map((item) => {
-        //   return item;
-        // });
-        // headTags.value = [...modelTags.value];
         getTagList();
       })
       .catch((error) => {

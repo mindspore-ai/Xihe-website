@@ -206,6 +206,9 @@ function pathClick(index) {
 watch(
   () => codeString.value,
   (val) => {
+    if (typeof val === 'number') {
+      val = val.toString();
+    }
     result.value = mkit.render(val);
   }
 );

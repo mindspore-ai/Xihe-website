@@ -24,6 +24,7 @@ import {
   deleteFile,
   uploadFileGitlab,
   downloadFile,
+  deleteFolder,
 } from '@/api/api-gitlab';
 
 // import { changeByte } from '@/shared/utils';
@@ -251,7 +252,19 @@ function deleteFolderClick(folderName) {
   }
   // 删除文件夹
   if (isFolder.value) {
-    return false;
+    deleteFolder({
+      type: prop.moduleName,
+      name: routerParams.value.name,
+      path: path,
+      id: repoDetailData.value.id,
+    }).then(() => {
+      isHandleDel.value = true;
+      getFilesByPath();
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      });
+    });
   } else {
     deleteFile({
       type: prop.moduleName,
@@ -396,7 +409,6 @@ watch(
             <td class="tree-table-item-from" :title="item.commit_title_html">
               <div class="inner-box">
                 <div
-                  v-if="!item.is_dir"
                   class="delete-folder"
                   :class="{ 'is-visitor': !repoDetailData.is_owner }"
                   @click="toggleDelDlg(true, item.name, item.is_dir)"

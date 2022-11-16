@@ -156,7 +156,7 @@ function confirmPrivate() {
   modifyModel(query, detailData.owner, detailData.id)
     .then((res) => {
       // if (res.status === 200) {
-      description.value = res.data.desc;
+      detailData.desc = res.data.desc;
       ElMessage({
         type: 'success',
         message: '修改成功',

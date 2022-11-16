@@ -201,8 +201,10 @@ socket.onmessage = function (event) {
             !trainDetail.value.enable_aim
           ) {
             isEvaluating.value = false;
+            isCusEvaluated.value = true;
           } else {
             isEvaluating.value = true;
+            isCusEvaluated.value = false;
           }
         } else {
           isEvaluating.value = true;
@@ -230,9 +232,13 @@ function setEvaluateWebscoket(id, type) {
   ws.onmessage = function (event) {
     // 推理出url 断开websocket
     if (type === 'standard') {
+      // 自动评估
       try {
         if (JSON.parse(event.data).data.access_url) {
           btnContent.value = '查看报告';
+          resetContent.value = '重新评估';
+
+          resetEvaluting.value = false;
           isEvaluating.value = false;
           isEvaluated.value = true;
 
@@ -241,6 +247,9 @@ function setEvaluateWebscoket(id, type) {
         } else if (JSON.parse(event.data).data.error) {
           btnContent.value = '开始评估';
           isEvaluating.value = false;
+
+          resetContent.value = '重新评估';
+          resetEvaluting.value = false;
           ElMessage({
             type: 'error',
             message: JSON.parse(event.data).data.error,
@@ -250,7 +259,6 @@ function setEvaluateWebscoket(id, type) {
       } catch (e) {
         console.error(e);
       }
-      // 自动评估
     } else {
       try {
         // 自定义评估
@@ -278,6 +286,50 @@ function setEvaluateWebscoket(id, type) {
       }
     }
   };
+}
+const resetContent = ref('重新评估');
+const resetEvaluting = ref(false);
+// 重新评估
+function resetEvaluate() {
+  requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
+  requestData.value.batch_size_scope = query.batch_size_scope.split(',');
+  requestData.value.momentum_scope = query.momentum_scope.split(',');
+
+  ruleRef.value.validate((valid) => {
+    if (valid) {
+      resetEvaluting.value = true;
+      resetContent.value = '评估中...';
+      autoEvaluate(
+        requestData.value,
+        detailData.value.id,
+        route.params.trainId
+      ).then((res) => {
+        if (res.status === 201) {
+          if (res.data.data.error) {
+            resetEvaluting.value = false;
+            resetContent.value = '重新评估';
+            ElMessage({
+              type: 'error',
+              message: res.data.data.error,
+            });
+          } else {
+            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard');
+          }
+        }
+
+        requestData.value = {
+          learning_rate_scope: [],
+          batch_size_scope: [],
+          momentum_scope: [],
+        };
+      });
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '请按要求输入信息',
+      });
+    }
+  });
 }
 
 // 自动评估
@@ -643,7 +695,19 @@ watch(
                     >{{ btnContent }}</o-button
                   >
 
-                  <o-button v-if="isEvaluated" type="primary" @click="goToPage"
+                  <o-button
+                    v-if="isEvaluated"
+                    :disabled="resetEvaluting"
+                    type="primary"
+                    @click="resetEvaluate"
+                    >{{ resetContent }}</o-button
+                  >
+
+                  <o-button
+                    v-if="isEvaluated"
+                    :disabled="resetEvaluting"
+                    type="primary"
+                    @click="goToPage"
                     >查看报告</o-button
                   >
                 </div>

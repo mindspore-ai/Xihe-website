@@ -6,11 +6,11 @@ import useClipboard from 'vue-clipboard3';
 import OButton from '@/components/OButton.vue';
 import FileTree from './FileTree.vue';
 
-// import IconDownload from '~icons/app/download';
+import IconDownload from '~icons/app/download';
 import IconPlus from '~icons/app/plus';
 import IconCopy from '~icons/app/copy-nickname';
 
-// import { gitlabDownloadAll } from '@/api/api-gitlab';
+import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 
@@ -68,7 +68,7 @@ const i18n = {
       },
     },
   ],
-  downloadAll: '克隆',
+  downloadAll: '克隆/下载',
   downloadZip: '下载ZIP',
   addNew: '添加',
 };
@@ -98,11 +98,22 @@ function pathClick(index) {
     },
   });
 }
-// function downloadAll() {
-//   gitlabDownloadAll(repoDetailData.value.repo_id).then((res) => {
-//     console.log(res);
-//   });
-// }
+function downloadAll() {
+  gitlabDownloadAll({
+    type: prop.moduleName,
+    name: route.params.name,
+    user: route.params.user,
+  }).then((res) => {
+    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    const href = window.URL.createObjectURL(res); // 创建下载的链接
+    downloadElement.href = href;
+    downloadElement.download = `${route.params.name}.zip`; // 下载后文件名
+    document.body.appendChild(downloadElement);
+    downloadElement.click(); // 点击下载
+    document.body.removeChild(downloadElement); // 下载完成移除元素
+    window.URL.revokeObjectURL(href);
+  });
+}
 </script>
 <template>
   <div class="model-file">
@@ -144,14 +155,14 @@ function pathClick(index) {
                   </template>
                 </el-input>
               </div>
-              <!-- <div class="download-zip">
+              <div class="download-zip">
                 <o-button size="small" class="download-all" @click="downloadAll"
                   ><a>{{ i18n.downloadZip }}</a>
                   <template #suffix>
                     <o-icon><icon-download></icon-download></o-icon>
                   </template>
                 </o-button>
-              </div> -->
+              </div>
             </div>
           </el-popover>
         </div>
@@ -219,9 +230,9 @@ $theme: #0d8dff;
           flex-direction: column;
           align-items: center;
           .clone-repo {
-            // margin-bottom: 16px;
+            padding-bottom: 16px;
             width: 100%;
-            // border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
             h5 {
               font-weight: 500;
               color: #000;
@@ -245,6 +256,7 @@ $theme: #0d8dff;
             }
           }
           .download-zip {
+            margin-top: 16px;
             .o-button {
               padding: 4px 10px !important;
               min-width: 0;

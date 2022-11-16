@@ -166,18 +166,50 @@ export async function getGitlabFile(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err?.message,
       });
       throw new Error(err);
     });
 }
 // 下载全部
-// export async function gitlabDownloadAll(id) {
-//   const url = `/repo/projects/${id}/repository/archive.zip`;
-//   return request.get(url, await getGitlabConfig()).then((res) => {
-//     return res.data;
-//   });
-// }
+export async function gitlabDownloadAll(params) {
+  const url = `/api/v1/repo/${params.type}/${params.user}/${params.name}`;
+  let config = await getHeaderConfig();
+  config['responseType'] = 'blob';
+  config['timeout'] = 60000;
+  return request
+    .get(url, config)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      ElMessage({
+        type: 'error',
+        message: err.message,
+      });
+      throw new Error(err);
+    });
+}
+
+// 删除文件夹
+
+export async function deleteFolder(params) {
+  const url = `/api/v1/repo/${params.type}/${
+    params.name
+  }/dir/${encodeURIComponent(params.path)}`;
+  return request
+    .delete(url, await getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      ElMessage({
+        type: 'error',
+        message: err.message,
+      });
+      throw new Error(err);
+    });
+}
 
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {

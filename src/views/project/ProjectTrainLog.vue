@@ -202,6 +202,7 @@ socket.onmessage = function (event) {
           ) {
             isEvaluating.value = false;
             isCusEvaluated.value = true;
+            evaluateUrl.value = res.data.data.access_url;
           } else {
             isEvaluating.value = true;
             isCusEvaluated.value = false;
@@ -373,11 +374,11 @@ function saveSetting() {
           });
         }
 
-        requestData.value = {
-          learning_rate_scope: [],
-          batch_size_scope: [],
-          momentum_scope: [],
-        };
+        // requestData.value = {
+        //   learning_rate_scope: [],
+        //   batch_size_scope: [],
+        //   momentum_scope: [],
+        // };
       });
     } else {
       ElMessage({

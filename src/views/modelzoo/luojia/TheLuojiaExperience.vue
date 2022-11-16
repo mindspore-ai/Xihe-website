@@ -16,7 +16,7 @@ import gif from '@/assets/gifs/loading.gif';
 
 import {
   handleLuoJiaInfer,
-  // handleLuoJiaHistory,
+  handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
 
@@ -111,7 +111,6 @@ function handleInferClick() {
       if (res.status === 201 && res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
-          console.log(res);
           isShow.value = false;
           if (res.status === 201 && res.data.data) {
             const aurl = res.data.data.answer;
@@ -169,20 +168,18 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  // ElMessage({
-  //   type: 'warning',
-  //   message: '开发中，敬请期待。',
-  // });
   dialogTableVisible.value = true;
   gridData.value = [];
   gridData.value.push(historyInfo.value);
-  // handleLuoJiaHistory().then((res) => {
-  //   if (res.status === 200) {
-  //     gridData.value = [];
-  //     historyInfo.value.create_at = res.create_time;
-  //     gridData.value.push(historyInfo.value);
-  //   }
-  // });
+  handleLuoJiaHistory().then((res) => {
+    if (res.data) {
+      gridData.value = [];
+      historyInfo.value.create_at = res.data[0].created_at;
+      gridData.value.push(historyInfo.value);
+    } else {
+      gridData.value = [];
+    }
+  });
 }
 
 function handleDetailClick() {
@@ -436,6 +433,9 @@ onMounted(() => {
     display: none;
   }
   :deep(.cesium-viewer-fullscreenContainer) {
+    display: none !important;
+  }
+  :deep(.cesium-infoBox) {
     display: none !important;
   }
 }

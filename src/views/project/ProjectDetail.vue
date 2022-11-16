@@ -187,7 +187,7 @@ const rules = reactive({
       message: '不能连续两个及以上中划线',
       trigger: 'blur',
     },
-    { validator: checkName, trigger: 'blur' },
+    { validator: checkName, trigger: 'change' },
   ],
   describe: [
     // { required: true, message: '必填项', trigger: 'blur' },
@@ -705,14 +705,21 @@ watch(
 // function goTrain(path) {
 //   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
 // }
+let time = null;
 function checkName(rule, value, callback) {
-  checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
-    if (res.data.can_apply) {
-      callback();
-    } else {
-      callback(new Error('该名称已存在'));
-    }
-  });
+  if (time !== null) {
+    clearTimeout(time);
+  }
+  time = setTimeout(() => {
+    console.log(111);
+    checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
+      if (res.data.can_apply) {
+        callback();
+      } else {
+        callback(new Error('该名称已存在'));
+      }
+    });
+  }, 500);
 }
 </script>
 

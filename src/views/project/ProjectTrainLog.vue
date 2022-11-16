@@ -700,6 +700,7 @@ watch(
                     v-if="isEvaluated"
                     :disabled="resetEvaluting"
                     type="primary"
+                    style="margin-right: 8px"
                     @click="resetEvaluate"
                     >{{ resetContent }}</o-button
                   >

@@ -442,7 +442,6 @@ function goAimPage() {
 
 // 跳到评估页面
 function goToPage() {
-  // 点击在新页签打开
   let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/projectAim`,
     query: {

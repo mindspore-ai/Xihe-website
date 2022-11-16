@@ -202,7 +202,6 @@ socket.onmessage = function (event) {
           ) {
             isEvaluating.value = false;
             isCusEvaluated.value = true;
-            evaluateUrl.value = trainDetail.value.aim_path;
           } else {
             isEvaluating.value = true;
             isCusEvaluated.value = false;
@@ -224,7 +223,7 @@ function reloadPage() {
 }
 
 // 评估
-function setEvaluateWebscoket(id, type) {
+function setEvaluateWebscoket(id, type, isReset) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
     [getHeaderConfig().headers['private-token']]
@@ -234,31 +233,39 @@ function setEvaluateWebscoket(id, type) {
     // 推理出url 断开websocket
     if (type === 'standard') {
       // 自动评估
-      try {
-        if (JSON.parse(event.data).data.access_url) {
-          btnContent.value = '查看报告';
-          resetContent.value = '重新评估';
+      if (!isReset) {
+        try {
+          if (JSON.parse(event.data).data.access_url) {
+            btnContent.value = '查看报告';
+            resetContent.value = '重新评估';
 
-          resetEvaluting.value = false;
-          isEvaluating.value = false;
-          isEvaluated.value = true;
+            resetEvaluting.value = false;
+            isEvaluating.value = false;
+            isEvaluated.value = true;
 
-          evaluateUrl.value = JSON.parse(event.data).data.access_url;
-          ws.close();
-        } else if (JSON.parse(event.data).data.error) {
-          btnContent.value = '开始评估';
-          isEvaluating.value = false;
+            evaluateUrl.value = JSON.parse(event.data).data.access_url;
+            ws.close();
+          } else if (JSON.parse(event.data).data.error) {
+            btnContent.value = '开始评估';
+            isEvaluating.value = false;
 
-          resetContent.value = '重新评估';
-          resetEvaluting.value = false;
-          ElMessage({
-            type: 'error',
-            message: JSON.parse(event.data).data.error,
-          });
-          ws.close();
+            resetContent.value = '重新评估';
+            resetEvaluting.value = false;
+            ElMessage({
+              type: 'error',
+              message: JSON.parse(event.data).data.error,
+            });
+            ws.close();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
+        try {
+          console.log(JSON.parse(event.data));
+        } catch (e) {
+          console.error(e);
+        }
       }
     } else {
       try {
@@ -731,10 +738,7 @@ watch(
                   >
 
                   <a :href="`${evaluateUrl}`" onclick="return false">
-                    <o-button
-                      v-if="isCusEvaluated"
-                      type="primary"
-                      @click="goAimPage"
+                    <o-button type="primary" @click="goAimPage"
                       >查看报告</o-button
                     >
                   </a>

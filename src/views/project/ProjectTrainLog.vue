@@ -223,7 +223,7 @@ function reloadPage() {
 }
 
 // 评估
-function setEvaluateWebscoket(id, type, isReset) {
+function setEvaluateWebscoket(id, type) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
     [getHeaderConfig().headers['private-token']]
@@ -233,40 +233,40 @@ function setEvaluateWebscoket(id, type, isReset) {
     // 推理出url 断开websocket
     if (type === 'standard') {
       // 自动评估
-      if (!isReset) {
-        try {
-          if (JSON.parse(event.data).data.access_url) {
-            btnContent.value = '查看报告';
-            resetContent.value = '重新评估';
+      // if (!isReset) {
+      try {
+        if (JSON.parse(event.data).data.access_url) {
+          btnContent.value = '查看报告';
+          // resetContent.value = '重新评估';
 
-            resetEvaluting.value = false;
-            isEvaluating.value = false;
-            isEvaluated.value = true;
+          // resetEvaluting.value = false;
+          isEvaluating.value = false;
+          isEvaluated.value = true;
 
-            evaluateUrl.value = JSON.parse(event.data).data.access_url;
-            ws.close();
-          } else if (JSON.parse(event.data).data.error) {
-            btnContent.value = '开始评估';
-            isEvaluating.value = false;
+          evaluateUrl.value = JSON.parse(event.data).data.access_url;
+          ws.close();
+        } else if (JSON.parse(event.data).data.error) {
+          btnContent.value = '开始评估';
+          isEvaluating.value = false;
 
-            resetContent.value = '重新评估';
-            resetEvaluting.value = false;
-            ElMessage({
-              type: 'error',
-              message: JSON.parse(event.data).data.error,
-            });
-            ws.close();
-          }
-        } catch (e) {
-          console.error(e);
+          // resetContent.value = '重新评估';
+          // resetEvaluting.value = false;
+          ElMessage({
+            type: 'error',
+            message: JSON.parse(event.data).data.error,
+          });
+          ws.close();
         }
-      } else {
-        try {
-          console.log(JSON.parse(event.data));
-        } catch (e) {
-          console.error(e);
-        }
+      } catch (e) {
+        console.error(e);
       }
+      // } else {
+      //   try {
+      //     console.log(JSON.parse(event.data));
+      //   } catch (e) {
+      //     console.error(e);
+      //   }
+      // }
     } else {
       try {
         // 自定义评估
@@ -295,50 +295,50 @@ function setEvaluateWebscoket(id, type, isReset) {
     }
   };
 }
-const resetContent = ref('重新评估');
-const resetEvaluting = ref(false);
+// const resetContent = ref('重新评估');
+// const resetEvaluting = ref(false);
 // 重新评估
-function resetEvaluate() {
-  requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
-  requestData.value.batch_size_scope = query.batch_size_scope.split(',');
-  requestData.value.momentum_scope = query.momentum_scope.split(',');
+// function resetEvaluate() {
+//   requestData.value.learning_rate_scope = query.learning_rate_scope.split(',');
+//   requestData.value.batch_size_scope = query.batch_size_scope.split(',');
+//   requestData.value.momentum_scope = query.momentum_scope.split(',');
 
-  ruleRef.value.validate((valid) => {
-    if (valid) {
-      resetEvaluting.value = true;
-      resetContent.value = '评估中...';
-      autoEvaluate(
-        requestData.value,
-        detailData.value.id,
-        route.params.trainId
-      ).then((res) => {
-        if (res.status === 201) {
-          if (res.data.data.error) {
-            resetEvaluting.value = false;
-            resetContent.value = '重新评估';
-            ElMessage({
-              type: 'error',
-              message: res.data.data.error,
-            });
-          } else {
-            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard', true);
-          }
-        }
+//   ruleRef.value.validate((valid) => {
+//     if (valid) {
+//       resetEvaluting.value = true;
+//       resetContent.value = '评估中...';
+//       autoEvaluate(
+//         requestData.value,
+//         detailData.value.id,
+//         route.params.trainId
+//       ).then((res) => {
+//         if (res.status === 201) {
+//           if (res.data.data.error) {
+//             resetEvaluting.value = false;
+//             resetContent.value = '重新评估';
+//             ElMessage({
+//               type: 'error',
+//               message: res.data.data.error,
+//             });
+//           } else {
+//             setEvaluateWebscoket(res.data.data.evaluate_id, 'standard', true);
+//           }
+//         }
 
-        requestData.value = {
-          learning_rate_scope: [],
-          batch_size_scope: [],
-          momentum_scope: [],
-        };
-      });
-    } else {
-      ElMessage({
-        type: 'error',
-        message: '请按要求输入信息',
-      });
-    }
-  });
-}
+//         requestData.value = {
+//           learning_rate_scope: [],
+//           batch_size_scope: [],
+//           momentum_scope: [],
+//         };
+//       });
+//     } else {
+//       ElMessage({
+//         type: 'error',
+//         message: '请按要求输入信息',
+//       });
+//     }
+//   });
+// }
 
 // 自动评估
 function saveSetting() {
@@ -703,20 +703,23 @@ watch(
                     >{{ btnContent }}</o-button
                   >
 
-                  <o-button
+                  <!-- <o-button
                     v-if="isEvaluated"
                     :disabled="resetEvaluting"
                     type="primary"
                     style="margin-right: 8px"
                     @click="resetEvaluate"
                     >{{ resetContent }}</o-button
-                  >
+                  > -->
 
-                  <o-button
+                  <!-- <o-button
                     v-if="isEvaluated"
                     :disabled="resetEvaluting"
                     type="primary"
                     @click="goToPage"
+                    >查看报告</o-button
+                  > -->
+                  <o-button v-if="isEvaluated" type="primary" @click="goToPage"
                     >查看报告</o-button
                   >
                 </div>

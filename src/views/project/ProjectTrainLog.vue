@@ -321,7 +321,7 @@ function resetEvaluate() {
               message: res.data.data.error,
             });
           } else {
-            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard');
+            setEvaluateWebscoket(res.data.data.evaluate_id, 'standard', true);
           }
         }
 

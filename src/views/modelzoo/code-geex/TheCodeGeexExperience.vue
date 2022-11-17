@@ -113,15 +113,13 @@ function hanleGenerateCode() {
     isDisabled.value = true;
     handleGenerateCode({
       content: tabsList.value[activeIndex.value].code,
-      // result_num: 1,
       lang: tabsList.value[activeIndex.value].name,
     }).then((res) => {
       if (res.status === 201 && res.data.data) {
-        let bool = res.data.data.answer.indexOf('Code generation finished');
-        if (bool !== -1) {
+        if (res.data.data.answer === '') {
           tabsList.value[activeIndex.value].code = endedContent.value =
             tabsList.value[activeIndex.value].code +
-            res.data.data.answer.substring(2);
+            '\n// Code generation finished, modify code to continue the generation.';
 
           instance.dispose();
           init(tabsList.value[activeIndex.value]);
@@ -133,6 +131,23 @@ function hanleGenerateCode() {
           instance.dispose();
           init(tabsList.value[activeIndex.value]);
         }
+
+        // let bool = res.data.data.answer.indexOf('Code generation finished');
+        // if (bool !== -1) {
+        //   tabsList.value[activeIndex.value].code = endedContent.value =
+        //     tabsList.value[activeIndex.value].code +
+        //     res.data.data.answer.substring(2);
+
+        //   instance.dispose();
+        //   init(tabsList.value[activeIndex.value]);
+        // } else {
+        //   isDisabled.value = false;
+        //   tabsList.value[activeIndex.value].code =
+        //     tabsList.value[activeIndex.value].code + res.data.data.answer;
+
+        //   instance.dispose();
+        //   init(tabsList.value[activeIndex.value]);
+        // }
       } else {
         ElMessage({
           type: 'error',

@@ -131,23 +131,6 @@ function hanleGenerateCode() {
           instance.dispose();
           init(tabsList.value[activeIndex.value]);
         }
-
-        // let bool = res.data.data.answer.indexOf('Code generation finished');
-        // if (bool !== -1) {
-        //   tabsList.value[activeIndex.value].code = endedContent.value =
-        //     tabsList.value[activeIndex.value].code +
-        //     res.data.data.answer.substring(2);
-
-        //   instance.dispose();
-        //   init(tabsList.value[activeIndex.value]);
-        // } else {
-        //   isDisabled.value = false;
-        //   tabsList.value[activeIndex.value].code =
-        //     tabsList.value[activeIndex.value].code + res.data.data.answer;
-
-        //   instance.dispose();
-        //   init(tabsList.value[activeIndex.value]);
-        // }
       } else {
         ElMessage({
           type: 'error',

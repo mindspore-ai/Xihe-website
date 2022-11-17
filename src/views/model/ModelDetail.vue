@@ -107,7 +107,7 @@ function getDetailData() {
           storeData['is_empty'] = detailData.value.is_empty;
         }
         fileData.setFileData(storeData);
-        console.log(detailData.value);
+        // console.log(detailData.value);
         const { tags } = detailData.value;
         isDigged.value = detailData.value.liked;
 
@@ -364,6 +364,7 @@ function handleModelLike() {
   let params = {
     name: detailData.value.name,
     owner: detailData.value.owner,
+    resource_type: 'model',
   };
   if (!userInfoStore.id) {
     // 如未登录

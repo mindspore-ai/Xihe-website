@@ -353,6 +353,7 @@ function handleProjectLike() {
   let params = {
     name: detailData.value.name,
     owner: detailData.value.owner,
+    resource_type: 'project',
   };
   if (!userInfoStore.id) {
     // 如未登录

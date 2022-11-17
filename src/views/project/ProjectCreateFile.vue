@@ -347,7 +347,7 @@ async function confirmCreating(formEl) {
           if (error.response.data.msg === "can't find repo id") {
             ElMessage({
               type: 'warning',
-              message: '仓库不存在',
+              message: '用户名和仓库不对应',
               center: true,
             });
           } else if (error.response.data.msg === 'empty key') {

@@ -83,6 +83,7 @@ watch(
 // 头部点击选择目录
 function pathClick(item, index) {
   if (item) {
+    console.log('item: ', item, index);
     let arr = headContents.value.slice(0, index + 1);
     // let str = arr.join('/') + '/';
     let str = arr.join('/');
@@ -92,7 +93,7 @@ function pathClick(item, index) {
     // getDetailData(str);
   } else {
     // 返回根目录
-    // getDetailData('');、
+    // getDetailData('');
     dirPath.value = '';
     headContents.value = [];
   }
@@ -121,7 +122,7 @@ function goBlob(item) {
       headContents.value.push(lastPath);
       console.log('headContents.value: ', headContents.value);
 
-      // 
+      //
     }
 
     // 取头部数组headContents的最后一位
@@ -150,7 +151,8 @@ function goBlob(item) {
 function handleFile(item) {
   console.log('dirPath值: ', dirPath.value);
 
-  emit('handle', dirPath.value + item.name);
+  emit('handle', item.name);
+  // emit('handle', dirPath.value + item.name);
 }
 </script>
 

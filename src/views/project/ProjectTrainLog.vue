@@ -165,7 +165,7 @@ function handleGetOutput() {
     if (res.status === 202 && res.data.data) {
       outputUrl.value = res.data.data.log_url;
 
-      outputName.value = 'tar.gz';
+      outputName.value = 'output.tar.gz';
     } else {
       outputName.value = '';
     }
@@ -659,7 +659,11 @@ watch(
             <div v-if="isAim">
               <div class="have-aim">
                 <p>
-                  请确保是否支持适配自定义评估代码，运行失败详情请参考添加评估代码
+                  当前为自定义评估，若运行失败请参考<a
+                    href="https://xihe-docs.mindspore.cn/zh/tutorial/evaluation/"
+                    target="_blank"
+                    >添加自定义评估代码</a
+                  >
                 </p>
                 <div class="info-btn">
                   <o-button
@@ -792,6 +796,9 @@ watch(
           p {
             color: #999;
             font-size: 14px;
+            a {
+              color: #0d8dff;
+            }
           }
           .o-button {
             align-self: flex-end;

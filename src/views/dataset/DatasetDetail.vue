@@ -268,6 +268,7 @@ function handleDatasetLike() {
   let params = {
     name: detailData.value.name,
     owner: detailData.value.owner,
+    resource_type: 'dataset',
   };
   if (!userInfoStore.id) {
     // 如未登录

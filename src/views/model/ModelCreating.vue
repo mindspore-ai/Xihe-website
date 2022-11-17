@@ -96,7 +96,7 @@ function create(formEl) {
   });
 }
 function checkName(rule, value, callback) {
-  checkNames({ name: value, owner: userInfo.userName }).then(() => {
+  checkNames({ name: value, owner: userInfo.userName }).then((res) => {
     if (res.data.can_apply) {
       callback();
     } else {

@@ -457,7 +457,7 @@ function start2() {
     // };
     socket.value.onmessage = function (event) {
       try {
-        console.log('111', event.data);
+        console.log('111', event.data.data);
       } catch {
         console.log(222);
       }

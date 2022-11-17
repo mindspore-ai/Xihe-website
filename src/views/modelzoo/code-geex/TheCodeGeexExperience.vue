@@ -112,25 +112,21 @@ function hanleGenerateCode() {
     content: tabsList.value[activeIndex.value].code,
     language: tabsList.value[activeIndex.value].name,
   }).then((res) => {
-    if (res.status === 200 && res.data) {
+    if (res.status === 200) {
+      if (res.data.finish === 'true') {
+        tabsList.value[activeIndex.value].code = endedContent.value =
+          tabsList.value[activeIndex.value].code + res.data.result;
+        instance.dispose();
+        init(tabsList.value[activeIndex.value]);
+      } else {
+        isDisabled.value = false;
+        tabsList.value[activeIndex.value].code =
+          tabsList.value[activeIndex.value].code + res.data.result;
+        instance.dispose();
+        init(tabsList.value[activeIndex.value]);
+      }
+    } else if (res.data.finish === 'false') {
       isDisabled.value = false;
-
-      tabsList.value[activeIndex.value].code =
-        tabsList.value[activeIndex.value].code + res.data;
-
-      instance.dispose();
-
-      init(tabsList.value[activeIndex.value]);
-    } else if (res.status === -2) {
-      tabsList.value[activeIndex.value].code = endedContent.value =
-        tabsList.value[activeIndex.value].code + res.msg;
-
-      instance.dispose();
-
-      init(tabsList.value[activeIndex.value]);
-    } else if (res.status === -1) {
-      isDisabled.value = false;
-
       ElMessage({
         type: 'error',
         message: res.msg,

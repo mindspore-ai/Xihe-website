@@ -107,7 +107,6 @@ function getDetailData() {
           storeData['is_empty'] = detailData.value.is_empty;
         }
         fileData.setFileData(storeData);
-        // console.log(detailData.value);
         const { tags } = detailData.value;
         isDigged.value = detailData.value.liked;
 

@@ -111,34 +111,31 @@ function hanleGenerateCode() {
     goAuthorize();
   } else {
     isDisabled.value = true;
-    handleGenerateCode({
-      content: tabsList.value[activeIndex.value].code,
-      lang: tabsList.value[activeIndex.value].name,
-    }).then((res) => {
-      if (res.status === 201 && res.data.data) {
-        if (res.data.data.answer === '') {
-          tabsList.value[activeIndex.value].code = endedContent.value =
-            tabsList.value[activeIndex.value].code +
-            '\n// Code generation finished, modify code to continue the generation.';
+    try {
+      handleGenerateCode({
+        content: tabsList.value[activeIndex.value].code,
+        lang: tabsList.value[activeIndex.value].name,
+      }).then((res) => {
+        if (res.status === 201) {
+          if (res.data.data.finish === 'false') {
+            isDisabled.value = false;
+            tabsList.value[activeIndex.value].code =
+              tabsList.value[activeIndex.value].code + res.data.data.result;
 
-          instance.dispose();
-          init(tabsList.value[activeIndex.value]);
-        } else {
-          isDisabled.value = false;
-          tabsList.value[activeIndex.value].code =
-            tabsList.value[activeIndex.value].code + res.data.data.answer;
+            instance.dispose();
+            init(tabsList.value[activeIndex.value]);
+          } else if (res.data.data.finish === 'true') {
+            tabsList.value[activeIndex.value].code = endedContent.value =
+              tabsList.value[activeIndex.value].code + res.data.data.result;
 
-          instance.dispose();
-          init(tabsList.value[activeIndex.value]);
+            instance.dispose();
+            init(tabsList.value[activeIndex.value]);
+          }
         }
-      } else {
-        ElMessage({
-          type: 'error',
-          message: res,
-        });
-        isDisabled.value = false;
-      }
-    });
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 

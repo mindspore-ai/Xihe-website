@@ -14,9 +14,7 @@ const activeNavItem = ref('');
 const storeTeamId = computed(() => {
   return useCompetitionData().teamId;
 });
-const comInfo = computed(() => {
-  return useCompetitionData().competitionData;
-});
+const comInfo = useCompetitionData().competitionData;
 
 watch(
   () => {
@@ -61,7 +59,7 @@ const navItems = reactive([
   {
     id: 'discussion',
     label: '讨论',
-    href: comInfo.value.discuss_link,
+    href: comInfo.forum,
     windowOpen: true,
     isIndividual: true,
   },

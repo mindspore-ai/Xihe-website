@@ -11,6 +11,7 @@ import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
 const userComData = useCompetitionData().competitionData;
+console.log('userComData: ', userComData);
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
 }); */
@@ -34,7 +35,7 @@ getGuide(userComData.dataset_doc)
     <div class="header">
       <!-- <div></div> -->
       <o-button
-        v-if="!userComData.is_competitor"
+        v-if="userComData.is_competitor"
         size="small"
         @click="downloadDataset(userComData.dataset_url)"
         >下载数据集

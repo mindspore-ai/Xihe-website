@@ -28,7 +28,6 @@ const isAuthentic = computed(() => {
 });
 const route = useRoute();
 const router = useRouter();
-// console.log('router: ', route);
 const tips = ref(false); //控制创建训练弹窗
 const queryRef = ref(null);
 const detailData = ref([]);
@@ -444,6 +443,14 @@ const rules = reactive({
     },
     { validator: checkBootfile, trigger: 'blur' },
   ],
+  desc: [
+    {
+      pattern: /^[\u4e00-\u9fa5-_，,。 .a-zA-Z0-9]+$/,
+      message:
+        '仅支持中英文、数字，且允许字符为：下划线_、中划线-、空格 、逗号，、句号。',
+      trigger: 'blur',
+    },
+  ],
 });
 
 // 添加输入模型TODO:id值
@@ -495,13 +502,14 @@ function deleteEnvironment(item) {
 
 // 子组件点击
 function handleClick(item) {
-  console.log('点击子组件传递的值: ', item);
+  // console.log('点击子组件传递的值: ', item);
   if (option.value === 'directory') {
-    codeDir.value = item.join('/') + '/';
-    console.log('代码目录: ', codeDir.value);
+    codeDir.value = item;
+    // console.log('代码目录: ', codeDir.value);
   } else {
+    // console.log('点击子组件传递的值: ', item);
     bootFile.value = item;
-    console.log('启动文件: ', bootFile.value);
+    // console.log('启动文件: ', bootFile.value);
     showbtn.value = true;
   }
 }
@@ -513,6 +521,7 @@ function confirmSelect(type) {
     form.code_dir = codeDir.value;
     codeDirInt.value.focus();
   } else {
+    showbtn.value = false;
     form.boot_file = bootFile.value;
     bootFileInt.value.focus();
   }
@@ -661,7 +670,7 @@ function selectFile(item) {
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <el-form-item label="描述">
+                  <el-form-item prop="desc" label="描述">
                     <el-input
                       v-model="form.desc"
                       style="height: 98px"
@@ -698,7 +707,6 @@ function selectFile(item) {
                       </div>
                     </el-popover>
                   </div>
-                  <!-- prop="model" -->
                   <el-form-item class="model" label="输入模型">
                     <div
                       v-for="item in modelList"
@@ -798,18 +806,6 @@ function selectFile(item) {
                       <div>
                         在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
                         <br />
-                        <!-- 格式为：
-                        <div style="color: red">
-                          [{ <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                          &lt;解析参数对应的值1&gt;, <br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;"value":&lt;解析参数名称1&gt;
-                          <br />&nbsp;&nbsp;},{
-                          <br />&nbsp;&nbsp;&nbsp;&nbsp;"name":
-                          &lt;解析参数对应的值2&gt;,
-                          <br />&nbsp;&nbsp;&nbsp;&nbsp;"value":
-                          &lt;解析参数名称2&gt; <br />}, ... ]
-                        </div>
-                        注意{}末尾不能有逗号 -->
                       </div>
                     </el-popover>
                   </div>

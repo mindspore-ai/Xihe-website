@@ -28,21 +28,25 @@ const props = defineProps({
 // console.log('仓库详情数据: ', props.repoDetail);
 // console.log('类型: ', props.optionType);
 
-const dirPath = ref(''); // 自定义路径，末尾不带/
-const headContents = ref([]); // 头部路径，最终代码目录路径(数组)
+const dirPath = ref(''); // 代码目录自定义路径，末尾不带/
+const filePath = ref(''); // 启动文件自定义路径，末尾不带/
+// console.log('dirPath: ', dirPath.value);
+const inp = ref(null);
+const dirHeadPath = ref([]); // 代码目录弹窗头部路径，最终代码目录路径(数组)
+const fileHeadPath = ref([]); // 启动文件弹窗头部路径
 // const bootFile = ref('');
 // const radio = ref();
 
 let routerParams = router.currentRoute.value.params;
 // let contents = routerParams.contents;
-const filesList = ref([]); //文件树table内容
+const dirTableData = ref([]); //代码目录文件树table内容
+const fileTableData = ref([]); //启动文件文件树table内容
 
 const emit = defineEmits(['handle']);
 
-// 获取目录树的内容（表格数据）
-async function getDetailData(dirPath2) {
+// 获取代码目录的内容（表格数据）
+async function getDirData(dirPath2) {
   try {
-    // gitlab
     await getGitlabTree({
       type: 'project',
       user: routerParams.user,
@@ -51,97 +55,136 @@ async function getDetailData(dirPath2) {
       name: routerParams.name,
     }).then((res) => {
       if (res.data) {
-        filesList.value = res.data;
-        // console.log('获取文件目录树结果: ', filesList.value);
+        dirTableData.value = res.data;
+        fileTableData.value = res.data;
+        // console.log('获取文件目录树结果: ', dirTableData.value);
       }
     });
   } catch (error) {
     console.error(error);
   }
 }
-function getFilesByPath(item) {
+function getDirByPath(item) {
   // 不是根目录下
   if (item) {
-    getDetailData(item + '/');
+    getDirData(item + '/');
   } else {
     // 根目录下
-    getDetailData(item);
+    getDirData('');
   }
 }
 
 watch(
   () => dirPath.value,
   () => {
-    getFilesByPath(dirPath.value);
+    getDirByPath(dirPath.value);
   },
   {
     immediate: true,
     deep: true,
   }
 );
-
-// 头部点击选择目录
-function pathClick(item, index) {
+// 获取启动文件的内容（表格数据）
+async function getFileData(dirPath2) {
+  try {
+    await getGitlabTree({
+      type: 'project',
+      user: routerParams.user,
+      path: dirPath2,
+      id: props.repoDetail.id,
+      name: routerParams.name,
+    }).then((res) => {
+      if (res.data) {
+        fileTableData.value = res.data;
+        // console.log('获取文件目录树结果: ', dirTableData.value);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+function getFileByPath(item) {
+  // 不是根目录下
   if (item) {
-    console.log('item: ', item, index);
-    let arr = headContents.value.slice(0, index + 1);
-    // let str = arr.join('/') + '/';
-    let str = arr.join('/');
-    dirPath.value = str; //再次请求数据
-    headContents.value = headContents.value.slice(0, index + 1);
-    emit('handle', headContents.value);
-    // getDetailData(str);
+    getFileData(item + '/');
   } else {
-    // 返回根目录
-    // getDetailData('');
-    dirPath.value = '';
-    headContents.value = [];
+    // 根目录下
+    getFileData('');
   }
 }
 
+watch(
+  () => filePath.value,
+  () => {
+    getFileByPath(filePath.value);
+  },
+  {
+    // immediate: true,
+    deep: true,
+  }
+);
+
+// 头部点击选择目录
+function pathClick(item, index) {
+  // 代码目录
+  if (props.optionType === 'directory') {
+    if (item) {
+      let arr = dirHeadPath.value.slice(0, index + 1);
+      let str = arr.join('/');
+      dirPath.value = str; //再次请求数据
+      dirHeadPath.value = dirHeadPath.value.slice(0, index + 1);
+      emit('handle', dirHeadPath.value.join('/') + '/');
+      fileHeadPath.value = dirHeadPath.value.map((item) => {
+        return item;
+      });
+      // filePath.value = dirPath.value;
+    } else {
+      // 返回根目录
+      dirPath.value = '';
+      dirHeadPath.value = [];
+      fileHeadPath.value = [];
+      emit('handle', dirHeadPath.value.join('/'));
+    }
+  } else {
+    // 启动文件
+    if (item) {
+      let arr = fileHeadPath.value.slice(0, index + 1);
+      let str = arr.join('/');
+      filePath.value = str; //再次请求数据
+      fileHeadPath.value = fileHeadPath.value.slice(0, index + 1);
+      fileRelativePath.value.splice(index);
+      console.log('头部启动文件相对路径 ', fileRelativePath.value);
+    } else {
+      filePath.value = '';
+      // dirHeadPath.value = [];
+      fileHeadPath.value = [];
+    }
+  }
+}
+
+const fileRelativePath = ref([]);
 // 点击文件夹或者文件
 function goBlob(item) {
-  // console.log('item111: ', item);
-
   // 如果是文件夹
+  // debugger;
   if (item.is_dir) {
-    // 如果是代码目录弹窗
+    // 代码目录弹窗
     if (props.optionType === 'directory') {
       dirPath.value = item.path;
-      // console.log('dirPath值变化了: ', dirPath.value);
       let lastPath = dirPath.value.split('/').slice(-1).toString();
-      headContents.value.push(lastPath);
-      console.log('headContents.valu11111: ', headContents.value);
-      emit('handle', headContents.value);
+      dirHeadPath.value.push(lastPath);
+      emit('handle', dirHeadPath.value.join('/') + '/');
+      fileHeadPath.value = JSON.parse(JSON.stringify(dirHeadPath.value));
     } else {
-      // 如果是启动文件弹窗
-      console.log('item: ', item);
-      dirPath.value = item.path;
-      console.log('启动文件dirPath: ', dirPath.value);
-      let lastPath = dirPath.value.split('/').slice(-1).toString();
-      headContents.value.push(lastPath);
-      console.log('headContents.value: ', headContents.value);
-
-      //
+      // 启动文件弹窗
+      filePath.value = item.path;
+      let lastPath = filePath.value.split('/').slice(-1).toString();
+      fileHeadPath.value.push(lastPath);
+      // TODO: fileRelativePath.value = fileHeadPath.value.slice(
+      //   dirHeadPath.value.length
+      // );
+      // console.log('相对路径: ', fileRelativePath.value);
     }
-
-    // 取头部数组headContents的最后一位
-    // /* let headLastPath = '';
-    // headLastPath = headContents.value.pop();
-    // dirPath.value = item.path;
-    // let lastPath = dirPath.value.split('/').slice(-1).toString();
-    // if (headLastPath === lastPath) {
-    //   headContents.value.splice(
-    //     headContents.value.indexOf(lastPath),
-    //     1,
-    //     lastPath
-    //   );
-    //   // emit('handle', headContents.value);
-    // } else {
-    //   //  headContents.value.splice(-1);
-    //   // headContents.value.push(lastPath);
-    //   emit('handle', headContents.value);
-    // } */
   } else {
     return;
   }
@@ -149,10 +192,13 @@ function goBlob(item) {
 
 // 点击文件单选框
 function handleFile(item) {
-  console.log('dirPath值: ', dirPath.value);
-
-  emit('handle', item.name);
-  // emit('handle', dirPath.value + item.name);
+  const fileArr = item.path.split('/');
+  fileRelativePath.value = fileArr.slice(dirHeadPath.value.length);
+  if (!item.name) {
+    emit('handle', item.name);
+  } else {
+    emit('handle', fileRelativePath.value.join('/'));
+  }
 }
 </script>
 
@@ -166,23 +212,34 @@ function handleFile(item) {
           <div class="item-path" @click="pathClick()">
             {{ repoDetail.name }}
           </div>
-          <div
-            v-for="(item, index) in headContents"
-            :key="index"
-            class="item-path"
-            @click="pathClick(item, index)"
-          >
-            /{{ item }}
+          <div v-if="optionType === 'directory'" class="item-path">
+            <div
+              v-for="(item, index) in dirHeadPath"
+              :key="index"
+              class="dir-path"
+              @click="pathClick(item, index)"
+            >
+              /{{ item }}
+            </div>
+          </div>
+          <div v-else class="item-path">
+            <div
+              v-for="(item, index) in fileHeadPath"
+              :key="index"
+              class="dir-path"
+              @click="pathClick(item, index)"
+            >
+              /{{ item }}
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="file-body">
-      <!-- v-if="!repoDetailData.is_empty" -->
-      <div class="tree">
+      <div v-if="optionType === 'directory'" class="tree">
         <el-table
           :header-cell-style="{ background: '#e5e8f0' }"
-          :data="filesList"
+          :data="dirTableData"
           style="width: 100%"
         >
           <el-table-column
@@ -220,7 +277,65 @@ function handleFile(item) {
           <el-table-column prop="is_dir" label="描述" />
         </el-table>
 
-        <!-- <div v-if="!filesList.length" class="empyt-folder">空文件夹</div> -->
+        <!-- <div v-if="!dirTableData.length" class="empyt-folder">空文件夹</div> -->
+      </div>
+      <div v-else class="tree">
+        <el-table
+          :header-cell-style="{ background: '#e5e8f0' }"
+          :data="fileTableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="name"
+            label="名称"
+            width="300"
+            class="file-name"
+          >
+            <template #default="scope">
+              <!-- v-if="optionType === 'file' && !item.is_dir" -->
+              <input
+                v-if="
+                  optionType === 'file' &&
+                  !scope.row.is_dir &&
+                  fileHeadPath.length >= dirHeadPath.length
+                "
+                ref="inp"
+                type="radio"
+                name="tableRadio"
+                @click="handleFile(scope.row)"
+              />
+              <!-- <input
+                v-if="
+                  optionType === 'file' &&
+                  !scope.row.is_dir &&
+                  fileHeadPath.length < dirHeadPath.length
+                "
+                ref="inp"
+                type="radio"
+                disabled
+                name="tableRadio"
+                @click="handleFile(scope.row)"
+              /> -->
+              <div
+                class="file-blob"
+                :style="{
+                  paddingLeft:
+                    optionType === 'file' && !scope.row.is_dir ? '8px' : '0px',
+                }"
+                @click="goBlob(scope.row)"
+              >
+                <o-icon v-if="!scope.row.is_dir"
+                  ><icon-file></icon-file>
+                </o-icon>
+                <o-icon v-else><icon-folder></icon-folder> </o-icon>
+                <span>
+                  {{ scope.row.name }}
+                </span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="is_dir" label="描述" />
+        </el-table>
       </div>
     </div>
   </div>
@@ -228,7 +343,9 @@ function handleFile(item) {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
-
+input {
+  outline: none;
+}
 .model-file {
   .file-top {
     display: flex;
@@ -245,10 +362,13 @@ $theme: #0d8dff;
           font-weight: 500;
         }
         .item-path {
+          display: flex;
           cursor: pointer;
           color: #555;
-          &:hover {
-            text-decoration: underline;
+          .dir-path {
+            &:hover {
+              text-decoration: underline;
+            }
           }
         }
       }
@@ -424,10 +544,11 @@ $theme: #0d8dff;
     .el-table__row {
       // border-bottom: 1px solid red !important;
       height: 48px;
-      .el-table_1_column_1 {
+      .el-table__cell {
         padding-left: 12px;
         .cell {
           display: flex;
+          // font-size: 30px;
           .file-blob {
             display: flex;
             padding-left: 8px;

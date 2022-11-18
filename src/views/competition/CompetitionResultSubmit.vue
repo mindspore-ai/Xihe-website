@@ -21,6 +21,7 @@ import {
   handleScoring,
   getScore,
   getSubmissions,
+  submit,
 } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
@@ -47,39 +48,43 @@ const minute = date.getMinutes();
 const second = date.getSeconds();
 if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
-const beforeAvatarUpload = (rawFile) => {
-  if (
-    detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
-    !(
-      rawFile.type === 'application/x-zip-compressed' ||
-      rawFile.type === 'application/zip'
-    )
-  ) {
-    ElMessage.error('请上传.zip文件');
-    return false;
-  } else if (
-    detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
-    rawFile.type !== 'text/plain'
-  ) {
-    ElMessage.error('请上传.txt文件');
-    return false;
-  } else if (!/^\S*$/.test(rawFile.name)) {
-    ElMessage.error('文件名不能包含空格');
-    return false;
-  } else {
-    let fileName =
-      rawFile.name.split('.')[0] +
-      `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
-      rawFile.name.split('.')[1];
-    // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
-    if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-      fileName = fileName.split('.')[0];
-    }
-    const copyFile = new File([rawFile], fileName);
-    upLoad(copyFile);
-    return false;
-  }
-  return true;
+const beforeUpload = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  upLoad(formData);
+  return false;
+  // if (
+  //   detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+  //   !(
+  //     rawFile.type === 'application/x-zip-compressed' ||
+  //     rawFile.type === 'application/zip'
+  //   )
+  // ) {
+  //   ElMessage.error('请上传.zip文件');
+  //   return false;
+  // } else if (
+  //   detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
+  //   rawFile.type !== 'text/plain'
+  // ) {
+  //   ElMessage.error('请上传.txt文件');
+  //   return false;
+  // } else if (!/^\S*$/.test(rawFile.name)) {
+  //   ElMessage.error('文件名不能包含空格');
+  //   return false;
+  // } else {
+  //   let fileName =
+  //     rawFile.name.split('.')[0] +
+  //     `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
+  //     rawFile.name.split('.')[1];
+  //   // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
+  //   if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+  //     fileName = fileName.split('.')[0];
+  //   }
+  //   const copyFile = new File([rawFile], fileName);
+  //   upLoad(copyFile);
+  //   return false;
+  // }
+  // return true;
 };
 
 const Progress = ref(0);
@@ -90,63 +95,67 @@ function callback(transferredAmount, totalAmount) {
   );
 }
 async function upLoad(param) {
-  let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
-    detailData.value.name
-  }_${detailData.value.is_individual ? 1 : 0}/${param.name}`;
+  console.log(param);
+  submit(detailData1.value.id, detailData1.value.phase, param).then((res) => {
+    console.log(res);
+  });
+  // let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
+  //   detailData.value.name
+  // }_${detailData.value.is_individual ? 1 : 0}/${param.name}`;
   // 上传函数接收三个参数
   // 1.文件相关信息，编辑完成不需要验证文件名重复isEdit传true，其余传false。
   // 2.进度条回调函数
   // 3.上传成功的回调
   // TODO:是否统一封装失败情况
-  await handleUpload(
-    {
-      file: param,
-      path,
-      isEdit: true,
-    },
-    callback,
-    function () {
-      // pathClick(route.params.contents.length);
-      togglePhoneDlg(false);
-      Progress.value = '';
-      fileList.value = [];
-      handleSubmit(
-        {
-          file_name: param.name,
-          competition_id: route.path.split('/')[2],
-          period: 2,
-        },
-        route.path.split('/')[2]
-      ).then((res) => {
-        if (res.status === 200) {
-          // ElMessage({
-          //   type: 'success',
-          //   message: '上传成功,正在自动评分中！',
-          // });
-          handleScoring({ file_name: param.name }, teamId.value).then((res) => {
-            if (res.status === 200) {
-              ElMessage({
-                type: 'success',
-                message: '上传成功,正在自动评分中！',
-              });
-              getIndividual(teamId.value);
-            } else {
-              ElMessage({
-                type: 'error',
-                message: res.msg,
-              });
-              getIndividual(teamId.value);
-            }
-          });
-        } else {
-          ElMessage({
-            type: 'error',
-            message: res.msg,
-          });
-        }
-      });
-    }
-  );
+  // await handleUpload(
+  //   {
+  //     file: param,
+  //     path,
+  //     isEdit: true,
+  //   },
+  //   callback,
+  //   function () {
+  //     // pathClick(route.params.contents.length);
+  //     togglePhoneDlg(false);
+  //     Progress.value = '';
+  //     fileList.value = [];
+  //     handleSubmit(
+  //       {
+  //         file_name: param.name,
+  //         competition_id: route.path.split('/')[2],
+  //         period: 2,
+  //       },
+  //       route.path.split('/')[2]
+  //     ).then((res) => {
+  //       if (res.status === 200) {
+  //         // ElMessage({
+  //         //   type: 'success',
+  //         //   message: '上传成功,正在自动评分中！',
+  //         // });
+  //         handleScoring({ file_name: param.name }, teamId.value).then((res) => {
+  //           if (res.status === 200) {
+  //             ElMessage({
+  //               type: 'success',
+  //               message: '上传成功,正在自动评分中！',
+  //             });
+  //             getIndividual(teamId.value);
+  //           } else {
+  //             ElMessage({
+  //               type: 'error',
+  //               message: res.msg,
+  //             });
+  //             getIndividual(teamId.value);
+  //           }
+  //         });
+  //       } else {
+  //         ElMessage({
+  //           type: 'error',
+  //           message: res.msg,
+  //         });
+  //       }
+  //     });
+  //   }
+  // );
 }
 const fileList = ref([]);
 
@@ -211,7 +220,10 @@ watch(
   },
   { immediate: true }
 );
-getSubmissions(route.path.split('/')[2]).then((res) => {});
+getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
+  detailData.value = res.data;
+  tableData.value = res.data.details;
+});
 async function getIndividual(id) {
   // 通过团队id获得团队信息
   let res = await getTeamInfoById(id);
@@ -288,31 +300,31 @@ function goProjectClick(val) {
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
-  if (
-    tableData.value[0] &&
-    `${year}-${month}-${day}` === tableData.value[0].create_time
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '您今天已经提交过了哦~',
-    });
-  } else if (
-    detailData.value.competition_period !== detailData1.value.competition_period
-  ) {
-    ElMessage({
-      type: 'error',
-      message: '您未进入决赛，无法提交结果！',
-    });
-  } else {
-    // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: '提交结果通道火速开通中，请您耐心等待哦~',
-    //   });
-    // } else {
-    togglePhoneDlg(true);
-    // }
-  }
+  // if (
+  //   tableData.value[0] &&
+  //   `${year}-${month}-${day}` === tableData.value[0].create_time
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '您今天已经提交过了哦~',
+  //   });
+  // } else if (
+  //   detailData.value.competition_period !== detailData1.value.competition_period
+  // ) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '您未进入决赛，无法提交结果！',
+  //   });
+  // } else {
+  // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: '提交结果通道火速开通中，请您耐心等待哦~',
+  //   });
+  // } else {
+  togglePhoneDlg(true);
+  // }
+  // }
 }
 function handelCancel() {
   togglePhoneDlg(false);
@@ -323,13 +335,7 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <div
-        v-if="
-          detailData &&
-          !detailData.project_name &&
-          detailData.leader_name.name === userInfo.userName
-        "
-      >
+      <div v-if="detailData">
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -366,10 +372,7 @@ function handelCancel() {
     <div class="left">
       <div class="header">
         <div class="header-title">结果列表</div>
-        <div
-          v-if="detailData && detailData.leader_name.name === userInfo.userName"
-          class="header-button"
-        >
+        <div class="header-button">
           <span>每日限提交1次</span>
           <OButton type="primary" size="small" @click="handelSubmit"
             >提交结果</OButton
@@ -378,15 +381,17 @@ function handelCancel() {
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="file_name">
+          <el-table-column prop="project" width="290">
             <template #header>
-              <o-icon><icon-upload></icon-upload> </o-icon
-              >提交的最新结果（显示最近3条）
+              <div class="align">
+                <o-icon><icon-upload></icon-upload> </o-icon
+                >提交的最新结果（显示最近3条）
+              </div>
             </template>
           </el-table-column>
-          <el-table-column prop="create_time" label="提交时间" width="125" />
-          <el-table-column prop="status_info" label="状态" width="295" />
-          <el-table-column prop="score" label="我的分数" width="105" />
+          <el-table-column prop="submit_at" label="提交时间" />
+          <el-table-column prop="status" label="状态" />
+          <el-table-column prop="score" label="我的分数" />
         </el-table>
       </div>
     </div>
@@ -403,7 +408,7 @@ function handelCancel() {
       :file-list="fileList"
       action=""
       drag
-      :before-upload="beforeAvatarUpload"
+      :before-upload="beforeUpload"
     >
       <el-icon class="el-icon--upload"><IconAddFile /></el-icon>
       <div class="el-upload__text">
@@ -469,7 +474,8 @@ function handelCancel() {
       .el-table__cell {
         padding: 0;
         .cell {
-          display: flex;
+          // display: flex;
+          text-align: center;
           .o-icon {
             font-size: 24px;
             line-height: 24px;
@@ -481,6 +487,9 @@ function handelCancel() {
         color: #000000;
         .cell {
           padding: 13px 24px;
+          .align {
+            // text-align: left;
+          }
         }
       }
       .el-table__body {

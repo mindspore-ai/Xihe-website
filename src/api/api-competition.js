@@ -129,9 +129,19 @@ export function getTeamInfoById(id) {
  * 查询团队提交记录
  * @returns
  */
-export function getSubmissions(id) {
-  const url = `/server/competition/${id}/submissions`;
+export function getSubmissions(id, phase) {
+  const url = `/server/competition/${id}/preliminary/submissions`;
   return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 上传结果
+ * @returns
+ */
+export function submit(id, phase, file) {
+  const url = `/server/competition/${id}/${phase}/submissions`;
+  return request.post(url, file, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

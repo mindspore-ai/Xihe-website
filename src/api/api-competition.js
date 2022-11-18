@@ -140,7 +140,7 @@ export function getSubmissions(id, phase) {
  * @returns
  */
 export function submit(id, phase, file) {
-  const url = `/server/competition/${id}/${phase}/submissions`;
+  const url = `/server/competition/${id}/preliminary/submissions`;
   return request.post(url, file, getHeaderConfig()).then((res) => {
     return res.data;
   });

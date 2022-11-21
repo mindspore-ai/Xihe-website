@@ -198,17 +198,17 @@ function confirmPrivate() {
     });
 }
 function confirmDel() {
-  deleteDataset(detailData.id).then((res) => {
-    if (res.status === 200) {
+  deleteDataset(detailData.owner, detailData.name)
+    .then(() => {
       showDel.value = false;
       showConfirm.value = true;
-    } else {
+    })
+    .catch(() => {
       ElMessage({
         type: 'error',
-        message: res.msg,
+        message: '删除失败',
       });
-    }
-  });
+    });
 }
 function toggleDelDlg(flag) {
   if (flag === undefined) {

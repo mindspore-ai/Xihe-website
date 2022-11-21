@@ -104,16 +104,11 @@ export function modifyDataset(params, owner, id) {
  * 删除数据集仓库
  * @returns
  */
-export function deleteDataset(id) {
-  const url = `/api/datasets/${id}`;
-  return request
-    .delete(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
+export function deleteDataset(owner, name) {
+  const url = `/server/dataset/${owner}/${name}`;
+  return request.delete(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 获取标签信息

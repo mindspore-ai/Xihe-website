@@ -112,16 +112,11 @@ export function getTags(type) {
  * 删除模型仓库
  * @returns
  */
-export function deleteModel(id) {
-  const url = `/api/models/${id}`;
-  return request
-    .delete(url, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
+export function deleteModel(owner, name) {
+  const url = `/server/model/${owner}/${name}`;
+  return request.delete(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 /**

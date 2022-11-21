@@ -138,16 +138,11 @@ export function addDownloadRecord(id) {
  * 删除项目仓库
  * @returns
  */
-export function deleteProject(id) {
-  const url = `/api/projects/${id}`;
-  return request
-    .delete(url, getHeaderConfig())
-    .then((res) => {
-      return res;
-    })
-    .catch((e) => {
-      return e;
-    });
+export function deleteProject(owner, name) {
+  const url = `/server/project/${owner}/${name}`;
+  return request.delete(url, getHeaderConfig()).then((res) => {
+    return res;
+  });
 }
 
 /**

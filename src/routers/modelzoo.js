@@ -62,16 +62,17 @@ export default [
   {
     path: '/modelzoo/codegeex',
     name: 'codegeex',
-    component: () => {
-      return import('@/views/modelzoo/code-geex/TheCodeGeex.vue');
-    },
+    // component: () => {
+    //   return import('@/views/modelzoo/code-geex/TheCodeGeex.vue');
+    // },
+    redirect: '/',
     children: [
       {
         path: '',
         name: 'codegeexExperience',
-        component: () => {
-          return import('@/views/modelzoo/code-geex/TheCodeGeexExperience.vue');
-        },
+        // component: () => {
+        //   return import('@/views/modelzoo/code-geex/TheCodeGeexExperience.vue');
+        // },
         redirect: '/',
       },
       // {
@@ -84,9 +85,9 @@ export default [
       {
         path: 'introduce',
         name: 'codegeexIntroduce',
-        component: () => {
-          return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
-        },
+        // component: () => {
+        //   return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
+        // },
         redirect: '/',
       },
       // {

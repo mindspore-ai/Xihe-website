@@ -243,17 +243,17 @@ async function confirmRename(formEl) {
 }
 // 删除成功，你可再次创建新模型，点击确定回到个人主页。
 function confirmDel() {
-  deleteProject(detailData.id).then((res) => {
-    if (res.status === 200) {
+  deleteProject(detailData.owner, detailData.name)
+    .then(() => {
       showDel.value = false;
       showConfirm.value = true;
-    } else {
+    })
+    .catch(() => {
       ElMessage({
         type: 'error',
-        message: res.msg,
+        message: '删除失败',
       });
-    }
-  });
+    });
 }
 function toggleDelDlg(flag) {
   if (flag === undefined) {

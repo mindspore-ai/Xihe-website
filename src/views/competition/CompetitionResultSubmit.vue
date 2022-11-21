@@ -48,38 +48,38 @@ const minute = date.getMinutes();
 const second = date.getSeconds();
 if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
-const beforeUpload = (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  upLoad(formData);
-  return false;
-  // if (
-  //   detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
-  //   !(
-  //     rawFile.type === 'application/x-zip-compressed' ||
-  //     rawFile.type === 'application/zip'
-  //   )
-  // ) {
-  //   ElMessage.error('请上传.zip文件');
-  //   return false;
-  // } else if (
-  //   detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
-  //   rawFile.type !== 'text/plain'
-  // ) {
-  //   ElMessage.error('请上传.txt文件');
-  //   return false;
-  // } else if (!/^\S*$/.test(rawFile.name)) {
-  //   ElMessage.error('文件名不能包含空格');
-  //   return false;
-  // } else {
-  //   let fileName =
-  //     rawFile.name.split('.')[0] +
-  //     `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
-  //     rawFile.name.split('.')[1];
-  //   // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
-  //   if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-  //     fileName = fileName.split('.')[0];
-  //   }
+const beforeUpload = (rawFile) => {
+  if (
+    detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+    !(
+      rawFile.type === 'application/x-zip-compressed' ||
+      rawFile.type === 'application/zip'
+    )
+  ) {
+    ElMessage.error('请上传.zip文件');
+    return false;
+  } else if (
+    detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
+    rawFile.type !== 'text/plain'
+  ) {
+    ElMessage.error('请上传.txt文件');
+    return false;
+  } else if (!/^\S*$/.test(rawFile.name)) {
+    ElMessage.error('文件名不能包含空格');
+    return false;
+  } else {
+    //   let fileName =
+    //     rawFile.name.split('.')[0] +
+    //     `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
+    //     rawFile.name.split('.')[1];
+    //   // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
+    //   if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+    //     fileName = fileName.split('.')[0];
+    const formData = new FormData();
+    formData.append('file', rawFile);
+    upLoad(formData);
+    return false;
+  }
   //   const copyFile = new File([rawFile], fileName);
   //   upLoad(copyFile);
   //   return false;
@@ -95,10 +95,20 @@ function callback(transferredAmount, totalAmount) {
   );
 }
 async function upLoad(param) {
-  console.log(param);
-  submit(detailData1.value.id, detailData1.value.phase, param).then((res) => {
-    console.log(res);
-  });
+  submit(detailData1.value.id, detailData1.value.phase, param)
+    .then((res) => {
+      getSubmissions(detailData1.value.id, detailData1.value.phase).then(
+        (res) => {
+          tableData.value = res.data.details;
+        }
+      );
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '上传失败,请稍后重试！',
+      });
+    });
   // let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
   //   detailData.value.name
   // }_${detailData.value.is_individual ? 1 : 0}/${param.name}`;
@@ -300,30 +310,30 @@ function goProjectClick(val) {
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
-  // if (
-  //   tableData.value[0] &&
-  //   `${year}-${month}-${day}` === tableData.value[0].create_time
-  // ) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '您今天已经提交过了哦~',
-  //   });
-  // } else if (
-  //   detailData.value.competition_period !== detailData1.value.competition_period
-  // ) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '您未进入决赛，无法提交结果！',
-  //   });
-  // } else {
-  // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '提交结果通道火速开通中，请您耐心等待哦~',
-  //   });
-  // } else {
-  togglePhoneDlg(true);
-  // }
+  if (
+    tableData.value[0] &&
+    `${year}-${month}-${day}` === tableData.value[0].submit_at
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '您今天已经提交过了哦~',
+    });
+    // } else if (
+    //   detailData.value.competition_period !== detailData1.value.competition_period
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '您未进入决赛，无法提交结果！',
+    //   });
+    // } else {
+    // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '提交结果通道火速开通中，请您耐心等待哦~',
+    //   });
+  } else {
+    togglePhoneDlg(true);
+  }
   // }
 }
 function handelCancel() {
@@ -487,9 +497,6 @@ function handelCancel() {
         color: #000000;
         .cell {
           padding: 13px 24px;
-          .align {
-            // text-align: left;
-          }
         }
       }
       .el-table__body {

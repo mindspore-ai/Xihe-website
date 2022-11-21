@@ -104,6 +104,27 @@ function checkName(rule, value, callback) {
     }
   });
 }
+// 校验描述的长度200个字符
+function checkDesc(rule, value, callback) {
+  if (getByteLength(value) <= 200) {
+    callback();
+  } else {
+    callback(new Error('字符长度不能超过200个'));
+  }
+  // console.log(getByteLength(value));
+}
+function getByteLength(str) {
+  console.log('str: ', str);
+  let len = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
+      len += 2;
+    } else {
+      len++;
+    }
+  }
+  return len;
+}
 </script>
 
 <template>
@@ -204,7 +225,11 @@ function checkName(rule, value, callback) {
           </div>
         </el-popover>
       </el-form-item>
-      <el-form-item class="des item" prop="desc">
+      <el-form-item
+        class="des item"
+        prop="desc"
+        :rules="[{ validator: checkDesc, trigger: 'blur' }]"
+      >
         <div>
           <span>{{ i18n.datasetDescribe }}</span>
         </div>
@@ -213,7 +238,6 @@ function checkName(rule, value, callback) {
           :rows="2"
           type="textarea"
           :placeholder="i18n.placeholder.describe"
-          maxlength="100"
           show-word-limit
         />
       </el-form-item>

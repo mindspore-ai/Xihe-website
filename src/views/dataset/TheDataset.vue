@@ -117,44 +117,48 @@ function backCondition() {
 
 // 应用分类--多选
 function sortsClick(index, index2) {
-  // console.log('点击应用分类: ');
-
   renderSorts.value[index].haveActive = true;
   // 高亮
   renderSorts.value[index].condition[index2].isActive =
     !renderSorts.value[index].condition[index2].isActive;
   goSearch(renderSorts.value);
 }
-// 清除所有的应用分类
+// 清除所有的一级应用分类
 function clearItem1(index) {
-  // console.log('index: ', index);
   renderSorts.value[index].haveActive = false;
   renderSorts.value[index].condition.forEach((item) => {
     item.isActive = false;
   });
-  query.tags = null;
+  query.tag_kinds = null;
 }
 
 //数据集/其他（多选）--协议单选
 function conditionClick(index, index2) {
   renderCondition.value[index].haveActive = true;
-  if (renderCondition.value[index].title.key === 'licenses') {
-    renderCondition.value[index].condition.forEach((item) => {
+  // 协议
+  if (renderCondition.value[index].title.key === 1) {
+    renderCondition.value[index].condition[index].items.forEach((item) => {
       item.isSelected = true;
     });
-    renderCondition.value[index].condition[index2].isSelected = false;
-
-    if (renderCondition.value[index].condition[index2].isActive === true) {
-      renderCondition.value[index].condition[index2].isActive =
-        !renderCondition.value[index].condition[index2].isActive;
-      renderCondition.value[index].condition.forEach((item) => {
+    renderCondition.value[index].condition[index].items[
+      index2
+    ].isSelected = false;
+    if (
+      renderCondition.value[index].condition[index].items[index2].isActive ===
+      true
+    ) {
+      renderCondition.value[index].condition[index].items[index2].isActive =
+        !renderCondition.value[index].condition[index].items[index2].isActive;
+      renderCondition.value[index].condition[index].items.forEach((item) => {
         item.isSelected = false;
       });
       renderCondition.value[index].haveActive = false;
     } else {
-      renderCondition.value[index].condition.forEach((single) => {
+      renderCondition.value[index].condition[index].items.forEach((single) => {
         single.isActive = false;
-        renderCondition.value[index].condition[index2].isActive = true;
+        renderCondition.value[index].condition[index].items[
+          index2
+        ].isActive = true;
       });
     }
   } else {
@@ -172,37 +176,57 @@ function conditionClick(index, index2) {
 
 //查询
 function goSearch(render) {
-  let time = 0;
+  let time1 = 0;
+  let time2 = 0;
   query.page_num = 1;
   let tagList = []; //标签
   let tag_kinds = []; //标签类型
   render.forEach((item) => {
-    time = 0;
-    item.condition.forEach((value) => {
-      if (value.isActive) {
-        if (item.title.key === 0) {
+    time1 = 0;
+    time2 = 0;
+    // 应用分类
+    if (item.title.key === 0) {
+      item.condition.forEach((value) => {
+        if (value.isActive) {
           tag_kinds.push(value.kind);
           if (tag_kinds.length < 6) {
             query.tag_kinds = tag_kinds.join(',');
           } else {
-            console.log('value.kind: ', value.kind);
             ElMessage({
               message: '最多支持刷选5个标签 !',
               type: 'warning',
             });
             return;
           }
+        } else {
+          time1 += 1;
         }
-      } else {
-        time += 1;
+      });
+      if (time1 === item.condition.length) {
+        // query[item.title.key] = null; // 所有都未选不传
+        item.haveActive = false;
+        if (item.title.key === 0) {
+          query.tag_kinds = null;
+        }
       }
-    });
-    if (time === item.condition.length) {
-      // console.log('取消点击');
-      // query[item.title.key] = null; // 所有都未选不传
-      item.haveActive = false;
-      if (item.title.key === 0) {
-        query.tag_kinds = null;
+      // 协议(单选)
+    } else if (item.title.key === 1) {
+      item.condition.forEach((value) => {
+        value.items.forEach((val) => {
+          if (val.isActive) {
+            tagList.push(val.name);
+            query.tags = tagList.join(',');
+          } else {
+            time2 += 1;
+          }
+        });
+      });
+      if (time2 === item.condition[0].items.length) {
+        // query[item.title.key] = null; // 所有都未选不传
+        item.haveActive = false;
+        if (item.title.key === 1) {
+          query.tags = null;
+        }
       }
     }
   });
@@ -210,30 +234,34 @@ function goSearch(render) {
 
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition.map((item) => {
+  renderCondition.value[index].condition[index].items.map((item) => {
     item.isActive = false;
     item.isSelected = false;
     return item;
   });
-  query[renderCondition.value[index].title.key] = null;
+  query.tags = null;
 }
 //查看全部标签
+let radioItem = ref({});
 function checkAllClick(item, index) {
   showCondition.value = false;
   item.showTagsAll = true;
   showTags.value = true;
-  radioList.value = renderCondition.value[index];
+  radioItem.value = renderCondition.value[index];
+  radioList.value = renderCondition.value[index].condition[0];
 }
+// 二级协议点击
 function radioClick(detail, list) {
-  if (list.title.key === 'licenses') {
+  // 协议
+  if (list.title.key === 1) {
     if (detail.isActive === true) {
       detail.isActive = false;
       list.haveActive = false;
-      renderCondition.value[list.num].condition.forEach((item) => {
+      renderCondition.value[list.num].condition[0].items.forEach((item) => {
         item.isSelected = false;
       });
     } else {
-      renderCondition.value[list.num].condition.forEach((item) => {
+      renderCondition.value[list.num].condition[0].items.forEach((item) => {
         item.isActive = false;
         item.isSelected = true;
       });
@@ -243,7 +271,7 @@ function radioClick(detail, list) {
     }
   } else {
     detail.isActive = !detail.isActive;
-    let bool = renderCondition.value[list.num].condition.every(
+    let bool = renderCondition.value[list.num].condition[0].items.every(
       (item) => item.isActive === false
     );
     if (bool) {
@@ -254,7 +282,7 @@ function radioClick(detail, list) {
   }
   goSearch(renderCondition.value);
 }
-// 分类二级标签
+// 应用分类二级标签
 function sortTagClick(index, index2) {
   moreSortTags.value[index].haveActive = true;
   moreSortTags.value[index].items.forEach((item) => {
@@ -291,10 +319,8 @@ function handleTagSearch(date) {
   let tagList = [];
   date.forEach((item) => {
     item.items.forEach((val) => {
-      // console.log('val: ', val);
       if (val.isActive === true) {
         tagList.push(val.name);
-
         // console.log('tagList: ', tagList);
       }
     });
@@ -548,14 +574,14 @@ onUnmounted(() => {
         /> -->
         <div class="condition-radio">
           <div
-            v-for="detail in radioList.condition"
+            v-for="detail in radioList.items"
             :key="detail"
             class="condition-detail"
             :class="{
               'condition-active1': detail.isActive === true,
               'condition-active': detail.isSelected === true,
             }"
-            @click="radioClick(detail, radioList)"
+            @click="radioClick(detail, radioItem)"
           >
             {{ detail.name }}
             <o-icon class="icon-x">
@@ -566,7 +592,7 @@ onUnmounted(() => {
       </div>
 
       <div v-show="showCondition" class="condition">
-        <!-- 应用分类 -->
+        <!-- 应用分类一级标签 -->
         <div
           v-for="(item, index) in renderSorts"
           :key="item.title"
@@ -605,7 +631,7 @@ onUnmounted(() => {
         </div>
 
         <!-- 数据集大小 licenses（单选） 其它 -->
-        <!-- 无数据 -->
+        <!-- 协议一级标签 -->
         <div
           v-for="(item, index) in renderCondition"
           :key="item"
@@ -626,7 +652,7 @@ onUnmounted(() => {
               :class="{
                 'condition-active1': detail.isActive === true,
                 'condition-active':
-                  detail.isSelected === true && item.title.key === 'licenses',
+                  detail.isSelected === true && item.title.key === 1,
               }"
               @click="conditionClick(index, index2, detail.id)"
             >
@@ -637,7 +663,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div
-            v-if="renderCondition[index].condition.length > 7"
+            v-if="renderCondition[index].condition[0].items.length > 7"
             class="radio-all"
             @click="checkAllClick(item, index)"
           >

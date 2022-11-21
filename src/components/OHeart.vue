@@ -67,7 +67,8 @@ function onClick(e) {
     display: flex;
     align-items: center;
     line-height: 24px;
-    color: rgba(13, 141, 255, 1);
+    // color: rgba(13, 141, 255, 1);
+    color: #555;
     svg {
       fill: rgba(13, 141, 255, 1);
     }

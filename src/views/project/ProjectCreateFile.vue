@@ -318,7 +318,7 @@ async function confirmCreating(formEl) {
       };
       createTrainProject(params, detailData.value.id)
         .then((res) => {
-          console.log('res: ', res);
+          // console.log('res: ', res);
           if (res.status === 201) {
             ElMessage({
               type: 'success',
@@ -558,7 +558,12 @@ function selectFile(item) {
         </div>
         <div class="createfile-content-tip">
           你可以通过表单方式创建训练实例，详情请参考
-          <a href="#" style="color: #0d8dff">表单方式-创建训练实例</a>
+          <a
+            href="https://xihe-docs.mindspore.cn/zh/tutorial/train/"
+            target="_blank"
+            style="color: #0d8dff"
+            >表单方式-创建训练实例</a
+          >
         </div>
         <div class="createfile-form-wrap">
           <el-form

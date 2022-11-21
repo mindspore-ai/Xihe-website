@@ -25,12 +25,9 @@ const props = defineProps({
     },
   },
 });
-// console.log('仓库详情数据: ', props.repoDetail);
-// console.log('类型: ', props.optionType);
 
 const dirPath = ref(''); // 代码目录自定义路径，末尾不带/
 const filePath = ref(''); // 启动文件自定义路径，末尾不带/
-// console.log('dirPath: ', dirPath.value);
 const inp = ref(null);
 const dirHeadPath = ref([]); // 代码目录弹窗头部路径，最终代码目录路径(数组)
 const fileHeadPath = ref([]); // 启动文件弹窗头部路径
@@ -96,7 +93,7 @@ async function getFileData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         fileTableData.value = res.data;
-        // console.log('获取文件目录树结果: ', dirTableData.value);
+        // console.log('获取文件目录树结果: ', fileTableData.value);
       }
     });
   } catch (error) {
@@ -147,17 +144,16 @@ function pathClick(item, index) {
     }
   } else {
     // 启动文件
-    if (item) {
+    if (item && index >= dirHeadPath.value.length - 1) {
       let arr = fileHeadPath.value.slice(0, index + 1);
       let str = arr.join('/');
       filePath.value = str; //再次请求数据
       fileHeadPath.value = fileHeadPath.value.slice(0, index + 1);
       fileRelativePath.value.splice(index);
-      console.log('头部启动文件相对路径 ', fileRelativePath.value);
     } else {
-      filePath.value = '';
-      // dirHeadPath.value = [];
-      fileHeadPath.value = [];
+      return;
+      // getFileByPath();
+      // fileHeadPath.value = [];
     }
   }
 }
@@ -183,7 +179,6 @@ function goBlob(item) {
       // TODO: fileRelativePath.value = fileHeadPath.value.slice(
       //   dirHeadPath.value.length
       // );
-      // console.log('相对路径: ', fileRelativePath.value);
     }
   } else {
     return;
@@ -236,6 +231,7 @@ function handleFile(item) {
       </div>
     </div>
     <div class="file-body">
+      <!-- 代码目录弹窗内容 -->
       <div v-if="optionType === 'directory'" class="tree">
         <el-table
           :header-cell-style="{ background: '#e5e8f0' }"
@@ -279,6 +275,7 @@ function handleFile(item) {
 
         <!-- <div v-if="!dirTableData.length" class="empyt-folder">空文件夹</div> -->
       </div>
+      <!-- 启动文件弹窗内容 -->
       <div v-else class="tree">
         <el-table
           :header-cell-style="{ background: '#e5e8f0' }"
@@ -304,18 +301,6 @@ function handleFile(item) {
                 name="tableRadio"
                 @click="handleFile(scope.row)"
               />
-              <!-- <input
-                v-if="
-                  optionType === 'file' &&
-                  !scope.row.is_dir &&
-                  fileHeadPath.length < dirHeadPath.length
-                "
-                ref="inp"
-                type="radio"
-                disabled
-                name="tableRadio"
-                @click="handleFile(scope.row)"
-              /> -->
               <div
                 class="file-blob"
                 :style="{

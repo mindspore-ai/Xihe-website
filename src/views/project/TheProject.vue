@@ -106,8 +106,8 @@ const projectType = reactive([
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
-const renderSorts = ref([]);
-const otherCondition = ref([]);
+const renderSorts = ref([]); //应用分类标签
+const otherCondition = ref([]); //训练平台、协议、项目类型标签
 const showDetail = ref(false);
 const moreSortTags = ref([]);
 const showCondition = ref(true);
@@ -148,6 +148,7 @@ function projectTypeClick(val) {
   }
 }
 
+// 应用分类查看全部
 function moreClick() {
   showDetail.value = true;
   showCondition.value = false;
@@ -173,7 +174,7 @@ function clearItem1(index) {
   renderSorts.value[index].condition.forEach((item) => {
     item.isActive = false;
   });
-  queryData.tags = null;
+  queryData.tag_kinds = null;
 }
 // 训练平台标签
 function othersClick(index, index2) {
@@ -197,64 +198,79 @@ function clearItem3(index) {
 // 单选(sdk,状态，协议)
 function conditionClick(index, index2) {
   renderCondition.value[index].haveActive = true;
-  renderCondition.value[index].condition.forEach((item) => {
+  // renderCondition.value[index].condition.forEach((value) => {
+  //   console.log('value: ', value);
+  //   value.items=value.items.map((val) => {
+  //     return {
+  //       name: val,
+  //       isSelected: false,
+  //       isActive: false,
+  //     };
+  //   });
+  // });
+  renderCondition.value[index].condition[0].items.forEach((item) => {
     item.isSelected = true;
   });
-  renderCondition.value[index].condition[index2].isSelected = false;
-
-  if (renderCondition.value[index].condition[index2].isActive === true) {
-    renderCondition.value[index].condition[index2].isActive =
-      !renderCondition.value[index].condition[index2].isActive;
-    renderCondition.value[index].condition.forEach((item) => {
+  renderCondition.value[index].condition[0].items[index2].isSelected = false;
+  if (
+    renderCondition.value[index].condition[0].items[index2].isActive === true
+  ) {
+    renderCondition.value[index].condition[0].items[index2].isActive =
+      !renderCondition.value[index].condition[0].items[index2].isActive;
+    renderCondition.value[index].condition[0].items.forEach((item) => {
       item.isSelected = false;
     });
   } else {
-    renderCondition.value[index].condition.forEach((single) => {
+    renderCondition.value[index].condition[0].items.forEach((single) => {
       single.isActive = false;
-      renderCondition.value[index].condition[index2].isActive = true;
+      renderCondition.value[index].condition[0].items[index2].isActive = true;
     });
   }
   goSearch(renderCondition.value);
 }
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition.forEach((item) => {
+  renderCondition.value[index].condition[0].items.forEach((item) => {
     item.isActive = false;
     item.isSelected = false;
   });
-  queryData[renderCondition.value[index].title.key] = null;
+  // queryData[renderCondition.value[index].title.key] = null;
+  goSearch(renderCondition.value);
 }
 
 // 查看全部标签(sdk,状态，协议)
+let radioItem = ref({});
 function checkAllClick(item, index) {
   showCondition.value = false;
   item.showTagsAll = true;
   showTags.value = true;
-  radioList.value = renderCondition.value[index];
+  radioList.value = renderCondition.value[index].condition[0].items;
+  radioItem.value = renderCondition.value[index];
 }
 
 function radioClick(detail, list) {
-  list.condition.forEach((item) => {
+  list.condition[0].items.forEach((item) => {
     item.isSelected = true;
   });
   detail.isSelected = false;
 
   if (detail.isActive === true) {
     detail.isActive = !detail.isActive;
-    renderCondition.value[list.num].haveActive = false;
+    renderCondition.value[list.title.key].haveActive = false;
 
     queryData[list.title.key] = null;
-    list.condition.forEach((item) => {
+    list.condition[0].items.forEach((item) => {
       item.isSelected = false;
     });
   } else {
-    list.condition.forEach((item) => {
+    list.condition[0].items.forEach((item) => {
       item.isActive = false;
     });
     detail.isActive = !detail.isActive;
-    renderCondition.value[list.num].haveActive = true;
-    queryData[list.title.key] = detail.id;
+    renderCondition.value[list.title.key].haveActive = true;
+    // queryData[list.title.key] = detail.id;
   }
+  goSearch(renderCondition.value);
 }
 
 // 分类二级标签
@@ -316,19 +332,18 @@ function searchTags(date) {
 
 //查询
 function goSearch(render) {
-  let time = 0;
+  let time1 = 0;
+  let time2 = 0;
   queryData.page_num = 1;
   let tagList = []; //标签
   let tag_kinds = []; //标签类型
   render.forEach((item) => {
-    time = 0;
-    // let tagList = [];
-    item.condition.forEach((value) => {
-      if (value.isActive) {
-        // console.log('item.title.key: ', item.title.key);
-        if (item.title.key === 0) {
-          console.log('value: ', value);
-          // console.log('点击应用发送请求');
+    time1 = 0;
+    time2 = 0;
+    // 应用分类
+    if (item.title.text === '应用分类') {
+      item.condition.forEach((value) => {
+        if (value.isActive) {
           tag_kinds.push(value.kind);
           if (tag_kinds.length < 6) {
             queryData.tag_kinds = tag_kinds.join(',');
@@ -339,36 +354,96 @@ function goSearch(render) {
             });
             return;
           }
-        } else if (item.title.key === 1) {
-          value.items.forEach((val) => {
-            console.log('val: ', val);
-            tagList.push(val.name);
-            queryData.tags = tagList.join(',');
-
-            /* if (val.isActive) {
-              tagList.push(val.name);
-
-              if (queryData.tags) {
-                queryData.tags = queryData.tags + ',' + tagList.join(',');
-              } else {
-                queryData.tags = tagList.join(',');
-              }
-            } */
-          });
+        } else {
+          time1 += 1;
         }
-      } else {
-        // 取消点击
-        time += 1;
+      });
+      if (time1 === item.condition.length) {
+        // queryData[item.title.key] = null; // 所有都未选不传
+        item.haveActive = false;
+        if (item.title.key === 0) {
+          queryData.tag_kinds = null;
+        }
       }
-    });
-    if (time === item.condition.length) {
-      // console.log('取消点击');
-      // queryData[item.title.key] = null; // 所有都未选不传
-      item.haveActive = false;
-      queryData.tag_kinds = null;
+      // 协议(单选)
+    } else {
+      item.condition.forEach((value) => {
+        value.items.forEach((val) => {
+          if (val.isActive) {
+            tagList.push(val.name);
+            if (tagList.length < 6) {
+              queryData.tags = tagList.join(',');
+            } else {
+              ElMessage({
+                message: '最多支持刷选5个标签 !',
+                type: 'warning',
+              });
+              return;
+            }
+          } else {
+            time2 += 1;
+          }
+        });
+      });
+      if (time2 === item.condition[0].items.length) {
+        // queryData[item.title.key] = null; // 所有都未选不传
+        item.haveActive = false;
+        if (item.title.key === 1) {
+          queryData.tags = null;
+        }
+      }
     }
   });
 }
+// function goSearch(render) {
+//   let time = 0;
+//   queryData.page_num = 1;
+//   let tagList = []; //标签
+//   let tag_kinds = []; //标签类型
+//   render.forEach((item) => {
+//     time = 0;
+//     // let tagList = [];
+//     item.condition.forEach((value) => {
+//       if (value.isActive) {
+//         if (item.title.key === 0) {
+//           tag_kinds.push(value.kind);
+//           if (tag_kinds.length < 6) {
+//             queryData.tag_kinds = tag_kinds.join(',');
+//           } else {
+//             ElMessage({
+//               message: '最多支持刷选5个标签 !',
+//               type: 'warning',
+//             });
+//             return;
+//           }
+//         } else if (item.title.key === 1) {
+//           value.items.forEach((val) => {
+//             tagList.push(val.name);
+//             queryData.tags = tagList.join(',');
+
+//             /* if (val.isActive) {
+//               tagList.push(val.name);
+
+//               if (queryData.tags) {
+//                 queryData.tags = queryData.tags + ',' + tagList.join(',');
+//               } else {
+//                 queryData.tags = tagList.join(',');
+//               }
+//             } */
+//           });
+//         }
+//       } else {
+//         // 取消点击
+//         time += 1;
+//       }
+//     });
+//     if (time === item.condition.length) {
+//       // queryData[item.title.key] = null; // 所有都未选不传
+//       item.haveActive = false;
+//       queryData.tag_kinds = null;
+//     }
+//   });
+// }
 
 function dropdownClick(item) {
   if (item.value === 'download') {
@@ -383,7 +458,6 @@ function dropdownClick(item) {
 function getProject() {
   getProjectData(queryData).then((res) => {
     if (res.status === 200) {
-      // console.log('res: ', res.data);
       projectCount.value = res.data.data.total;
       if (projectCount.value / 10 < 8) {
         layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -409,10 +483,20 @@ function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         it.isActive = false;
+        it.isSelected = false;
+        it.items = it.items.map((child) => {
+          // child.isSelected = false;
+          // child.isActive = false;
+          return {
+            name: child,
+            isSelected: false,
+            isActive: false,
+          };
+        });
         item.condition.push(it);
       });
     });
-    // renderCondition.value = i18n.screenCondition.splice(1, 3);
+    renderCondition.value = i18n.screenCondition.splice(1, 3); //训练平台、协议、项目类型的一级标签
     // renderCondition.value.forEach((item, index) => {
     //   item.showTagsAll = false;
     //   item.condition.forEach((it) => {
@@ -424,11 +508,10 @@ function getModelTag() {
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
     });
-    renderSorts.value = i18n.screenCondition.splice(ind, 1);
+    renderSorts.value = i18n.screenCondition.splice(ind, 1); //应用分类的一级标签
     otherCondition.value = i18n.screenCondition;
-    moreSortTags.value = renderSorts.value[0].condition;
-
-    moreSortTags.value.forEach((sort) => {
+    moreSortTags.value = renderSorts.value[0].condition; //应用分类的二级标签
+    /* moreSortTags.value.forEach((sort) => {
       sort.haveActive = false;
       sort.items = sort.items.map((tag) => {
         return {
@@ -437,7 +520,7 @@ function getModelTag() {
           isSelected: false,
         };
       });
-    });
+    }); */
     otherCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
@@ -447,7 +530,6 @@ function getModelTag() {
           isSelected: false,
         };
       });
-      // console.log(item.condition[0].items);
       item.num = index;
     });
   });
@@ -542,7 +624,7 @@ onUnmounted(() => {
     </div>
     <div class="model-body wrap">
       <div></div>
-      <!-- 标签二级(全部) -->
+      <!-- 二级标签页面(全部) -->
       <div v-show="showDetail" class="condition">
         <p class="getback" @click="backCondition">
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
@@ -561,6 +643,7 @@ onUnmounted(() => {
         >
           <div class="condition-title">
             <span>{{ item.kind }}</span>
+            <!-- 二级标签的清除 -->
             <div
               v-if="item.haveActive"
               class="clear"
@@ -570,6 +653,7 @@ onUnmounted(() => {
               <span>{{ i18n.clear }}</span>
             </div>
           </div>
+          <!-- 应用分类二级标签 -->
           <div class="condition-box-all">
             <div
               v-for="(detail, index2) in item.items"
@@ -589,28 +673,22 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <!-- 单选的显示全部 -->
+      <!-- 单选的显示全部-二级标签 -->
       <div v-show="showTags" class="condition">
         <p class="getback" @click="backCondition">
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">协议</p>
-        <!-- <el-input
-          v-model="queryData.search"
-          :prefix-icon="Search"
-          class="w-50 m-2"
-          placeholder="请输入tag名称"
-        /> -->
         <div class="condition-radio">
           <div
-            v-for="detail in radioList.condition"
+            v-for="detail in radioList"
             :key="detail"
             class="condition-detail"
             :class="{
               'condition-active1': detail.isActive === true,
               'condition-active': detail.isSelected === true,
             }"
-            @click="radioClick(detail, radioList)"
+            @click="radioClick(detail, radioItem)"
           >
             {{ detail.name }}
             <o-icon class="icon-x">
@@ -674,8 +752,8 @@ onUnmounted(() => {
             <span @click="moreClick">查看全部</span>
           </div>
         </div>
-        <!-- sdk status 协议 -->
-        <!-- <div
+        <!-- sdk status 训练平台、协议、项目类型 -->
+        <div
           v-for="(item, index) in renderCondition"
           :key="item"
           class="condition-item"
@@ -689,7 +767,7 @@ onUnmounted(() => {
           </div>
           <div class="condition-box">
             <div
-              v-for="(detail, index2) in item.condition"
+              v-for="(detail, index2) in item.condition[0].items"
               :key="detail"
               class="condition-detail"
               :class="{
@@ -698,22 +776,22 @@ onUnmounted(() => {
               }"
               @click="conditionClick(index, index2, detail.id)"
             >
-              {{ detail.kind }}
+              {{ detail.name }}
               <o-icon class="icon-x">
                 <icon-x></icon-x>
               </o-icon>
             </div>
           </div>
           <div
-            v-if="renderCondition[index].condition.length > 7"
+            v-if="renderCondition[index].condition[0].items.length > 7"
             class="radio-all"
           >
             <div class="check-all-modal"></div>
             <span @click="checkAllClick(item, index)">查看全部</span>
           </div>
-        </div> -->
-        <!-- 其他 训练平台-->
-        <div
+        </div>
+        <!-- 其他-->
+        <!-- <div
           v-for="(item, index) in otherCondition"
           :key="item.title"
           class="condition-item"
@@ -741,7 +819,7 @@ onUnmounted(() => {
               <o-icon class="icon-x"><icon-x></icon-x></o-icon>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="card-box">

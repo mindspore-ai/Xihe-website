@@ -174,7 +174,7 @@ getDetailData();
                 <div class="right-wrap">
                   <div v-if="competitionData.status_name === '进行中'">
                     <OButton
-                      :disabled="competitionData.competition_period==='决赛'"
+                      :disabled="competitionData.competition_period === '决赛'"
                       type="primary"
                       animation
                       @click="goApplication"
@@ -235,7 +235,7 @@ getDetailData();
                 <div class="right-wrap">
                   <div v-if="competitionData.status_name === '进行中'">
                     <OButton
-                      :disabled="competitionData.competition_period==='决赛'"
+                      :disabled="competitionData.competition_period === '决赛'"
                       type="primary"
                       animation
                       @click="goApplication"

@@ -24,7 +24,7 @@ import IconPoppver from '~icons/app/popover.svg';
         </div>
         <div>
           -&nbsp;仓库名建议简短
-          <span class="remind">(5-30个字符)</span>
+          <span class="remind">(5-35个字符)</span>
           ，仓库下的文件或文件夹绝对路径长度<span class="remind"
             >不能超过1000字符</span
           >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的

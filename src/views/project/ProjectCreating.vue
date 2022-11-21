@@ -38,14 +38,14 @@ const i18n = {
 
 // 表单信息
 const proList = reactive({
-  owner: null,
+  owner: '',
   cover_id: '1',
-  name: null,
-  desc: null,
-  protocol: null,
-  training: null,
-  type: null,
-  repo_type: null,
+  name: '',
+  desc: '',
+  protocol: '',
+  training: '',
+  type: '',
+  repo_type: '',
 });
 
 const ruleFormRef = ref(null);
@@ -79,7 +79,8 @@ const rules = reactive({
   ],
   desc: [
     // { required: true, message: '必填项', trigger: 'blur' },
-    { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
+    // { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
+    { validator: checkDesc, trigger: 'blur' },
   ],
 });
 function checkName(rule, value, callback) {
@@ -90,6 +91,27 @@ function checkName(rule, value, callback) {
       callback(new Error('该名称已存在'));
     }
   });
+}
+// 校验描述的长度200个字符
+function checkDesc(rule, value, callback) {
+  if (getByteLength(value) <= 200) {
+    callback();
+  } else {
+    callback(new Error('字符长度不能超过200个'));
+  }
+  // console.log(getByteLength(value));
+}
+function getByteLength(str) {
+  // console.log('str: ', str);
+  let len = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
+      len += 2;
+    } else {
+      len++;
+    }
+  }
+  return len;
 }
 
 const nameList = ref([]);
@@ -323,13 +345,12 @@ onMounted(() => {});
           <div class="warning">
             <!-- <o-icon><icon-necessary></icon-necessary></o-icon> -->
           </div>
-          <el-form-item :label="i18n.desc" prop="desc">
+          <el-form-item :label="i18n.desc" prop="desc" class="item-desc">
             <el-input
               v-model="proList.desc"
               type="textarea"
               :placeholder="i18n.input_text"
               rows="5"
-              maxlength="100"
               show-word-limit
             ></el-input>
           </el-form-item>
@@ -498,6 +519,11 @@ onMounted(() => {});
         display: flex;
         align-items: center;
       }
+      :deep .item-desc {
+        .el-form-item__label {
+          margin-right: 8px !important;
+        }
+      }
     }
     .item-img {
       cursor: pointer;
@@ -552,6 +578,7 @@ onMounted(() => {});
         width: 400px;
       }
     }
+
     .obuton {
       // width: 144px;
       // height: 48px;

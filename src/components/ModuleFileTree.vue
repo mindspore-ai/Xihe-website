@@ -98,21 +98,30 @@ function pathClick(index) {
     },
   });
 }
-function downloadAll() {
-  gitlabDownloadAll({
-    type: prop.moduleName,
-    name: route.params.name,
-    user: route.params.user,
-  }).then((res) => {
+async function downloadZip() {
+  try {
+    let href = null;
+    if (repoDetailData.value.repo_type === 'public') {
+      href = `/api/v1/repo/${prop.moduleName}/${route.params.user}/${route.params.name}`;
+    } else {
+      await gitlabDownloadAll({
+        type: prop.moduleName,
+        name: route.params.name,
+        user: route.params.user,
+      }).then((res) => {
+        href = window.URL.createObjectURL(res); // 创建下载的链接
+      });
+    }
     let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
-    const href = window.URL.createObjectURL(res); // 创建下载的链接
     downloadElement.href = href;
     downloadElement.download = `${route.params.name}.zip`; // 下载后文件名
     document.body.appendChild(downloadElement);
     downloadElement.click(); // 点击下载
     document.body.removeChild(downloadElement); // 下载完成移除元素
     window.URL.revokeObjectURL(href);
-  });
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 </script>
 <template>
@@ -156,7 +165,7 @@ function downloadAll() {
                 </el-input>
               </div>
               <div class="download-zip">
-                <o-button size="small" class="download-all" @click="downloadAll"
+                <o-button size="small" class="download-all" @click="downloadZip"
                   ><a>{{ i18n.downloadZip }}</a>
                   <template #suffix>
                     <o-icon><icon-download></icon-download></o-icon>

@@ -58,6 +58,10 @@ export default defineConfig({
         target: 'https://xihe-dev.test.osinfra.cn/',
         changeOrigin: true,
       },
+      '/gitlab-lfs/': {
+        target: 'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com/',
+        changeOrigin: true,
+      },
     },
   },
 });

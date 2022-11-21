@@ -222,7 +222,6 @@ export function downloadFile(params) {
       href = window.URL.createObjectURL(blob); // 创建下载的链接
     } else if (res?.data.download_url) {
       href = `/gitlab-lfs${res?.data.download_url.split('gitlab-lfs')[1]}`;
-      console.log(href);
     }
     downloadElement.href = href;
     downloadElement.download = params.path; // 下载后文件名

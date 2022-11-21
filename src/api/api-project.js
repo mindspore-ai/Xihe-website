@@ -162,13 +162,13 @@ export function projectsOrder(params) {
  * @returns
  */
 export function addDataset(params, owner, id) {
-  const url = `/server/project/${owner}/${id}/dataset/relation`;
+  const url = `/server/project/relation/${owner}/${id}/dataset`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 export function deleteDataset(params, owner, id) {
-  const url = `/server/project/${owner}/${id}/dataset/relation`;
+  const url = `/server/project/relation/${owner}/${id}/dataset`;
   return request
     .delete(url, { data: params, ...getHeaderConfig() })
     .then((res) => {
@@ -180,7 +180,7 @@ export function deleteDataset(params, owner, id) {
  * @returns
  */
 export function addModel(params, owner, id) {
-  const url = `/server/project/${owner}/${id}/model/relation`;
+  const url = `/server/project/relation/${owner}/${id}/model`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -190,7 +190,7 @@ export function addModel(params, owner, id) {
  * @returns
  */
 export function deleteModel(params, owner, id) {
-  const url = `/server/project/${owner}/${id}/model/relation`;
+  const url = `/server/project/relation/${owner}/${id}/model`;
   return request
     .delete(url, { data: params, ...getHeaderConfig() })
     .then((res) => {

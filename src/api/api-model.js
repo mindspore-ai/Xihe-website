@@ -159,13 +159,13 @@ export function checkNames(params) {
  * @returns
  */
 export function addDataset(params, owner, id) {
-  const url = `/server/model/${owner}/${id}/dataset/relation`;
+  const url = `/server/model/relation/${owner}/${id}/dataset`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 export function deleteDataset(params, owner, id) {
-  const url = `/server/model/${owner}/${id}/dataset/relation`;
+  const url = `/server/model/relation/${owner}/${id}/dataset`;
   return request
     .delete(url, { data: params, ...getHeaderConfig() })
     .then((res) => {

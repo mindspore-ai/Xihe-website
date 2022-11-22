@@ -62,41 +62,33 @@ export default [
   {
     path: '/modelzoo/codegeex',
     name: 'codegeex',
-    // component: () => {
-    //   return import('@/views/modelzoo/code-geex/TheCodeGeex.vue');
-    // },
-    redirect: '/',
+    component: () => {
+      return import('@/views/modelzoo/code-geex/TheCodeGeex.vue');
+    },
     children: [
       {
         path: '',
         name: 'codegeexExperience',
-        // component: () => {
-        //   return import('@/views/modelzoo/code-geex/TheCodeGeexExperience.vue');
-        // },
-        redirect: '/',
+        component: () => {
+          return import('@/views/modelzoo/code-geex/TheCodeGeexExperience.vue');
+        },
       },
-      // {
-      //   path: 'introduce',
-      //   name: 'codegeexIntroduce',
-      //   component: () => {
-      //     return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
-      //   },
-      // },
       {
         path: 'introduce',
         name: 'codegeexIntroduce',
-        // component: () => {
-        //   return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
-        // },
-        redirect: '/',
+        component: () => {
+          return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
+        },
       },
-      // {
-      //   path: 'test',
-      //   name: 'codegeexTest',
-      //   redirect: '/modelzoo/codegeex',
-      // },
       {
-        path: 'test',
+        path: 'introduce',
+        name: 'codegeexIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/code-geex/TheCodeGeexIntroduce.vue');
+        },
+      },
+      {
+        path: 'experience',
         name: 'codegeexTest',
         redirect: '/modelzoo/codegeex',
       },

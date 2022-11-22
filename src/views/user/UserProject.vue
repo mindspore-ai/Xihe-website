@@ -47,7 +47,6 @@ let query = reactive({
   name: '',
   page_num: 1,
   count_per_page: 12,
-  // owner_name: route.params.user,
   sort_by: 'update_time',
 });
 
@@ -163,15 +162,8 @@ watch(
       </div>
     </div>
 
-    <!-- <div v-else-if="projectCount === 0 && !bool" class="empty-status">
-      <img src="@/assets/imgs/project-empty.png" alt="" />
-      <p @click="setNewClick">该用户暂未创建任何项目</p>
-    </div> -->
-
     <div v-else class="empty-status">
       <img src="@/assets/imgs/project-empty.png" alt="" />
-      <!-- <p v-if="isAuthentic" @click="setNewClick">无匹配项目</p>
-      <p v-else>该用户暂未创建任何模型</p> -->
       <p
         v-if="isAuthentic && !queryData.keyWord"
         class="empty-text"
@@ -196,8 +188,6 @@ watch(
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // width: 100%;
-  // height: 100%;
   img {
     width: 280px;
     height: 206px;
@@ -233,20 +223,11 @@ watch(
         width: 100%;
         height: 100%;
       }
-      /* .title {
-        font-size: 18px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 5;
-      } */
       .title {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 84%;
-        // margin: 0 auto;
         font-size: 18px;
         position: absolute;
         top: 50%;

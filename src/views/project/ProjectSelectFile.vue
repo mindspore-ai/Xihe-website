@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus';
 
 // import { useFileData } from '@/stores';
 
-import { createTrainProject, getProjectData } from '@/api/api-project';
+import { createTrainProject } from '@/api/api-project';
 import { findFile, downloadFileObs, getDownLoadToken } from '@/api/api-obs';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 

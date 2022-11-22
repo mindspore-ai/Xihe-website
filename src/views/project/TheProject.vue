@@ -26,11 +26,6 @@ import { useLoginStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 
 const loginStore = useLoginStore();
-// import { useUserInfoStore, useFileData } from '@/stores';
-// const fileData = useFileData();
-// const detailData = computed(() => {
-//   return useFileData().fileStoreData;
-// });
 
 const route = useRoute();
 const router = useRouter();
@@ -124,10 +119,8 @@ const queryData = reactive({
   page_num: 1, //分页
   sort_by: null, //排序规则
 });
-// queryData.search = route.query.search;
 
 const debounceSearch = debounce(getProject, 500, {
-  // leading: true,
   trailing: true,
 });
 
@@ -177,7 +170,7 @@ function clearItem1(index) {
   queryData.tag_kinds = null;
 }
 // 训练平台标签
-function othersClick(index, index2) {
+/* function othersClick(index, index2) {
   otherCondition.value[index].haveActive = true;
   // 高亮
   otherCondition.value[index].condition[index2].isActive =
@@ -185,29 +178,19 @@ function othersClick(index, index2) {
   otherCondition.value[index].condition[0].items[index2].isActive =
     !otherCondition.value[index].condition[0].items[index2].isActive;
   goSearch(otherCondition.value);
-}
+} */
 // 清除训练平台标签
-function clearItem3(index) {
+/* function clearItem3(index) {
   otherCondition.value[index].haveActive = false;
   otherCondition.value[index].condition.forEach((item) => {
     item.isActive = false;
   });
   queryData[otherCondition.value[index].title.key] = null;
-}
+} */
 
 // 单选(sdk,状态，协议)
 function conditionClick(index, index2) {
   renderCondition.value[index].haveActive = true;
-  // renderCondition.value[index].condition.forEach((value) => {
-  //   console.log('value: ', value);
-  //   value.items=value.items.map((val) => {
-  //     return {
-  //       name: val,
-  //       isSelected: false,
-  //       isActive: false,
-  //     };
-  //   });
-  // });
   renderCondition.value[index].condition[0].items.forEach((item) => {
     item.isSelected = true;
   });
@@ -234,7 +217,6 @@ function clearItem(index) {
     item.isActive = false;
     item.isSelected = false;
   });
-  // queryData[renderCondition.value[index].title.key] = null;
   goSearch(renderCondition.value);
 }
 
@@ -268,7 +250,6 @@ function radioClick(detail, list) {
     });
     detail.isActive = !detail.isActive;
     renderCondition.value[list.title.key].haveActive = true;
-    // queryData[list.title.key] = detail.id;
   }
   goSearch(renderCondition.value);
 }
@@ -395,55 +376,6 @@ function goSearch(render) {
     }
   });
 }
-// function goSearch(render) {
-//   let time = 0;
-//   queryData.page_num = 1;
-//   let tagList = []; //标签
-//   let tag_kinds = []; //标签类型
-//   render.forEach((item) => {
-//     time = 0;
-//     // let tagList = [];
-//     item.condition.forEach((value) => {
-//       if (value.isActive) {
-//         if (item.title.key === 0) {
-//           tag_kinds.push(value.kind);
-//           if (tag_kinds.length < 6) {
-//             queryData.tag_kinds = tag_kinds.join(',');
-//           } else {
-//             ElMessage({
-//               message: '最多支持刷选5个标签 !',
-//               type: 'warning',
-//             });
-//             return;
-//           }
-//         } else if (item.title.key === 1) {
-//           value.items.forEach((val) => {
-//             tagList.push(val.name);
-//             queryData.tags = tagList.join(',');
-
-//             /* if (val.isActive) {
-//               tagList.push(val.name);
-
-//               if (queryData.tags) {
-//                 queryData.tags = queryData.tags + ',' + tagList.join(',');
-//               } else {
-//                 queryData.tags = tagList.join(',');
-//               }
-//             } */
-//           });
-//         }
-//       } else {
-//         // 取消点击
-//         time += 1;
-//       }
-//     });
-//     if (time === item.condition.length) {
-//       // queryData[item.title.key] = null; // 所有都未选不传
-//       item.haveActive = false;
-//       queryData.tag_kinds = null;
-//     }
-//   });
-// }
 
 function dropdownClick(item) {
   if (item.value === 'download') {
@@ -497,13 +429,6 @@ function getModelTag() {
       });
     });
     renderCondition.value = i18n.screenCondition.splice(1, 3); //训练平台、协议、项目类型的一级标签
-    // renderCondition.value.forEach((item, index) => {
-    //   item.showTagsAll = false;
-    //   item.condition.forEach((it) => {
-    //     it.isSelected = false;
-    //   });
-    //   item.num = index;
-    // });
     let ind;
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
@@ -511,20 +436,9 @@ function getModelTag() {
     renderSorts.value = i18n.screenCondition.splice(ind, 1); //应用分类的一级标签
     otherCondition.value = i18n.screenCondition;
     moreSortTags.value = renderSorts.value[0].condition; //应用分类的二级标签
-    /* moreSortTags.value.forEach((sort) => {
-      sort.haveActive = false;
-      sort.items = sort.items.map((tag) => {
-        return {
-          name: tag,
-          isActive: false,
-          isSelected: false,
-        };
-      });
-    }); */
     otherCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
-        // it.isSelected = false;
         return {
           name: it,
           isSelected: false,
@@ -630,12 +544,6 @@ onUnmounted(() => {
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">{{ i18n.taskSort }}</p>
-        <!-- <el-input
-          v-model="queryData.search"
-          :prefix-icon="Search"
-          class="w-50 m-2"
-          placeholder="请输入tag名称"
-        /> -->
         <div
           v-for="(item, index) in moreSortTags"
           :key="item.id"
@@ -886,27 +794,6 @@ onUnmounted(() => {
                 </div>
                 <div class="card-modal"></div>
               </div>
-
-              <!-- TODO: -->
-              <!-- <div class="card-top">
-                <div class="description">
-                  <p>{{ item.desc }}</p>
-                </div>
-                <img
-                  :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
-                  alt=""
-                />
-                <div class="title">
-                  <span>
-                    {{ item.name }}
-                  </span>
-                </div>
-                <div class="dig">
-                  <o-icon> <icon-heart></icon-heart> </o-icon
-                  >{{ item.like_count }}
-                </div>
-                <div class="card-modal"></div>
-              </div> -->
 
               <div class="card-bottom">
                 <div class="info">

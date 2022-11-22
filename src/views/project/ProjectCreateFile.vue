@@ -68,34 +68,10 @@ const form = reactive({
     version: 'mindspore_1.3.0-cuda_10.1-py_3.7-ubuntu_1804-x86_64',
     flavor: 'modelarts.p3.large.public',
   },
-  datasets: [
-    /* {
-      File: '', //模型或数据集的文件路径
-      key: '', //引用这个模型或数据集的参数
-      name: '', //数据集或模型仓库的名称
-      owner: '', //数据集或模型仓库的拥有者
-    }, */
-  ],
-  hyperparameter: [
-    /* {
-      key: '',
-      value: '',
-    }, */
-  ],
-  env: [
-    /* {
-      key: '',
-      value: '',
-    }, */
-  ],
-  models: [
-    /* {
-      File: '',
-      key: '',
-      name: '',
-      owner: '',
-    }, */
-  ],
+  datasets: [],
+  hyperparameter: [],
+  env: [],
+  models: [],
   desc: '',
 });
 
@@ -269,18 +245,6 @@ async function confirmCreating(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      /* let models = {},
-        datasets = {},
-        hyperparameter = {},
-        env = {};
-      try {
-        models = JSON.parse(form.models);
-        datasets = JSON.parse(form.datasets);
-        hyperparameter = JSON.parse(form.hyperparameter);
-        env = JSON.parse(form.env);
-      } catch (e) {
-        // console.error(e);
-      } */
       // 获取模型数据
       // debugger;
       model.value.forEach((element) => {
@@ -330,14 +294,6 @@ async function confirmCreating(formEl) {
               });
             }, 500);
           }
-          /*  } else {
-          ElMessage({
-            type: 'error',
-            message: res.msg,
-            duration: 5000,
-            center: true,
-          });
-        } */
         })
         .catch((error) => {
           // console.log(error.response);
@@ -1075,11 +1031,6 @@ function selectFile(item) {
         margin-bottom: 24px;
       }
       .createfile-form-wrap {
-        .el-form {
-          // display: flex;
-          // display: grid;
-          // justify-content: space-between;
-        }
         // 表单上侧
         .form-wrap-top {
           padding-bottom: 14px;
@@ -1094,14 +1045,6 @@ function selectFile(item) {
                 top: 50%;
                 transform: translateY(-40%);
                 font-size: 8px;
-
-                /* .item-title-text {
-                  vertical-align: middle;
-                  margin-right: 4px;
-                } */
-                // .o-icon .el-tooltip__trigger{
-                //   font-size: 30px;
-                // }
               }
               .option {
                 width: 100%;
@@ -1184,10 +1127,6 @@ function selectFile(item) {
   .el-form-item {
     margin-bottom: 26px;
     margin-left: 10px;
-    // width: 560px;
-    /* @media (max-width: 1440px) {
-      width: 500px;
-    } */
     .el-form-item__content {
       // width: 100%;
       width: 546px;
@@ -1224,7 +1163,6 @@ function selectFile(item) {
   .form-item-btn {
     display: flex;
     align-items: center;
-    // font-size: 23px;
     .btn-text {
       margin-left: 16px;
     }
@@ -1268,13 +1206,6 @@ function selectFile(item) {
           }
         }
       }
-      /* .el-input {
-        width: 100%;
-        margin-bottom: 26px;
-      }
-      .el-form-item__error {
-        top: calc(100% + -75px);
-      } */
     }
   }
 }

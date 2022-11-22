@@ -19,17 +19,14 @@ import { ElMessage } from 'element-plus';
 import warningImg from '@/assets/icons/warning.png';
 
 import { useUserInfoStore, useFileData } from '@/stores';
-import { downloadObs, findFile } from '@/api/api-obs';
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { trainList } from '@/api/api-project';
 
 import {
   addDataset,
   deleteDataset,
-  modifyProjectAdd,
   addModel,
   deleteModel,
-  modifyModelAdd,
 } from '@/api/api-project';
 
 const route = useRoute();
@@ -97,7 +94,9 @@ function getTrainList() {
     // console.log('trainListData.value: ', trainListData.value);
   });
 }
-getTrainList();
+if (userInfo.id) {
+  getTrainList();
+}
 //跳转到选择文件创建训练实例页
 function goSelectFile() {
   if (trainListData.value !== null && trainListData.value.length === 5) {
@@ -174,8 +173,6 @@ function confirmAdd() {
   } else {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    // console.log('params: ', params);
-
     addDataset(params, detailData.value.owner, detailData.value.id).then(
       (res) => {
         if (res.data.length === 0) {
@@ -185,16 +182,6 @@ function confirmAdd() {
           });
           return;
         } else {
-          /* let modifyParams = {
-            relate_infer_datasets: [],
-          };
-          detailData.value.relate_infer_datasets_list.forEach((item) => {
-            modifyParams.relate_infer_datasets.push(item.id);
-          });
-          let projectId = detailData.value.id;
-          modifyParams.relate_infer_datasets.push(res.results.data[0].id);
-          modifyProjectAdd(modifyParams, projectId).then((res) => {
-            if (res.status === 200) { */
           ElMessage({
             type: 'success',
             message: '添加成功',
@@ -202,9 +189,6 @@ function confirmAdd() {
           emit('on-click');
           isShow.value = false;
           addSearch.value = '';
-          //   }
-          // });
-          // detailData.value.related_datasets.push(res.data);
         }
       }
     );
@@ -248,33 +232,13 @@ function confirmClick() {
     params.name = paramsArr[1];
     addModel(params, detailData.value.owner, detailData.value.id).then(
       (res) => {
-        /* let modifyParams = {
-          relate_infer_models: [],
-        };
-
-        detailData.value.relate_infer_models_list.forEach((item) => {
-          modifyParams.relate_infer_models.push(item.id);
-        });
-
-        let projectId = detailData.value.id;
-        modifyParams.relate_infer_models.push(res.results.data[0].id);
-
-        modifyModelAdd(modifyParams, projectId).then((res) => {
-          if (res.status === 200) { */
         emit('on-click');
         isShow1.value = false;
         addSearch.value = '';
-        //   }
-        // });
       }
     );
   }
 }
-
-/* const deleteRelate = ref(false);
-function cancelClick() {
-  deleteRelate.value = false;
-} */
 
 // 删除数据集、模型
 function deleteClick(item) {
@@ -284,13 +248,11 @@ function deleteClick(item) {
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
-      // if (res.status === 200) {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关数据集。',
       });
       emit('on-click');
-      // }
     });
   } else if (item.type === 'model') {
     deleteModel(
@@ -342,28 +304,6 @@ function getReadMeFile() {
       .catch((err) => {
         console.error(err);
       });
-
-    // findFile(
-    //   `xihe-obj/projects/${route.params.user}/${routerParams.name}/train/`
-    // ).then((tree) => {
-    //   if (
-    //     tree.status === 200 &&
-    //     tree.data.children &&
-    //     tree.data.children.length
-    //   ) {
-    //     README = tree.data.children.filter((item) => {
-    //       return item.name === 'README.md';
-    //     });
-    //     if (README[0]) {
-    //       downloadObs(README[0].path).then((res) => {
-    //         res ? (codeString.value = res) : '';
-    //       });
-    //       result.value = mkit.render(codeString.value);
-    //     } else {
-    //       codeString.value = '';
-    //     }
-    //   }
-    // });
   } catch (error) {
     console.error(error);
   }
@@ -678,12 +618,8 @@ function toggleDelDlg(flag) {
     padding-right: 48px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
-    // display: flex;
-    // flex-direction: row-reverse;
     position: relative;
     .createtrain-btn {
-      // width: 120px;
-      // height: 48px;
       position: absolute;
       right: 192px;
       z-index: 1;
@@ -801,9 +737,7 @@ function toggleDelDlg(flag) {
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        // margin-top: 24px;
         .dataset-item {
-          // max-width: 424px;
           width: 100%;
           padding: 24px;
           background-color: #fff;

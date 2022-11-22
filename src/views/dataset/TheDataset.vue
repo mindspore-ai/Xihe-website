@@ -8,8 +8,6 @@ import OEmpty from '@/components/OEmpty.vue';
 import { Search } from '@element-plus/icons-vue';
 import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
-// import IconTime from '~icons/app/time';
-// import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
 import emptyImg from '@/assets/imgs/dataset-empty.png';
@@ -321,7 +319,6 @@ function handleTagSearch(date) {
     item.items.forEach((val) => {
       if (val.isActive === true) {
         tagList.push(val.name);
-        // console.log('tagList: ', tagList);
       }
     });
   });
@@ -378,14 +375,6 @@ function getModelTag() {
         item.condition.push(it);
       });
     });
-    // renderCondition.value = i18n.screenCondition.splice(1, 3);
-    // renderCondition.value.forEach((item, index) => {
-    //   item.showTagsAll = false;
-    //   item.condition.forEach((it) => {
-    //     it.isSelected = false;
-    //   });
-    //   item.num = index;
-    // });
     let ind;
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
@@ -417,16 +406,12 @@ function getModelTag() {
           isSelected: false,
         };
       });
-      // sort.condition = sort.task_list;
     });
   });
 }
 getModelTag();
 
 function goDetail(user, name) {
-  // router.push({
-  //   path: `/datasets/${user}/${name}`,
-  // });
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/datasets/${user}/${name}`,
@@ -518,12 +503,6 @@ onUnmounted(() => {
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">{{ i18n.taskSort }}</p>
-        <!-- <el-input
-          v-model="query.search"
-          :prefix-icon="Search"
-          class="w-50 m-2"
-          placeholder="请输入tag名称"
-        /> -->
         <div
           v-for="(item, index) in moreSortTags"
           :key="item.id"
@@ -567,11 +546,6 @@ onUnmounted(() => {
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">协议</p>
-        <!-- <el-input
-          v-model="query.search"
-          :prefix-icon="Search"
-          placeholder="请输入tag名称"
-        /> -->
         <div class="condition-radio">
           <div
             v-for="detail in radioList.items"

@@ -28,15 +28,7 @@ const i18n = {
     <div class="card-top">
       <div class="model-name">{{ cardData.resource.name }}</div>
     </div>
-    <div class="label-box">
-      <!-- <div
-          v-for="label in cardData.task_list"
-          :key="label.id"
-          class="label-item"
-        >
-          {{ label.name }}
-        </div> -->
-    </div>
+    <div class="label-box"></div>
     <p class="model-introduce">
       {{ cardData.resource.description }}
     </p>

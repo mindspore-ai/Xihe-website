@@ -32,7 +32,6 @@ getGuide(userComData.dataset_doc)
 <template>
   <div class="dataset-page">
     <div class="header">
-      <!-- <div></div> -->
       <o-button
         v-if="userComData.is_competitor"
         size="small"

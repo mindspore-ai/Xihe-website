@@ -41,7 +41,6 @@ let query = reactive({
   name: '',
   page_num: 1,
   count_per_page: 10,
-  // owner_name: route.params.user,
   sort_by: '',
 });
 const emit = defineEmits(['getlivecount', 'domChange']);
@@ -170,7 +169,6 @@ watch(props, () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  // height: 100%;
   flex-direction: column;
   .empty-img {
     width: 280px;

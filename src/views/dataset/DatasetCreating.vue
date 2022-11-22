@@ -3,20 +3,14 @@ import { reactive, ref } from 'vue';
 import { useUserInfoStore } from '@/stores';
 
 import IconNecessary from '~icons/app/necessary.svg';
-// import IconPoppver from '~icons/app/popover.svg';
-
-// import OSelect from '@/components/OSelect.vue';//
-// import OInput from '@/components/OInput.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
 import protocol from '../../../config/protocol';
-// import { getModelTags } from '@/api/api-model';
 import { createDataset, checkNames } from '@/api/api-dataset';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const userInfo = useUserInfoStore();
-// const visual = ref('Public');
 const i18n = {
   homePage: '个人主页',
   createPlaceholder: '新建数据集',
@@ -45,31 +39,16 @@ let query = reactive({
   desc: '',
   protocol: protocol[0].name,
 });
-// function getOwnSelect(value) {
-//   query.owner = value;
-// }
-// function getLicenses(value) {
-//   query.licenses.push(value);
-// }
 
 try {
   owner.value = useUserInfoStore().owner;
-  // getModelTags().then((res) => {
-  //   protocol.value = res.data.licenses;
-  //   query.protocol = protocol.value[0].name;
-  // });
-  // query.owner = owner.value[0];
-  // query.licenses[0] = licenses.value[0];
 } catch (error) {
   console.error(error);
 }
 function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
-    // console.log(valid);
     if (valid) {
-      // let newList = JSON.parse(JSON.stringify(query));
-      // newList.protocol = [newList.protocol];
       createDataset(query)
         .then((res) => {
           router.push(`/datasets/${userInfo.userName}/${res.data.name}`);
@@ -77,20 +56,6 @@ function create(formEl) {
             type: 'success',
             message: '创建成功',
           });
-          // if (res.status === 200) {
-          //   ElMessage({
-          //     type: 'success',
-          //     message: '创建成功',
-          //   });
-          //   router.push(
-          //     `/datasets/${res.data.owner_name.name}/${res.data.name}/tree`
-          //   );
-          // } else {
-          //   ElMessage({
-          //     type: 'error',
-          //     message: '文件名重复，或文件名不合规',
-          //   });
-          // }
         })
         .catch((err) => {
           if (err.message === 'unsupported protocol') {
@@ -152,11 +117,6 @@ function getByteLength(str) {
         >
         <el-breadcrumb-item class="set-new">新建数据集</el-breadcrumb-item>
       </el-breadcrumb>
-      <!-- <span class="home" @click="router.push(`/${userInfo.userName}`)">{{
-        i18n.homePage
-      }}</span
-      ><span class="arrow">&gt;</span
-      ><span class="createPlaceholder">{{ i18n.createPlaceholder }}</span> -->
     </div>
 
     <el-form ref="queryRef" class="creating-box" :model="query" prop="region">
@@ -219,33 +179,6 @@ function getByteLength(str) {
           :placeholder="i18n.placeholder.name"
           size=""
         ></el-input>
-        <!-- <el-popover
-          visible
-          placement="bottom-start"
-          :width="372"
-          trigger="hover"
-          content="this is content, this is content, this is content"
-          :teleported="false"
-        >
-          <template #reference>
-            <o-icon><icon-poppver></icon-poppver></o-icon>
-          </template>
-          <div>
-            <div>- 仓库名目前只支持英文</div>
-            <div>
-              - 仓库名名称不能以英文句号(<span class="remind">.</span
-              >)开头或结尾，且不能包含以下字符<span class="remind"
-                >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
-              >
-            </div>
-            <div>
-              -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-                class="remind"
-                >不能超过1000字符</span
-              >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
-            </div>
-          </div>
-        </el-popover> -->
         <o-popper></o-popper>
       </el-form-item>
       <el-form-item
@@ -337,15 +270,6 @@ function getByteLength(str) {
         font-weight: 400;
       }
     }
-    // .home {
-    //   cursor: pointer;
-    // }
-    // .arrow {
-    //   margin: 0 3px;
-    // }
-    // .createPlaceholder {
-    //   color: #000000;
-    // }
   }
 
   .creating-box {
@@ -360,19 +284,6 @@ function getByteLength(str) {
     min-height: calc(100vh - 558px);
 
     .des {
-      // .el-textarea {
-      //   width: 400px;
-      //   :deep(.el-textarea__inner) {
-      //     height: 126px;
-      //     box-shadow: 0 0 0 1px #999999 inset;
-      //     border-radius: 0%;
-      //     padding: 7px 16px;
-      //     resize: none;
-      //     &:focus {
-      //       box-shadow: 0 0 0 1px #555555 inset !important;
-      //     }
-      //   }
-      // }
       align-items: center;
     }
     .item {
@@ -416,7 +327,6 @@ function getByteLength(str) {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        // position: relative;
         .el-radio.el-radio--large {
           height: 32px;
         }
@@ -425,21 +335,14 @@ function getByteLength(str) {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;
-          // position: absolute;
-          // top: 27px;
         }
         .explain2 {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;
-          // position: absolute;
-          // top: 79px;
         }
       }
     }
-    // .o-button {
-    //   width: 150px;
-    // }
     .el-form-item {
       .el-form-item__cotent {
         .el-form-item__error {
@@ -447,23 +350,6 @@ function getByteLength(str) {
         }
       }
       margin: 0;
-      // .el-popover.el-popper {
-      //   padding: 24px 16px 16px 16px;
-      //   font-size: 12px;
-      //   line-height: 16px;
-      //   color: #656565;
-      //   .remind {
-      //     color: #f13b35;
-      //   }
-      // }
-      // position: relative;
-      // .el-tooltip__trigger {
-      //   cursor: pointer;
-      //   position: absolute;
-      //   right: -40px;
-      //   top: 5px;
-      //   font-size: 24px;
-      // }
       .requirement {
         line-height: 34px;
       }

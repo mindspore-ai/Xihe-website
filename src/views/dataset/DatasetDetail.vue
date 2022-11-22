@@ -10,15 +10,9 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import OHeart from '@/components/OHeart.vue';
 
-// import { getModelTags } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
 import protocol from '../../../config/protocol';
-import {
-  getDatasetData,
-  modifyDataset,
-  getTags,
-  modifyTags,
-} from '@/api/api-dataset';
+import { getTags, modifyTags } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useFileData } from '@/stores';
@@ -27,7 +21,6 @@ const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
 
 const isDigged = ref(false);
-const digCount = ref(0);
 const router = useRouter();
 const route = useRoute();
 const headTags = ref([]);
@@ -36,25 +29,11 @@ const inputDom = ref();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-let reopt = {
-  method: 'PUT',
-  url: null,
-  headers: null,
-};
 
 let isTagShow = ref(false);
 const tabPosition = ref('left');
 
 let renderList = ref([]);
-let queryDate = {
-  device_target: [],
-  libraries: [],
-  licenses: [],
-  tags: [],
-  task: [],
-  task_cate: [],
-  // dataset_format: [],
-};
 
 let dialogList = {
   head: {
@@ -114,33 +93,37 @@ function getDetailData() {
       user: route.params.user,
       repoName: route.params.name,
       modular: 'dataset',
-    }).then((res) => {
-      let storeData = res.data;
-      // 判断仓库是否属于自己
-      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
-      // 文件列表是否为空
-      if (detailData.value) {
-        storeData['is_empty'] = detailData.value.is_empty;
-      }
-      fileData.setFileData(storeData);
-      isDigged.value = detailData.value.liked;
-      const { tags } = detailData.value;
-      modelTags.value = [];
-      headTags.value = [];
-      if (tags) {
-        tags.forEach((item) => {
-          modelTags.value.push({ name: item });
-        });
-        headTags.value = modelTags.value.filter((item) => {
-          let a = protocol.map((it) => {
-            if (it.name === item.name) return false;
+    })
+      .then((res) => {
+        let storeData = res.data;
+        // 判断仓库是否属于自己
+        storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+        // 文件列表是否为空
+        if (detailData.value) {
+          storeData['is_empty'] = detailData.value.is_empty;
+        }
+        fileData.setFileData(storeData);
+        isDigged.value = detailData.value.liked;
+        const { tags } = detailData.value;
+        modelTags.value = [];
+        headTags.value = [];
+        if (tags) {
+          tags.forEach((item) => {
+            modelTags.value.push({ name: item });
           });
-          if (!a.indexOf(false)) return false;
-          else return true;
-        });
-      }
-      preStorage.value = JSON.stringify(headTags.value);
-    });
+          headTags.value = modelTags.value.filter((item) => {
+            let a = protocol.map((it) => {
+              if (it.name === item.name) return false;
+            });
+            if (!a.indexOf(false)) return false;
+            else return true;
+          });
+        }
+        preStorage.value = JSON.stringify(headTags.value);
+      })
+      .catch(() => {
+        router.push('/404');
+      });
     getTagList();
   } catch (error) {
     router.push('/notfound');
@@ -213,7 +196,6 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    // if (key === 'task') {
     renderList.value[key].items.forEach((item) => {
       item.items.forEach((it) => {
         if (it.name === tag.name) {
@@ -221,13 +203,6 @@ function deleteClick(tag) {
         }
       });
     });
-    // } else {
-    //   renderList.value[key].forEach((item) => {
-    //     if (item.name === tag.name) {
-    //       item.isActive = false;
-    //     }
-    //   });
-    // }
   });
 }
 
@@ -237,29 +212,11 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    // if (menuitem === 'task') {
     renderList.value[menuitem].items.forEach((it) => {
       it.items.forEach((item) => {
         item.isActive = false;
       });
     });
-    // } else if (menuitem === 'status') {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     if (detailData.value.status_name === it.name) {
-    //       it.isActive = true;
-    //     }
-    //   });
-    // } else if (menuitem === 'sdk') {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     if (detailData.value.sdk_name === it.name) {
-    //       it.isActive = true;
-    //     }
-    //   });
-    // } else {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     it.isActive = false;
-    //   });
-    // }
   });
 }
 
@@ -321,65 +278,10 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  // dialogList.menuList.forEach((menu) => {
-  //   if (menu.key === 'task') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       item.task_list.forEach((it) => {
-  //         if (it.isActive) {
-  //           queryDate[menu.key].push(it.id);
-  //           let index = queryDate['task_cate'].indexOf(it.task_cate_id);
-  //           if (index === -1) {
-  //             queryDate['task_cate'].push(it.task_cate_id);
-  //           }
-  //           // console.log(queryDate['task_cate']);
-  //         } else {
-  //           return;
-  //         }
-  //       });
-  //     });
-  //     // TODO: 修改, 情况重复;
-  //   } else if (menu.key === 'tags') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive === true) {
-  //         queryDate[menu.key].push(item.id);
-  //       }
-  //     });
-  //   } else if (menu.key === 'licenses') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive) {
-  //         queryDate[menu.key].push(item.id);
-  //       }
-  //     });
-  //   } else {
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive === true) {
-  //         queryDate[menu.key] = item.id;
-  //       }
-  //     });
-  //   }
-  // });
-  // let params = queryDate;
-  // params.id = detailData.value.id;
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
     () => {
-      // if (res.status === 200) {
-      //   ElMessage({
-      //     type: 'success',
-      //     message: res.msg,
-      //     center: true,
-      //   });
       getDetailData();
       isTagShow.value = false;
-      // } else {
-      //   ElMessage({
-      //     type: 'error',
-      //     message: res.msg,
-      //     center: true,
-      //   });
-      // }
     }
   );
 }
@@ -406,11 +308,6 @@ function getTagList() {
           };
         });
       });
-      // } else {
-      //   renderList.value[key].map((item) => {
-      //     item.isActive = false;
-      //   });
-      // }
     });
     headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
@@ -422,26 +319,6 @@ function getTagList() {
             }
           });
         });
-
-        // } else if (menuitem === 'status') {
-        //   renderList.value[menuitem].forEach((it) => {
-        //     if (detailData.value.status_name === it.name) {
-        //       it.isActive = true;
-        //     }
-        //   });
-        // } else if (menuitem === 'sdk') {
-        //   renderList.value[menuitem].forEach((it) => {
-        //     if (detailData.value.sdk_name === it.name) {
-        //       it.isActive = true;
-        //     }
-        //   });
-        // } else {
-        //   renderList.value[menuitem].map((it) => {
-        //     if (it.name === item.name) {
-        //       it.isActive = true;
-        //     }
-        //   });
-        // }
       });
     });
   });
@@ -486,9 +363,6 @@ watch(
     return useUserInfoStore().token;
   },
   (token) => {
-    // if (token && token !== preToken) {
-    //   getDetailData();
-    // }
     if (token) {
       getDetailData();
     }
@@ -599,21 +473,6 @@ watch(
                     </div>
                   </div>
                 </div>
-                <!-- </div> -->
-                <!-- <div v-else class="noTask-box">
-                  <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
-                    class="condition-detail"
-                    :class="[
-                      { 'condition-active': item.isActive },
-                      { 'condition-active1': item.isSelected },
-                    ]"
-                    @click="tagClick(item, menu.key)"
-                  >
-                    {{ item.name }}
-                  </div>
-                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -681,7 +540,6 @@ $theme: #0d8dff;
       margin: 0 16px 10px 0;
       height: 28px;
       font-size: 14px;
-      // color: #555;
       color: $theme;
       user-select: none;
       background-color: #f3f9ff;
@@ -697,7 +555,6 @@ $theme: #0d8dff;
 :deep .el-dialog {
   width: 800px;
   min-height: 502px;
-  // --el-dialog-margin-top: 24vh;
 }
 .dialog-body {
   margin-bottom: 18px;
@@ -744,9 +601,6 @@ $theme: #0d8dff;
     background-color: #f3f9ff;
     border-radius: 8px;
     border: 1px solid #e5e5e5;
-    // .icon-x {
-    //   display: none;
-    // }
   }
   .condition-active {
     color: $theme;
@@ -791,9 +645,6 @@ $theme: #0d8dff;
   padding: 0 16px;
   max-width: 1472px;
 }
-// .input-dom {
-//   display: none;
-// }
 .model-detail {
   background-color: #fff;
   .card-head-top {
@@ -898,7 +749,6 @@ $theme: #0d8dff;
 
   .el-tabs__item {
     height: 48px;
-    // font-size: 16px;
     color: #555555;
     font-weight: normal;
     line-height: 48px;

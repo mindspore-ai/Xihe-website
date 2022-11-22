@@ -213,12 +213,6 @@ function getTrainList() {
           (item) => item.status === 'scheduling' || item.status === 'Running'
         );
 
-        // if (bool || trainData.value.length >= 5) {
-        //   btnShow.value = true;
-        // } else {
-        //   btnShow.value = false;
-        // }
-
         if (trainData.value.length < 5 && !bool) {
           btnShow.value = false;
         } else if (bool) {

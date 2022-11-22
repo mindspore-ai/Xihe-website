@@ -99,7 +99,7 @@ function addRelateClick() {
 }
 
 function confirmAdd() {
-  // 如果填写为空,提示-->return  TODO:提示
+  // 如果填写为空,提示-->return
   if (addSearch.value === '') return;
   let params = {};
   let paramsArr = addSearch.value.split('/');
@@ -115,23 +115,11 @@ function confirmAdd() {
         });
         return;
       } else {
-        // let modifyParams = {
-        //   relate_datasets: [],
-        // };
-        // detailData.value.relate_datasets_list.forEach((item) => {
-        //   modifyParams.relate_datasets.push(item.id);
-        // });
-        // let projectId = detailData.value.id;
-        // modifyParams.relate_datasets.push(res.results.data[0].id);
-        // modifyProjectAdd(modifyParams, projectId).then((res) => {
-        // if (res.status === 200) {
         ElMessage({
           type: 'success',
           message: '添加成功',
         });
         emit('on-click');
-        // }
-        // });
       }
     })
     .catch((err) => {
@@ -148,48 +136,18 @@ function confirmAdd() {
 function deleteClick(item) {
   let projectId = detailData.value.id;
   if (item.type === 'dataset') {
-    // let modifyParams = {
-    //   relate_datasets: [],
-    // };
-    // detailData.value.relate_datasets_list.forEach((child) => {
-    //   if (item[0].id !== child.id) {
-    //     modifyParams.relate_datasets_list.push(child.id);
-    //   }
-    // });
     deleteDataset(
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
     ).then((res) => {
-      // if (res.status === 200) {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关数据集。',
       });
       emit('on-click');
-      // }
     });
   }
-  /* else {
-    let modifyParams = {
-      relate_projects: [],
-    };
-    detailData.value.relate_projects_list.forEach((child) => {
-      if (item[0].id !== child.id) {
-        modifyParams.relate_projects.push(child.id);
-      }
-    });
-    modifyProjectAdd(modifyParams, projectId).then((res) => {
-      if (res.status === 200) {
-        ElMessage({
-          type: 'success',
-          message: '删除成功！你可再次添加相关模型。',
-        });
-        emit('on-click');
-      }
-    });
-    return false;
-  } */
 }
 
 function goEditor() {
@@ -216,7 +174,6 @@ function goDetailClick(val) {
   router.push(`/datasets/${val.owner.name}/${val.name}`);
 }
 function goProjectClick(val) {
-  // console.log('val: ', val);
   router.push(`/projects/${val.owner.name}/${val.name}`);
 }
 // 文本监听

@@ -209,6 +209,11 @@ socket.onmessage = function (event) {
           } else {
             isEvaluating.value = true;
           }
+        } else if (trainDetail.value.status === 'Failed') {
+          handleGetLog();
+          handleGetOutput();
+          isEvaluating.value = true;
+          isCusEvaluating.value = true;
         } else {
           isEvaluating.value = true;
           isCusEvaluating.value = true;
@@ -570,7 +575,7 @@ watch(
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
-              {{ logUrl === '' ? '训练中' : logName }}
+              {{ logUrl === '' ? '' : logName }}
             </div>
           </li>
           <li class="info-list">
@@ -594,7 +599,9 @@ watch(
             </div>
             <div class="info-list-detail document">
               <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
-              <p v-else><span @click="handleNofileClick">训练中</span></p>
+              <p v-else>
+                <span @click="handleNofileClick"></span>
+              </p>
             </div>
           </li>
 

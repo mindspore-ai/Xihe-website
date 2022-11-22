@@ -34,14 +34,14 @@ const i18n = {
     description: '更改描述',
     options: [
       {
-        value: 'private',
+        value: 'Private',
         label: 'Private',
         id: 1,
         describe:
           '其他用户将无法搜索、查看你的模项目，仅你及你的团队成员可查看和编辑此项目。',
       },
       {
-        value: 'public',
+        value: 'Public',
         label: 'Public',
         id: 2,
         describe:
@@ -119,9 +119,9 @@ function getOwnSelect(value) {
 visibleValue.value = detailData.repo_type;
 function getVisiableSelect(value) {
   visibleValue.value = value;
-  //   value === 'private'
-  //     ? (visibleValue.value = true)
-  //     : (visibleValue.value = false);
+  value === 'Private'
+    ? (visibleValue.value = 'private')
+    : (visibleValue.value = 'public');
 }
 photos.forEach((item) => {
   item.is_active = false;
@@ -164,6 +164,7 @@ function confirmPrivate() {
     .then((res) => {
       // if (res.status === 200) {
       detailData.desc = res.data.desc;
+      detailData.repo_type = res.data.repo_type;
       ElMessage({
         type: 'success',
         message: '项目信息更改成功',

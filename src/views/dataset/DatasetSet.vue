@@ -93,8 +93,8 @@ function getOwnSelect(value) {
 }
 function getVisiableSelect(value) {
   value === 'Private'
-    ? (visibleValue.value = true)
-    : (visibleValue.value = false);
+    ? (visibleValue.value = 'private')
+    : (visibleValue.value = 'public');
 }
 // debugger;
 // console.log('数据集详情数据: ', detailData);
@@ -179,6 +179,7 @@ function confirmPrivate() {
     .then((res) => {
       // if (res.status === 200) {
       detailData.desc = res.data.desc;
+      detailData.repo_type = res.data.repo_type;
       ElMessage({
         type: 'success',
         message: '修改成功',

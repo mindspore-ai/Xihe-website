@@ -150,11 +150,11 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  // if (newList.is_private === 'Public') {
-  //   newList.is_private = false;
-  // } else {
-  //   newList.is_private = true;
-  // }
+  if (newList.repo_type === 'Public') {
+    newList.repo_type = 'public';
+  } else {
+    newList.repo_type = 'private';
+  }
   // protocol.value.forEach((item) => {
   //   if (item.name === newList.protocol) {
   //     newList.protocol = [item.id];
@@ -217,7 +217,7 @@ projectPhotos.value[0].is_active = true;
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
 proList.protocol = protocol[0].name;
-proList.repo_type = 'public';
+proList.repo_type = 'Public';
 // console.log('1', trainSdk, '2', projectPhotos);
 // });
 /* beforeRouteEnter(from){
@@ -411,11 +411,11 @@ onMounted(() => {});
           <el-form-item class="view" :label="i18n.view">
             <div class="visual">
               <el-radio-group v-model="proList.repo_type">
-                <el-radio label="public" />
+                <el-radio label="Public" />
               </el-radio-group>
               <div class="visual-desc">所有人可见</div>
               <el-radio-group v-model="proList.repo_type">
-                <el-radio label="private" />
+                <el-radio label="Private" />
               </el-radio-group>
               <div class="visual-desc">仅自己可见</div>
             </div>

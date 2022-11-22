@@ -211,7 +211,13 @@ socket.onmessage = function (event) {
           }
         } else if (trainDetail.value.status === 'Failed') {
           handleGetLog();
-          handleGetOutput();
+          // handleGetOutput();
+          outputName.value = '';
+          isEvaluating.value = true;
+          isCusEvaluating.value = true;
+        } else if (trainDetail.value.status === 'Running') {
+          logName.value = '训练中';
+          outputName.value = '训练中';
           isEvaluating.value = true;
           isCusEvaluating.value = true;
         } else {
@@ -434,22 +440,7 @@ const downloadBlob = (blob, fileName) => {
   }
 };
 
-function handleNofileClick() {
-  ElMessage({
-    type: 'warning',
-    message: '训练中,请训练完成后点击下载',
-  });
-}
-
 async function downloadLogFile() {
-  if (!logUrl.value) {
-    ElMessage({
-      type: 'warning',
-      message: '训练中,请训练完成后点击下载',
-    });
-    return;
-  }
-
   let url = logUrl.value;
   let data = await fetch(url)
     .then((response) => response.blob())
@@ -575,7 +566,7 @@ watch(
           <li class="info-list">
             <div class="info-list-title">日志文件</div>
             <div class="info-list-detail document" @click="downloadLogFile">
-              {{ logUrl === '' ? '' : logName }}
+              {{ logName }}
             </div>
           </li>
           <li class="info-list">
@@ -600,7 +591,7 @@ watch(
             <div class="info-list-detail document">
               <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
               <p v-else>
-                <span @click="handleNofileClick"></span>
+                <span>{{ outputName }}</span>
               </p>
             </div>
           </li>

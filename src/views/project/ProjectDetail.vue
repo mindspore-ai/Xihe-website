@@ -600,12 +600,13 @@ function forkCreateClick() {
       // const owner1 = 's9qfqri3zpc8j2x7';
       // const id1 = '632414db7187a3b38b417660';
       projectFork(detailData.value.owner, detailData.value.id, params)
-        .then((res) => {
+        .then(() => {
           // if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
             `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );
+          location.reload();
           // } else {
           //   loadingShow.value = false;
           //   ElMessage({

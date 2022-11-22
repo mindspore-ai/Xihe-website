@@ -6,6 +6,7 @@ import { getUserLive } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/live-empty.png';
 import lovingHeartImg from '@/assets/icons/lovingHeart.png';
 import creatingImg from '@/assets/icons/creating.png';
+import forkImg from '@/assets/icons/fork.png';
 
 import projectcard from '@/views/user/UserProjectcard.vue';
 import livecard from '@/views/user/UserLivecard.vue';
@@ -46,6 +47,7 @@ function getLiveData() {
     if (res.data) {
       liveCount.value = res.data.length;
       liveData.value = res.data;
+      // console.log('liveData.value: ', liveData.value);
       if (liveCount.value > 6) {
         emit('domChange', 76);
       }
@@ -69,15 +71,16 @@ watch(
 );
 
 function goDetail(item) {
-  if (item.resource.type.indexOf('model') !== -1) {
+  console.log('item: ', item);
+  if (item.resource.type === 'model') {
     router.push({
       path: `/models/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.resource.type.indexOf('dataset') !== -1) {
+  } else if (item.resource.type === 'dataset') {
     router.push({
       path: `/datasets/${item.resource.owner.name}/${item.resource.name}`,
     });
-  } else if (item.resource.type.indexOf('project') !== -1) {
+  } else if (item.resource.type === 'project') {
     router.push({
       path: `/projects/${item.resource.owner.name}/${item.resource.name}`,
     });
@@ -117,19 +120,24 @@ getCount();
           :key="item.id"
           class="card-list-item"
         >
-          <div class="card-list-item-title">
-            <img v-if="item.type.includes('like')" :src="lovingHeartImg" />
-            <img v-else :src="creatingImg" />
+          <div class="card-title">
+            <div v-if="item.type === 'like'" class="card-type">
+              <img :src="lovingHeartImg" />
+              <span>收藏了一个</span>
+            </div>
+            <div v-else-if="item.type === 'create'" class="card-type">
+              <img :src="creatingImg" />
+              <span>创建了一个</span>
+            </div>
+            <div v-else class="card-type">
+              <img :src="forkImg" />
+              <span>Fork了一个</span>
+            </div>
             <span>
               {{
-                item.type.includes('like') ? '收藏了一个' : '创建了一个'
-              }}</span
-            >
-            <span>
-              {{
-                item.resource.type.includes('model')
+                item.resource.type === 'model'
                   ? '模型'
-                  : item.resource.type.includes('project')
+                  : item.resource.type === 'project'
                   ? '项目'
                   : '数据集'
               }}
@@ -137,7 +145,7 @@ getCount();
             <span class="item-title-time">{{ item.time }}</span>
           </div>
           <projectcard
-            v-if="item.resource.type.includes('project')"
+            v-if="item.resource.type === 'project'"
             :card-data="item"
             class="card-list-item-content"
             @click="goDetail(item)"
@@ -181,15 +189,19 @@ getCount();
         }
 
         width: 100%;
-        &-title {
+        .card-title {
           font-size: 18px;
           color: #000;
           margin-bottom: 10px;
           display: flex;
           align-items: center;
-          img {
-            width: 24px;
-            margin-right: 8px;
+          .card-type {
+            display: flex;
+            align-items: center;
+            img {
+              width: 24px;
+              margin-right: 8px;
+            }
           }
           .item-title-time {
             font-size: 16px;

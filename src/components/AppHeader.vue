@@ -335,7 +335,6 @@ function goModelDetail(index, model) {
   emptyValue();
 }
 function goDatasetDetail(index, dataset) {
-  console.log('index, dataset: ', index, dataset);
   const str = dataset.replace(/<[^>]+>/g, '');
   router.push({
     path: `/datasets/${datasetData.value[index].owner}/${str}`,

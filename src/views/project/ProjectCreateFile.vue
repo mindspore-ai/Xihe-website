@@ -318,7 +318,6 @@ async function confirmCreating(formEl) {
       };
       createTrainProject(params, detailData.value.id)
         .then((res) => {
-          // console.log('res: ', res);
           if (res.status === 201) {
             ElMessage({
               type: 'success',
@@ -341,8 +340,8 @@ async function confirmCreating(formEl) {
         } */
         })
         .catch((error) => {
-          console.log(error.response);
-          console.log(error.response.data.msg);
+          // console.log(error.response);
+          // console.log(error.response.data.msg);
           if (error.response.data.msg === "can't find repo id") {
             ElMessage({
               type: 'warning',
@@ -368,6 +367,8 @@ async function confirmCreating(formEl) {
               center: true,
             });
           }
+          model.value = [];
+          dataset.value = [];
         });
     } else {
       return false;
@@ -502,14 +503,10 @@ function deleteEnvironment(item) {
 
 // 子组件点击
 function handleClick(item) {
-  // console.log('点击子组件传递的值: ', item);
   if (option.value === 'directory') {
     codeDir.value = item;
-    // console.log('代码目录: ', codeDir.value);
   } else {
-    // console.log('点击子组件传递的值: ', item);
     bootFile.value = item;
-    // console.log('启动文件: ', bootFile.value);
     showbtn.value = true;
   }
 }

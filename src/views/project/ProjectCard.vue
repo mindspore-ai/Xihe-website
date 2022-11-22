@@ -457,25 +457,24 @@ function start2() {
     // };
     socket.value.onmessage = function (event) {
       try {
-        console.log('111', event.data.data);
+        if (
+          JSON.parse(event.data).data &&
+          JSON.parse(event.data).data.access_url
+        ) {
+          clientSrc.value = JSON.parse(event.data).data.access_url;
+          msg.value = '运行中';
+          closeConn();
+        } else {
+          failLog.value = JSON.parse(event.data).data.error.replace(
+            /\n/g,
+            '<br />'
+          );
+          failLog.value = `<span> ${failLog.value}</span>`;
+          msg.value = '启动失败';
+          closeConn();
+        }
       } catch {
-        console.log(222);
-      }
-      if (
-        JSON.parse(event.data).data &&
-        JSON.parse(event.data).data.access_url
-      ) {
-        clientSrc.value = JSON.parse(event.data).data.access_url;
-        msg.value = '运行中';
-        closeConn();
-      } else {
-        failLog.value = JSON.parse(event.data).data.error.replace(
-          /\n/g,
-          '<br />'
-        );
-        failLog.value = `<span> ${failLog.value}</span>`;
-        msg.value = '启动失败';
-        closeConn();
+        msg.value = '';
       }
     };
     // startInference2({
@@ -492,24 +491,28 @@ function start2() {
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
       [`visitor-${detailData.value.id}`]
     );
-    socket.value.onmessage = function (event) {
-      if (
-        JSON.parse(event.data).data &&
-        JSON.parse(event.data).data.access_url
-      ) {
-        clientSrc.value = JSON.parse(event.data).data.access_url;
-        msg.value = '运行中';
-        closeConn();
-      } else {
-        msg.value = '未启动';
-        canStart.value = false;
-        closeConn();
-        ElMessage({
-          type: 'error',
-          message: '该项目暂不能成功启动',
-        });
-      }
-    };
+    try {
+      socket.value.onmessage = function (event) {
+        if (
+          JSON.parse(event.data).data &&
+          JSON.parse(event.data).data.access_url
+        ) {
+          clientSrc.value = JSON.parse(event.data).data.access_url;
+          msg.value = '运行中';
+          closeConn();
+        } else {
+          msg.value = '未启动';
+          canStart.value = false;
+          closeConn();
+          ElMessage({
+            type: 'error',
+            message: '该项目暂不能成功启动',
+          });
+        }
+      };
+    } catch {
+      msg.value = '';
+    }
     msg.value = '启动中';
   }
   // } else {

@@ -202,26 +202,40 @@ function goTrainLog(trainId) {
 
 let socket;
 function getTrainList() {
-  trainList(projectId).then((res) => {
-    trainData.value = res.data.data;
-    // 列表为空可以创建实例
-    if (!trainData.value) {
-      btnShow.value = false;
-    } else {
-      let bool = trainData.value.some(
-        (item) => item.status === 'scheduling' || item.status === 'Running'
-      );
-      if (bool || trainData.value.length >= 5) {
-        btnShow.value = true;
-      } else {
+  try {
+    trainList(projectId).then((res) => {
+      trainData.value = res.data.data;
+      // 列表为空可以创建实例
+      if (!trainData.value) {
         btnShow.value = false;
+      } else {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+
+        // if (bool || trainData.value.length >= 5) {
+        //   btnShow.value = true;
+        // } else {
+        //   btnShow.value = false;
+        // }
+
+        if (trainData.value.length < 5 && !bool) {
+          btnShow.value = false;
+        } else if (bool) {
+          btnShow.value = true;
+          socket = setWebsocket(
+            `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+          );
+        } else if (trainData.value.length >= 5 && !bool) {
+          btnShow.value = true;
+        }
       }
-      socket = setWebsocket(
-        `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
-      );
-    }
-  });
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
+getTrainList();
 
 function setWebsocket(url) {
   const socket = new WebSocket(url, [
@@ -243,13 +257,13 @@ function setWebsocket(url) {
           btnShow.value = false;
         }
 
-        if (trainData.value[trainData.value.length - 1].error) {
-          btnShow.value = false;
-          ElMessage({
-            type: 'error',
-            message: trainData.value[trainData.value.length - 1].error,
-          });
-        }
+        // if (trainData.value[trainData.value.length - 1].error) {
+        //   btnShow.value = false;
+        //   ElMessage({
+        //     type: 'error',
+        //     message: trainData.value[trainData.value.length - 1].error,
+        //   });
+        // }
       }
     } catch (e) {
       console.error(e);
@@ -258,9 +272,9 @@ function setWebsocket(url) {
   return socket;
 }
 
-socket = setWebsocket(
-  `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
-);
+// socket = setWebsocket(
+//   `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+// );
 
 // 页面刷新
 onMounted(() => {

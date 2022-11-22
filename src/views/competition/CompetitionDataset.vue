@@ -11,7 +11,6 @@ import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
 const userComData = useCompetitionData().competitionData;
-console.log('userComData: ', userComData);
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
 }); */

@@ -1,13 +1,12 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import { useUserInfoStore, useFileData } from '@/stores';
-import { modifyModel, deleteModel, getModelData } from '@/api/api-model';
-import { fileRename } from '@/api/api-obs';
+import { modifyModel, deleteModel } from '@/api/api-model';
 
 import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
@@ -16,12 +15,12 @@ import successImg from '@/assets/icons/success.png';
 let detailData = reactive(useFileData().fileStoreData);
 
 const router = useRouter();
-const route = useRoute();
+// const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
 const organizationAdminList = reactive(userInfoStore.organizationAdminList);
-const fileData = useFileData();
+// const fileData = useFileData();
 
 const i18n = {
   visible: {
@@ -101,21 +100,9 @@ async function confirmRename(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       try {
-        // let pathQuery = {
-        //   new_path: `xihe-obj/models/${route.params.user}/${query.name}/`,
-        //   old_path: `xihe-obj/models/${route.params.user}/${routerParams.name}/`,
-        // };
         modifyModel(query, detailData.owner, detailData.id).then((res) => {
-          // if (res.status === 200) {
           // 改名成功更新pinia数据
-          // getModelData({ name: query.name }).then((res) => {
-          //   if (res.results.data.length) {
-          //     let storeData = res.results.data[0];
-          //     storeData['is_owner'] =
           detailData.name = res.data.name;
-          // route.params.name = detailData.name;
-          //   fileData.setFileData(storeData);
-          // }
           ElMessage({
             type: 'success',
             message: '仓库信息更新成功',
@@ -128,13 +115,6 @@ async function confirmRename(formEl) {
             },
           });
           detailData.name = query.name;
-          // });
-          // } else {
-          //   ElMessage({
-          //     type: 'error',
-          //     message: res.msg,
-          //   });
-          // }
         });
       } catch (error) {
         ElMessage({
@@ -155,19 +135,12 @@ function confirmPrivate() {
   };
   modifyModel(query, detailData.owner, detailData.id)
     .then((res) => {
-      // if (res.status === 200) {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
       ElMessage({
         type: 'success',
         message: '修改成功',
       });
-      // } else {
-      //   ElMessage({
-      //     type: 'error',
-      //     message: res.msg,
-      //   });
-      // }
     })
     .catch(() => {
       ElMessage({
@@ -427,7 +400,6 @@ function toggleDelDlg(flag) {
       display: flex;
       :deep(.el-form-item__content) {
         display: flex;
-        // flex-direction: column;
         justify-content: start;
       }
       justify-content: space-between;

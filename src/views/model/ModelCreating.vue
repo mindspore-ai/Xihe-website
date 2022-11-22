@@ -10,7 +10,7 @@ import OIcon from '@/components/OIcon.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import protocol from '../../../config/protocol';
-import { createModelStore, getModelTags, checkNames } from '@/api/api-model';
+import { createModelStore, checkNames } from '@/api/api-model';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -47,10 +47,6 @@ let query = reactive({
 
 try {
   owner.value = useUserInfoStore().owner;
-  // getModelTags().then((res) => {
-  //   protocol.value = res.data.licenses;
-  //   query.protocol = protocol.value[0].name;
-  // });
 } catch (error) {
   console.error(error);
 }
@@ -58,23 +54,13 @@ function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      // console.log(valid);
-      // let newList = JSON.parse(JSON.stringify(query));
-      // newList.protocol = [newList.protocol];
       createModelStore(query)
         .then((res) => {
-          // if (res.data) {
           ElMessage({
             type: 'success',
             message: '创建成功',
           });
           router.push(`/models/${res.data.owner}/${res.data.name}/tree`);
-          // } else {
-          //   ElMessage({
-          //     type: 'error',
-          //     message: '文件名重复，或文件名不合规',
-          //   });
-          // }
         })
         .catch((err) => {
           if (err.message === 'unsupported protocol') {
@@ -167,7 +153,6 @@ function getByteLength(str) {
         prop="name"
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
-          // 后端5-44
           {
             pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
             message: '暂不支持中文字符，且长度为5-35个字符',
@@ -313,15 +298,6 @@ function getByteLength(str) {
         font-weight: 400;
       }
     }
-    // .home {
-    //   cursor: pointer;
-    // }
-    // .arrow {
-    //   margin: 0 3px;
-    // }
-    // .createPlaceholder {
-    //   color: #000000;
-    // }
   }
 
   .creating-box {
@@ -336,19 +312,6 @@ function getByteLength(str) {
     min-height: calc(100vh - 558px);
 
     .des {
-      // .el-textarea {
-      //   width: 400px;
-      //   :deep(.el-textarea__inner) {
-      //     height: 126px;
-      //     box-shadow: 0 0 0 1px #999999 inset;
-      //     border-radius: 0%;
-      //     padding: 7px 16px;
-      //     resize: none;
-      //     &:focus {
-      //       box-shadow: 0 0 0 1px #555555 inset !important;
-      //     }
-      //   }
-      // }
       align-items: center;
     }
     .item {
@@ -399,21 +362,14 @@ function getByteLength(str) {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;
-          // position: absolute;
-          // top: 27px;
         }
         .explain2 {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;
-          // position: absolute;
-          // top: 79px;
         }
       }
     }
-    // .o-button {
-    //   width: 150px;
-    // }
     .el-form-item {
       margin: 0;
       .el-popover.el-popper {

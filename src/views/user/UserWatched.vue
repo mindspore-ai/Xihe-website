@@ -2,15 +2,12 @@
 import { ref, reactive, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
-// import { Search } from '@element-plus/icons-vue';
 
-// import IconMenu from '~icons/app/menu';
 import IconStar from '~icons/app/Star';
 
 import OButton from '@/components/OButton.vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-// import { getUserDig2 } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
 
 import { getUserFollow, cancelFollowing, getFollowing } from '@/api/api-user';
@@ -43,19 +40,6 @@ let queryData = reactive({
   size: 6,
 });
 
-// 登录用户的关注列表
-/* const loginFollowList = computed(() => {
-  return userInfoStore.followList;
-}); */
-// 登录用户关注id列表
-/* let loginFollowIdList = computed(() =>
-  loginFollowList.value.map((val) => val.id)
-); */
-// 当前用户的关注列表
-/* const currentFollowList = computed(() => {
-  return userInfo.value.followList;
-}); */
-
 const currentFollowList = ref([]);
 // 获取用户的关注列表
 function getFollowList() {
@@ -81,23 +65,6 @@ watch(
   },
   { immediate: true }
 );
-// 用于判断按钮的内容状态
-/* function watchFollowList() {
-  currentFollowList.value.forEach((val) => {
-    if (loginFollowIdList.value.indexOf(val.id) !== -1) {
-      val.isFollow = true;
-    } else {
-      val.isFollow = false;
-    }
-  });
-}
-watchFollowList(); */
-/* watch(
-  () => currentFollowList.value,
-  () => {
-    watchFollowList();
-  }
-); */
 
 // 关注用户or点赞
 function getWatch(name) {
@@ -111,17 +78,6 @@ function getWatch(name) {
         userInfoStore.followingCount++;
         getFollowList();
       });
-      /* getUserDig({ userId, fans }).then((res) => {
-        if (res.status === 200) {
-          if (loginFollowIdList.value.indexOf(fans.id) !== -1) {
-            let index = loginFollowIdList.value.indexOf(fans.id);
-            loginFollowList.value.splice(index, 1);
-          } else {
-            loginFollowList.value.push(fans);
-          }
-        }
-        fans.isFollow = !fans.isFollow;
-      }); */
     } catch (error) {
       console.error(error);
     }
@@ -137,21 +93,9 @@ function cancelWatch(name) {
     try {
       let params = { account: name };
       cancelFollowing(params).then((res) => {
-        // TODO:取消关注更新数据
         userInfoStore.followingCount--;
         getFollowList();
       });
-      /* getUserDig2({ userId, follow }).then((res) => {
-        if (res.status === 200) {
-          if (loginFollowIdList.value.indexOf(follow.id) !== -1) {
-            let index = loginFollowIdList.value.indexOf(follow.id);
-            loginFollowList.value.splice(index, 1);
-          } else {
-            loginFollowList.value.push(follow);
-          }
-        }
-        follow.isFollow = !follow.isFollow;
-      }); */
     } catch (error) {
       console.error(error);
     }
@@ -323,7 +267,6 @@ function toTop() {
         align-items: center;
         .watched-dropdown {
           position: relative;
-          // right: -10px;
         }
       }
       .o-icon {
@@ -380,9 +323,6 @@ function toTop() {
       top: calc(50% + 21px);
       left: 50%;
       transform: translate(-50%, -50%);
-      // width: 100%;
-      // height: 100%;
-      // height: calc(100% - 21px);
       display: flex;
       justify-content: center;
       align-items: center;

@@ -15,12 +15,10 @@ import IconEmail from '~icons/app/email';
 import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
-// import { getUserDig } from '@/api/api-user';
 import { goAuthorize } from '@/shared/login';
 import { getFollowing, cancelFollowing } from '@/api/api-user';
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
-// console.log('userInfoStore: ', userInfoStore);
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
 
@@ -33,6 +31,7 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
+// console.log('userInfo: ', userInfo.value);
 const activeNavItem = ref('');
 
 // 路由变化动态改变下外边距
@@ -172,14 +171,9 @@ function handleNavClick(item) {
 }
 
 function dropdownClick(item) {
-  // if (item.value === 'update_time') {
-  //   queryData.order = '-' + item.value;
-  // } else {
   queryData.order = item.value;
-  // }
 }
 function createNew(item) {
-  // router.push(`/new/${item.id}`);
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/new/${item.id}`,
@@ -193,7 +187,6 @@ function goSetting() {
 function getKeyWord() {
   queryData.page = 1;
   queryData.keyWord = keyWord.value;
-  // console.log('queryData: ', queryData);
 }
 // 粉丝页
 function goFollow() {
@@ -229,7 +222,6 @@ function getFollow(name) {
         userInfo.value.isFollower = true;
         userInfo.value.fansCount++;
         currentFansList.value.unshift(loginUserInfo);
-        // console.log('currentFansList: ', currentFansList);
         userInfoStore.followingCount++;
       });
     } catch (error) {
@@ -246,7 +238,6 @@ function cancelFollow(name) {
       currentFansList.value.splice(0, 1);
       userInfo.value.isFollower = false;
       userInfo.value.fansCount--;
-      // console.log('fansCount: ', userInfo.value.fansCount);
       userInfoStore.followingCount--;
     });
   } catch (error) {
@@ -317,9 +308,6 @@ function handleDomChange(val) {
                     : userInfo.followingCount
                 }}
               </span>
-              <!-- <span class="social-item-follow">{{
-                userInfo.followingCount
-              }}</span> -->
             </p>
           </div>
 

@@ -193,7 +193,6 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    // if (key === 'task') {
     renderList.value[key].items.forEach((item) => {
       item.items.forEach((it) => {
         if (it.name === tag.name) {
@@ -201,13 +200,6 @@ function deleteClick(tag) {
         }
       });
     });
-    // } else {
-    //   renderList.value[key].forEach((item) => {
-    //     if (item.name === tag.name) {
-    //       item.isActive = false;
-    //     }
-    //   });
-    // }
   });
 }
 
@@ -217,29 +209,11 @@ function deleteModelTags() {
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    // if (menuitem === 'task') {
     renderList.value[menuitem].items.forEach((it) => {
       it.items.forEach((item) => {
         item.isActive = false;
       });
     });
-    // } else if (menuitem === 'status') {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     if (detailData.value.status_name === it.name) {
-    //       it.isActive = true;
-    //     }
-    //   });
-    // } else if (menuitem === 'sdk') {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     if (detailData.value.sdk_name === it.name) {
-    //       it.isActive = true;
-    //     }
-    //   });
-    // } else {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     it.isActive = false;
-    //   });
-    // }
   });
 }
 
@@ -264,34 +238,6 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  // console.log({ add, remove });
-  // dialogList.menuList.forEach((menu) => {
-  //   if (menu.key === 'task') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       item.task_list.forEach((it) => {
-  //         if (it.isActive) {
-  //           queryDate[menu.key].push(it.id);
-  //           let index = queryDate['task_cate'].indexOf(it.task_cate_id);
-  //           if (index === -1) {
-  //             queryDate['task_cate'].push(it.task_cate_id);
-  //           }
-  //         } else {
-  //           return;
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive) {
-  //         queryDate[menu.key].push(item.id);
-  //       }
-  //     });
-  //   }
-  // });
-  // let params = queryDate;
-  // params.id = detailData.value.id;
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
     (res) => {
       // if (res.status === 200) {
@@ -314,7 +260,6 @@ function getTagList() {
     });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      // if (key === 'task') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
           return {
@@ -323,15 +268,9 @@ function getTagList() {
           };
         });
       });
-      // } else {
-      //   renderList.value[key].forEach((item) => {
-      //     item.isActive = false;
-      //   });
-      // }
     });
     headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        // if (menuitem === 'task') {
         renderList.value[menuitem].items.forEach((mit) => {
           mit.items.forEach((it) => {
             if (it.name === item.name) {
@@ -339,13 +278,6 @@ function getTagList() {
             }
           });
         });
-        // } else {
-        //   renderList.value[menuitem].forEach((it) => {
-        //     if (it.name === item.name) {
-        //       it.isActive = true;
-        //     }
-        //   });
-        // }
       });
     });
   });
@@ -447,7 +379,6 @@ watch(
     <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
-          <!-- TODO:缺少模型拥有者头像字段 -->
           <img :src="detailData.avatar_id" alt="" />
         </div>
         <router-link :to="{ path: `/${route.params.user}` }">
@@ -467,20 +398,6 @@ watch(
             class="loves"
             @click="handleModelLike"
           ></o-heart>
-          <!-- <div v-if="detailData.liked" class="loves">
-            <o-heart
-              :is-digged="!isDigged"
-              :dig-count="detailData.like_count"
-              @click="cancelLike"
-            ></o-heart>
-          </div>
-          <div v-else class="loves">
-            <o-heart
-              :is-digged="isDigged"
-              :dig-count="detailData.like_count"
-              @click="getLike"
-            ></o-heart>
-          </div> -->
         </div>
       </div>
       <div class="label-box">
@@ -537,7 +454,6 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <!-- <div v-if="menu.key == 'task'" class="body-right"> -->
                 <div
                   v-for="item in renderList[menu.key].items"
                   :key="item"
@@ -560,22 +476,6 @@ watch(
                     </div>
                   </div>
                 </div>
-                <!-- </div> -->
-
-                <!-- <div v-else class="noTask-box">
-                  <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
-                    class="condition-detail"
-                    :class="[
-                      { 'condition-active': item.isActive },
-                      { 'condition-single': item.isSelected },
-                    ]"
-                    @click="tagClick(item, menu.key)"
-                  >
-                    {{ item.name }}
-                  </div>
-                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -621,7 +521,6 @@ $theme: #0d8dff;
       .head-delete {
         font-size: 12px;
         line-height: 18px;
-        // margin-right: 52px;
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -647,7 +546,6 @@ $theme: #0d8dff;
         margin: 0 16px 10px 0;
         height: 28px;
         font-size: 14px;
-        // color: #555;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;

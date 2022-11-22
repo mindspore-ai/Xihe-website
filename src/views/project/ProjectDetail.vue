@@ -27,9 +27,7 @@ import {
 } from '@/api/api-project';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
-import { getBaseInfo } from '@/api/api-shared';
 import { goAuthorize } from '@/shared/login';
-import project from '@/routers/project';
 
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -47,7 +45,6 @@ const detailData = computed(() => {
 const modelTags = ref([]);
 const headTags = ref([]);
 const isDigged = ref(false);
-const digCount = ref(0);
 const inputDom = ref();
 const forkShow = ref(false);
 const loadingShow = ref(false);
@@ -55,21 +52,6 @@ const renderList = ref([]);
 const isShow = ref();
 const isTagShow = ref(false);
 const tabPosition = ref('left');
-
-/* let reopt = {
-  method: 'PUT',
-  url: null,
-  headers: null,
-}; */
-
-let queryDate = {
-  infer_sdk: null,
-  train_sdk: null,
-  licenses: [],
-  tags: [],
-  task: [],
-  task_cate: [],
-};
 
 let dialogList = {
   head: {
@@ -203,7 +185,6 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
-const isForkShow = ref();
 // let timer = null;
 // 项目详情数据
 function getDetailData() {
@@ -212,74 +193,70 @@ function getDetailData() {
       user: route.params.user,
       repoName: route.params.name,
       modular: 'project',
-    }).then((res) => {
-      let storeData = res.data;
-      // console.log('项目详情数据: ', res.data);
-      // 判断仓库是否属于自己
-      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
-      // 文件列表是否为空
-      if (detailData.value) {
-        storeData['is_empty'] = detailData.value.is_empty;
-      }
-      fileData.setFileData(storeData);
+    })
+      .then((res) => {
+        let storeData = res.data;
+        // console.log('项目详情数据: ', res.data);
+        // 判断仓库是否属于自己
+        storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+        // 文件列表是否为空
+        if (detailData.value) {
+          storeData['is_empty'] = detailData.value.is_empty;
+        }
+        fileData.setFileData(storeData);
 
-      isShow.value = userInfoStore.userName === storeData.owner;
-      forkForm.storeName = detailData.value.name;
-      forkForm.owner = userInfoStore.userName;
+        isShow.value = userInfoStore.userName === storeData.owner;
+        forkForm.storeName = detailData.value.name;
+        forkForm.owner = userInfoStore.userName;
 
-      if (detailData.value.type !== 'Gradio') {
-        tabTitle[0].label = '项目卡片';
-        activeName.value = '项目卡片';
-      }
+        if (detailData.value.type !== 'Gradio') {
+          tabTitle[0].label = '项目卡片';
+          activeName.value = '项目卡片';
+        }
 
-      // digCount.value = detailData.value.type;
-      isDigged.value = detailData.value.liked;
+        // digCount.value = detailData.value.type;
+        isDigged.value = detailData.value.liked;
 
-      const { training, tags } = detailData.value;
-      modelTags.value = [];
-      headTags.value = [];
-      if (tags) {
-        // TODO: tags很有可能不止一个;
-        // modelTags.value = [{ name: protocol }, { name: training }];
-        tags.forEach((item) => {
-          modelTags.value.push({ name: item });
+        const { training, tags } = detailData.value;
+        modelTags.value = [];
+        headTags.value = [];
+        if (tags) {
+          // TODO: tags很有可能不止一个;
+          // modelTags.value = [{ name: protocol }, { name: training }];
+          tags.forEach((item) => {
+            modelTags.value.push({ name: item });
+          });
+        } // else {
+        //   modelTags.value = [{ name: protocol }, { name: training }];
+        // }
+        modelTags.value = modelTags.value.map((item) => {
+          return item;
         });
-      } // else {
-      //   modelTags.value = [{ name: protocol }, { name: training }];
-      // }
-      modelTags.value = modelTags.value.map((item) => {
-        return item;
+        // console.log(modelTags.value);
+        if (tags) {
+          tags.forEach((item) => {
+            headTags.value.push({ name: item });
+          });
+        }
+        headTags.value = headTags.value.filter((item) => {
+          let a = protocol.map((it) => {
+            if (it.name === item.name) return false;
+          });
+          if (!a.indexOf(false)) return false;
+          else return true;
+        });
+        preStorage.value = JSON.stringify(headTags.value);
+        getAllTags();
+      })
+      .catch(() => {
+        router.push('/404');
       });
-      // console.log(modelTags.value);
-      if (tags) {
-        // TODO: tags很有可能不止一个;
-        // headTags.value = [{ name: training }];
-        tags.forEach((item) => {
-          headTags.value.push({ name: item });
-        });
-      } //else {
-      //   headTags.value = [{ name: training }];
-      // }
-      headTags.value = headTags.value.filter((item) => {
-        let a = protocol.map((it) => {
-          if (it.name === item.name) return false;
-        });
-        if (!a.indexOf(false)) return false;
-        else return true;
-      });
-      // if (headTags.value[0]) headTags.value = '';
-      // headTags.value = [...modelTags.value];
-      preStorage.value = JSON.stringify(headTags.value);
-      getAllTags();
-    });
   } catch (error) {
     router.push('/404');
   }
 }
 const preStorage = ref();
 getDetailData();
-
-// const runingStatus = ref(false);
 
 function handleTabClick(item) {
   if (item.index === '1' && userInfoStore.userName === detailData.value.owner) {
@@ -294,7 +271,6 @@ function handleTabClick(item) {
 
 // 点击标签
 function tagClick(it, key, index) {
-  // if (key === 'train_sdk' || key === 'infer_sdk' || key === 'licenses') {
   if (key === '应用分类') {
     renderList.value.forEach((a) => {
       if (a.domain === key) {
@@ -344,8 +320,6 @@ function tagClick(it, key, index) {
 // 添加标签
 function addTagClick() {
   isTagShow.value = true;
-  // getAllTags();
-  // getDetailData();
 }
 
 // 点赞，取消点赞
@@ -401,33 +375,19 @@ function deleteClick(tag) {
         }
       });
     });
-    // } else {
-    //     renderList.value[key].forEach((item) => {
-    //       if (item.name === tag.name) {
-    //         item.isActive = false;
-    //       }
-    //     });
-    // }
   });
 }
-// TODO:
 // 编辑标签头部标签删除全部已添加标签
 function deleteModelTags() {
   headTags.value = [];
   let menu = dialogList.menuList.map((item) => item.key);
 
   menu.forEach((menuitem) => {
-    // if (menuitem === 'task') {
     renderList.value[menuitem].items.forEach((it) => {
       it.items.forEach((item) => {
         item.isActive = false;
       });
     });
-    // } else {
-    //   renderList.value[menuitem].forEach((it) => {
-    //     it.isActive = false;
-    //   });
-    // }
   });
 }
 
@@ -452,53 +412,10 @@ function confirmBtn() {
       add.push(item);
     }
   });
-  // dialogList.menuList.forEach((menu) => {
-  //   if (menu.key === 'task') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       item.task_list.forEach((it) => {
-  //         if (it.isActive) {
-  //           queryDate[menu.key].push(it.id);
-  //           let index = queryDate['task_cate'].indexOf(it.task_cate_id);
-  //           if (index === -1) {
-  //             queryDate['task_cate'].push(it.task_cate_id);
-  //           }
-  //         } else {
-  //           return;
-  //         }
-  //       });
-  //     });
-  //   } else if (menu.key === 'tags') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive === true) {
-  //         queryDate[menu.key].push(item.id);
-  //       }
-  //     });
-  //   } else if (menu.key === 'licenses') {
-  //     queryDate[menu.key] = [];
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive) {
-  //         queryDate[menu.key].push(item.id);
-  //       }
-  //     });
-  //   } else {
-  //     renderList.value[menu.key].forEach((item) => {
-  //       if (item.isActive === true) {
-  //         queryDate[menu.key] = item.id;
-  //       }
-  //     });
-  //   }
-  // });
-  // let params = queryDate;
-  // params.id = detailData.value.id;
 
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
     (res) => {
-      // if (res.status === 200) {
       getDetailData();
-      // getAllTags();
-      // }
     }
   );
   isTagShow.value = false;
@@ -507,15 +424,11 @@ function confirmBtn() {
 // 取消
 function cancelBtn() {
   isTagShow.value = false;
-  // getAllTags();
-  // getDetailData();
 }
 
 function getAllTags() {
   getTags('project').then((res) => {
     renderList.value = res.data;
-    // localStorage.setItem('photoList', JSON.stringify(res.data.projects_photo));
-    // console.log(res.data);
     dialogList.menuList = res.data.map((item, index) => {
       return { tab: item.domain, key: index };
     });
@@ -530,18 +443,10 @@ function getAllTags() {
           };
         });
       });
-      // } else {
-      //   renderList.value[key].forEach((item) => {
-      //     item.isActive = false;
-      //     item.isSelected = false;
-      //   });
-      // }
     });
-    // console.log(renderList);
-    // TODO:已添加标签高亮
+    // 已添加标签高亮
     headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        //     if (menuitem === 'task') {
         renderList.value[menuitem].items.forEach((mit) => {
           mit.items.forEach((it) => {
             if (it.name === item.name) {
@@ -549,19 +454,6 @@ function getAllTags() {
             }
           });
         });
-        //     } else if (menuitem === 'tags') {
-        //       renderList.value[menuitem].forEach((it) => {
-        //         if (it.name === item.name) {
-        //           it.isActive = true;
-        //         }
-        //       });
-        //     } else {
-        //       renderList.value[menuitem].forEach((it) => {
-        //         if (it.name === item.name) {
-        //           it.isActive = true;
-        //         }
-        //       });
-        //     }
       });
     });
   });
@@ -585,36 +477,17 @@ function forkCreateClick() {
   ruleFormRef.value.validate(async (valid) => {
     if (valid) {
       forkShow.value = false;
-      // loadingShow.value = true;
-      // let projectId = detailData.value.id;
       let params = {};
       params.name = forkForm.storeName;
-      // params.owner_id = userInfoStore.id;
       params.desc = forkForm.describe;
-      // await getBaseInfo().then((res) => {
-      //   params.owner_type = res.user_type_id;
-      // });
       forkShow.value = false;
-      // loadingShow.value = true;
-      //换后台
-      // const owner1 = 's9qfqri3zpc8j2x7';
-      // const id1 = '632414db7187a3b38b417660';
       projectFork(detailData.value.owner, detailData.value.id, params)
         .then(() => {
-          // if (res.status === 200 && res.data.status === 200) {
           loadingShow.value = false;
           router.push(
             `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );
           location.reload();
-          // } else {
-          //   loadingShow.value = false;
-          //   ElMessage({
-          //     type: 'error',
-          //     message: res.data.msg,
-          //     center: true,
-          //   });
-          // }
         })
         .catch(() => {
           ElMessage({
@@ -636,19 +509,6 @@ function forkCreateClick() {
 
 function forkClick() {
   forkShow.value = true;
-  // loadingShow.value = true;
-  // projectFork(detailData.value.owner, detailData.value.id)
-  //   .then(() => {
-  //     // loadingShow.value = false;
-  //     router.push(`/projects/${userInfoStore.userName}/${forkForm.storeName}`);
-  //   })
-  //   .catch(() => {
-  //     ElMessage({
-  //       type: 'error',
-  //       message: '暂不能fork该项目',
-  //       center: true,
-  //     });
-  //   });
   nextTick(() => {
     document.querySelector('.el-input__inner').focus();
   });
@@ -682,15 +542,6 @@ watch(
         activeName.value = tabTitle[route.meta.index].label;
       }
     }
-    // if (route.meta.index === 2) {
-    //   activeName.value = 'tree';
-    // } else if (route.meta.index === 1) {
-    //   activeName.value = 'train';
-    // } else if (route.meta.index === 3) {
-    //   activeName.value = 'settings';
-    // } else {
-    //   activeName.value = '';
-    // }
   }
 );
 // 中途登录页面更新
@@ -705,9 +556,6 @@ watch(
   }
 );
 
-// function goTrain(path) {
-//   router.push(`/projects/${route.params.user}/${route.params.name}/${path}`);
-// }
 let time = null;
 function checkName(rule, value, callback) {
   if (time !== null) {
@@ -733,7 +581,6 @@ function checkName(rule, value, callback) {
         <div>
           <div class="card-head-1">
             <div class="avatar">
-              <!-- TODO:缺少项目拥有者头像字段 -->
               <img :src="detailData.avatar_id" alt="" />
             </div>
 
@@ -766,7 +613,6 @@ function checkName(rule, value, callback) {
             </div>
           </div>
         </div>
-        <!-- <div v-if="loginStore.isLogined && isForkShow"> -->
         <div
           v-if="
             loginStore.isLogined && userInfoStore.userName !== detailData.owner
@@ -870,7 +716,6 @@ function checkName(rule, value, callback) {
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <!-- <div v-if="menu.key == '0'" class="body-right"> -->
                 <div class="body-right">
                   <div
                     v-for="(item, index) in renderList[menu.key].items"
@@ -909,21 +754,6 @@ function checkName(rule, value, callback) {
                     </div>
                   </div>
                 </div>
-
-                <!-- <div v-else class="noTask-box">
-                  <div
-                    v-for="item in renderList[menu.key]"
-                    :key="item.id"
-                    class="condition-detail"
-                    :class="[
-                      { 'condition-active': item.isActive },
-                      { 'condition-active1': item.isSelected },
-                    ]"
-                    @click="tagClick(item, menu.key)"
-                  >
-                    {{ item.name }}
-                  </div>
-                </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -946,13 +776,6 @@ function checkName(rule, value, callback) {
           :label-position="tabPosition"
           hide-required-asterisk
         >
-          <!-- <el-form-item label="拥有者" prop="owner">
-            <el-select v-model="forkForm.owner">
-              <el-option v-for="item in ownerName" :key="item" :value="item">{{
-                item
-              }}</el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="仓库名称" class="store-name" prop="storeName">
             <el-input
               v-model="forkForm.storeName"
@@ -1363,11 +1186,6 @@ $theme: #0d8dff;
       .el-tabs {
         :deep(.el-tabs__nav) {
           display: flex;
-          // .el-tabs__item:nth-child(3) {
-          //   display: flex;
-          //   align-items: center;
-          //   padding-bottom: 0;
-          // }
           .el-tabs__item {
             cursor: pointer;
             &:hover {

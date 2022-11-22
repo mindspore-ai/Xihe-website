@@ -1,17 +1,12 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import { useUserInfoStore, useFileData } from '@/stores';
-import {
-  modifyDataset,
-  deleteDataset,
-  getDatasetData,
-} from '@/api/api-dataset';
-import { fileRename } from '@/api/api-obs';
+import { modifyDataset, deleteDataset } from '@/api/api-dataset';
 
 import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
@@ -20,12 +15,10 @@ import successImg from '@/assets/icons/success.png';
 let detailData = reactive(useFileData().fileStoreData);
 
 const router = useRouter();
-const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
 const organizationAdminList = reactive(userInfoStore.organizationAdminList);
-const fileData = useFileData();
 
 const i18n = {
   visible: {
@@ -96,8 +89,6 @@ function getVisiableSelect(value) {
     ? (visibleValue.value = 'private')
     : (visibleValue.value = 'public');
 }
-// debugger;
-// console.log('数据集详情数据: ', detailData);
 async function confirmRename(formEl) {
   if (!formEl) return;
   if (!query.name.trim()) {
@@ -107,7 +98,6 @@ async function confirmRename(formEl) {
     if (valid) {
       try {
         modifyDataset(query, detailData.owner, detailData.id).then((res) => {
-          // console.log('res: ', res);
           detailData.name = res.data.name;
           ElMessage({
             type: 'success',
@@ -122,42 +112,6 @@ async function confirmRename(formEl) {
           });
           routerParams.name = detailData.name;
         });
-
-        /* let pathQuery = {
-          new_path: `xihe-obj/datasets/${route.params.user}/${query.name}/`,
-          old_path: `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`,
-        }; */
-        /*   fileRename(pathQuery).then((res) => {
-          if (res.status === 200) {
-            // 改名成功更新pinia数据
-            getDatasetData({ name: query.name }).then((res) => {
-              if (res.results.data.length) {
-                let storeData = res.results.data[0];
-                storeData['is_owner'] =
-                  userInfoStore.userName === storeData.owner_name.name;
-                fileData.setFileData(storeData);
-              }
-              ElMessage({
-                type: 'success',
-                message: '仓库信息更新成功',
-              });
-              router.push({
-                name: 'datasetSet',
-                params: {
-                  user: routerParams.user,
-                  name: query.name,
-                },
-              });
-              routerParams.name = query.name;
-            });
-          } else {
-            ElMessage({
-              type: 'error',
-              message: res.msg,
-            });
-          } 
-        });
-       */
       } catch (error) {
         ElMessage({
           type: 'error',
@@ -177,19 +131,12 @@ function confirmPrivate() {
   };
   modifyDataset(query, detailData.owner, detailData.id)
     .then((res) => {
-      // if (res.status === 200) {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
       ElMessage({
         type: 'success',
         message: '修改成功',
       });
-      /* } else {
-      ElMessage({
-        type: 'error',
-        message: res.msg,
-      });
-    } */
     })
     .catch(() => {
       ElMessage({
@@ -451,7 +398,6 @@ function toggleDelDlg(flag) {
       display: flex;
       :deep(.el-form-item__content) {
         display: flex;
-        // flex-direction: column;
         justify-content: start;
       }
       justify-content: space-between;

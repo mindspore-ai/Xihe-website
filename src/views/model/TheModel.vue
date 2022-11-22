@@ -125,9 +125,6 @@ let queryData = reactive({
   sort_by: null, //排序规则
 });
 
-// queryData.search = route.query.search;
-// keyWord.value = queryData.search;
-
 const debounceSearch = debounce(getModel, 500, {
   trailing: true,
 });
@@ -439,18 +436,12 @@ function getModelTag() {
         it.isActive = false;
         it.isSelected = false;
         it.items = it.items.map((child) => {
-          // child.isSelected = false;
-          // child.isActive = false;
           return {
             name: child,
             isSelected: false,
             isActive: false,
           };
         });
-        // } else {
-        //   it.isActive = false;
-        //   it.isSelected = false;
-        // }
         item.condition.push(it);
       });
     });
@@ -479,9 +470,6 @@ function handleCurrentChange(val) {
   document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
-  // router.push({
-  //   path: `/models/${user}/${name}`,
-  // });
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/models/${user}/${name}`,
@@ -499,15 +487,6 @@ function getKeyWord() {
   queryData.page_num = 1;
   queryData.name = keyWord.value;
 }
-
-// watch(
-//   useFilterData(),
-//   (val) => {
-//     if (val.filterData) {
-//       getModelTag(val.filterData);
-//     }
-//   }
-// );
 
 // 二次点击模型，跳转刷新模型页面数据
 watch(
@@ -566,12 +545,6 @@ onUnmounted(() => {
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">{{ i18n.taskSort }}</p>
-        <!-- <el-input
-          v-model="queryData.search"
-          :prefix-icon="Search"
-          placeholder="请输入tag名称"
-        /> -->
-
         <div
           v-for="(item, index) in radioList.condition"
           :key="item.id"
@@ -616,11 +589,6 @@ onUnmounted(() => {
           <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
         </p>
         <p class="sort-title">{{ modalName }}</p>
-        <!-- <el-input
-          v-model="queryData.search"
-          :prefix-icon="Search"
-          placeholder="请输入tag名称"
-        /> -->
         <div class="condition-radio">
           <div
             v-for="detail in radioList2.items"

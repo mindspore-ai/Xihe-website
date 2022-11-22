@@ -38,17 +38,6 @@ const userInfo = computed(() => {
 
 const emit = defineEmits(['domChange']);
 // 获得收藏页面数据
-/* getUserCollection(userInfo.value.id).then((res) => {
-  if (res.status === 200 && res.data.length) {
-    collectionCount.value = res.data.length;
-    collectionData.value = res.data;
-    if (collectionCount.value > 6) {
-      emit('domChange', 76);
-    }
-  } else {
-    collectionData.value = [];
-  }
-}); */
 getUserCollection(userInfo.value.userName).then((res) => {
   if (res.data) {
     collectionCount.value = res.data.length;
@@ -134,12 +123,10 @@ function toTop() {
           ></livecard>
         </div>
       </div>
-      <!-- <div v-else class="empty-wrap"> -->
       <div v-else class="empty">
         <img class="empty-img" :src="emptyImg" />
         <p class="empty-text">{{ i18n.emptyText }}</p>
       </div>
-      <!-- </div> -->
     </div>
     <div v-if="collectionCount > 6" class="pagination">
       <el-pagination

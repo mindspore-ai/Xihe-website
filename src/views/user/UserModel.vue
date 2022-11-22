@@ -49,7 +49,6 @@ let query = reactive({
   name: '',
   page_num: 1,
   count_per_page: 10,
-  // owner: route.params.user,
   sort_by: '',
 });
 

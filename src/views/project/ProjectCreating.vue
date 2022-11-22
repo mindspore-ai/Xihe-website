@@ -1,15 +1,14 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import { fromPath } from '@/routers/index';
 
 import protocol from '../../../config/protocol';
 import { trainSdk, inferSdk, projectPhoto } from '../../../config/protocol';
-import { getModelTags, setNewProject, checkNames } from '@/api/api-project.js';
+import { setNewProject, checkNames } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
 
-import IconPopver from '~icons/app/popover.svg';
+// import IconPopver from '~icons/app/popover.svg';
 import IconNecessary from '~icons/app/necessary.svg';
 // import OButton from '@/components/OButton.vue';
 import { ElMessage } from 'element-plus';
@@ -17,10 +16,6 @@ import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfo = useUserInfoStore();
 const router = useRouter();
-// const option = ref('');
-/* fromPath === '/projects'
-  ? (option.value = '项目')
-  : (option.value = '个人主页'); */
 const i18n = {
   create: '新建项目',
   owner: '拥有者',
@@ -52,7 +47,6 @@ const ruleFormRef = ref(null);
 const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
-    // 后端5-42
     {
       pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
       message: '暂不支持中文字符，且长度为5-35个字符',
@@ -127,7 +121,6 @@ const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
     if (valid) {
       setProject();
-      // console.log(proList);
     } else {
       ElMessage({
         type: 'error',
@@ -155,38 +148,13 @@ function setProject() {
   } else {
     newList.repo_type = 'private';
   }
-  // protocol.value.forEach((item) => {
-  //   if (item.name === newList.protocol) {
-  //     newList.protocol = [item.id];
-  //   }
-  // });
   setNewProject(newList)
     .then((res) => {
-      // if (res.status === 200) {
       ElMessage({
         type: 'success',
         message: '创建成功',
       });
       router.push(`/projects/${userInfo.userName}/${res.data.name}`);
-      // } else if (
-      //   res.data.name &&
-      //   res.data.name[0] === '项目名必须是3-20位数字、字母、下划线组成'
-      // ) {
-      //   ElMessage({
-      //     type: 'error',
-      //     message: res.data.name[0],
-      //   });
-      // } else if (
-      //   res.data.non_field_errors &&
-      //   res.data.non_field_errors[0] ===
-      //     '字段 name, owner_id, owner_type 必须能构成唯一集合。'
-      // ) {
-      //   ElMessage({
-      //     type: 'error',
-      //     message: '项目名已存在',
-      //   });
-      // } else {
-      // }
     })
     .catch((err) => {
       if (err.message === 'unsupported protocol') {
@@ -202,28 +170,13 @@ function setProject() {
       }
     });
 }
-// TODO:项目封面，项目类型以及训练平台的数据
-// getModelTags().then((res) => {
-
-// projectPhotos.value = res.data.projects_photo;
-// projectPhotos.value.forEach((item) => {
-//   item.is_active = false;
-// });
+// 项目封面，项目类型以及训练平台的数据
 projectPhotos.value[0].is_active = true;
-// protocol.value = res.data.licenses;
-// trainSdk.value = res.data.train_sdk;
-// inferSdk.value = res.data.infer_sdk;
 
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
 proList.protocol = protocol[0].name;
 proList.repo_type = 'Public';
-// console.log('1', trainSdk, '2', projectPhotos);
-// });
-/* beforeRouteEnter(from){
-  console.log('to, from, next: ', from);
-  // next();
-}; */
 onMounted(() => {});
 </script>
 
@@ -279,48 +232,6 @@ onMounted(() => {});
               v-model="proList.name"
               :placeholder="i18n.input_proName"
             ></el-input>
-            <!--  :rules="[
-                { required: true, message: '必填项', trigger: 'blur' },
-                {
-                  pattern: /^[^\u4e00-\u9fa5]{3,1000}$/g,
-                  message: '暂不支持中文字符，且长度需大于3个字符',
-                  trigger: 'blur',
-                },
-                {
-                  pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9!@#$^&().']+$/,
-                  message: '格式不正确',
-                  trigger: 'blur',
-                },
-                {
-                  pattern: /^[^.].*[^.]$/,
-                  message: '格式不正确',
-                  trigger: 'blur',
-                },
-              ]" -->
-            <!-- <el-popover
-              placement="bottom-start"
-              :width="372"
-              trigger="hover"
-              content="this is content, this is content, this is content"
-              :teleported="false"
-            >
-              <template #reference>
-                <o-icon><icon-popver></icon-popver></o-icon>
-              </template>
-              <div>- 仓库名目前只支持英文</div>
-              <div>
-                - 仓库名名称不能以英文句号(<span class="remind">.</span
-                >)开头或结尾，且不能包含以下字符:<span class="remind">
-                  :&nbsp;/&nbsp;\&nbsp;*&nbsp;;&nbsp;?&nbsp;&lt;&nbsp;&gt;&nbsp;|</span
-                >
-              </div>
-              <div>
-                -&nbsp;仓库名建议简短<span class="remind">(5-20个字符)</span
-                >，仓库下的文件或文件夹绝对路径长度<span class="remind"
-                  >不能超过1000字符</span
-                >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
-              </div>
-            </el-popover> -->
             <o-popper></o-popper>
           </el-form-item>
         </div>
@@ -456,15 +367,6 @@ onMounted(() => {});
       font-weight: 400;
     }
   }
-  // .home {
-  //   cursor: pointer;
-  // }
-  // .arrow {
-  //   margin: 0 3px;
-  // }
-  // .createPlaceholder {
-  //   color: #000000;
-  // }
 }
 
 .select_active {
@@ -580,10 +482,6 @@ onMounted(() => {});
     }
 
     .obuton {
-      // width: 144px;
-      // height: 48px;
-      // margin-left: 128px;
-      // margin-top: 24px;
       display: flex;
       justify-content: center;
     }

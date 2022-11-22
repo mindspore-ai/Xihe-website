@@ -14,7 +14,6 @@ const currentFansList = ref([]);
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
-// const router = useRouter();
 
 // 是否是访客
 const isAuthentic = computed(() => {

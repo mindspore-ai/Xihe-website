@@ -71,7 +71,6 @@ watch(
 );
 
 function goDetail(item) {
-  console.log('item: ', item);
   if (item.resource.type === 'model') {
     router.push({
       path: `/models/${item.resource.owner.name}/${item.resource.name}`,

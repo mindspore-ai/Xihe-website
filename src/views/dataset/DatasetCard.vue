@@ -9,9 +9,6 @@ import RelateCard from '@/components/RelateCard.vue';
 import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
 import NoRelate from '@/components/NoRelate.vue';
 
-// import IconTime from '~icons/app/time';
-// import IconDownload from '~icons/app/download';
-// import IconHeart from '~icons/app/heart';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';
 
@@ -86,27 +83,6 @@ function getReadMeFile() {
       .catch((err) => {
         console.error(err);
       });
-    /* findFile(
-      `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`
-    ).then((tree) => {
-      if (
-        tree.status === 200 &&
-        tree.data.children &&
-        tree.data.children.length
-      ) {
-        README = tree.data.children.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README[0]) {
-          downloadObs(README[0].path).then((res) => {
-            res ? (codeString.value = res) : '';
-          });
-          result.value = mkit.render(codeString.value);
-        } else {
-          codeString.value = '';
-        }
-      }
-    }); */
   } catch (error) {
     console.error(error);
   }

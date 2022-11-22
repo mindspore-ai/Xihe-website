@@ -46,14 +46,15 @@ export const routes = [
     component: () => {
       return import('@/views/TheCreating.vue');
     },
-    beforeEnter: async (to, from, next) => {
+    beforeEnter: async () => {
       const logingStore = useLoginStore();
       if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
         return {
           name: '404',
         };
+        // router.push('/404');
       }
-      next();
+      // next();
     },
     children: [
       {

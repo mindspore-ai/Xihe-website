@@ -257,13 +257,13 @@ function setWebsocket(url) {
           btnShow.value = false;
         }
 
-        // if (trainData.value[trainData.value.length - 1].error) {
-        //   btnShow.value = false;
-        //   ElMessage({
-        //     type: 'error',
-        //     message: trainData.value[trainData.value.length - 1].error,
-        //   });
-        // }
+        if (trainData.value[trainData.value.length - 1].error) {
+          btnShow.value = false;
+          ElMessage({
+            type: 'error',
+            message: trainData.value[trainData.value.length - 1].error,
+          });
+        }
       }
     } catch (e) {
       console.error(e);

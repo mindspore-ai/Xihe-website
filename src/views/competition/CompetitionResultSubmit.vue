@@ -95,8 +95,9 @@ function callback(transferredAmount, totalAmount) {
   );
 }
 async function upLoad(param) {
+  togglePhoneDlg(false);
   submit(detailData1.value.id, detailData1.value.phase, param)
-    .then((res) => {
+    .then(() => {
       getSubmissions(detailData1.value.id, detailData1.value.phase).then(
         (res) => {
           tableData.value = res.data.details;

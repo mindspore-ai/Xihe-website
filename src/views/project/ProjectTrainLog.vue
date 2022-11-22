@@ -186,10 +186,15 @@ socket.onmessage = function (event) {
       trainDetail.value = JSON.parse(event.data).data;
       if (trainDetail.value) {
         form.name = trainDetail.value.name;
-        form.desc = trainDetail.value.log;
+        // form.desc = trainDetail.value.log;
         configurationInfo.value = trainDetail.value.compute;
         isDone.value = trainDetail.value.is_done;
         isAim.value = trainDetail.value.enable_aim;
+        if (trainDetail.value.error) {
+          form.desc = trainDetail.value.error;
+        } else {
+          form.desc = trainDetail.value.log;
+        }
 
         // 训练未完成 true ；自定义时 aim_path为空时 true
         if (trainDetail.value.status === 'Completed') {
@@ -201,10 +206,8 @@ socket.onmessage = function (event) {
             !trainDetail.value.enable_aim
           ) {
             isEvaluating.value = false;
-            // isCusEvaluated.value = true;
           } else {
             isEvaluating.value = true;
-            // isCusEvaluated.value = false;
           }
         } else {
           isEvaluating.value = true;

@@ -28,6 +28,7 @@ import {
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -235,10 +236,19 @@ function setWebsocket(url) {
         let bool = trainData.value.some(
           (item) => item.status === 'scheduling' || item.status === 'Running'
         );
+
         if (bool || trainData.value.length >= 5) {
           btnShow.value = true;
         } else {
           btnShow.value = false;
+        }
+
+        if (trainData.value[trainData.value.length - 1].error) {
+          btnShow.value = false;
+          ElMessage({
+            type: 'error',
+            message: trainData.value[trainData.value.length - 1].error,
+          });
         }
       }
     } catch (e) {

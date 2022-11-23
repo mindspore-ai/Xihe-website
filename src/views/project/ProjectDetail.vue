@@ -491,7 +491,6 @@ function forkCreateClick() {
           router.push(
             `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );
-          location.reload();
         })
         .catch(() => {
           ElMessage({

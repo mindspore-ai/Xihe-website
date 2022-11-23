@@ -125,6 +125,19 @@ function getDetailData() {
           });
         }
         preStorage.value = JSON.stringify(headTags.value);
+        // 处理框架标签
+        const mindspore = [];
+        modelTags.value.forEach((element, index) => {
+          if (/^MindSpore/.test(element)) {
+            mindspore.push(modelTags.value.splice(index, 1));
+          }
+        });
+        mindspore.forEach((item) => {
+          item.splice(0, 9);
+        });
+        if (mindspore.length) {
+          modelTags.value.push('MindSpore' + mindspore.join(','));
+        }
 
         getTagList();
       })

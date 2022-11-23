@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -125,6 +125,22 @@ function getDetailData() {
           });
         }
         preStorage.value = JSON.stringify(headTags.value);
+        // 处理框架标签
+        const mindspore = [];
+        modelTags.value.forEach((element, index) => {
+          if (/^MindSpore/.test(element.name)) {
+            mindspore.push(modelTags.value.splice(index, 1, 1)[0]);
+          }
+        });
+        mindspore.forEach((item, index) => {
+          mindspore[index] = item.name.substring(9);
+        });
+        if (mindspore.length) {
+          modelTags.value.push({ name: 'MindSpore' + mindspore.join(', ') });
+        }
+        modelTags.value = modelTags.value.filter((item) => {
+          return item !== 1;
+        });
 
         getTagList();
       })
@@ -401,7 +417,11 @@ watch(
         </div>
       </div>
       <div class="label-box">
-        <div v-for="label in modelTags" :key="label" class="label-item">
+        <div
+          v-for="(label, index) in modelTags"
+          :key="index"
+          class="label-item"
+        >
           {{ label.name }}
         </div>
         <div

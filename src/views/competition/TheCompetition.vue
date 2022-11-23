@@ -11,7 +11,7 @@ import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
-import { getCompetition, getAllCompetition } from '@/api/api-competition';
+import {  getAllCompetition } from '@/api/api-competition';
 
 const router = useRouter();
 
@@ -27,15 +27,6 @@ const tableData = ref([]);
 const tableData1 = ref([]);
 const tableData2 = ref([]);
 const tableData3 = ref([]);
-/* function getCompetitions() {
-  getCompetition()
-    .then((res) => {
-      tableData.value = res.data;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-} */
 // 获取进行中、已结束、未开始的比赛
 function getCompetitions1(tab) {
   if (tab === '1') {
@@ -61,7 +52,6 @@ function getCompetitions1(tab) {
     });
   }
 }
-// getCompetitions();
 // 获取所有的比赛
 function getCompetitions2() {
   // { status: 'in-progress' }preparing
@@ -84,9 +74,6 @@ function goDetail(id) {
   });
   // router.push(`/competition/${id}`);
 }
-// function change(pre, next) {
-// console.log(pre, next);
-// }
 </script>
 <template>
   <div class="competition-page">

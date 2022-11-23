@@ -153,6 +153,20 @@ watch(
   },
   { immediate: true }
 );
+// 解决头部搜索二次进入个人主页页面不刷新
+watch(
+  () => {
+    return route.path;
+  },
+  (newVal, oldVal) => {
+    if (
+      route.name === 'userLives' &&
+      oldVal === '/' + userInfo.value.userName
+    ) {
+      router.go();
+    }
+  }
+);
 
 // 是否显示工具栏
 // 用户关注和用户粉丝列表不显示

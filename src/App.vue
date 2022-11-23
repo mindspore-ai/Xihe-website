@@ -7,6 +7,12 @@ import AppFooter from '@/components/AppFooter.vue';
 
 const route = useRoute();
 
+const APP_ID = import.meta.env.VITE_APP_ID;
+const APP_HOST = import.meta.env.VITE_APP_HOST;
+
+console.log(APP_ID);
+console.log(APP_HOST);
+
 const showFooter = computed(() => {
   return !(route.path === '/' || route.path === '/home');
 });

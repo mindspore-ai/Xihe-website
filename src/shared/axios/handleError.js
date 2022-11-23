@@ -15,7 +15,7 @@ export default (err) => {
     response.data?.code === 'resource_not_exists';
   if (isFilteredErr) {
     err.message = response.data?.msg || '';
-    err.filterd = true;
+    err.filtered = true;
     return err;
   }
 

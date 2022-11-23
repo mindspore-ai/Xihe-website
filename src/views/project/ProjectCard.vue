@@ -400,8 +400,9 @@ function start2() {
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
       [`visitor-${detailData.value.id}`]
     );
-    try {
-      socket.value.onmessage = function (event) {
+
+    socket.value.onmessage = function (event) {
+      try {
         if (
           JSON.parse(event.data).data &&
           JSON.parse(event.data).data.access_url
@@ -418,10 +419,10 @@ function start2() {
             message: '该项目暂不能成功启动',
           });
         }
-      };
-    } catch {
-      msg.value = '';
-    }
+      } catch {
+        msg.value = '';
+      }
+    };
     msg.value = '启动中';
   }
 }

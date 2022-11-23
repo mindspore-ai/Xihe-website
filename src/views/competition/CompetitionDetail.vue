@@ -113,6 +113,7 @@ async function getDetailData() {
     showDetail.value = true;
   } catch (error) {
     console.error(error);
+    router.push('/404');
   }
 }
 getDetailData();

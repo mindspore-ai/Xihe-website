@@ -1,9 +1,4 @@
 import { request } from '@/shared/axios';
-/* import { useUserInfoStore } from '@/stores';
-
-function getUserInfo() {
-  return useUserInfoStore();
-} */
 
 import { LOGIN_KEYS } from '@/shared/login';
 

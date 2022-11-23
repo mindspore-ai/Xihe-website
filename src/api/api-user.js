@@ -218,12 +218,12 @@ export function getUserCompetition(params) {
  * 获取用户进行中、已结束的比赛
  * @returns
  */
-export function getCompetition(status) {
+/* export function getCompetition(status) {
   const url = `/api/competitions/user_competitions/?status=${status}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
-}
+} */
 
 /**
  * 用户动态

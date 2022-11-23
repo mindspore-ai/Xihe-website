@@ -7,16 +7,17 @@ import { useCompetitionData } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
-const teamId = ref(null);
+// const teamId = ref(null);
 const activeNavItem = ref('');
 // const fixed = ref(false);
 
-const storeTeamId = computed(() => {
+/* const storeTeamId = computed(() => {
   return useCompetitionData().teamId;
-});
+}); */
 const comInfo = useCompetitionData().competitionData;
+// console.log('comInfo: ', comInfo);
 
-watch(
+/* watch(
   () => {
     return storeTeamId.value;
   },
@@ -24,7 +25,7 @@ watch(
     teamId.value = newVal;
   },
   { immediate: true }
-);
+); */
 const navItems = reactive([
   {
     id: 'introduction',
@@ -42,13 +43,13 @@ const navItems = reactive([
     id: 'result',
     label: '结果',
     href: 'result',
-    isIndividual: true,
+    isIndividual: false,
   },
   {
     id: 'team',
     label: '我的团队',
     href: 'team',
-    isIndividual: true,
+    isIndividual: false,
   },
   {
     id: 'leaderboard',
@@ -73,7 +74,7 @@ const navItems = reactive([
 
 // 渲染的nav数据 (区分是否报名)
 const renderNav = computed(() => {
-  return teamId.value
+  return comInfo.is_competitor
     ? navItems
     : navItems.filter((item) => {
         return item.isIndividual;

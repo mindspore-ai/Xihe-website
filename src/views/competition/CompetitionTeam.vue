@@ -6,25 +6,25 @@ import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 // import { changeTeam } from '@/api/api-competition';
 // import { joinTeam } from '@/api/api-competition';
-import { getTeamInfoByName } from '@/api/api-competition';
+// import { getTeamInfoByName } from '@/api/api-competition';
 import { getTeamInfoById } from '@/api/api-competition';
 // import { deleteTeam } from '@/api/api-competition';
 // import { quitTeam } from '@/api/api-competition';
 // import { removeMember } from '@/api/api-competition';
 // import { transferCaptain } from '@/api/api-competition';
-import { getGroupid } from '@/api/api-competition';
+// import { getGroupid } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 
-import { ElMessage } from 'element-plus';
+// import { ElMessage } from 'element-plus';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 import IconGroup from '~icons/app/group.svg';
 import IconCancel from '~icons/app/cancel.svg';
 import IconDelivery from '~icons/app/delivery.svg';
-import warningImg from '@/assets/icons/warning.png';
+// import warningImg from '@/assets/icons/warning.png';
 import IconTips from '~icons/app/tips.svg';
-import ODialog from '@/components/ODialog.vue';
+// import ODialog from '@/components/ODialog.vue';
 import OButton from '@/components/OButton.vue';
 
 import IconCancel2 from '~icons/app/cancelBlue.svg';
@@ -32,7 +32,7 @@ import IconDelivery2 from '~icons/app/deliveryBlue.svg';
 const userInfoStore = useUserInfoStore();
 // console.log('userInfoStore: ', userInfoStore);
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamTips:
@@ -68,9 +68,9 @@ const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
 // 含个人参赛的团队Id和团队参赛的团队Id
-const teamId = computed(() => {
+/* const teamId = computed(() => {
   return useCompetitionData().teamId;
-});
+}); */
 
 const form1 = reactive({
   teamName: '',
@@ -111,7 +111,7 @@ const rules2 = reactive({
     },
   ],
 });
-const rules3 = reactive({
+/* const rules3 = reactive({
   teamName: [
     {
       required: true,
@@ -125,7 +125,7 @@ const rules3 = reactive({
       trigger: 'blur',
     },
   ],
-});
+}); */
 
 function handleClick() {}
 /* watch(
@@ -148,10 +148,8 @@ async function getIndividual(id) {
     teamData.value = res.data.data;
     teamMemberData.value = res.data.data.members;
     leaderData.value = teamMemberData.value.filter((item) => {
-      // TODO:item.role换回'leader'
-      return item.role === '';
+      return item.role === 'leader';
     });
-    // is_individual.value = res.data.is_individual;
     // 判断是否个人参赛
     is_individual.value = teamData.value.name ? false : true;
     show.value = true;
@@ -159,7 +157,7 @@ async function getIndividual(id) {
 }
 getIndividual(route.params.id);
 // 点击创建团队（修改团队）
-function fountTeam(formEl) {
+/* function fountTeam(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -185,9 +183,9 @@ function fountTeam(formEl) {
       return false;
     }
   });
-}
+} */
 // 加入团队
-function addTeam(formEl) {
+/* function addTeam(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -231,10 +229,10 @@ function addTeam(formEl) {
       return false;
     }
   });
-}
+} */
 
 // 移除成员
-async function deleteMember(memberId) {
+/* async function deleteMember(memberId) {
   const memberIds = teamMemberData.value.map((item) => {
     return item.id;
   });
@@ -249,10 +247,10 @@ async function deleteMember(memberId) {
       message: '移除成功！',
     });
   }
-}
+} */
 
 // 移交队长
-function handleCaptain(memberId) {
+/* function handleCaptain(memberId) {
   let params = {
     id: teamId.value,
     leader: memberId,
@@ -267,10 +265,10 @@ function handleCaptain(memberId) {
       });
     }
   });
-}
+} */
 
 // 删除团队
-async function confirmDel() {
+/* async function confirmDel() {
   let res = await deleteTeam(teamId.value);
   if (res.status === 200) {
     showDel.value = false;
@@ -296,17 +294,17 @@ async function confirmDel() {
   if (res2.status === 200) {
     userComData.setTeamId(res2.group_id);
   }
-}
-function toggleDelDlg(flag) {
+} */
+/* function toggleDelDlg(flag) {
   if (flag === undefined) {
     showDel.value = !showDel.value;
   } else {
     showDel.value = flag;
   }
-}
+} */
 
 // 编辑团队名
-function confirmEdit(formEl) {
+/* function confirmEdit(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -329,17 +327,17 @@ function confirmEdit(formEl) {
       return false;
     }
   });
-}
-function toggleEditDlg(flag) {
+} */
+/* function toggleEditDlg(flag) {
   if (flag === undefined) {
     showEdit.value = !showEdit.value;
   } else {
     showEdit.value = flag;
   }
-}
+} */
 
 // 退出团队
-async function confirmQuit() {
+/* async function confirmQuit() {
   let params = { id: teamId.value };
   let res = await quitTeam(params);
   if (res.status === 200) {
@@ -354,14 +352,14 @@ async function confirmQuit() {
   if (res2.status === 200) {
     userComData.setTeamId(res2.group_id);
   }
-}
-function toggleQuitDlg(flag) {
+} */
+/* function toggleQuitDlg(flag) {
   if (flag === undefined) {
     showQuit.value = !showQuit.value;
   } else {
     showQuit.value = flag;
   }
-}
+} */
 </script>
 <template>
   <div v-if="show" class="competitionTeam">
@@ -519,7 +517,7 @@ function toggleQuitDlg(flag) {
     </div>
   </div>
   <!-- 删除团队弹窗 -->
-  <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
+  <!-- <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
     <template #head>
       <div
         class="dlg-title"
@@ -562,9 +560,9 @@ function toggleQuitDlg(flag) {
         }}</o-button>
       </div>
     </template>
-  </o-dialog>
+  </o-dialog> -->
   <!-- 编辑团队名弹窗 -->
-  <o-dialog :show="showEdit" :close="false" @close-click="toggleEditDlg(false)">
+  <!-- <o-dialog :show="showEdit" :close="false" @close-click="toggleEditDlg(false)">
     <template #head>
       <div
         class="dlg-title"
@@ -622,9 +620,9 @@ function toggleQuitDlg(flag) {
         }}</o-button>
       </div>
     </template>
-  </o-dialog>
+  </o-dialog> -->
   <!-- 退出团队弹窗 -->
-  <o-dialog :show="showQuit" :close="false" @close-click="toggleQuitDlg(false)">
+  <!-- <o-dialog :show="showQuit" :close="false" @close-click="toggleQuitDlg(false)">
     <template #head>
       <div
         class="dlg-title"
@@ -663,7 +661,7 @@ function toggleQuitDlg(flag) {
         }}</o-button>
       </div>
     </template>
-  </o-dialog>
+  </o-dialog> -->
 </template>
 
 <style lang="scss" scoped>

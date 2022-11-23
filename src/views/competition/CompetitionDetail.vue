@@ -97,12 +97,13 @@ async function getDetailData() {
     // debugger;
     if (res.status === 200 && res.data.data.name) {
       competitionData.value = res.data.data;
+      // console.log('competitionData.value: ', competitionData.value);
       userComData.setCompetitionData(res.data.data);
       // userComData.setTeamId(res.data.data.id);
     } else {
       router.push('/competition');
     }
-    // 获取团队idTODO:
+    // 获取团队id
     /* let params = { id: route.params.id };
     let res2 = await getGroupid(params.id);
     console.log('团队idres2: ', res2);
@@ -170,7 +171,10 @@ getDetailData();
               </div>
               <div class="card-footer">举办方:{{ competitionData.host }}</div>
             </div>
-            <div v-if="teamId === null && show" class="right1">
+            <div
+              v-if="competitionData.is_competitor === false && show"
+              class="right1"
+            >
               <div class="right1-bonus">
                 <div class="number">奖池：￥{{ competitionData.bonus }}</div>
                 <div class="time">赛期:{{ competitionData.duration }}</div>
@@ -225,15 +229,21 @@ getDetailData();
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status_name === 'done'"
+                  v-if="competitionData.status === 'done'"
                   class="card-head-state finished"
                 >
                   已结束
                 </div>
               </div>
             </div>
-            <div v-if="teamId === null && show" class="right1">
-              <div v-if="teamId !== null" class="right1-bonus">
+            <div
+              v-if="competitionData.is_competitor === false && show"
+              class="right1"
+            >
+              <div
+                v-if="competitionData.is_competitor === true"
+                class="right1-bonus"
+              >
                 <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
               <div class="right-immediate">
@@ -262,7 +272,7 @@ getDetailData();
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="time">赛期:{{ competitionData.duration }}</div>
+                <div class="time">22222赛期:{{ competitionData.duration }}</div>
               </div>
             </div>
           </div>

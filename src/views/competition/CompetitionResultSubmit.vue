@@ -312,6 +312,7 @@ function goProjectClick(val) {
 // togglePhoneDlg(true)
 function handelSubmit() {
   if (
+    tableData.value &&
     tableData.value[0] &&
     `${year}-${month}-${day}` === tableData.value[0].submit_at
   ) {

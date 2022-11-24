@@ -69,6 +69,11 @@ const rules = reactive({
       message: '不能连续两个及以上中划线',
       trigger: 'blur',
     },
+    {
+      pattern: /^(?!.*(_)\1+).*$/,
+      message: '不能连续两个及以上下划线',
+      trigger: 'blur',
+    },
     { validator: checkName, trigger: 'blur' },
   ],
   desc: [

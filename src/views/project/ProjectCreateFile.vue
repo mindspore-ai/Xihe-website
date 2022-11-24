@@ -410,10 +410,11 @@ const rules = reactive({
   ],
 });
 
-// 添加输入模型TODO:id值
+// 添加输入模型
 function addModel() {
   let item = { id: modelId.value, key: 'key值', value: 'value值' };
   modelList.push(item);
+  console.log('modelList: ', modelList);
   modelId.value++;
 }
 
@@ -440,21 +441,33 @@ function addEnvironment() {
 function deleteModel(item) {
   let index = modelList.indexOf(item);
   modelList.splice(index, 1);
+  if (modelList.length === 0) {
+    form.models = [];
+  }
 }
 // 删除数据集
 function deleteDataset(item) {
   let index = datasetList.indexOf(item);
   datasetList.splice(index, 1);
+  if (datasetList.length === 0) {
+    form.datasets = [];
+  }
 }
 // 删除超参
 function deleteHyperparams(item) {
   let index = hyperparamsList.indexOf(item);
   hyperparamsList.splice(index, 1);
+  if (hyperparamsList.length === 0) {
+    form.hyperparameter = [];
+  }
 }
 // 删除环境变量
 function deleteEnvironment(item) {
   let index = environmentList.indexOf(item);
   environmentList.splice(index, 1);
+  if (environmentList.length === 0) {
+    form.env = [];
+  }
 }
 
 // 子组件点击
@@ -662,6 +675,8 @@ function selectFile(item) {
                         模型仓库的拥有者。<br />
                         <span style="color: red">模型名: </span>
                         模型仓库的名称。<br />
+                        <span style="color: red">文件路径: </span>
+                        模型仓库的文件路径。<br />
                       </div>
                     </el-popover>
                   </div>
@@ -704,6 +719,8 @@ function selectFile(item) {
                         数据集仓库的拥有者。<br />
                         <span style="color: red">数据集名: </span>
                         数据集仓库的名称。<br />
+                        <span style="color: red">文件路径: </span>
+                        数据集仓库的文件路径。<br />
                       </div>
                     </el-popover>
                   </div>

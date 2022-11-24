@@ -86,7 +86,7 @@ function checkName(rule, value, callback) {
   });
 }
 // 校验描述的长度200个字符
-function checkDesc(rule, value, callback) {
+/* function checkDesc(rule, value, callback) {
   if (getByteLength(value) <= 200) {
     callback();
   } else {
@@ -105,7 +105,7 @@ function getByteLength(str) {
     }
   }
   return len;
-}
+} */
 </script>
 
 <template>
@@ -186,11 +186,7 @@ function getByteLength(str) {
         ></el-input>
         <o-popper></o-popper>
       </el-form-item>
-      <el-form-item
-        class="des item"
-        prop="desc"
-        :rules="[{ validator: checkDesc, trigger: 'blur' }]"
-      >
+      <el-form-item class="des item" prop="desc">
         <div>
           <span>{{ i18n.datasetDescribe }}</span>
         </div>
@@ -199,6 +195,7 @@ function getByteLength(str) {
           :rows="2"
           type="textarea"
           :placeholder="i18n.placeholder.describe"
+          maxlength="200"
           show-word-limit
         />
       </el-form-item>

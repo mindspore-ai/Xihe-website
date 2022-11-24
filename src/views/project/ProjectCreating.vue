@@ -78,8 +78,8 @@ const rules = reactive({
   ],
   desc: [
     // { required: true, message: '必填项', trigger: 'blur' },
-    // { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
-    { validator: checkDesc, trigger: 'blur' },
+    { min: 1, max: 200, message: '内容不能为空', trigger: 'blur' },
+    // { validator: checkDesc, trigger: 'blur' },
   ],
 });
 function checkName(rule, value, callback) {
@@ -92,7 +92,7 @@ function checkName(rule, value, callback) {
   });
 }
 // 校验描述的长度200个字符
-function checkDesc(rule, value, callback) {
+/* function checkDesc(rule, value, callback) {
   if (getByteLength(value) <= 200) {
     callback();
   } else {
@@ -111,7 +111,7 @@ function getByteLength(str) {
     }
   }
   return len;
-}
+} */
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);
@@ -267,6 +267,7 @@ onMounted(() => {});
               type="textarea"
               :placeholder="i18n.input_text"
               rows="5"
+              maxlength="200"
               show-word-limit
             ></el-input>
           </el-form-item>

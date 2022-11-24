@@ -1,5 +1,5 @@
 export default [
-  { id: 1, name: 'apache 2.0' },
+  { id: 1, name: 'apache-2.0' },
   { id: 2, name: 'mit' },
   { id: 3, name: 'cc-by-sa-3.0' },
   { id: 4, name: 'afl-3.0' },

@@ -101,6 +101,9 @@ async function upLoad(param) {
       getSubmissions(detailData1.value.id, detailData1.value.phase).then(
         (res) => {
           tableData.value = res.data.details;
+          if (tableData.value.length > 3) {
+            tableData.value = tableData.value.slice(0, 3);
+          }
         }
       );
     })
@@ -234,6 +237,9 @@ watch(
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
   detailData.value = res.data;
   tableData.value = res.data.details;
+  if (tableData.value.length > 3) {
+    tableData.value = tableData.value.slice(0, 3);
+  }
 });
 async function getIndividual(id) {
   // 通过团队id获得团队信息
@@ -347,7 +353,7 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <div v-if="detailData">
+      <!-- <div v-if="detailData">
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -361,8 +367,8 @@ function handelCancel() {
             >确定</OButton
           >
         </div>
-      </div>
-      <div v-else-if="detailData && detailData.project_name">
+      </div> -->
+      <div v-if="detailData && detailData.project">
         <div
           v-if="detailData.leader_name.name === userInfo.userName"
           class="guide"
@@ -370,8 +376,8 @@ function handelCancel() {
           你可对该项目内的文件进行改动
         </div>
         <project-relate-card
-          :detail-data="detailData"
-          :name="'project_name'"
+          :detail-data="detailData.project"
+          :name="'project'"
           @jump="goProjectClick"
         ></project-relate-card>
       </div>

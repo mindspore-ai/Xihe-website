@@ -215,100 +215,114 @@ watch(
     margin-right: 40px;
     width: 100%;
     border-right: 1px solid #d8d8d8;
-    .markdown-file {
+    :deep(.markdown-file) {
       padding-right: 40px;
-    }
-    .o-button {
-      position: absolute;
-      top: 0px;
-      right: 40px;
-    }
-  }
-  .upload-readme {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    // justify-content: center;
-    font-size: 14px;
-    .upload-readme-img {
-      margin-top: 205px;
-      .o-icon {
-        display: block;
-      }
-      font-size: 48px;
-    }
-    .upload-readme-tip {
-      display: flex;
-      margin-top: 24px;
-      line-height: 17px;
-      color: #999;
-      .link-style {
-        cursor: pointer;
-        color: #33b3ff;
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-  .right-data {
-    :deep(.remove-item) {
-      visibility: hidden;
-    }
-    max-width: 425px;
-    width: 100%;
-    color: #000;
-    .download-data {
-      .download-title {
-        margin-bottom: 8px;
-        font-size: 16px;
-        color: #555;
-      }
-      .download-count {
-        font-size: 18px;
-        color: #000;
-      }
-    }
-    .dataset-data {
-      .dataset-box {
-        :deep(.remove-item) {
-          visibility: hidden;
-        }
-        display: grid;
-        grid-template-columns: repeat(1, minmax(200px, 1fr));
-        column-gap: 24px;
-        row-gap: 24px;
-        margin-top: 24px;
-        .dataset-item {
-          max-width: 424px;
-          width: 100%;
-          padding: 24px;
-          background-color: #fff;
-          .dataset-top {
-            margin-bottom: 14px;
+      .license {
+        position: absolute;
+        max-width: 425px;
+        width: 100%;
+        top: v-bind('licensesHeight');
+        left: calc(100% + 40px);
+        center {
+          display: flex;
+          img {
+            min-width: 0;
+            width: 100%;
           }
-          .dataset-bottom {
+        }
+      }
+    }
+  }
+  .o-button {
+    position: absolute;
+    top: 0px;
+    right: 40px;
+  }
+}
+.upload-readme {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: center;
+  font-size: 14px;
+  .upload-readme-img {
+    margin-top: 205px;
+    .o-icon {
+      display: block;
+    }
+    font-size: 48px;
+  }
+  .upload-readme-tip {
+    display: flex;
+    margin-top: 24px;
+    line-height: 17px;
+    color: #999;
+    .link-style {
+      cursor: pointer;
+      color: #33b3ff;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+.right-data {
+  :deep(.remove-item) {
+    visibility: hidden;
+  }
+  max-width: 425px;
+  width: 100%;
+  color: #000;
+  .download-data {
+    .download-title {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+    .download-count {
+      font-size: 18px;
+      color: #000;
+    }
+  }
+  .dataset-data {
+    .dataset-box {
+      :deep(.remove-item) {
+        visibility: hidden;
+      }
+      display: grid;
+      grid-template-columns: repeat(1, minmax(200px, 1fr));
+      column-gap: 24px;
+      row-gap: 24px;
+      margin-top: 24px;
+      .dataset-item {
+        max-width: 424px;
+        width: 100%;
+        padding: 24px;
+        background-color: #fff;
+        .dataset-top {
+          margin-bottom: 14px;
+        }
+        .dataset-bottom {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          & > div {
             display: flex;
-            justify-content: start;
             align-items: center;
-            & > div {
-              display: flex;
-              align-items: center;
-              margin-right: 24px;
-              span {
-                font-size: 20px;
-                padding-right: 4px;
-              }
+            margin-right: 24px;
+            span {
+              font-size: 20px;
+              padding-right: 4px;
             }
           }
         }
       }
     }
-    .title {
-      margin: 48px 0 24px;
-      font-size: 18px;
-      line-height: 24px;
-    }
+  }
+  .title {
+    margin: 48px 0 24px;
+    font-size: 18px;
+    line-height: 24px;
   }
 }
 </style>

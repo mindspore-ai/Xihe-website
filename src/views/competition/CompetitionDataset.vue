@@ -12,7 +12,6 @@ import { useCompetitionData } from '@/stores';
 import { router } from '@/routers';
 
 const userComData = useCompetitionData().competitionData;
-console.log('userComData: ', userComData);
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
 }); */

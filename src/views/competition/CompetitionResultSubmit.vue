@@ -317,31 +317,31 @@ function goProjectClick(val) {
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
-  // if (
-  //   tableData.value &&
-  //   tableData.value[0] &&
-  //   `${year}-${month}-${day}` === tableData.value[0].submit_at
-  // ) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '您今天已经提交过了哦~',
-  //   });
-  // } else if (
-  //   detailData.value.competition_period !== detailData1.value.competition_period
-  // ) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '您未进入决赛，无法提交结果！',
-  //   });
-  // } else {
-  // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '提交结果通道火速开通中，请您耐心等待哦~',
-  //   });
-  // } else {
-  togglePhoneDlg(true);
-  // }
+  if (
+    tableData.value &&
+    tableData.value[0] &&
+    `${year}-${month}-${day}` === tableData.value[0].submit_at
+  ) {
+    ElMessage({
+      type: 'error',
+      message: '您今天已经提交过了哦~',
+    });
+    // } else if (
+    //   detailData.value.competition_period !== detailData1.value.competition_period
+    // ) {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '您未进入决赛，无法提交结果！',
+    //   });
+    // } else {
+    // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
+    //   ElMessage({
+    //     type: 'error',
+    //     message: '提交结果通道火速开通中，请您耐心等待哦~',
+    //   });
+  } else {
+    togglePhoneDlg(true);
+  }
   // }
 }
 function handelCancel() {

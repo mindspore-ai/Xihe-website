@@ -154,8 +154,8 @@ function getByteLength(str) {
         :rules="[
           { required: true, message: '必填项', trigger: 'blur' },
           {
-            pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
-            message: '暂不支持中文字符，且长度为5-35个字符',
+            pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
+            message: '暂不支持中文字符，且长度为3-35个字符',
             trigger: 'blur',
           },
           {
@@ -209,8 +209,8 @@ function getByteLength(str) {
           </div>
           <div>- 仓库名不能连续两个及以上中划线（-）或下划线（_）</div>
           <div>
-            -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
-              class="remind"
+            -&nbsp;仓库名建议简短<span class="remind">(3-35个字符)</span
+            >，仓库下的文件或文件夹绝对路径长度<span class="remind"
               >不能超过1000字符</span
             >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算
           </div>

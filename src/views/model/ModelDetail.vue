@@ -134,7 +134,9 @@ function getDetailData() {
         });
         mindspore.forEach((item, index) => {
           mindspore[index] = item.name.substring(9);
+          mindspore[index] = Number(mindspore[index]);
         });
+        mindspore.sort();
         if (mindspore.length) {
           modelTags.value.push({ name: 'MindSpore' + mindspore.join(', ') });
         }

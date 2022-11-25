@@ -11,7 +11,7 @@ import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
-import {  getAllCompetition } from '@/api/api-competition';
+import { getAllCompetition } from '@/api/api-competition';
 
 const router = useRouter();
 
@@ -59,6 +59,7 @@ function getCompetitions2() {
     .then((res) => {
       if (res.status === 200) {
         tableData.value = res.data.data;
+        console.log('tableData.value: ', tableData.value);
       }
     })
     .catch((err) => {
@@ -67,12 +68,14 @@ function getCompetitions2() {
 }
 getCompetitions2();
 // 跳转到比赛详情页
-function goDetail(id) {
+function goDetail(competitionName) {
+  let competitionList = tableData.value.filter((item) => {
+    return item.name === competitionName;
+  });
   router.push({
     name: 'competitionDetail',
-    params: { id: id },
+    params: { id: competitionList[0].id },
   });
-  // router.push(`/competition/${id}`);
 }
 </script>
 <template>
@@ -81,13 +84,25 @@ function goDetail(id) {
       <div class="wrap">
         <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item
-            ><img :src="paintings" alt="" @click="goDetail(1)" />
+            ><img
+              :src="paintings"
+              alt=""
+              @click="goDetail('昇思AI挑战赛-艺术家画作风格迁移')"
+            />
           </el-carousel-item>
           <el-carousel-item
-            ><img :src="imageClassify" alt="" @click="goDetail(3)" />
+            ><img
+              :src="imageClassify"
+              alt=""
+              @click="goDetail('昇思AI挑战赛-多类别图像分类')"
+            />
           </el-carousel-item>
           <el-carousel-item
-            ><img :src="textClassification" alt="" @click="goDetail(2)" />
+            ><img
+              :src="textClassification"
+              alt=""
+              @click="goDetail('昇思AI挑战赛-文本分类')"
+            />
           </el-carousel-item>
         </el-carousel>
       </div>

@@ -6,11 +6,13 @@ import IconDownload from '~icons/app/download';
 import OButton from '@/components/OButton.vue';
 import { handleMarkdown } from '@/shared/markdown';
 
-import { downloadDataset } from '@/api/api-obs';
+// import { downloadDataset } from '@/api/api-obs';
 import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
+import { router } from '@/routers';
 
 const userComData = useCompetitionData().competitionData;
+console.log('userComData: ', userComData);
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
 }); */
@@ -28,6 +30,10 @@ getGuide(userComData.dataset_doc)
   .catch((err) => {
     console.error(err);
   });
+
+function downloadDataset() {
+  window.open(userComData.dataset_url, '_black');
+}
 </script>
 <template>
   <div class="dataset-page">
@@ -35,7 +41,7 @@ getGuide(userComData.dataset_doc)
       <o-button
         v-if="userComData.is_competitor"
         size="small"
-        @click="downloadDataset(userComData.dataset_url)"
+        @click="downloadDataset()"
         >下载数据集
         <template #suffix>
           <o-icon><icon-download></icon-download></o-icon> </template

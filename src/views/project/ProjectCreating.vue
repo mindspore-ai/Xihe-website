@@ -48,13 +48,12 @@ const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
     {
-      pattern: /^[^\u4e00-\u9fa5]{5,35}$/g,
-      message: '暂不支持中文字符，且长度为5-35个字符',
+      pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
+      message: '暂不支持中文字符，且长度为3-35个字符',
       trigger: 'blur',
     },
     {
       // 不能含有:;*?\<>|等特殊字符
-      // pattern: /^[^\*/?\\<>|:;]$/g,
       pattern: /^[^\*/?\\<>|:;]*$/g,
       message: '不能含有:/\\*;?<>|等特殊字符',
       trigger: 'blur',

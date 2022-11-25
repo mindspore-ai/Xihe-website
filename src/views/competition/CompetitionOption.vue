@@ -43,13 +43,13 @@ const navItems = reactive([
     id: 'result',
     label: '结果',
     href: 'result',
-    isIndividual: true,
+    isIndividual: false,
   },
   {
     id: 'team',
     label: '我的团队',
     href: 'team',
-    isIndividual: true,
+    isIndividual: false,
   },
   {
     id: 'leaderboard',

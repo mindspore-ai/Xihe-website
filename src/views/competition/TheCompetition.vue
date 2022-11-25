@@ -59,7 +59,6 @@ function getCompetitions2() {
     .then((res) => {
       if (res.status === 200) {
         tableData.value = res.data.data;
-        console.log('tableData.value: ', tableData.value);
       }
     })
     .catch((err) => {
@@ -75,6 +74,12 @@ function goDetail(competitionName) {
   router.push({
     name: 'competitionDetail',
     params: { id: competitionList[0].id },
+  });
+}
+function goCompetitionDetail(id) {
+  router.push({
+    name: 'competitionDetail',
+    params: { id: id },
   });
 }
 </script>
@@ -121,7 +126,7 @@ function goDetail(competitionName) {
               v-for="item in tableData"
               :key="item.id"
               class="competition-box"
-              @click="goDetail(item.id)"
+              @click="goCompetitionDetail(item.id)"
             >
               <div class="left">
                 <div class="card-head">
@@ -162,7 +167,7 @@ function goDetail(competitionName) {
                     <OButton
                       type="primary"
                       animation
-                      @click="goDetail(item.id)"
+                      @click="goCompetitionDetail(item.id)"
                     >
                       立即前往
                       <template #suffix>
@@ -195,7 +200,7 @@ function goDetail(competitionName) {
               v-for="item in tableData3"
               :key="item.id"
               class="competition-box"
-              @click="goDetail(item.id)"
+              @click="goCompetitionDetail(item.id)"
             >
               <div class="left">
                 <div class="card-head">
@@ -226,7 +231,7 @@ function goDetail(competitionName) {
                     <OButton
                       type="primary"
                       animation
-                      @click="goDetail(item.id)"
+                      @click="goCompetitionDetail(item.id)"
                     >
                       立即前往
                       <template #suffix>
@@ -259,7 +264,7 @@ function goDetail(competitionName) {
               v-for="item in tableData2"
               :key="item.id"
               class="competition-box"
-              @click="goDetail(item.id)"
+              @click="goCompetitionDetail(item.id)"
             >
               <div class="left">
                 <div class="card-head">
@@ -290,7 +295,7 @@ function goDetail(competitionName) {
                     <OButton
                       type="primary"
                       animation
-                      @click="goDetail(item.id)"
+                      @click="goCompetitionDetail(item.id)"
                     >
                       立即前往
                       <template #suffix>
@@ -323,7 +328,7 @@ function goDetail(competitionName) {
               v-for="item in tableData1"
               :key="item.id"
               class="competition-box"
-              @click="goDetail(item.id)"
+              @click="goCompetitionDetail(item.id)"
             >
               <div class="left">
                 <div class="card-head">
@@ -354,7 +359,7 @@ function goDetail(competitionName) {
                     <OButton
                       type="primary"
                       animation
-                      @click="goDetail(item.id)"
+                      @click="goCompetitionDetail(item.id)"
                     >
                       立即前往
                       <template #suffix>

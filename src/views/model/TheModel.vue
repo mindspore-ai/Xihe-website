@@ -120,7 +120,7 @@ let queryData = reactive({
   tags: null, //标签
   tag_kinds: null, //标签类型(应用分类)
   level: null, //仓库级别
-  count_per_page: 12, //每页数量
+  count_per_page: 10, //每页数量
   page_num: 1, //分页
   sort_by: null, //排序规则
 });

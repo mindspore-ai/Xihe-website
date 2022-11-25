@@ -76,14 +76,24 @@ function create(formEl) {
     }
   });
 }
+let time = null;
 function checkName(rule, value, callback) {
-  checkNames({ name: value, owner: userInfo.userName }).then((res) => {
-    if (res.data.can_apply) {
-      callback();
-    } else {
-      callback(new Error('该名称已存在'));
-    }
-  });
+  if (time !== null) {
+    clearTimeout(time);
+  }
+  time = setTimeout(() => {
+    checkNames({ name: value, owner: userInfo.userName })
+      .then((res) => {
+        if (res.data.can_apply) {
+          callback();
+        } else {
+          callback(new Error('该名称已存在'));
+        }
+      })
+      .catch(() => {
+        callback(new Error('文件名重复，或文件名不合规'));
+      });
+  }, 500);
 }
 // 校验描述的长度200个字符
 /* function checkDesc(rule, value, callback) {
@@ -173,7 +183,7 @@ function getByteLength(str) {
             message: '不能连续两个及以上下划线',
             trigger: 'blur',
           },
-          { validator: checkName, trigger: 'blur' },
+          { validator: checkName, trigger: 'change' },
         ]"
       >
         <div class="requirement">

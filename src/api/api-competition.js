@@ -125,7 +125,7 @@ export function getTeamInfoById(id) {
  * @returns
  */
 export function getSubmissions(id, phase) {
-  const url = `/server/competition/${id}/preliminary/submissions`;
+  const url = `/server/competition/${id}/${phase}/submissions`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -135,7 +135,7 @@ export function getSubmissions(id, phase) {
  * @returns
  */
 export async function submit(id, phase, file) {
-  const url = `/server/competition/${id}/preliminary/submissions`;
+  const url = `/server/competition/${id}/${phase}/submissions`;
   let config = await getHeaderConfig();
   config['timeout'] = 60000;
   return request.post(url, file, config).then((res) => {

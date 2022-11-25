@@ -134,9 +134,11 @@ export function getSubmissions(id, phase) {
  * 上传结果
  * @returns
  */
-export function submit(id, phase, file) {
+export async function submit(id, phase, file) {
   const url = `/server/competition/${id}/preliminary/submissions`;
-  return request.post(url, file, getHeaderConfig()).then((res) => {
+  let config = await getHeaderConfig();
+  config['timeout'] = 60000;
+  return request.post(url, file, config).then((res) => {
     return res.data;
   });
 }

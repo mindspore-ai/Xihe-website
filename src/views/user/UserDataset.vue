@@ -58,7 +58,7 @@ function getDatasetData() {
       }
       avatarImg.value = res.data.avatar_id;
       datasetCount.value = res.data.total;
-      datasetData.value = res.data.models;
+      datasetData.value = res.data.datasets;
     } else {
       datasetData.value = [];
     }

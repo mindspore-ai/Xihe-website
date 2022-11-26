@@ -19,7 +19,7 @@ function getHeaderConfig() {
  */
 export function getCompetition(params) {
   const url = `/server/competition/${params.id}`;
-  return request.get(url).then((res) => {
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });
 }

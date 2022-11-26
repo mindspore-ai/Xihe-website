@@ -5,6 +5,11 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
+const APP_ID = import.meta.env.VITE_APP_ID;
+const APP_HOST = import.meta.env.VITE_APP_HOST;
+
+console.log(APP_ID, APP_HOST);
+
 const route = useRoute();
 
 const showFooter = computed(() => {

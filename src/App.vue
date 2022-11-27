@@ -5,10 +5,7 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-const APP_ID = import.meta.env.VITE_APP_ID;
-const APP_HOST = import.meta.env.VITE_APP_HOST;
-
-console.log(APP_ID, APP_HOST);
+import tipImg from '@/assets/imgs/home/tip.png';
 
 const route = useRoute();
 
@@ -25,6 +22,16 @@ const setHeader = () => {
 
   isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
+};
+
+const dialogVisible = ref(false);
+const toggleDlg = (val) => {
+  dialogVisible.value = val;
+};
+
+const tipVisible = ref(true);
+const toggleTip = (val) => {
+  tipVisible.value = val;
 };
 
 onMounted(() => {
@@ -50,6 +57,34 @@ onUnmounted(() => {
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
+
+  <div v-if="tipVisible" class="app-tip">
+    <div class="tip-content">
+      <img class="tip-img" :src="tipImg" @click="toggleDlg(true)" />
+      <!-- <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" /> -->
+    </div>
+
+    <o-dialog :show="dialogVisible" :close="false">
+      <template #head>
+        <p class="dlg-title">新后台上线公告</p>
+      </template>
+
+      <div class="dlg-body">
+        <p class="dlg-content">
+          tip图片的关闭icon单独切一下
+          公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容
+        </p>
+      </div>
+
+      <template #foot>
+        <div class="dlg-btn">
+          <OButton type="primary" size="small" @click="toggleDlg(fasle)"
+            >我知道啦</OButton
+          >
+        </div>
+      </template>
+    </o-dialog>
+  </div>
 </template>
 
 <style lang="scss">
@@ -113,5 +148,41 @@ onUnmounted(() => {
 .slide-leave-to {
   position: absolute;
   top: 100%;
+}
+.app-tip {
+  position: fixed;
+  z-index: 1;
+  bottom: 30vh;
+  right: 0;
+  .tip-content {
+    .tip-img {
+      max-width: 200px;
+      object-fit: fill;
+      cursor: pointer;
+    }
+    .tip-btn {
+    }
+  }
+}
+.dlg-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: normal;
+  color: #000000;
+  line-height: 32px;
+}
+
+.dlg-content {
+  font-size: 14px;
+  font-weight: normal;
+  color: #555555;
+  line-height: 22px;
+}
+
+.dlg-btn {
+  display: flex;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  justify-content: center;
 }
 </style>

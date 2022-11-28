@@ -219,12 +219,22 @@ getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
 
 const detailData = ref();
 function goProjectClick() {
-  // router.push(`/projects/${val.owner}/${val.name}`);
-  router.push(
-    `/projects/${detailData.value.project.split('/')[0]}/${
-      detailData.value.project.split('/')[1]
-    }`
-  );
+  if (
+    (detailData1.value.is_competitor && detailData1.value.team_id === '') ||
+    detailData1.value.team_role === 'leader'
+  ) {
+    // router.push(`/projects/${val.owner}/${val.name}`);
+    router.push(
+      `/projects/${detailData.value.project.split('/')[0]}/${
+        detailData.value.project.split('/')[1]
+      }`
+    );
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '只有队长可以查看改项目~',
+    });
+  }
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
@@ -280,7 +290,13 @@ function handelCancel() {
         </div>
       </div> -->
       <div v-if="detailData && detailData.project">
-        <div v-if="detailData1.team_role === 'leader'" class="guide">
+        <div
+          v-if="
+            (detailData1.is_competitor && detailData1.team_id === '') ||
+            detailData1.team_role === 'leader'
+          "
+          class="guide"
+        >
           你可对该项目内的文件进行改动
         </div>
         <!-- <project-relate-card
@@ -288,7 +304,10 @@ function handelCancel() {
           :name="'project'"
           @jump="goProjectClick"
         ></project-relate-card> -->
-        <p @click="goProjectClick">{{ detailData.project }}</p>
+        <div class="project" @click="goProjectClick">
+          <o-icon><icon-project></icon-project></o-icon
+          >{{ detailData.project.split('/')[1] }}
+        </div>
       </div>
       <div v-else class="empty">
         <o-icon><icon-project></icon-project></o-icon>
@@ -460,10 +479,23 @@ function handelCancel() {
         margin-right: 8px;
       }
     }
-    p {
+    .project {
       text-align: center;
-      margin-top: 64px;
+      font-size: 18px;
+      margin-top: 24px;
       cursor: pointer;
+      height: 100px;
+      line-height: 100px;
+
+      &:hover {
+        box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
+        color: #0d8dff;
+      }
+      border: 1px solid #e5e5e5;
+      .o-icon {
+        margin-right: 36px;
+        display: inline-block;
+      }
     }
   }
 }

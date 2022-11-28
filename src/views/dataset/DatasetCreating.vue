@@ -82,17 +82,13 @@ function checkName(rule, value, callback) {
     clearTimeout(time);
   }
   time = setTimeout(() => {
-    checkNames({ name: value, owner: userInfo.userName })
-      .then((res) => {
-        if (res.data.can_apply) {
-          callback();
-        } else {
-          callback(new Error('该名称已存在'));
-        }
-      })
-      .catch(() => {
-        callback(new Error('文件名重复，或文件名不合规'));
-      });
+    checkNames({ name: value, owner: userInfo.userName }).then((res) => {
+      if (res.data.can_apply) {
+        callback();
+      } else {
+        callback(new Error('该名称已存在'));
+      }
+    });
   }, 500);
 }
 // 校验描述的长度200个字符

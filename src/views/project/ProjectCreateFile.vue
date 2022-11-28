@@ -202,8 +202,6 @@ function getDetailData() {
     }).then((res) => {
       // if (res.results.status === 200) {
       detailData.value = res.data;
-      // console.log('项目仓库详情数据: ', detailData.value);
-
       // }
     });
   } catch (error) {
@@ -414,7 +412,6 @@ const rules = reactive({
 function addModel() {
   let item = { id: modelId.value, key: 'key值', value: 'value值' };
   modelList.push(item);
-  console.log('modelList: ', modelList);
   modelId.value++;
 }
 
@@ -885,7 +882,7 @@ function selectFile(item) {
         padding: '8px 0 30px',
         fontSize: '18px',
         textAlign: 'center',
-        width: '640px',
+        width: '100%',
       }"
     >
       <div :style="{ marginBottom: '8px' }">
@@ -934,7 +931,6 @@ function selectFile(item) {
         padding: '8px 0 12px',
         fontSize: '18px',
         textAlign: 'center',
-        width: '640px',
       }"
     >
       <!-- 弹窗的目录子组件 -->

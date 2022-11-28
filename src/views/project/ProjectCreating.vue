@@ -107,10 +107,8 @@ function checkName(rule, value, callback) {
   } else {
     callback(new Error('字符长度不能超过200个'));
   }
-  // console.log(getByteLength(value));
 }
 function getByteLength(str) {
-  // console.log('str: ', str);
   let len = 0;
   for (let i = 0; i < str.length; i++) {
     if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {

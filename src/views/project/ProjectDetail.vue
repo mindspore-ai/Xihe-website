@@ -195,7 +195,6 @@ function getDetailData() {
     })
       .then((res) => {
         let storeData = res.data;
-        // console.log('项目详情数据: ', res.data);
         // 判断仓库是否属于自己
         storeData['is_owner'] = userInfoStore.userName === storeData.owner;
         // 文件列表是否为空
@@ -220,7 +219,6 @@ function getDetailData() {
         modelTags.value = [];
         headTags.value = [];
         if (tags) {
-          // TODO: tags很有可能不止一个;
           // modelTags.value = [{ name: protocol }, { name: training }];
           tags.forEach((item) => {
             modelTags.value.push({ name: item });
@@ -231,7 +229,6 @@ function getDetailData() {
         modelTags.value = modelTags.value.map((item) => {
           return item;
         });
-        // console.log(modelTags.value);
         if (tags) {
           tags.forEach((item) => {
             headTags.value.push({ name: item });
@@ -341,7 +338,6 @@ function handleProjectLike() {
       // 点赞(收藏)
       getUserDig(params)
         .then((res) => {
-          console.log('res: ', res);
           if (res.status === 201) {
             getDetailData();
           }

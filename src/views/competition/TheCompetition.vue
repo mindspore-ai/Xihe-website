@@ -31,21 +31,18 @@ const tableData3 = ref([]);
 function getCompetitions1(tab) {
   if (tab === '1') {
     getAllCompetition({ status: 'preparing' }).then((res) => {
-      // console.log('未开始的比赛：', res.data);
       if (res.status === 200) {
         tableData1.value = res.data.data;
       }
     });
   } else if (tab === '2') {
     getAllCompetition({ status: 'done' }).then((res) => {
-      // console.log('已结束的比赛：', res.data);
       if (res.status === 200) {
         tableData2.value = res.data.data;
       }
     });
   } else if (tab === '3') {
     getAllCompetition({ status: 'in-progress' }).then((res) => {
-      // console.log('进行中的比赛：', res.data);
       if (res.status === 200) {
         tableData3.value = res.data.data;
       }

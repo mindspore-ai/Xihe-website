@@ -75,7 +75,6 @@ function keepEmail2(formEl) {
     if (valid) {
       keepUserEmail(qurey)
         .then((res) => {
-          // console.log('res', res);
           if (res.status === 200) {
             userInfoStore.emailStatus = true;
             ruleForm.email_code = null;
@@ -85,7 +84,6 @@ function keepEmail2(formEl) {
               message: '激活成功',
             });
           } else {
-            // console.log('error', res);
             ElMessage({
               type: 'error',
               message: res.msg,
@@ -93,7 +91,6 @@ function keepEmail2(formEl) {
           }
         })
         .catch((err) => {
-          // console.log('err', err);
           ElMessage({ type: 'error', message: err.ReferenceError });
         });
     }

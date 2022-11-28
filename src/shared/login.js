@@ -203,8 +203,6 @@ export async function goAuthorize() {
     const url = client.buildAuthorizeUrl({
       scope: 'openid profile email phone address username',
     });
-    // console.log('client', client);
-    // console.log('url: ', url);
     window.location.href = url;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);

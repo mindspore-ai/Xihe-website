@@ -93,11 +93,8 @@ async function getDetailData() {
   try {
     // 获取比赛信息
     let res = await getCompetition({ id: route.params.id });
-    // console.log('单个比赛信息res: ', res.data);
-    // debugger;
     if (res.status === 200 && res.data.data.name) {
       competitionData.value = res.data.data;
-      // console.log('competitionData.value: ', competitionData.value);
       userComData.setCompetitionData(res.data.data);
       // userComData.setTeamId(res.data.data.id);
     } else {
@@ -106,7 +103,6 @@ async function getDetailData() {
     // 获取团队id
     /* let params = { id: route.params.id };
     let res2 = await getGroupid(params.id);
-    console.log('团队idres2: ', res2);
     if (res2.status === 200) {
       // teamId.value = res2.group_id;
       userComData.setTeamId(res2.group_id);

@@ -52,7 +52,6 @@ if (props.cardType === 'model') {
     ...files_list,
     ...tags,
   ]; */
-  // console.log('labelList.value: ', labelList.value);
 } else if (props.cardType === 'dataset') {
   const {
     /* licenses_list, task_list, files_list, */

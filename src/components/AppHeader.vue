@@ -40,6 +40,12 @@ const modelData = ref([]);
 const datasetData = ref([]);
 const projectData = ref([]);
 const userData = ref([]);
+
+const modelResult = ref([]);
+const datasetResult = ref([]);
+const projectResult = ref([]);
+const userResult = ref([]);
+
 let query = reactive({
   name: '',
 });
@@ -199,21 +205,25 @@ function getSearch() {
           // 模型、数据集、项目、用户名的搜索结果
           if (modelCount.value) {
             modelData.value = res.data.data.model.top;
+            getModelResult(modelData.value);
           } else {
             modelData.value = [];
           }
           if (datasetCount.value) {
             datasetData.value = res.data.data.dataset.top;
+            getDatasetResult(datasetData.value);
           } else {
             datasetData.value = [];
           }
           if (projectCount.value) {
             projectData.value = res.data.data.project.top;
+            getProjectResult(projectData.value);
           } else {
             projectData.value = [];
           }
           if (userCount.value) {
             userData.value = res.data.data.user.top;
+            getUserResult(userData.value);
           } else {
             userData.value = [];
           }
@@ -240,38 +250,116 @@ function emptyValue() {
   keyword.value = '';
   show.value = true;
 }
-// 高亮函数
-function heightLight(str, keyword) {
-  let kw = escapeHtml(keyword);
-  const reg = new RegExp(kw, 'ig');
-  return str.replace(reg, (val) => {
-    return `<span style="color:#000;font-weight:bold">${val}</span>`;
-  });
-}
+
 // 模型搜索结果
-const modelResult = computed(() => {
-  return modelData.value.map((item) => {
-    return heightLight(item.name, keyword.value);
+function getModelResult(modelData) {
+  let resultList = [];
+  let kw = escapeHtml(keyword.value);
+
+  modelData.forEach((item) => {
+    const patt = new RegExp(kw, 'i');
+    if (patt.test(item.name)) {
+      resultList.push(item);
+    }
   });
-});
+  let dataList = [];
+  resultList.forEach((item) => {
+    const reg = new RegExp(kw, 'gi');
+    let obj = {
+      owner: item.owner,
+      name: item.name.replace(
+        reg,
+        (val) => `<span style='color:#000;font-weight:bold'>${val}</span>`
+      ),
+    };
+    dataList.push(obj);
+  });
+  modelResult.value = dataList;
+}
+
 // 数据集搜索结果
-const datasetResult = computed(() => {
-  return datasetData.value.map((item) => {
-    return heightLight(item.name, keyword.value);
+function getDatasetResult(datasetData) {
+  let resultList = [];
+  let kw = escapeHtml(keyword.value);
+
+  datasetData.forEach((item) => {
+    const patt = new RegExp(kw, 'i');
+    if (patt.test(item.name)) {
+      resultList.push(item);
+    }
   });
-});
+  let dataList = [];
+  resultList.forEach((item) => {
+    const reg = new RegExp(kw, 'gi');
+    let obj = {
+      owner: item.owner,
+      name: item.name.replace(
+        reg,
+        (val) => `<span style='color:#000;font-weight:bold'>${val}</span>`
+      ),
+    };
+    dataList.push(obj);
+  });
+  datasetResult.value = dataList;
+}
 // 项目搜索结果
-const projectResult = computed(() => {
-  return projectData.value.map((item) => {
-    return heightLight(item.name, keyword.value);
+function getProjectResult(projectData) {
+  let resultList = [];
+  let kw = escapeHtml(keyword.value);
+  projectData.forEach((item) => {
+    const patt = new RegExp(kw, 'i');
+    if (patt.test(item.name)) {
+      resultList.push(item);
+    }
   });
-});
-// 用户名搜索结果
-const userResult = computed(() => {
-  return userData.value.map((item) => {
-    return heightLight(item, keyword.value);
+  let dataList = [];
+
+  resultList.forEach((item) => {
+    const reg = new RegExp(kw, 'gi');
+    let obj = {
+      owner: item.owner,
+      name: item.name.replace(
+        reg,
+        (val) => `<span style='color:#000;font-weight:bold'>${val}</span>`
+      ),
+    };
+    dataList.push(obj);
   });
-});
+  projectResult.value = dataList;
+}
+// 用户搜索结果
+function getUserResult(userData) {
+  let resultList = [];
+  let kw = escapeHtml(keyword.value);
+  userData.forEach((item) => {
+    const patt = new RegExp(kw, 'i');
+    if (patt.test(item)) {
+      resultList.push(item);
+    }
+  });
+  let dataList = [];
+
+  resultList.forEach((item) => {
+    const reg = new RegExp(kw, 'gi');
+    let obj = {
+      name: item.replace(
+        reg,
+        (val) => `<span style='color:#000;font-weight:bold'>${val}</span>`
+      ),
+    };
+    dataList.push(obj);
+  });
+  userResult.value = dataList;
+}
+
+// 高亮函数
+// function heightLight(str, keyword) {
+//   let kw = escapeHtml(keyword);
+//   const reg = new RegExp(kw, 'gi');
+//   return str.replace(reg, (val) => {
+//     return `<span style="color:#000;font-weight:bold">${val}</span>`;
+//   });
+// }
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
@@ -324,28 +412,28 @@ function getProject(keyword) {
 // 跳转到模型、数据集、项目的详情页
 function goModelDetail(index, model) {
   // 解析name的html标签，获得里面的内容
-  const str = model.replace(/<[^>]+>/g, '');
+  const str = model.name.replace(/<[^>]+>/g, '');
   router.push({
     path: `/models/${modelData.value[index].owner}/${str}`,
   });
   emptyValue();
 }
 function goDatasetDetail(index, dataset) {
-  const str = dataset.replace(/<[^>]+>/g, '');
+  const str = dataset.name.replace(/<[^>]+>/g, '');
   router.push({
     path: `/datasets/${datasetData.value[index].owner}/${str}`,
   });
   emptyValue();
 }
 function goProjectDetail(index, project) {
-  const str = project.replace(/<[^>]+>/g, '');
+  const str = project.name.replace(/<[^>]+>/g, '');
   router.push({
     path: `/projects/${projectData.value[index].owner}/${str}`,
   });
   emptyValue();
 }
 function goUserDetail(index, userName) {
-  const str = userName.replace(/<[^>]+>/g, '');
+  const str = userName.name.replace(/<[^>]+>/g, '');
   router.push({ path: `/${str}` });
   emptyValue();
 }
@@ -412,7 +500,7 @@ function handleBlur() {
                     :key="index"
                     class="result-item-list"
                     @click="goProjectDetail(index, project)"
-                    v-html="project"
+                    v-html="project.name"
                   ></li>
                 </ul>
               </div>
@@ -438,7 +526,7 @@ function handleBlur() {
                     :key="index"
                     class="result-item-list"
                     @click="goModelDetail(index, model)"
-                    v-html="model"
+                    v-html="model.name"
                   ></li>
                 </ul>
               </div>
@@ -464,7 +552,7 @@ function handleBlur() {
                     :key="index"
                     class="result-item-list"
                     @click="goDatasetDetail(index, dataset)"
-                    v-html="dataset"
+                    v-html="dataset.name"
                   ></li>
                 </ul>
               </div>
@@ -486,11 +574,11 @@ function handleBlur() {
                 <ul>
                   <li
                     v-for="(user, index) in userResult"
-                    v-show="index < 3"
+                    v-show="index < 10"
                     :key="index"
                     class="result-item-list"
                     @click="goUserDetail(index, user)"
-                    v-html="user"
+                    v-html="user.name"
                   ></li>
                 </ul>
               </div>
@@ -509,7 +597,6 @@ function handleBlur() {
             <div class="no-result">找不到该关键词，请重新输入</div>
           </div>
         </div>
-        <!-- </div> -->
       </div>
       <div v-show="show" class="header-right">
         <div class="header-search">

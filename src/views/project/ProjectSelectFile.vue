@@ -48,7 +48,6 @@ function confirmCreating() {
   // try {
   //   JSON.parse(params);
   // } catch (e) {
-  //   console.log(e);
   //   ElMessage.error('请输入正确的JSON格式');
   //   return;
   // }
@@ -144,10 +143,8 @@ function getDetailData() {
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
-      // console.log('res: ', res);
       // if (res.results.status === 200) {
       detailData.value = res.data;
-      // console.log('detailData.value: ', detailData.value);
 
       // }
     });

@@ -82,7 +82,6 @@ export function modifyModel(params, owner, id) {
  */
 export function modifyTags(params, owner, id) {
   const url = `/server/model/${owner}/${id}/tags`;
-  // console.log(params, owner, id);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

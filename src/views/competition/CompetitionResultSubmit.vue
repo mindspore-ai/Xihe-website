@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconProject from '~icons/app/project-tree';
@@ -11,18 +11,9 @@ import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
 
-import { handleUpload } from '@/api/api-obs';
+// import { handleUpload } from '@/api/api-obs';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
-import {
-  getTeamInfoById,
-  addProject,
-  changeTeam,
-  handleSubmit,
-  handleScoring,
-  getScore,
-  getSubmissions,
-  submit,
-} from '@/api/api-competition';
+import { getSubmissions, submit } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
@@ -43,9 +34,9 @@ const date = new Date();
 const year = date.getFullYear();
 let month = date.getMonth() + 1;
 let day = date.getDate();
-const hour = date.getHours();
-const minute = date.getMinutes();
-const second = date.getSeconds();
+// const hour = date.getHours();
+// const minute = date.getMinutes();
+// const second = date.getSeconds();
 if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
 const beforeUpload = (rawFile) => {
@@ -68,32 +59,20 @@ const beforeUpload = (rawFile) => {
     ElMessage.error('文件名不能包含空格');
     return false;
   } else {
-    //   let fileName =
-    //     rawFile.name.split('.')[0] +
-    //     `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
-    //     rawFile.name.split('.')[1];
-    //   // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
-    //   if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-    //     fileName = fileName.split('.')[0];
     const formData = new FormData();
     formData.append('file', rawFile);
     upLoad(formData);
     return false;
   }
-  //   const copyFile = new File([rawFile], fileName);
-  //   upLoad(copyFile);
-  //   return false;
-  // }
-  // return true;
 };
 
 const Progress = ref(0);
 // 进度条
-function callback(transferredAmount, totalAmount) {
-  Progress.value = parseFloat(
-    ((transferredAmount * 100.0) / totalAmount).toFixed(2)
-  );
-}
+// function callback(transferredAmount, totalAmount) {
+//   Progress.value = parseFloat(
+//     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
+//   );
+// }
 async function upLoad(param) {
   togglePhoneDlg(false);
   submit(detailData1.value.id, detailData1.value.phase, param)
@@ -107,11 +86,18 @@ async function upLoad(param) {
         }
       );
     })
-    .catch(() => {
-      ElMessage({
-        type: 'error',
-        message: '上传失败,请稍后重试！',
-      });
+    .catch((err) => {
+      if (err.response.data?.msg === 'no permission to submit') {
+        ElMessage({
+          type: 'error',
+          message: '您未进入决赛，无需提交！',
+        });
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '上传失败,请稍后重试！',
+        });
+      }
     });
   // let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
   //   detailData.value.name
@@ -172,7 +158,6 @@ async function upLoad(param) {
   // );
 }
 const fileList = ref([]);
-
 function onChange() {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
 }
@@ -186,126 +171,55 @@ function togglePhoneDlg(flag) {
     showPhoneDlg.value = flag;
   }
 }
-const relatedPro = ref();
-function confirmAdd() {
-  if (relatedPro.value === '') return;
-  let params = {};
-  let paramsArr = relatedPro.value.split('/');
-  params.owner_name = paramsArr[0];
-  params.name = paramsArr[1];
-  addProject(params).then((res) => {
-    if (res.results.data.length === 0) {
-      ElMessage({
-        type: 'error',
-        message: '没有查询到数据！',
-      });
-      return;
-    } else {
-      let relate_project = res.results.data[0].id;
-      changeTeam({ relate_project }, teamId.value).then((res) => {
-        if (res.status === 200) {
-          detailData.value = res.data;
-          // TODO:更新时间
-          detailData.value.update_date_time = res.data.project_name.update_time;
-          detailData.value.project_name = [detailData.value.project_name];
-          ElMessage({
-            type: 'success',
-            message: '绑定成功！',
-          });
-        } else {
-          ElMessage({
-            type: 'error',
-            message: '只能绑定一个项目！',
-          });
-        }
-      });
-    }
-  });
-}
+// 绑定相关项目
+// const relatedPro = ref();
+// function confirmAdd() {
+//   if (relatedPro.value === '') return;
+//   let params = {};
+//   let paramsArr = relatedPro.value.split('/');
+//   params.owner_name = paramsArr[0];
+//   params.name = paramsArr[1];
+//   addProject(params).then((res) => {
+//     if (res.results.data.length === 0) {
+//       ElMessage({
+//         type: 'error',
+//         message: '没有查询到数据！',
+//       });
+//       return;
+//     } else {
+//       let relate_project = res.results.data[0].id;
+//       changeTeam({ relate_project }, teamId.value).then((res) => {
+//         if (res.status === 200) {
+//           detailData.value = res.data;
+//           // TODO:更新时间
+//           detailData.value.update_date_time = res.data.project_name.update_time;
+//           detailData.value.project_name = [detailData.value.project_name];
+//           ElMessage({
+//             type: 'success',
+//             message: '绑定成功！',
+//           });
+//         } else {
+//           ElMessage({
+//             type: 'error',
+//             message: '只能绑定一个项目！',
+//           });
+//         }
+//       });
+//     }
+//   });
+// }
 
-watch(
-  () => {
-    return teamId.value;
-  },
-  (newVal) => {
-    if (newVal) {
-      getIndividual(newVal);
-    }
-  },
-  { immediate: true }
-);
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
   detailData.value = res.data;
   tableData.value = res.data.details;
-  if (tableData.value.length > 3) {
+  if (tableData.value && tableData.value.length > 3) {
     tableData.value = tableData.value.slice(0, 3);
   }
 });
-async function getIndividual(id) {
-  // 通过团队id获得团队信息
-  let res = await getTeamInfoById(id);
-  if (res.status === 200) {
-    // let fileName = res.data.score_list.reverse()[0].file_name;
-    detailData.value = res.data;
-    tableData.value = res.data.score_list;
-    tableData.value.reverse();
-    if (tableData.value.length > 3) {
-      tableData.value = tableData.value.slice(0, 3);
-    }
 
-    let fileName = '';
-    if (tableData.value[0]) {
-      fileName = tableData.value[0].file_name;
-    }
-
-    tableData.value.forEach((item) => {
-      item.create_time = item.create_time.split('T')[0];
-      item.file_name = item.file_name.split('-')[0];
-    });
-    //艺术家画作风格迁移查分数
-    if (
-      detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
-      tableData.value[0] &&
-      tableData.value[0].score === null
-    ) {
-      getScore(fileName, teamId.value).then((qwq) => {
-        if (qwq.data || qwq.data === 0) {
-          tableData.value[0].status_info = qwq.msg;
-          if (qwq.data) {
-            tableData.value[0].score = qwq.data.toFixed(3);
-          }
-        }
-      });
-    }
-    // TODO: 关联卡片时间
-    if (res.data.project_name) {
-      detailData.value.update_date_time = res.data.project_name.update_time;
-      detailData.value.project_name = [detailData.value.project_name];
-    }
-  }
-}
-// let groupId = ref(null);
 const detailData = ref();
-/* async function getIndividual() {
-  // 获得团队id，判断是否报名
-  let params = { id: route.path.split('/')[2] };
-  let res1 = await getGroupid(params.id);
-  if (res1.status === 200) {
-    groupId = res1.group_id;
-  }
-  // 通过团队id获得团队信息
-  let res2 = await getTeamInfoById(groupId);
-  if (res2.status === 200) {
-    detailData.value = res2.data;
-    // TODO:更新时间
-    detailData.value.update_date_time = '2022-08-26 10:39:10';
-    detailData.value.project_name = [detailData.value.project_name];
-  }
-}
-
-getIndividual(); */
 function goProjectClick(val) {
-  if (detailData.value.leader_name.name === userInfo.userName) {
+  if (detailData1.value.team_id && detailData1.value.team_role === 'leader') {
     router.push(`/projects/${val.owner_name.name}/${val.name}`);
   } else {
     ElMessage({
@@ -368,10 +282,7 @@ function handelCancel() {
         </div>
       </div> -->
       <div v-if="detailData && detailData.project">
-        <div
-          v-if="detailData.leader_name.name === userInfo.userName"
-          class="guide"
-        >
+        <div v-if="detailData1.team_role === 'leader'" class="guide">
           你可对该项目内的文件进行改动
         </div>
         <project-relate-card
@@ -380,7 +291,6 @@ function handelCancel() {
           @jump="goProjectClick"
         ></project-relate-card>
       </div>
-
       <div v-else class="empty">
         <o-icon><icon-project></icon-project></o-icon>
         当前暂未关联项目

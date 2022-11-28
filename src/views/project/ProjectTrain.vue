@@ -54,8 +54,9 @@ let README = '';
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
-  contents: ['train'],
+  contents: [],
 };
+// contents: ['train'],
 
 const i18n = {
   createTrain: '创建训练实例',
@@ -276,7 +277,7 @@ function getReadMeFile() {
     getGitlabTree({
       type: 'project',
       user: routerParams.user,
-      path: 'train',
+      path: '',
       id: detailData.value.id,
       name: routerParams.name,
     })
@@ -288,7 +289,7 @@ function getReadMeFile() {
           getGitlabFileRaw({
             type: 'project',
             user: routerParams.user,
-            path: 'train/README.md',
+            path: 'README.md',
             id: detailData.value.id,
             name: routerParams.name,
           }).then((res) => {

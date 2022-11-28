@@ -1,9 +1,9 @@
 <script setup>
-import { ref, watch, computed, onUpdated } from 'vue';
+import { ref, watch, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
-import { getGroupid } from '@/api/api-competition';
+// import { getGroupid } from '@/api/api-competition';
 
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
@@ -21,9 +21,9 @@ const userComData = useCompetitionData();
 //   return userComData.competitionData;
 // });
 // 用户团队id
-const teamId = computed(() => {
+/* const teamId = computed(() => {
   return useCompetitionData().teamId;
-});
+}); */
 
 const competitionData = ref([]);
 const show = ref(true);

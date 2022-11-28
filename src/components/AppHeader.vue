@@ -574,7 +574,7 @@ function handleBlur() {
                 <ul>
                   <li
                     v-for="(user, index) in userResult"
-                    v-show="index < 10"
+                    v-show="index < 7"
                     :key="index"
                     class="result-item-list"
                     @click="goUserDetail(index, user)"

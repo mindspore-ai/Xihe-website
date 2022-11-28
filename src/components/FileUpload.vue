@@ -35,7 +35,7 @@ const i18n = {
     uploadTitle: '上传文件',
     dragText: '拖拽文件到此处上传 或 ',
     clickText: '点击此处浏览本地文件并上传',
-    limitText: '（最大不超过1MB）',
+    limitText: '（最大不超过200kb）',
     addDescribe: '添加描述',
     placeholder: '请输入此次操作描述信息',
     cancel: '取消',
@@ -85,8 +85,8 @@ function beforeUpload(rawFile) {
     ElMessage.warning('不支持中文文件名');
     return false;
   }
-  if (rawFile.size / 1024 / 1024 > 1) {
-    ElMessage.warning('web端暂只支持1MB以内文件上传，请使用git上传');
+  if (rawFile.size / 1024 > 200) {
+    ElMessage.warning('web端暂只支持200kb以内文件上传，请使用git上传');
     return false;
   }
   return true;

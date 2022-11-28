@@ -6,6 +6,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import tipImg from '@/assets/imgs/home/tip.png';
+import tipCloseImg from '@/assets/imgs/home/close.png';
 
 const route = useRoute();
 
@@ -61,7 +62,7 @@ onUnmounted(() => {
   <div v-if="tipVisible" class="app-tip">
     <div class="tip-content">
       <img class="tip-img" :src="tipImg" @click="toggleDlg(true)" />
-      <!-- <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" /> -->
+      <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
     </div>
 
     <o-dialog :show="dialogVisible" :close="false">
@@ -155,12 +156,19 @@ onUnmounted(() => {
   bottom: 30vh;
   right: 0;
   .tip-content {
+    position: relative;
+    margin-right: 16px;
     .tip-img {
       max-width: 200px;
       object-fit: fill;
       cursor: pointer;
     }
     .tip-btn {
+      position: absolute;
+      right: 2px;
+      top: 50px;
+      max-width: 17px;
+      cursor: pointer;
     }
   }
 }

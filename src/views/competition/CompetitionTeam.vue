@@ -66,7 +66,6 @@ const showQuit = ref(false);
 const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
-console.log('userComData: ', userComData.competitionData);
 // 含个人参赛的团队Id和团队参赛的团队Id
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
@@ -488,7 +487,7 @@ getIndividual(route.params.id);
         </el-table-column>
         <el-table-column prop="email" label="邮箱" />
         <el-table-column
-          v-if="userInfoStore.userName == leaderData[0].name"
+          v-if="userComData.competitionData.team_role === 'leader'"
           prop="address"
           label="操作"
           width="350"

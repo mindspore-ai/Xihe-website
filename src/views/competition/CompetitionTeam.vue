@@ -66,6 +66,7 @@ const showQuit = ref(false);
 const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
+console.log('userComData: ', userComData.competitionData);
 // 含个人参赛的团队Id和团队参赛的团队Id
 /* const teamId = computed(() => {
   return useCompetitionData().teamId;
@@ -430,13 +431,13 @@ getIndividual(route.params.id);
       <div class="header">
         <div class="header-title">
           <div class="text">
-            我<span v-if="userInfoStore.userName === leaderData[0].name"
+            我<span v-if="userComData.competitionData.team_role === 'leader'"
               >创建</span
             >
             <span v-else>加入</span>的团队：{{ teamData.name }}
           </div>
           <div
-            v-if="userInfoStore.userName === leaderData[0].name"
+            v-if="userComData.competitionData.team_role === 'leader'"
             class="tips"
           >
             <icon-tips class="tips-icon"></icon-tips>
@@ -444,7 +445,7 @@ getIndividual(route.params.id);
           </div>
         </div>
         <div
-          v-if="userInfoStore.userName === leaderData[0].name"
+          v-if="userComData.competitionData.team_role === 'leader'"
           class="header-button"
         >
           <OButton

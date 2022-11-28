@@ -1,8 +1,8 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive } from 'vue';
 
-import { useRoute, useRouter } from 'vue-router';
-import { useUserInfoStore, useCompetitionData } from '@/stores';
+import { useRoute } from 'vue-router';
+import { useCompetitionData } from '@/stores';
 
 // import { changeTeam } from '@/api/api-competition';
 // import { joinTeam } from '@/api/api-competition';
@@ -29,9 +29,7 @@ import OButton from '@/components/OButton.vue';
 
 import IconCancel2 from '~icons/app/cancelBlue.svg';
 import IconDelivery2 from '~icons/app/deliveryBlue.svg';
-const userInfoStore = useUserInfoStore();
 const route = useRoute();
-// const router = useRouter();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamTips:
@@ -56,7 +54,7 @@ const i18n = {
 const activeName = ref('first');
 const queryRef1 = ref(null);
 const queryRef2 = ref(null);
-const queryRef3 = ref(null);
+// const queryRef3 = ref(null);
 const teamData = ref([]); //团队信息
 const teamMemberData = ref([]); //团队成员信息
 const leaderData = ref([]); //队长信息
@@ -66,10 +64,6 @@ const showQuit = ref(false);
 const is_individual = ref(true); //判断是否个人参赛
 const show = ref(false);
 const userComData = useCompetitionData();
-// 含个人参赛的团队Id和团队参赛的团队Id
-/* const teamId = computed(() => {
-  return useCompetitionData().teamId;
-}); */
 
 const form1 = reactive({
   teamName: '',
@@ -77,9 +71,9 @@ const form1 = reactive({
 const form2 = reactive({
   teamName: '',
 });
-const form3 = reactive({
+/* const form3 = reactive({
   teamName: '',
-});
+}); */
 const rules1 = reactive({
   teamName: [
     {
@@ -127,17 +121,6 @@ const rules2 = reactive({
 }); */
 
 function handleClick() {}
-/* watch(
-  () => {
-    return teamId.value;
-  },
-  (newVal) => {
-    if (newVal) {
-      getIndividual(newVal);
-    }
-  },
-  { immediate: true }
-); */
 
 // 进入页面获得is_individual值，判断是否个人参赛
 async function getIndividual(id) {

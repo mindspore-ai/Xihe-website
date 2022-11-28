@@ -9,7 +9,6 @@ import { handleMarkdown } from '@/shared/markdown';
 // import { downloadDataset } from '@/api/api-obs';
 import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
-import { router } from '@/routers';
 
 const userComData = useCompetitionData().competitionData;
 /* const teamId = computed(() => {

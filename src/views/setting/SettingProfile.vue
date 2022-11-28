@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useUserInfoStore } from '@/stores';
 
 import { setUserData } from '@/api/api-user';
@@ -73,26 +73,28 @@ function saveData() {
     // nickname: nickName.value,
     bio: userDescription.value || userInfoStore.description,
     avatar_id: avatar.value,
-  }).then((res) => {
-    // console.log(res);
-    // if (res.status === 200) {
-    userInfoStore.nickName = nickName.value;
-    userInfoStore.description = userDescription.value;
-    userInfoStore.avatar =
-      filterData.value.user_avatar[checkedAvatar.value - 1].url;
-    ElMessage({
-      type: 'success',
-      message: '个人信息更新成功',
-      center: true,
+  })
+    .then(() => {
+      // console.log(res);
+      // if (res.status === 200) {
+      userInfoStore.nickName = nickName.value;
+      userInfoStore.description = userDescription.value;
+      userInfoStore.avatar =
+        filterData.value.user_avatar[checkedAvatar.value - 1].url;
+      ElMessage({
+        type: 'success',
+        message: '个人信息更新成功',
+        center: true,
+      });
+      disabled.value = true;
+    })
+    .catch((err) => {
+      ElMessage({
+        type: 'error',
+        message: err,
+        center: true,
+      });
     });
-    // } else {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: res.msg,
-    //     center: true,
-    //   });
-    // }
-  });
 }
 function selectAvatar(id) {
   checkedAvatar.value = id;
@@ -104,6 +106,10 @@ function confirmAvatar() {
 function handleCurrentChange(val) {
   query.page = val;
 }
+const disabled = ref(true);
+watch([userDescription, avatar], () => {
+  disabled.value = false;
+});
 </script>
 
 <template>
@@ -133,7 +139,9 @@ function handleCurrentChange(val) {
     ></el-input>
   </div>
 
-  <o-button type="primary" @click="saveData">保存</o-button>
+  <o-button type="primary" :disabled="disabled" @click="saveData"
+    >保存</o-button
+  >
   <o-dialog
     :close="false"
     :is-center="true"
@@ -227,7 +235,7 @@ function handleCurrentChange(val) {
   }
 }
 .dlg-body {
-  width: 800px;
+  // width: 800px;
   padding: 0 40px;
   min-height: 382px;
   .avatar-list {

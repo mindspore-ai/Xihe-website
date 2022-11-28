@@ -218,15 +218,13 @@ getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
 });
 
 const detailData = ref();
-function goProjectClick(val) {
-  if (detailData1.value.team_id && detailData1.value.team_role === 'leader') {
-    router.push(`/projects/${val.owner_name.name}/${val.name}`);
-  } else {
-    ElMessage({
-      type: 'error',
-      message: '只有队长可查看改项目',
-    });
-  }
+function goProjectClick() {
+  // router.push(`/projects/${val.owner}/${val.name}`);
+  router.push(
+    `/projects/${detailData.value.project.split('/')[0]}/${
+      detailData.value.project.split('/')[1]
+    }`
+  );
 }
 // togglePhoneDlg(true)
 function handelSubmit() {
@@ -285,11 +283,12 @@ function handelCancel() {
         <div v-if="detailData1.team_role === 'leader'" class="guide">
           你可对该项目内的文件进行改动
         </div>
-        <project-relate-card
+        <!-- <project-relate-card
           :detail-data="detailData.project"
           :name="'project'"
           @jump="goProjectClick"
-        ></project-relate-card>
+        ></project-relate-card> -->
+        <p @click="goProjectClick">{{ detailData.project }}</p>
       </div>
       <div v-else class="empty">
         <o-icon><icon-project></icon-project></o-icon>
@@ -308,7 +307,7 @@ function handelCancel() {
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="project" width="290">
+          <el-table-column prop="project" width="295">
             <template #header>
               <div class="align">
                 <o-icon><icon-upload></icon-upload> </o-icon
@@ -460,6 +459,11 @@ function handelCancel() {
       .o-icon {
         margin-right: 8px;
       }
+    }
+    p {
+      text-align: center;
+      margin-top: 64px;
+      cursor: pointer;
     }
   }
 }

@@ -75,13 +75,11 @@ onUnmounted(() => {
           致所有用户：<br />
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为了优化平台的性能和功能，提高平台可扩展性和稳定性，平台重构了后台架构，在本次更新中，平台做了几大调整：<br /><br />
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a>1.</a>
-          支持通过git对仓库文件进行版本控制、批量上传和git
-          lfs上传大文件等操作。<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a>2.</a>为适配后续版本的迭代，平台设定了一些规则对原有的数据进行迁移，可能会导致部分数据存放的位置和命名的方式与原来不一致。目前最新的迁移时间是2022/11/27
+          1.支持通过git对仓库文件进行版本控制、批量上传和gitlfs上传大文件等操作。<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.为适配后续版本的迭代，平台设定了一些规则对原有的数据进行迁移，可能会导致部分数据存放的位置和命名的方式与原来不一致。目前最新的迁移时间是2022/11/27
           17:00。<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a>3.</a>具体数据迁移规则和优化详情请阅读
-          <a href="https://xihe-docs.mindspore.cn/zh/appendix/release.html"
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.具体数据迁移规则和优化详情请阅读
+          <a href="https://xihe-docs.mindspore.cn/zh/release/"
             >平台更新说明文档</a
           >
           。<br /><br />

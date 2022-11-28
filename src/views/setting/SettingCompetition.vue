@@ -17,7 +17,6 @@ function getCompetitons() {
   getUserCompetition({
     mine: userInfoStore.userName,
   }).then((res) => {
-    // console.log('res: ', res);
     if (res.status === 200) {
       competitionDatas.value = res.data.data;
     }

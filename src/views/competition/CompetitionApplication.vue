@@ -135,8 +135,6 @@ function handleProvince(province) {
   Object.keys(areaData.value[province]).forEach((city) => {
     citys.value.push(areaData.value[province][city]);
   });
-  // console.log('citys.value', citys.value);
-  // console.log('citys.value[0].label', citys.value[0].label);
   query.loc_city = citys.value[0].label;
 }
 // 切换身份
@@ -186,7 +184,6 @@ function saveInfo(formEl) {
               return true;
             }
           });
-          // console.log('params1: ', params1);
           goCompetition(params1).then((res) => {
             if (res.status === 200) {
               emit('handleStep');

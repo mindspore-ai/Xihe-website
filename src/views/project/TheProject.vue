@@ -395,7 +395,6 @@ function getProject() {
         layout.value = layout.value.split(',').splice(0, 4).join(',');
       }
       projectData.value = res.data.data;
-      // console.log('项目列表数据', projectData.value);
     }
   });
 }

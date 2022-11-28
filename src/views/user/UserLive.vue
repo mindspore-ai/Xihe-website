@@ -47,7 +47,6 @@ function getLiveData() {
     if (res.data) {
       liveCount.value = res.data.length;
       liveData.value = res.data;
-      // console.log('liveData.value: ', liveData.value);
       if (liveCount.value > 6) {
         emit('domChange', 76);
       }

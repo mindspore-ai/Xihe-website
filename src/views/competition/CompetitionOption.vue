@@ -15,7 +15,6 @@ const activeNavItem = ref('');
   return useCompetitionData().teamId;
 }); */
 const comInfo = useCompetitionData().competitionData;
-// console.log('comInfo: ', comInfo);
 
 /* watch(
   () => {

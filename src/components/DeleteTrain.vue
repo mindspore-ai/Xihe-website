@@ -61,7 +61,7 @@ watch(
         padding: '8px 0 30px',
         fontSize: '18px',
         textAlign: 'center',
-        width: '640px',
+        width: '100%',
       }"
     >
       {{ deleteCondition.describe }}

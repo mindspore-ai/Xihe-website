@@ -293,7 +293,7 @@ function toggleDelDlg(flag) {
             padding: '8px 0 12px',
             fontSize: '18px',
             textAlign: 'center',
-            width: '640px',
+            width: '100%',
           }"
         >
           {{ i18n.delete.describe1 }}

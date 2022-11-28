@@ -62,7 +62,6 @@ function goInvited() {
   }
 }
 function goUserPage(vel) {
-  // console.log(vel);
   router.push(`/${vel}`);
 }
 </script>

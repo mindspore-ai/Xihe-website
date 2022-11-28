@@ -350,7 +350,6 @@ function dropdownClick(item) {
 function getDataset() {
   getDatasetData(query).then((res) => {
     modelCount.value = res.data.total;
-    // console.log(res.data.total);
     if (modelCount.value / query.count_per_page < 8) {
       layout.value = layout.value.split(',').splice(0, 4).join(',');
     }

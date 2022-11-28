@@ -449,7 +449,7 @@ getGitlabTree({
     try {
       canStart.value = true;
     } catch {
-      console.log('canStart', canStart.value);
+      console.error('canStart', canStart.value);
     }
   }
 });

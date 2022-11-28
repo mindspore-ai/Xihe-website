@@ -132,7 +132,6 @@ export function getTags(type) {
  */
 export function modifyTags(params, owner, id) {
   const url = `/server/dataset/${owner}/${id}/tags`;
-  // console.log(params, owner, id);
   return request
     .put(url, params, getHeaderConfig())
     .then((res) => {

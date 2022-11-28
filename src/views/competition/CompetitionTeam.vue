@@ -30,7 +30,6 @@ import OButton from '@/components/OButton.vue';
 import IconCancel2 from '~icons/app/cancelBlue.svg';
 import IconDelivery2 from '~icons/app/deliveryBlue.svg';
 const userInfoStore = useUserInfoStore();
-// console.log('userInfoStore: ', userInfoStore);
 const route = useRoute();
 // const router = useRouter();
 const i18n = {

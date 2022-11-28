@@ -74,7 +74,6 @@ export function checkNames(params) {
  */
 export function modifyProject(params, owner, id) {
   const url = `/server/project/${owner}/${id}`;
-  // console.log(params);
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -270,7 +269,6 @@ export function rebuildTrain(projectId, trainId) {
 export function deleteTainList(projectId, trainId) {
   const url = `/server/train/project/${projectId}/training/${trainId}`;
   return request.delete(url, getHeaderConfig()).then((res) => {
-    // console.log('res: ', res);
     return res;
   });
 }
@@ -321,7 +319,6 @@ export function createTrainProject(params, projectId) {
  */
 export function projectFork(owner, projectId, params) {
   const url = `/server/project/${owner}/${projectId}`;
-  // console.log(url);
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

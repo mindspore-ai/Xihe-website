@@ -38,7 +38,6 @@ const userInfo = useUserInfoStore();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-// console.log('项目详情: ', detailData.value);
 const isShow = ref(false);
 const isShow1 = ref(false);
 const addSearch = ref('');
@@ -91,7 +90,6 @@ route.hash ? getReadMeFile() : '';
 function getTrainList() {
   trainList(detailData.value.id).then((res) => {
     trainListData.value = res.data.data;
-    // console.log('trainListData.value: ', trainListData.value);
   });
 }
 if (userInfo.id) {

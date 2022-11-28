@@ -241,7 +241,7 @@ function handleFile(item) {
           <el-table-column
             prop="name"
             label="名称"
-            width="300"
+            width="350"
             class="file-name"
           >
             <template #default="scope">
@@ -270,7 +270,7 @@ function handleFile(item) {
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="is_dir" label="描述" />
+          <el-table-column label="描述" />
         </el-table>
 
         <!-- <div v-if="!dirTableData.length" class="empyt-folder">空文件夹</div> -->
@@ -319,7 +319,7 @@ function handleFile(item) {
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="is_dir" label="描述" />
+          <el-table-column label="描述" />
         </el-table>
       </div>
     </div>

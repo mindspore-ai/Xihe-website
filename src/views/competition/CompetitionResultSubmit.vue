@@ -270,7 +270,6 @@ async function getIndividual(id) {
     ) {
       getScore(fileName, teamId.value).then((qwq) => {
         if (qwq.data || qwq.data === 0) {
-          // console.log(qwq.data);
           tableData.value[0].status_info = qwq.msg;
           if (qwq.data) {
             tableData.value[0].score = qwq.data.toFixed(3);
@@ -568,7 +567,7 @@ function handelCancel() {
   }
   .upload-demo {
     :deep(.el-upload) {
-      width: 733px;
+      width: 100%;
       .el-upload-dragger {
         width: 100%;
         height: 210px;

@@ -405,7 +405,6 @@ function toggleDelDlg(flag) {
           :style="{
             fontSize: '18px',
             textAlign: 'center',
-            width: '640px',
           }"
         >
           {{ i18n.delete.describe2 }}

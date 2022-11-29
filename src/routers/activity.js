@@ -22,11 +22,10 @@ export default [
     },
     beforeEnter: async (to, from, next) => {
       try {
-        const res = await getActivityDetail().then((res) => {
-          console.log(res.data);
-        });
+        const res = await getActivityDetail();
+
         if (isLogined.value) {
-          if (res.data.is_competitor) {
+          if (res.is_competitor) {
             next();
           } else {
             router.push('/activity');

@@ -75,7 +75,6 @@ function saveData() {
     avatar_id: avatar.value,
   })
     .then(() => {
-      // console.log(res);
       // if (res.status === 200) {
       userInfoStore.nickName = nickName.value;
       userInfoStore.description = userDescription.value;
@@ -135,6 +134,8 @@ watch([userDescription, avatar], () => {
     <el-input
       v-model="userDescription"
       placeholder="一句话介绍你自己"
+      maxlength="200"
+      show-word-limit
       class="setting-input"
     ></el-input>
   </div>

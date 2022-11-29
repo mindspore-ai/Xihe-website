@@ -348,9 +348,7 @@ function handleDomChange(val) {
           <div class="info-extends-box">
             <p class="info-extends-title">个人介绍</p>
             <div class="info-extends-detail gray">
-              <span>{{
-                userInfo.description || '这个人很懒，啥都没留下'
-              }}</span>
+              {{ userInfo.description || '这个人很懒，啥都没留下' }}
             </div>
           </div>
           <div class="info-extends-box">

@@ -118,7 +118,7 @@ watch(props, () => {
         :current-page="query.page"
         :page-size="query.count_per_page"
         :total="modelCount"
-        layout="sizes, prev, pager, next, jumper"
+        :layout="layout"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>

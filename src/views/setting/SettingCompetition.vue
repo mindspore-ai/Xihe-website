@@ -56,7 +56,10 @@ function goDetail(id) {
 <template>
   <!-- 我的比赛 -->
   <div class="competition">
-    <div v-if="competitionDatas" class="competition-list">
+    <div
+      v-if="competitionDatas && competitionDatas.length"
+      class="competition-list"
+    >
       <el-tabs
         v-model="activeName"
         type="card"

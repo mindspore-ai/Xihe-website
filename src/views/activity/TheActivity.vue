@@ -303,7 +303,7 @@ function saveInfo() {
       </template>
 
       <div class="dlg-body">
-        知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍知识挑战赛介绍。
+        挑战10道随机人工智能领域题（含选择题和填空题），让知识卷起来！
       </div>
 
       <template #foot>
@@ -574,9 +574,9 @@ function saveInfo() {
         background-size: cover;
         color: #30ecff;
         height: 1019px;
-      &-top {
+        &-top {
           height: 810px;
-        display: flex;
+          display: flex;
           flex-direction: column;
           align-items: center;
           &-three {
@@ -640,7 +640,7 @@ function saveInfo() {
         }
         &-others {
           height: 810px;
-        display: flex;
+          display: flex;
           flex-direction: column;
           align-items: center;
           &-box {
@@ -731,7 +731,6 @@ function saveInfo() {
   }
 
   .dlg-body {
-    width: 817px;
     font-size: 14px;
     color: #555555;
     line-height: 22px;

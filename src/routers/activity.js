@@ -19,22 +19,22 @@ export default [
     component: () => {
       return import('@/views/activity/TheActivityTest.vue');
     },
-    beforeEnter: async (to, from, next) => {
-      try {
-        if (isLogined.value) {
-          const res = await getActivityDetail();
-          if (res.is_competitor) {
-            next();
-          } else {
-            next('/activity');
-          }
-        } else {
-          goAuthorize();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    // beforeEnter: async (to, from, next) => {
+    //   try {
+    //     if (isLogined.value) {
+    //       const res = await getActivityDetail();
+    //       if (res.is_competitor) {
+    //         next();
+    //       } else {
+    //         next('/activity');
+    //       }
+    //     } else {
+    //       goAuthorize();
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
   },
   {
     path: '/activity-result',

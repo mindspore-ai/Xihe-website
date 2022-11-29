@@ -1,10 +1,9 @@
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { useLoginStore } from '@/stores';
 import { getActivityDetail } from '@/api/api-activity';
 import { goAuthorize } from '@/shared/login';
+
 const isLogined = computed(() => useLoginStore().isLogined);
-const router = useRouter();
 export default [
   //活动
   {
@@ -28,7 +27,7 @@ export default [
           if (res.is_competitor) {
             next();
           } else {
-            router.push('/activity');
+            next('/activity');
           }
         } else {
           goAuthorize();

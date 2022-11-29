@@ -10,6 +10,7 @@ import modelzoo from './modelzoo';
 import dataset from './dataset';
 import project from './project';
 import competition from './competition';
+import activity from './activity';
 
 import whitelistRouter from '@/whitelist/whitelist-router';
 
@@ -100,6 +101,8 @@ export const routes = [
   ...project,
   // 比赛
   ...competition,
+  // 活动
+  ...activity,
   // 404页面
   {
     path: '/404',

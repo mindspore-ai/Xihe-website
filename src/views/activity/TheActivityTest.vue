@@ -1,8 +1,9 @@
+
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router';
 
-import { getQuestions } from '@/api/api-activity';
+import { getQuestions, getActivityDetail } from '@/api/api-activity';
 
 import { formatSeconds } from '@/shared/utils';
 
@@ -264,6 +265,10 @@ onMounted(() => {
     console.log(res);
   });
 
+  getActivityDetail().then((res) => {
+    console.log(res);
+  });
+
   // const selectionData = res.choices.forEach((item) => {
   //   item.isFinished = false;
   //   item.isSelected = false;
@@ -286,7 +291,6 @@ onUnmounted(() => {
   clearInterval(timer);
 });
 </script>
-
 <template>
   <div class="wrap">
     <div class="test">
@@ -453,8 +457,8 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
+  
+  <style lang="scss" scoped>
 :deep(.el-radio-group) {
   display: flex;
   flex-direction: column;
@@ -672,3 +676,4 @@ onUnmounted(() => {
   }
 }
 </style>
+  

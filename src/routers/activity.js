@@ -21,9 +21,8 @@ export default [
     },
     beforeEnter: async (to, from, next) => {
       try {
-        const res = await getActivityDetail();
-
         if (isLogined.value) {
+          const res = await getActivityDetail();
           if (res.is_competitor) {
             next();
           } else {

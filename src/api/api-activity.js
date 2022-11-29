@@ -1,16 +1,15 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
 
-function getUserInfo() {
-  return useUserInfoStore();
-}
+import { LOGIN_KEYS } from '@/shared/login';
 
 function getHeaderConfig() {
-  let headersConfig = {
-    headers: {
-      Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
-    },
-  };
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
 }
 

@@ -11,7 +11,7 @@ export default [
     path: '/activity-test',
     name: 'activityTest',
     component: () => {
-      return import('@/views/activity/TheTest.vue');
+      return import('@/views/activity/TheActivityTest.vue');
     },
     // beforeEnter: (to, from, next) => {
     //   if (from.path === '/activity') {

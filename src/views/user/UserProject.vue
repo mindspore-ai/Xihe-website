@@ -67,17 +67,16 @@ function handleCurrentChange(val) {
 
 function getUserProject() {
   getUserProjectData(query, userInfo.value.userName).then((res) => {
-    // if (res.count && res.results.status === 200) {
-    if (res.data.total > 12) {
-      emit('domChange', 76);
+    if (res.data.total) {
+      if (res.data.total > 12) {
+        emit('domChange', 76);
+      }
+      avatarImg.value = res.data.avatar_id;
+      projectCount.value = res.data.total;
+      projectData.value = res.data;
+    } else {
+      projectData.value = [];
     }
-    avatarImg.value = res.data.avatar_id;
-    projectCount.value = res.data.total;
-    projectData.value = res.data;
-    // } else {
-    //   projectData.value = [];
-    //   projectCount.value = res.count;
-    // }
   });
 }
 function goDetail(user, name) {

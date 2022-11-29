@@ -43,6 +43,8 @@ let query = reactive({
   count_per_page: 10,
   sort_by: '',
 });
+
+const layout = ref('sizes, prev, pager, next, jumper');
 const emit = defineEmits(['getlivecount', 'domChange']);
 
 function goDetail(user, modelName) {
@@ -53,7 +55,7 @@ function goDetail(user, modelName) {
 function getDatasetData() {
   getUserDatasetData(query, userInfo.value.userName).then((res) => {
     if (res.data.total) {
-      if (res.count > 10) {
+      if (res.data.total > 10) {
         emit('domChange', 76);
       }
       avatarImg.value = res.data.avatar_id;
@@ -110,7 +112,7 @@ watch(props, () => {
         :current-page="query.page"
         :page-size="query.count_per_page"
         :total="datasetCount"
-        layout="sizes, prev, pager, next, jumper"
+        :layout="layout"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>

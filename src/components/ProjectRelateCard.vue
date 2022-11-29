@@ -31,9 +31,9 @@ function goDetailClick(item) {
 }
 </script>
 <template>
-  <div v-if="detailData.length">
+  <div v-if="detailData[name].length">
     <div
-      v-for="item in detailData"
+      v-for="item in detailData[name]"
       :key="item"
       class="project-item"
       @click="goDetailClick(item)"

@@ -16,7 +16,7 @@ const i18n = {
 };
 
 const props = defineProps({
-  // 相关数据集、模型的详情信息
+  // 数据集、模型的详情信息
   detailData: {
     type: Object,
     default: null,
@@ -55,19 +55,19 @@ watch(
 );
 </script>
 <template>
-  <div v-if="detailData.length">
+  <div v-if="detailData[name].length">
     <!-- <delete-relate
       :del-relate="delRelate"
       @cancel="cancelClick"
     ></delete-relate> -->
     <div
-      v-for="item in detailData"
+      v-for="item in detailData[name]"
       :key="item"
       class="dataset-item"
       @click="goDetailClick(item)"
     >
       <o-icon
-        v-if="userInfo.userName === item.owner.name"
+        v-if="userInfo.userName === detailData.owner"
         class="remove-item"
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove

@@ -261,7 +261,7 @@ watch(
         <div class="dataset-box">
           <relate-card
             v-if="detailData.related_datasets"
-            :detail-data="detailData.related_datasets"
+            :detail-data="detailData"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetailClick"
@@ -276,7 +276,7 @@ watch(
         </div>
         <project-relate-card
           v-if="detailData.related_projects"
-          :detail-data="detailData.related_projects"
+          :detail-data="detailData"
           :name="'related_projects'"
           @delete="deleteClick"
           @jump="goProjectClick"

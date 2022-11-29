@@ -76,6 +76,11 @@ const navItems = [
     label: '比赛',
     href: '/competition',
   },
+  {
+    id: 'activity',
+    label: '活动',
+    href: '/activity',
+  },
   /*  {
     id: 'leaderboards',
     label: '排行榜',
@@ -151,7 +156,9 @@ watch(
     return route.name;
   },
   (val) => {
-    if (/^models|datasets|projects|modelzoo|competition|teams/g.test(val)) {
+    if (
+      /^models|datasets|projects|modelzoo|competition|activity|teams/g.test(val)
+    ) {
       activeNavItem.value = val;
     } else {
       activeNavItem.value = '';

@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router';
@@ -28,8 +27,8 @@ const routePath = ref('');
 const questionData = ref([
   {
     type: 'selection',
-    question: '1111当前题目题目题目题目题目题目题目题目题目题目业的权利。',
-    answer: [
+    desc: '1111当前题目题目题目题目题目题目题目题目题目题目业的权利。',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -41,9 +40,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '2222当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '2222当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -55,9 +53,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '3333当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '3333当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -69,9 +66,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '4444当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '4444当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -83,9 +79,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '5555当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '5555当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -97,9 +92,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '6666当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '6666当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -111,9 +105,8 @@ const questionData = ref([
   },
   {
     type: 'selection',
-    question:
-      '7777当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    answer: [
+    desc: '7777当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
+    options: [
       { code: 'A', text: '选项A' },
       { code: 'B', text: '选项B' },
       { code: 'C', text: '选项C' },
@@ -125,7 +118,7 @@ const questionData = ref([
   },
   {
     type: 'completion',
-    question: '8888下列程序的执行结果是',
+    desc: '8888下列程序的执行结果是',
     code: 'int d = 1;\nfun(int p) \n{   \n\tint d = 5;\n\td += p++;\n\tpritnf(“%d “, d);\n}\nmain()\n{   \n\tint a = 3;   \n\tfun(a); \n\td += a++;\n\tprintf(“%d\n”, d);\n}\n',
     isSelected: false,
     isFinished: false,
@@ -133,15 +126,15 @@ const questionData = ref([
   },
   {
     type: 'completion',
-    question: '9.在线面横线填写正确的答案',
-    code: '\n编程代码：\nclass Solution:\n    def Print(self , pRoot: TreeNode) -> List[List[int]]:\n        res = []\n        if pRoot is None:\n            #如果是空，则直接返回空数组\n            return res\n        #队列存储，进行层次遍历\n\t______请输入代码块_____\n        q = [pRoot]\n        while q:\n            #记录二叉树的某一行\n            row = [] \n            n = len(q)\n            #因先进入的是根节点，故每层节点多少，队列大小就是多少\n            for i in range(n):\n                #取出队首\n                node = q.pop(0)\n                row.append(node.val)\n                #若是左右孩子存在，则存入左右孩子作为下一个层次\n                if node.left:\n                    #加入队尾\n                    q.append(node.left)\n                if node.right:\n                    q.append(node.right)\n            res.append(row)\n        return res',
+    desc: '9.在线面横线填写正确的答案',
+    code: '编程代码：\nclass Solution:\n    def Print(self , pRoot: TreeNode) -> List[List[int]]:\n        res = []\n        if pRoot is None:\n            #如果是空，则直接返回空数组\n            return res\n        #队列存储，进行层次遍历\n\t______请输入代码块_____\n        q = [pRoot]\n        while q:\n            #记录二叉树的某一行\n            row = [] \n            n = len(q)\n            #因先进入的是根节点，故每层节点多少，队列大小就是多少\n            for i in range(n):\n                #取出队首\n                node = q.pop(0)\n                row.append(node.val)\n                #若是左右孩子存在，则存入左右孩子作为下一个层次\n                if node.left:\n                    #加入队尾\n                    q.append(node.left)\n                if node.right:\n                    q.append(node.right)\n            res.append(row)\n        return res',
     isSelected: false,
     isFinished: false,
     right: '',
   },
   {
     type: 'completion',
-    question: '10 10 10 下列程序的执行结果是',
+    desc: '10 10 10 下列程序的执行结果是',
     code: 'int d = 1;\nfun(int p) \n{   \n\tint d = 5;\n\td += p++;\n\tpritnf(“%d “, d);\n}\nmain()\n{   \n\tint a = 3;   \n\tfun(a); \n\td += a++;\n\tprintf(“%d\\n”, d);\n}\n',
     isSelected: false,
     isFinished: false,
@@ -340,7 +333,7 @@ onUnmounted(() => {
 
             <div class="container-body-bottom">
               <div class="subject">
-                {{ questionData[subjectIndex].question }}
+                {{ questionData[subjectIndex].desc }}
               </div>
               <!-- 选择题 -->
               <div
@@ -352,7 +345,7 @@ onUnmounted(() => {
                   @change="handleAnswerChange"
                 >
                   <el-radio
-                    v-for="item in questionData[subjectIndex].answer"
+                    v-for="item in questionData[subjectIndex].options"
                     :key="item"
                     :label="item.code"
                     >{{ item.text }}</el-radio
@@ -457,8 +450,7 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-  
-  <style lang="scss" scoped>
+<style lang="scss" scoped>
 :deep(.el-radio-group) {
   display: flex;
   flex-direction: column;
@@ -676,4 +668,3 @@ onUnmounted(() => {
   }
 }
 </style>
-  

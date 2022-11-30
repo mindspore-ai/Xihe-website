@@ -134,10 +134,28 @@ function showDialog2() {
 
 //立即报名
 function saveInfo() {
-  applyActivity(applicationData.value).then((res) => {
+  let formData = applicationData.value.query;
+  console.log('formData: ', formData);
+  let params = {
+    city: formData.loc_city,
+    detail: {
+      detail1:
+        formData.schoolName1 ||
+        formData.schoolName2 ||
+        formData.industry ||
+        formData.description,
+      detail2: formData.major1 || formData.major2 || formData.company,
+    },
+    email: formData.email,
+    identity: formData.identity_type,
+    name: formData.name,
+    phone: formData.phone,
+    province: formData.loc_province,
+  };
+  applyActivity(params).then((res) => {
     console.log('res: ', res);
   });
-  console.log(applicationData.value);
+  console.log(applicationData.value.query);
 }
 // appleActivity
 </script>

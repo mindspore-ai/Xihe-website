@@ -27,6 +27,8 @@ import timelineImg from '@/assets/imgs/activity/timeline.png';
 import rankImg from '@/assets/imgs/activity/rank.png';
 import CompetitionApplication from '@/views/competition/CompetitionApplication.vue';
 
+import { GetRankingList } from '@/api/api-activity';
+
 const router = useRouter();
 
 const isShow = ref(false);
@@ -115,17 +117,22 @@ function prevPage() {
 function nextPage() {
   currentPage.value = currentPage.value + 1;
 }
+const perPageData = ref([]);
 watch(
   () => currentPage.value,
-  (n, o) => {
-    console.log(n, o);
-    if (n > 1) leftDisabled.value = false;
+  (newValue) => {
+    console.log(newValue);
+    if (newValue > 1) leftDisabled.value = false;
     else {
       leftDisabled.value = true;
       currentPage.value = 1;
     }
   }
 );
+const rankingData = ref([]);
+GetRankingList().then((res) => {
+  rankingData.value = res.data;
+});
 
 function showDialog2() {
   showApplication.value = true;
@@ -231,7 +238,7 @@ function saveInfo() {
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second">
-                <p class="seniority">01</p>
+                <p class="seniority">02</p>
                 <p class="name">Gitee Name</p>
                 <p class="integral">743536<span>积分</span></p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
@@ -243,7 +250,7 @@ function saveInfo() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third">
-                <p class="seniority">01</p>
+                <p class="seniority">03</p>
                 <p class="name">Gitee Name</p>
                 <p class="integral">743536<span>积分</span></p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
@@ -251,7 +258,10 @@ function saveInfo() {
             </div>
             <div class="rank-top-others">
               <div v-for="item in 7" :key="item" class="items">
-                <p class="left">04<span>Gitee Name</span></p>
+                <p class="left">
+                  {{ item + 3 === 10 ? 10 : '0' + (item + 3)
+                  }}<span>Gitee Name</span>
+                </p>
                 <p class="right">47364<span>积分</span></p>
               </div>
             </div>
@@ -608,12 +618,15 @@ function saveInfo() {
             }
             .first {
               margin-top: 160px;
+              cursor: pointer;
             }
             .second {
               margin-top: 185px;
+              cursor: pointer;
             }
             .third {
               margin-top: 208px;
+              cursor: pointer;
             }
           }
           &-others {
@@ -625,6 +638,7 @@ function saveInfo() {
               font-size: 24px;
               padding: 16px 0;
               border-bottom: 1px dashed #005ec2;
+              cursor: pointer;
               .right {
                 font-size: 18px;
                 height: 28px;
@@ -654,6 +668,7 @@ function saveInfo() {
             font-size: 24px;
             padding: 16px 0;
             border-bottom: 1px dashed #005ec2;
+            cursor: pointer;
             .right {
               font-size: 18px;
               height: 28px;

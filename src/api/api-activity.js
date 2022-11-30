@@ -62,7 +62,7 @@ export function applyToActivity(params) {
  */
 export function GetRankingList() {
   const url = '/server/challenge/ranking';
-  return request.get(url).then((res) => {
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

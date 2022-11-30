@@ -97,14 +97,14 @@ const optionData = reactive({
     B: [
       {
         value: 'B1',
-        name: 'mindspore_1.3.0-cann_5.0.2-py_3.7-euler_2.8.3-aarch64',
-        content: 'mindspore_1.3.0-cann_5.0.2-py_3.7-euler_2.8.3-aarch64',
+        name: 'mindspore_1.7.0-cann_5.1.0-py_3.7-euler_2.8.3-aarch64',
+        content: 'mindspore_1.7.0-cann_5.1.0-py_3.7-euler_2.8.3-aarch64',
       },
-      {
+      /* {30日注释
         value: 'B2',
         name: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
         content: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
-      },
+      }, */
     ],
   },
   com3: {

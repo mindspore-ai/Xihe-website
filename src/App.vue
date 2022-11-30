@@ -34,7 +34,7 @@ const tipVisible = ref(true);
 const toggleTip = (val) => {
   tipVisible.value = val;
 };
-
+console.log('测试环境');
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
 });

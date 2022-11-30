@@ -181,6 +181,7 @@ function change2() {
 
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
+  console.log('进入页面');
   if (!isAuthentic.value) {
     router.push('/');
   }

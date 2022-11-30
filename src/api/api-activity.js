@@ -56,3 +56,13 @@ export function applyActivity(params) {
     return res.data;
   });
 }
+/**
+ * 获取排行榜
+ * @returns
+ */
+export function GetRankingList() {
+  const url = '/server/challenge/ranking';
+  return request.get(url).then((res) => {
+    return res.data;
+  });
+}

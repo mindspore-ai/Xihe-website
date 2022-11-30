@@ -172,8 +172,8 @@ function confirmAdd() {
   } else {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    addDataset(params, detailData.value.owner, detailData.value.id).then(
-      (res) => {
+    addDataset(params, detailData.value.owner, detailData.value.id)
+      .then((res) => {
         if (res.data.length === 0) {
           ElMessage({
             type: 'error',
@@ -189,8 +189,15 @@ function confirmAdd() {
           isShow.value = false;
           addSearch.value = '';
         }
-      }
-    );
+      })
+      .catch((err) => {
+        isShow.value = false;
+        addSearch.value = '';
+        ElMessage({
+          type: 'error',
+          message: '未查询到数据',
+        });
+      });
   }
 }
 
@@ -229,13 +236,24 @@ function confirmClick() {
   } else {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
-    addModel(params, detailData.value.owner, detailData.value.id).then(
-      (res) => {
+    addModel(params, detailData.value.owner, detailData.value.id)
+      .then((res) => {
+        ElMessage({
+          type: 'success',
+          message: '添加成功',
+        });
         emit('on-click');
         isShow1.value = false;
         addSearch.value = '';
-      }
-    );
+      })
+      .catch((err) => {
+        isShow1.value = false;
+        addSearch.value = '';
+        ElMessage({
+          type: 'error',
+          message: '未查询到数据',
+        });
+      });
   }
 }
 
@@ -444,7 +462,7 @@ function toggleDelDlg(flag) {
         <div class="dataset-box">
           <relate-card
             v-if="detailData.related_datasets"
-            :detail-data="detailData.related_datasets"
+            :detail-data="detailData"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetasetClick"
@@ -471,7 +489,7 @@ function toggleDelDlg(flag) {
         </div>
         <relate-card
           v-if="detailData.related_models"
-          :detail-data="detailData.related_models"
+          :detail-data="detailData"
           :name="'related_models'"
           @delete="deleteClick"
           @jump="goDetailClick"
@@ -554,7 +572,7 @@ function toggleDelDlg(flag) {
           padding: '8px 0 30px',
           fontSize: '18px',
           textAlign: 'center',
-          width: '640px',
+          width: '100%',
         }"
       >
         {{ describe }}

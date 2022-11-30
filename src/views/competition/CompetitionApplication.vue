@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, defineExpose } from 'vue';
 
 import { goCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
@@ -61,6 +61,9 @@ const query = reactive({
   company: '',
   description: '',
 });
+
+defineExpose({ query });
+
 const rules = reactive({
   name: [
     {

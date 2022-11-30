@@ -4,6 +4,7 @@ import { ref, reactive, defineExpose } from 'vue';
 import { goCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
 import { createTeam } from '@/api/api-competition';
+import { applyActivity } from '@/api/api-activity';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
@@ -22,6 +23,14 @@ const areaData = ref([]);
 const agree = ref(false);
 let province = ref([]);
 let citys = ref([]);
+
+const props = defineProps({
+  showApplication: {
+    type: Boolean,
+    default: false,
+  },
+});
+console.log('showApplication: ', props.showApplication);
 
 const i18n = {
   application: '报名表',
@@ -124,19 +133,26 @@ function getArea() {
   getAreaData().then((res) => {
     areaData.value = res.data;
     // 获得省份数据
-    Object.keys(areaData.value['86']).forEach((city) => {
+    Object.keys(areaData.value['86']).forEach((item) => {
       province.value.push({
-        label: areaData.value['86'][city],
-        value: city,
+        label: areaData.value['86'][item],
+        value: item,
       });
     });
   });
 }
 getArea();
-function handleProvince(province) {
+function handleProvince(num) {
   citys.value = [];
-  Object.keys(areaData.value[province]).forEach((city) => {
-    citys.value.push(areaData.value[province][city]);
+  Object.keys(areaData.value[num]).forEach((item) => {
+    citys.value.push(areaData.value[num][item]);
+  });
+  // 获取具体省份
+  province.value.some((val) => {
+    if (val.value === query.loc_province) {
+      query.loc_province = val.label;
+      return true;
+    }
   });
   query.loc_city = citys.value[0].label;
 }
@@ -146,7 +162,12 @@ function changeRole(item) {
   query.identity_type = item;
 }
 
-const emit = defineEmits(['handleStep']);
+const emit = defineEmits(['handleStep', 'hideForm']);
+
+function cancelApplication() {
+  emit('hideForm', false);
+}
+
 // 保存报名
 function saveInfo(formEl) {
   if (!formEl) return;
@@ -154,49 +175,40 @@ function saveInfo(formEl) {
     if (valid) {
       // 提交报名表
       // 表单的数据
-      let params1 = {
-        name: query.name,
-        loc_province: query.loc_province,
-        loc_city: query.loc_city,
+      if (query.identity_type === 1) {
+        query.identity_type = 'student';
+      } else if (query.identity_type === 2) {
+        query.identity_type = 'teacher';
+      } else if (query.identity_type === 3) {
+        query.identity_type = 'developer';
+      } else if (query.identity_type === 4) {
+        query.identity_type = '';
+      }
+      let params = {
+        city: query.loc_city,
+        detail: {
+          detail1:
+            query.schoolName1 ||
+            query.schoolName2 ||
+            query.industry ||
+            query.description,
+          detail2: query.major1 || query.major2 || query.company,
+        },
         email: query.email,
+        identity: query.identity_type,
+        name: query.name,
         phone: query.phone,
-        identity_type: query.identity_type,
-        detail1:
-          query.schoolName1 ||
-          query.schoolName2 ||
-          query.industry ||
-          query.description,
-        detail2: query.major1 || query.major2 || query.company,
+        province: query.loc_province,
       };
-      let params2 = {
-        name: query.username,
-        relate_competition: route.params.id,
-        is_individual: true,
-      };
-      createTeam(params2)
-        .then((res) => {
-          if (res.status === 200) {
-            teamData.value = res.data;
-            // is_individual.value = res.data.is_individual;
-          }
-        })
-        .finally(() => {
-          province.value.some((val) => {
-            if (val.value === params1.loc_province) {
-              params1.loc_province = val.label;
-              return true;
-            }
-          });
-          goCompetition(params1).then((res) => {
-            if (res.status === 200) {
-              emit('handleStep');
-              ElMessage({
-                type: 'success',
-                message: '报名成功！',
-              });
-            }
-          });
+      console.log('params1: ', params);
+      applyActivity(params).then((res) => {
+        console.log('res: ', res);
+        ElMessage({
+          message: '报名成功',
+          type: 'success',
         });
+        emit('hideForm', false);
+      });
     } else {
       console.error('error submit!');
       return false;
@@ -406,13 +418,24 @@ function saveInfo(formEl) {
         </el-form-item>
       </el-form>
     </div>
-    <div class="nextBtn">
+    <div v-if="showApplication" class="next-btn">
+      <o-button @click="cancelApplication">暂不报名</o-button>
+      <o-button v-if="!agree" disabled type="secondary">立即报名</o-button>
+      <o-button v-else type="primary" @click="saveInfo(queryRef)"
+        >立即报名</o-button
+      >
+    </div>
+    <div v-else class="next-btn">
       <o-button v-if="!agree" disabled type="secondary">{{
         i18n.save
       }}</o-button>
-      <o-button v-else disabled type="primary" @click="saveInfo(queryRef)">{{
-        i18n.save
-      }}</o-button>
+      <o-button
+        v-if="agree"
+        disabled
+        type="primary"
+        @click="saveInfo(queryRef)"
+        >{{ i18n.save }}</o-button
+      >
     </div>
     <div class="isAgree">
       <div class="isAgree-text" @click="agree = !agree">
@@ -555,10 +578,15 @@ function saveInfo(formEl) {
       }
     }
   }
-  .nextBtn {
+  .next-btn {
     display: flex;
     justify-content: center;
     margin-top: 12px;
+    .o-button {
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
   }
   .isAgree {
     font-size: 14px;

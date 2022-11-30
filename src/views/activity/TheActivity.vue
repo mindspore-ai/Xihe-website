@@ -26,6 +26,7 @@ import timeImg from '@/assets/imgs/activity/time.png';
 import timelineImg from '@/assets/imgs/activity/timeline.png';
 import rankImg from '@/assets/imgs/activity/rank.png';
 import CompetitionApplication from '@/views/competition/CompetitionApplication.vue';
+import { applyActivity } from '@/api/api-activity';
 
 const router = useRouter();
 
@@ -133,6 +134,9 @@ function showDialog2() {
 
 //立即报名
 function saveInfo() {
+  applyActivity(applicationData.value).then((res) => {
+    console.log('res: ', res);
+  });
   console.log(applicationData.value);
 }
 // appleActivity
@@ -315,11 +319,11 @@ function saveInfo() {
       </template>
     </o-dialog>
     <!-- 报名弹窗 -->
-    <o-dialog class="applicationDialog" :show="showApplication" :close="false">
+    <el-dialog v-model="showApplication" class="application-dialog">
       <div class="dlg-body">
         <CompetitionApplication ref="applicationData"></CompetitionApplication>
       </div>
-      <template #foot>
+      <template #footer>
         <div class="dlg-foot">
           <div class="nextBtn">
             <o-button @click="showApplication = false">暂不报名</o-button>
@@ -343,7 +347,7 @@ function saveInfo() {
           </div>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -574,9 +578,9 @@ function saveInfo() {
         background-size: cover;
         color: #30ecff;
         height: 1019px;
-      &-top {
+        &-top {
           height: 810px;
-        display: flex;
+          display: flex;
           flex-direction: column;
           align-items: center;
           &-three {
@@ -640,7 +644,7 @@ function saveInfo() {
         }
         &-others {
           height: 810px;
-        display: flex;
+          display: flex;
           flex-direction: column;
           align-items: center;
           &-box {
@@ -743,6 +747,75 @@ function saveInfo() {
     justify-content: center;
   }
 }
+:deep(.el-dialog) {
+  width: 900px;
+  // position: fixed;
+  // left: 0;
+  // right: 0;
+  // // top: 0;
+  // bottom: 0;
+  // width: 100%;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    .application {
+      padding: 0px;
+      .application-title {
+        // background-color: red;
+        border: none;
+        padding-bottom: 0px;
+        display: flex;
+        flex-direction: column;
+        .text {
+          margin-bottom: 16px;
+          text-align: center;
+        }
+        .tips {
+          width: 100%;
+        }
+      }
+      .nextBtn {
+        display: none;
+      }
+      .isAgree {
+        display: none;
+      }
+    }
+  }
+  .el-dialog__footer {
+    .dlg-foot {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .nextBtn {
+        margin-bottom: 24px;
+        .o-button {
+          &:first-child {
+            margin-right: 20px;
+          }
+        }
+      }
+      .isAgree {
+        display: flex;
+        .isAgree-text {
+          display: flex;
+          align-items: center;
+          span {
+            margin-left: 8px;
+            cursor: pointer;
+          }
+        }
+        .statement {
+          a {
+            color: #0d8dff;
+          }
+        }
+      }
+    }
+  }
+}
 .applicationDialog {
   width: 900px !important;
   .o-dialog-wrap {
@@ -811,14 +884,6 @@ function saveInfo() {
         }
       }
     }
-  }
-}
-.applicationDialog {
-  width: 1000px;
-  :deep(.o-dialog-wrap) {
-    background-color: red;
-    position: relative;
-    top: 0;
   }
 }
 </style>

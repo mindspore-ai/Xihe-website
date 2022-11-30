@@ -50,8 +50,8 @@ export function submitPapers(params) {
  * 报名
  * @returns
  */
-export function applyToActivity(params) {
-  const url = '/server/challenge/aiquestions';
+export function applyActivity(params) {
+  const url = '/server/challenge/competitor';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

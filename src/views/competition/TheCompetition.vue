@@ -65,7 +65,7 @@ function getCompetitions2() {
       if (res.status === 200) {
         tableData.value = res.data.data;
         console.log('tableData.value: ', tableData.value);
-        perPage.value = tableData.value.slice(0, 5);
+        perPage.value = tableData.value.slice(0, queryData.size);
       }
     })
     .catch((err) => {
@@ -101,7 +101,10 @@ const perPage = ref([]);
 function handleCurrentChange(val) {
   console.log('val: ', val);
   queryData.page = val;
-  perPage.value = tableData.value.slice(0, 5);
+  perPage.value = tableData.value.slice(
+    queryData.page * queryData.size - queryData.size,
+    queryData.page * queryData.size
+  );
   toTop();
 }
 function toTop() {

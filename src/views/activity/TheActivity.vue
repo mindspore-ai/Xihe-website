@@ -309,12 +309,12 @@ function goRule() {
           <img :src="timelineImg" alt="" />
         </div>
       </div>
-      <div class="activity-rank">
+      <div v-if="rankingData.length" class="activity-rank">
         <div class="title">
           <img :src="rankImg" alt="" />
         </div>
         <!-- 排行榜 -->
-        <div v-if="rankingData.length" class="rank">
+        <div class="rank">
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second">
@@ -687,6 +687,7 @@ function goRule() {
     }
     .activity-time {
       margin-top: 64px;
+      margin-bottom: 64px;
       .title {
         width: 210px;
         height: 70px;
@@ -703,7 +704,7 @@ function goRule() {
       }
     }
     .activity-rank {
-      margin-top: 64px;
+      // margin-top: 64px;
       .title {
         width: 174px;
         height: 70px;

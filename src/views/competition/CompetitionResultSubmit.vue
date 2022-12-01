@@ -307,7 +307,9 @@ function handelCancel() {
       </div>
       <div v-else class="empty">
         <o-icon><icon-project></icon-project></o-icon>
-        当前暂未关联项目
+        {{
+          detailData1.type === '' ? '当前暂未关联项目' : '该比赛无需关联项目'
+        }}
       </div>
     </div>
     <div class="left">

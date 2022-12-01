@@ -149,6 +149,22 @@ function handleNextClick() {
   subjectIndex.value += 1;
 }
 
+function submitPaperFn() {
+  submitPapers(queryData.value).then((res) => {
+    if (res.data) {
+      isShow.value = false;
+      isAllowed.value = true;
+
+      router.push({
+        name: 'activityResult',
+        params: { times: 3 - queryData.value.times, score: res.data.score },
+      });
+
+      clearInterval(timer);
+    }
+  });
+}
+
 // 交卷
 function handleSubmitPaper() {
   isShow.value = true;
@@ -172,21 +188,21 @@ function handleSubmitPaper() {
 
 // 确认交卷
 function handleConfirmSubmit() {
-  clearInterval(timer);
+  // clearInterval(timer);
+  submitPaperFn();
+  // submitPapers(queryData.value).then((res) => {
+  //   console.log(res);
+  //   if (res.data) {
+  //     isShow.value = false;
+  //     isAllowed.value = true;
+  //     router.push({
+  //       name: 'activityResult',
+  //       params: { times: 3 - queryData.value.times, score: res.data.score },
+  //     });
 
-  submitPapers(queryData.value).then((res) => {
-    console.log(res);
-    if (res.data) {
-      isShow.value = false;
-      isAllowed.value = true;
-      router.push({
-        name: 'activityResult',
-        params: { times: 3 - queryData.value.times, score: res.data.score },
-      });
-
-      clearInterval(timer);
-    }
-  });
+  //     clearInterval(timer);
+  //   }
+  // });
 }
 
 // 取消交卷
@@ -238,18 +254,20 @@ async function getDate() {
 
         console.log(activityQuestions.value);
         console.log(queryData.value);
-      } else if (res.msg === 'challenge_excced_max_time') {
-        ElMessage({
-          type: 'warning',
-          message: '挑战次数已用完，请明日再来',
-        });
-        setTimeout(() => {
-          router.push('/activity');
-        }, 1500);
       }
     });
   } catch (e) {
-    console.error(e);
+    ElMessage({
+      type: 'warning',
+      message: '挑战次数已用完，请明日再来',
+    });
+
+    isShow1.value = false;
+    isAllowed.value = true;
+
+    setTimeout(() => {
+      router.push('/activity');
+    }, 1500);
   }
 }
 getDate();
@@ -279,8 +297,8 @@ watch(
   () => testTime.value,
   () => {
     if (testTime.value === 0) {
-      clearInterval(timer);
       // 发请求交卷; 切到分数页面
+      submitPaperFn();
     }
   }
 );

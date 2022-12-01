@@ -175,7 +175,7 @@ function handleNextClick() {
 // 交卷
 function handleSubmitPaper() {
   isShow.value = true;
-  console.log(questionData.value);
+  // console.log(questionData.value);
 }
 
 // 确认交卷
@@ -255,7 +255,7 @@ watch(
 onMounted(() => {
   timer = setInterval(() => {
     testTime.value--;
-    console.log('考试中');
+    // console.log('考试中');
   }, 1000);
 
   // 处理获取到的题目数据

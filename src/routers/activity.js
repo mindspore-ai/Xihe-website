@@ -14,7 +14,7 @@ export default [
     },
   },
   {
-    path: '/activity-test',
+    path: '/activity-1',
     name: 'activityTest',
     component: () => {
       return import('@/views/activity/TheActivityTest.vue');
@@ -41,6 +41,13 @@ export default [
     name: 'activityResult',
     component: () => {
       return import('@/views/activity/TheActivityResult.vue');
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.query) {
+        next();
+      } else {
+        next('/activity');
+      }
     },
   },
 ];

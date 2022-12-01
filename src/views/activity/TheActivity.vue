@@ -143,7 +143,7 @@ function hideForm(val) {
 
 // 开始答题
 function handleStartAnswer() {
-  router.push('/activity-test');
+  router.push('/activity-1');
 }
 // 排行榜
 const currentPage = ref(1);

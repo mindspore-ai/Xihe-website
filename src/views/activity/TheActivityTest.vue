@@ -141,26 +141,9 @@ function handlePreClick() {
 function handleNextClick() {
   subjectIndex.value += 1;
 }
+const isAnswering = ref(false);
 
 function submitPaperFn() {
-  submitPapers(queryData.value).then((res) => {
-    if (res.data) {
-      isShow.value = false;
-      isAllowed.value = true;
-
-      router.push({
-        name: 'activityResult',
-        params: { times: 3 - queryData.value.times, score: res.data.score },
-      });
-
-      clearInterval(timer);
-    }
-  });
-}
-
-// 交卷
-function handleSubmitPaper() {
-  isShow.value = true;
   activityQuestions.value.forEach((item, index) => {
     if (index < 7) {
       if (item.right) {
@@ -172,11 +155,32 @@ function handleSubmitPaper() {
       queryData.value.result.push(item.right);
     }
   });
+
+  return submitPapers(queryData.value).then((res) => {
+    if (res.data) {
+      isShow.value = false;
+      isAllowed.value = true;
+
+      clearInterval(timer);
+      return res.data;
+    }
+  });
+}
+
+// t
+function toggleDialog(val) {
+  isShow.value = val;
 }
 
 // 确认交卷
 function handleConfirmSubmit() {
-  submitPaperFn();
+  isAnswering.value = false;
+  submitPaperFn().then((res) => {
+    router.push({
+      path: '/activity-result',
+      query: { times: 3 - queryData.value.times, score: res.score },
+    });
+  });
 }
 
 // 取消交卷
@@ -222,6 +226,8 @@ async function getDate() {
       activityQuestions.value[index + 7].desc = item.desc;
       activityQuestions.value[index + 7].info = item.info;
     });
+
+    isAnswering.value = true;
   } catch (e) {
     ElMessage({
       type: 'warning',
@@ -283,16 +289,16 @@ onMounted(() => {
   window.onbeforeunload = () => {
     submitPaperFn();
   };
-
-  // 前进后退提交
-  window.addEventListener('popstate', fn, false);
 });
 
 onUnmounted(() => {
   window.removeEventListener('popstate', fn);
 
   // 离开页面提交试卷信息，清除计时器,
-  submitPaperFn();
+  if (isAnswering.value) {
+    isAnswering.value = false;
+    submitPaperFn();
+  }
 });
 </script>
 <template>
@@ -405,7 +411,7 @@ onUnmounted(() => {
                 v-else
                 type="primary"
                 size="small"
-                @click="handleSubmitPaper"
+                @click="toggleDialog(true)"
                 >交卷</o-button
               >
             </div>
@@ -413,7 +419,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- 弹窗 -->
+      <!-- 交卷弹窗 -->
       <o-dialog class="warning-tip" :show="isShow" :close="false">
         <template #head>
           <div class="tip-icon">
@@ -437,7 +443,7 @@ onUnmounted(() => {
           </div>
         </template>
       </o-dialog>
-
+      <!-- 离开弹窗 -->
       <o-dialog class="warning-tip" :show="isShow1" :close="false">
         <template #head>
           <div class="tip-icon">

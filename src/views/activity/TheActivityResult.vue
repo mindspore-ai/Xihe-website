@@ -5,9 +5,9 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 const scores = ref(80);
-const times = route.params.times;
+const times = route.query.times;
 
-scores.value = route.params.score;
+scores.value = route.query.score;
 
 // 跳转到Mincon页面
 function handleBackMincon() {
@@ -28,7 +28,7 @@ function handleContinueChallenge() {
       router.push('/activity');
     }, 2000);
   } else {
-    router.push('/activity-test');
+    router.push('/activity-1');
   }
 }
 </script>

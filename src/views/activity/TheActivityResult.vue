@@ -93,7 +93,7 @@ function handleContinueChallenge() {
     font-size: 12px;
     color: #555555;
     line-height: 18px;
-    margin-top: 170px;
+    margin-top: 120px;
     .history {
       cursor: pointer;
     }

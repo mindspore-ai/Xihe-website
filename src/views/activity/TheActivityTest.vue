@@ -273,17 +273,6 @@ watch(
   }
 );
 
-const fn = () => {
-  submitPapers(queryData.value).then((res) => {
-    if (res.data) {
-      isShow.value = false;
-      isAllowed.value = true;
-
-      clearInterval(timer);
-    }
-  });
-};
-
 onMounted(() => {
   // 刷新提交
   window.onbeforeunload = () => {
@@ -292,8 +281,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('popstate', fn);
-
   // 离开页面提交试卷信息，清除计时器,
   if (isAnswering.value) {
     isAnswering.value = false;
@@ -664,6 +651,7 @@ onUnmounted(() => {
             font-size: 14px;
             color: #555555;
             line-height: 22px;
+            user-select: none;
           }
           .answers {
             margin-top: 24px;

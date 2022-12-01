@@ -3,11 +3,8 @@ import { ref, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import IconWarning from '~icons/app/activity-warning';
-import activityBanner from '@/assets/imgs/activity/activity-banner.png';
-import activityBanner2 from '@/assets/imgs/activity/activity-banner2.png';
 import qrCode from '@/assets/imgs/activity/qr-code.png';
 import scoreImg from '@/assets/imgs/activity/score.png';
-import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
 import awardsImg from '@/assets/imgs/activity/awards.png';
 import annularImg from '@/assets/imgs/activity/annular.png';
@@ -42,7 +39,6 @@ const router = useRouter();
 
 const isShow = ref(false);
 const showApplication = ref(false);
-const agree = ref(false);
 const applicationData = ref(null);
 const showBtn = ref(false);
 const activityDetail = ref('');
@@ -418,6 +414,20 @@ function goRule() {
       <div class="explain">本活动最终解释权归昇思MindSpore开源社区所有</div>
     </div>
 
+    <!-- <el-dialog v-model="isShow" custom-class="start-challenge">
+      <template #head>
+        <div class="test-title">知识挑战赛</div>
+        <div class="tip">
+          <o-icon>
+            <icon-warning></icon-warning>
+          </o-icon>
+          <span
+            >每日有3次挑战机会，跳出本页面、未答完退出都算作1次挑战机会。</span
+          >
+        </div>
+      </template>
+    </el-dialog> -->
+
     <o-dialog
       class="start-challenge"
       :show="isShow"
@@ -446,8 +456,14 @@ function goRule() {
         </div>
       </template>
     </o-dialog>
+
     <!-- 报名弹窗 -->
-    <el-dialog v-model="showApplication" destroy-on-close :show-close="false">
+    <el-dialog
+      v-model="showApplication"
+      destroy-on-close
+      :show-close="false"
+      width="900"
+    >
       <CompetitionApplication
         ref="applicationData"
         :show-application="showApplication"
@@ -890,7 +906,9 @@ function goRule() {
     }
   }
 }
+// :deep(.start-challenge) {
 .start-challenge {
+  width: 817px !important;
   .test-title {
     text-align: center;
   }

@@ -4,9 +4,11 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import paintings from '@/assets/imgs/paintings1.jpg';
-import imageClassify from '@/assets/imgs/image-classify.jpg';
-import textClassification from '@/assets/imgs/text-classification2.jpg';
+import comBanner1 from '@/assets/imgs/competition/com-banner1.png';
+import comBanner2 from '@/assets/imgs/competition/com-banner2.png';
+import comBanner3 from '@/assets/imgs/competition/com-banner3.png';
+import comBanner4 from '@/assets/imgs/competition/com-banner4.png';
+
 import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -63,6 +65,7 @@ function getCompetitions2() {
       if (res.status === 200) {
         tableData.value = res.data.data;
         console.log('tableData.value: ', tableData.value);
+        perPage.value = tableData.value.slice(0, 5);
       }
     })
     .catch((err) => {
@@ -94,9 +97,11 @@ const layout = ref(' prev, pager, next');
   }
   queryData.size = val;
 } */
+const perPage = ref([]);
 function handleCurrentChange(val) {
   console.log('val: ', val);
   queryData.page = val;
+  perPage.value = tableData.value.slice(0, 5);
   toTop();
 }
 function toTop() {
@@ -110,21 +115,28 @@ function toTop() {
         <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item
             ><img
-              :src="paintings"
+              :src="comBanner1"
               alt=""
               @click="goDetail('昇思AI挑战赛-艺术家画作风格迁移')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
-              :src="imageClassify"
+              :src="comBanner2"
               alt=""
               @click="goDetail('昇思AI挑战赛-多类别图像分类')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
-              :src="textClassification"
+              :src="comBanner3"
+              alt=""
+              @click="goDetail('昇思AI挑战赛-文本分类')"
+            />
+          </el-carousel-item>
+          <el-carousel-item
+            ><img
+              :src="comBanner4"
               alt=""
               @click="goDetail('昇思AI挑战赛-文本分类')"
             />
@@ -143,7 +155,7 @@ function toTop() {
         <el-tab-pane label="全部" name="first">
           <div v-if="tableData">
             <div
-              v-for="item in tableData"
+              v-for="item in perPage"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"

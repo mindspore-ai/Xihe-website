@@ -1,31 +1,36 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { getActivityDetail } from '@/api/api-activity';
 
 const router = useRouter();
 const route = useRoute();
 const scores = ref(80);
 const times = route.params.times;
-console.log(route.params.times);
+
+scores.value = route.params.score;
 
 // 跳转到Mincon页面
 function handleBackMincon() {
   router.push('/activity');
 }
 
-function handleContinueChallenge() {
-  //先判断是否还要答题次数和是否报名
-  router.push('/activity-test');
+function handleBackPage() {
+  router.push('/activity');
 }
 
-function getActivityScore() {
-  getActivityDetail().then((res) => {
-    scores.value = res.data.score;
-    console.log(res.data.score);
-  });
+function handleContinueChallenge() {
+  if (times <= 0) {
+    ElMessage({
+      type: 'warning',
+      message: '挑战次数已用尽，请明日再来',
+    });
+    setTimeout(() => {
+      router.push('/activity');
+    }, 2000);
+  } else {
+    router.push('/activity-test');
+  }
 }
-getActivityScore();
 </script>
 
 <template>

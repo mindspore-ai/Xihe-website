@@ -334,7 +334,10 @@ function showDialog2() {
       </div>
     </div>
 
-    <o-dialog class="test" :show="isShow" @close-click="toggleClick()"
+    <o-dialog
+      class="start-challenge"
+      :show="isShow"
+      @close-click="toggleClick()"
       ><template #head>
         <div class="test-title">知识挑战赛</div>
         <div class="tip">
@@ -743,8 +746,8 @@ function showDialog2() {
     }
   }
 }
-.test {
-  &-title {
+.start-challenge {
+  .test-title {
     text-align: center;
   }
   .tip {

@@ -31,7 +31,88 @@ const queryData = ref({
   times: 0,
 });
 
-const activityQuestions = ref([]);
+const activityQuestions = ref([
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    options: [],
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: 'selection',
+  },
+  {
+    desc: '',
+    info: '',
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: '"completion"',
+  },
+  {
+    desc: '',
+    info: '',
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: '"completion"',
+  },
+  {
+    desc: '',
+    info: '',
+    right: '',
+    isFinished: false,
+    isSelected: false,
+    type: '"completion"',
+  },
+]);
 
 function handleSelectClick(val, i) {
   subjectIndex.value = i;
@@ -44,6 +125,7 @@ function handleSelectClick(val, i) {
 
 function handleInputChange() {
   console.log(activityQuestions.value[subjectIndex.value]);
+
   if (activityQuestions.value[subjectIndex.value].right.trim()) {
     activityQuestions.value[subjectIndex.value].isFinished = true;
   } else {
@@ -99,14 +181,12 @@ function handleConfirmSubmit() {
       isAllowed.value = true;
       router.push({
         name: 'activityResult',
-        params: { times: 3 - queryData.value.times },
+        params: { times: 3 - queryData.value.times, score: res.data.score },
       });
+
+      clearInterval(timer);
     }
   });
-
-  // 交卷带结果跳转得分页面
-  // isAllowed.value = true;
-  // router.push('/activity-result');
 }
 
 // 取消交卷
@@ -138,34 +218,34 @@ async function getDate() {
     await getQuestions().then((res) => {
       console.log(res);
       if (res.data) {
+        timer = setInterval(() => {
+          testTime.value--;
+          console.log('考试中');
+        }, 1000);
+
         queryData.value.answer = res.data.answer;
         queryData.value.times = res.data.times;
 
-        res.data.choices.forEach((item) => {
-          item.isFinished = false;
-          item.isSelected = false;
-          item.right = '';
-          item.type = 'selection';
-
-          activityQuestions.value.push(item);
+        res.data.choices.forEach((item, index) => {
+          activityQuestions.value[index].desc = item.desc;
+          activityQuestions.value[index].options = item.options;
         });
 
-        res.data.completions.forEach((item) => {
-          item.isFinished = false;
-          item.isSelected = false;
-          item.right = '';
-          item.type = 'completion';
-
-          activityQuestions.value.push(item);
+        res.data.completions.forEach((item, index) => {
+          activityQuestions.value[index + 7].desc = item.desc;
+          activityQuestions.value[index + 7].info = item.info;
         });
 
         console.log(activityQuestions.value);
         console.log(queryData.value);
-      } else if (res.msg === 'exceed max times') {
+      } else if (res.msg === 'challenge_excced_max_time') {
         ElMessage({
           type: 'warning',
-          message: '今日挑战次数已用完',
+          message: '挑战次数已用完，请明日再来',
         });
+        setTimeout(() => {
+          router.push('/activity');
+        }, 1500);
       }
     });
   } catch (e) {
@@ -186,17 +266,7 @@ onBeforeRouteLeave((to, from, next) => {
   }
 });
 
-// window.onbeforeunload = function () {
-//   return '系统不会保存你所做的更改！';
-// };
-
-// watch(
-//   () => activityQuestions.value[subjectIndex.value],
-//   () => {
-//     activityQuestions.value[subjectIndex.value].isFinished =
-//       activityQuestions.value[subjectIndex.value].right.trim() ? true : false;
-//   }
-// );
+// 刷新或离开页面的操作
 
 watch(
   () => subjectIndex.value,
@@ -216,10 +286,7 @@ watch(
 );
 
 onMounted(() => {
-  timer = setInterval(() => {
-    testTime.value--;
-    console.log('考试中');
-  }, 1000);
+  window.addEventListener('beforeunload', () => beforeunloadFn());
 });
 
 onUnmounted(() => {
@@ -267,7 +334,8 @@ onUnmounted(() => {
               </div>
               <div class="container-body-top-right">
                 <div class="challenge">
-                  <span>今日挑战剩余次数：</span><span class="counts">2</span>
+                  <span>今日挑战剩余次数：</span
+                  ><span class="counts">{{ 3 - queryData.times }}</span>
                 </div>
                 <p>{{ formatSeconds(testTime) }}</p>
               </div>
@@ -277,7 +345,7 @@ onUnmounted(() => {
               <div class="subject">
                 {{ activityQuestions[subjectIndex].desc }}
               </div>
-              <!-- 选择题 -->
+
               <div
                 v-if="activityQuestions[subjectIndex].type === 'selection'"
                 class="answers"
@@ -294,7 +362,7 @@ onUnmounted(() => {
                   >
                 </el-radio-group>
               </div>
-              <!-- 填空题 -->
+
               <div v-else class="answers">
                 <el-input
                   v-model="activityQuestions[subjectIndex].info"

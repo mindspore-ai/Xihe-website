@@ -418,14 +418,16 @@ function saveInfo(formEl) {
       </el-form>
     </div>
     <div v-if="showApplication" class="next-btn">
-      <o-button @click="cancelApplication">暂不报名</o-button>
-      <o-button v-if="!agree" disabled type="secondary">立即报名</o-button>
-      <o-button v-else type="primary" @click="saveInfo(queryRef)"
+      <o-button size="small" @click="cancelApplication">暂不报名</o-button>
+      <o-button v-if="!agree" size="small" disabled type="secondary"
+        >立即报名</o-button
+      >
+      <o-button v-else size="small" type="primary" @click="saveInfo(queryRef)"
         >立即报名</o-button
       >
     </div>
     <div v-else class="next-btn">
-      <o-button v-if="!agree" disabled type="secondary">{{
+      <o-button v-if="!agree" size="small" disabled type="secondary">{{
         i18n.save
       }}</o-button>
       <o-button
@@ -436,8 +438,8 @@ function saveInfo(formEl) {
         >{{ i18n.save }}</o-button
       >
     </div>
-    <div class="isAgree">
-      <div class="isAgree-text" @click="agree = !agree">
+    <div class="agree">
+      <div class="agree-text" @click="agree = !agree">
         <input v-model="agree" type="checkbox" class="input" />
         <span>{{ i18n.agree }}</span>
       </div>
@@ -582,18 +584,23 @@ function saveInfo(formEl) {
     justify-content: center;
     margin-top: 12px;
     .o-button {
+      // width: 90px;
+      // height: 32px;
+      // padding: 14px !important;
+      // padding-top: 5px;
+      // padding-bottom: 5px;
       &:first-child {
         margin-right: 20px;
       }
     }
   }
-  .isAgree {
+  .agree {
     font-size: 14px;
     color: #000;
     margin-top: 16px;
     display: flex;
     justify-content: center;
-    .isAgree-text {
+    .agree-text {
       display: flex;
       align-items: center;
       span {

@@ -135,28 +135,30 @@ function toTop() {
             ><img
               :src="comBanner1"
               alt=""
-              @click="goDetail('昇思AI挑战赛-艺术家画作风格迁移')"
+              @click="goDetail('第四届MindCon-西安旅游主题图像分类')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
               :src="comBanner2"
               alt=""
-              @click="goDetail('昇思AI挑战赛-多类别图像分类')"
+              @click="goDetail('第四届MindCon-基于小样本学习的口罩识别')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
               :src="comBanner3"
               alt=""
-              @click="goDetail('昇思AI挑战赛-文本分类')"
+              @click="
+                goDetail('第四届MindCon-爱（AI）美食--10类常见美食图片分类')
+              "
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
               :src="comBanner4"
               alt=""
-              @click="goDetail('昇思AI挑战赛-文本分类')"
+              @click="goDetail('第四届MindCon-外卖评论文本分类')"
             />
           </el-carousel-item>
         </el-carousel>

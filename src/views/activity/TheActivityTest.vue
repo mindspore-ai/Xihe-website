@@ -2,11 +2,7 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router';
 
-import {
-  getQuestions,
-  getActivityDetail,
-  submitPapers,
-} from '@/api/api-activity';
+import { getQuestions, submitPapers } from '@/api/api-activity';
 
 import { formatSeconds } from '@/shared/utils';
 
@@ -116,7 +112,6 @@ const activityQuestions = ref([
 
 function handleSelectClick(val, i) {
   subjectIndex.value = i;
-  console.log(val);
   activityQuestions.value.forEach((item) => {
     item.isSelected = false;
   });
@@ -124,8 +119,6 @@ function handleSelectClick(val, i) {
 }
 
 function handleInputChange() {
-  console.log(activityQuestions.value[subjectIndex.value]);
-
   if (activityQuestions.value[subjectIndex.value].right.trim()) {
     activityQuestions.value[subjectIndex.value].isFinished = true;
   } else {
@@ -168,7 +161,6 @@ function submitPaperFn() {
 // 交卷
 function handleSubmitPaper() {
   isShow.value = true;
-  console.log(queryData.value);
   activityQuestions.value.forEach((item, index) => {
     if (index < 7) {
       if (item.right) {
@@ -182,27 +174,9 @@ function handleSubmitPaper() {
   });
 }
 
-// window.addEventListener('beforeunload', () => {
-//   router.push('/');
-// });
-
 // 确认交卷
 function handleConfirmSubmit() {
-  // clearInterval(timer);
   submitPaperFn();
-  // submitPapers(queryData.value).then((res) => {
-  //   console.log(res);
-  //   if (res.data) {
-  //     isShow.value = false;
-  //     isAllowed.value = true;
-  //     router.push({
-  //       name: 'activityResult',
-  //       params: { times: 3 - queryData.value.times, score: res.data.score },
-  //     });
-
-  //     clearInterval(timer);
-  //   }
-  // });
 }
 
 // 取消交卷
@@ -228,33 +202,25 @@ function handleConfirmBack() {
   router.push(routePath.value);
 }
 
-// 处理获取到的题目数据
 async function getDate() {
   try {
-    await getQuestions().then((res) => {
-      console.log(res);
-      if (res.data) {
-        timer = setInterval(() => {
-          testTime.value--;
-          console.log('考试中');
-        }, 1000);
+    const res = await getQuestions();
 
-        queryData.value.answer = res.data.answer;
-        queryData.value.times = res.data.times;
+    timer = setInterval(() => {
+      testTime.value--;
+    }, 1000);
 
-        res.data.choices.forEach((item, index) => {
-          activityQuestions.value[index].desc = item.desc;
-          activityQuestions.value[index].options = item.options;
-        });
+    queryData.value.answer = res.data.answer;
+    queryData.value.times = res.data.times;
 
-        res.data.completions.forEach((item, index) => {
-          activityQuestions.value[index + 7].desc = item.desc;
-          activityQuestions.value[index + 7].info = item.info;
-        });
+    res.data.choices.forEach((item, index) => {
+      activityQuestions.value[index].desc = item.desc;
+      activityQuestions.value[index].options = item.options;
+    });
 
-        console.log(activityQuestions.value);
-        console.log(queryData.value);
-      }
+    res.data.completions.forEach((item, index) => {
+      activityQuestions.value[index + 7].desc = item.desc;
+      activityQuestions.value[index + 7].info = item.info;
     });
   } catch (e) {
     ElMessage({
@@ -284,8 +250,6 @@ onBeforeRouteLeave((to, from, next) => {
   }
 });
 
-// 刷新或离开页面的操作
-
 watch(
   () => subjectIndex.value,
   () => {
@@ -303,13 +267,32 @@ watch(
   }
 );
 
+const fn = () => {
+  submitPapers(queryData.value).then((res) => {
+    if (res.data) {
+      isShow.value = false;
+      isAllowed.value = true;
+
+      clearInterval(timer);
+    }
+  });
+};
+
 onMounted(() => {
-  window.addEventListener('beforeunload', () => beforeunloadFn());
+  // 刷新提交
+  window.onbeforeunload = () => {
+    submitPaperFn();
+  };
+
+  // 前进后退提交
+  window.addEventListener('popstate', fn, false);
 });
 
 onUnmounted(() => {
+  window.removeEventListener('popstate', fn);
+
   // 离开页面提交试卷信息，清除计时器,
-  clearInterval(timer);
+  submitPaperFn();
 });
 </script>
 <template>

@@ -162,7 +162,7 @@ function changeRole(item) {
   query.identity_type = item;
 }
 
-const emit = defineEmits(['handleStep', 'hideForm']);
+const emit = defineEmits(['handleStep', 'hideForm', 'getActivity']);
 
 function cancelApplication() {
   emit('hideForm', false);
@@ -206,7 +206,9 @@ function saveInfo(formEl) {
         ElMessage({
           message: '报名成功',
           type: 'success',
+          duration: 4000,
         });
+        emit('getActivity');
         emit('hideForm', false);
       });
     } else {

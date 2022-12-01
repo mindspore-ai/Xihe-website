@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import IconWarning from '~icons/app/activity-warning';
 import activityBanner from '@/assets/imgs/activity/activity-banner.png';
+import scoreImg from '@/assets/imgs/activity/score.png';
 import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
 import awardsImg from '@/assets/imgs/activity/awards.png';
@@ -41,7 +42,7 @@ const isShow = ref(false);
 const showApplication = ref(false);
 const agree = ref(false);
 const applicationData = ref(null);
-const showBtn = ref(true);
+const showBtn = ref(false);
 const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
@@ -95,35 +96,38 @@ const taskListImg = reactive([
 function getActivity() {
   getActivityDetail().then((res) => {
     activityDetail.value = res.data;
+    showBtn.value = true;
     // console.log('activityDetail.value: ', activityDetail.value.is_competitor);
   });
 }
 getActivity();
 
 function handleClick(index) {
-  // 答题页
-  if (index === 0) {
-    isShow.value = true;
-  } else if (index === 1) {
-    // 跳转到比赛列表
-    // showApplication.value = true;
-    router.push('/competition');
+  console.log('index: ', index);
+  if (!isLogined) {
+    goAuthorize();
   } else {
-    // 跳转到比赛列表
-    router.push('/competition');
+    // 如果已报名
+    if (activityDetail.value.is_competitor) {
+      if (index === 0) {
+        isShow.value = true;
+      } else {
+        // 跳转到比赛列表
+        router.push('/competition');
+      }
+    } else {
+      showApplication.value = true;
+    }
   }
 }
 
 function toggleClick() {
   isShow.value = false;
 }
-/* function handleClick() {
-  showApplication.value = false;
-} */
 
+//隐藏报名表单
 function hideForm(val) {
   showApplication.value = val;
-  // showBtn.value = val; //TODO:隐藏立即报名按钮
 }
 
 // 开始答题
@@ -169,9 +173,13 @@ function showDialog2() {
 }
 </script>
 <template>
-  <div class="activity">
+  <div v-if="showBtn" class="activity">
     <div class="activity-banner">
       <!-- <img :src="activityBanner" alt="" /> -->
+      <!-- <div class="user-info">
+        <img :src="scoreImg" alt="" />
+        <div class="score"></div>
+      </div> -->
       <div
         v-if="!activityDetail.is_competitor"
         class="application-btn"
@@ -243,12 +251,6 @@ function showDialog2() {
                 class="challenge-btn"
                 @click="handleClick(index)"
               />
-              <!-- <img
-                :src="item.challenge2"
-                alt=""
-                class="challenge-btn2"
-                @click="handleClick(index)"
-              /> -->
             </div>
           </div>
         </div>
@@ -363,6 +365,7 @@ function showDialog2() {
         ref="applicationData"
         :show-application="showApplication"
         @hide-form="hideForm"
+        @get-activity="getActivity"
       ></CompetitionApplication>
     </el-dialog>
   </div>
@@ -383,6 +386,14 @@ function showDialog2() {
     img {
       width: 100%;
       height: 100%;
+    }
+    .user-info {
+      width: 488px;
+      height: 176px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     .application-btn {
       width: 220px;

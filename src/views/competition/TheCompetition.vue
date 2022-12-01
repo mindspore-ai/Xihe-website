@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -18,15 +18,21 @@ const router = useRouter();
 const activeName = ref('first');
 const state = ref('doing'); //比赛状态：will-do，doing，done
 
+const tableData = ref([]);
+const tableData1 = ref([]);
+const tableData2 = ref([]);
+const tableData3 = ref([]);
+
+let queryData = reactive({
+  page: 1,
+  size: 3,
+});
+
 const handleClick = (tab) => {
   if (tab.props.name !== 'first') {
     getCompetitions1(tab.props.name);
   }
 };
-const tableData = ref([]);
-const tableData1 = ref([]);
-const tableData2 = ref([]);
-const tableData3 = ref([]);
 // 获取进行中、已结束、未开始的比赛
 function getCompetitions1(tab) {
   if (tab === '1') {
@@ -56,6 +62,7 @@ function getCompetitions2() {
     .then((res) => {
       if (res.status === 200) {
         tableData.value = res.data.data;
+        console.log('tableData.value: ', tableData.value);
       }
     })
     .catch((err) => {
@@ -78,6 +85,22 @@ function goCompetitionDetail(id) {
     name: 'competitionDetail',
     params: { id: id },
   });
+}
+// 分页器
+const layout = ref(' prev, pager, next');
+/* function handleSizeChange(val) {
+  if (tableData.value.length / val < 8) {
+    layout.value = layout.value.split(',').splice(0, 4).join(',');
+  }
+  queryData.size = val;
+} */
+function handleCurrentChange(val) {
+  console.log('val: ', val);
+  queryData.page = val;
+  toTop();
+}
+function toTop() {
+  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>
@@ -184,6 +207,16 @@ function goCompetitionDetail(id) {
                   </div>
                 </div>
               </div>
+            </div>
+            <!-- 全部比赛页的分页器 -->
+            <div v-if="tableData.length > 3" class="pagination">
+              <el-pagination
+                :current-page="queryData.page"
+                :page-size="queryData.size"
+                :total="tableData.length"
+                :layout="layout"
+                @current-change="handleCurrentChange"
+              ></el-pagination>
             </div>
           </div>
           <div v-else class="empty">
@@ -561,6 +594,11 @@ function goCompetitionDetail(id) {
               }
             }
           }
+        }
+        .pagination {
+          margin-top: 40px;
+          display: flex;
+          justify-content: center;
         }
       }
     }

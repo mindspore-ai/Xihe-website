@@ -31,16 +31,47 @@ const showBread = ref(false);
 const showDetail = ref(false);
 const fixed = ref(false);
 
-// 立即报名
+// 获取比赛信息、判断是否报名
+async function getDetailData() {
+  try {
+    // 获取比赛信息
+    let res = await getCompetition({ id: route.params.id });
+    if (res.status === 200 && res.data.data.name) {
+      competitionData.value = res.data.data;
+      userComData.setCompetitionData(res.data.data);
+      // userComData.setTeamId(res.data.data.id);
+    } else {
+      router.push('/competition');
+    }
+    // 获取团队id
+    /* let params = { id: route.params.id };
+    let res2 = await getGroupid(params.id);
+    if (res2.status === 200) {
+      // teamId.value = res2.group_id;
+      userComData.setTeamId(res2.group_id);
+    } */
+    showDetail.value = true;
+  } catch (error) {
+    console.error(error);
+    router.push('/404');
+  }
+}
+getDetailData();
+
+// 点击报名
 function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
   if (!userInfoStore.id) {
     goAuthorize();
   } else {
-    // show.value = false;
-    router.push({
-      path: `/competition/${competitionData.value.id}/1/statement`,
-    });
+    if (competitionData.value.type === 'challenge') {
+      router.push('/activity');
+    } else {
+      // show.value = false;
+      router.push({
+        path: `/competition/${competitionData.value.id}/1/statement`,
+      });
+    }
   }
 }
 watch(
@@ -87,33 +118,6 @@ onUpdated(() => {
     }
   });
 });
-
-// 获取比赛信息、判断是否报名
-async function getDetailData() {
-  try {
-    // 获取比赛信息
-    let res = await getCompetition({ id: route.params.id });
-    if (res.status === 200 && res.data.data.name) {
-      competitionData.value = res.data.data;
-      userComData.setCompetitionData(res.data.data);
-      // userComData.setTeamId(res.data.data.id);
-    } else {
-      router.push('/competition');
-    }
-    // 获取团队id
-    /* let params = { id: route.params.id };
-    let res2 = await getGroupid(params.id);
-    if (res2.status === 200) {
-      // teamId.value = res2.group_id;
-      userComData.setTeamId(res2.group_id);
-    } */
-    showDetail.value = true;
-  } catch (error) {
-    console.error(error);
-    router.push('/404');
-  }
-}
-getDetailData();
 </script>
 
 <template>

@@ -11,7 +11,6 @@ const router = useRouter();
 const activeNavItem = ref('');
 // const fixed = ref(false);
 const comInfo = useCompetitionData().competitionData;
-console.log('comInfo: ', comInfo);
 
 const navItems = reactive([
   {

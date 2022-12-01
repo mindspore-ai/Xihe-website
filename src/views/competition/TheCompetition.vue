@@ -70,7 +70,7 @@ function getCompetitions2() {
     .then((res) => {
       if (res.status === 200) {
         tableData.value = res.data.data;
-        console.log('tableData.value: ', tableData.value);
+        // console.log('tableData.value: ', tableData.value);
         perPage.value = tableData.value.slice(0, queryData.size);
       }
     })
@@ -105,7 +105,6 @@ const layout = ref('prev, pager, next');
 } */
 const perPage = ref([]);
 function handleCurrentChange(val) {
-  console.log('val: ', val);
   queryData.page = val;
   perPage.value = tableData.value.slice(
     queryData.page * queryData.size - queryData.size,
@@ -114,7 +113,6 @@ function handleCurrentChange(val) {
   toTop();
 }
 function handleCurrentChange3(val) {
-  console.log('val: ', val);
   queryData3.page = val;
   perPage3.value = tableData3.value.slice(
     queryData.page * queryData.size - queryData.size,

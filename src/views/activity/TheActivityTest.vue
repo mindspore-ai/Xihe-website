@@ -365,7 +365,6 @@ onUnmounted(() => {
                   readonly
                   style="height: 100%; width: 100%"
                 ></el-input>
-                <!-- <div v-html>{{ activityQuestions[subjectIndex].info }}</div> -->
 
                 <div class="answer-inp">
                   <span>请输入正确答案：</span>

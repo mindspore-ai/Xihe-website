@@ -57,8 +57,8 @@ function getCompetitions1(tab) {
   } else if (tab === '3') {
     getAllCompetition({ status: 'in-progress' }).then((res) => {
       if (res.status === 200) {
-        tableData3.value = res.data.data;
-        perPage3.value = tableData.value.slice(0, queryData3.size);
+        tableData3.value = res.data.data.reverse();
+        perPage3.value = tableData3.value.slice(0, queryData3.size);
       }
     });
   }
@@ -69,8 +69,7 @@ function getCompetitions2() {
   getAllCompetition()
     .then((res) => {
       if (res.status === 200) {
-        tableData.value = res.data.data;
-        console.log('tableData.value: ', tableData.value);
+        tableData.value = res.data.data.reverse();
         perPage.value = tableData.value.slice(0, queryData.size);
       }
     })
@@ -105,7 +104,6 @@ const layout = ref('prev, pager, next');
 } */
 const perPage = ref([]);
 function handleCurrentChange(val) {
-  console.log('val: ', val);
   queryData.page = val;
   perPage.value = tableData.value.slice(
     queryData.page * queryData.size - queryData.size,
@@ -114,11 +112,10 @@ function handleCurrentChange(val) {
   toTop();
 }
 function handleCurrentChange3(val) {
-  console.log('val: ', val);
   queryData3.page = val;
   perPage3.value = tableData3.value.slice(
-    queryData.page * queryData.size - queryData.size,
-    queryData.page * queryData.size
+    queryData3.page * queryData3.size - queryData3.size,
+    queryData3.page * queryData3.size
   );
   toTop();
 }
@@ -319,7 +316,7 @@ function toTop() {
               <el-pagination
                 hide-on-single-page
                 :current-page="queryData3.page"
-                :page-size="queryData.size"
+                :page-size="queryData3.size"
                 :total="tableData3.length"
                 :layout="layout"
                 @current-change="handleCurrentChange3"

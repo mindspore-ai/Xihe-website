@@ -379,10 +379,10 @@ function goRule() {
               >
                 <p class="left">
                   {{ (currentPage - 1) * 10 + item }}
-                  <span> {{ perPageData[item - 1].score }}</span>
+                  <span> {{ perPageData[item - 1].competitor }}</span>
                 </p>
                 <p class="right">
-                  {{ perPageData[item - 1].competitor }}<span>积分</span>
+                  {{ perPageData[item - 1].score }}<span>积分</span>
                 </p>
               </div>
             </div>

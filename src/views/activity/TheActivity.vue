@@ -340,7 +340,7 @@ function goRule() {
               </div>
               <div class="third" @click="goUser(perPageData[2].competitor)">
                 <p class="seniority">03</p>
-                <p class="name">{{ perPageData[2].competitor }} Name</p>
+                <p class="name">{{ perPageData[2].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[2].score }}<span>积分</span>
                 </p>

@@ -147,6 +147,9 @@ function goDetail(id) {
 function goCode() {
   router.push({ path: '/modelzoo/codegeex' });
 }
+function goActivity() {
+  router.push({ path: '/activity' });
+}
 </script>
 
 <template>
@@ -256,6 +259,9 @@ function goCode() {
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
     >
+      <swiper-slide>
+        <div class="photo7 cursor" @click="goActivity()"></div>
+      </swiper-slide>
       <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide>
@@ -750,6 +756,13 @@ function goCode() {
     }
     .photo6 {
       background: url(@/assets/imgs/home/home-banner1.png);
+      width: 100%;
+      height: 480px;
+      background-size: cover;
+      background-position: 50%;
+    }
+    .photo7 {
+      background: url(@/assets/imgs/home/home-banner2.png);
       width: 100%;
       height: 480px;
       background-size: cover;

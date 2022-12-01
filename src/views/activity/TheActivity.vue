@@ -48,7 +48,7 @@ const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
-console.log('userInfo: ', userInfo);
+// console.log('userInfo: ', userInfo);
 
 // 活动介绍
 const introdution = reactive([
@@ -106,7 +106,6 @@ function getActivity() {
 getActivity();
 
 function handleClick(index) {
-  console.log('index: ', index);
   if (!isLogined) {
     goAuthorize();
   } else {
@@ -206,25 +205,31 @@ function showDialog2() {
     showApplication.value = true;
   }
 }
+function goRule() {
+  window.open(
+    'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+    '_black'
+  );
+}
 </script>
 <template>
   <div v-if="showBtn" class="activity">
     <!-- 已经报名 -->
     <div v-if="activityDetail.is_competitor" class="activity-banner">
       <!-- <img :src="activityBanner" alt="" /> -->
-      <!-- <div class="user-info">
+      <div class="user-info">
         <img :src="scoreImg" alt="" />
         <div class="info-list">
           <div class="userName">
-            <img :src="aaa" alt="" />
-            <span> 雷曼 </span>
+            <img :src="userInfo.avatar" alt="" />
+            <span> {{ userInfo.userName }} </span>
           </div>
           <div class="score">
-            <span>530</span>
+            <div>{{ activityDetail.score }}</div>
             <span>我的积分</span>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
     <!-- 没有报名 -->
     <div v-else class="activity-banner2" @click="showDialog2"></div>
@@ -283,7 +288,7 @@ function showDialog2() {
           >
             <img :src="item.baseImg" alt="" />
             <div class="task-btn">
-              <img :src="item.rule" alt="" class="rule-btn" />
+              <img :src="item.rule" alt="" class="rule-btn" @click="goRule" />
               <!-- <img :src="item.rule2" alt="" class="rule-btn2" /> -->
               <img
                 :src="item.challenge"
@@ -429,6 +434,7 @@ function showDialog2() {
 .activity {
   background-color: #f5f6f8;
   margin-top: 80px;
+  // 已经报名banner
   .activity-banner {
     background-image: url('@/assets/imgs/activity/activity-banner.png');
     background-size: cover;
@@ -436,6 +442,7 @@ function showDialog2() {
     width: 100%;
     height: 480px;
     background-position: 50%;
+    margin-bottom: 42px;
 
     img {
       width: 100%;
@@ -444,25 +451,62 @@ function showDialog2() {
     .user-info {
       width: 488px;
       height: 176px;
+      position: absolute;
+      bottom: -44px;
+      left: 50%;
+      transform: translateX(-50%);
       img {
         width: 100%;
         height: 100%;
       }
-    }
-    .application-btn {
-      width: 220px;
-      height: 64px;
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: pointer;
-      img {
+      .info-list {
         width: 100%;
         height: 100%;
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        .userName {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 14px;
+            border-radius: 50%;
+          }
+          span {
+            font-size: 18px;
+            color: #000000;
+          }
+        }
+        .score {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          div {
+            line-height: 40px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffb33a;
+            margin-bottom: 14px;
+          }
+          span {
+            line-height: 20px;
+            font-size: 14px;
+            color: #000000;
+          }
+        }
       }
     }
   }
+  // 没有报名banner
   .activity-banner2 {
     background-image: url('@/assets/imgs/activity/activity-banner2.png');
     background-size: cover;

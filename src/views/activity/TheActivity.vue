@@ -147,18 +147,50 @@ const perPageData = ref([]);
 watch(
   () => currentPage.value,
   (newValue) => {
-    console.log(newValue);
-    if (newValue > 1) leftDisabled.value = false;
-    else {
+    if (newValue > rankingData.value.length / 10) {
+      if (currentPage.value !== Math.ceil(rankingData.value.length / 10)) {
+        currentPage.value = Math.ceil(rankingData.value.length / 10);
+      }
+      rightDisabled.value = true;
+      leftDisabled.value = false;
+      //TODO:最后一页数据
+      perPageData.value = rankingData.value.slice(
+        newValue * 10 - 10,
+        newValue * 10
+      );
+    } else if (newValue > 1) {
+      leftDisabled.value = false;
+      rightDisabled.value = false;
+      perPageData.value = rankingData.value.slice(
+        newValue * 10 - 10,
+        newValue * 10
+      );
+    } else {
       leftDisabled.value = true;
-      currentPage.value = 1;
+      rightDisabled.value = false;
+      if (currentPage.value !== 1) currentPage.value = 1;
+      perPageData.value = rankingData.value.slice(0, 10);
     }
   }
 );
 const rankingData = ref([]);
 GetRankingList().then((res) => {
   rankingData.value = res.data;
+  // rankingData.value = [1, 2, 3, 4, 5, 6];
+  perPageData.value = rankingData.value.slice(0, 10);
 });
+watch(
+  () => perPageData.value,
+  (n) => {
+    if (n.length < 10) {
+      for (let i = 0; i < 10; i++) {
+        if (!perPageData.value[i]) {
+          perPageData.value[i] = { score: '--', competitor: '---' };
+        }
+      }
+    }
+  }
+);
 
 function showDialog2() {
   if (!isLogined) {
@@ -267,25 +299,31 @@ function showDialog2() {
           <img :src="rankImg" alt="" />
         </div>
         <!-- 排行榜 -->
-        <div class="rank">
+        <div v-if="rankingData.length" class="rank">
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second">
                 <p class="seniority">02</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[1].competitor }}</p>
+                <p class="integral">
+                  {{ perPageData[1].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="first">
                 <p class="seniority">01</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[0].competitor }}</p>
+                <p class="integral">
+                  {{ perPageData[0].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third">
                 <p class="seniority">03</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[2].competitor }} Name</p>
+                <p class="integral">
+                  {{ perPageData[2].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
             </div>
@@ -293,23 +331,31 @@ function showDialog2() {
               <div v-for="item in 7" :key="item" class="items">
                 <p class="left">
                   {{ item + 3 === 10 ? 10 : '0' + (item + 3)
-                  }}<span>Gitee Name</span>
+                  }}<span>{{ perPageData[item + 2].competitor }}</span>
                 </p>
-                <p class="right">47364<span>积分</span></p>
+                <p class="right">
+                  {{ perPageData[item + 2].score }}<span>积分</span>
+                </p>
               </div>
             </div>
           </div>
           <div v-else class="rank-others">
             <div class="rank-others-box">
               <div v-for="item in 10" :key="item" class="items">
-                <p class="left">04<span>Gitee Name</span></p>
-                <p class="right">47364<span>积分</span></p>
+                <p class="left">
+                  {{ (currentPage - 1) * 10 + item }}
+                  <span> {{ perPageData[item - 1].score }}</span>
+                </p>
+                <p class="right">
+                  {{ perPageData[item - 1].competitor }}<span>积分</span>
+                </p>
               </div>
             </div>
           </div>
           <el-pagination
+            hide-on-single-page
             layout="prev,slot,next"
-            :total="50"
+            :total="rankingData.length"
             :current-page="currentPage"
             @current-change="pageChange"
           >

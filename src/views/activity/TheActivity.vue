@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import IconWarning from '~icons/app/activity-warning';
 import activityBanner from '@/assets/imgs/activity/activity-banner.png';
+import activityBanner2 from '@/assets/imgs/activity/activity-banner2.png';
 import scoreImg from '@/assets/imgs/activity/score.png';
 import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
@@ -33,7 +34,7 @@ import CompetitionApplication from '@/views/competition/CompetitionApplication.v
 import { getActivityDetail } from '@/api/api-activity';
 import { GetRankingList } from '@/api/api-activity';
 
-import { useLoginStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 
 const router = useRouter();
@@ -46,6 +47,8 @@ const showBtn = ref(false);
 const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
+const userInfo = useUserInfoStore();
+// console.log('userInfo: ', userInfo);
 
 // 活动介绍
 const introdution = reactive([
@@ -103,7 +106,6 @@ function getActivity() {
 getActivity();
 
 function handleClick(index) {
-  console.log('index: ', index);
   if (!isLogined) {
     goAuthorize();
   } else {
@@ -151,18 +153,50 @@ const perPageData = ref([]);
 watch(
   () => currentPage.value,
   (newValue) => {
-    console.log(newValue);
-    if (newValue > 1) leftDisabled.value = false;
-    else {
+    if (newValue > rankingData.value.length / 10) {
+      if (currentPage.value !== Math.ceil(rankingData.value.length / 10)) {
+        currentPage.value = Math.ceil(rankingData.value.length / 10);
+      }
+      rightDisabled.value = true;
+      leftDisabled.value = false;
+      //TODO:最后一页数据
+      perPageData.value = rankingData.value.slice(
+        newValue * 10 - 10,
+        newValue * 10
+      );
+    } else if (newValue > 1) {
+      leftDisabled.value = false;
+      rightDisabled.value = false;
+      perPageData.value = rankingData.value.slice(
+        newValue * 10 - 10,
+        newValue * 10
+      );
+    } else {
       leftDisabled.value = true;
-      currentPage.value = 1;
+      rightDisabled.value = false;
+      if (currentPage.value !== 1) currentPage.value = 1;
+      perPageData.value = rankingData.value.slice(0, 10);
     }
   }
 );
 const rankingData = ref([]);
 GetRankingList().then((res) => {
   rankingData.value = res.data;
+  // rankingData.value = [1, 2, 3, 4, 5, 6];
+  perPageData.value = rankingData.value.slice(0, 10);
 });
+watch(
+  () => perPageData.value,
+  (n) => {
+    if (n.length < 10) {
+      for (let i = 0; i < 10; i++) {
+        if (!perPageData.value[i]) {
+          perPageData.value[i] = { score: '--', competitor: '---' };
+        }
+      }
+    }
+  }
+);
 
 function showDialog2() {
   if (!isLogined) {
@@ -171,23 +205,34 @@ function showDialog2() {
     showApplication.value = true;
   }
 }
+function goRule() {
+  window.open(
+    'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+    '_black'
+  );
+}
 </script>
 <template>
   <div v-if="showBtn" class="activity">
-    <div class="activity-banner">
+    <!-- 已经报名 -->
+    <div v-if="activityDetail.is_competitor" class="activity-banner">
       <!-- <img :src="activityBanner" alt="" /> -->
-      <!-- <div class="user-info">
+      <div class="user-info">
         <img :src="scoreImg" alt="" />
-        <div class="score"></div>
-      </div> -->
-      <div
-        v-if="!activityDetail.is_competitor"
-        class="application-btn"
-        @click="showDialog2"
-      >
-        <img :src="applicationImg" alt="" />
+        <div class="info-list">
+          <div class="userName">
+            <img :src="userInfo.avatar" alt="" />
+            <span> {{ userInfo.userName }} </span>
+          </div>
+          <div class="score">
+            <div>{{ activityDetail.score }}</div>
+            <span>我的积分</span>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- 没有报名 -->
+    <div v-else class="activity-banner2" @click="showDialog2"></div>
     <div class="wrap">
       <!-- 活动介绍 -->
       <div class="activity-intro">
@@ -243,7 +288,7 @@ function showDialog2() {
           >
             <img :src="item.baseImg" alt="" />
             <div class="task-btn">
-              <img :src="item.rule" alt="" class="rule-btn" />
+              <img :src="item.rule" alt="" class="rule-btn" @click="goRule" />
               <!-- <img :src="item.rule2" alt="" class="rule-btn2" /> -->
               <img
                 :src="item.challenge"
@@ -269,25 +314,31 @@ function showDialog2() {
           <img :src="rankImg" alt="" />
         </div>
         <!-- 排行榜 -->
-        <div class="rank">
+        <div v-if="rankingData.length" class="rank">
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second">
                 <p class="seniority">02</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[1].competitor }}</p>
+                <p class="integral">
+                  {{ perPageData[1].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="first">
                 <p class="seniority">01</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[0].competitor }}</p>
+                <p class="integral">
+                  {{ perPageData[0].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third">
                 <p class="seniority">03</p>
-                <p class="name">Gitee Name</p>
-                <p class="integral">743536<span>积分</span></p>
+                <p class="name">{{ perPageData[2].competitor }} Name</p>
+                <p class="integral">
+                  {{ perPageData[2].score }}<span>积分</span>
+                </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
             </div>
@@ -295,23 +346,31 @@ function showDialog2() {
               <div v-for="item in 7" :key="item" class="items">
                 <p class="left">
                   {{ item + 3 === 10 ? 10 : '0' + (item + 3)
-                  }}<span>Gitee Name</span>
+                  }}<span>{{ perPageData[item + 2].competitor }}</span>
                 </p>
-                <p class="right">47364<span>积分</span></p>
+                <p class="right">
+                  {{ perPageData[item + 2].score }}<span>积分</span>
+                </p>
               </div>
             </div>
           </div>
           <div v-else class="rank-others">
             <div class="rank-others-box">
               <div v-for="item in 10" :key="item" class="items">
-                <p class="left">04<span>Gitee Name</span></p>
-                <p class="right">47364<span>积分</span></p>
+                <p class="left">
+                  {{ (currentPage - 1) * 10 + item }}
+                  <span> {{ perPageData[item - 1].score }}</span>
+                </p>
+                <p class="right">
+                  {{ perPageData[item - 1].competitor }}<span>积分</span>
+                </p>
               </div>
             </div>
           </div>
           <el-pagination
+            hide-on-single-page
             layout="prev,slot,next"
-            :total="50"
+            :total="rankingData.length"
             :current-page="currentPage"
             @current-change="pageChange"
           >
@@ -378,6 +437,7 @@ function showDialog2() {
 .activity {
   background-color: #f5f6f8;
   margin-top: 80px;
+  // 已经报名banner
   .activity-banner {
     background-image: url('@/assets/imgs/activity/activity-banner.png');
     background-size: cover;
@@ -385,6 +445,7 @@ function showDialog2() {
     width: 100%;
     height: 480px;
     background-position: 50%;
+    margin-bottom: 42px;
 
     img {
       width: 100%;
@@ -393,24 +454,70 @@ function showDialog2() {
     .user-info {
       width: 488px;
       height: 176px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .application-btn {
-      width: 220px;
-      height: 64px;
       position: absolute;
-      bottom: 50px;
+      bottom: -44px;
       left: 50%;
       transform: translateX(-50%);
-      cursor: pointer;
       img {
         width: 100%;
         height: 100%;
       }
+      .info-list {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        .userName {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 14px;
+            border-radius: 50%;
+          }
+          span {
+            font-size: 18px;
+            color: #000000;
+          }
+        }
+        .score {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          div {
+            line-height: 40px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffb33a;
+            margin-bottom: 14px;
+          }
+          span {
+            line-height: 20px;
+            font-size: 14px;
+            color: #000000;
+          }
+        }
+      }
     }
+  }
+  // 没有报名banner
+  .activity-banner2 {
+    background-image: url('@/assets/imgs/activity/activity-banner2.png');
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background-position: 50%;
+    cursor: pointer;
   }
   .wrap {
     // padding: 0px 16px 136px 16px;

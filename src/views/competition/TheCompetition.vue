@@ -4,9 +4,11 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import paintings from '@/assets/imgs/paintings1.jpg';
-import imageClassify from '@/assets/imgs/image-classify.jpg';
-import textClassification from '@/assets/imgs/text-classification2.jpg';
+import comBanner1 from '@/assets/imgs/competition/com-banner1.png';
+import comBanner2 from '@/assets/imgs/competition/com-banner2.png';
+import comBanner3 from '@/assets/imgs/competition/com-banner3.png';
+import comBanner4 from '@/assets/imgs/competition/com-banner4.png';
+
 import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -25,7 +27,11 @@ const tableData3 = ref([]);
 
 let queryData = reactive({
   page: 1,
-  size: 3,
+  size: 5,
+});
+let queryData3 = reactive({
+  page: 1,
+  size: 5,
 });
 
 const handleClick = (tab) => {
@@ -34,6 +40,7 @@ const handleClick = (tab) => {
   }
 };
 // 获取进行中、已结束、未开始的比赛
+const perPage3 = ref([]);
 function getCompetitions1(tab) {
   if (tab === '1') {
     getAllCompetition({ status: 'preparing' }).then((res) => {
@@ -51,6 +58,7 @@ function getCompetitions1(tab) {
     getAllCompetition({ status: 'in-progress' }).then((res) => {
       if (res.status === 200) {
         tableData3.value = res.data.data;
+        perPage3.value = tableData.value.slice(0, queryData3.size);
       }
     });
   }
@@ -63,6 +71,7 @@ function getCompetitions2() {
       if (res.status === 200) {
         tableData.value = res.data.data;
         console.log('tableData.value: ', tableData.value);
+        perPage.value = tableData.value.slice(0, queryData.size);
       }
     })
     .catch((err) => {
@@ -87,16 +96,30 @@ function goCompetitionDetail(id) {
   });
 }
 // 分页器
-const layout = ref(' prev, pager, next');
+const layout = ref('prev, pager, next');
 /* function handleSizeChange(val) {
   if (tableData.value.length / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
   }
   queryData.size = val;
 } */
+const perPage = ref([]);
 function handleCurrentChange(val) {
   console.log('val: ', val);
   queryData.page = val;
+  perPage.value = tableData.value.slice(
+    queryData.page * queryData.size - queryData.size,
+    queryData.page * queryData.size
+  );
+  toTop();
+}
+function handleCurrentChange3(val) {
+  console.log('val: ', val);
+  queryData3.page = val;
+  perPage3.value = tableData3.value.slice(
+    queryData.page * queryData.size - queryData.size,
+    queryData.page * queryData.size
+  );
   toTop();
 }
 function toTop() {
@@ -110,21 +133,28 @@ function toTop() {
         <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item
             ><img
-              :src="paintings"
+              :src="comBanner1"
               alt=""
               @click="goDetail('昇思AI挑战赛-艺术家画作风格迁移')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
-              :src="imageClassify"
+              :src="comBanner2"
               alt=""
               @click="goDetail('昇思AI挑战赛-多类别图像分类')"
             />
           </el-carousel-item>
           <el-carousel-item
             ><img
-              :src="textClassification"
+              :src="comBanner3"
+              alt=""
+              @click="goDetail('昇思AI挑战赛-文本分类')"
+            />
+          </el-carousel-item>
+          <el-carousel-item
+            ><img
+              :src="comBanner4"
               alt=""
               @click="goDetail('昇思AI挑战赛-文本分类')"
             />
@@ -143,7 +173,7 @@ function toTop() {
         <el-tab-pane label="全部" name="first">
           <div v-if="tableData">
             <div
-              v-for="item in tableData"
+              v-for="item in perPage"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"
@@ -209,8 +239,9 @@ function toTop() {
               </div>
             </div>
             <!-- 全部比赛页的分页器 -->
-            <div v-if="tableData.length > 3" class="pagination">
+            <div class="pagination">
               <el-pagination
+                hide-on-single-page
                 :current-page="queryData.page"
                 :page-size="queryData.size"
                 :total="tableData.length"
@@ -227,7 +258,7 @@ function toTop() {
         <el-tab-pane label="进行中" name="3">
           <div v-if="tableData3">
             <div
-              v-for="item in tableData3"
+              v-for="item in perPage3"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"
@@ -281,6 +312,16 @@ function toTop() {
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="queryData3.page"
+                :page-size="queryData.size"
+                :total="tableData3.length"
+                :layout="layout"
+                @current-change="handleCurrentChange3"
+              ></el-pagination>
             </div>
           </div>
           <div v-else class="empty">

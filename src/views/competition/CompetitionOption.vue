@@ -10,51 +10,44 @@ const router = useRouter();
 // const teamId = ref(null);
 const activeNavItem = ref('');
 // const fixed = ref(false);
-
-/* const storeTeamId = computed(() => {
-  return useCompetitionData().teamId;
-}); */
 const comInfo = useCompetitionData().competitionData;
+console.log('comInfo: ', comInfo);
 
-/* watch(
-  () => {
-    return storeTeamId.value;
-  },
-  (newVal) => {
-    teamId.value = newVal;
-  },
-  { immediate: true }
-); */
 const navItems = reactive([
   {
     id: 'introduction',
     label: '介绍',
     href: 'introduction',
     isIndividual: true,
+    competitionType: 'competition',
   },
   {
     id: 'dataset',
     label: '数据集',
     href: 'dataset',
     isIndividual: true,
+    competitionType: 'competition',
   },
   {
     id: 'result',
     label: '结果',
     href: 'result',
     isIndividual: false,
+    competitionType: 'competition',
   },
   {
     id: 'team',
     label: '我的团队',
     href: 'team',
     isIndividual: false,
+    competitionType: 'challenge',
   },
   {
     id: 'leaderboard',
     label: '排行榜',
     href: 'leaderboard',
     isIndividual: true,
+    competitionType: 'competition',
   },
   {
     id: 'discussion',
@@ -62,23 +55,52 @@ const navItems = reactive([
     href: comInfo.forum,
     windowOpen: true,
     isIndividual: true,
+    competitionType: 'challenge',
   },
   {
     id: 'agreement',
     label: '协议',
     href: 'agreement',
     isIndividual: true,
+    competitionType: 'competition',
   },
 ]);
 
+const renderNav = ref();
 // 渲染的nav数据 (区分是否报名)
-const renderNav = computed(() => {
-  return comInfo.is_competitor
+watch(
+  () => comInfo.is_competitor,
+  (newValue) => {
+    // 如果已经报名
+    if (newValue) {
+      if (comInfo.type === '') {
+        renderNav.value = navItems;
+      } else {
+        renderNav.value = navItems.filter((item) => {
+          return item.competitionType === 'competition';
+        });
+      }
+    } else {
+      if (comInfo.type === '') {
+        renderNav.value = navItems.filter((item) => {
+          return item.isIndividual;
+        });
+      } else {
+        renderNav.value = navItems.filter((item) => {
+          return item.isIndividual && item.label !== '讨论';
+        });
+      }
+    }
+  },
+  { immediate: true }
+);
+/* const renderNav = computed(() => {
+  return comInfo.is_competitor && comInfo.type === 'challenge'
     ? navItems
     : navItems.filter((item) => {
         return item.isIndividual;
       });
-});
+}); */
 
 watch(
   () => {

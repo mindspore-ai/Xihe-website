@@ -24,13 +24,12 @@ const agree = ref(false);
 let province = ref([]);
 let citys = ref([]);
 
-const props = defineProps({
+defineProps({
   showApplication: {
     type: Boolean,
     default: false,
   },
 });
-console.log('showApplication: ', props.showApplication);
 
 const i18n = {
   application: '报名表',
@@ -200,9 +199,7 @@ function saveInfo(formEl) {
         phone: query.phone,
         province: query.loc_province,
       };
-      console.log('params1: ', params);
       applyActivity(params).then((res) => {
-        console.log('res: ', res);
         ElMessage({
           message: '报名成功',
           type: 'success',

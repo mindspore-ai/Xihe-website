@@ -31,8 +31,20 @@ import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
+import tipImg from '@/assets/imgs/home/tip.png';
+import tipCloseImg from '@/assets/imgs/home/close.png';
 
 AOS.init();
+
+const dialogVisible = ref(false);
+const toggleDlg = (val) => {
+  dialogVisible.value = val;
+};
+
+const tipVisible = ref(true);
+const toggleTip = (val) => {
+  tipVisible.value = val;
+};
 
 const modules = [Pagination, Autoplay];
 
@@ -138,6 +150,50 @@ function goCode() {
 </script>
 
 <template>
+  <div v-if="tipVisible" class="app-tip">
+    <div class="tip-content">
+      <img class="tip-img" :src="tipImg" @click="toggleDlg(true)" />
+      <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
+    </div>
+
+    <o-dialog :show="dialogVisible" :close="false">
+      <template #head>
+        <p class="dlg-title">新后台上线公告</p>
+      </template>
+
+      <div class="dlg-body">
+        <p class="dlg-content">
+          致所有用户：<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为了优化平台的性能和功能，提高平台可扩展性和稳定性，平台重构了后台架构，在本次更新中，平台做了几大调整：<br /><br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.出于平台和用户安全考虑，新后台需要用户绑定邮箱进行登录。对于部分原来未提供邮箱的用户，在登录时需要您补充邮箱进行验证登陆，邮箱验证登陆成功后方可正常访问平台。<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          2.支持通过git对仓库文件进行版本控制、批量上传和git&nbsp;lfs上传大文件等操作。<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.为适配后续版本的迭代，平台设定了一些规则对原有的数据进行迁移，可能会导致部分数据存放的位置和命名的方式与原来不一致。目前最新的迁移时间是2022/11/27
+          17:00。<br />
+
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.具体数据迁移规则和优化详情请阅读
+          <a href="https://xihe-docs.mindspore.cn/zh/release/"
+            >平台更新说明文档</a
+          >
+          。<br /><br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在上线前，我们对平台进行了测试、修复BUG，但可能无法保证做到百分百排除所有问题。如大家在使用过程中遇到BUG，可以添加官方助手小猫子（
+          <span>微信号：mindspore0328</span>
+          ），您也可以联系我们的邮箱
+          <span>contact@mindspore.cn</span>
+          ，我们会及时回复。还请大家给予一些耐心与理解，我们会全力解决各类问题，优化大家的平台体验。<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢大家一直以来的支持！期待昇思大模型平台能让您零距离感受AI大模型，更加轻松体验模型的训练与推理！
+        </p>
+      </div>
+
+      <template #foot>
+        <div class="dlg-btn">
+          <OButton type="primary" size="small" @click="toggleDlg(fasle)"
+            >我知道啦</OButton
+          >
+        </div>
+      </template>
+    </o-dialog>
+  </div>
   <div ref="homeIns" class="home">
     <!-- 首屏-->
     <!-- <div class="home-portal">
@@ -512,6 +568,28 @@ function goCode() {
 </template>
 
 <style lang="scss" scoped>
+.app-tip {
+  position: fixed;
+  z-index: 100;
+  bottom: 30vh;
+  right: 0;
+  .tip-content {
+    position: relative;
+    margin-right: 16px;
+    .tip-img {
+      max-width: 200px;
+      object-fit: fill;
+      cursor: pointer;
+    }
+    .tip-btn {
+      position: absolute;
+      right: 2px;
+      top: 50px;
+      max-width: 17px;
+      cursor: pointer;
+    }
+  }
+}
 .o-icon {
   transition: all 0.2s linear;
 }

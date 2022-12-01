@@ -198,6 +198,11 @@ watch(
     }
   }
 );
+function goUser(val) {
+  if (val !== '---') {
+    router.push({ path: `/${val}` });
+  }
+}
 
 function showDialog2() {
   if (!isLogined) {
@@ -312,7 +317,7 @@ function showDialog2() {
         <div class="rank">
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
-              <div class="second">
+              <div class="second" @click="goUser(perPageData[1].competitor)">
                 <p class="seniority">02</p>
                 <p class="name">{{ perPageData[1].competitor }}</p>
                 <p class="integral">
@@ -320,7 +325,7 @@ function showDialog2() {
                 </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
-              <div class="first">
+              <div class="first" @click="goUser(perPageData[0].competitor)">
                 <p class="seniority">01</p>
                 <p class="name">{{ perPageData[0].competitor }}</p>
                 <p class="integral">
@@ -328,7 +333,7 @@ function showDialog2() {
                 </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
-              <div class="third">
+              <div class="third" @click="goUser(perPageData[2].competitor)">
                 <p class="seniority">03</p>
                 <p class="name">{{ perPageData[2].competitor }} Name</p>
                 <p class="integral">
@@ -338,7 +343,12 @@ function showDialog2() {
               </div>
             </div>
             <div class="rank-top-others">
-              <div v-for="item in 7" :key="item" class="items">
+              <div
+                v-for="item in 7"
+                :key="item"
+                class="items"
+                @click="goUser(perPageData[item + 2].competitor)"
+              >
                 <p class="left">
                   {{ item + 3 === 10 ? 10 : '0' + (item + 3)
                   }}<span>{{ perPageData[item + 2].competitor }}</span>
@@ -351,7 +361,12 @@ function showDialog2() {
           </div>
           <div v-else class="rank-others">
             <div class="rank-others-box">
-              <div v-for="item in 10" :key="item" class="items">
+              <div
+                v-for="item in 10"
+                :key="item"
+                class="items"
+                @click="goUser(perPageData[item - 1].competitor)"
+              >
                 <p class="left">
                   {{ (currentPage - 1) * 10 + item }}
                   <span> {{ perPageData[item - 1].score }}</span>

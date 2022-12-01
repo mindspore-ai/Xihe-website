@@ -1,9 +1,3 @@
-// import { computed } from 'vue';
-// import { useLoginStore } from '@/stores';
-// import { getActivityDetail } from '@/api/api-activity';
-// import { goAuthorize } from '@/shared/login';
-
-// const isLogined = computed(() => useLoginStore().isLogined);
 export default [
   //活动
   {
@@ -19,22 +13,6 @@ export default [
     component: () => {
       return import('@/views/activity/TheActivityTest.vue');
     },
-    // beforeEnter: async (to, from, next) => {
-    //   try {
-    //     if (isLogined.value) {
-    //       const res = await getActivityDetail();
-    //       if (res.is_competitor) {
-    //         next();
-    //       } else {
-    //         next('/activity');
-    //       }
-    //     } else {
-    //       goAuthorize();
-    //     }
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // },
   },
   {
     path: '/activity-result',
@@ -43,7 +21,7 @@ export default [
       return import('@/views/activity/TheActivityResult.vue');
     },
     beforeEnter: (to, from, next) => {
-      if (to.query) {
+      if (to.path && from.path === '/activity-1') {
         next();
       } else {
         next('/activity');

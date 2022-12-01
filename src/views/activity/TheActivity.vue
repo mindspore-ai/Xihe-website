@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import IconWarning from '~icons/app/activity-warning';
 import activityBanner from '@/assets/imgs/activity/activity-banner.png';
 import activityBanner2 from '@/assets/imgs/activity/activity-banner2.png';
+import qrCode from '@/assets/imgs/activity/qr-code.png';
 import scoreImg from '@/assets/imgs/activity/score.png';
 import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
@@ -113,9 +114,17 @@ function handleClick(index) {
     if (activityDetail.value.is_competitor) {
       if (index === 0) {
         isShow.value = true;
-      } else {
+      } else if (index === 1) {
         // 跳转到比赛列表
-        router.push('/competition');
+        let routerData = router.resolve({
+          path: '/competition',
+        });
+        window.open(routerData.href, '_blank');
+      } else {
+        window.open(
+          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+          '_black'
+        );
       }
     } else {
       showApplication.value = true;
@@ -406,6 +415,7 @@ function goRule() {
           </el-pagination>
         </div>
       </div>
+      <div class="explain">本活动最终解释权归昇思MindSpore开源社区所有</div>
     </div>
 
     <o-dialog
@@ -437,7 +447,7 @@ function goRule() {
       </template>
     </o-dialog>
     <!-- 报名弹窗 -->
-    <el-dialog v-model="showApplication" :show-close="false">
+    <el-dialog v-model="showApplication" destroy-on-close :show-close="false">
       <CompetitionApplication
         ref="applicationData"
         :show-application="showApplication"
@@ -445,6 +455,9 @@ function goRule() {
         @get-activity="getActivity"
       ></CompetitionApplication>
     </el-dialog>
+  </div>
+  <div class="qr-code">
+    <img :src="qrCode" alt="" />
   </div>
 </template>
 
@@ -467,7 +480,7 @@ function goRule() {
       height: 100%;
     }
     .user-info {
-      width: 488px;
+      width: 366px;
       height: 176px;
       position: absolute;
       bottom: -44px;
@@ -867,6 +880,14 @@ function goRule() {
         margin-bottom: 64px;
       }
     }
+    .explain {
+      height: 20px;
+      line-height: 20px;
+      font-size: 14px;
+      color: #555555;
+      margin-bottom: 64px;
+      text-align: center;
+    }
   }
 }
 .start-challenge {
@@ -942,6 +963,18 @@ function goRule() {
         padding-left: 50px;
       }
     }
+  }
+}
+.qr-code {
+  width: 86px;
+  height: 127px;
+  position: fixed;
+  z-index: 1;
+  bottom: 30vh;
+  right: 40px;
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

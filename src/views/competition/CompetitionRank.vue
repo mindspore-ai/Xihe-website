@@ -53,7 +53,43 @@ nextTick(() => {
 });
 </script>
 <template>
-  <el-tabs type="border-card" @tab-change="changeTab">
+  <div v-if="comInfo.type === 'challenge'">
+    <div v-if="preliminaryData.length" class="rank-page">
+      <div class="rank-header">排行榜</div>
+      <div class="rank-body">
+        <el-table :data="preliminaryData">
+          <el-table-column prop="date" label="排名">
+            <template #default="scope">
+              <img v-if="scope.$index === 0" :src="firstImg" alt="" />
+              <img v-else-if="scope.$index === 1" :src="secondImg" alt="" />
+              <img v-else-if="scope.$index === 2" :src="thirdImg" alt="" />
+              <div v-else-if="scope.$index < 9" class="num">
+                {{ '0' + (scope.$index + 1) }}
+              </div>
+              <div v-else class="num">{{ scope.$index + 1 }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="team_name" label="参赛团队" />
+          <el-table-column label="分数">
+            <template #default="scope">
+              <div class="score">
+                {{ preliminaryData[scope.$index].score }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="submit_at" label="提交时间" width="210" />
+          <!-- <template v-if="preliminaryData" #append>
+          查看全部<OIcon><IconArrowDown /></OIcon>
+        </template> -->
+        </el-table>
+      </div>
+    </div>
+    <div v-else class="empty">
+      <img :src="emptyImg" alt="" />
+      <p>当前为选拔阶段，暂无排行榜</p>
+    </div>
+  </div>
+  <el-tabs v-else type="border-card" @tab-change="changeTab">
     <el-tab-pane>
       <template #label>
         <div class="tabs-item tabs-left">初赛排行榜</div>
@@ -199,7 +235,7 @@ nextTick(() => {
   }
   .rank-header {
     margin: 40px 80px 0;
-    background-image: url(@/assets/imgs/rank-bg.png);
+    background-image: url(@/assets/imgs/rank-bg2.png);
     color: #ffffff;
     font-size: 24px;
     line-height: 32px;

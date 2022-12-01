@@ -30,9 +30,16 @@ export function getActivityDetail() {
  */
 export function getQuestions() {
   const url = '/server/challenge/aiquestions';
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, {
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+      timeout: 60000,
+    })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

@@ -707,26 +707,26 @@ function saveInfo() {
 .test {
   &-title {
     text-align: center;
-    width: 817px;
   }
   .tip {
     width: 100%;
     background: rgba(13, 141, 255, 0.03);
     border: 1px solid #d8d8d8;
-    padding: 12px 16px;
-    padding-left: 40px;
+    padding: 8px 16px;
+    padding-left: 48px;
     margin-top: 24px;
+    line-height: 22px;
     position: relative;
     .o-icon {
       font-size: 16px;
       position: absolute;
-      left: 14px;
-      top: 22px;
+      left: 16px;
+      top: 14px;
     }
     span {
       font-size: 14px;
       color: #555555;
-      line-height: 22px;
+      // line-height: 22px;
     }
   }
 

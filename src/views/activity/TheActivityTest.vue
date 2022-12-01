@@ -2,12 +2,17 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router';
 
-import { getQuestions, getActivityDetail } from '@/api/api-activity';
+import {
+  getQuestions,
+  getActivityDetail,
+  submitPapers,
+} from '@/api/api-activity';
 
 import { formatSeconds } from '@/shared/utils';
 
 import IconWarning from '~icons/app/activity-warning';
 import warningImg from '@/assets/icons/warning.png';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 
@@ -18,140 +23,36 @@ const isFirst = ref(true);
 const isShow = ref(false);
 const isShow1 = ref(false);
 
-const isAllowed = ref(false);
-
 const routePath = ref('');
-// 拉取的题库数据
-// const activeQuestions = ref({});
+const isAllowed = ref(false);
+const queryData = ref({
+  answer: '',
+  result: [],
+  times: 0,
+});
 
-const questionData = ref([
-  {
-    type: 'selection',
-    desc: '1111当前题目题目题目题目题目题目题目题目题目题目业的权利。',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '2222当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '3333当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '4444当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '5555当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '6666当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'selection',
-    desc: '7777当前题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目',
-    options: [
-      { code: 'A', text: '选项A' },
-      { code: 'B', text: '选项B' },
-      { code: 'C', text: '选项C' },
-      { code: 'D', text: '选项D' },
-    ],
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'completion',
-    desc: '8888下列程序的执行结果是',
-    code: 'int d = 1;\nfun(int p) \n{   \n\tint d = 5;\n\td += p++;\n\tpritnf(“%d “, d);\n}\nmain()\n{   \n\tint a = 3;   \n\tfun(a); \n\td += a++;\n\tprintf(“%d\n”, d);\n}\n',
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'completion',
-    desc: '9.在线面横线填写正确的答案',
-    code: '编程代码：\nclass Solution:\n    def Print(self , pRoot: TreeNode) -> List[List[int]]:\n        res = []\n        if pRoot is None:\n            #如果是空，则直接返回空数组\n            return res\n        #队列存储，进行层次遍历\n\t______请输入代码块_____\n        q = [pRoot]\n        while q:\n            #记录二叉树的某一行\n            row = [] \n            n = len(q)\n            #因先进入的是根节点，故每层节点多少，队列大小就是多少\n            for i in range(n):\n                #取出队首\n                node = q.pop(0)\n                row.append(node.val)\n                #若是左右孩子存在，则存入左右孩子作为下一个层次\n                if node.left:\n                    #加入队尾\n                    q.append(node.left)\n                if node.right:\n                    q.append(node.right)\n            res.append(row)\n        return res',
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-  {
-    type: 'completion',
-    desc: '10 10 10 下列程序的执行结果是',
-    code: 'int d = 1;\nfun(int p) \n{   \n\tint d = 5;\n\td += p++;\n\tpritnf(“%d “, d);\n}\nmain()\n{   \n\tint a = 3;   \n\tfun(a); \n\td += a++;\n\tprintf(“%d\\n”, d);\n}\n',
-    isSelected: false,
-    isFinished: false,
-    right: '',
-  },
-]);
+const activityQuestions = ref([]);
 
 function handleSelectClick(val, i) {
   subjectIndex.value = i;
-  questionData.value.forEach((item) => {
+  console.log(val);
+  activityQuestions.value.forEach((item) => {
     item.isSelected = false;
   });
   val.isSelected = true;
 }
 
+function handleInputChange() {
+  console.log(activityQuestions.value[subjectIndex.value]);
+  if (activityQuestions.value[subjectIndex.value].right.trim()) {
+    activityQuestions.value[subjectIndex.value].isFinished = true;
+  } else {
+    activityQuestions.value[subjectIndex.value].isFinished = false;
+  }
+}
+
 function handleAnswerChange() {
-  questionData.value.forEach((item) => {
+  activityQuestions.value.forEach((item) => {
     if (item.right) {
       item.isFinished = true;
     }
@@ -169,16 +70,43 @@ function handleNextClick() {
 // 交卷
 function handleSubmitPaper() {
   isShow.value = true;
-  console.log(questionData.value);
+  console.log(queryData.value);
+  activityQuestions.value.forEach((item, index) => {
+    if (index < 7) {
+      if (item.right) {
+        queryData.value.result.push(item.right.substring(0, 1));
+      } else {
+        queryData.value.result.push(item.right);
+      }
+    } else {
+      queryData.value.result.push(item.right);
+    }
+  });
 }
+
+// window.addEventListener('beforeunload', () => {
+//   router.push('/');
+// });
 
 // 确认交卷
 function handleConfirmSubmit() {
   clearInterval(timer);
-  isShow.value = false;
+
+  submitPapers(queryData.value).then((res) => {
+    console.log(res);
+    if (res.data) {
+      isShow.value = false;
+      isAllowed.value = true;
+      router.push({
+        name: 'activityResult',
+        params: { times: 3 - queryData.value.times },
+      });
+    }
+  });
+
   // 交卷带结果跳转得分页面
-  isAllowed.value = true;
-  router.push('/activity-result');
+  // isAllowed.value = true;
+  // router.push('/activity-result');
 }
 
 // 取消交卷
@@ -204,6 +132,48 @@ function handleConfirmBack() {
   router.push(routePath.value);
 }
 
+// 处理获取到的题目数据
+async function getDate() {
+  try {
+    await getQuestions().then((res) => {
+      console.log(res);
+      if (res.data) {
+        queryData.value.answer = res.data.answer;
+        queryData.value.times = res.data.times;
+
+        res.data.choices.forEach((item) => {
+          item.isFinished = false;
+          item.isSelected = false;
+          item.right = '';
+          item.type = 'selection';
+
+          activityQuestions.value.push(item);
+        });
+
+        res.data.completions.forEach((item) => {
+          item.isFinished = false;
+          item.isSelected = false;
+          item.right = '';
+          item.type = 'completion';
+
+          activityQuestions.value.push(item);
+        });
+
+        console.log(activityQuestions.value);
+        console.log(queryData.value);
+      } else if (res.msg === 'exceed max times') {
+        ElMessage({
+          type: 'warning',
+          message: '今日挑战次数已用完',
+        });
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+getDate();
+
 onBeforeRouteLeave((to, from, next) => {
   //离开当前的组件，触发
   routePath.value = to.path;
@@ -220,20 +190,19 @@ onBeforeRouteLeave((to, from, next) => {
 //   return '系统不会保存你所做的更改！';
 // };
 
-watch(
-  () => questionData.value[subjectIndex.value].right.trim(),
-  () => {
-    questionData.value[subjectIndex.value].isFinished = questionData.value[
-      subjectIndex.value
-    ].right
-      ? true
-      : false;
-  }
-);
+// watch(
+//   () => activityQuestions.value[subjectIndex.value],
+//   () => {
+//     activityQuestions.value[subjectIndex.value].isFinished =
+//       activityQuestions.value[subjectIndex.value].right.trim() ? true : false;
+//   }
+// );
 
 watch(
   () => subjectIndex.value,
-  () => (isFirst.value = subjectIndex.value === 0 ? true : false)
+  () => {
+    isFirst.value = subjectIndex.value === 0 ? true : false;
+  }
 );
 
 watch(
@@ -251,32 +220,6 @@ onMounted(() => {
     testTime.value--;
     console.log('考试中');
   }, 1000);
-
-  // 处理获取到的题目数据
-
-  getQuestions().then((res) => {
-    console.log(res);
-  });
-
-  getActivityDetail().then((res) => {
-    console.log(res);
-  });
-
-  // const selectionData = res.choices.forEach((item) => {
-  //   item.isFinished = false;
-  //   item.isSelected = false;
-  //   item.right = '';
-  //   item.type = 'selection';
-  // });
-
-  // const competionData = res.completions.forEach((item) => {
-  //   item.isFinished = false;
-  //   item.isSelected = false;
-  //   item.right = '';
-  //   item.type = 'completion';
-  // });
-
-  // activeQuestions.value = [...selectionData, ...competionData];
 });
 
 onUnmounted(() => {
@@ -292,7 +235,7 @@ onUnmounted(() => {
         <span class="current">&nbsp;超级知识卷</span>
       </div>
 
-      <div class="test-main">
+      <div id="height" class="test-main">
         <div class="container">
           <div class="container-title">知识挑战赛</div>
 
@@ -309,7 +252,7 @@ onUnmounted(() => {
             <div class="container-body-top">
               <div class="container-body-top-left">
                 <p class="title">题目序号：</p>
-                <div v-for="(item, index) in questionData" :key="item">
+                <div v-for="(item, index) in activityQuestions" :key="item">
                   <p
                     class="item"
                     :class="[
@@ -318,7 +261,6 @@ onUnmounted(() => {
                     ]"
                     @click="handleSelectClick(item, index)"
                   >
-                    <!-- {{ item.index }} -->
                     {{ index + 1 }}
                   </p>
                 </div>
@@ -333,29 +275,29 @@ onUnmounted(() => {
 
             <div class="container-body-bottom">
               <div class="subject">
-                {{ questionData[subjectIndex].desc }}
+                {{ activityQuestions[subjectIndex].desc }}
               </div>
               <!-- 选择题 -->
               <div
-                v-if="questionData[subjectIndex].type === 'selection'"
+                v-if="activityQuestions[subjectIndex].type === 'selection'"
                 class="answers"
               >
                 <el-radio-group
-                  v-model="questionData[subjectIndex].right"
+                  v-model="activityQuestions[subjectIndex].right"
                   @change="handleAnswerChange"
                 >
                   <el-radio
-                    v-for="item in questionData[subjectIndex].options"
+                    v-for="item in activityQuestions[subjectIndex].options"
                     :key="item"
-                    :label="item.code"
-                    >{{ item.text }}</el-radio
+                    :label="item"
+                    >{{ item }}</el-radio
                   >
                 </el-radio-group>
               </div>
               <!-- 填空题 -->
               <div v-else class="answers">
                 <el-input
-                  v-model="questionData[subjectIndex].code"
+                  v-model="activityQuestions[subjectIndex].info"
                   type="textarea"
                   autosize
                   readonly
@@ -365,7 +307,8 @@ onUnmounted(() => {
                 <div class="answer-inp">
                   <span>请输入正确答案：</span>
                   <el-input
-                    v-model="questionData[subjectIndex].right"
+                    v-model="activityQuestions[subjectIndex].right"
+                    @input="handleInputChange"
                   ></el-input>
                 </div>
               </div>
@@ -373,7 +316,7 @@ onUnmounted(() => {
 
             <div
               class="button-box"
-              style="display: flex; justify-content: center"
+              :style="{ 'margin-top': subjectIndex > 6 ? '40px' : '124px' }"
             >
               <o-button
                 :disabled="isFirst"
@@ -455,6 +398,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  .el-radio {
+    height: 38px;
+  }
 }
 .warning-tip {
   .tip-icon {
@@ -478,7 +424,7 @@ onUnmounted(() => {
 }
 .test {
   margin: 0 auto;
-  padding: 170px 16px 136px 16px;
+  padding: 120px 16px 64px 16px;
   max-width: 1472px;
   &-back {
     font-size: 12px;
@@ -570,7 +516,7 @@ onUnmounted(() => {
         width: 100%;
         background: rgba(13, 141, 255, 0.03);
         border: 1px solid #d8d8d8;
-        padding: 12px 16px;
+        height: 40px;
         padding-left: 40px;
         margin-top: 24px;
         position: relative;
@@ -584,6 +530,7 @@ onUnmounted(() => {
         span {
           font-size: 14px;
           color: #555555;
+          line-height: 40px;
         }
       }
 
@@ -663,6 +610,8 @@ onUnmounted(() => {
 
       .button-box {
         margin-top: 124px;
+        display: flex;
+        justify-content: center;
       }
     }
   }

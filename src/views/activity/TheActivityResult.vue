@@ -1,7 +1,13 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { getActivityDetail } from '@/api/api-activity';
 
 const router = useRouter();
+const route = useRoute();
+const scores = ref(80);
+const times = route.params.times;
+console.log(route.params.times);
 
 // 跳转到Mincon页面
 function handleBackMincon() {
@@ -12,6 +18,14 @@ function handleContinueChallenge() {
   //先判断是否还要答题次数和是否报名
   router.push('/activity-test');
 }
+
+function getActivityScore() {
+  getActivityDetail().then((res) => {
+    scores.value = res.data.score;
+    console.log(res.data.score);
+  });
+}
+getActivityScore();
 </script>
 
 <template>
@@ -33,7 +47,10 @@ function handleContinueChallenge() {
 
         <div class="middle">
           <img src="@/assets/imgs/mindcon/mindcon-leaf-1.png" alt="" />
-          <p><span>80</span>分</p>
+          <p>
+            <span>{{ scores }}</span
+            >分
+          </p>
           <img src="@/assets/imgs/mindcon/mindcon-leaf-2.png" alt="" />
         </div>
 
@@ -49,7 +66,9 @@ function handleContinueChallenge() {
           >
         </div>
 
-        <p class="challenge-counts">今日剩余挑战次数：<span>2</span></p>
+        <p class="challenge-counts">
+          今日剩余挑战次数：<span>{{ times }}</span>
+        </p>
       </div>
     </div>
   </div>
@@ -117,6 +136,7 @@ function handleContinueChallenge() {
       line-height: 93px;
       font-size: 24px;
       margin: 0 21px;
+      text-align: center;
       span {
         font-size: 100px;
       }

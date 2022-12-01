@@ -1,9 +1,9 @@
-import { computed } from 'vue';
-import { useLoginStore } from '@/stores';
-import { getActivityDetail } from '@/api/api-activity';
-import { goAuthorize } from '@/shared/login';
+// import { computed } from 'vue';
+// import { useLoginStore } from '@/stores';
+// import { getActivityDetail } from '@/api/api-activity';
+// import { goAuthorize } from '@/shared/login';
 
-const isLogined = computed(() => useLoginStore().isLogined);
+// const isLogined = computed(() => useLoginStore().isLogined);
 export default [
   //活动
   {

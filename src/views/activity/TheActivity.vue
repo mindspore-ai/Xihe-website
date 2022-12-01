@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import IconWarning from '~icons/app/activity-warning';
 import activityBanner from '@/assets/imgs/activity/activity-banner.png';
+import scoreImg from '@/assets/imgs/activity/score.png';
 import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
 import awardsImg from '@/assets/imgs/activity/awards.png';
@@ -22,10 +23,18 @@ import secondImg from '@/assets/imgs/activity/second-task.png';
 import thirdImg from '@/assets/imgs/activity/third-task.png';
 import challengeBtn from '@/assets/imgs/activity/challenge-btn.png';
 import ruleBtn from '@/assets/imgs/activity/rule-btn.png';
+// import challengeBtn2 from '@/assets/imgs/activity/challenge-btn2.png';
+// import ruleBtn2 from '@/assets/imgs/activity/rule-btn2.png';
 import timeImg from '@/assets/imgs/activity/time.png';
 import timelineImg from '@/assets/imgs/activity/timeline.png';
 import rankImg from '@/assets/imgs/activity/rank.png';
 import CompetitionApplication from '@/views/competition/CompetitionApplication.vue';
+
+import { getActivityDetail } from '@/api/api-activity';
+import { GetRankingList } from '@/api/api-activity';
+
+import { useLoginStore } from '@/stores';
+import { goAuthorize } from '@/shared/login';
 
 const router = useRouter();
 
@@ -33,6 +42,10 @@ const isShow = ref(false);
 const showApplication = ref(false);
 const agree = ref(false);
 const applicationData = ref(null);
+const showBtn = ref(false);
+const activityDetail = ref('');
+
+const isLogined = useLoginStore().isLogined;
 
 // 活动介绍
 const introdution = reactive([
@@ -73,30 +86,49 @@ const taskListImg = reactive([
   {
     baseImg: thirdImg,
     rule: ruleBtn,
+    // rule2: ruleBtn2,
     challenge: challengeBtn,
+    // challenge2: challengeBtn2,
   },
 ]);
 
+// 获取活动分数
+function getActivity() {
+  getActivityDetail().then((res) => {
+    activityDetail.value = res.data;
+    showBtn.value = true;
+    // console.log('activityDetail.value: ', activityDetail.value.is_competitor);
+  });
+}
+getActivity();
+
 function handleClick(index) {
-  // 答题页
-  if (index === 0) {
-    isShow.value = true;
-  } else if (index === 1) {
-    // 跳转到比赛列表
-    // showApplication.value = true;
-    router.push('/competition');
+  console.log('index: ', index);
+  if (!isLogined) {
+    goAuthorize();
   } else {
-    // 跳转到比赛列表
-    router.push('/competition');
+    // 如果已报名
+    if (activityDetail.value.is_competitor) {
+      if (index === 0) {
+        isShow.value = true;
+      } else {
+        // 跳转到比赛列表
+        router.push('/competition');
+      }
+    } else {
+      showApplication.value = true;
+    }
   }
 }
 
 function toggleClick() {
   isShow.value = false;
 }
-/* function handleClick() {
-  showApplication.value = false;
-} */
+
+//隐藏报名表单
+function hideForm(val) {
+  showApplication.value = val;
+}
 
 // 开始答题
 function handleStartAnswer() {
@@ -115,37 +147,49 @@ function prevPage() {
 function nextPage() {
   currentPage.value = currentPage.value + 1;
 }
+const perPageData = ref([]);
 watch(
   () => currentPage.value,
-  (n, o) => {
-    console.log(n, o);
-    if (n > 1) leftDisabled.value = false;
+  (newValue) => {
+    console.log(newValue);
+    if (newValue > 1) leftDisabled.value = false;
     else {
       leftDisabled.value = true;
       currentPage.value = 1;
     }
   }
 );
+const rankingData = ref([]);
+GetRankingList().then((res) => {
+  rankingData.value = res.data;
+});
 
 function showDialog2() {
-  showApplication.value = true;
+  if (!isLogined) {
+    goAuthorize();
+  } else {
+    showApplication.value = true;
+  }
 }
-
-//立即报名
-function saveInfo() {
-  console.log(applicationData.value);
-}
-// appleActivity
 </script>
 <template>
-  <div class="activity">
+  <div v-if="showBtn" class="activity">
     <div class="activity-banner">
-      <img :src="activityBanner" alt="" />
-      <div class="application-btn" @click="showDialog2">
+      <!-- <img :src="activityBanner" alt="" /> -->
+      <!-- <div class="user-info">
+        <img :src="scoreImg" alt="" />
+        <div class="score"></div>
+      </div> -->
+      <div
+        v-if="!activityDetail.is_competitor"
+        class="application-btn"
+        @click="showDialog2"
+      >
         <img :src="applicationImg" alt="" />
       </div>
     </div>
     <div class="wrap">
+      <!-- 活动介绍 -->
       <div class="activity-intro">
         <div class="title">
           <img :src="introductionImg" alt="" />
@@ -165,6 +209,7 @@ function saveInfo() {
           </div>
         </div>
       </div>
+      <!-- 活动奖项 -->
       <div class="activity-awards">
         <div class="title">
           <img :src="awardsImg" alt="" />
@@ -185,6 +230,7 @@ function saveInfo() {
           </div>
         </div>
       </div>
+      <!-- 比赛任务 -->
       <div class="activity-task">
         <div class="title">
           <img :src="taskImg" alt="" />
@@ -198,6 +244,7 @@ function saveInfo() {
             <img :src="item.baseImg" alt="" />
             <div class="task-btn">
               <img :src="item.rule" alt="" class="rule-btn" />
+              <!-- <img :src="item.rule2" alt="" class="rule-btn2" /> -->
               <img
                 :src="item.challenge"
                 alt=""
@@ -206,14 +253,9 @@ function saveInfo() {
               />
             </div>
           </div>
-          <!-- <div class="second-task">
-            <img :src="secondImg" alt="" @click="goCompetitons" />
-          </div>
-          <div class="third-task">
-            <img :src="thirdImg" alt="" />
-          </div> -->
         </div>
       </div>
+      <!-- 活动时间线 -->
       <div class="activity-time">
         <div class="title">
           <img :src="timeImg" alt="" />
@@ -231,7 +273,7 @@ function saveInfo() {
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second">
-                <p class="seniority">01</p>
+                <p class="seniority">02</p>
                 <p class="name">Gitee Name</p>
                 <p class="integral">743536<span>积分</span></p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
@@ -243,7 +285,7 @@ function saveInfo() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third">
-                <p class="seniority">01</p>
+                <p class="seniority">03</p>
                 <p class="name">Gitee Name</p>
                 <p class="integral">743536<span>积分</span></p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
@@ -251,7 +293,10 @@ function saveInfo() {
             </div>
             <div class="rank-top-others">
               <div v-for="item in 7" :key="item" class="items">
-                <p class="left">04<span>Gitee Name</span></p>
+                <p class="left">
+                  {{ item + 3 === 10 ? 10 : '0' + (item + 3)
+                  }}<span>Gitee Name</span>
+                </p>
                 <p class="right">47364<span>积分</span></p>
               </div>
             </div>
@@ -315,35 +360,14 @@ function saveInfo() {
       </template>
     </o-dialog>
     <!-- 报名弹窗 -->
-    <o-dialog class="applicationDialog" :show="showApplication" :close="false">
-      <div class="dlg-body">
-        <CompetitionApplication ref="applicationData"></CompetitionApplication>
-      </div>
-      <template #foot>
-        <div class="dlg-foot">
-          <div class="nextBtn">
-            <o-button @click="showApplication = false">暂不报名</o-button>
-            <o-button v-if="!agree" disabled type="secondary"
-              >立即报名</o-button
-            >
-            <o-button v-else type="primary" @click="saveInfo(queryRef)"
-              >立即报名</o-button
-            >
-          </div>
-          <div class="isAgree">
-            <div class="isAgree-text" @click="agree = !agree">
-              <input v-model="agree" type="checkbox" class="input" />
-              <span>已阅读并同意</span>
-            </div>
-            <div class="statement">
-              <router-link target="_blank" to="/privacy"
-                >《昇思大模型平台隐私政策声明》</router-link
-              >
-            </div>
-          </div>
-        </div>
-      </template>
-    </o-dialog>
+    <el-dialog v-model="showApplication" :show-close="false">
+      <CompetitionApplication
+        ref="applicationData"
+        :show-application="showApplication"
+        @hide-form="hideForm"
+        @get-activity="getActivity"
+      ></CompetitionApplication>
+    </el-dialog>
   </div>
 </template>
 
@@ -352,14 +376,24 @@ function saveInfo() {
   background-color: #f5f6f8;
   margin-top: 80px;
   .activity-banner {
-    // background-image: url('@/assets/imgs/activity/activity-banner.png');
-    // background-size: cover;
+    background-image: url('@/assets/imgs/activity/activity-banner.png');
+    background-size: cover;
     position: relative;
     width: 100%;
     height: 480px;
+    background-position: 50%;
+
     img {
       width: 100%;
       height: 100%;
+    }
+    .user-info {
+      width: 488px;
+      height: 176px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     .application-btn {
       width: 220px;
@@ -608,12 +642,15 @@ function saveInfo() {
             }
             .first {
               margin-top: 160px;
+              cursor: pointer;
             }
             .second {
               margin-top: 185px;
+              cursor: pointer;
             }
             .third {
               margin-top: 208px;
+              cursor: pointer;
             }
           }
           &-others {
@@ -625,6 +662,7 @@ function saveInfo() {
               font-size: 24px;
               padding: 16px 0;
               border-bottom: 1px dashed #005ec2;
+              cursor: pointer;
               .right {
                 font-size: 18px;
                 height: 28px;
@@ -654,6 +692,7 @@ function saveInfo() {
             font-size: 24px;
             padding: 16px 0;
             border-bottom: 1px dashed #005ec2;
+            cursor: pointer;
             .right {
               font-size: 18px;
               height: 28px;
@@ -742,82 +781,41 @@ function saveInfo() {
     justify-content: center;
   }
 }
-.applicationDialog {
-  width: 900px !important;
-  .o-dialog-wrap {
-    // position: relative;
-    // top: 0;
-    // :deep .o-dialog-head {
-    //   display: none;
-    // }
-    .o-dialog-body {
-      color: red;
-      padding: 50px !important;
-      .application {
-        padding: 0px;
-        :deep(.application-title) {
-          border: none;
-          padding-bottom: 0px;
-          display: flex;
-          flex-direction: column;
-          .text {
-            margin-bottom: 16px;
-            text-align: center;
-          }
-          .tips {
-            width: 100%;
-          }
-        }
-        :deep(.nextBtn) {
-          display: none;
-        }
-        :deep(.isAgree) {
-          display: none;
-        }
-      }
-    }
-    .o-dialog-foot {
-      padding-top: 0 !important;
-      margin-top: 30px;
-      .dlg-foot {
+:deep(.el-dialog) {
+  width: 900px;
+  // position: fixed;
+  // left: 0;
+  // right: 0;
+  // // top: 0;
+  // bottom: 0;
+  // width: 100%;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 40px;
+    .application {
+      padding: 0px;
+      .application-title {
+        // background-color: red;
+        border: none;
+        padding-bottom: 0px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .nextBtn {
-          margin-bottom: 24px;
-          .o-button {
-            &:first-child {
-              margin-right: 20px;
-            }
-          }
+        .text {
+          margin-bottom: 16px;
+          text-align: center;
         }
-        .isAgree {
-          display: flex;
-          .isAgree-text {
-            display: flex;
-            align-items: center;
-            span {
-              margin-left: 8px;
-              cursor: pointer;
-            }
-          }
-          .statement {
-            a {
-              color: #0d8dff;
-            }
-          }
+        .tips {
+          width: 100%;
         }
       }
+      .application-form {
+        display: flex;
+        justify-content: flex-start;
+        padding-left: 50px;
+      }
     }
-  }
-}
-.applicationDialog {
-  width: 1000px;
-  :deep(.o-dialog-wrap) {
-    background-color: red;
-    position: relative;
-    top: 0;
   }
 }
 </style>

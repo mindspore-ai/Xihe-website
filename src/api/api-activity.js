@@ -57,8 +57,8 @@ export function submitPapers(params) {
  * 报名
  * @returns
  */
-export function applyToActivity(params) {
-  const url = '/server/challenge/aiquestions';
+export function applyActivity(params) {
+  const url = '/server/challenge/competitor';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -69,7 +69,7 @@ export function applyToActivity(params) {
  */
 export function GetRankingList() {
   const url = '/server/challenge/ranking';
-  return request.get(url).then((res) => {
+  return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

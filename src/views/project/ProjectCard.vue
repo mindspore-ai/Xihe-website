@@ -158,7 +158,7 @@ function confirmAdd() {
 }
 // 模型添加
 function confirmClick() {
-  // 如果填写为空,提示-->return  TODO:提示
+  // 如果填写为空,提示-->return
   if (addSearch.value === '') {
     ElMessage({
       type: 'error',
@@ -194,11 +194,13 @@ function confirmClick() {
     params.name = paramsArr[1];
     addModel(params, detailData.value.owner, detailData.value.id)
       .then((res) => {
+        ElMessage({
+          type: 'success',
+          message: '添加成功',
+        });
         emit('on-click');
         isShow1.value = false;
         addSearch.value = '';
-        //   }
-        // });
       })
       .catch((err) => {
         isShow1.value = false;
@@ -592,7 +594,7 @@ onUnmounted(() => {
         <div class="dataset-box">
           <relate-card
             v-if="detailData.related_datasets"
-            :detail-data="detailData.related_datasets"
+            :detail-data="detailData"
             :name="'related_datasets'"
             @delete="deleteClick"
             @jump="goDetasetClick"
@@ -614,7 +616,7 @@ onUnmounted(() => {
         </div>
         <relate-card
           v-if="detailData.related_models"
-          :detail-data="detailData.related_models"
+          :detail-data="detailData"
           :name="'related_models'"
           @delete="deleteClick"
           @jump="goDetailClick"

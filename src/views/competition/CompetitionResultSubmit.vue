@@ -317,7 +317,11 @@ function handelCancel() {
         <div class="header-title">结果列表</div>
         <div class="header-button">
           <span>每日限提交1次</span>
-          <OButton type="primary" size="small" @click="handelSubmit"
+          <OButton
+            :disabled="detailData1.id === 'mask_detection'"
+            type="primary"
+            size="small"
+            @click="handelSubmit"
             >提交结果</OButton
           >
         </div>

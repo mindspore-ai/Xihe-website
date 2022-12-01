@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import IconWarning from '~icons/app/activity-warning';
 import activityBanner from '@/assets/imgs/activity/activity-banner.png';
+import activityBanner2 from '@/assets/imgs/activity/activity-banner2.png';
 import scoreImg from '@/assets/imgs/activity/score.png';
 import applicationImg from '@/assets/imgs/activity/application.png';
 import introductionImg from '@/assets/imgs/activity/introduction.png';
@@ -33,7 +34,7 @@ import CompetitionApplication from '@/views/competition/CompetitionApplication.v
 import { getActivityDetail } from '@/api/api-activity';
 import { GetRankingList } from '@/api/api-activity';
 
-import { useLoginStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 
 const router = useRouter();
@@ -46,6 +47,8 @@ const showBtn = ref(false);
 const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
+const userInfo = useUserInfoStore();
+console.log('userInfo: ', userInfo);
 
 // 活动介绍
 const introdution = reactive([
@@ -206,20 +209,25 @@ function showDialog2() {
 </script>
 <template>
   <div v-if="showBtn" class="activity">
-    <div class="activity-banner">
+    <!-- 已经报名 -->
+    <div v-if="activityDetail.is_competitor" class="activity-banner">
       <!-- <img :src="activityBanner" alt="" /> -->
       <!-- <div class="user-info">
         <img :src="scoreImg" alt="" />
-        <div class="score"></div>
+        <div class="info-list">
+          <div class="userName">
+            <img :src="aaa" alt="" />
+            <span> 雷曼 </span>
+          </div>
+          <div class="score">
+            <span>530</span>
+            <span>我的积分</span>
+          </div>
+        </div>
       </div> -->
-      <div
-        v-if="!activityDetail.is_competitor"
-        class="application-btn"
-        @click="showDialog2"
-      >
-        <img :src="applicationImg" alt="" />
-      </div>
     </div>
+    <!-- 没有报名 -->
+    <div v-else class="activity-banner2" @click="showDialog2"></div>
     <div class="wrap">
       <!-- 活动介绍 -->
       <div class="activity-intro">
@@ -454,6 +462,15 @@ function showDialog2() {
         height: 100%;
       }
     }
+  }
+  .activity-banner2 {
+    background-image: url('@/assets/imgs/activity/activity-banner2.png');
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background-position: 50%;
+    cursor: pointer;
   }
   .wrap {
     // padding: 0px 16px 136px 16px;

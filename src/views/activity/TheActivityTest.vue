@@ -272,11 +272,23 @@ watch(
   }
 );
 
+function beforeunloadHandler() {
+  if (isAnswering.value) {
+    isAnswering.value = false;
+    submitPaperFn();
+  }
+}
+
 onMounted(() => {
   // 刷新提交
   window.onbeforeunload = () => {
-    submitPaperFn();
+    if (isAnswering.value) {
+      isAnswering.value = false;
+      submitPaperFn();
+    }
   };
+
+  window.addEventListener('pagehide', beforeunloadHandler(), true);
 });
 
 onUnmounted(() => {

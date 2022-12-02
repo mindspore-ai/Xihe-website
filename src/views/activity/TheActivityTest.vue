@@ -267,7 +267,12 @@ watch(
   () => {
     if (testTime.value === 0) {
       // 发请求交卷; 切到分数页面
-      submitPaperFn();
+      submitPaperFn().then((res) => {
+        router.push({
+          path: '/activity-result',
+          query: { times: 3 - queryData.value.times, score: res.score },
+        });
+      });
     }
   }
 );
@@ -275,7 +280,12 @@ watch(
 function beforeunloadHandler() {
   if (isAnswering.value) {
     isAnswering.value = false;
-    submitPaperFn();
+    submitPaperFn().then((res) => {
+      router.push({
+        path: '/activity-result',
+        query: { times: 3 - queryData.value.times, score: res.score },
+      });
+    });
   }
 }
 
@@ -284,7 +294,12 @@ onMounted(() => {
   window.onbeforeunload = () => {
     if (isAnswering.value) {
       isAnswering.value = false;
-      submitPaperFn();
+      submitPaperFn().then((res) => {
+        router.push({
+          path: '/activity-result',
+          query: { times: 3 - queryData.value.times, score: res.score },
+        });
+      });
     }
   };
 

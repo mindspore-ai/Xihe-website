@@ -215,7 +215,11 @@ watch(
     if (n.length < 10) {
       for (let i = 0; i < 10; i++) {
         if (!perPageData.value[i]) {
-          perPageData.value[i] = { score: '--', competitor: '---' };
+          perPageData.value[i] = {
+            score: '--',
+            competitor: '---',
+            number: '--',
+          };
         }
       }
     }
@@ -347,7 +351,7 @@ function goRule() {
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second" @click="goUser(perPageData[1].competitor)">
-                <p class="seniority">{{ perPageData[1].competitor.number }}</p>
+                <p class="seniority">{{ perPageData[1].number }}</p>
                 <p class="name">{{ perPageData[1].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[1].score }}<span>积分</span>
@@ -355,7 +359,7 @@ function goRule() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="first" @click="goUser(perPageData[0].competitor)">
-                <p class="seniority">{{ perPageData[0].competitor.number }}</p>
+                <p class="seniority">{{ perPageData[0].number }}</p>
                 <p class="name">{{ perPageData[0].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[0].score }}<span>积分</span>
@@ -363,7 +367,7 @@ function goRule() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third" @click="goUser(perPageData[2].competitor)">
-                <p class="seniority">{{ perPageData[2].competitor.number }}</p>
+                <p class="seniority">{{ perPageData[2].number }}</p>
                 <p class="name">{{ perPageData[2].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[2].score }}<span>积分</span>
@@ -379,7 +383,7 @@ function goRule() {
                 @click="goUser(perPageData[item + 2].competitor)"
               >
                 <p class="left">
-                  {{ perPageData[item + 2].competitor.number
+                  {{ perPageData[item + 2].number
                   }}<span>{{ perPageData[item + 2].competitor }}</span>
                 </p>
                 <p class="right">
@@ -397,7 +401,7 @@ function goRule() {
                 @click="goUser(perPageData[item - 1].competitor)"
               >
                 <p class="left">
-                  {{ perPageData[item - 1].competitor.number }}
+                  {{ perPageData[item - 1].number }}
                   <span> {{ perPageData[item - 1].competitor }}</span>
                 </p>
                 <p class="right">

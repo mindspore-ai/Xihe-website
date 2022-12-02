@@ -764,8 +764,9 @@ function goRule() {
       .rank {
         background-image: url(@/assets/imgs/activity/rank-bg.png);
         background-size: cover;
+        background-position: 50%;
         color: #30ecff;
-        height: 1019px;
+        height: 1012px;
         &-top {
           height: 810px;
           display: flex;

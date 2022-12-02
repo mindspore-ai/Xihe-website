@@ -30,14 +30,14 @@ function togglePhoneDlg(flag) {
 //获取手机号
 const userInfoStore = useUserInfoStore();
 const phoneExhibition = ref('');
-try {
-  getUserPhone(userInfoStore.id).then((res) => {
-    if (res.data) {
-      userInfoStore.phone = res.data;
-      phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
-    }
-  });
-} catch {}
+
+getUserPhone(userInfoStore.id).then((res) => {
+  if (res.data) {
+    userInfoStore.phone = res.data;
+    phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
+  }
+});
+
 //获取验证码
 function setPhone(formEl) {
   if (!formEl) return;

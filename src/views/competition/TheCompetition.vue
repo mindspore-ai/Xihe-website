@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import paintings from '@/assets/imgs/paintings1.jpg';
-import imageClassify from '@/assets/imgs/image-classify.jpg';
-import textClassification from '@/assets/imgs/text-classification2.jpg';
+import paintings from '@/assets/imgs/competition/paintings.jpg';
+import imageClassify from '@/assets/imgs/competition/image-classify.jpg';
+import textClassification from '@/assets/imgs/competition/text-classification.jpg';
 import emptyImg from '@/assets/imgs/live-empty.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';

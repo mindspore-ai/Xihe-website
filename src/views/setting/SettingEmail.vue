@@ -31,16 +31,14 @@ const ruleForm = reactive({
   email_code: '',
   email_code2: '',
 });
-try {
-  getUserEmail(userInfoStore.id).then((res) => {
-    if (res.data[0].email) {
-      userInfoStore.email = res.data[0].email;
-      userInfoStore.emailStatus = res.data[0].is_active;
-      // TODO:39行的判断意义何在？
-      scene.value = 'change_email';
-    }
-  });
-} catch {}
+
+getUserEmail(userInfoStore.id).then((res) => {
+  if (res.data[0].email) {
+    userInfoStore.email = res.data[0].email;
+    userInfoStore.emailStatus = res.data[0].is_active;
+  }
+});
+
 function setEmail(formEl) {
   if (!formEl) return;
   formEl.validateField('email', (vaild) => {

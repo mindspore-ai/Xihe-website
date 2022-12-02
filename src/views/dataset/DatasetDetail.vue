@@ -100,53 +100,49 @@ onBeforeRouteLeave(() => {
 });
 let modelTags = ref([]);
 function getDetailData() {
-  try {
-    getDatasetData({
-      name: route.params.name,
-      owner_name: route.params.user,
-    }).then((res) => {
-      if (res.results.data.length) {
-        let storeData = res.results.data[0];
-        // 判断仓库是否属于自己
-        storeData['is_owner'] =
-          userInfoStore.userName === storeData.owner_name.name;
-        // 文件列表是否为空
-        if (detailData.value) {
-          storeData['is_empty'] = detailData.value.is_empty;
-        }
-        fileData.setFileData(storeData);
-        digCount.value = detailData.value.digg_count;
-        const {
-          licenses_list,
-          // libraries_list,
-          task_list,
-          tags_list,
-          // device_target_list,
-          files_list,
-        } = detailData.value;
-        isDigged.value = detailData.value.digg.includes(userInfoStore.id);
-
-        modelTags.value = [
-          ...licenses_list,
-          ...task_list,
-          ...tags_list,
-          // ...libraries_list,
-          // ...device_target_list,
-          ...files_list,
-        ];
-        modelTags.value = modelTags.value.map((item) => {
-          return item;
-        });
-
-        headTags.value = [...modelTags.value];
-        getTagList();
-      } else {
-        router.push('/404');
+  getDatasetData({
+    name: route.params.name,
+    owner_name: route.params.user,
+  }).then((res) => {
+    if (res.results.data.length) {
+      let storeData = res.results.data[0];
+      // 判断仓库是否属于自己
+      storeData['is_owner'] =
+        userInfoStore.userName === storeData.owner_name.name;
+      // 文件列表是否为空
+      if (detailData.value) {
+        storeData['is_empty'] = detailData.value.is_empty;
       }
-    });
-  } catch (error) {
-    console.error(error);
-  }
+      fileData.setFileData(storeData);
+      digCount.value = detailData.value.digg_count;
+      const {
+        licenses_list,
+        // libraries_list,
+        task_list,
+        tags_list,
+        // device_target_list,
+        files_list,
+      } = detailData.value;
+      isDigged.value = detailData.value.digg.includes(userInfoStore.id);
+
+      modelTags.value = [
+        ...licenses_list,
+        ...task_list,
+        ...tags_list,
+        // ...libraries_list,
+        // ...device_target_list,
+        ...files_list,
+      ];
+      modelTags.value = modelTags.value.map((item) => {
+        return item;
+      });
+
+      headTags.value = [...modelTags.value];
+      getTagList();
+    } else {
+      router.push('/404');
+    }
+  });
 }
 getDetailData();
 

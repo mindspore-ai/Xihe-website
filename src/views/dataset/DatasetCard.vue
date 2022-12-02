@@ -57,7 +57,6 @@ route.hash ? getReadMeFile() : '';
 
 // 获取README文件
 function getReadMeFile() {
-  try {
     findFile(
       `xihe-obj/datasets/${route.params.user}/${routerParams.name}/`
     ).then((tree) => {
@@ -79,9 +78,6 @@ function getReadMeFile() {
         }
       }
     });
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 function handleEditor() {

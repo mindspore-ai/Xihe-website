@@ -821,6 +821,10 @@ function goRule() {
               padding: 16px 0;
               border-bottom: 1px dashed #005ec2;
               cursor: pointer;
+              .left {
+                display: flex;
+                align-items: center;
+              }
               .right {
                 font-size: 18px;
                 height: 28px;
@@ -851,6 +855,10 @@ function goRule() {
             padding: 16px 0;
             border-bottom: 1px dashed #005ec2;
             cursor: pointer;
+            .left {
+              display: flex;
+              align-items: center;
+            }
             .right {
               font-size: 18px;
               height: 28px;

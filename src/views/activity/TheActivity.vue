@@ -162,13 +162,12 @@ const perPageData = ref([]);
 watch(
   () => currentPage.value,
   (newValue) => {
-    if (newValue > rankingData.value.length / 10) {
+    if (newValue >= rankingData.value.length / 10) {
       if (currentPage.value !== Math.ceil(rankingData.value.length / 10)) {
         currentPage.value = Math.ceil(rankingData.value.length / 10);
       }
       rightDisabled.value = true;
       leftDisabled.value = false;
-      //TODO:最后一页数据
       perPageData.value = rankingData.value.slice(
         newValue * 10 - 10,
         newValue * 10
@@ -191,7 +190,23 @@ watch(
 const rankingData = ref([]);
 GetRankingList().then((res) => {
   rankingData.value = res.data;
-  // rankingData.value = [1, 2, 3, 4, 5, 6];
+  rankingData.value.forEach((item, index) => {
+    if (index === 0) {
+      rankingData.value[index].number = 1;
+    } else if (
+      rankingData.value[index].score === rankingData.value[index - 1].score
+    ) {
+      rankingData.value[index].number = rankingData.value[index - 1].number;
+    } else {
+      rankingData.value[index].number = index + 1;
+    }
+    if (
+      rankingData.value[index].number < 10 &&
+      typeof rankingData.value[index].number !== 'string'
+    ) {
+      rankingData.value[index].number = '0' + rankingData.value[index].number;
+    }
+  });
   perPageData.value = rankingData.value.slice(0, 10);
 });
 watch(
@@ -332,7 +347,7 @@ function goRule() {
           <div v-if="currentPage === 1" class="rank-top">
             <div class="rank-top-three">
               <div class="second" @click="goUser(perPageData[1].competitor)">
-                <p class="seniority">02</p>
+                <p class="seniority">{{ perPageData[1].competitor.number }}</p>
                 <p class="name">{{ perPageData[1].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[1].score }}<span>积分</span>
@@ -340,7 +355,7 @@ function goRule() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="first" @click="goUser(perPageData[0].competitor)">
-                <p class="seniority">01</p>
+                <p class="seniority">{{ perPageData[0].competitor.number }}</p>
                 <p class="name">{{ perPageData[0].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[0].score }}<span>积分</span>
@@ -348,7 +363,7 @@ function goRule() {
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
               <div class="third" @click="goUser(perPageData[2].competitor)">
-                <p class="seniority">03</p>
+                <p class="seniority">{{ perPageData[2].competitor.number }}</p>
                 <p class="name">{{ perPageData[2].competitor }}</p>
                 <p class="integral">
                   {{ perPageData[2].score }}<span>积分</span>
@@ -364,7 +379,7 @@ function goRule() {
                 @click="goUser(perPageData[item + 2].competitor)"
               >
                 <p class="left">
-                  {{ item + 3 === 10 ? 10 : '0' + (item + 3)
+                  {{ perPageData[item + 2].competitor.number
                   }}<span>{{ perPageData[item + 2].competitor }}</span>
                 </p>
                 <p class="right">
@@ -382,7 +397,7 @@ function goRule() {
                 @click="goUser(perPageData[item - 1].competitor)"
               >
                 <p class="left">
-                  {{ (currentPage - 1) * 10 + item }}
+                  {{ perPageData[item - 1].competitor.number }}
                   <span> {{ perPageData[item - 1].competitor }}</span>
                 </p>
                 <p class="right">

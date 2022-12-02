@@ -128,9 +128,9 @@ function handleClick(index) {
   }
 }
 
-function toggleClick() {
-  isShow.value = false;
-}
+// function toggleClick() {
+//   isShow.value = false;
+// }
 
 //隐藏报名表单
 function hideForm(val) {
@@ -429,9 +429,13 @@ function goRule() {
       <div class="explain">本活动最终解释权归昇思MindSpore开源社区所有</div>
     </div>
 
-    <!-- <el-dialog v-model="isShow" custom-class="start-challenge">
-      <template #head>
-        <div class="test-title">知识挑战赛</div>
+    <div v-if="isShow" class="activity-dlg">
+      <el-dialog
+        v-model="isShow"
+        title="知识挑战赛"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+      >
         <div class="tip">
           <o-icon>
             <icon-warning></icon-warning>
@@ -440,37 +444,18 @@ function goRule() {
             >每日有3次挑战机会，跳出本页面、未答完退出都算作1次挑战机会。</span
           >
         </div>
-      </template>
-    </el-dialog> -->
 
-    <o-dialog
-      class="start-challenge"
-      :show="isShow"
-      @close-click="toggleClick()"
-      ><template #head>
-        <div class="test-title">知识挑战赛</div>
-        <div class="tip">
-          <o-icon>
-            <icon-warning></icon-warning>
-          </o-icon>
-          <span
-            >每日有3次挑战机会，跳出本页面、未答完退出都算作1次挑战机会。</span
-          >
+        <div class="dlg-body">
+          挑战10道随机人工智能领域题（含选择题和填空题），让知识卷起来！
         </div>
-      </template>
 
-      <div class="dlg-body">
-        挑战10道随机人工智能领域题（含选择题和填空题），让知识卷起来！
-      </div>
-
-      <template #foot>
         <div class="dlg-foot">
           <o-button type="primary" size="small" @click="handleStartAnswer"
             >开始答题</o-button
           >
         </div>
-      </template>
-    </o-dialog>
+      </el-dialog>
+    </div>
 
     <!-- 报名弹窗 -->
     <el-dialog
@@ -493,6 +478,63 @@ function goRule() {
 </template>
 
 <style lang="scss" scoped>
+.activity-dlg {
+  :deep(.el-dialog) {
+    width: 817px !important;
+    --el-dialog-margin-top: 32vh;
+    .el-dialog__header {
+      display: block;
+      font-size: 24px;
+      color: #000000;
+      line-height: 32px;
+      text-align: center;
+      padding-top: 40px;
+      margin-right: 0;
+    }
+
+    .el-dialog__body {
+      padding: 6px 40px 40px;
+    }
+    .el-dialog__headerbtn {
+      top: 0;
+    }
+
+    .tip {
+      width: 100%;
+      background: rgba(13, 141, 255, 0.03);
+      border: 1px solid #d8d8d8;
+      padding: 8px 16px;
+      padding-left: 48px;
+      line-height: 22px;
+      position: relative;
+      .o-icon {
+        font-size: 16px;
+        position: absolute;
+        left: 16px;
+        top: 14px;
+      }
+      span {
+        font-size: 14px;
+        color: #555555;
+        // line-height: 22px;
+      }
+    }
+
+    .dlg-body {
+      font-size: 14px;
+      color: #555555;
+      line-height: 22px;
+      padding-top: 0px;
+      margin-top: 16px;
+    }
+    .dlg-foot {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+    }
+  }
+}
+
 .activity {
   background-color: #f5f6f8;
   margin-top: 80px;
@@ -921,46 +963,7 @@ function goRule() {
     }
   }
 }
-// :deep(.start-challenge) {
-.start-challenge {
-  width: 817px !important;
-  .test-title {
-    text-align: center;
-  }
-  .tip {
-    width: 100%;
-    background: rgba(13, 141, 255, 0.03);
-    border: 1px solid #d8d8d8;
-    padding: 8px 16px;
-    padding-left: 48px;
-    margin-top: 24px;
-    line-height: 22px;
-    position: relative;
-    .o-icon {
-      font-size: 16px;
-      position: absolute;
-      left: 16px;
-      top: 14px;
-    }
-    span {
-      font-size: 14px;
-      color: #555555;
-      // line-height: 22px;
-    }
-  }
 
-  .dlg-body {
-    font-size: 14px;
-    color: #555555;
-    line-height: 22px;
-    padding-top: 0px;
-  }
-
-  .dlg-foot {
-    display: flex;
-    justify-content: center;
-  }
-}
 :deep(.el-dialog) {
   width: 900px;
   // position: fixed;

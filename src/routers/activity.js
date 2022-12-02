@@ -21,7 +21,7 @@ export default [
       return import('@/views/activity/TheActivityResult.vue');
     },
     beforeEnter: (to, from, next) => {
-      if (to.path && from.path === '/activity-1') {
+      if (to.query && from.path === '/activity-1') {
         next();
       } else {
         next('/activity');

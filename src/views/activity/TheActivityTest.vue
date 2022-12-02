@@ -166,13 +166,11 @@ function submitPaperFn() {
   });
 }
 
-// t
 function toggleDialog(val) {
   isShow.value = val;
 }
 
-// 确认交卷
-function handleConfirmSubmit() {
+function confirmSubmitpaper() {
   isAnswering.value = false;
   submitPaperFn().then((res) => {
     router.push({
@@ -182,22 +180,20 @@ function handleConfirmSubmit() {
   });
 }
 
-// 取消交卷
-function handleConcelSubmit() {
+function concelSubmit() {
   isShow.value = false;
 }
 
-// 返回MindIcon（提交答案，跳转）
-function handleBackPage() {
+function backToMindCon() {
   isShow1.value = true;
   router.push('/activity');
 }
 
-function handleConcelBack() {
+function concelBack() {
   isShow1.value = false;
 }
 
-function handleConfirmBack() {
+function confirmBack() {
   clearInterval(timer);
   isShow1.value = false;
   isAllowed.value = true;
@@ -280,12 +276,7 @@ watch(
 function beforeunloadHandler() {
   if (isAnswering.value) {
     isAnswering.value = false;
-    submitPaperFn().then((res) => {
-      router.push({
-        path: '/activity-result',
-        query: { times: 3 - queryData.value.times, score: res.score },
-      });
-    });
+    submitPaperFn();
   }
 }
 
@@ -294,12 +285,7 @@ onMounted(() => {
   window.onbeforeunload = () => {
     if (isAnswering.value) {
       isAnswering.value = false;
-      submitPaperFn().then((res) => {
-        router.push({
-          path: '/activity-result',
-          query: { times: 3 - queryData.value.times, score: res.score },
-        });
-      });
+      submitPaperFn();
     }
   };
 
@@ -318,7 +304,7 @@ onUnmounted(() => {
   <div class="wrap">
     <div class="test">
       <div class="test-back">
-        <span class="history" @click="handleBackPage">MindCon&nbsp;></span>
+        <span class="history" @click="backToMindCon">MindCon&nbsp;></span>
         <span class="current">&nbsp;超级知识卷</span>
       </div>
 
@@ -384,13 +370,16 @@ onUnmounted(() => {
               </div>
 
               <div v-else class="answers">
-                <el-input
-                  v-model="activityQuestions[subjectIndex].info"
-                  type="textarea"
-                  autosize
-                  readonly
-                  style="height: 100%; width: 100%"
-                ></el-input>
+                <div class="answers-box">
+                  <div class="mask"></div>
+                  <el-input
+                    v-model="activityQuestions[subjectIndex].info"
+                    type="textarea"
+                    autosize
+                    readonly
+                    style="height: 100%; width: 100%"
+                  ></el-input>
+                </div>
 
                 <div class="answer-inp">
                   <span>请输入正确答案：</span>
@@ -449,10 +438,10 @@ onUnmounted(() => {
             <o-button
               type="primary"
               style="margin-right: 16px"
-              @click="handleConcelSubmit"
+              @click="concelSubmit"
               >取消</o-button
             >
-            <o-button @click="handleConfirmSubmit">继续交卷</o-button>
+            <o-button @click="confirmSubmitpaper">继续交卷</o-button>
           </div>
         </template>
       </o-dialog>
@@ -471,10 +460,10 @@ onUnmounted(() => {
             <o-button
               type="primary"
               style="margin-right: 16px"
-              @click="handleConcelBack"
+              @click="concelBack"
               >取消</o-button
             >
-            <o-button @click="handleConfirmBack">继续</o-button>
+            <o-button @click="confirmBack">继续</o-button>
           </div>
         </template>
       </o-dialog>
@@ -681,6 +670,21 @@ onUnmounted(() => {
           }
           .answers {
             margin-top: 24px;
+            &-box {
+              width: 100%;
+              height: 100%;
+              position: relative;
+              .mask {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-color: rgba(0, 0, 0, 0);
+                z-index: 8;
+              }
+            }
+
             .el-textarea {
               width: 100% !important;
             }

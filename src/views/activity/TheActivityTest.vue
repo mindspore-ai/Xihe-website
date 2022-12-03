@@ -224,10 +224,17 @@ async function getDate() {
 
     isAnswering.value = true;
   } catch (e) {
-    ElMessage({
-      type: 'warning',
-      message: '挑战次数已用完，请明日再来',
-    });
+    if (e.message === 'challenge_excced_max_time') {
+      ElMessage({
+        type: 'warning',
+        message: '挑战次数已用完，请明日再来',
+      });
+    } else {
+      ElMessage({
+        type: 'warning',
+        message: '您有其他页面正在答题中，请稍后重试',
+      });
+    }
 
     isShow1.value = false;
     isAllowed.value = true;
@@ -264,6 +271,7 @@ watch(
     if (testTime.value === 0) {
       // 发请求交卷; 切到分数页面
       submitPaperFn().then((res) => {
+        isAnswering.value = false;
         router.push({
           path: '/activity-result',
           query: { times: 3 - queryData.value.times, score: res.score },
@@ -282,17 +290,13 @@ function beforeunloadHandler() {
 
 onMounted(() => {
   // 刷新提交
-  window.onbeforeunload = () => {
-    if (isAnswering.value) {
-      isAnswering.value = false;
-      submitPaperFn();
-    }
-  };
-
-  window.addEventListener('pagehide', beforeunloadHandler(), true);
+  window.addEventListener('beforeunload', beforeunloadHandler);
+  window.addEventListener('pagehide', beforeunloadHandler);
 });
 
 onUnmounted(() => {
+  window.removeEventListener('beforeunload', beforeunloadHandler);
+  window.removeEventListener('pagehide', beforeunloadHandler);
   // 离开页面提交试卷信息，清除计时器,
   if (isAnswering.value) {
     isAnswering.value = false;

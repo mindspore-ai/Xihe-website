@@ -224,15 +224,15 @@ async function getDate() {
 
     isAnswering.value = true;
   } catch (e) {
-    if (e.message === 'challenge_excced_max_time') {
+    if (e.message === 'challenge_in-progress') {
       ElMessage({
         type: 'warning',
-        message: '挑战次数已用完，请明日再来',
+        message: '您有其他页面正在答题中，请稍后重试',
       });
     } else {
       ElMessage({
         type: 'warning',
-        message: '您有其他页面正在答题中，请稍后重试',
+        message: '挑战次数已用完，请明日再来',
       });
     }
 

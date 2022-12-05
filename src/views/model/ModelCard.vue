@@ -244,7 +244,7 @@ watch(
     <div class="right-data">
       <div class="download-data">
         <div class="download-title">{{ i18n.recentDownload }}</div>
-        <!-- <span class="download-count">{{ detailData.download_count }}</span> -->
+        <span class="download-count">{{ detailData.download_count }}</span>
       </div>
       <!-- 添加数据集 -->
       <div class="dataset-data">

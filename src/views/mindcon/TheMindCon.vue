@@ -22,8 +22,8 @@ import secondImg from '@/assets/imgs/activity/second-task.png';
 import thirdImg from '@/assets/imgs/activity/third-task.png';
 import challengeBtn from '@/assets/imgs/activity/challenge-btn.png';
 import ruleBtn from '@/assets/imgs/activity/rule-btn.png';
-// import challengeBtn2 from '@/assets/imgs/activity/challenge-btn2.png';
-// import ruleBtn2 from '@/assets/imgs/activity/rule-btn2.png';
+import challengeBtn2 from '@/assets/imgs/activity/challenge-btn2.png';
+import ruleBtn2 from '@/assets/imgs/activity/rule-btn2.png';
 import timeImg from '@/assets/imgs/activity/time.png';
 import timelineImg from '@/assets/imgs/activity/timeline.png';
 import rankImg from '@/assets/imgs/activity/rank.png';
@@ -76,19 +76,23 @@ const taskListImg = reactive([
   {
     baseImg: firstImg,
     rule: ruleBtn,
+    rule2: ruleBtn2,
     challenge: challengeBtn,
+    challenge2: challengeBtn2,
   },
   {
     baseImg: secondImg,
     rule: ruleBtn,
+    rule2: ruleBtn2,
     challenge: challengeBtn,
+    challenge2: challengeBtn2,
   },
   {
     baseImg: thirdImg,
     rule: ruleBtn,
-    // rule2: ruleBtn2,
+    rule2: ruleBtn2,
     challenge: challengeBtn,
-    // challenge2: challengeBtn2,
+    challenge2: challengeBtn2,
   },
 ]);
 
@@ -102,7 +106,7 @@ function getActivity() {
 }
 getActivity();
 
-function handleClick(index) {
+function goChallenge(index) {
   if (!isLogined) {
     goAuthorize();
   } else {
@@ -317,14 +321,24 @@ function goRule() {
           >
             <img :src="item.baseImg" alt="" />
             <div class="task-btn">
-              <img :src="item.rule" alt="" class="rule-btn" @click="goRule" />
-              <!-- <img :src="item.rule2" alt="" class="rule-btn2" /> -->
-              <img
-                :src="item.challenge"
-                alt=""
-                class="challenge-btn"
-                @click="handleClick(index)"
-              />
+              <div class="rule-btn">
+                <img :src="item.rule" alt="" />
+                <img
+                  :src="item.rule2"
+                  alt=""
+                  class="rule-img"
+                  @click="goRule"
+                />
+              </div>
+              <div class="challenge-btn">
+                <img :src="item.challenge" alt="" />
+                <img
+                  :src="item.challenge2"
+                  alt=""
+                  class="challenge-img"
+                  @click="goChallenge(index)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -754,21 +768,48 @@ function goRule() {
             position: absolute;
             bottom: 14px;
             right: 20px;
+            display: flex;
             .rule-btn {
               width: 85px;
               height: 32px;
               margin-left: 7px;
               cursor: pointer;
-              /* &:hover {
-                background-color: red;
-                color: red;
-              } */
+              &:hover > .rule-img {
+                display: block;
+              }
+              img {
+                width: 100%;
+                height: 100%;
+              }
+              .rule-img {
+                display: none;
+                width: 85px;
+                height: 32px;
+                margin-left: 7px;
+                cursor: pointer;
+                position: absolute;
+                top: 0;
+                left: 0;
+              }
             }
             .challenge-btn {
               width: 85px;
               height: 32px;
               margin-left: 7px;
               cursor: pointer;
+              &:hover > .challenge-img {
+                display: block;
+              }
+              .challenge-img {
+                display: none;
+                width: 85px;
+                height: 32px;
+                margin-left: 7px;
+                cursor: pointer;
+                position: absolute;
+                top: 0;
+                right: 0;
+              }
             }
           }
         }

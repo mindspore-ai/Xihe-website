@@ -206,9 +206,9 @@ export function getAreaData() {
  * 添加项目（查询数据集信息）
  * @returns
  */
-export function addProject(params) {
-  const url = `/api/projects/?name=${params.name}&owner_name=${params.owner_name}`;
-  return request.get(url, { params, ...getHeaderConfig() }).then((res) => {
+export function addProject(params, id, phase) {
+  const url = `/server/competition/${id}/${phase}/realted_project`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

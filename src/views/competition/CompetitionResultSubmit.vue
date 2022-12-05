@@ -255,7 +255,15 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <div>
+      <div
+        v-if="
+          detailData &&
+          !detailData.project &&
+          detailData1.type === '' &&
+          ((detailData1.is_competitor && detailData1.team_id === '') ||
+            detailData1.team_role === 'leader')
+        "
+      >
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -270,7 +278,7 @@ function handelCancel() {
           >
         </div>
       </div>
-      <div v-if="detailData && detailData.project">
+      <div v-else-if="detailData && detailData.project">
         <div
           v-if="
             (detailData1.is_competitor && detailData1.team_id === '') ||

@@ -4,21 +4,21 @@ export default [
     path: '/activity',
     name: 'activity',
     component: () => {
-      return import('@/views/activity/TheActivity.vue');
+      return import('@/views/mindcon/TheMIndCon.vue');
     },
   },
   {
     path: '/activity-1',
     name: 'activityTest',
     component: () => {
-      return import('@/views/activity/TheActivityTest.vue');
+      return import('@/views/mindcon/TheMIndCoinTest.vue');
     },
   },
   {
     path: '/activity-result',
     name: 'activityResult',
     component: () => {
-      return import('@/views/activity/TheActivityResult.vue');
+      return import('@/views/mindcon/TheMindConResult.vue');
     },
     beforeEnter: (to, from, next) => {
       if (to.query && from.path === '/activity-1') {

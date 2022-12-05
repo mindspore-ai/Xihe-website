@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, nextTick, computed } from 'vue';
+import { ref, onMounted, watch, nextTick, computed, onUnmounted } from 'vue';
 
 import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
@@ -280,6 +280,10 @@ onMounted(() => {
       sendBtn.value.click();
     }
   });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
 });
 </script>
 <template>

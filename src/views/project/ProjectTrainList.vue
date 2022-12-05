@@ -266,17 +266,19 @@ function setWebsocket(url) {
   return socket;
 }
 
-// socket = setWebsocket(
-//   `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
-// );
+const closeSocket = () => {
+  socket.close();
+};
 
 // 页面刷新
 onMounted(() => {
-  window.addEventListener('beforeunload', () => socket.close());
+  window.addEventListener('beforeunload', () => closeSocket());
 });
 
 onUnmounted(() => {
   socket && socket.close();
+
+  window.removeEventListener('beforeunload', closeSocket);
 });
 </script>
 <template>

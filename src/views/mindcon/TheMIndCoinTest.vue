@@ -9,7 +9,6 @@ import { formatSeconds } from '@/shared/utils';
 import IconWarning from '~icons/app/activity-warning';
 import warningImg from '@/assets/icons/warning.png';
 
-
 const router = useRouter();
 
 let timer;
@@ -181,7 +180,7 @@ function confirmSubmitpaper() {
   });
 }
 
-function concelSubmit() {
+function cancelSubmit() {
   isShow.value = false;
 }
 
@@ -190,7 +189,7 @@ function backToMindCon() {
   router.push('/activity');
 }
 
-function concelBack() {
+function cancleBack() {
   isShow1.value = false;
 }
 
@@ -202,7 +201,7 @@ function confirmBack() {
   router.push(routePath.value);
 }
 
-async function getDate() {
+async function getData() {
   try {
     const res = await getQuestions();
 
@@ -245,7 +244,7 @@ async function getDate() {
     }, 1500);
   }
 }
-getDate();
+getData();
 
 onBeforeRouteLeave((to, from, next) => {
   //离开当前的组件，触发
@@ -307,13 +306,13 @@ onUnmounted(() => {
 </script>
 <template>
   <div class="wrap">
-    <div class="test">
-      <div class="test-back">
+    <div class="mindcon">
+      <div class="mindcon-back">
         <span class="history" @click="backToMindCon">MindCon&nbsp;></span>
         <span class="current">&nbsp;超级知识卷</span>
       </div>
 
-      <div id="height" class="test-main">
+      <div id="height" class="mindcon-main">
         <div class="container">
           <div class="container-title">知识挑战赛</div>
 
@@ -443,7 +442,7 @@ onUnmounted(() => {
             <o-button
               type="primary"
               style="margin-right: 16px"
-              @click="concelSubmit"
+              @click="cancelSubmit"
               >取消</o-button
             >
             <o-button @click="confirmSubmitpaper">继续交卷</o-button>
@@ -465,7 +464,7 @@ onUnmounted(() => {
             <o-button
               type="primary"
               style="margin-right: 16px"
-              @click="concelBack"
+              @click="cancleBack"
               >取消</o-button
             >
             <o-button @click="confirmBack">继续</o-button>
@@ -504,7 +503,7 @@ onUnmounted(() => {
   min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
 }
-.test {
+.mindcon {
   margin: 0 auto;
   padding: 120px 16px 64px 16px;
   max-width: 1472px;

@@ -459,6 +459,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.close();
+
+  window.removeEventListener('beforeunload', reloadPage);
 });
 
 watch(

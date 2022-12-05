@@ -51,6 +51,7 @@ const modules = [Pagination, Autoplay];
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const router = useRouter();
+
 // const hoemVideo =
 //   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/video/mindSpore%20AI%20%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E9%A6%96%E9%A1%B5banner.mp4';
 

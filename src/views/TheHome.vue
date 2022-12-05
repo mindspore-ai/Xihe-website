@@ -739,7 +739,7 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 1440px) {
         height: 400px;
       }
     }
@@ -749,7 +749,7 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 1440px) {
         height: 400px;
       }
     }
@@ -759,17 +759,17 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 1440px) {
         height: 400px;
       }
     }
     .photo6 {
-      background: url(@/assets/imgs/home/home-banner1.png);
+      background: url(@/assets/imgs/home/home-banner1.jpg);
       width: 100%;
       height: 480px;
       background-size: cover;
       background-position: 50%;
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 1440px) {
         height: 400px;
       }
     }
@@ -779,7 +779,7 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
-      @media screen and (max-width: 1280px) {
+      @media screen and (max-width: 1440px) {
         height: 400px;
       }
     }

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { getCompetition, getAllCompetition } from '@/api/api-user';
-import emptyImg from '@/assets/imgs/competition-empty.png';
+import emptyImg from '@/assets/imgs/live-empty.png';
 import { useRouter } from 'vue-router';
 
 const activeName = ref('all');

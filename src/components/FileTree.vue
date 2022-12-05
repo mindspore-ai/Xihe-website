@@ -278,43 +278,29 @@ let reopt = {
   data: null,
 };
 function downloadFiles(objkey, fileName, storeId) {
-  try {
-    getDownLoadToken({ objkey }).then((res) => {
-      res1.value = res; //
-
-      addDownloadRecord(storeId, objkey.split('/')[1])
-        .then((res) => {
-          if (res.status === 200) {
-            reopt.method = 'get';
-            reopt.url = res1.value.data.signedUrl;
-            reopt.responseType = 'blob';
-            let link = document.createElement('a');
-            link.href = res1.value.data.signedUrl;
-            link.click();
-          } else if (res.status === -1) {
-            toggleCodeeDlg(true);
-            getCode(storeId, objkey.split('/')[1]).then((res) => {
-              let blob = new Blob([res], { type: 'image/png' });
-              url.value = window.URL.createObjectURL(blob);
-            });
-          }
-          // ElMessage({
-          //   type: 'success',
-          //   message: res.msg,
-          //   center: true,
-          // });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    });
-  } catch (error) {
-    ElMessage({
-      type: 'error',
-      message: error,
-      center: true,
-    });
-  }
+  getDownLoadToken({ objkey }).then((res) => {
+    res1.value = res; //
+    addDownloadRecord(storeId, objkey.split('/')[1])
+      .then((res) => {
+        if (res.status === 200) {
+          reopt.method = 'get';
+          reopt.url = res1.value.data.signedUrl;
+          reopt.responseType = 'blob';
+          let link = document.createElement('a');
+          link.href = res1.value.data.signedUrl;
+          link.click();
+        } else if (res.status === -1) {
+          toggleCodeeDlg(true);
+          getCode(storeId, objkey.split('/')[1]).then((res) => {
+            let blob = new Blob([res], { type: 'image/png' });
+            url.value = window.URL.createObjectURL(blob);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
 }
 function toggleCodeeDlg(flag) {
   if (flag === undefined) {

@@ -70,7 +70,7 @@ const beforeAvatarUpload = (rawFile) => {
       rawFile.name.split('.')[0] +
       `-${year}-${month}-${day}-${hour}-${minute}-${second}.` +
       rawFile.name.split('.')[1];
-    // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];TODO:无法直接修改文件名
+    // rawFile.name = name.split('.')[0] + `${date.getTime()}.` + name.split('.')[1];
     if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
       fileName = fileName.split('.')[0];
     }
@@ -181,7 +181,6 @@ function confirmAdd() {
       changeTeam({ relate_project }, teamId.value).then((res) => {
         if (res.status === 200) {
           detailData.value = res.data;
-          // TODO:更新时间
           detailData.value.update_date_time = res.data.project_name.update_time;
           detailData.value.project_name = [detailData.value.project_name];
           ElMessage({
@@ -247,7 +246,6 @@ async function getIndividual(id) {
         }
       });
     }
-    // TODO: 关联卡片时间
     if (res.data.project_name) {
       detailData.value.update_date_time = res.data.project_name.update_time;
       detailData.value.project_name = [detailData.value.project_name];
@@ -267,7 +265,6 @@ const detailData = ref();
   let res2 = await getTeamInfoById(groupId);
   if (res2.status === 200) {
     detailData.value = res2.data;
-    // TODO:更新时间
     detailData.value.update_date_time = '2022-08-26 10:39:10';
     detailData.value.project_name = [detailData.value.project_name];
   }

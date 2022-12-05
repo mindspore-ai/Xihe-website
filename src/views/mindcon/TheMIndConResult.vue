@@ -9,7 +9,6 @@ const times = route.query.times;
 
 scores.value = route.query.score;
 
-// 跳转到Mincon页面
 function handleBackMincon() {
   router.push('/activity');
 }

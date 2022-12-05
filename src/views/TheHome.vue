@@ -739,6 +739,9 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 1280px) {
+        height: 400px;
+      }
     }
     .photo4 {
       background: url(@/assets/imgs/home/home-banner5.jpg);
@@ -746,6 +749,9 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 1280px) {
+        height: 400px;
+      }
     }
     .photo5 {
       background: url(@/assets/imgs/home/home-banner6.png);
@@ -753,6 +759,9 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 1280px) {
+        height: 400px;
+      }
     }
     .photo6 {
       background: url(@/assets/imgs/home/home-banner1.png);
@@ -760,6 +769,9 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 1280px) {
+        height: 400px;
+      }
     }
     .photo7 {
       background: url(@/assets/imgs/home/home-banner2.png);
@@ -767,6 +779,9 @@ function goActivity() {
       height: 480px;
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 1280px) {
+        height: 400px;
+      }
     }
     .cursor {
       cursor: pointer;

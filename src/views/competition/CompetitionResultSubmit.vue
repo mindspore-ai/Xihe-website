@@ -6,14 +6,13 @@ import IconProject from '~icons/app/project-tree';
 
 import OButton from '@/components/OButton.vue';
 import ODialog from '@/components/ODialog.vue';
-import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
 
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
 
 // import { handleUpload } from '@/api/api-obs';
 import { useCompetitionData } from '@/stores';
-import { getSubmissions, submit } from '@/api/api-competition';
+import { getSubmissions, submit, addProject } from '@/api/api-competition';
 
 const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
@@ -167,43 +166,18 @@ function togglePhoneDlg(flag) {
     showPhoneDlg.value = flag;
   }
 }
-// 绑定相关项目
-// const relatedPro = ref();
-// function confirmAdd() {
-//   if (relatedPro.value === '') return;
-//   let params = {};
-//   let paramsArr = relatedPro.value.split('/');
-//   params.owner_name = paramsArr[0];
-//   params.name = paramsArr[1];
-//   addProject(params).then((res) => {
-//     if (res.results.data.length === 0) {
-//       ElMessage({
-//         type: 'error',
-//         message: '没有查询到数据！',
-//       });
-//       return;
-//     } else {
-//       let relate_project = res.results.data[0].id;
-//       changeTeam({ relate_project }, teamId.value).then((res) => {
-//         if (res.status === 200) {
-//           detailData.value = res.data;
-//           // TODO:更新时间
-//           detailData.value.update_date_time = res.data.project_name.update_time;
-//           detailData.value.project_name = [detailData.value.project_name];
-//           ElMessage({
-//             type: 'success',
-//             message: '绑定成功！',
-//           });
-//         } else {
-//           ElMessage({
-//             type: 'error',
-//             message: '只能绑定一个项目！',
-//           });
-//         }
-//       });
-//     }
-//   });
-// }
+// 绑定关联项目
+const relatedPro = ref();
+function confirmAdd() {
+  if (relatedPro.value === '') return;
+  let params = {};
+  let paramsArr = relatedPro.value.split('/');
+  params.owner = paramsArr[0];
+  params.project_name = paramsArr[1];
+  addProject(params, detailData1.value.id, detailData1.value.phase).then(
+    (res) => {}
+  );
+}
 
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
   detailData.value = res.data;
@@ -270,7 +244,15 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <!-- <div v-if="detailData">
+      <div
+        v-if="
+          detailData &&
+          !detailData.project &&
+          detailData1.type === '' &&
+          ((detailData1.is_competitor && detailData1.team_id === '') ||
+            detailData1.team_role === 'leader')
+        "
+      >
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -284,8 +266,8 @@ function handelCancel() {
             >确定</OButton
           >
         </div>
-      </div> -->
-      <div v-if="detailData && detailData.project">
+      </div>
+      <div v-else-if="detailData && detailData.project">
         <div
           v-if="
             (detailData1.is_competitor && detailData1.team_id === '') ||

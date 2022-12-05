@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, nextTick, computed } from 'vue';
+import { ref, onMounted, watch, nextTick, computed, onUnmounted } from 'vue';
 
 import { useUserInfoStore, useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -157,15 +157,25 @@ watch(
   }
 );
 
-onMounted(() => {
-  // handleGetExamples();
+const handleKeydown = (e) => {
+  if (e.keyCode === 13) {
+    //回车执行查询
+    sendBtn.value.click();
+  }
+};
 
-  document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {
-    if (e.keyCode === 13) {
-      //回车执行查询
-      sendBtn.value.click();
-    }
-  });
+const inputContent = ref(null);
+const inputDom = ref(null);
+
+onMounted(() => {
+  inputDom.value = inputContent.value.ref;
+  inputContent.value.ref.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+
+  inputDom.value.removeEventListener('keydown', handleKeydown);
 });
 </script>
 <template>
@@ -207,7 +217,7 @@ onMounted(() => {
       <div class="input-area">
         <div class="input-box">
           <el-input
-            id="inpMsg"
+            ref="inputContent"
             v-model="inputMsg"
             placeholder="请用简体中文输入问题或选择下方样例，不超过30个字"
             style="width: 100%"

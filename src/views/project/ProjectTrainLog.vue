@@ -454,7 +454,7 @@ async function downloadLogFile() {
 }
 
 onMounted(() => {
-  window.addEventListener('beforeunload', () => reloadPage());
+  window.addEventListener('beforeunload', reloadPage);
 });
 
 onUnmounted(() => {

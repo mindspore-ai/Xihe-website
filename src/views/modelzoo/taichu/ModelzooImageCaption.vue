@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 
 import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
@@ -163,6 +163,10 @@ function customUpload() {
 }
 
 const activeNames1 = ref(['1']);
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="model-page">

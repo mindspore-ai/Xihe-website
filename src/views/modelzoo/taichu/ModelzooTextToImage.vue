@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onUnmounted } from 'vue';
 
 import { useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -232,6 +232,10 @@ const handleNameChange = (val) => {
 function refreshTags() {
   exampleList.value = getRandom(lists, 6);
 }
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="model-page">

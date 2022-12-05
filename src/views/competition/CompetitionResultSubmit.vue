@@ -174,9 +174,20 @@ function confirmAdd() {
   let paramsArr = relatedPro.value.split('/');
   params.owner = paramsArr[0];
   params.project_name = paramsArr[1];
-  addProject(params, detailData1.value.id, detailData1.value.phase).then(
-    (res) => {}
-  );
+  addProject(params, detailData1.value.id, detailData1.value.phase)
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '绑定成功~',
+      });
+      detailData.value.project = relatedPro.value;
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '绑定失败，请检查后重试~',
+      });
+    });
 }
 
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {

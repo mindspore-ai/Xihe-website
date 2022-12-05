@@ -167,28 +167,28 @@ function togglePhoneDlg(flag) {
   }
 }
 // 绑定关联项目
-// const relatedPro = ref();
-// function confirmAdd() {
-//   if (relatedPro.value === '') return;
-//   let params = {};
-//   let paramsArr = relatedPro.value.split('/');
-//   params.owner = paramsArr[0];
-//   params.project_name = paramsArr[1];
-//   addProject(params, detailData1.value.id, detailData1.value.phase)
-//     .then(() => {
-//       ElMessage({
-//         type: 'success',
-//         message: '绑定成功~',
-//       });
-//       detailData.value.project = relatedPro.value;
-//     })
-//     .catch(() => {
-//       ElMessage({
-//         type: 'error',
-//         message: '绑定失败，请检查后重试~',
-//       });
-//     });
-// }
+const relatedPro = ref();
+function confirmAdd() {
+  if (relatedPro.value === '') return;
+  let params = {};
+  let paramsArr = relatedPro.value.split('/');
+  params.owner = paramsArr[0];
+  params.project_name = paramsArr[1];
+  addProject(params, detailData1.value.id, detailData1.value.phase)
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '绑定成功~',
+      });
+      detailData.value.project = relatedPro.value;
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '绑定失败，请检查后重试~',
+      });
+    });
+}
 
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
   detailData.value = res.data;
@@ -255,15 +255,7 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <!-- <div
-        v-if="
-          detailData &&
-          !detailData.project &&
-          detailData1.type === '' &&
-          ((detailData1.is_competitor && detailData1.team_id === '') ||
-            detailData1.team_role === 'leader')
-        "
-      >
+      <div>
         <div class="guide">
           上传结果前请创建Private项目，然后在此输入“用户名/项目名”进行关联，比赛和项目只能进行一次关联，后续只能对该项目内的文件进行改动
         </div>
@@ -277,7 +269,7 @@ function handelCancel() {
             >确定</OButton
           >
         </div>
-      </div> -->
+      </div>
       <div v-if="detailData && detailData.project">
         <div
           v-if="

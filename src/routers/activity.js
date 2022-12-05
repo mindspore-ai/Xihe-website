@@ -4,14 +4,14 @@ export default [
     path: '/activity',
     name: 'activity',
     component: () => {
-      return import('@/views/mindcon/TheMIndCon.vue');
+      return import('@/views/mindcon/TheMindCon.vue');
     },
   },
   {
     path: '/activity-1',
     name: 'activityTest',
     component: () => {
-      return import('@/views/mindcon/TheMIndCoinTest.vue');
+      return import('@/views/mindcon/TheMindConTest.vue');
     },
   },
   {

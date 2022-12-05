@@ -167,28 +167,28 @@ function togglePhoneDlg(flag) {
   }
 }
 // 绑定关联项目
-const relatedPro = ref();
-function confirmAdd() {
-  if (relatedPro.value === '') return;
-  let params = {};
-  let paramsArr = relatedPro.value.split('/');
-  params.owner = paramsArr[0];
-  params.project_name = paramsArr[1];
-  addProject(params, detailData1.value.id, detailData1.value.phase)
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '绑定成功~',
-      });
-      detailData.value.project = relatedPro.value;
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'error',
-        message: '绑定失败，请检查后重试~',
-      });
-    });
-}
+// const relatedPro = ref();
+// function confirmAdd() {
+//   if (relatedPro.value === '') return;
+//   let params = {};
+//   let paramsArr = relatedPro.value.split('/');
+//   params.owner = paramsArr[0];
+//   params.project_name = paramsArr[1];
+//   addProject(params, detailData1.value.id, detailData1.value.phase)
+//     .then(() => {
+//       ElMessage({
+//         type: 'success',
+//         message: '绑定成功~',
+//       });
+//       detailData.value.project = relatedPro.value;
+//     })
+//     .catch(() => {
+//       ElMessage({
+//         type: 'error',
+//         message: '绑定失败，请检查后重试~',
+//       });
+//     });
+// }
 
 getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
   detailData.value = res.data;
@@ -255,7 +255,7 @@ function handelCancel() {
   <div class="submit-page">
     <div class="right">
       <div class="header">关联项目</div>
-      <div
+      <!-- <div
         v-if="
           detailData &&
           !detailData.project &&
@@ -277,8 +277,8 @@ function handelCancel() {
             >确定</OButton
           >
         </div>
-      </div>
-      <div v-else-if="detailData && detailData.project">
+      </div> -->
+      <div v-if="detailData && detailData.project">
         <div
           v-if="
             (detailData1.is_competitor && detailData1.team_id === '') ||

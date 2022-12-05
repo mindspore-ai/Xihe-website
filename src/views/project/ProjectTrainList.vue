@@ -272,7 +272,7 @@ const closeSocket = () => {
 
 // 页面刷新
 onMounted(() => {
-  window.addEventListener('beforeunload', () => closeSocket());
+  window.addEventListener('beforeunload', closeSocket);
 });
 
 onUnmounted(() => {

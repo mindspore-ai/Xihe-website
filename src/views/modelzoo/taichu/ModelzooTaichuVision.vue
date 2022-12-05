@@ -261,7 +261,15 @@ watch(
     deep: true,
   }
 );
+const inputContent = ref(null);
+const inputDom = ref(null);
 
+const handleKeydown = (e) => {
+  if (e.keyCode === 13) {
+    //回车执行查询
+    sendBtn.value.click();
+  }
+};
 onMounted(() => {
   // 1.获取本地选取的图片
   inp.value.onchange = function (e) {
@@ -274,16 +282,14 @@ onMounted(() => {
     handleUploadImg(imgUrl.value);
   };
 
-  document.querySelector(' #inpMsg').addEventListener('keydown', function (e) {
-    if (e.keyCode === 13) {
-      //回车执行查询
-      sendBtn.value.click();
-    }
-  });
+  inputDom.value = inputContent.value.ref;
+  inputContent.value.ref.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', onResize);
+
+  inputDom.value.removeEventListener('keydown', handleKeydown);
 });
 </script>
 <template>
@@ -336,7 +342,7 @@ onUnmounted(() => {
       <div class="input-area">
         <div class="input-box">
           <el-input
-            id="inpMsg"
+            ref="inputContent"
             v-model="inputMsg"
             placeholder="请先选择图片再输入问题，不超过30个字"
             style="width: 100%"

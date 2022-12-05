@@ -1,6 +1,6 @@
 <script setup>
+import { ref, reactive, onUnmounted } from 'vue';
 import { request } from '@/shared/axios';
-import { ref, reactive } from 'vue';
 
 import OButton from '@/components/OButton.vue';
 
@@ -379,6 +379,10 @@ function refreshTags() {
   });
   getExampleLists();
 }
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="model-page">

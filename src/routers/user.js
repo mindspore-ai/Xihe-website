@@ -64,12 +64,32 @@ export default [
         component: () => {
           return import('@/views/user/UserLive.vue');
         },
+        // 带查询参数userName时重定向
+        beforeEnter: (to, from, next) => {
+          if (Object.keys(to.query).length) {
+            function changeFullpath(str) {
+              return str.replace(/\?userName=[a-zA-Z0-9]+/g, '');
+            }
+            to.fullPath = changeFullpath(to.fullPath);
+          }
+          next();
+        },
       },
       {
         path: 'models',
         name: 'userModels',
         component: () => {
           return import('@/views/user/UserModel.vue');
+        },
+        // 带查询参数userName时重定向
+        beforeEnter: (to, from, next) => {
+          if (Object.keys(to.query).length) {
+            function changeFullpath(str) {
+              return str.replace(/\?userName=[a-zA-Z0-9]+/g, '');
+            }
+            to.fullPath = changeFullpath(to.fullPath);
+          }
+          next();
         },
       },
       {
@@ -78,6 +98,15 @@ export default [
         component: () => {
           return import('@/views/user/UserDataset.vue');
         },
+        beforeEnter: (to, from, next) => {
+          if (Object.keys(to.query).length) {
+            function changeFullpath(str) {
+              return str.replace(/\?userName=[a-zA-Z0-9]+/g, '');
+            }
+            to.fullPath = changeFullpath(to.fullPath);
+          }
+          next();
+        },
       },
       {
         path: 'projects',
@@ -85,12 +114,30 @@ export default [
         component: () => {
           return import('@/views/user/UserProject.vue');
         },
+        beforeEnter: (to, from, next) => {
+          if (Object.keys(to.query).length) {
+            function changeFullpath(str) {
+              return str.replace(/\?userName=[a-zA-Z0-9]+/g, '');
+            }
+            to.fullPath = changeFullpath(to.fullPath);
+          }
+          next();
+        },
       },
       {
         path: 'collections',
         name: 'userCollections',
         component: () => {
           return import('@/views/user/UserCollection.vue');
+        },
+        beforeEnter: (to, from, next) => {
+          if (Object.keys(to.query).length) {
+            function changeFullpath(str) {
+              return str.replace(/\?userName=[a-zA-Z0-9]+/g, '');
+            }
+            to.fullPath = changeFullpath(to.fullPath);
+          }
+          next();
         },
       },
       {

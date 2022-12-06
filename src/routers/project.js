@@ -30,6 +30,15 @@ export default [
       index: 1,
       isPrivate: true,
     },
+    beforeEnter: (to, from, next) => {
+      if (Object.keys(to.query).length) {
+        function changeFullpath(str) {
+          return str.replace(/\?id=[a-zA-Z0-9]+/g, '');
+        }
+        to.fullPath = changeFullpath(to.fullPath);
+      }
+      next();
+    },
   },
   {
     path: '/projects/:user/:name/projectAim',

@@ -85,9 +85,6 @@ goHome();
 function goSelectFile() {
   let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
-    query: {
-      id: detailData.value.id,
-    },
   });
   window.open(routerData.href, '_blank');
 }

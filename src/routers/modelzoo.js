@@ -155,4 +155,33 @@ export default [
       return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');
     },
   },
+  // 悟空
+  {
+    path: '/modelzoo/wukong',
+    name: 'wukong',
+    component: () => {
+      return import('@/views/modelzoo/wukong/TheWukong.vue');
+    },
+    children: [
+      {
+        path: '',
+        name: 'wukongExperience',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'wukongIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+        },
+      },
+      {
+        path: 'experience',
+        name: 'wukongTest',
+        redirect: '/modelzoo/wukong',
+      },
+    ],
+  },
 ];

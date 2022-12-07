@@ -170,6 +170,7 @@ watch(
       background: rgba(7, 12, 22, 0.6);
       box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
       backdrop-filter: blur(5px);
+      position: relative;
     }
   }
 }

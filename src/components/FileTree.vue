@@ -96,9 +96,9 @@ let query = reactive({
   description: '',
   textValue: '',
 });
-function getDetailData(path) {
+async function getDetailData(path) {
   try {
-    findFile(path).then((tree) => {
+    await findFile(path).then((tree) => {
       if (
         tree.status === 200 &&
         tree.data.children &&

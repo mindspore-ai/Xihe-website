@@ -106,9 +106,9 @@ onBeforeRouteLeave(() => {
 });
 
 let modelTags = ref([]);
-function getDetailData() {
+async function getDetailData() {
   try {
-    getModelData({
+    await getModelData({
       name: route.params.name,
       owner_name: route.params.user,
     }).then((res) => {

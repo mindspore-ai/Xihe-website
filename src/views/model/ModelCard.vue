@@ -59,29 +59,29 @@ const i18n = {
   emptyVisited: '无模型卡片',
 };
 // 获取README文件
-function getReadMeFile() {
+async function getReadMeFile() {
   try {
-    findFile(`xihe-obj/models/${route.params.user}/${route.params.name}/`).then(
-      (tree) => {
-        if (
-          tree.status === 200 &&
-          tree.data.children &&
-          tree.data.children.length
-        ) {
-          README = tree.data.children.filter((item) => {
-            return item.name === 'README.md';
+    await findFile(
+      `xihe-obj/models/${route.params.user}/${route.params.name}/`
+    ).then((tree) => {
+      if (
+        tree.status === 200 &&
+        tree.data.children &&
+        tree.data.children.length
+      ) {
+        README = tree.data.children.filter((item) => {
+          return item.name === 'README.md';
+        });
+        if (README[0]) {
+          downloadObs(README[0].path).then((res) => {
+            res ? (codeString.value = res) : '';
           });
-          if (README[0]) {
-            downloadObs(README[0].path).then((res) => {
-              res ? (codeString.value = res) : '';
-            });
-            result.value = mkit.render(codeString.value);
-          } else {
-            codeString.value = '';
-          }
+          result.value = mkit.render(codeString.value);
+        } else {
+          codeString.value = '';
         }
       }
-    );
+    });
   } catch (error) {
     console.error(error);
   }

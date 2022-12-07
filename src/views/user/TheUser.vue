@@ -232,13 +232,13 @@ function goWatched() {
 }
 
 // 关注用户or点赞
-function getFollow(userId, fans) {
+async function getFollow(userId, fans) {
   // 如果用户没有登录，则跳转到登录页面
   if (!userInfoStore.id) {
     return goAuthorize();
   } else {
     try {
-      getUserDig({ userId, fans }).then((res) => {
+      await getUserDig({ userId, fans }).then((res) => {
         if (res.status === 200) {
           if (followIdList.indexOf(fans.id) !== -1) {
             let index = followIdList.indexOf(fans.id);

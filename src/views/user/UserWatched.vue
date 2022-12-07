@@ -84,13 +84,13 @@ watch(
 );
 
 // 取消关注or取消点赞
-function getWatched(userId, follow) {
+async function getWatched(userId, follow) {
   if (!userInfoStore.id) {
     goAuthorize();
     return;
   } else {
     try {
-      getUserDig2({ userId, follow }).then((res) => {
+      await getUserDig2({ userId, follow }).then((res) => {
         if (res.status === 200) {
           if (loginFollowIdList.value.indexOf(follow.id) !== -1) {
             let index = loginFollowIdList.value.indexOf(follow.id);

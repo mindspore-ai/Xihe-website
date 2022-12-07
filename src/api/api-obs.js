@@ -436,9 +436,9 @@ export async function createFolder(params, successCallback) {
   }
 }
 // 文件下载 封装
-export function downloadFile(objkey, fileName, storeId) {
+export async function downloadFile(objkey, fileName, storeId) {
   try {
-    getDownLoadToken({ objkey }).then((res) => {
+    await getDownLoadToken({ objkey }).then((res) => {
       reopt.method = 'get';
       reopt.url = res.data.signedUrl;
       reopt.responseType = 'blob';
@@ -466,9 +466,9 @@ export function downloadFile(objkey, fileName, storeId) {
   }
 }
 // 比赛数据集下载
-export function downloadDataset(objkey) {
+export async function downloadDataset(objkey) {
   try {
-    getDownLoadToken({ objkey }).then((res) => {
+    await getDownLoadToken({ objkey }).then((res) => {
       // reopt.method = 'get';
       // reopt.url = res.data.signedUrl;
       // reopt.responseType = 'blob';

@@ -8,6 +8,8 @@ import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
+import IconAlbum from '~icons/app/wukong-album';
+import IconCollection from '~icons/app/wukong-collection';
 
 const text = ref('');
 const styleIndex = ref(0);
@@ -192,7 +194,7 @@ function refreshTags() {
             v-for="item in styleData[styleIndex].options"
             :key="item"
             class="sort-item"
-            :class="item.isSelected ? 'active' : ''"
+            :class="item.isSelected ? 'active' : ' '"
             @click="choseSortTag(item)"
           >
             {{ item.tag }}
@@ -202,10 +204,55 @@ function refreshTags() {
     </div>
 
     <div class="wk-experience-btn">立即生成</div>
+
+    <div class="sider-content">
+      <div class="nav-item">
+        <p class="nav-item-img">
+          <o-icon><icon-album></icon-album></o-icon>
+        </p>
+        <p class="nav-item-text">AI画集</p>
+      </div>
+      <div class="nav-item">
+        <p class="nav-item-img">
+          <o-icon><icon-collection></icon-collection></o-icon>
+        </p>
+        <p class="nav-item-text">我的收藏</p>
+      </div>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .wk-experience {
+  position: relative;
+  .sider-content {
+    position: absolute;
+    bottom: 220px;
+    right: -231px;
+    color: #fff;
+    .nav-item {
+      margin-bottom: 16px;
+      text-align: center;
+      cursor: pointer;
+      &-img {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+        font-size: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #b2b2b2;
+        line-height: 20px;
+        margin-top: 8px;
+      }
+    }
+  }
+
   :deep(.el-input) {
     max-width: 1416px;
     width: 100%;
@@ -227,6 +274,7 @@ function refreshTags() {
       }
     }
   }
+
   .title {
     font-size: 18px;
     font-weight: 400;

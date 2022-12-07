@@ -1,0 +1,357 @@
+<script setup>
+import { ref } from 'vue';
+
+import one from '@/assets/imgs/wukong/style-bg-1.png';
+import two from '@/assets/imgs/wukong/style-bg-2.png';
+import three from '@/assets/imgs/wukong/style-bg-3.png';
+import four from '@/assets/imgs/wukong/style-bg-4.png';
+import five from '@/assets/imgs/wukong/style-bg-5.png';
+
+import IconRefresh from '~icons/app/refresh-taichu';
+
+const text = ref('');
+const styleIndex = ref(0);
+
+const styleBackgrounds = [one, two, three, four, five];
+
+const styleData = ref([
+  {
+    style: '动漫',
+    options: [
+      { tag: '宫崎骏', isSelected: false },
+      { tag: '新海城', isSelected: false },
+    ],
+  },
+  {
+    style: '经典',
+    options: [
+      { tag: '达芬奇', isSelected: false },
+      { tag: '毕加索', isSelected: false },
+      { tag: '梵高', isSelected: false },
+      { tag: '莫奈', isSelected: false },
+      { tag: '温斯洛.霍默', isSelected: false },
+      { tag: '莫里茨.科内利斯。埃舍尔', isSelected: false },
+    ],
+  },
+  {
+    style: '幻想艺术',
+    options: [
+      { tag: '韦恩.巴洛', isSelected: false },
+      { tag: '格雷格.鲁特科夫斯基', isSelected: false },
+    ],
+  },
+  {
+    style: '更多风格',
+    options: [
+      { tag: '动漫', isSelected: false },
+      { tag: '国风', isSelected: false },
+      { tag: '田园', isSelected: false },
+      { tag: '涂鸦', isSelected: false },
+      { tag: '立体', isSelected: false },
+      { tag: '浮雕', isSelected: false },
+      { tag: '水彩', isSelected: false },
+      { tag: '油画', isSelected: false },
+      { tag: '暗黑', isSelected: false },
+      { tag: '写实', isSelected: false },
+      { tag: '高清', isSelected: false },
+      { tag: '蜡笔画', isSelected: false },
+      { tag: '专业CG艺术', isSelected: false },
+      { tag: '彩色国风水墨', isSelected: false },
+      { tag: '生动色彩', isSelected: false },
+      { tag: '星际漫游', isSelected: false },
+      { tag: '赛博朋克', isSelected: false },
+      { tag: '印象主义', isSelected: false },
+      { tag: '现代主义', isSelected: false },
+      { tag: '巴洛克风格', isSelected: false },
+      { tag: '像素风格', isSelected: false },
+      { tag: '浮世绘', isSelected: false },
+      { tag: '蒸汽波', isSelected: false },
+    ],
+  },
+  {
+    style: '随机风格',
+    options: [],
+  },
+]);
+
+const exampleData = ref([
+  { text: 'example-item1', isSelected: false },
+  { text: 'example-item2', isSelected: false },
+  { text: 'example-item3', isSelected: false },
+  { text: 'example-item4', isSelected: false },
+  { text: 'example-item5', isSelected: false },
+  { text: 'example-item6', isSelected: false },
+]);
+const newExampleData = ref([
+  { text: '样例1', isSelected: false },
+  { text: '样例2', isSelected: false },
+  { text: '样例3', isSelected: false },
+  { text: '样例4', isSelected: false },
+  { text: '样例5', isSelected: false },
+  { text: '样例6', isSelected: false },
+]);
+
+function exampleSelectHandler(item) {
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
+  item.isSelected = true;
+  text.value = item.text;
+}
+
+function handleInput() {
+  exampleData.value.forEach((item) => {
+    if (item.text === text.value) {
+      item.isSelected = true;
+    } else {
+      item.isSelected = false;
+    }
+  });
+}
+
+function choseStyleSort(val) {
+  styleIndex.value = val;
+}
+
+function choseSortTag(val) {
+  console.log(val);
+  styleData.value.forEach((item) => {
+    item.options.forEach((tag) => {
+      tag.isSelected = false;
+    });
+  });
+  val.isSelected = true;
+}
+
+function getRandomStyle(index) {
+  if (index === 4) {
+    console.log('获取随机风格');
+    styleData.value[index].options = [
+      { tag: '梅西', isSelected: false },
+      { tag: '内马尔', isSelected: false },
+    ];
+  } else {
+    return;
+  }
+}
+
+function refreshTags() {
+  exampleData.value = newExampleData.value;
+}
+</script>
+<template>
+  <div class="wk-experience">
+    <el-input
+      v-model="text"
+      maxlength="75"
+      placeholder="请输入简体中文或选择下方样例"
+      show-word-limit
+      type="text"
+      @input="handleInput"
+    />
+
+    <div class="wk-experience-examples">
+      <p class="title">选择样例</p>
+      <div class="example-items">
+        <p
+          v-for="item in exampleData"
+          :key="item.text"
+          :class="item.isSelected ? 'active' : ''"
+          @click="exampleSelectHandler(item)"
+        >
+          {{ item.text }}
+        </p>
+      </div>
+      <div class="refresh" @click="refreshTags">
+        <o-icon><icon-refresh></icon-refresh></o-icon>
+        <p>换一批</p>
+      </div>
+    </div>
+
+    <div class="wk-experience-styles">
+      <p class="title">选择风格</p>
+      <div class="content">
+        <div class="style-tag">
+          <div
+            v-for="(item, index) in styleData"
+            :key="item.style"
+            class="style-item"
+            :class="styleIndex === index ? 'active-1' : ''"
+            @click="choseStyleSort(index)"
+          >
+            <img :src="styleBackgrounds[index]" alt="" />
+
+            <div class="style-item-name" @click="getRandomStyle(index)">
+              {{ item.style }}
+            </div>
+          </div>
+        </div>
+
+        <div class="sort-tag">
+          <div
+            v-for="item in styleData[styleIndex].options"
+            :key="item"
+            class="sort-item"
+            :class="item.isSelected ? 'active' : ''"
+            @click="choseSortTag(item)"
+          >
+            {{ item.tag }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wk-experience-btn">立即生成</div>
+  </div>
+</template>
+<style lang="scss" scoped>
+.wk-experience {
+  :deep(.el-input) {
+    max-width: 1416px;
+    width: 100%;
+    .el-input__wrapper {
+      box-shadow: none;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      padding: 8px 24px;
+
+      .el-input__inner {
+        font-size: 14px;
+        color: #b2b2b2;
+      }
+
+      .el-input__count .el-input__count-inner {
+        background: none;
+      }
+    }
+  }
+  .title {
+    font-size: 18px;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 25px;
+    margin-right: 40px;
+  }
+  .active {
+    color: #fff !important;
+    background: #008eff !important;
+  }
+  .active-1 {
+    border: 1px solid #008eff;
+  }
+
+  &-examples {
+    display: flex;
+    margin-top: 48px;
+    align-items: center;
+
+    .example-items {
+      flex: 1;
+      display: flex;
+      p {
+        color: #b2b2b2;
+        border: 1px solid #0d8dff;
+        margin-right: 16px;
+        border-radius: 8px;
+        background: rgba(13, 141, 255, 0.3);
+        padding: 7px 12px;
+        font-size: 14px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
+    .refresh {
+      font-size: 12px;
+      font-weight: 400;
+      color: #0d8dff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      .o-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  &-styles {
+    margin-top: 48px;
+    display: flex;
+    .content {
+      flex: 1;
+      .style-tag {
+        display: flex;
+        cursor: pointer;
+      }
+      .sort-tag {
+        display: flex;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border-radius: 8px;
+        margin-top: 16px;
+        padding: 8px 24px 24px;
+        width: 100%;
+        min-height: 93px;
+        .sort-item {
+          background: rgba(13, 141, 255, 0.3);
+          border-radius: 8px;
+          border: 1px solid #0d8dff;
+          padding: 12px 16px;
+          margin-right: 16px;
+          margin-top: 16px;
+          font-size: 18px;
+          font-weight: 400;
+          color: #b2b2b2;
+          cursor: pointer;
+        }
+      }
+    }
+    .style-item {
+      display: flex;
+      justify-content: center;
+      width: 129px;
+      height: 80px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      margin-right: 16px;
+      border-radius: 5px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      &-name {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 40px 0 16px;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      }
+    }
+  }
+
+  &-btn {
+    background-image: url('@/assets/imgs/wukong/button-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 130px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 48px auto 0px;
+    cursor: pointer;
+  }
+}
+</style>

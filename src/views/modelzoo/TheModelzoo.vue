@@ -24,6 +24,13 @@ let i18n = {
   clear: '清除',
   cardLists: [
     {
+      title: '悟空',
+      introduce: '看我猴子七十二变',
+      url: dasheng,
+      path: '/modelzoo/wukong',
+      openness: true,
+    },
+    {
       title: 'CodeGeeX',
       introduce: '130亿参数的多编程语言代码生成预训练模型',
       url: codegeex,

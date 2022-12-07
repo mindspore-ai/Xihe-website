@@ -502,16 +502,16 @@ function goRule() {
     --el-dialog-margin-top: 32vh;
     .el-dialog__header {
       display: block;
-      font-size: 24px;
+      // font-size: 24px;
+      // line-height: 32px;
+      // padding-top: 40px;
       color: #000000;
-      line-height: 32px;
       text-align: center;
-      padding-top: 40px;
       margin-right: 0;
     }
 
     .el-dialog__body {
-      padding: 6px 40px 40px;
+      padding: 0px 40px 40px;
     }
     .el-dialog__headerbtn {
       top: 0;

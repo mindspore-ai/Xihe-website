@@ -7,7 +7,6 @@
     "dev": "vite",
     "build:staging": "vite build --mode staging",
     "build": "vite build",
-    "build:production": "vite build --mode production",
     "lint": "eslint \"src/**/*.{js,ts,vue,jsx,tsx}\""
   },
   "dependencies": {

@@ -27,6 +27,7 @@ import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
 import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
+import gallery from '@/assets/imgs/wukong/ceshi1.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -61,6 +62,10 @@ const homeIns = ref(null);
 const quickStartLabel = '快速开始';
 const i18n = {
   mouse: '滑动鼠标探索更多',
+  gallery: {
+    title: '精选画廊',
+    introduce: '此处文案待提供此处文案待提供',
+  },
   page: {
     title: '个人主页',
     introduce: '在个人主页开启探索、创建、收藏MindSpore项目、模型、数据集之旅',
@@ -123,16 +128,16 @@ function handleBtnClick() {
     router.push(`/${userInfo.userName}`);
   }
 }
-function goInvited() {
-  const status = loginStore.loginStatus;
-  if (status === LOGIN_STATUS.DOING) {
-    return;
-  } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
-    goAuthorize();
-  } else {
-    router.push(`/settings/invitation`);
-  }
-}
+// function goInvited() {
+//   const status = loginStore.loginStatus;
+//   if (status === LOGIN_STATUS.DOING) {
+//     return;
+//   } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
+//     goAuthorize();
+//   } else {
+//     router.push(`/settings/invitation`);
+//   }
+// }
 function handleBtnClick2() {
   router.push(`https://${DOMAIN}/datasets`);
 }
@@ -285,6 +290,31 @@ function goActivity() {
 
     <div class="home-content">
       <div class="wrapper">
+        <!-- 精选画廊 -->
+        <div class="content-gallery">
+          <div class="gallery-left">
+            <p class="gallery-title">{{ i18n.gallery.title }}</p>
+            <p class="gallery-desc">{{ i18n.gallery.introduce }}</p>
+            <OButton
+              animation
+              class="gallery-entry"
+              data-aos="slide-up"
+              data-aos-offset="200"
+              data-aos-duration="1600"
+              @click="handleBtnClick"
+            >
+              {{ i18n.modelzoo.quickStartLabel }}
+              <template #suffix>
+                <OIcon><IconArrowRight /></OIcon>
+              </template>
+            </OButton>
+          </div>
+          <div class="gallery-right">
+            <img :src="gallery" alt="" />
+            <img :src="gallery" alt="" />
+            <img :src="gallery" alt="" />
+          </div>
+        </div>
         <!-- 个人主页 -->
         <div
           class="content-page"
@@ -293,6 +323,7 @@ function goActivity() {
           data-aos-offset="-121"
           data-aos-once="true"
         >
+          <img class="page-right" :src="homePageImg" alt="" />
           <div class="page-left">
             <p class="page-title">{{ i18n.page.title }}</p>
             <p class="page-desc">{{ i18n.page.introduce }}</p>
@@ -310,10 +341,18 @@ function goActivity() {
               </template>
             </OButton>
           </div>
-          <img class="page-right" :src="homePageImg" alt="" />
         </div>
         <!-- 项目-->
         <div class="content-project">
+          <a class="project-entry" :href="`https://${DOMAIN}/projects`">
+            <div class="entry-header">
+              <p class="entry-title">{{ i18n.project.title }}</p>
+              <p class="entry-desc">{{ i18n.project.introduce }}</p>
+            </div>
+            <p class="entry-body">
+              {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
+            </p>
+          </a>
           <a
             class="project-card"
             :href="`https://${DOMAIN}/projects/wesley/lenet5_demo`"
@@ -358,15 +397,6 @@ function goActivity() {
               </div>
               <div class="project-tag">NLP</div>
             </div>
-          </a>
-          <a class="project-entry" :href="`https://${DOMAIN}/projects`">
-            <div class="entry-header">
-              <p class="entry-title">{{ i18n.project.title }}</p>
-              <p class="entry-desc">{{ i18n.project.introduce }}</p>
-            </div>
-            <p class="entry-body">
-              {{ i18n.project.more }}<OIcon><IconArrowRight /></OIcon>
-            </p>
           </a>
         </div>
 
@@ -796,6 +826,44 @@ function goActivity() {
       max-width: 1472px;
       margin: 0 auto;
       padding: 60px 16px 128px;
+      .content-gallery {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 64px;
+
+        .gallery-left {
+          .gallery-title {
+            font-size: 54px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 76px;
+          }
+          .gallery-desc {
+            font-size: 16px;
+            font-weight: normal;
+            color: #555555;
+            line-height: 24px;
+            margin-top: 16px;
+          }
+
+          .gallery-entry {
+            margin-top: 48px;
+          }
+        }
+        perspective: 800px;
+        .gallery-right {
+          width: 68%;
+          display: flex;
+          justify-content: right;
+          transform: rotateY(345deg);
+          transform-origin: right;
+          img {
+            width: 30%;
+            margin-left: 24px;
+          }
+        }
+      }
 
       .content-page {
         display: flex;
@@ -834,7 +902,7 @@ function goActivity() {
           flex-basis: 277px;
           background: rgba(255, 255, 255, 0.95);
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-          margin-right: 24px;
+          margin-left: 24px;
           cursor: pointer;
 
           &:hover {

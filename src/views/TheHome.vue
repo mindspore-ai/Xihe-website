@@ -48,9 +48,9 @@ const tipVisible = ref(true);
 const toggleTip = (val) => {
   tipVisible.value = val;
 };
-const galleryVisible = ref(true);
+const galleryVisible = ref(false);
 const toggleGallery = (val) => {
-  tipVisible.value = val;
+  galleryVisible.value = val;
 };
 
 const modules = [Pagination, Autoplay];
@@ -352,7 +352,7 @@ function goActivity() {
               </template>
             </OButton>
           </div>
-          <div class="gallery-right">
+          <div class="gallery-right" @click="toggleGallery(true)">
             <img :src="gallery" alt="" />
             <img :src="gallery" alt="" />
             <img :src="gallery" alt="" />
@@ -871,6 +871,11 @@ function goActivity() {
       padding: 60px 16px 128px;
       :deep(.el-dialog) {
         background: rgba(0, 0, 0, 0.85);
+        .el-dialog__body {
+          position: relative;
+          top: 50%;
+          transform: translateY(-55%);
+        }
         .my-swiper2 {
           --swiper-navigation-size: 24px;
           --swiper-navigation-color: #fff;
@@ -878,7 +883,7 @@ function goActivity() {
             img {
               width: 100%;
               height: auto;
-              margin-top: 7%;
+              margin-top: 30px;
             }
           }
           .swiper-pagination-fraction {

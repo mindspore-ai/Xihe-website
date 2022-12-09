@@ -1,20 +1,31 @@
 <script setup>
-import { ref } from 'vue';
+import { watch, ref, nextTick, onUnmounted } from 'vue';
 
 import one from '@/assets/imgs/wukong/style-bg-1.png';
 import two from '@/assets/imgs/wukong/style-bg-2.png';
 import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
+import generate from '@/assets/imgs/taichu/taichu-vision/taichu_vision_2.jpg';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
+import IconDownload from '~icons/app/wukong-download';
+import IconLike from '~icons/app/wukong-like';
+
+const imgHeight = ref(null);
+const imgContain = ref(null);
 
 const text = ref('');
 const styleIndex = ref(0);
 
+const showCollection = ref(false);
+
+const isInferred = ref(false);
+
 const styleBackgrounds = [one, two, three, four, five];
+const styleBackground = [generate, generate, generate, generate];
 
 const styleData = ref([
   {
@@ -137,9 +148,53 @@ function getRandomStyle(index) {
   }
 }
 
+const showInferDlg = ref(false);
+function handleInfer() {
+  showInferDlg.value = true;
+
+  setTimeout(() => {
+    isInferred.value = true;
+  }, 3000);
+}
+
 function refreshTags() {
   exampleData.value = newExampleData.value;
 }
+
+function toggleCollectionDlg(val) {
+  showCollection.value = val;
+}
+
+// const screenWidth = ref(
+//   window.innerWidth ||
+//     document.documentElement.clientWidth ||
+//     document.body.clientWidth
+// );
+
+// const onResize = () => {
+//   screenWidth.value =
+//     window.innerWidth ||
+//     document.documentElement.clientWidth ||
+//     document.body.clientWidth;
+// };
+// window.addEventListener('resize', onResize);
+
+// watch(
+//   () => screenWidth.value,
+//   () => {
+//     if (isInferred.value) {
+//       nextTick(() => {
+//         console.log(imgContain.value);
+//         console.log(imgContain.value[0]);
+//         // imgContain.value[0].style.height = imgContain.value[0].offsetWidth;
+//       });
+//     }
+//   }
+// );
+
+// onUnmounted(() => {
+//   window.removeEventListener('resize', onResize);
+// });
 </script>
 <template>
   <div class="wk-experience">
@@ -203,7 +258,7 @@ function refreshTags() {
       </div>
     </div>
 
-    <div class="wk-experience-btn">立即生成</div>
+    <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
 
     <div class="sider-content">
       <div class="nav-item">
@@ -212,18 +267,263 @@ function refreshTags() {
         </p>
         <p class="nav-item-text">AI画集</p>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" @click="toggleCollectionDlg(true)">
         <p class="nav-item-img">
           <o-icon><icon-collection></icon-collection></o-icon>
         </p>
         <p class="nav-item-text">我的收藏</p>
       </div>
     </div>
+    <!-- 推理dialog -->
+    <el-dialog
+      v-model="showInferDlg"
+      :fullscreen="true"
+      :append-to-body="true"
+      class="infer-dlg"
+    >
+      <template #header="{ titleClass }">
+        <div class="infer-dlg-head">
+          <span class="title" :class="titleClass"
+            >来自深渊 风景 绘画 写实风格</span
+          >
+        </div>
+      </template>
+
+      <div v-if="!isInferred" class="infer-dlg-loading">
+        <img src="@/assets/gifs/loading.gif" alt="" />
+        <p>正在创作中，请耐心等待</p>
+      </div>
+
+      <div v-else-if="isInferred" class="infer-dlg-result">
+        <div
+          v-for="item in styleBackground"
+          ref="imgContain"
+          :key="item"
+          class="result-item"
+        >
+          <img ref="imgHeight" :src="item" alt="" />
+          <div class="handles">
+            <div class="handles-contain">
+              <p>
+                <o-icon><icon-download></icon-download></o-icon>
+              </p>
+              <p>
+                <o-icon><icon-like></icon-like></o-icon>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- 我的收藏dialog -->
+    <el-dialog
+      v-model="showCollection"
+      :fullscreen="true"
+      :append-to-body="true"
+      center
+      class="collection-dlg"
+    >
+      <template #header="{ titleId, titleClass }">
+        <div class="collection-dlg-head">
+          <span :id="titleId" class="title" :class="titleClass">我的收藏</span>
+          <span class="numbers">6/10</span>
+        </div>
+      </template>
+
+      <div class="collection-dlg-contain">
+        <!-- <el-carousel type="card" height="200px" :autoplay="false">
+          <el-carousel-item v-for="item in styleBackgrounds" :key="item">
+            <div class="collect-item">
+              <img :src="item" alt="" />
+            </div>
+          </el-carousel-item>
+        </el-carousel> -->
+      </div>
+    </el-dialog>
   </div>
 </template>
+<style lang="scss">
+.infer-dlg {
+  background: none;
+  backdrop-filter: blur(5px);
+  &-head {
+    .title {
+      color: #fff;
+    }
+  }
+
+  &-result {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .result-item {
+      flex: 1;
+      margin-right: 24px;
+      position: relative;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &:hover {
+        .handles {
+          display: block;
+        }
+      }
+
+      img {
+        width: 100%;
+        object-fit: contain;
+      }
+
+      .handles {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        &-contain {
+          display: flex;
+          p {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:first-child {
+              margin-right: 16px;
+            }
+            &:hover {
+              background: rgba(255, 255, 255, 0.3);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &-loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    img {
+      width: 56px;
+      align-self: center;
+    }
+    p {
+      font-size: 18px;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 25px;
+      text-align: center;
+    }
+  }
+
+  .el-dialog__header {
+    height: 80px;
+    padding: 0;
+    text-align: center;
+    line-height: 80px;
+    background: #000;
+  }
+
+  .el-dialog__body {
+    padding-left: 64px;
+    padding-right: 64px;
+    height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+  }
+
+  .el-dialog__headerbtn {
+    top: 16px;
+    right: 24px;
+    .el-dialog__close {
+      color: #fff;
+      font-size: 40px;
+    }
+  }
+}
+
+.collection-dlg {
+  background: none;
+  backdrop-filter: blur(5px);
+
+  &-head {
+    height: 80px;
+    text-align: center;
+    line-height: 80px;
+    width: 100%;
+    .title {
+      font-size: 24px;
+      color: #ffffff;
+      line-height: 24px;
+      margin-right: 24px;
+    }
+    .numbers {
+      font-size: 16px;
+      color: #ffffff;
+      line-height: 24px;
+    }
+  }
+
+  &-contain {
+    width: 100%;
+    height: 100%;
+
+    .el-carousel__item {
+      // .collect-item {
+      //   width: 600px;
+      //   height: 600px;
+      //   background: #d3dce6;
+      // }
+    }
+
+    // .el-carousel__item:nth-child(2n) {
+    //   background-color: #99a9bf;
+    // }
+
+    // .el-carousel__item:nth-child(2n + 1) {
+    //   background-color: #d3dce6;
+    // }
+  }
+
+  .el-dialog__header {
+    padding: 0;
+    margin-right: 0;
+    background: #000;
+  }
+
+  .el-dialog__body {
+    padding: 0 0 200px;
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .el-dialog__headerbtn {
+    // top: 10px;
+    right: 10px;
+    .el-dialog__close {
+      color: #fff;
+      font-size: 40px;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .wk-experience {
   position: relative;
+
   .sider-content {
     position: absolute;
     bottom: 220px;

@@ -19,7 +19,7 @@ function getHeaderConfig() {
 export function queryUserToken(params) {
   const url = `/server/login`;
   return request
-    .get(url, { params })
+    .get(url, { $doException: true, params })
     .then((res) => {
       return res.data;
     })
@@ -37,7 +37,7 @@ export async function queryUserInfo(params) {
   if (token) {
     const url = `/server/user`;
     return request
-      .get(url, getHeaderConfig())
+      .get(url, { $doException: true, ...getHeaderConfig() })
       .then((res) => {
         return res.data;
       })
@@ -46,9 +46,11 @@ export async function queryUserInfo(params) {
       });
   } else if (userName) {
     const url = `/server/user?account=${userName}`;
-    return request.get(url, getHeaderConfig()).then((res) => {
-      return res.data;
-    });
+    return request
+      .get(url, { $doException: true, ...getHeaderConfig() })
+      .then((res) => {
+        return res.data;
+      });
   }
 }
 
@@ -58,9 +60,14 @@ export async function queryUserInfo(params) {
  */
 export function queryUserIdToken(params) {
   const url = `/server/login/${params.userName}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    })
+    .catch(() => {
+      saveUserAuth();
+    });
 }
 
 /**
@@ -128,9 +135,11 @@ export function getUserProjectData(params, name) {
  */
 export function setUserData(params) {
   const url = '/server/user';
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .put(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

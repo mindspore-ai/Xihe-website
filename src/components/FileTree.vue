@@ -151,7 +151,7 @@ async function getDetailData(path) {
       .catch((err) => {
         ElMessage({
           type: 'error',
-          message: err.message,
+          message: err.msg,
         });
       });
   } catch (error) {

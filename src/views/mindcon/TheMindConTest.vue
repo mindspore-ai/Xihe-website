@@ -224,7 +224,7 @@ async function getData() {
 
     isAnswering.value = true;
   } catch (e) {
-    if (e.message === 'it is in-progress') {
+    if (e.msg === 'it is in-progress') {
       ElMessage({
         type: 'warning',
         message: '您有其他页面正在答题中，请稍后重试',

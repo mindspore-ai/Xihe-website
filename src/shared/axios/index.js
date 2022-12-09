@@ -88,30 +88,26 @@ const responseInterceptorId = request.interceptors.response.use(
     if (err.response) {
       err = handleError(err);
       // token过期，重新登录
-      if (err.code === 401) {
+      if (err.status === 401) {
         saveUserAuth();
         goAuthorize();
       }
     } else {
       // 没有response(没有状态码)的情况
       // eg: 超时；断网；请求重复被取消；主动取消请求；
-
       // 错误信息err传入isCancel方法，可以判断请求是否被取消
       if (axios.isCancel(err)) {
-        throw new axios.Cancel(
-          err.message || `请求'${request.config.url}'被取消`
-        );
+        throw new axios.Cancel(err.msg || `请求'${request.config.url}'被取消`);
       } else if (err.stack && err.stack.includes('timeout')) {
-        err.message = '请求超时!';
+        err.msg = '请求超时!';
       } else {
-        err.message = '连接服务器失败!';
+        err.msg = '连接服务器失败!';
       }
     }
-
-    if (!err.filtered) {
+    if (!config.$doException) {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
         center: true,
       });
     }

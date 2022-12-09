@@ -57,7 +57,7 @@ export function getRepoDetailByName(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -75,7 +75,7 @@ export async function uploadFileGitlab(params, path) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -93,7 +93,7 @@ export async function editorFileGitlab(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -111,7 +111,7 @@ export async function getGitlabTree(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -129,7 +129,7 @@ export async function deleteFile(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -148,7 +148,7 @@ export async function getGitlabFileRaw(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -166,7 +166,7 @@ export async function getGitlabFile(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err?.message,
+        message: err?.msg,
       });
       throw new Error(err);
     });
@@ -185,7 +185,7 @@ export async function gitlabDownloadAll(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });
@@ -205,7 +205,7 @@ export async function deleteFolder(params) {
     .catch((err) => {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
       });
       throw new Error(err);
     });

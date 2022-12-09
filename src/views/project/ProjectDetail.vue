@@ -772,7 +772,7 @@ function checkName(rule, value, callback) {
     </div>
     <!-- Fork -->
     <div class="fork-dialog">
-      <el-dialog v-model="forkShow" title="创建FORK" center>
+      <el-dialog v-model="forkShow" destroy-on-close title="创建FORK" center>
         <el-form
           ref="ruleFormRef"
           :model="forkForm"
@@ -823,7 +823,7 @@ $theme: #0d8dff;
 .loading {
   :deep .el-dialog {
     width: 800px;
-    min-height: 502px;
+    // min-height: 502px;
     --el-dialog-margin-top: 24vh;
     .el-dialog__body {
       display: flex;
@@ -849,7 +849,7 @@ $theme: #0d8dff;
 .fork-dialog {
   :deep .el-dialog {
     width: 800px;
-    min-height: 502px;
+    // min-height: 502px;
     --el-dialog-margin-top: 24vh;
     .el-dialog__header {
       padding-bottom: 15px;

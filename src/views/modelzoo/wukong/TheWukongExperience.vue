@@ -18,7 +18,6 @@ const text = ref('');
 const styleIndex = ref(0);
 
 const showCollection = ref(false);
-
 const isInferred = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);

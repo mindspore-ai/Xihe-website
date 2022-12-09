@@ -5,9 +5,11 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay } from 'swiper';
+import { Pagination, Autoplay, FreeMode, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
 
 import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
@@ -44,6 +46,10 @@ const toggleDlg = (val) => {
 
 const tipVisible = ref(true);
 const toggleTip = (val) => {
+  tipVisible.value = val;
+};
+const galleryVisible = ref(true);
+const toggleGallery = (val) => {
   tipVisible.value = val;
 };
 
@@ -264,6 +270,7 @@ function goActivity() {
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
+      class="my-swiper"
     >
       <swiper-slide>
         <div class="photo7 cursor" @click="goActivity()"></div>
@@ -291,6 +298,42 @@ function goActivity() {
     <div class="home-content">
       <div class="wrapper">
         <!-- 精选画廊 -->
+        <el-dialog v-model="galleryVisible" fullscreen align-center>
+          <swiper
+            :slides-per-view="3"
+            :slides-per-group="3"
+            :speed="3000"
+            :space-between="30"
+            :free-mode="true"
+            :navigation="true"
+            :pagination="{
+              type: 'fraction',
+            }"
+            :modules="[Pagination, FreeMode, Navigation]"
+            loop
+            class="my-swiper2"
+          >
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+          </swiper>
+
+          <div class="button">
+            <OButton animation class="gallery-entry" @click="handleBtnClick">
+              {{ i18n.modelzoo.quickStartLabel }}
+              <template #suffix>
+                <OIcon><IconArrowRight /></OIcon>
+              </template>
+            </OButton>
+          </div>
+        </el-dialog>
         <div class="content-gallery">
           <div class="gallery-left">
             <p class="gallery-title">{{ i18n.gallery.title }}</p>
@@ -726,7 +769,7 @@ function goActivity() {
   //     }
   //   }
   // }
-  .swiper {
+  .my-swiper {
     margin-top: 80px;
     @media screen and (max-width: 1920px) {
       img {
@@ -826,6 +869,38 @@ function goActivity() {
       max-width: 1472px;
       margin: 0 auto;
       padding: 60px 16px 128px;
+      :deep(.el-dialog) {
+        background: rgba(0, 0, 0, 0.85);
+        .my-swiper2 {
+          --swiper-navigation-size: 24px;
+          --swiper-navigation-color: #fff;
+          .swiper-slide {
+            img {
+              width: 100%;
+              height: auto;
+              margin-top: 7%;
+            }
+          }
+          .swiper-pagination-fraction {
+            color: red;
+            font-size: 16px;
+            top: 0;
+            bottom: unset;
+          }
+        }
+        .button {
+          margin-top: 64px;
+          text-align: center;
+          .o-button {
+            color: #fff;
+            border: 1px solid #fff;
+            &:hover {
+              color: #fff;
+              border: 1px solid #fff;
+            }
+          }
+        }
+      }
       .content-gallery {
         display: flex;
         justify-content: space-between;

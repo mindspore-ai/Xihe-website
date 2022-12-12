@@ -58,7 +58,7 @@ function getFollow(name) {
   } else {
     try {
       let params = { account: name };
-      getFollowing(params).then((res) => {
+      getFollowing(params).then(() => {
         userInfoStore.followingCount++;
         getFansList();
       });
@@ -72,7 +72,7 @@ function getFollow(name) {
 function cancelFollow(name) {
   try {
     let params = { account: name };
-    cancelFollowing(params).then((res) => {
+    cancelFollowing(params).then(() => {
       userInfoStore.followingCount--;
       getFansList();
     });

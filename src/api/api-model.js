@@ -1,10 +1,5 @@
 import { request } from '@/shared/axios';
-import { useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
-
-function getUserInfo() {
-  return useUserInfoStore();
-}
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)

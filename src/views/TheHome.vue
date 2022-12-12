@@ -31,6 +31,9 @@ import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
 import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
+import gallery1 from '@/assets/imgs/home/gallery1.png';
+import gallery2 from '@/assets/imgs/home/gallery2.png';
+import gallery3 from '@/assets/imgs/home/gallery3.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -315,9 +318,18 @@ function goActivity() {
             loop
             class="my-swiper2"
           >
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
+            >
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p>城市夜景 赛博朋克 格雷格·鲁特科夫斯基</p></swiper-slide
+            >
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p>诺亚方舟在世界末日起航 科幻插画</p></swiper-slide
+            >
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
@@ -328,7 +340,12 @@ function goActivity() {
           </swiper>
 
           <div class="button">
-            <OButton animation class="gallery-entry" @click="handleBtnClick">
+            <OButton
+              animation
+              class="gallery-entry"
+              type="small"
+              @click="handleBtnClick"
+            >
               {{ i18n.modelzoo.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -355,11 +372,13 @@ function goActivity() {
             </OButton>
           </div>
           <div class="gallery-right" @click="toggleGallery(true)">
-            <img :src="gallery" alt="" />
-            <img :src="gallery" alt="" />
-            <img :src="gallery" alt="" />
+            <img class="gallery1" :src="gallery1" alt="" />
+            <img class="gallery2" :src="gallery2" alt="" />
+            <img class="gallery3" :src="gallery3" alt="" />
           </div>
-          <OIcon class="arrow-right"><IconArrowRight2 /></OIcon>
+          <OIcon class="arrow-right" @click="toggleGallery(true)"
+            ><IconArrowRight2
+          /></OIcon>
         </div>
         <!-- 个人主页 -->
         <div
@@ -908,7 +927,14 @@ function goActivity() {
             img {
               width: 100%;
               height: auto;
-              margin-top: 20%;
+              margin-top: 16%;
+            }
+            p {
+              color: #ffffff;
+              text-align: center;
+              line-height: 26px;
+              font-size: 18px;
+              margin-top: 16px;
             }
           }
           .my-pagination-clickable {
@@ -923,7 +949,7 @@ function goActivity() {
           }
         }
         .button {
-          margin-top: 64px;
+          margin-top: 3%;
           text-align: center;
           .o-button {
             color: #fff;
@@ -975,13 +1001,19 @@ function goActivity() {
           width: 68%;
           display: flex;
           justify-content: right;
-          transform: rotateY(345deg);
-          transform-origin: right;
-          position: relative;
+          align-items: center;
+          // transform: rotateY(345deg);
+          // transform-origin: right;
           cursor: pointer;
           img {
             width: 30%;
             margin-left: 24px;
+          }
+          .gallery1 {
+            height: 78%;
+          }
+          .gallery2 {
+            height: 89%;
           }
           &:hover + .arrow-right {
             display: block;

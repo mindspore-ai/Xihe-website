@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -24,6 +24,9 @@ const mkit = handleMarkdown();
 const codeString = ref('');
 const result = ref();
 let README = '';
+const rightModel = ref(null);
+const licensesHeight = ref(0);
+
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -114,6 +117,9 @@ function handleDetailClick(val) {
 function handleProjectClick(val) {
   router.push(`/projects/${val.owner.name}/${val.name}`);
 }
+onMounted(() => {
+  licensesHeight.value = `${rightModel.value.offsetHeight + 40}px`;
+});
 // 文本监听
 watch(
   () => codeString.value,
@@ -172,33 +178,35 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div class="download-data">
-        <div class="download-title">{{ i18n.recentDownload }}</div>
-        <span class="download-count">{{ detailData.download_count }}</span>
-      </div>
-      <!-- 相关模型 -->
-      <div class="dataset-data">
-        <div class="title">{{ i18n.dataset }}</div>
-        <div class="dataset-box">
-          <relate-card
-            v-if="detailData.related_models"
-            :detail-data="detailData.related_models"
-            :name="'related_models'"
-            @jump="handleDetailClick"
-          ></relate-card>
-          <no-relate v-else relate-name="model"></no-relate>
+      <div ref="rightModel" class="right-inner">
+        <div class="download-data">
+          <div class="download-title">{{ i18n.recentDownload }}</div>
+          <span class="download-count">{{ detailData.download_count }}</span>
         </div>
-      </div>
-      <!-- 相关项目 -->
-      <div class="related-project">
-        <div class="title">{{ i18n.relatedItem }}</div>
-        <project-relate-card
-          v-if="detailData.related_projects"
-          :detail-data="detailData.related_projects"
-          :name="'related_projects'"
-          @jump="handleProjectClick"
-        ></project-relate-card>
-        <no-relate v-else relate-name="project"></no-relate>
+        <!-- 相关模型 -->
+        <div class="dataset-data">
+          <div class="title">{{ i18n.dataset }}</div>
+          <div class="dataset-box">
+            <relate-card
+              v-if="detailData.related_models"
+              :detail-data="detailData.related_models"
+              :name="'related_models'"
+              @jump="handleDetailClick"
+            ></relate-card>
+            <no-relate v-else relate-name="model"></no-relate>
+          </div>
+        </div>
+        <!-- 相关项目 -->
+        <div class="related-project">
+          <div class="title">{{ i18n.relatedItem }}</div>
+          <project-relate-card
+            v-if="detailData.related_projects"
+            :detail-data="detailData"
+            :name="'related_projects'"
+            @jump="handleProjectClick"
+          ></project-relate-card>
+          <no-relate v-else relate-name="project"></no-relate>
+        </div>
       </div>
     </div>
   </div>

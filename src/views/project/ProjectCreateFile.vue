@@ -298,8 +298,6 @@ async function confirmCreating(formEl) {
           }
         })
         .catch((error) => {
-          // console.log(error.response);
-          // console.log(error.response.data.msg);
           if (error.response.data.msg === "can't find repo id") {
             ElMessage({
               type: 'warning',

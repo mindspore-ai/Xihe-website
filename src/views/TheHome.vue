@@ -298,16 +298,17 @@ function goActivity() {
     <div class="home-content">
       <div class="wrapper">
         <!-- 精选画廊 -->
-        <el-dialog v-model="galleryVisible" fullscreen align-center>
+        <el-dialog v-model="galleryVisible" fullscreen>
           <swiper
             :slides-per-view="3"
-            :slides-per-group="3"
-            :speed="3000"
+            :slides-per-group="1"
+            :speed="500"
             :space-between="30"
             :free-mode="true"
             :navigation="true"
             :pagination="{
               type: 'fraction',
+              clickableClass: 'my-pagination-clickable',
             }"
             :modules="[Pagination, FreeMode, Navigation]"
             loop
@@ -871,10 +872,22 @@ function goActivity() {
       padding: 60px 16px 128px;
       :deep(.el-dialog) {
         background: rgba(0, 0, 0, 0.85);
+        .el-dialog__headerbtn {
+          z-index: 200;
+        }
+        .el-icon {
+          color: #fff;
+          font-size: 24px;
+        }
+        .el-dialog__header {
+          padding: 0;
+        }
         .el-dialog__body {
-          position: relative;
-          top: 50%;
-          transform: translateY(-55%);
+          // position: relative;
+          // top: 50%;
+          // transform: translateY(-50%);
+          padding: 0 16px;
+          height: 100%;
         }
         .my-swiper2 {
           --swiper-navigation-size: 24px;
@@ -883,13 +896,17 @@ function goActivity() {
             img {
               width: 100%;
               height: auto;
-              margin-top: 30px;
+              margin-top: 20%;
             }
           }
+          .my-pagination-clickable {
+            position: fixed;
+          }
           .swiper-pagination-fraction {
-            color: red;
+            color: #fff;
             font-size: 16px;
-            top: 0;
+            position: fixed;
+            top: 22px;
             bottom: unset;
           }
         }

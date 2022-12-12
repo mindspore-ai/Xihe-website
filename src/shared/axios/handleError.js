@@ -1,63 +1,53 @@
-import whiteListApi from '@/whitelist/whitelist-api';
-
 export default (err) => {
   const { response } = err;
 
   if (!response.status) {
+    err.status = '';
     err.code = '';
-    err.message = '有response但没有response.status的情况';
+    err.msg = '有response但没有response.status的情况';
   }
-  err.code = response.status;
+  err.status = response.status;
+  err.code = response.data?.code || '';
+  err.msg = response.data?.msg || '';
 
-  const isFilteredErr =
-    whiteListApi.indexOf(response.config.url) !== -1 ||
-    response.status === 400 ||
-    response.data?.code === 'resource_not_exists';
-  if (isFilteredErr) {
-    err.message = response.data?.msg || '';
-    err.filtered = true;
-    return err;
-  }
-
-  switch (response.status) {
-    case 200:
-      err.message = '错误响应也会有状态码为200的情况';
-      break;
-    case 400:
-      err.message = '请求出错(400)';
-      break;
-    case 401:
-      err.message = '请重新登录(401)';
-      break;
-    case 403:
-      err.message = '拒绝访问(403)';
-      break;
-    case 404:
-      err.message = '请求出错(404)';
-      break;
-    case 408:
-      err.message = '请求超时(408)';
-      break;
-    case 500:
-      err.message = '服务器错误(500)';
-      break;
-    case 501:
-      err.message = '服务未实现(501)';
-      break;
-    case 502:
-      err.message = '网络错误(502)';
-      break;
-    case 503:
-      err.message = '服务不可用(503)';
-      break;
-    case 504:
-      err.message = '网络超时(504)';
-      break;
-    case 505:
-      err.message = 'HTTP版本不受支持(505)';
-      break;
-    default:
-      err.message = `连接出错，状态码：(${err.response.status})!`;
+  if (err.msg === '' && err.status !== 400) {
+    switch (response.status) {
+      case 200:
+        err.msg = '错误响应也会有状态码为200的情况';
+        break;
+      case 401:
+        err.msg = '请重新登录(401)';
+        break;
+      case 403:
+        err.msg = '拒绝访问(403)';
+        break;
+      case 404:
+        err.msg = '请求出错(404)';
+        break;
+      case 408:
+        err.msg = '请求超时(408)';
+        break;
+      case 500:
+        err.msg = '服务器错误(500)';
+        break;
+      case 501:
+        err.msg = '服务未实现(501)';
+        break;
+      case 502:
+        err.msg = '网络错误(502)';
+        break;
+      case 503:
+        err.msg = '服务不可用(503)';
+        break;
+      case 504:
+        err.msg = '网络超时(504)';
+        break;
+      case 505:
+        err.msg = 'HTTP版本不受支持(505)';
+        break;
+      default:
+        err.msg = `连接出错，状态码：(${err.response.status})!`;
+    }
   }
 
   return err;

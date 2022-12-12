@@ -165,7 +165,7 @@ function setProject() {
       router.push(`/projects/${userInfo.userName}/${res.data.name}`);
     })
     .catch((err) => {
-      if (err.message === 'unsupported protocol') {
+      if (err.msg === 'unsupported protocol') {
         ElMessage({
           type: 'error',
           message: '暂不支持该协议',

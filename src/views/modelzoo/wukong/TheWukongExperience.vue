@@ -1,12 +1,12 @@
 <script setup>
-import { watch, ref, nextTick, onUnmounted } from 'vue';
+import { ref } from 'vue';
 
 import one from '@/assets/imgs/wukong/style-bg-1.png';
 import two from '@/assets/imgs/wukong/style-bg-2.png';
 import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
-import generate from '@/assets/imgs/taichu/taichu-vision/taichu_vision_2.jpg';
+import generate from '@/assets/imgs/wukong/ceshi3.jpg';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconAlbum from '~icons/app/wukong-album';
@@ -14,18 +14,14 @@ import IconCollection from '~icons/app/wukong-collection';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 
-const imgHeight = ref(null);
-const imgContain = ref(null);
-
 const text = ref('');
 const styleIndex = ref(0);
 
 const showCollection = ref(false);
-
 const isInferred = ref(false);
 
-const styleBackgrounds = [one, two, three, four, five];
-const styleBackground = [generate, generate, generate, generate];
+const styleBackgrounds = ref([one, two, three, four, five]);
+const styleBackground = ref([generate, generate, generate, generate]);
 
 const styleData = ref([
   {
@@ -43,7 +39,7 @@ const styleData = ref([
       { tag: '梵高', isSelected: false },
       { tag: '莫奈', isSelected: false },
       { tag: '温斯洛.霍默', isSelected: false },
-      { tag: '莫里茨.科内利斯。埃舍尔', isSelected: false },
+      { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
     ],
   },
   {
@@ -103,6 +99,10 @@ const newExampleData = ref([
   { text: '样例5', isSelected: false },
   { text: '样例6', isSelected: false },
 ]);
+
+function cancelCollect() {
+  styleBackground.value.splice(3, 1);
+}
 
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
@@ -165,36 +165,10 @@ function toggleCollectionDlg(val) {
   showCollection.value = val;
 }
 
-// const screenWidth = ref(
-//   window.innerWidth ||
-//     document.documentElement.clientWidth ||
-//     document.body.clientWidth
-// );
-
-// const onResize = () => {
-//   screenWidth.value =
-//     window.innerWidth ||
-//     document.documentElement.clientWidth ||
-//     document.body.clientWidth;
-// };
-// window.addEventListener('resize', onResize);
-
-// watch(
-//   () => screenWidth.value,
-//   () => {
-//     if (isInferred.value) {
-//       nextTick(() => {
-//         console.log(imgContain.value);
-//         console.log(imgContain.value[0]);
-//         // imgContain.value[0].style.height = imgContain.value[0].offsetWidth;
-//       });
-//     }
-//   }
-// );
-
-// onUnmounted(() => {
-//   window.removeEventListener('resize', onResize);
-// });
+const currentPic = ref(0);
+function carouselChangeHandle(a) {
+  currentPic.value = a;
+}
 </script>
 <template>
   <div class="wk-experience">
@@ -294,14 +268,9 @@ function toggleCollectionDlg(val) {
         <p>正在创作中，请耐心等待</p>
       </div>
 
-      <div v-else-if="isInferred" class="infer-dlg-result">
-        <div
-          v-for="item in styleBackground"
-          ref="imgContain"
-          :key="item"
-          class="result-item"
-        >
-          <img ref="imgHeight" :src="item" alt="" />
+      <div v-else class="infer-dlg-result">
+        <div v-for="item in styleBackground" :key="item" class="result-item">
+          <img :src="item" alt="" />
           <div class="handles">
             <div class="handles-contain">
               <p>
@@ -326,19 +295,33 @@ function toggleCollectionDlg(val) {
     >
       <template #header="{ titleId, titleClass }">
         <div class="collection-dlg-head">
-          <span :id="titleId" class="title" :class="titleClass">我的收藏</span>
-          <span class="numbers">6/10</span>
+          <span
+            :id="titleId"
+            class="title"
+            :class="titleClass"
+            @click="cancelCollect"
+            >我的收藏</span
+          >
+          <span class="numbers"
+            >{{ currentPic + 1 }}/{{ styleBackground.length }}</span
+          >
         </div>
       </template>
 
       <div class="collection-dlg-contain">
-        <!-- <el-carousel type="card" height="200px" :autoplay="false">
-          <el-carousel-item v-for="item in styleBackgrounds" :key="item">
+        <el-carousel
+          type="card"
+          :autoplay="false"
+          arrow="always"
+          @change="carouselChangeHandle"
+        >
+          <el-carousel-item v-for="item in styleBackground" :key="item">
             <div class="collect-item">
               <img :src="item" alt="" />
+              <div class="desc">城市夜景 赛博朋克 格雷格·鲁特科夫斯基</div>
             </div>
           </el-carousel-item>
-        </el-carousel> -->
+        </el-carousel>
       </div>
     </el-dialog>
   </div>
@@ -346,7 +329,6 @@ function toggleCollectionDlg(val) {
 <style lang="scss">
 .infer-dlg {
   background: none;
-  backdrop-filter: blur(5px);
   &-head {
     .title {
       color: #fff;
@@ -359,9 +341,10 @@ function toggleCollectionDlg(val) {
     width: 100%;
 
     .result-item {
-      flex: 1;
-      margin-right: 24px;
       position: relative;
+      margin-right: 24px;
+      width: 23vw;
+      height: 23vw;
 
       &:last-child {
         margin-right: 0;
@@ -374,14 +357,18 @@ function toggleCollectionDlg(val) {
       }
 
       img {
+        height: 100%;
         width: 100%;
-        object-fit: contain;
       }
 
       .handles {
         position: absolute;
         bottom: 24px;
         right: 24px;
+        @media screen and (max-width: 1450px) {
+          bottom: 10px;
+          right: 10px;
+        }
         &-contain {
           display: flex;
           p {
@@ -394,8 +381,18 @@ function toggleCollectionDlg(val) {
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            @media screen and (max-width: 1080px) {
+              width: 24px;
+              height: 24px;
+              .o-icon {
+                font-size: 16px;
+              }
+            }
             &:first-child {
               margin-right: 16px;
+              @media screen and (max-width: 1450px) {
+                margin-right: 8px;
+              }
             }
             &:hover {
               background: rgba(255, 255, 255, 0.3);
@@ -433,14 +430,17 @@ function toggleCollectionDlg(val) {
     text-align: center;
     line-height: 80px;
     background: #000;
+    margin-right: 0;
   }
 
   .el-dialog__body {
     padding-left: 64px;
     padding-right: 64px;
+    padding-bottom: 120px;
     height: calc(100vh - 80px);
     display: flex;
     align-items: center;
+    background: rgba(0, 0, 0, 0.85);
   }
 
   .el-dialog__headerbtn {
@@ -455,7 +455,6 @@ function toggleCollectionDlg(val) {
 
 .collection-dlg {
   background: none;
-  backdrop-filter: blur(5px);
 
   &-head {
     height: 80px;
@@ -478,22 +477,51 @@ function toggleCollectionDlg(val) {
   &-contain {
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    padding-top: 9vh;
+    .el-carousel {
+      width: 100%;
+      .el-carousel__container {
+        height: 34vw;
+        .el-carousel__item {
+          left: 7vw;
 
-    .el-carousel__item {
-      // .collect-item {
-      //   width: 600px;
-      //   height: 600px;
-      //   background: #d3dce6;
-      // }
+          .collect-item {
+            width: 34vw;
+            height: 100%;
+            background: none;
+            .desc {
+              font-size: 18px;
+              font-weight: 500;
+              color: #ffffff;
+              line-height: 26px;
+              text-align: center;
+              margin-top: 16px;
+            }
+            img {
+              width: 34vw;
+              height: calc(100% - 42px);
+            }
+          }
+          .el-carousel__item--card {
+            width: 34vw;
+          }
+          .el-carousel__item--card.is-active {
+            transform: translateX(454.25px) scale(10.9);
+          }
+
+          .el-carousel__mask {
+            width: 34vw;
+            height: calc(100% - 42px);
+          }
+        }
+
+        .el-carousel__arrow i {
+          font-size: 30px;
+        }
+      }
     }
-
-    // .el-carousel__item:nth-child(2n) {
-    //   background-color: #99a9bf;
-    // }
-
-    // .el-carousel__item:nth-child(2n + 1) {
-    //   background-color: #d3dce6;
-    // }
   }
 
   .el-dialog__header {
@@ -505,6 +533,7 @@ function toggleCollectionDlg(val) {
   .el-dialog__body {
     padding: 0 0 200px;
     height: calc(100vh - 80px);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     flex-direction: column;
     align-items: center;

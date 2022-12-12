@@ -119,7 +119,7 @@ watch(
   background: #f5f6f8;
 }
 .wukong-bg2 {
-  background-image: url('@/assets/imgs/wukong/wukong-bg.png');
+  background-image: url('@/assets/imgs/wukong/wukong-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   .wukong-bread {

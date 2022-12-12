@@ -160,22 +160,20 @@ async function confirmRename(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       try {
-        modifyProject(query, userInfoStore.userName, detailData.id).then(
-          (res) => {
-            ElMessage({
-              type: 'success',
-              message: '仓库信息更新成功',
-            });
-            router.push({
-              name: 'projectSet',
-              params: {
-                user: routerParams.user,
-                name: query.name,
-              },
-            });
-            detailData.name = query.name;
-          }
-        );
+        modifyProject(query, userInfoStore.userName, detailData.id).then(() => {
+          ElMessage({
+            type: 'success',
+            message: '仓库信息更新成功',
+          });
+          router.push({
+            name: 'projectSet',
+            params: {
+              user: routerParams.user,
+              name: query.name,
+            },
+          });
+          detailData.name = query.name;
+        });
       } catch (error) {
         ElMessage({
           type: 'error',

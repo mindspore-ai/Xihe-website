@@ -15,9 +15,13 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
+// eslint-disable-next-line no-unused-vars
 import ModelList from '@/components/ModelList.vue';
+// eslint-disable-next-line no-unused-vars
 import DatasetList from '@/components/DatasetList.vue';
+// eslint-disable-next-line no-unused-vars
 import HyperparamsList from '@/components/HyperparamsList.vue';
+// eslint-disable-next-line no-unused-vars
 import EnvironmentList from '@/components/EnvironmentList.vue';
 
 const userInfoStore = useUserInfoStore();

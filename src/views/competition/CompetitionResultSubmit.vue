@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import IconProject from '~icons/app/project-tree';
 
@@ -18,7 +18,6 @@ const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
 });
 
-const route = useRoute();
 const router = useRouter();
 const tableData = ref();
 

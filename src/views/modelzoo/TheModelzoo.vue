@@ -6,7 +6,8 @@ import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-import dasheng from '@/assets/imgs/modelzoo/dasheng1.png';
+import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
+import wukong from '@/assets/imgs/modelzoo/wukong.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -24,9 +25,9 @@ let i18n = {
   clear: '清除',
   cardLists: [
     {
-      title: '悟空',
+      title: '悟空.画画',
       introduce: '看我猴子七十二变',
-      url: dasheng,
+      url: wukong,
       path: '/modelzoo/wukong',
       openness: true,
     },

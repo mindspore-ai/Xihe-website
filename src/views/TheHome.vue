@@ -15,6 +15,7 @@ import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconArrowRight2 from '~icons/app/arrow-right2.svg';
 // import homeBanner2 from '@/assets/imgs/home-banner2.png';
 // import homeBanner3 from '@/assets/imgs/home-banner3.png';
 import homePageImg from '@/assets/imgs/home/home-page.png';
@@ -358,6 +359,7 @@ function goActivity() {
             <img :src="gallery" alt="" />
             <img :src="gallery" alt="" />
           </div>
+          <OIcon class="arrow-right"><IconArrowRight2 /></OIcon>
         </div>
         <!-- 个人主页 -->
         <div
@@ -892,6 +894,16 @@ function goActivity() {
         .my-swiper2 {
           --swiper-navigation-size: 24px;
           --swiper-navigation-color: #fff;
+          .swiper-button-prev,
+          .swiper-button-next {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000000;
+            background: #000;
+            border-radius: 50%;
+            font-weight: 600;
+            top: 55%;
+          }
           .swiper-slide {
             img {
               width: 100%;
@@ -928,6 +940,16 @@ function goActivity() {
         justify-content: space-between;
         align-items: center;
         padding-bottom: 64px;
+        .arrow-right {
+          background: #000;
+          position: absolute;
+          font-size: 36px;
+          top: 35%;
+          border-radius: 50%;
+          right: 16px;
+          cursor: pointer;
+          display: none;
+        }
 
         .gallery-left {
           .gallery-title {
@@ -955,9 +977,14 @@ function goActivity() {
           justify-content: right;
           transform: rotateY(345deg);
           transform-origin: right;
+          position: relative;
+          cursor: pointer;
           img {
             width: 30%;
             margin-left: 24px;
+          }
+          &:hover + .arrow-right {
+            display: block;
           }
         }
       }

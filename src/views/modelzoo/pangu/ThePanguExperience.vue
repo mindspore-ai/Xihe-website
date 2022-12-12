@@ -112,12 +112,12 @@ function sendMessage() {
         });
       } else {
         msgList.value.forEach((item) => (item.isLoading = false));
-        if (res.code === 'bigmodel_sensitive_info') {
-          ElMessage({
-            type: 'error',
-            message: '内容审核不通过，请重新输入',
-          });
-        }
+        // if (res.code === 'bigmodel_sensitive_info') {
+        //   ElMessage({
+        //     type: 'error',
+        //     message: '内容审核不通过，请重新输入',
+        //   });
+        // }
       }
     });
 

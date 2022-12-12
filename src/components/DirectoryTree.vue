@@ -52,7 +52,6 @@ async function getDirData(dirPath2) {
       if (res.data) {
         dirTableData.value = res.data;
         fileTableData.value = res.data;
-        // console.log('获取文件目录树结果: ', dirTableData.value);
       }
     });
   } catch (error) {
@@ -91,7 +90,6 @@ async function getFileData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         fileTableData.value = res.data;
-        // console.log('获取文件目录树结果: ', fileTableData.value);
       }
     });
   } catch (error) {

@@ -45,7 +45,6 @@ const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
-// console.log('userInfo: ', userInfo);
 
 // 活动介绍
 const introdution = reactive([
@@ -101,7 +100,6 @@ function getActivity() {
   getActivityDetail().then((res) => {
     activityDetail.value = res.data;
     showBtn.value = true;
-    // console.log('activityDetail.value: ', activityDetail.value.is_competitor);
   });
 }
 getActivity();

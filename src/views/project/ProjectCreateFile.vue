@@ -172,9 +172,9 @@ function goTrain() {
   });
 }
 // 获得项目详情数据
-function getDetailData() {
+async function getDetailData() {
   try {
-    getProjectData({
+    await getProjectData({
       name: route.params.name,
       owner_name: route.params.user,
     }).then((res) => {

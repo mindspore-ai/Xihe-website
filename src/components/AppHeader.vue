@@ -186,10 +186,10 @@ const debounceSearch = debounce(getSearch, 500, {
 onUnmounted(() => {
   debounceSearch.cancel();
 });
-function getSearch() {
+async function getSearch() {
   query.name = keyword.value;
   try {
-    getSearchData(query).then((res) => {
+    await getSearchData(query).then((res) => {
       if (res.status === 200) {
         queryData.value = res.data;
         // 模型、数据集、项目的搜索结果数量

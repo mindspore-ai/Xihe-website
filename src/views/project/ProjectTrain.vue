@@ -313,9 +313,9 @@ function addModeClick() {
 }
 
 // 获取README文件
-function getReadMeFile() {
+async function getReadMeFile() {
   try {
-    findFile(
+    await findFile(
       `xihe-obj/projects/${route.params.user}/${routerParams.name}/train/`
     ).then((tree) => {
       if (

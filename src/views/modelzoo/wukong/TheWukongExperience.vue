@@ -14,11 +14,14 @@ import IconCollection from '~icons/app/wukong-collection';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 
+import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
+
 const text = ref('');
 const styleIndex = ref(0);
 
 const showCollection = ref(false);
 const isInferred = ref(false);
+const showAlbum = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);
 const styleBackground = ref([generate, generate, generate, generate]);
@@ -169,6 +172,11 @@ const currentPic = ref(0);
 function carouselChangeHandle(a) {
   currentPic.value = a;
 }
+
+// AI画集
+function toggleAlbum() {
+  showAlbum.value = true;
+}
 </script>
 <template>
   <div class="wk-experience">
@@ -235,7 +243,7 @@ function carouselChangeHandle(a) {
     <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
 
     <div class="sider-content">
-      <div class="nav-item">
+      <div class="nav-item" @click="toggleAlbum(true)">
         <p class="nav-item-img">
           <o-icon><icon-album></icon-album></o-icon>
         </p>
@@ -323,6 +331,14 @@ function carouselChangeHandle(a) {
           </el-carousel-item>
         </el-carousel>
       </div>
+    </el-dialog>
+    <el-dialog
+      v-model="showAlbum"
+      :fullscreen="true"
+      :append-to-body="true"
+      class="album-dlg"
+    >
+      <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
 </template>
@@ -541,6 +557,39 @@ function carouselChangeHandle(a) {
 
   .el-dialog__headerbtn {
     // top: 10px;
+    right: 10px;
+    .el-dialog__close {
+      color: #fff;
+      font-size: 40px;
+    }
+  }
+}
+.album-dlg {
+  padding-left: 6%;
+  padding-right: 6%;
+  background: rgb(0, 0, 0);
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #d8d8d8;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 3px;
+    box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+    background: #ffffff;
+  }
+
+  .el-dialog__body {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .el-dialog__headerbtn {
     right: 10px;
     .el-dialog__close {
       color: #fff;

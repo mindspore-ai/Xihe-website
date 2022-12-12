@@ -78,8 +78,7 @@ watch(
           <div class="wukong-head-right-top">
             <div class="wukong-head-right-top-title">悟空</div>
             <div class="wukong-head-right-top-content">
-              OPT（Omni-Perception
-              Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
+              借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。 
             </div>
           </div>
 
@@ -139,13 +138,12 @@ watch(
         &-title {
           font-size: 36px;
           font-weight: 300;
-          color: #fff;
+          color: #000;
           line-height: 48px;
         }
 
         &-content {
           font-size: 14px;
-          color: #b2b2b2;
           line-height: 22px;
         }
       }

@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 import ONav from '@/components/ONav.vue';
 
-import codeGeexBanner from '@/assets/imgs/modelzoo/codegeex.png';
+import wukongBanner from '@/assets/imgs/wukong/wukong-banner.png';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -71,14 +71,14 @@ watch(
 
       <div class="wukong-head">
         <div class="wukong-head-left">
-          <img draggable="false" :src="codeGeexBanner" alt="" />
+          <img draggable="false" :src="wukongBanner" alt="" />
         </div>
 
         <div class="wukong-head-right">
           <div class="wukong-head-right-top">
             <div class="wukong-head-right-top-title">悟空</div>
             <div class="wukong-head-right-top-content">
-              借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。 
+              借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。
             </div>
           </div>
 
@@ -138,12 +138,13 @@ watch(
         &-title {
           font-size: 36px;
           font-weight: 300;
-          color: #000;
+          color: #fff;
           line-height: 48px;
         }
 
         &-content {
           font-size: 14px;
+          color: #b2b2b2;
           line-height: 22px;
         }
       }

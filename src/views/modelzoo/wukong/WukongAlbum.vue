@@ -28,17 +28,17 @@ const imgs = reactive([
     source: '来自深渊 风景 绘画 写实风格',
   },
   {
-    link: 'https://127.0.0.1:9999/src/assets/imgs/wukong/ceshi1.png',
+    link: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2Fa%2F586ddfd220e8b.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673076183&t=37b258a21bc8060d74d78e956c6698d3',
     style: '#风格：动漫 宫崎骏',
     source: '来自深渊 风景 绘画 写实风格',
   },
   {
-    link: 'https://127.0.0.1:9999/src/assets/imgs/wukong/ceshi1.png',
+    link: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2Fa%2F586ddfd220e8b.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673076183&t=37b258a21bc8060d74d78e956c6698d3',
     style: '#风格：动漫 宫崎骏',
     source: '来自深渊 风景 绘画 写实风格',
   },
   {
-    link: 'https://127.0.0.1:9999/src/assets/imgs/wukong/ceshi1.png',
+    link: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2Fa%2F586ddfd220e8b.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673076183&t=37b258a21bc8060d74d78e956c6698d3',
     style: '#风格：动漫 宫崎骏',
     source: '来自深渊 风景 绘画 写实风格',
   },
@@ -100,7 +100,6 @@ const imgs = reactive([
 <style lang="scss" scoped>
 // TODO:
 :deep(.el-dialog) {
-  
   // background: rgba(0, 0, 0, 0.85);
   // padding-left: 6%;
   // padding-right: 6%;

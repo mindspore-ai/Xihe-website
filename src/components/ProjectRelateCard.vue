@@ -10,7 +10,7 @@ const i18n = {
   uploadTime: '上传时间',
 };
 
-const props = defineProps({
+defineProps({
   // 相关项目的详情信息
   detailData: {
     type: Object,

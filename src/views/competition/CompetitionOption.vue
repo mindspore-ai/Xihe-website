@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, reactive } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ONav from '@/components/ONav.vue';
 // import { getGroupid } from '@/api/api-competition';

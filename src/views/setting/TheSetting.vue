@@ -4,9 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
-import IconEmail from '~icons/app/email';
+// import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
-import IconInvitation from '~icons/app/invitation';
+// import IconInvitation from '~icons/app/invitation';
 
 import ringImg from '@/assets/icons/ring.png';
 

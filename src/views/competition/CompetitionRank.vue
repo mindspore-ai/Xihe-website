@@ -48,8 +48,10 @@ function changeTab(index) {
 }
 nextTick(() => {
   tabs.value = document.querySelectorAll('.tabs-item');
-  tabs.value[1].classList.remove('tabs-right');
-  tabs.value[0].classList.add('tabs-left');
+  if (tabs.value.length) {
+    tabs.value[1].classList.remove('tabs-right');
+    tabs.value[0].classList.add('tabs-left');
+  }
 });
 </script>
 <template>

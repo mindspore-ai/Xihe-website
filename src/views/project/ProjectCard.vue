@@ -19,7 +19,6 @@ import {
   deleteDataset,
   addModel,
   deleteModel,
-  startInference,
   getGuide,
 } from '@/api/api-project';
 import { useFileData } from '@/stores';
@@ -146,7 +145,7 @@ function confirmAdd() {
           addSearch.value = '';
         }
       })
-      .catch((err) => {
+      .catch(() => {
         isShow.value = false;
         addSearch.value = '';
         ElMessage({
@@ -193,7 +192,7 @@ function confirmClick() {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params, detailData.value.owner, detailData.value.id)
-      .then((res) => {
+      .then(() => {
         ElMessage({
           type: 'success',
           message: '添加成功',
@@ -202,7 +201,7 @@ function confirmClick() {
         isShow1.value = false;
         addSearch.value = '';
       })
-      .catch((err) => {
+      .catch(() => {
         isShow1.value = false;
         addSearch.value = '';
         ElMessage({
@@ -220,28 +219,24 @@ function deleteClick(item) {
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
-    ).then((res) => {
-      // if (res.status === 200) {
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关数据集。',
       });
       emit('on-click');
-      // }
     });
   } else if (item.type === 'model') {
     deleteModel(
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
-    ).then((res) => {
-      // if (res.status === 200) {
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关模型。',
       });
       emit('on-click');
-      // }
     });
   }
 }
@@ -356,17 +351,17 @@ const hasPrefix = computed(() => {
   return msg.value === '启动中' ? true : false;
 });
 const clientSrc = ref('');
-let timer = null;
+// let timer = null;
 // 游客启动推理
-function start() {
-  // startInference(detailData.value.id).then((res) => {
-  //   if (res.data.status === 200) msg.value = '启动中';
-  // socket.send(JSON.stringify({ pk: detailData.value.id }));
-  // });
-  socket.value = new WebSocket(
-    `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-  );
-}
+// function start() {
+//   // startInference(detailData.value.id).then((res) => {
+//   //   if (res.data.status === 200) msg.value = '启动中';
+//   // socket.send(JSON.stringify({ pk: detailData.value.id }));
+//   // });
+//   socket.value = new WebSocket(
+//     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
+//   );
+// }
 //拥有者启动推理
 function start2() {
   if (detailData.value.owner === userInfo.userName) {

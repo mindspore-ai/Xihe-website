@@ -122,7 +122,7 @@ function confirmAdd() {
         emit('on-click');
       }
     })
-    .catch((err) => {
+    .catch(() => {
       addSearch.value = '';
       ElMessage({
         type: 'error',
@@ -134,13 +134,12 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
-  let projectId = detailData.value.id;
   if (item.type === 'dataset') {
     deleteDataset(
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
-    ).then((res) => {
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关数据集。',

@@ -10,7 +10,6 @@ import ODialog from '@/components/ODialog.vue';
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
 
-// import { handleUpload } from '@/api/api-obs';
 import { useCompetitionData } from '@/stores';
 import { getSubmissions, submit, addProject } from '@/api/api-competition';
 

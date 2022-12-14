@@ -1,16 +1,14 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
 
 // import OButton from '@/components/OButton.vue';
 // import FileTree from './FileTree.vue';
-import IconProject from '~icons/app/project-tree';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import { getGitlabTree } from '@/api/api-gitlab';
 
 const router = useRouter();
-const route = useRoute();
 const props = defineProps({
   repoDetail: {
     type: Object,
@@ -54,7 +52,6 @@ async function getDirData(dirPath2) {
       if (res.data) {
         dirTableData.value = res.data;
         fileTableData.value = res.data;
-        // console.log('获取文件目录树结果: ', dirTableData.value);
       }
     });
   } catch (error) {
@@ -93,7 +90,6 @@ async function getFileData(dirPath2) {
     }).then((res) => {
       if (res.data) {
         fileTableData.value = res.data;
-        // console.log('获取文件目录树结果: ', fileTableData.value);
       }
     });
   } catch (error) {
@@ -176,7 +172,7 @@ function goBlob(item) {
       filePath.value = item.path;
       let lastPath = filePath.value.split('/').slice(-1).toString();
       fileHeadPath.value.push(lastPath);
-      // TODO: fileRelativePath.value = fileHeadPath.value.slice(
+      // fileRelativePath.value = fileHeadPath.value.slice(
       //   dirHeadPath.value.length
       // );
     }

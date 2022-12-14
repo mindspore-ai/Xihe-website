@@ -5,6 +5,9 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
+import tipImg from '@/assets/imgs/questionnaire.png';
+import tipCloseImg from '@/assets/imgs/close.png';
+
 const route = useRoute();
 
 const showFooter = computed(() => {
@@ -20,6 +23,11 @@ const setHeader = () => {
 
   isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
+};
+
+const tipVisible = ref(true);
+const toggleTip = (val) => {
+  tipVisible.value = val;
 };
 
 onMounted(() => {
@@ -45,6 +53,13 @@ onUnmounted(() => {
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
+
+  <div v-if="tipVisible" class="app-questionnaire">
+    <div class="tip-content">
+      <img class="tip-img" :src="tipImg" />
+      <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -108,6 +123,29 @@ onUnmounted(() => {
 .slide-leave-to {
   position: absolute;
   top: 100%;
+}
+
+.app-questionnaire {
+  position: fixed;
+  z-index: 1;
+  bottom: 16px;
+  left: 16px;
+  .tip-content {
+    position: relative;
+    margin-right: 16px;
+    .tip-img {
+      max-width: 200px;
+      object-fit: fill;
+      cursor: pointer;
+    }
+    .tip-btn {
+      position: absolute;
+      right: 2px;
+      top: 0;
+      max-width: 17px;
+      cursor: pointer;
+    }
+  }
 }
 
 .dlg-title {

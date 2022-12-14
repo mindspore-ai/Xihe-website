@@ -100,6 +100,7 @@ function goDetail(id) {
               v-for="item in competitionDatas2"
               :key="item.id"
               class="competition-card"
+              @click="goDetail(item.id)"
             >
               <div class="left">
                 <div class="title">
@@ -132,6 +133,7 @@ function goDetail(id) {
               v-for="item in competitionDatas3"
               :key="item.id"
               class="competition-card"
+              @click="goDetail(item.id)"
             >
               <div class="left">
                 <div class="title">

@@ -154,16 +154,16 @@ function handleBtnClick() {
     router.push(`/${userInfo.userName}`);
   }
 }
-// function goInvited() {
-//   const status = loginStore.loginStatus;
-//   if (status === LOGIN_STATUS.DOING) {
-//     return;
-//   } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
-//     goAuthorize();
-//   } else {
-//     router.push(`/settings/invitation`);
-//   }
-// }
+/* function goInvited() {
+  const status = loginStore.loginStatus;
+  if (status === LOGIN_STATUS.DOING) {
+    return;
+  } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
+    goAuthorize();
+  } else {
+    router.push(`/settings/invitation`);
+  }
+} */
 function handleBtnClick2() {
   router.push(`https://${DOMAIN}/datasets`);
 }

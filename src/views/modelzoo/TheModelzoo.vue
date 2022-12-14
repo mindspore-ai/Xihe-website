@@ -26,7 +26,7 @@ let i18n = {
   cardLists: [
     {
       title: '悟空.画画',
-      introduce: '看我猴子七十二变',
+      introduce: '拥有目前最大的中文开源多模态数据集',
       url: wukong,
       path: '/modelzoo/wukong',
       openness: true,
@@ -116,7 +116,6 @@ function goModelzoo() {
   max-width: 1472px;
 }
 .modelzoo {
-  // background-color: #f5f6f8;
   .model-head {
     padding-top: 80px;
     background-size: cover;

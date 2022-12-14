@@ -34,7 +34,9 @@ function handleNavClick(item) {
 }
 
 function learnWukongMore() {
-  window.open('https://models.aminer.cn/codegeex/');
+  window.open(
+    'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
+  );
 }
 
 watch(

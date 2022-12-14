@@ -1,6 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, FreeMode, Navigation } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+
 import one from '@/assets/imgs/wukong/style-bg-1.png';
 import two from '@/assets/imgs/wukong/style-bg-2.png';
 import three from '@/assets/imgs/wukong/style-bg-3.png';
@@ -15,6 +22,7 @@ import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
+import gallery from '@/assets/imgs/wukong/ceshi1.png';
 
 const text = ref('');
 const styleIndex = ref(0);
@@ -87,12 +95,12 @@ const styleData = ref([
 ]);
 
 const exampleData = ref([
-  { text: 'example-item1', isSelected: false },
-  { text: 'example-item2', isSelected: false },
-  { text: 'example-item3', isSelected: false },
-  { text: 'example-item4', isSelected: false },
-  { text: 'example-item5', isSelected: false },
-  { text: 'example-item6', isSelected: false },
+  { text: '空山新雨后', isSelected: false },
+  { text: '北国风光', isSelected: false },
+  { text: '星河欲坠时', isSelected: false },
+  { text: '西湖 烟雨', isSelected: false },
+  { text: '落日 莫奈', isSelected: false },
+  { text: '星空 梵高', isSelected: false },
 ]);
 const newExampleData = ref([
   { text: '样例1', isSelected: false },
@@ -294,7 +302,7 @@ function toggleAlbum() {
     </el-dialog>
 
     <!-- 我的收藏dialog -->
-    <el-dialog
+    <!-- <el-dialog
       v-model="showCollection"
       :fullscreen="true"
       :append-to-body="true"
@@ -331,7 +339,49 @@ function toggleAlbum() {
           </el-carousel-item>
         </el-carousel>
       </div>
+    </el-dialog> -->
+
+    <el-dialog
+      v-model="showCollection"
+      :fullscreen="true"
+      :append-to-body="true"
+      center
+      class="collection-dlg"
+    >
+      <swiper
+        :slides-per-view="3"
+        :slides-per-group="1"
+        :speed="500"
+        :space-between="30"
+        :free-mode="true"
+        :navigation="true"
+        :pagination="{
+          type: 'fraction',
+          clickableClass: 'my-pagination-clickable',
+        }"
+        :modules="[Pagination, FreeMode, Navigation]"
+        loop
+        class="my-swiper2"
+      >
+        <swiper-slide v-for="item in 5" :key="item"
+          ><img :src="gallery" alt="" />
+          <p>来自深渊 风景 绘画 写实风格</p>
+
+          <div class="handler">
+            <p>
+              <o-icon><icon-download></icon-download></o-icon>
+            </p>
+            <p>
+              <o-icon><icon-like></icon-like></o-icon>
+            </p>
+          </div>
+        </swiper-slide>
+
+        <div class="collect-title">我的收藏</div>
+      </swiper>
     </el-dialog>
+
+    <!-- AI画集 -->
     <el-dialog
       v-model="showAlbum"
       :fullscreen="true"
@@ -468,102 +518,194 @@ function toggleAlbum() {
     }
   }
 }
+.my-swiper2 {
+  --swiper-navigation-size: 24px;
+  --swiper-navigation-color: #fff;
 
-.collection-dlg {
-  background: none;
-
-  &-head {
-    height: 80px;
-    text-align: center;
-    line-height: 80px;
-    width: 100%;
-    .title {
-      font-size: 24px;
-      color: #ffffff;
-      line-height: 24px;
-      margin-right: 24px;
-    }
-    .numbers {
-      font-size: 16px;
-      color: #ffffff;
-      line-height: 24px;
-    }
-  }
-
-  &-contain {
-    width: 100%;
-    height: 100%;
+  .handler {
+    position: absolute;
+    bottom: 64px;
+    right: 24px;
     display: flex;
-    align-items: center;
-    padding-top: 9vh;
-    .el-carousel {
-      width: 100%;
-      .el-carousel__container {
-        height: 34vw;
-        .el-carousel__item {
-          left: 7vw;
-
-          .collect-item {
-            width: 34vw;
-            height: 100%;
-            background: none;
-            .desc {
-              font-size: 18px;
-              font-weight: 500;
-              color: #ffffff;
-              line-height: 26px;
-              text-align: center;
-              margin-top: 16px;
-            }
-            img {
-              width: 34vw;
-              height: calc(100% - 42px);
-            }
-          }
-          .el-carousel__item--card {
-            width: 34vw;
-          }
-          .el-carousel__item--card.is-active {
-            transform: translateX(454.25px) scale(10.9);
-          }
-
-          .el-carousel__mask {
-            width: 34vw;
-            height: calc(100% - 42px);
-          }
-        }
-
-        .el-carousel__arrow i {
-          font-size: 30px;
-        }
+    p {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      &:first-child {
+        margin-right: 16px;
       }
     }
   }
 
-  .el-dialog__header {
-    padding: 0;
-    margin-right: 0;
+  .collect-title {
+    position: fixed;
+    top: 22px;
+    left: -40px;
+    font-size: 24px;
+    color: #ffffff;
+    line-height: 24px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
     background: #000;
+    border-radius: 50%;
+    font-weight: 600;
+    top: 55%;
   }
-
-  .el-dialog__body {
-    padding: 0 0 200px;
-    height: calc(100vh - 80px);
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .swiper-slide {
+    img {
+      width: 100%;
+      height: auto;
+      margin-top: 16%;
+    }
+    p {
+      color: #ffffff;
+      text-align: center;
+      line-height: 26px;
+      font-size: 18px;
+      margin-top: 16px;
+    }
   }
+  .my-pagination-clickable {
+    position: fixed;
+  }
+  .swiper-pagination-fraction {
+    color: #fff;
+    font-size: 16px;
+    line-height: 26px;
+    position: fixed;
+    top: 22px;
+    left: 50px;
+    bottom: unset;
+  }
+}
 
+.collection-dlg {
+  background: rgba(0, 0, 0, 0.85);
   .el-dialog__headerbtn {
     // top: 10px;
     right: 10px;
+    z-index: 2010;
     .el-dialog__close {
       color: #fff;
       font-size: 40px;
     }
   }
+
+  .el-dialog__body {
+    margin-top: 10vh;
+  }
 }
+
+// .collection-dlg {
+//   background: none;
+
+//   &-head {
+//     height: 80px;
+//     text-align: center;
+//     line-height: 80px;
+//     width: 100%;
+//     .title {
+//       font-size: 24px;
+//       color: #ffffff;
+//       line-height: 24px;
+//       margin-right: 24px;
+//     }
+//     .numbers {
+//       font-size: 16px;
+//       color: #ffffff;
+//       line-height: 24px;
+//     }
+//   }
+
+//   &-contain {
+//     width: 100%;
+//     height: 100%;
+//     display: flex;
+//     align-items: center;
+//     padding-top: 9vh;
+//     .el-carousel {
+//       width: 100%;
+//       .el-carousel__container {
+//         height: 34vw;
+//         .el-carousel__item {
+//           left: 7vw;
+
+//           .collect-item {
+//             width: 34vw;
+//             height: 100%;
+//             background: none;
+//             .desc {
+//               font-size: 18px;
+//               font-weight: 500;
+//               color: #ffffff;
+//               line-height: 26px;
+//               text-align: center;
+//               margin-top: 16px;
+//             }
+//             img {
+//               width: 34vw;
+//               height: calc(100% - 42px);
+//             }
+//           }
+//           .el-carousel__item--card {
+//             width: 34vw;
+//           }
+//           .el-carousel__item--card.is-active {
+//             transform: translateX(454.25px) scale(10.9);
+//           }
+
+//           .el-carousel__mask {
+//             width: 34vw;
+//             height: calc(100% - 42px);
+//           }
+//         }
+
+//         .el-carousel__arrow i {
+//           font-size: 30px;
+//         }
+//       }
+//     }
+//   }
+
+//   .el-dialog__header {
+//     padding: 0;
+//     margin-right: 0;
+//     background: #000;
+//   }
+
+//   .el-dialog__body {
+//     padding: 0 0 200px;
+//     height: calc(100vh - 80px);
+//     background: rgba(0, 0, 0, 0.85);
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//   }
+
+//   .el-dialog__headerbtn {
+//     // top: 10px;
+//     right: 10px;
+//     .el-dialog__close {
+//       color: #fff;
+//       font-size: 40px;
+//     }
+//   }
+// }
 .album-dlg {
   padding-left: 6%;
   padding-right: 6%;
@@ -676,6 +818,7 @@ function toggleAlbum() {
     .example-items {
       flex: 1;
       display: flex;
+      flex-wrap: wrap;
       p {
         color: #b2b2b2;
         border: 1px solid #0d8dff;

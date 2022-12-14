@@ -52,9 +52,25 @@ const tipVisible = ref(true);
 const toggleTip = (val) => {
   tipVisible.value = val;
 };
+const mySwiper = ref(null);
 const galleryVisible = ref(false);
-const toggleGallery = (val) => {
+const currPage = ref(1);
+const toggleGallery = (val, num) => {
   galleryVisible.value = val;
+  currPage.value = num;
+  if (mySwiper.value) {
+    mySwiper.value.slideTo(currPage.value);
+  }
+};
+// watch(
+//   () => mySwiper.value,
+//   () => {
+//     console.log(currPage.value);
+//     mySwiper.value.slideTo(currPage.value);
+//   }
+// );
+const onSwiper = (val) => {
+  mySwiper.value = val;
 };
 
 const modules = [Pagination, Autoplay];
@@ -304,9 +320,9 @@ function goActivity() {
         <!-- 精选画廊 -->
         <el-dialog v-model="galleryVisible" fullscreen>
           <swiper
+            centered-slides
             :slides-per-view="3"
             :slides-per-group="1"
-            :speed="500"
             :space-between="30"
             :free-mode="true"
             :navigation="true"
@@ -315,8 +331,8 @@ function goActivity() {
               clickableClass: 'my-pagination-clickable',
             }"
             :modules="[Pagination, FreeMode, Navigation]"
-            loop
             class="my-swiper2"
+            @swiper="onSwiper"
           >
             <swiper-slide
               ><img :src="gallery" alt="" />
@@ -324,11 +340,15 @@ function goActivity() {
             >
             <swiper-slide
               ><img :src="gallery" alt="" />
-              <p>城市夜景 赛博朋克 格雷格·鲁特科夫斯基</p></swiper-slide
+              <p @click="currPage = 8">
+                城市夜景 赛博朋克 格雷格·鲁特科夫斯基
+              </p></swiper-slide
             >
             <swiper-slide
               ><img :src="gallery" alt="" />
-              <p>诺亚方舟在世界末日起航 科幻插画</p></swiper-slide
+              <p @click="currPage = 6">
+                诺亚方舟在世界末日起航 科幻插画
+              </p></swiper-slide
             >
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
@@ -340,12 +360,7 @@ function goActivity() {
           </swiper>
 
           <div class="button">
-            <OButton
-              animation
-              class="gallery-entry"
-              type="small"
-              @click="handleBtnClick"
-            >
+            <OButton animation class="gallery-entry" @click="handleBtnClick">
               {{ i18n.modelzoo.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -371,12 +386,27 @@ function goActivity() {
               </template>
             </OButton>
           </div>
-          <div class="gallery-right" @click="toggleGallery(true)">
-            <img class="gallery1" :src="gallery1" alt="" />
-            <img class="gallery2" :src="gallery2" alt="" />
-            <img class="gallery3" :src="gallery3" alt="" />
+          <div class="gallery-right">
+            <img
+              class="gallery1"
+              :src="gallery1"
+              alt=""
+              @click="toggleGallery(true, 0)"
+            />
+            <img
+              class="gallery2"
+              :src="gallery2"
+              alt=""
+              @click="toggleGallery(true, 1)"
+            />
+            <img
+              class="gallery3"
+              :src="gallery3"
+              alt=""
+              @click="toggleGallery(true, 2)"
+            />
           </div>
-          <OIcon class="arrow-right" @click="toggleGallery(true)"
+          <OIcon class="arrow-right" @click="toggleGallery(true, 3)"
             ><IconArrowRight2
           /></OIcon>
         </div>

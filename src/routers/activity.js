@@ -13,6 +13,13 @@ export default [
     component: () => {
       return import('@/views/mindcon/TheMindConTest.vue');
     },
+    beforeEnter: (to, from, next) => {
+      if (from.path === '/activity') {
+        next();
+      } else {
+        next('/activity');
+      }
+    },
   },
   {
     path: '/activity-result',

@@ -154,18 +154,6 @@ function handleBtnClick() {
     router.push(`/${userInfo.userName}`);
   }
 }
-<<<<<<< HEAD
-// function goInvited() {
-//   const status = loginStore.loginStatus;
-//   if (status === LOGIN_STATUS.DOING) {
-//     return;
-//   } else if (status === LOGIN_STATUS.FAILED || status === LOGIN_STATUS.NOT) {
-//     goAuthorize();
-//   } else {
-//     router.push(`/settings/invitation`);
-//   }
-// }
-=======
 /* function goInvited() {
   const status = loginStore.loginStatus;
   if (status === LOGIN_STATUS.DOING) {
@@ -176,7 +164,6 @@ function handleBtnClick() {
     router.push(`/settings/invitation`);
   }
 } */
->>>>>>> daebef809f1e1027bebe570179c2bbebb9cbda3d
 function handleBtnClick2() {
   router.push(`https://${DOMAIN}/datasets`);
 }

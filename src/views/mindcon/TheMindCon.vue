@@ -147,10 +147,6 @@ function goChallenge(index) {
   }
 }
 
-// function toggleClick() {
-//   isShow.value = false;
-// }
-
 //隐藏报名表单
 function hideForm(val) {
   showApplication.value = val;

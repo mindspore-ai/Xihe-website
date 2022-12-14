@@ -10,17 +10,6 @@ export default [
     },
   },
   {
-    path: '/projects/:user/:name/selectfile',
-    name: 'projectsSelectFile',
-    component: () => {
-      return import('@/views/project/ProjectSelectFile.vue');
-    },
-    meta: {
-      index: 1,
-      isPrivate: true,
-    },
-  },
-  {
     path: '/projects/:user/:name/createfile',
     name: 'projectsCreateFile',
     component: () => {

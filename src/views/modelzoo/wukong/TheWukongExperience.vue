@@ -150,10 +150,6 @@ const newExampleData = ref([
   { text: '样例6', isSelected: false },
 ]);
 
-function cancelCollect() {
-  styleBackground.value.splice(3, 1);
-}
-
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
     item.isSelected = false;

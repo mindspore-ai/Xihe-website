@@ -14,8 +14,6 @@ import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
 
-import generate from '@/assets/imgs/wukong/ceshi3.jpg';
-
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
@@ -26,7 +24,11 @@ import IconHeart from '~icons/app/collected';
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
 
-const text = ref('');
+// import { getWkExamples } from '@/api/api-modelzoo.js';
+import { wuKongInfer } from '@/api/api-modelzoo.js';
+
+const inputText = ref('');
+const sortTag = ref('');
 const styleIndex = ref(0);
 
 const showCollection = ref(false);
@@ -34,7 +36,7 @@ const isInferred = ref(false);
 const showAlbum = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);
-const styleBackground = ref([generate, generate, generate, generate]);
+const styleBackground = ref([]);
 
 const styleData = ref([
   {
@@ -137,17 +139,15 @@ const exampleData = ref([
   { text: '北国风光', isSelected: false },
   { text: '星河欲坠时', isSelected: false },
   { text: '西湖 烟雨', isSelected: false },
-  { text: '落日 莫奈', isSelected: false },
   { text: '星空 梵高', isSelected: false },
 ]);
 
 const newExampleData = ref([
-  { text: '样例1', isSelected: false },
-  { text: '样例2', isSelected: false },
-  { text: '样例3', isSelected: false },
-  { text: '样例4', isSelected: false },
-  { text: '样例5', isSelected: false },
-  { text: '样例6', isSelected: false },
+  { text: '落日 莫奈', isSelected: false },
+  { text: '抽烟的女人 毕加索', isSelected: false },
+  { text: '教堂 巴洛克风格', isSelected: false },
+  { text: '程序员 头像 像素风格', isSelected: false },
+  { text: '城市夜景 赛博朋克 格雷格·鲁特科夫斯基', isSelected: false },
 ]);
 
 function exampleSelectHandler(item) {
@@ -155,12 +155,12 @@ function exampleSelectHandler(item) {
     item.isSelected = false;
   });
   item.isSelected = true;
-  text.value = item.text;
+  inputText.value = item.text;
 }
 
 function handleInput() {
   exampleData.value.forEach((item) => {
-    if (item.text === text.value) {
+    if (item.text === inputText.value) {
       item.isSelected = true;
     } else {
       item.isSelected = false;
@@ -173,13 +173,13 @@ function choseStyleSort(val) {
 }
 
 function choseSortTag(val) {
-  console.log(val);
   styleData.value.forEach((item) => {
     item.options.forEach((tag) => {
       tag.isSelected = false;
     });
   });
   val.isSelected = true;
+  sortTag.value = val.tag;
 }
 
 function getRandomStyle(index) {
@@ -192,15 +192,39 @@ function getRandomStyle(index) {
 }
 
 const showInferDlg = ref(false);
-function handleInfer() {
+// wk推理
+async function handleInfer() {
   showInferDlg.value = true;
 
-  setTimeout(() => {
-    isInferred.value = true;
-  }, 3000);
+  if (inputText.value && sortTag.value) {
+    try {
+      const res = await wuKongInfer({
+        sample: inputText.value,
+        style: sortTag.value,
+      });
+
+      isInferred.value = true;
+      styleBackground.value = res.data.data.pictures;
+    } catch (e) {
+      ElMessage({
+        type: 'warning',
+        message: e.msg,
+      });
+      showInferDlg.value = false;
+    }
+  }
 }
 
 function refreshTags() {
+  // getWkExamples().then((res) => {
+  //   if (res.status === 201 && res.data) {
+  //     console.log(res.data);
+  //     res.data.forEach((item, index) => {
+  //       exampleData.value[index].text = item;
+  //     });
+  //   }
+  // });
+
   exampleData.value = newExampleData.value;
 }
 
@@ -216,7 +240,7 @@ function toggleAlbum() {
 <template>
   <div class="wk-experience">
     <el-input
-      v-model="text"
+      v-model="inputText"
       maxlength="75"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit

@@ -13,6 +13,7 @@ import two from '@/assets/imgs/wukong/style-bg-2.png';
 import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
+
 import generate from '@/assets/imgs/wukong/ceshi3.jpg';
 
 import IconRefresh from '~icons/app/refresh-taichu';
@@ -20,6 +21,7 @@ import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
+import IconHeart from '~icons/app/collected';
 
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
@@ -210,11 +212,6 @@ function toggleCollectionDlg(val) {
   showCollection.value = val;
 }
 
-const currentPic = ref(0);
-function carouselChangeHandle(a) {
-  currentPic.value = a;
-}
-
 // AI画集
 function toggleAlbum() {
   showAlbum.value = true;
@@ -228,6 +225,7 @@ function toggleAlbum() {
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
       type="text"
+      clearable
       @input="handleInput"
     />
 
@@ -278,6 +276,8 @@ function toggleAlbum() {
           >
             {{ item.tag }}
           </div>
+
+          <div :class="`triangle${styleIndex}`"></div>
         </div>
       </div>
     </div>
@@ -336,45 +336,6 @@ function toggleAlbum() {
     </el-dialog>
 
     <!-- 我的收藏dialog -->
-    <!-- <el-dialog
-      v-model="showCollection"
-      :fullscreen="true"
-      :append-to-body="true"
-      center
-      class="collection-dlg"
-    >
-      <template #header="{ titleId, titleClass }">
-        <div class="collection-dlg-head">
-          <span
-            :id="titleId"
-            class="title"
-            :class="titleClass"
-            @click="cancelCollect"
-            >我的收藏</span
-          >
-          <span class="numbers"
-            >{{ currentPic + 1 }}/{{ styleBackground.length }}</span
-          >
-        </div>
-      </template>
-
-      <div class="collection-dlg-contain">
-        <el-carousel
-          type="card"
-          :autoplay="false"
-          arrow="always"
-          @change="carouselChangeHandle"
-        >
-          <el-carousel-item v-for="item in styleBackground" :key="item">
-            <div class="collect-item">
-              <img :src="item" alt="" />
-              <div class="desc">城市夜景 赛博朋克 格雷格·鲁特科夫斯基</div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-    </el-dialog> -->
-
     <el-dialog
       v-model="showCollection"
       :fullscreen="true"
@@ -405,8 +366,8 @@ function toggleAlbum() {
             <p>
               <o-icon><icon-download></icon-download></o-icon>
             </p>
-            <p>
-              <o-icon><icon-like></icon-like></o-icon>
+            <p class="heart">
+              <o-icon><icon-heart></icon-heart></o-icon>
             </p>
           </div>
         </swiper-slide>
@@ -631,7 +592,6 @@ function toggleAlbum() {
 .collection-dlg {
   background: rgba(0, 0, 0, 0.85);
   .el-dialog__headerbtn {
-    // top: 10px;
     right: 10px;
     z-index: 2010;
     .el-dialog__close {
@@ -639,107 +599,8 @@ function toggleAlbum() {
       font-size: 40px;
     }
   }
-
-  .el-dialog__body {
-    margin-top: 10vh;
-  }
 }
 
-// .collection-dlg {
-//   background: none;
-
-//   &-head {
-//     height: 80px;
-//     text-align: center;
-//     line-height: 80px;
-//     width: 100%;
-//     .title {
-//       font-size: 24px;
-//       color: #ffffff;
-//       line-height: 24px;
-//       margin-right: 24px;
-//     }
-//     .numbers {
-//       font-size: 16px;
-//       color: #ffffff;
-//       line-height: 24px;
-//     }
-//   }
-
-//   &-contain {
-//     width: 100%;
-//     height: 100%;
-//     display: flex;
-//     align-items: center;
-//     padding-top: 9vh;
-//     .el-carousel {
-//       width: 100%;
-//       .el-carousel__container {
-//         height: 34vw;
-//         .el-carousel__item {
-//           left: 7vw;
-
-//           .collect-item {
-//             width: 34vw;
-//             height: 100%;
-//             background: none;
-//             .desc {
-//               font-size: 18px;
-//               font-weight: 500;
-//               color: #ffffff;
-//               line-height: 26px;
-//               text-align: center;
-//               margin-top: 16px;
-//             }
-//             img {
-//               width: 34vw;
-//               height: calc(100% - 42px);
-//             }
-//           }
-//           .el-carousel__item--card {
-//             width: 34vw;
-//           }
-//           .el-carousel__item--card.is-active {
-//             transform: translateX(454.25px) scale(10.9);
-//           }
-
-//           .el-carousel__mask {
-//             width: 34vw;
-//             height: calc(100% - 42px);
-//           }
-//         }
-
-//         .el-carousel__arrow i {
-//           font-size: 30px;
-//         }
-//       }
-//     }
-//   }
-
-//   .el-dialog__header {
-//     padding: 0;
-//     margin-right: 0;
-//     background: #000;
-//   }
-
-//   .el-dialog__body {
-//     padding: 0 0 200px;
-//     height: calc(100vh - 80px);
-//     background: rgba(0, 0, 0, 0.85);
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//   }
-
-//   .el-dialog__headerbtn {
-//     // top: 10px;
-//     right: 10px;
-//     .el-dialog__close {
-//       color: #fff;
-//       font-size: 40px;
-//     }
-//   }
-// }
 .album-dlg {
   padding-left: 6%;
   padding-right: 6%;
@@ -820,7 +681,7 @@ function toggleAlbum() {
 
       .el-input__inner {
         font-size: 14px;
-        color: #b2b2b2;
+        color: #fff;
       }
 
       .el-input__count .el-input__count-inner {
@@ -897,6 +758,58 @@ function toggleAlbum() {
         padding: 8px 24px 24px;
         width: 100%;
         min-height: 93px;
+        position: relative;
+        .triangle0 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          top: -10px;
+          left: 62px;
+        }
+        .triangle1 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 202px;
+          top: -10px;
+        }
+        .triangle2 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 358px;
+          top: -10px;
+        }
+        .triangle3 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 498px;
+          top: -10px;
+        }
+        .triangle4 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 638px;
+          top: -10px;
+        }
+
         .sort-item {
           background: rgba(13, 141, 255, 0.3);
           border-radius: 8px;

@@ -129,6 +129,9 @@ watch(
       :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
         color: #fff;
       }
+      :deep(.el-breadcrumb__item:first-child .el-breadcrumb__inner) {
+        color: #b2b2b2;
+      }
     }
   }
   .wukong-head {
@@ -162,6 +165,9 @@ watch(
         background: rgba(7, 12, 22, 0.6);
         box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         backdrop-filter: blur(5px);
+        :deep(.nav-item:first-child) {
+          color: #fff !important;
+        }
       }
     }
     .tab-content {

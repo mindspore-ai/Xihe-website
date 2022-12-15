@@ -30,6 +30,10 @@ const toggleTip = (val) => {
   tipVisible.value = val;
 };
 
+function goDetail() {
+  window.open('https://huaweicompute.wjx.cn/vm/w2lbNFb.aspx?udsid=830516');
+}
+
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
 });
@@ -56,7 +60,7 @@ onUnmounted(() => {
 
   <div v-if="tipVisible" class="app-questionnaire">
     <div class="tip-content">
-      <img class="tip-img" :src="tipImg" />
+      <img class="tip-img" :src="tipImg" @click="goDetail" />
       <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
     </div>
   </div>

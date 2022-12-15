@@ -94,6 +94,42 @@ const styleData = ref([
   },
 ]);
 
+const randomList = ref([
+  { tag: '宫崎骏', isSelected: false },
+  { tag: '新海城', isSelected: false },
+  { tag: '达芬奇', isSelected: false },
+  { tag: '毕加索', isSelected: false },
+  { tag: '梵高', isSelected: false },
+  { tag: '莫奈', isSelected: false },
+  { tag: '温斯洛.霍默', isSelected: false },
+  { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
+  { tag: '韦恩.巴洛', isSelected: false },
+  { tag: '格雷格.鲁特科夫斯基', isSelected: false },
+  { tag: '动漫', isSelected: false },
+  { tag: '国风', isSelected: false },
+  { tag: '田园', isSelected: false },
+  { tag: '涂鸦', isSelected: false },
+  { tag: '立体', isSelected: false },
+  { tag: '浮雕', isSelected: false },
+  { tag: '水彩', isSelected: false },
+  { tag: '油画', isSelected: false },
+  { tag: '暗黑', isSelected: false },
+  { tag: '写实', isSelected: false },
+  { tag: '高清', isSelected: false },
+  { tag: '蜡笔画', isSelected: false },
+  { tag: '专业CG艺术', isSelected: false },
+  { tag: '彩色国风水墨', isSelected: false },
+  { tag: '生动色彩', isSelected: false },
+  { tag: '星际漫游', isSelected: false },
+  { tag: '赛博朋克', isSelected: false },
+  { tag: '印象主义', isSelected: false },
+  { tag: '现代主义', isSelected: false },
+  { tag: '巴洛克风格', isSelected: false },
+  { tag: '像素风格', isSelected: false },
+  { tag: '浮世绘', isSelected: false },
+  { tag: '蒸汽波', isSelected: false },
+]);
+
 const exampleData = ref([
   { text: '空山新雨后', isSelected: false },
   { text: '北国风光', isSelected: false },
@@ -102,6 +138,7 @@ const exampleData = ref([
   { text: '落日 莫奈', isSelected: false },
   { text: '星空 梵高', isSelected: false },
 ]);
+
 const newExampleData = ref([
   { text: '样例1', isSelected: false },
   { text: '样例2', isSelected: false },
@@ -149,11 +186,8 @@ function choseSortTag(val) {
 
 function getRandomStyle(index) {
   if (index === 4) {
-    console.log('获取随机风格');
-    styleData.value[index].options = [
-      { tag: '梅西', isSelected: false },
-      { tag: '内马尔', isSelected: false },
-    ];
+    const i = Math.floor(Math.random() * randomList.value.length);
+    styleData.value[index].options = [randomList.value[i]];
   } else {
     return;
   }

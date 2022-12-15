@@ -139,12 +139,12 @@ function handleBtnClick2() {
 function handleBtnClick3() {
   router.push(`https://${DOMAIN}/modelzoo`);
 }
-function goDetail(id) {
-  router.push({
-    name: 'competitionDetail',
-    params: { id: id },
-  });
-}
+// function goDetail(id) {
+//   router.push({
+//     name: 'competitionDetail',
+//     params: { id: id },
+//   });
+// }
 function goCode() {
   router.push({ path: '/modelzoo/codegeex' });
 }
@@ -265,21 +265,6 @@ function goActivity() {
       </swiper-slide>
       <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
-      </swiper-slide>
-      <!-- <swiper-slide>
-        <div class="photo1 cursor" @click="goInvited"></div>
-      </swiper-slide> -->
-      <!-- <swiper-slide>
-        <div class="photo2"></div>
-      </swiper-slide> -->
-      <swiper-slide>
-        <div class="photo3 cursor" @click="goDetail(3)"></div>
-      </swiper-slide>
-      <swiper-slide>
-        <div class="photo4 cursor" @click="goDetail(2)"></div>
-      </swiper-slide>
-      <swiper-slide>
-        <div class="photo5 cursor" @click="goDetail(1)"></div>
       </swiper-slide>
     </swiper>
 
@@ -720,50 +705,6 @@ function goActivity() {
     //   background-size: cover;
     //   background-position: 50%;
     // }
-    // .photo1 {
-    //   background: url(@/assets/imgs/home-banner3.png);
-    //   width: 100%;
-    //   height: 480px;
-    //   background-size: cover;
-    //   background-position: 50%;
-    // }
-    // .photo2 {
-    //   background: url(@/assets/imgs/home-banner2.png);
-    //   width: 100%;
-    //   height: 480px;
-    //   background-size: cover;
-    //   background-position: 50%;
-    // }
-    .photo3 {
-      background: url(@/assets/imgs/home/home-banner4.jpg);
-      width: 100%;
-      height: 480px;
-      background-size: cover;
-      background-position: 50%;
-      @media screen and (max-width: 1440px) {
-        height: 400px;
-      }
-    }
-    .photo4 {
-      background: url(@/assets/imgs/home/home-banner5.jpg);
-      width: 100%;
-      height: 480px;
-      background-size: cover;
-      background-position: 50%;
-      @media screen and (max-width: 1440px) {
-        height: 400px;
-      }
-    }
-    .photo5 {
-      background: url(@/assets/imgs/home/home-banner6.png);
-      width: 100%;
-      height: 480px;
-      background-size: cover;
-      background-position: 50%;
-      @media screen and (max-width: 1440px) {
-        height: 400px;
-      }
-    }
     .photo6 {
       background: url(@/assets/imgs/home/home-banner1.jpg);
       width: 100%;

@@ -222,7 +222,12 @@ export function getWkExamples() {
 export function wuKongInfer(params) {
   const url = '/server/bigmodel/wukong';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+      timeout: 60000,
+    })
     .then((res) => {
       return res;
     })

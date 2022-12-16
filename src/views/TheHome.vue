@@ -59,7 +59,7 @@ const toggleGallery = (val, num) => {
   galleryVisible.value = val;
   currPage.value = num;
   if (mySwiper.value) {
-    mySwiper.value.slideTo(currPage.value);
+    mySwiper.value.slideToLoop(currPage.value);
   }
 };
 // watch(
@@ -317,6 +317,7 @@ function goActivity() {
             }"
             :modules="[Pagination, FreeMode, Navigation]"
             class="my-swiper2"
+            loop
             @swiper="onSwiper"
           >
             <swiper-slide
@@ -869,7 +870,7 @@ function goActivity() {
         }
         .el-icon {
           color: #fff;
-          font-size: 24px;
+          font-size: 40px;
         }
         .el-dialog__header {
           padding: 0;

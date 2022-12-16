@@ -1,12 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, FreeMode, Navigation } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
+import { ref, computed } from 'vue';
 
 import one from '@/assets/imgs/wukong/style-bg-1.png';
 import two from '@/assets/imgs/wukong/style-bg-2.png';
@@ -15,25 +8,22 @@ import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
-import IconAlbum from '~icons/app/wukong-album';
-import IconCollection from '~icons/app/wukong-collection';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
-import IconHeart from '~icons/app/collected';
+import IconX from '~icons/app/x';
 
-import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
-import gallery from '@/assets/imgs/wukong/ceshi1.png';
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
 
-import { getWkExamples } from '@/api/api-modelzoo.js';
 import { wuKongInfer } from '@/api/api-modelzoo.js';
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const inputText = ref('');
 const sortTag = ref('');
 const styleIndex = ref(0);
 
-const showCollection = ref(false);
 const isInferred = ref(false);
-const showAlbum = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);
 const styleBackground = ref([]);
@@ -135,11 +125,11 @@ const randomList = ref([
 ]);
 
 const exampleData = ref([
-  { text: '空山新雨后', isSelected: false },
-  { text: '北国风光', isSelected: false },
-  { text: '星河欲坠时', isSelected: false },
+  { text: '秋水共长天一色', isSelected: false },
+  { text: '城市夜景', isSelected: false },
+  { text: '悬崖 美景 壮观 高清', isSelected: false },
   { text: '西湖 烟雨', isSelected: false },
-  { text: '星空 梵高', isSelected: false },
+  { text: '海滩 美景 高清', isSelected: false },
 ]);
 
 const lists = ref([
@@ -163,10 +153,6 @@ const lists = ref([
   { text: '空山新雨后', isSelected: false },
   { text: '小桥流水人家', isSelected: false },
   { text: '飞流直下三千尺，疑是银河落九天', isSelected: false },
-  {
-    text: '远上寒山石径斜，白云深处有人家。停车做爱枫林晚，霜叶红于二月花',
-    isSelected: false,
-  },
   { text: '永无夜晚铜锣湾', isSelected: false },
   { text: '上海陆家嘴 未来城市 科幻风格', isSelected: false },
   { text: '梅花香自苦寒来', isSelected: false },
@@ -188,6 +174,14 @@ function exampleSelectHandler(item) {
   inputText.value = item.text;
 }
 
+function clearInputText() {
+  inputText.value = '';
+
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
+}
+
 function handleInput() {
   exampleData.value.forEach((item) => {
     if (item.text === inputText.value) {
@@ -203,13 +197,23 @@ function choseStyleSort(val) {
 }
 
 function choseSortTag(val) {
-  styleData.value.forEach((item) => {
-    item.options.forEach((tag) => {
-      tag.isSelected = false;
+  if (val.tag === sortTag.value) {
+    val.isSelected = !val.isSelected;
+    if (val.isSelected) {
+      sortTag.value = val.tag;
+    } else {
+      sortTag.value = '';
+    }
+  } else {
+    styleData.value.forEach((item) => {
+      item.options.forEach((tag) => {
+        tag.isSelected = false;
+      });
     });
-  });
-  val.isSelected = true;
-  sortTag.value = val.tag;
+
+    val.isSelected = !val.isSelected;
+    sortTag.value = val.tag;
+  }
 }
 
 function getRandomStyle(index) {
@@ -224,24 +228,41 @@ function getRandomStyle(index) {
 const showInferDlg = ref(false);
 // wk推理
 async function handleInfer() {
-  if (inputText.value && sortTag.value) {
-    showInferDlg.value = true;
-    try {
-      const res = await wuKongInfer({
-        sample: inputText.value,
-        style: sortTag.value,
-      });
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    //  && sortTag.value
+    if (inputText.value) {
+      showInferDlg.value = true;
+      try {
+        const res = await wuKongInfer({
+          sample: inputText.value,
+          style: sortTag.value,
+        });
 
-      isInferred.value = true;
-      styleBackground.value = res.data.data.pictures;
-    } catch (e) {
+        isInferred.value = true;
+        styleBackground.value = res.data.data.pictures;
+      } catch (e) {
+        ElMessage({
+          type: 'warning',
+          message: e.msg,
+        });
+        showInferDlg.value = false;
+      }
+    } else if (!inputText.value) {
       ElMessage({
         type: 'warning',
-        message: e.msg,
+        message: '请输入样例描述',
       });
-      showInferDlg.value = false;
     }
   }
+}
+
+// 推理dlg关闭-触发
+function handleDlgClose() {
+  showInferDlg.value = false;
+
+  isInferred.value = false;
 }
 
 // 随机选取五个样例
@@ -261,24 +282,7 @@ function getDescExamples(arr, count) {
 }
 
 function refreshTags() {
-  // getWkExamples().then((res) => {
-  //   if (res.status === 201 && res.data) {
-  //     console.log(res.data);
-  //     // res.data.forEach((item, index) => {
-  //     //   exampleData.value[index].text = item;
-  //     // });
-  //   }
-  // });
   exampleData.value = getDescExamples(lists.value, 5);
-}
-
-function toggleCollectionDlg(val) {
-  showCollection.value = val;
-}
-
-// AI画集
-function toggleAlbum() {
-  showAlbum.value = true;
 }
 </script>
 <template>
@@ -289,9 +293,13 @@ function toggleAlbum() {
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
       type="text"
-      clearable
       @input="handleInput"
-    />
+    >
+      <template #suffix
+        ><o-icon v-if="inputText" class="clear-input" @click="clearInputText"
+          ><icon-x></icon-x></o-icon
+      ></template>
+    </el-input>
 
     <div class="wk-experience-examples">
       <p class="title">选择样例</p>
@@ -348,32 +356,17 @@ function toggleAlbum() {
 
     <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
 
-    <div class="sider-content">
-      <div class="nav-item" @click="toggleAlbum(true)">
-        <p class="nav-item-img">
-          <o-icon><icon-album></icon-album></o-icon>
-        </p>
-        <p class="nav-item-text">AI画集</p>
-      </div>
-      <div class="nav-item" @click="toggleCollectionDlg(true)">
-        <p class="nav-item-img">
-          <o-icon><icon-collection></icon-collection></o-icon>
-        </p>
-        <p class="nav-item-text">我的收藏</p>
-      </div>
-    </div>
     <!-- 推理dialog -->
     <el-dialog
       v-model="showInferDlg"
       :fullscreen="true"
       :append-to-body="true"
       class="infer-dlg"
+      @close="handleDlgClose"
     >
       <template #header="{ titleClass }">
         <div class="infer-dlg-head">
-          <span class="title" :class="titleClass"
-            >来自深渊 风景 绘画 写实风格</span
-          >
+          <span class="title" :class="titleClass">{{ inputText }}</span>
         </div>
       </template>
 
@@ -397,57 +390,6 @@ function toggleAlbum() {
           </div>
         </div>
       </div>
-    </el-dialog>
-
-    <!-- 我的收藏dialog -->
-    <el-dialog
-      v-model="showCollection"
-      :fullscreen="true"
-      :append-to-body="true"
-      center
-      class="collection-dlg"
-    >
-      <swiper
-        :slides-per-view="3"
-        :slides-per-group="1"
-        :speed="500"
-        :space-between="30"
-        :free-mode="true"
-        :navigation="true"
-        :pagination="{
-          type: 'fraction',
-          clickableClass: 'my-pagination-clickable',
-        }"
-        :modules="[Pagination, FreeMode, Navigation]"
-        loop
-        class="my-swiper2"
-      >
-        <swiper-slide v-for="item in 5" :key="item"
-          ><img :src="gallery" alt="" />
-          <p>来自深渊 风景 绘画 写实风格</p>
-
-          <div class="handler">
-            <p>
-              <o-icon><icon-download></icon-download></o-icon>
-            </p>
-            <p class="heart">
-              <o-icon><icon-heart></icon-heart></o-icon>
-            </p>
-          </div>
-        </swiper-slide>
-
-        <div class="collect-title">我的收藏</div>
-      </swiper>
-    </el-dialog>
-
-    <!-- AI画集 -->
-    <el-dialog
-      v-model="showAlbum"
-      :fullscreen="true"
-      :append-to-body="true"
-      class="album-dlg"
-    >
-      <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
 </template>
@@ -577,159 +519,11 @@ function toggleAlbum() {
     }
   }
 }
-.my-swiper2 {
-  --swiper-navigation-size: 24px;
-  --swiper-navigation-color: #fff;
-
-  .handler {
-    position: absolute;
-    bottom: 64px;
-    right: 24px;
-    display: flex;
-    p {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-      &:first-child {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .collect-title {
-    position: fixed;
-    top: 22px;
-    left: -40px;
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 24px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #000000;
-    background: #000;
-    border-radius: 50%;
-    font-weight: 600;
-    top: 55%;
-  }
-  .swiper-slide {
-    img {
-      width: 100%;
-      height: auto;
-      margin-top: 16%;
-    }
-    p {
-      color: #ffffff;
-      text-align: center;
-      line-height: 26px;
-      font-size: 18px;
-      margin-top: 16px;
-    }
-  }
-  .my-pagination-clickable {
-    position: fixed;
-  }
-  .swiper-pagination-fraction {
-    color: #fff;
-    font-size: 16px;
-    line-height: 26px;
-    position: fixed;
-    top: 22px;
-    left: 50px;
-    bottom: unset;
-  }
-}
-
-.collection-dlg {
-  background: rgba(0, 0, 0, 0.85);
-  .el-dialog__headerbtn {
-    right: 10px;
-    z-index: 2010;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-}
-
-.album-dlg {
-  padding-left: 6%;
-  padding-right: 6%;
-  background: rgb(0, 0, 0);
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: #d8d8d8;
-    background-clip: content-box;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: 3px;
-    box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-    background: #ffffff;
-  }
-
-  .el-dialog__body {
-    background: rgba(0, 0, 0, 0.85);
-  }
-
-  .el-dialog__headerbtn {
-    right: 10px;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-}
 </style>
 <style lang="scss" scoped>
 .wk-experience {
-  position: relative;
-
-  .sider-content {
-    position: absolute;
-    bottom: 220px;
-    right: -231px;
-    color: #fff;
-    .nav-item {
-      margin-bottom: 16px;
-      text-align: center;
-      cursor: pointer;
-      &-img {
-        width: 80px;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.1);
-        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-        font-size: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      &-text {
-        font-size: 14px;
-        font-weight: 400;
-        color: #b2b2b2;
-        line-height: 20px;
-        margin-top: 8px;
-      }
-    }
+  .clear-input {
+    cursor: pointer;
   }
 
   :deep(.el-input) {

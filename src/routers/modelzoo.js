@@ -59,7 +59,7 @@ export default [
     ],
   },
   // CodeGeex
-  {
+  /*   {
     path: '/modelzoo/codegeex',
     name: 'codegeex',
     component: () => {
@@ -88,7 +88,7 @@ export default [
         redirect: '/modelzoo/codegeex',
       },
     ],
-  },
+  }, */
   // 武大.Luojia
   {
     path: '/modelzoo/luojia',

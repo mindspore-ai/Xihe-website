@@ -32,6 +32,14 @@ let i18n = {
     //   openness: true,
     // },
     {
+      title: '悟空',
+      introduce:
+        '华为诺亚方舟实验室与MindSpore社区联合打造的中文图像生成大模型',
+      url: wukong,
+      path: '/modelzoo/wukong',
+      openness: true,
+    },
+    {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
       url: taichu,

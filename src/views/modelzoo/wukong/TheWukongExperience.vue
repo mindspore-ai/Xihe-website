@@ -366,7 +366,9 @@ function refreshTags() {
     >
       <template #header="{ titleClass }">
         <div class="infer-dlg-head">
-          <span class="title" :class="titleClass">{{ inputText }}</span>
+          <span class="title" :class="titleClass"
+            >{{ inputText }}&nbsp;&nbsp;{{ sortTag }}</span
+          >
         </div>
       </template>
 

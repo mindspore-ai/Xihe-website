@@ -7,7 +7,7 @@ import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
-import wukong from '@/assets/imgs/modelzoo/wukong.png';
+import wukong from '@/assets/imgs/wukong/wukong-banner1.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';

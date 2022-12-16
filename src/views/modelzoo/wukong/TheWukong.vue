@@ -198,12 +198,7 @@ watch(
     </el-dialog>
 
     <!-- AI画集 -->
-    <el-dialog
-      v-model="showAlbum"
-      :fullscreen="true"
-      :append-to-body="true"
-      class="album-dlg"
-    >
+    <el-dialog v-model="showAlbum" :fullscreen="true" center>
       <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
@@ -309,10 +304,48 @@ watch(
   }
 }
 
-.album-dlg {
-  padding-left: 6%;
-  padding-right: 6%;
-  background: rgb(0, 0, 0);
+// .album-dlg {
+//   padding-left: 6%;
+//   padding-right: 6%;
+//   background: rgb(0, 0, 0);
+//   &::-webkit-scrollbar {
+//     width: 6px;
+//     height: 6px;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     border-radius: 3px;
+//     background-color: #d8d8d8;
+//     background-clip: content-box;
+//   }
+
+//   &::-webkit-scrollbar-track {
+//     border-radius: 3px;
+//     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+//     background: #ffffff;
+//   }
+
+//   .is-fullscreen {
+//     background: rgba(0, 0, 0, 0.85) !important;
+//   }
+
+//   .el-dialog__body {
+//     background: rgba(0, 0, 0, 0.85);
+//   }
+
+//   .el-dialog__headerbtn {
+//     right: 10px;
+//     .el-dialog__close {
+//       color: #fff;
+//       font-size: 40px;
+//     }
+//   }
+// }
+</style>
+<style lang="scss" scoped>
+:deep(.el-dialog) {
+  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
+
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -329,27 +362,6 @@ watch(
     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
     background: #ffffff;
   }
-
-  .is-fullscreen {
-    background: rgba(0, 0, 0, 0.85) !important;
-  }
-
-  .el-dialog__body {
-    background: rgba(0, 0, 0, 0.85);
-  }
-
-  .el-dialog__headerbtn {
-    right: 10px;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-}
-</style>
-<style lang="scss" scoped>
-:deep(.el-dialog) {
-  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
   .el-dialog__headerbtn {
     right: 10px;
     z-index: 2010;

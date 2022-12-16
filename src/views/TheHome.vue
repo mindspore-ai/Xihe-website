@@ -382,10 +382,8 @@ function goActivity() {
             </OButton>
           </div>
           <div class="modelzoo-card-list">
-            <a
-              class="modelzoo-card"
-              :href="`https://${DOMAIN}/modelzoo/codegeex`"
-            >
+            <!-- :href="`https://${DOMAIN}/modelzoo/codegeex`" -->
+            <a class="modelzoo-card">
               <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>

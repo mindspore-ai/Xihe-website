@@ -12,7 +12,8 @@ import 'swiper/css/navigation';
 import ONav from '@/components/ONav.vue';
 
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
-import wukongBanner from '@/assets/imgs/wukong/wukong-banner.png';
+import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
+import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
 
 import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
@@ -100,7 +101,13 @@ watch(
 
       <div class="wukong-head">
         <div class="wukong-head-left">
-          <img draggable="false" :src="wukongBanner" alt="" />
+          <img
+            v-if="route.name === 'wukongIntroduce'"
+            draggable="false"
+            :src="wukongBanner1"
+            alt=""
+          />
+          <img v-else draggable="false" :src="wukongBanner2" alt="" />
         </div>
 
         <div class="wukong-head-right">
@@ -140,7 +147,7 @@ watch(
         </div>
       </div>
     </div>
-    <div class="sider-content">
+    <div v-if="route.name === 'wukongExperience'" class="sider-content">
       <div class="nav-item" @click="toggleAlbum(true)">
         <p class="nav-item-img">
           <o-icon><icon-album></icon-album></o-icon>

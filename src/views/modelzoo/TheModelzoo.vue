@@ -23,13 +23,13 @@ let i18n = {
   more: '更多',
   clear: '清除',
   cardLists: [
-    {
-      title: 'CodeGeeX',
-      introduce: '130亿参数的多编程语言代码生成预训练模型',
-      url: codegeex,
-      // path: '/modelzoo/codegeex',
-      openness: true,
-    },
+    // {
+    //   title: 'CodeGeeX',
+    //   introduce: '130亿参数的多编程语言代码生成预训练模型',
+    //   url: codegeex,
+    //   path: '/modelzoo/codegeex',
+    //   openness: true,
+    // },
     {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',

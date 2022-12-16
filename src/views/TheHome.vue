@@ -25,7 +25,8 @@ import models3 from '@/assets/imgs/home/models3.png';
 import models4 from '@/assets/imgs/home/models4.png';
 import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
-import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
+// import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
+import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
@@ -84,6 +85,8 @@ const i18n = {
     introduce2: '全球首个遥感专用框架及最大遥感样本库',
     modelzoo3: 'CodeGeeX',
     introduce3: '一个具有130亿参数的多编程语言代码生成预训练模型',
+    modelzoo4: '鹏程.盘古',
+    introduce4: '业界首个千亿级参数中文自然语言处理大模型',
   },
   model: {
     title: '模型',
@@ -382,8 +385,7 @@ function goActivity() {
             </OButton>
           </div>
           <div class="modelzoo-card-list">
-            <!-- :href="`https://${DOMAIN}/modelzoo/codegeex`" -->
-            <a class="modelzoo-card">
+            <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/codegeex`">
               <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>
@@ -394,7 +396,7 @@ function goActivity() {
                 </div>
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
               </div>
-            </a>
+            </a> -->
             <a
               class="modelzoo-card"
               :href="`https://${DOMAIN}/modelzoo/taichu`"
@@ -425,18 +427,18 @@ function goActivity() {
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce2 }}</div>
               </div>
             </a>
-            <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
+            <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
               <div class="card-header">
-                <img :src="modelzoo3" alt="" />
+                <img :src="modelzoo_pangu" alt="" />
               </div>
               <div class="card-body">
                 <div class="modelzoo-title">
-                  <p>{{ i18n.modelzoo.modelzoo3 }}</p>
+                  <p>{{ i18n.modelzoo.modelzoo4 }}</p>
                   <OIcon><IconArrowRight /></OIcon>
                 </div>
-                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
+                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce4 }}</div>
               </div>
-            </a> -->
+            </a>
           </div>
         </div>
 

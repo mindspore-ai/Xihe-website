@@ -171,7 +171,7 @@ watch(
       }
     }
     .tab-content {
-      padding: 48px 80px;
+      padding: 40px 80px;
       background-color: rgba(0, 0, 0, 0);
       background: rgba(7, 12, 22, 0.6);
       box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
@@ -264,7 +264,7 @@ watch(
       }
     }
     .tab-content {
-      padding: 48px;
+      padding: 40px 80px;
       background: #fff;
     }
   }

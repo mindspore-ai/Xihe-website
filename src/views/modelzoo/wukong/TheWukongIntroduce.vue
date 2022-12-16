@@ -45,49 +45,51 @@ import wukongSample from '@/assets/imgs/wukong/wukong-sample.png';
             </li>
             <li>
               <span class="content-item">•</span>
-              <span
-                >去除文本为无意义的词如 “Image”, “图片”，“照片”等的样本
+              <span>
+                去除文本为无意义的词如 “Image”, “图片”，“照片”等的样本
               </span>
             </li>
             <li>
               <span class="content-item">•</span>
-              <span>过滤文本中包含隐私/敏感词的样本</span>
+              <span> 过滤文本中包含隐私/敏感词的样本 </span>
             </li>
           </ul>
-        </div>
-        <div class="final-sample">
           <div class="result">
             最终我们经过过滤得到了一亿较高质量中文图文对，部分样例如下图所示。图中英文为手动翻译结果，不属于数据集本身：
           </div>
+        </div>
+        <div class="final-sample">
           <div class="sample-img">
             <img :src="wukongSample" alt="" />
           </div>
           <div class="more-dataset">
-            <span> 更多数据集相关细节可以参考（ </span>
-            <a
-              href="https://wukong-dataset.github.io/wukong-dataset/"
-              target="_blank"
-            >
-              https://wukong-dataset.github.io/wukong-dataset/
-            </a>
-            <span>) 。</span>
+            <div>
+              <span> 更多数据集相关细节可以参考</span>
+              <a
+                href="https://wukong-dataset.github.io/wukong-dataset/"
+                target="_blank"
+              >
+                https://wukong-dataset.github.io/wukong-dataset/
+              </a>
+              <span>。</span>
+            </div>
+            <div class="conclusion">
+              <span>
+                进一步地，在训练悟空画画模型时，我们对悟空数据集的数据根据图文匹配分数、水印分数以及艺术性分数
+              </span>
+              <a
+                href="https://github.com/christophschuhmann/improved-aesthetic-predictor"
+                target="_blank"
+              >
+                https://github.com/christophschuhmann/improved-aesthetic-predictor
+              </a>
+              <span>
+                再次进行筛选，最终获得25M左右的数据进行训练。该部分数据具有较高的图像质量，并对常见文本内容进行了良好的覆盖，使得训练得到的悟空画画模型对文本拥有广泛的识别能力，并能根据不同的提示词生成多样的图片风格。
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="conclusion">
-      <span>
-        进一步地，在训练悟空画画模型时，我们对悟空数据集的数据根据图文匹配分数、水印分数以及艺术性分数(
-      </span>
-      <a
-        href="https://github.com/christophschuhmann/improved-aesthetic-predictor"
-        target="_blank"
-      >
-        https://github.com/christophschuhmann/improved-aesthetic-predictor
-      </a>
-      <span>
-        )再次进行筛选，最终获得25M左右的数据进行训练。该部分数据具有较高的图像质量，并对常见文本内容进行了良好的覆盖，使得训练得到的悟空画画模型对文本拥有广泛的识别能力，并能根据不同的提示词生成多样的图片风格。
-      </span>
     </div>
   </div>
 </template>
@@ -111,16 +113,16 @@ import wukongSample from '@/assets/imgs/wukong/wukong-sample.png';
     margin-bottom: 40px;
     .model-title {
       line-height: 32px;
-      font-size: 24px;
+      font-size: 20px;
       color: #000000;
       margin-bottom: 24px;
     }
     .model-img {
       text-align: center;
       margin-bottom: 24px;
-      // img {
-      //   width: 60%;
-      // }
+      img {
+        width: 100%;
+      }
     }
     .model-detail {
       line-height: 22px;
@@ -131,16 +133,16 @@ import wukongSample from '@/assets/imgs/wukong/wukong-sample.png';
   .dataset {
     .dataset-title {
       line-height: 32px;
-      font-size: 24px;
+      font-size: 20px;
       color: #000000;
       margin-bottom: 24px;
     }
     .dataset-img {
       text-align: center;
       margin-bottom: 24px;
-      // img {
-      //   width: 60%;
-      // }
+      img {
+        width: 100%;
+      }
     }
     .dataset-detail {
       line-height: 22px;
@@ -153,32 +155,37 @@ import wukongSample from '@/assets/imgs/wukong/wukong-sample.png';
         margin-bottom: 16px;
         ul {
           li {
+            text-indent: 10px;
             .content-item {
               display: inline-block;
-              width: 10px;
-              height: 10px;
-              font-size: 10px;
-              color: #0d8dff;
+              font-size: 18px;
+              color: #555;
+              margin-right: 4px;
             }
           }
         }
+        .result {
+          margin-bottom: 24px;
+        }
       }
       .final-sample {
-        .result {
-          margin-bottom: 16px;
-        }
         .sample-img {
           text-align: center;
-          margin-bottom: 16px;
+          margin-bottom: 24px;
+          img {
+            width: 100%;
+          }
+        }
+        .more-dataset {
+          line-height: 22px;
+          font-size: 14px;
+          color: #555555;
+          a {
+            color: #0d8dff;
+          }
         }
       }
     }
-  }
-  .conclusion {
-    line-height: 22px;
-    font-size: 14px;
-    color: #555555;
-    margin-top: 16px;
   }
 }
 </style>

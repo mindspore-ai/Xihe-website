@@ -163,13 +163,7 @@ watch(
     </div>
 
     <!-- 我的收藏dialog -->
-    <el-dialog
-      v-model="showCollection"
-      :fullscreen="true"
-      :append-to-body="true"
-      center
-      class="collection-dlg"
-    >
+    <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
         :slides-per-view="3"
         :slides-per-group="1"
@@ -215,24 +209,21 @@ watch(
   </div>
 </template>
 <style lang="scss">
-.collection-dlg {
-  background: rgba(0, 0, 0, 0.85);
-  .el-dialog {
-    --el-dialog-bg-color: rgba(0, 0, 0, 0.85);
-  }
+// .collection-dlg {
+//   background: rgba(0, 0, 0, 0.85);
 
-  .el-dialog__headerbtn {
-    right: 10px;
-    z-index: 2010;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-  .is-fullscreen {
-    background: rgba(0, 0, 0, 0.85) !important;
-  }
-}
+//   .el-dialog__headerbtn {
+//     right: 10px;
+//     z-index: 2010;
+//     .el-dialog__close {
+//       color: #fff;
+//       font-size: 40px;
+//     }
+//   }
+//   .is-fullscreen {
+//     background: rgba(0, 0, 0, 0.85) !important;
+//   }
+// }
 
 .my-swiper2 {
   --swiper-navigation-size: 24px;
@@ -357,6 +348,17 @@ watch(
 }
 </style>
 <style lang="scss" scoped>
+:deep(.el-dialog) {
+  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
+  .el-dialog__headerbtn {
+    right: 10px;
+    z-index: 2010;
+    .el-dialog__close {
+      color: #fff;
+      font-size: 40px;
+    }
+  }
+}
 .wukong-bg1 {
   background: #f5f6f8;
 }

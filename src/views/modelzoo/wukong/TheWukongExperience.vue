@@ -14,8 +14,6 @@ import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
 
-import generate from '@/assets/imgs/wukong/ceshi3.jpg';
-
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
@@ -26,7 +24,11 @@ import IconHeart from '~icons/app/collected';
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
 
-const text = ref('');
+import { getWkExamples } from '@/api/api-modelzoo.js';
+import { wuKongInfer } from '@/api/api-modelzoo.js';
+
+const inputText = ref('');
+const sortTag = ref('');
 const styleIndex = ref(0);
 
 const showCollection = ref(false);
@@ -34,7 +36,7 @@ const isInferred = ref(false);
 const showAlbum = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);
-const styleBackground = ref([generate, generate, generate, generate]);
+const styleBackground = ref([]);
 
 const styleData = ref([
   {
@@ -137,17 +139,45 @@ const exampleData = ref([
   { text: '北国风光', isSelected: false },
   { text: '星河欲坠时', isSelected: false },
   { text: '西湖 烟雨', isSelected: false },
-  { text: '落日 莫奈', isSelected: false },
   { text: '星空 梵高', isSelected: false },
 ]);
 
-const newExampleData = ref([
-  { text: '样例1', isSelected: false },
-  { text: '样例2', isSelected: false },
-  { text: '样例3', isSelected: false },
-  { text: '样例4', isSelected: false },
-  { text: '样例5', isSelected: false },
-  { text: '样例6', isSelected: false },
+const lists = ref([
+  { text: '城市夜景 油画', isSelected: false },
+  { text: '星空 梵高', isSelected: false },
+  { text: '落日 莫奈', isSelected: false },
+  { text: '抽烟的女人 毕加索', isSelected: false },
+  { text: '教堂 巴洛克风格', isSelected: false },
+  { text: '程序员 头像 像素风格', isSelected: false },
+  { text: '城市夜景 赛博朋克 格雷格.鲁特科夫斯基', isSelected: false },
+  { text: '都市 天际线 日出', isSelected: false },
+  { text: '天气播报 背景 云', isSelected: false },
+  { text: '海滩 美景 高清', isSelected: false },
+  { text: '沙漠 美景 高清', isSelected: false },
+  { text: '森林 落叶 美景 高清', isSelected: false },
+  { text: '悬崖 美景 壮观 高清', isSelected: false },
+  { text: '时空 黑洞 辐射', isSelected: false },
+  { text: '西湖 烟雨', isSelected: false },
+  { text: '山水 水墨 写意', isSelected: false },
+  { text: '温馨的森林木屋', isSelected: false },
+  { text: '空山新雨后', isSelected: false },
+  { text: '小桥流水人家', isSelected: false },
+  { text: '飞流直下三千尺，疑是银河落九天', isSelected: false },
+  {
+    text: '远上寒山石径斜，白云深处有人家。停车做爱枫林晚，霜叶红于二月花',
+    isSelected: false,
+  },
+  { text: '永无夜晚铜锣湾', isSelected: false },
+  { text: '上海陆家嘴 未来城市 科幻风格', isSelected: false },
+  { text: '梅花香自苦寒来', isSelected: false },
+  { text: '北极圈极夜前的最后一次日落', isSelected: false },
+  { text: '星河欲坠时', isSelected: false },
+  { text: '北国风光', isSelected: false },
+  { text: '花海 城堡 卡通', isSelected: false },
+  { text: '猫咪 可爱', isSelected: false },
+  { text: '有山有水有点田', isSelected: false },
+  { text: '星空 高清', isSelected: false },
+  { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
 function exampleSelectHandler(item) {
@@ -155,12 +185,12 @@ function exampleSelectHandler(item) {
     item.isSelected = false;
   });
   item.isSelected = true;
-  text.value = item.text;
+  inputText.value = item.text;
 }
 
 function handleInput() {
   exampleData.value.forEach((item) => {
-    if (item.text === text.value) {
+    if (item.text === inputText.value) {
       item.isSelected = true;
     } else {
       item.isSelected = false;
@@ -173,13 +203,13 @@ function choseStyleSort(val) {
 }
 
 function choseSortTag(val) {
-  console.log(val);
   styleData.value.forEach((item) => {
     item.options.forEach((tag) => {
       tag.isSelected = false;
     });
   });
   val.isSelected = true;
+  sortTag.value = val.tag;
 }
 
 function getRandomStyle(index) {
@@ -192,16 +222,54 @@ function getRandomStyle(index) {
 }
 
 const showInferDlg = ref(false);
-function handleInfer() {
-  showInferDlg.value = true;
+// wk推理
+async function handleInfer() {
+  if (inputText.value && sortTag.value) {
+    showInferDlg.value = true;
+    try {
+      const res = await wuKongInfer({
+        sample: inputText.value,
+        style: sortTag.value,
+      });
 
-  setTimeout(() => {
-    isInferred.value = true;
-  }, 3000);
+      isInferred.value = true;
+      styleBackground.value = res.data.data.pictures;
+    } catch (e) {
+      ElMessage({
+        type: 'warning',
+        message: e.msg,
+      });
+      showInferDlg.value = false;
+    }
+  }
+}
+
+// 随机选取五个样例
+function getDescExamples(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
 }
 
 function refreshTags() {
-  exampleData.value = newExampleData.value;
+  // getWkExamples().then((res) => {
+  //   if (res.status === 201 && res.data) {
+  //     console.log(res.data);
+  //     // res.data.forEach((item, index) => {
+  //     //   exampleData.value[index].text = item;
+  //     // });
+  //   }
+  // });
+  exampleData.value = getDescExamples(lists.value, 5);
 }
 
 function toggleCollectionDlg(val) {
@@ -216,7 +284,7 @@ function toggleAlbum() {
 <template>
   <div class="wk-experience">
     <el-input
-      v-model="text"
+      v-model="inputText"
       maxlength="75"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit

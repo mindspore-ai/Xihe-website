@@ -5,7 +5,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, FreeMode, Navigation, EffectFade } from 'swiper';
+import { Pagination, Autoplay, FreeMode, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
@@ -16,7 +16,7 @@ import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
-import IconArrowRight2 from '~icons/app/arrow-right2.svg';
+// import IconArrowRight2 from '~icons/app/arrow-right2.svg';
 // import homeBanner2 from '@/assets/imgs/home-banner2.png';
 // import homeBanner3 from '@/assets/imgs/home-banner3.png';
 import homePageImg from '@/assets/imgs/home/home-page.png';
@@ -33,9 +33,6 @@ import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
 import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
-import gallery1 from '@/assets/imgs/home/gallery1.png';
-import gallery2 from '@/assets/imgs/home/gallery2.png';
-import gallery3 from '@/assets/imgs/home/gallery3.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -416,6 +413,7 @@ function goActivity() {
                 ><img
                   src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/上海陆家嘴 未来城市 科幻风格_00444217.png"
                   alt=""
+                  @click="toggleGallery(true, 0)"
                 />
               </swiper-slide>
               <swiper-slide
@@ -423,6 +421,7 @@ function goActivity() {
                   src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00000.png
 "
                   alt=""
+                  @click="toggleGallery(true, 1)"
                 />
               </swiper-slide>
               <swiper-slide
@@ -430,6 +429,7 @@ function goActivity() {
                   src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00001.png
 "
                   alt=""
+                  @click="toggleGallery(true, 2)"
                 />
               </swiper-slide>
               <swiper-slide
@@ -437,6 +437,7 @@ function goActivity() {
                   src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00003.png
 "
                   alt=""
+                  @click="toggleGallery(true, 3)"
                 />
               </swiper-slide>
               <swiper-slide
@@ -444,10 +445,15 @@ function goActivity() {
                   src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/书房 淡雅 写实 高清-00000.png
 "
                   alt=""
+                  @click="toggleGallery(true, 4)"
                 />
               </swiper-slide>
-              <swiper-slide><img :src="gallery" alt="" /> </swiper-slide>
-              <swiper-slide><img :src="gallery" alt="" /> </swiper-slide>
+              <swiper-slide
+                ><img :src="gallery" alt="" @click="toggleGallery(true, 5)" />
+              </swiper-slide>
+              <swiper-slide
+                ><img :src="gallery" alt="" @click="toggleGallery(true, 6)" />
+              </swiper-slide>
             </swiper>
           </div>
           <!-- <OIcon class="arrow-right" @click="toggleGallery(true, 3)"
@@ -569,7 +575,7 @@ function goActivity() {
               </OButton>
             </div>
             <div class="modelzoo-card-list">
-              <a
+              <!-- <a
                 class="modelzoo-card"
                 :href="`https://${DOMAIN}/modelzoo/codegeex`"
               >
@@ -585,7 +591,7 @@ function goActivity() {
                     {{ i18n.modelzoo.introduce3 }}
                   </div>
                 </div>
-              </a>
+              </a> -->
               <a
                 class="modelzoo-card"
                 :href="`https://${DOMAIN}/modelzoo/taichu`"
@@ -620,18 +626,23 @@ function goActivity() {
                   </div>
                 </div>
               </a>
-              <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
-              <div class="card-header">
-                <img :src="modelzoo3" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="modelzoo-title">
-                  <p>{{ i18n.modelzoo.modelzoo3 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
+              <a
+                class="modelzoo-card"
+                :href="`https://${DOMAIN}/modelzoo/pangu`"
+              >
+                <div class="card-header">
+                  <img :src="modelzoo_pangu" alt="" />
                 </div>
-                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
-              </div>
-            </a> -->
+                <div class="card-body">
+                  <div class="modelzoo-title">
+                    <p>{{ i18n.modelzoo.modelzoo4 }}</p>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </div>
+                  <div class="modelzoo-desc">
+                    {{ i18n.modelzoo.introduce4 }}
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch, nextTick } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -257,10 +257,8 @@ function confirmBtn() {
     }
   });
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
-    (res) => {
-      // if (res.status === 200) {
+    () => {
       getDetailData();
-      // }
     }
   );
   isTagShow.value = false;

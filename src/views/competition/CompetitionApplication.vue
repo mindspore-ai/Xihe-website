@@ -1,22 +1,19 @@
 <script setup>
 import { ref, reactive, defineExpose } from 'vue';
 
-import { goCompetition } from '@/api/api-competition';
+// import { goCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
-import { createTeam } from '@/api/api-competition';
+// import { createTeam } from '@/api/api-competition';
 import { applyActivity } from '@/api/api-activity';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
 import { ElMessage } from 'element-plus';
-import { useRoute } from 'vue-router';
 
 import { useUserInfoStore } from '@/stores';
 
-const route = useRoute();
 const userInfoStore = useUserInfoStore();
 
-const teamData = ref([]);
 const queryRef = ref(null);
 const role = ref(1);
 const areaData = ref([]);
@@ -199,7 +196,7 @@ function saveInfo(formEl) {
         phone: query.phone,
         province: query.loc_province,
       };
-      applyActivity(params).then((res) => {
+      applyActivity(params).then(() => {
         ElMessage({
           message: '报名成功',
           type: 'success',

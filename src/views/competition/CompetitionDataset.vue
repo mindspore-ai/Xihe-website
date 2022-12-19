@@ -6,7 +6,6 @@ import IconDownload from '~icons/app/download';
 import OButton from '@/components/OButton.vue';
 import { handleMarkdown } from '@/shared/markdown';
 
-// import { downloadDataset } from '@/api/api-obs';
 import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 

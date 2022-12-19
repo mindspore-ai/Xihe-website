@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import IconProject from '~icons/app/project-tree';
 
@@ -10,7 +10,6 @@ import ODialog from '@/components/ODialog.vue';
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
 
-// import { handleUpload } from '@/api/api-obs';
 import { useCompetitionData } from '@/stores';
 import { getSubmissions, submit, addProject } from '@/api/api-competition';
 
@@ -18,7 +17,6 @@ const detailData1 = computed(() => {
   return useCompetitionData().competitionData;
 });
 
-const route = useRoute();
 const router = useRouter();
 const tableData = ref();
 

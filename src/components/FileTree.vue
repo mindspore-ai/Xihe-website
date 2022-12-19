@@ -429,6 +429,9 @@ watch(
         </template>
       </tbody>
     </table>
+    <p v-show="filesList.length === 100" class="over-limit-tip">
+      可能存在部分文件未完全展示，请克隆至本地查看。
+    </p>
     <div v-if="!filesList.length" class="empyt-folder">空文件夹</div>
   </div>
   <div v-else-if="isAuthentic" class="empty-own">
@@ -696,6 +699,9 @@ watch(
         align-items: center;
       }
     }
+  }
+  .over-limit-tip {
+    margin-top: 12px;
   }
   .empyt-folder {
     display: flex;

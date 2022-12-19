@@ -220,7 +220,7 @@ function getDetailData() {
         // digCount.value = detailData.value.type;
         isDigged.value = detailData.value.liked;
 
-        const { training, tags } = detailData.value;
+        const { tags } = detailData.value;
         modelTags.value = [];
         headTags.value = [];
         if (tags) {
@@ -419,7 +419,7 @@ function confirmBtn() {
   });
 
   modifyTags({ add, remove }, userInfoStore.userName, detailData.value.id).then(
-    (res) => {
+    () => {
       getDetailData();
     }
   );

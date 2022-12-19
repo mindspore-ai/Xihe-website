@@ -179,7 +179,6 @@ function handleNavClick(item) {
       item.id === 'lives'
         ? `/${userInfo.value.userName}`
         : `/${userInfo.value.userName}/${item.id}`,
-    // query: { userName: userInfo.value.userName },
   });
 }
 

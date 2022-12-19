@@ -34,8 +34,11 @@ import { GetRankingList } from '@/api/api-activity';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
+
+const isInProgress = ref(false);
 
 const isShow = ref(false);
 const showApplication = ref(false);
@@ -45,7 +48,6 @@ const activityDetail = ref('');
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
-// console.log('userInfo: ', userInfo);
 
 // 活动介绍
 const introdution = reactive([
@@ -101,7 +103,6 @@ function getActivity() {
   getActivityDetail().then((res) => {
     activityDetail.value = res.data;
     showBtn.value = true;
-    // console.log('activityDetail.value: ', activityDetail.value.is_competitor);
   });
 }
 getActivity();
@@ -113,7 +114,21 @@ function goChallenge(index) {
     // 如果已报名
     if (activityDetail.value.is_competitor) {
       if (index === 0) {
-        isShow.value = true;
+        getActivity();
+
+        if (activityDetail.value.ai_question.remaining_times > 0) {
+          if (activityDetail.value.ai_question.in_progress) {
+            isShow.value = true;
+            isInProgress.value = true;
+          } else {
+            isShow.value = true;
+          }
+        } else {
+          ElMessage({
+            type: 'warning',
+            message: '挑战次数已用尽',
+          });
+        }
       } else if (index === 1) {
         // 跳转到比赛列表
         let routerData = router.resolve({
@@ -131,10 +146,6 @@ function goChallenge(index) {
     }
   }
 }
-
-// function toggleClick() {
-//   isShow.value = false;
-// }
 
 //隐藏报名表单
 function hideForm(val) {
@@ -467,6 +478,10 @@ function goRule() {
           挑战10道随机人工智能领域题（含选择题和填空题），让知识卷起来！
         </div>
 
+        <p v-if="isInProgress" class="progress_tip">
+          （提示：您有其他页面正在答题中，如果继续点击开始答题将结束上次答题）
+        </p>
+
         <div class="dlg-foot">
           <o-button type="primary" size="small" @click="handleStartAnswer"
             >开始答题</o-button
@@ -502,16 +517,16 @@ function goRule() {
     --el-dialog-margin-top: 32vh;
     .el-dialog__header {
       display: block;
-      font-size: 24px;
+      // font-size: 24px;
+      // line-height: 32px;
+      // padding-top: 40px;
       color: #000000;
-      line-height: 32px;
       text-align: center;
-      padding-top: 40px;
       margin-right: 0;
     }
 
     .el-dialog__body {
-      padding: 6px 40px 40px;
+      padding: 0px 40px 40px;
     }
     .el-dialog__headerbtn {
       top: 0;
@@ -545,6 +560,14 @@ function goRule() {
       padding-top: 0px;
       margin-top: 16px;
     }
+
+    .progress_tip {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #555555;
+      line-height: 22px;
+    }
+
     .dlg-foot {
       display: flex;
       justify-content: center;

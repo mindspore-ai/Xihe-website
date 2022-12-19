@@ -36,8 +36,8 @@ const requestInterceptorId = request.interceptors.request.use(
         background: 'transparent',
       });
     }
+    config.$noLoading ? '' : loadingCount++;
 
-    loadingCount++;
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
     request.config = Object.assign({}, config);
     // 在发送请求之前做些什么
@@ -60,13 +60,14 @@ const requestInterceptorId = request.interceptors.request.use(
  */
 const responseInterceptorId = request.interceptors.response.use(
   (response) => {
-    loadingCount--;
+    const { config } = response;
+    config.$noLoading ? '' : loadingCount--;
+
     if (loadingCount === 0 && loadingInstance) {
       useLoadingState().setloadingState(false);
       loadingInstance.close();
       loadingInstance = null;
     }
-    const { config } = response;
     pendingPool.delete(config.url);
 
     return Promise.resolve(handleResponse(response));
@@ -88,30 +89,26 @@ const responseInterceptorId = request.interceptors.response.use(
     if (err.response) {
       err = handleError(err);
       // token过期，重新登录
-      if (err.code === 401) {
+      if (err.status === 401) {
         saveUserAuth();
         goAuthorize();
       }
     } else {
       // 没有response(没有状态码)的情况
       // eg: 超时；断网；请求重复被取消；主动取消请求；
-
       // 错误信息err传入isCancel方法，可以判断请求是否被取消
       if (axios.isCancel(err)) {
-        throw new axios.Cancel(
-          err.message || `请求'${request.config.url}'被取消`
-        );
+        throw new axios.Cancel(err.msg || `请求'${request.config.url}'被取消`);
       } else if (err.stack && err.stack.includes('timeout')) {
-        err.message = '请求超时!';
+        err.msg = '请求超时!';
       } else {
-        err.message = '连接服务器失败!';
+        err.msg = '连接服务器失败!';
       }
     }
-
-    if (!err.filtered) {
+    if (!config.$doException) {
       ElMessage({
         type: 'error',
-        message: err.message,
+        message: err.msg,
         center: true,
       });
     }

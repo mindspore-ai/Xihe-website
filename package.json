@@ -5,9 +5,8 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "vite",
-    "build:testing": "vite build --mode testing",
+    "build:staging": "vite build --mode staging",
     "build": "vite build",
-    "build:production": "vite build --mode production",
     "lint": "eslint \"src/**/*.{js,ts,vue,jsx,tsx}\""
   },
   "dependencies": {

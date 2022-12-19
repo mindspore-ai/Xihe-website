@@ -18,7 +18,7 @@ import { getAllCompetition } from '@/api/api-competition';
 const router = useRouter();
 
 const activeName = ref('first');
-const state = ref('doing'); //比赛状态：will-do，doing，done
+// const state = ref('doing'); //比赛状态：will-do，doing，done
 
 const tableData = ref([]);
 const tableData1 = ref([]);
@@ -184,21 +184,17 @@ function toTop() {
                   </div>
                   <div
                     v-if="item.status === 'in-progress'"
-                    class="card-head-state"
-                    :class="state"
+                    class="card-head-state doing"
                   >
                     火热进行中
                   </div>
                   <div
                     v-else-if="item.status === 'preparing'"
-                    class="card-head-state"
-                    :class="state"
+                    class="card-head-state will-do"
                   >
                     未开始
                   </div>
-                  <div v-else class="card-head-state" :class="state">
-                    已结束
-                  </div>
+                  <div v-else class="card-head-state done">已结束</div>
                 </div>
                 <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
@@ -269,8 +265,7 @@ function toTop() {
                   </div>
                   <div
                     v-if="item.status === 'in-progress'"
-                    class="card-head-state"
-                    :class="state"
+                    class="card-head-state doing"
                   >
                     火热进行中
                   </div>
@@ -342,9 +337,8 @@ function toTop() {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status === 'preparing'"
-                    class="card-head-state"
-                    :class="state"
+                    v-if="item.status === 'done'"
+                    class="card-head-state done"
                   >
                     已结束
                   </div>
@@ -387,7 +381,7 @@ function toTop() {
               </div>
             </div>
           </div>
-          <div class="empty">
+          <div v-else class="empty">
             <img :src="emptyImg" alt="" />
             <p>暂无已结束比赛</p>
           </div>
@@ -407,8 +401,7 @@ function toTop() {
                   </div>
                   <div
                     v-if="item.status === 'preparing'"
-                    class="card-head-state"
-                    :class="state"
+                    class="card-head-state will-do"
                   >
                     未开始
                   </div>

@@ -6,7 +6,7 @@ COPY . /home/xihe/web
 
 RUN pnpm install
 
-RUN pnpm build:production
+RUN pnpm build
 
 FROM nginx:1.20.0
 

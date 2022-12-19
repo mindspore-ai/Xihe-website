@@ -201,7 +201,7 @@ export function deleteModel(params, owner, id) {
  * 修改项目信息(inference)
  * @returns
  */
-export function modifyProjectAdd(params, projectId) {
+export function modifyProjectAdd(params) {
   const url = `/server/project/${owner}/${id}/model/relation`;
   return request
     .delete(url, { params, ...getHeaderConfig() })

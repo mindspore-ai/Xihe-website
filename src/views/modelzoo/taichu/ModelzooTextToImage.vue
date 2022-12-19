@@ -158,10 +158,12 @@ function startRatiocnate1() {
           if (res.data) {
             inferUrlList.value = res.data.pictures;
           } else {
-            // ElMessage({
-            //   type: 'error',
-            //   message: res.msg,
-            // });
+            // if (res.code === 'bigmodel_sensitive_info') {
+            //   ElMessage({
+            //     type: 'error',
+            //     message: '内容审核不通过，请重新输入',
+            //   });
+            // }
           }
         });
       } else {
@@ -172,10 +174,12 @@ function startRatiocnate1() {
           if (res.data) {
             inferUrlList.value.push(res.data.picture + '?' + new Date());
           } else {
-            // ElMessage({
-            //   type: 'error',
-            //   message: res.msg,
-            // });
+            // if (res.code === 'bigmodel_sensitive_info') {
+            //   ElMessage({
+            //     type: 'error',
+            //     message: '内容审核不通过，请重新输入',
+            //   });
+            // }
           }
         });
       }

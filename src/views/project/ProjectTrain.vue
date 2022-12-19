@@ -115,17 +115,8 @@ function goSelectFile() {
     let routerData = router.resolve({
       // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
       path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
-      query: {
-        id: detailData.value.id,
-      },
     });
     window.open(routerData.href, '_blank');
-    // router.push({
-    //   path: `/projects/${detailData.value.owner_name.name}/${detailData.value.name}/selectfile`,
-    //   query: {
-    //     id: detailData.value.id,
-    //   },
-    // });
   }
 }
 
@@ -190,7 +181,7 @@ function confirmAdd() {
           addSearch.value = '';
         }
       })
-      .catch((err) => {
+      .catch(() => {
         isShow.value = false;
         addSearch.value = '';
         ElMessage({
@@ -237,7 +228,7 @@ function confirmClick() {
     params.owner = paramsArr[0];
     params.name = paramsArr[1];
     addModel(params, detailData.value.owner, detailData.value.id)
-      .then((res) => {
+      .then(() => {
         ElMessage({
           type: 'success',
           message: '添加成功',
@@ -246,7 +237,7 @@ function confirmClick() {
         isShow1.value = false;
         addSearch.value = '';
       })
-      .catch((err) => {
+      .catch(() => {
         isShow1.value = false;
         addSearch.value = '';
         ElMessage({
@@ -264,7 +255,7 @@ function deleteClick(item) {
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
-    ).then((res) => {
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关数据集。',
@@ -276,7 +267,7 @@ function deleteClick(item) {
       { id: item.id, owner: item.owner.name },
       detailData.value.owner,
       detailData.value.id
-    ).then((res) => {
+    ).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功！你可再次添加相关模型。',

@@ -27,8 +27,8 @@ import models1 from '@/assets/imgs/home/models1.png';
 import models2 from '@/assets/imgs/home/models2.png';
 import models3 from '@/assets/imgs/home/models3.png';
 import models4 from '@/assets/imgs/home/models4.png';
-import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
-import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
+import modelzoo1 from '@/assets/imgs/home/modelzoo1.jpg';
+import modelzoo2 from '@/assets/imgs/home/modelzoo2.jpg';
 // import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
 import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
@@ -178,9 +178,9 @@ function handleBtnClick3() {
 //     params: { id: id },
 //   });
 // }
-function goCode() {
-  router.push({ path: '/modelzoo/codegeex' });
-}
+// function goCode() {
+//   router.push({ path: '/modelzoo/codegeex' });
+// }
 function goActivity() {
   router.push({ path: '/activity' });
 }
@@ -297,9 +297,9 @@ function goActivity() {
       <swiper-slide>
         <div class="photo7 cursor" @click="goActivity()"></div>
       </swiper-slide>
-      <swiper-slide>
+      <!-- <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
-      </swiper-slide>
+      </swiper-slide> -->
     </swiper>
 
     <div class="home-content">

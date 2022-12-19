@@ -180,21 +180,6 @@ async function handleGetOutput() {
         message: err.msg,
       });
     }
-
-    // getTrainLog({
-    //   projectId: detailData.value.id,
-    //   trainId: route.params.trainId,
-    //   type: 'output',
-    // }).then((res) => {
-    //   if (res.status === 202 && res.data.data) {
-    //     outputUrl.value = res.data.data.log_url;
-
-    //     // outputName.value = 'output.tar.gz';
-    //   }
-    //   // else {
-    //   //   outputName.value = '';
-    //   // }
-    // });
   } else {
     return;
   }

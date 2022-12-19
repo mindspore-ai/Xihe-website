@@ -414,6 +414,11 @@ function refreshTags() {
       margin-right: 24px;
       width: 23vw;
       height: 23vw;
+      &:hover {
+        .handles {
+          display: block;
+        }
+      }
 
       &:last-child {
         margin-right: 0;
@@ -434,6 +439,7 @@ function refreshTags() {
         position: absolute;
         bottom: 24px;
         right: 24px;
+        display: none;
         @media screen and (max-width: 1450px) {
           bottom: 10px;
           right: 10px;

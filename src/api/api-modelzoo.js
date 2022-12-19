@@ -1,9 +1,5 @@
-import {
-  request
-} from '@/shared/axios';
-import {
-  LOGIN_KEYS
-} from '@/shared/login';
+import { request } from '@/shared/axios';
+import { LOGIN_KEYS } from '@/shared/login';
 // import { useUserInfoStore } from '@/stores';
 
 // function getUserInfo() {
@@ -19,11 +15,13 @@ import {
 //   return headersConfig;
 // }
 function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN) ? {
-    headers: {
-      'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-    },
-  } : {};
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
   return headersConfig;
 }
 
@@ -223,6 +221,7 @@ export function wuKongInfer(params) {
   const url = '/server/bigmodel/wukong';
   return request
     .post(url, params, {
+      $noLoading: true,
       headers: {
         'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },

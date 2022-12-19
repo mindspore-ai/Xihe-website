@@ -138,7 +138,7 @@ watch(
   }
 
   .luojia-title {
-    padding: 75px 80px 75px 40px;
+    padding: 80px;
     display: flex;
     justify-content: space-between;
     background-color: #fff;

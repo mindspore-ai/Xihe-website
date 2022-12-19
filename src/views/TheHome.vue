@@ -15,6 +15,7 @@ import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconArrowRight2 from '~icons/app/arrow-right2.svg';
 // import homeBanner2 from '@/assets/imgs/home-banner2.png';
 // import homeBanner3 from '@/assets/imgs/home-banner3.png';
 import homePageImg from '@/assets/imgs/home/home-page.png';
@@ -31,6 +32,9 @@ import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
 import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
+import gallery1 from '@/assets/imgs/home/gallery1.png';
+import gallery2 from '@/assets/imgs/home/gallery2.png';
+import gallery3 from '@/assets/imgs/home/gallery3.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -49,9 +53,25 @@ const tipVisible = ref(true);
 const toggleTip = (val) => {
   tipVisible.value = val;
 };
+const mySwiper = ref(null);
 const galleryVisible = ref(false);
-const toggleGallery = (val) => {
+const currPage = ref(1);
+const toggleGallery = (val, num) => {
   galleryVisible.value = val;
+  currPage.value = num;
+  if (mySwiper.value) {
+    mySwiper.value.slideToLoop(currPage.value);
+  }
+};
+// watch(
+//   () => mySwiper.value,
+//   () => {
+//     console.log(currPage.value);
+//     mySwiper.value.slideTo(currPage.value);
+//   }
+// );
+const onSwiper = (val) => {
+  mySwiper.value = val;
 };
 
 const modules = [Pagination, Autoplay];
@@ -286,24 +306,39 @@ function goActivity() {
     <div class="home-content">
       <div class="wrapper">
         <!-- 精选画廊 -->
-        <el-dialog v-model="galleryVisible" fullscreen align-center>
+        <el-dialog v-model="galleryVisible" fullscreen>
           <swiper
+            centered-slides
             :slides-per-view="3"
-            :slides-per-group="3"
-            :speed="3000"
+            :slides-per-group="1"
             :space-between="30"
             :free-mode="true"
             :navigation="true"
             :pagination="{
               type: 'fraction',
+              clickableClass: 'my-pagination-clickable',
             }"
             :modules="[Pagination, FreeMode, Navigation]"
-            loop
             class="my-swiper2"
+            loop
+            @swiper="onSwiper"
           >
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
+            >
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p @click="currPage = 8">
+                城市夜景 赛博朋克 格雷格·鲁特科夫斯基
+              </p></swiper-slide
+            >
+            <swiper-slide
+              ><img :src="gallery" alt="" />
+              <p @click="currPage = 6">
+                诺亚方舟在世界末日起航 科幻插画
+              </p></swiper-slide
+            >
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
             <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
@@ -340,11 +375,29 @@ function goActivity() {
               </template>
             </OButton>
           </div>
-          <div class="gallery-right" @click="toggleGallery(true)">
-            <img :src="gallery" alt="" />
-            <img :src="gallery" alt="" />
-            <img :src="gallery" alt="" />
+          <div class="gallery-right">
+            <img
+              class="gallery1"
+              :src="gallery1"
+              alt=""
+              @click="toggleGallery(true, 0)"
+            />
+            <img
+              class="gallery2"
+              :src="gallery2"
+              alt=""
+              @click="toggleGallery(true, 1)"
+            />
+            <img
+              class="gallery3"
+              :src="gallery3"
+              alt=""
+              @click="toggleGallery(true, 2)"
+            />
           </div>
+          <OIcon class="arrow-right" @click="toggleGallery(true, 3)"
+            ><IconArrowRight2
+          /></OIcon>
         </div>
         <!-- 个人主页 -->
         <div
@@ -812,30 +865,63 @@ function goActivity() {
       padding: 60px 16px 128px;
       :deep(.el-dialog) {
         background: rgba(0, 0, 0, 0.85);
+        .el-dialog__headerbtn {
+          z-index: 200;
+        }
+        .el-icon {
+          color: #fff;
+          font-size: 40px;
+        }
+        .el-dialog__header {
+          padding: 0;
+        }
         .el-dialog__body {
-          position: relative;
-          top: 50%;
-          transform: translateY(-55%);
+          // position: relative;
+          // top: 50%;
+          // transform: translateY(-50%);
+          padding: 0 16px;
+          height: 100%;
         }
         .my-swiper2 {
           --swiper-navigation-size: 24px;
           --swiper-navigation-color: #fff;
+          .swiper-button-prev,
+          .swiper-button-next {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000000;
+            background: #000;
+            border-radius: 50%;
+            font-weight: 600;
+            top: 55%;
+          }
           .swiper-slide {
             img {
               width: 100%;
               height: auto;
-              margin-top: 30px;
+              margin-top: 16%;
+            }
+            p {
+              color: #ffffff;
+              text-align: center;
+              line-height: 26px;
+              font-size: 18px;
+              margin-top: 16px;
             }
           }
+          .my-pagination-clickable {
+            position: fixed;
+          }
           .swiper-pagination-fraction {
-            color: red;
+            color: #fff;
             font-size: 16px;
-            top: 0;
+            position: fixed;
+            top: 22px;
             bottom: unset;
           }
         }
         .button {
-          margin-top: 64px;
+          margin-top: 3%;
           text-align: center;
           .o-button {
             color: #fff;
@@ -852,6 +938,16 @@ function goActivity() {
         justify-content: space-between;
         align-items: center;
         padding-bottom: 64px;
+        .arrow-right {
+          background: #000;
+          position: absolute;
+          font-size: 36px;
+          top: 35%;
+          border-radius: 50%;
+          right: 16px;
+          cursor: pointer;
+          display: none;
+        }
 
         .gallery-left {
           .gallery-title {
@@ -877,11 +973,22 @@ function goActivity() {
           width: 68%;
           display: flex;
           justify-content: right;
-          transform: rotateY(345deg);
-          transform-origin: right;
+          align-items: center;
+          // transform: rotateY(345deg);
+          // transform-origin: right;
+          cursor: pointer;
           img {
             width: 30%;
             margin-left: 24px;
+          }
+          .gallery1 {
+            height: 78%;
+          }
+          .gallery2 {
+            height: 89%;
+          }
+          &:hover + .arrow-right {
+            display: block;
           }
         }
       }

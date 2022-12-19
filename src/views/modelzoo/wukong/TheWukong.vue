@@ -2,10 +2,26 @@
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, FreeMode, Navigation } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+
 import ONav from '@/components/ONav.vue';
 
-import codeGeexBanner from '@/assets/imgs/modelzoo/codegeex.png';
+import gallery from '@/assets/imgs/wukong/ceshi1.png';
+import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
+import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
+
+import IconAlbum from '~icons/app/wukong-album';
+import IconCollection from '~icons/app/wukong-collection';
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconDownload from '~icons/app/wukong-download';
+import IconHeart from '~icons/app/collected';
+
+import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -33,8 +49,22 @@ function handleNavClick(item) {
   router.push({ path: item.href });
 }
 
+// 我的收藏
+const showCollection = ref(false);
+function toggleCollectionDlg(val) {
+  showCollection.value = val;
+}
+
+const showAlbum = ref(false);
+// AI画集
+function toggleAlbum() {
+  showAlbum.value = true;
+}
+
 function learnWukongMore() {
-  window.open('https://models.aminer.cn/codegeex/');
+  window.open(
+    'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
+  );
 }
 
 watch(
@@ -71,15 +101,20 @@ watch(
 
       <div class="wukong-head">
         <div class="wukong-head-left">
-          <img draggable="false" :src="codeGeexBanner" alt="" />
+          <img
+            v-if="route.name === 'wukongIntroduce'"
+            draggable="false"
+            :src="wukongBanner1"
+            alt=""
+          />
+          <img v-else draggable="false" :src="wukongBanner2" alt="" />
         </div>
 
         <div class="wukong-head-right">
           <div class="wukong-head-right-top">
             <div class="wukong-head-right-top-title">悟空</div>
             <div class="wukong-head-right-top-content">
-              OPT（Omni-Perception
-              Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
+              借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。
             </div>
           </div>
 
@@ -112,9 +147,230 @@ watch(
         </div>
       </div>
     </div>
+    <div v-if="route.name === 'wukongExperience'" class="sider-content">
+      <div class="nav-item" @click="toggleAlbum(true)">
+        <p class="nav-item-img">
+          <o-icon><icon-album></icon-album></o-icon>
+        </p>
+        <p class="nav-item-text">AI画集</p>
+      </div>
+      <div class="nav-item" @click="toggleCollectionDlg(true)">
+        <p class="nav-item-img">
+          <o-icon><icon-collection></icon-collection></o-icon>
+        </p>
+        <p class="nav-item-text">我的收藏</p>
+      </div>
+    </div>
+
+    <!-- 我的收藏dialog -->
+    <el-dialog v-model="showCollection" :fullscreen="true" center>
+      <swiper
+        :slides-per-view="3"
+        :slides-per-group="1"
+        :speed="500"
+        :space-between="30"
+        :free-mode="true"
+        :navigation="true"
+        :pagination="{
+          type: 'fraction',
+          clickableClass: 'my-pagination-clickable',
+        }"
+        :modules="[Pagination, FreeMode, Navigation]"
+        loop
+        class="my-swiper2"
+      >
+        <swiper-slide v-for="item in 5" :key="item"
+          ><img :src="gallery" alt="" />
+          <p>来自深渊 风景 绘画 写实风格</p>
+
+          <div class="handler">
+            <span class="icon-btn">
+              <o-icon><icon-download></icon-download></o-icon>
+            </span>
+            <span class="icon-btn heart">
+              <o-icon><icon-heart></icon-heart></o-icon>
+            </span>
+          </div>
+        </swiper-slide>
+
+        <div class="collect-title">我的收藏</div>
+      </swiper>
+    </el-dialog>
+
+    <!-- AI画集 -->
+    <el-dialog v-model="showAlbum" :fullscreen="true" center>
+      <WukongAlbum></WukongAlbum>
+    </el-dialog>
   </div>
 </template>
+<style lang="scss">
+// .collection-dlg {
+//   background: rgba(0, 0, 0, 0.85);
+
+//   .el-dialog__headerbtn {
+//     right: 10px;
+//     z-index: 2010;
+//     .el-dialog__close {
+//       color: #fff;
+//       font-size: 40px;
+//     }
+//   }
+//   .is-fullscreen {
+//     background: rgba(0, 0, 0, 0.85) !important;
+//   }
+// }
+
+.my-swiper2 {
+  --swiper-navigation-size: 24px;
+  --swiper-navigation-color: #fff;
+
+  .handler {
+    position: absolute;
+    bottom: 64px;
+    right: 24px;
+    display: none;
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      .o-icon {
+        font-size: 16px;
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+  }
+
+  .collect-title {
+    position: fixed;
+    top: 22px;
+    left: -40px;
+    font-size: 24px;
+    color: #ffffff;
+    line-height: 24px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    background: #000;
+    border-radius: 50%;
+    font-weight: 600;
+    top: 55%;
+  }
+  .swiper-slide {
+    &:hover {
+      .handler {
+        display: block;
+      }
+    }
+    img {
+      width: 100%;
+      height: auto;
+      margin-top: 16%;
+    }
+    p {
+      color: #ffffff;
+      text-align: center;
+      line-height: 26px;
+      font-size: 18px;
+      margin-top: 16px;
+    }
+  }
+  .my-pagination-clickable {
+    position: fixed;
+  }
+  .swiper-pagination-fraction {
+    color: #fff;
+    font-size: 16px;
+    line-height: 26px;
+    position: fixed;
+    top: 22px;
+    left: 50px;
+    bottom: unset;
+  }
+}
+
+// .album-dlg {
+//   padding-left: 6%;
+//   padding-right: 6%;
+//   background: rgb(0, 0, 0);
+//   &::-webkit-scrollbar {
+//     width: 6px;
+//     height: 6px;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     border-radius: 3px;
+//     background-color: #d8d8d8;
+//     background-clip: content-box;
+//   }
+
+//   &::-webkit-scrollbar-track {
+//     border-radius: 3px;
+//     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+//     background: #ffffff;
+//   }
+
+//   .is-fullscreen {
+//     background: rgba(0, 0, 0, 0.85) !important;
+//   }
+
+//   .el-dialog__body {
+//     background: rgba(0, 0, 0, 0.85);
+//   }
+
+//   .el-dialog__headerbtn {
+//     right: 10px;
+//     .el-dialog__close {
+//       color: #fff;
+//       font-size: 40px;
+//     }
+//   }
+// }
+</style>
 <style lang="scss" scoped>
+:deep(.el-dialog) {
+  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #d8d8d8;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 3px;
+    box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+    background: #ffffff;
+  }
+  .el-dialog__headerbtn {
+    right: 10px;
+    z-index: 2010;
+    .el-dialog__close {
+      color: #fff;
+      font-size: 40px;
+    }
+  }
+}
 .wukong-bg1 {
   background: #f5f6f8;
 }
@@ -128,6 +384,9 @@ watch(
       :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
         color: #fff;
       }
+      :deep(.el-breadcrumb__item:first-child .el-breadcrumb__inner) {
+        color: #b2b2b2;
+      }
     }
   }
   .wukong-head {
@@ -138,7 +397,6 @@ watch(
       &-top {
         &-title {
           font-size: 36px;
-          font-weight: 300;
           color: #fff;
           line-height: 48px;
         }
@@ -161,10 +419,13 @@ watch(
         background: rgba(7, 12, 22, 0.6);
         box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         backdrop-filter: blur(5px);
+        :deep(.nav-item:first-child) {
+          color: #fff !important;
+        }
       }
     }
     .tab-content {
-      padding: 48px 80px;
+      padding: 40px 80px;
       background-color: rgba(0, 0, 0, 0);
       background: rgba(7, 12, 22, 0.6);
       box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
@@ -257,8 +518,37 @@ watch(
       }
     }
     .tab-content {
-      padding: 48px;
+      padding: 40px 80px;
       background: #fff;
+    }
+  }
+}
+
+.sider-content {
+  position: fixed;
+  bottom: 220px;
+  right: 40px;
+  color: #fff;
+  .nav-item {
+    margin-bottom: 16px;
+    text-align: center;
+    cursor: pointer;
+    &-img {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+      font-size: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #b2b2b2;
+      line-height: 20px;
+      margin-top: 8px;
     }
   }
 }

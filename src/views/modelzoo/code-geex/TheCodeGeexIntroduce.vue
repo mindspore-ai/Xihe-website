@@ -174,7 +174,7 @@ const feature = [
 
 <style lang="scss" scoped>
 .codegeex-wrapper {
-  padding: 36px 80px;
+  padding: 40px 80px;
   background-color: #fff;
   .description {
     .title {
@@ -196,12 +196,16 @@ const feature = [
         color: #555;
         line-height: 22px;
         margin-bottom: 8px;
+        margin-left: 10px;
         font-weight: 400;
         .function-item {
           color: #000000;
         }
         &:last-child {
           margin-bottom: 0px;
+        }
+        a {
+          color: #0d8dff;
         }
       }
     }

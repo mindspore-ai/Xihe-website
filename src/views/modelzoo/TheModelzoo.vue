@@ -6,7 +6,8 @@ import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-import dasheng from '@/assets/imgs/modelzoo/dasheng1.png';
+import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
+import wukong from '@/assets/imgs/wukong/wukong-banner1.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -30,6 +31,14 @@ let i18n = {
     //   path: '/modelzoo/codegeex',
     //   openness: true,
     // },
+    {
+      title: '悟空',
+      introduce:
+        '华为诺亚方舟实验室与MindSpore社区联合打造的中文图像生成大模型',
+      url: wukong,
+      path: '/modelzoo/wukong',
+      openness: true,
+    },
     {
       title: '紫东.太初',
       introduce: '全球首个三模态千亿参数大模型',
@@ -108,7 +117,6 @@ function goModelzoo() {
   max-width: 1472px;
 }
 .modelzoo {
-  // background-color: #f5f6f8;
   .model-head {
     padding-top: 80px;
     background-size: cover;

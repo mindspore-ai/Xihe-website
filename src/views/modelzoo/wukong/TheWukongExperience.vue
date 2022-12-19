@@ -1,27 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 import one from '@/assets/imgs/wukong/style-bg-1.png';
 import two from '@/assets/imgs/wukong/style-bg-2.png';
 import three from '@/assets/imgs/wukong/style-bg-3.png';
 import four from '@/assets/imgs/wukong/style-bg-4.png';
 import five from '@/assets/imgs/wukong/style-bg-5.png';
-import generate from '@/assets/imgs/wukong/ceshi3.jpg';
 
 import IconRefresh from '~icons/app/refresh-taichu';
-import IconAlbum from '~icons/app/wukong-album';
-import IconCollection from '~icons/app/wukong-collection';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
+import IconX from '~icons/app/x';
 
-const text = ref('');
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
+
+import { wuKongInfer } from '@/api/api-modelzoo.js';
+
+const isLogined = computed(() => useLoginStore().isLogined);
+
+const inputText = ref('');
+const sortTag = ref('');
 const styleIndex = ref(0);
 
-const showCollection = ref(false);
 const isInferred = ref(false);
 
 const styleBackgrounds = ref([one, two, three, four, five]);
-const styleBackground = ref([generate, generate, generate, generate]);
+const styleBackground = ref([]);
 
 const styleData = ref([
   {
@@ -83,38 +88,103 @@ const styleData = ref([
   },
 ]);
 
-const exampleData = ref([
-  { text: 'example-item1', isSelected: false },
-  { text: 'example-item2', isSelected: false },
-  { text: 'example-item3', isSelected: false },
-  { text: 'example-item4', isSelected: false },
-  { text: 'example-item5', isSelected: false },
-  { text: 'example-item6', isSelected: false },
-]);
-const newExampleData = ref([
-  { text: '样例1', isSelected: false },
-  { text: '样例2', isSelected: false },
-  { text: '样例3', isSelected: false },
-  { text: '样例4', isSelected: false },
-  { text: '样例5', isSelected: false },
-  { text: '样例6', isSelected: false },
+const randomList = ref([
+  { tag: '宫崎骏', isSelected: false },
+  { tag: '新海城', isSelected: false },
+  { tag: '达芬奇', isSelected: false },
+  { tag: '毕加索', isSelected: false },
+  { tag: '梵高', isSelected: false },
+  { tag: '莫奈', isSelected: false },
+  { tag: '温斯洛.霍默', isSelected: false },
+  { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
+  { tag: '韦恩.巴洛', isSelected: false },
+  { tag: '格雷格.鲁特科夫斯基', isSelected: false },
+  { tag: '动漫', isSelected: false },
+  { tag: '国风', isSelected: false },
+  { tag: '田园', isSelected: false },
+  { tag: '涂鸦', isSelected: false },
+  { tag: '立体', isSelected: false },
+  { tag: '浮雕', isSelected: false },
+  { tag: '水彩', isSelected: false },
+  { tag: '油画', isSelected: false },
+  { tag: '暗黑', isSelected: false },
+  { tag: '写实', isSelected: false },
+  { tag: '高清', isSelected: false },
+  { tag: '蜡笔画', isSelected: false },
+  { tag: '专业CG艺术', isSelected: false },
+  { tag: '彩色国风水墨', isSelected: false },
+  { tag: '生动色彩', isSelected: false },
+  { tag: '星际漫游', isSelected: false },
+  { tag: '赛博朋克', isSelected: false },
+  { tag: '印象主义', isSelected: false },
+  { tag: '现代主义', isSelected: false },
+  { tag: '巴洛克风格', isSelected: false },
+  { tag: '像素风格', isSelected: false },
+  { tag: '浮世绘', isSelected: false },
+  { tag: '蒸汽波', isSelected: false },
 ]);
 
-function cancelCollect() {
-  styleBackground.value.splice(3, 1);
-}
+const exampleData = ref([
+  { text: '秋水共长天一色', isSelected: false },
+  { text: '城市夜景', isSelected: false },
+  { text: '悬崖 美景 壮观 高清', isSelected: false },
+  { text: '西湖 烟雨', isSelected: false },
+  { text: '海滩 美景 高清', isSelected: false },
+]);
+
+const lists = ref([
+  { text: '城市夜景 油画', isSelected: false },
+  { text: '星空 梵高', isSelected: false },
+  { text: '落日 莫奈', isSelected: false },
+  { text: '抽烟的女人 毕加索', isSelected: false },
+  { text: '教堂 巴洛克风格', isSelected: false },
+  { text: '程序员 头像 像素风格', isSelected: false },
+  { text: '城市夜景 赛博朋克 格雷格.鲁特科夫斯基', isSelected: false },
+  { text: '都市 天际线 日出', isSelected: false },
+  { text: '天气播报 背景 云', isSelected: false },
+  { text: '海滩 美景 高清', isSelected: false },
+  { text: '沙漠 美景 高清', isSelected: false },
+  { text: '森林 落叶 美景 高清', isSelected: false },
+  { text: '悬崖 美景 壮观 高清', isSelected: false },
+  { text: '时空 黑洞 辐射', isSelected: false },
+  { text: '西湖 烟雨', isSelected: false },
+  { text: '山水 水墨 写意', isSelected: false },
+  { text: '温馨的森林木屋', isSelected: false },
+  { text: '空山新雨后', isSelected: false },
+  { text: '小桥流水人家', isSelected: false },
+  { text: '飞流直下三千尺，疑是银河落九天', isSelected: false },
+  { text: '永无夜晚铜锣湾', isSelected: false },
+  { text: '上海陆家嘴 未来城市 科幻风格', isSelected: false },
+  { text: '梅花香自苦寒来', isSelected: false },
+  { text: '北极圈极夜前的最后一次日落', isSelected: false },
+  { text: '星河欲坠时', isSelected: false },
+  { text: '北国风光', isSelected: false },
+  { text: '花海 城堡 卡通', isSelected: false },
+  { text: '猫咪 可爱', isSelected: false },
+  { text: '有山有水有点田', isSelected: false },
+  { text: '星空 高清', isSelected: false },
+  { text: '重峦叠嶂 山水画', isSelected: false },
+]);
 
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
     item.isSelected = false;
   });
   item.isSelected = true;
-  text.value = item.text;
+  inputText.value = item.text;
+}
+
+function clearInputText() {
+  inputText.value = '';
+
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
 }
 
 function handleInput() {
   exampleData.value.forEach((item) => {
-    if (item.text === text.value) {
+    if (item.text === inputText.value) {
       item.isSelected = true;
     } else {
       item.isSelected = false;
@@ -127,59 +197,109 @@ function choseStyleSort(val) {
 }
 
 function choseSortTag(val) {
-  console.log(val);
-  styleData.value.forEach((item) => {
-    item.options.forEach((tag) => {
-      tag.isSelected = false;
+  if (val.tag === sortTag.value) {
+    val.isSelected = !val.isSelected;
+    if (val.isSelected) {
+      sortTag.value = val.tag;
+    } else {
+      sortTag.value = '';
+    }
+  } else {
+    styleData.value.forEach((item) => {
+      item.options.forEach((tag) => {
+        tag.isSelected = false;
+      });
     });
-  });
-  val.isSelected = true;
+
+    val.isSelected = !val.isSelected;
+    sortTag.value = val.tag;
+  }
 }
 
 function getRandomStyle(index) {
   if (index === 4) {
-    console.log('获取随机风格');
-    styleData.value[index].options = [
-      { tag: '梅西', isSelected: false },
-      { tag: '内马尔', isSelected: false },
-    ];
+    const i = Math.floor(Math.random() * randomList.value.length);
+    styleData.value[index].options = [randomList.value[i]];
   } else {
     return;
   }
 }
 
 const showInferDlg = ref(false);
-function handleInfer() {
-  showInferDlg.value = true;
+// wk推理
+async function handleInfer() {
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    //  && sortTag.value
+    if (inputText.value) {
+      showInferDlg.value = true;
+      try {
+        const res = await wuKongInfer({
+          sample: inputText.value,
+          style: sortTag.value,
+        });
 
-  setTimeout(() => {
-    isInferred.value = true;
-  }, 3000);
+        isInferred.value = true;
+        styleBackground.value = res.data.data.pictures;
+      } catch (e) {
+        ElMessage({
+          type: 'warning',
+          message: e.msg,
+        });
+        showInferDlg.value = false;
+      }
+    } else if (!inputText.value) {
+      ElMessage({
+        type: 'warning',
+        message: '请输入样例描述',
+      });
+    }
+  }
+}
+
+// 推理dlg关闭-触发
+function handleDlgClose() {
+  showInferDlg.value = false;
+
+  isInferred.value = false;
+}
+
+// 随机选取五个样例
+function getDescExamples(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
 }
 
 function refreshTags() {
-  exampleData.value = newExampleData.value;
-}
-
-function toggleCollectionDlg(val) {
-  showCollection.value = val;
-}
-
-const currentPic = ref(0);
-function carouselChangeHandle(a) {
-  currentPic.value = a;
+  exampleData.value = getDescExamples(lists.value, 5);
 }
 </script>
 <template>
   <div class="wk-experience">
     <el-input
-      v-model="text"
+      v-model="inputText"
       maxlength="75"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
       type="text"
       @input="handleInput"
-    />
+    >
+      <template #suffix
+        ><o-icon v-if="inputText" class="clear-input" @click="clearInputText"
+          ><icon-x></icon-x></o-icon
+      ></template>
+    </el-input>
 
     <div class="wk-experience-examples">
       <p class="title">选择样例</p>
@@ -228,37 +348,26 @@ function carouselChangeHandle(a) {
           >
             {{ item.tag }}
           </div>
+
+          <div :class="`triangle${styleIndex}`"></div>
         </div>
       </div>
     </div>
 
     <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
 
-    <div class="sider-content">
-      <div class="nav-item">
-        <p class="nav-item-img">
-          <o-icon><icon-album></icon-album></o-icon>
-        </p>
-        <p class="nav-item-text">AI画集</p>
-      </div>
-      <div class="nav-item" @click="toggleCollectionDlg(true)">
-        <p class="nav-item-img">
-          <o-icon><icon-collection></icon-collection></o-icon>
-        </p>
-        <p class="nav-item-text">我的收藏</p>
-      </div>
-    </div>
     <!-- 推理dialog -->
     <el-dialog
       v-model="showInferDlg"
       :fullscreen="true"
       :append-to-body="true"
       class="infer-dlg"
+      @close="handleDlgClose"
     >
       <template #header="{ titleClass }">
         <div class="infer-dlg-head">
           <span class="title" :class="titleClass"
-            >来自深渊 风景 绘画 写实风格</span
+            >{{ inputText }}&nbsp;&nbsp;{{ sortTag }}</span
           >
         </div>
       </template>
@@ -282,46 +391,6 @@ function carouselChangeHandle(a) {
             </div>
           </div>
         </div>
-      </div>
-    </el-dialog>
-
-    <!-- 我的收藏dialog -->
-    <el-dialog
-      v-model="showCollection"
-      :fullscreen="true"
-      :append-to-body="true"
-      center
-      class="collection-dlg"
-    >
-      <template #header="{ titleId, titleClass }">
-        <div class="collection-dlg-head">
-          <span
-            :id="titleId"
-            class="title"
-            :class="titleClass"
-            @click="cancelCollect"
-            >我的收藏</span
-          >
-          <span class="numbers"
-            >{{ currentPic + 1 }}/{{ styleBackground.length }}</span
-          >
-        </div>
-      </template>
-
-      <div class="collection-dlg-contain">
-        <el-carousel
-          type="card"
-          :autoplay="false"
-          arrow="always"
-          @change="carouselChangeHandle"
-        >
-          <el-carousel-item v-for="item in styleBackground" :key="item">
-            <div class="collect-item">
-              <img :src="item" alt="" />
-              <div class="desc">城市夜景 赛博朋克 格雷格·鲁特科夫斯基</div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
       </div>
     </el-dialog>
   </div>
@@ -452,134 +521,11 @@ function carouselChangeHandle(a) {
     }
   }
 }
-
-.collection-dlg {
-  background: none;
-
-  &-head {
-    height: 80px;
-    text-align: center;
-    line-height: 80px;
-    width: 100%;
-    .title {
-      font-size: 24px;
-      color: #ffffff;
-      line-height: 24px;
-      margin-right: 24px;
-    }
-    .numbers {
-      font-size: 16px;
-      color: #ffffff;
-      line-height: 24px;
-    }
-  }
-
-  &-contain {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-top: 9vh;
-    .el-carousel {
-      width: 100%;
-      .el-carousel__container {
-        height: 34vw;
-        .el-carousel__item {
-          left: 7vw;
-
-          .collect-item {
-            width: 34vw;
-            height: 100%;
-            background: none;
-            .desc {
-              font-size: 18px;
-              font-weight: 500;
-              color: #ffffff;
-              line-height: 26px;
-              text-align: center;
-              margin-top: 16px;
-            }
-            img {
-              width: 34vw;
-              height: calc(100% - 42px);
-            }
-          }
-          .el-carousel__item--card {
-            width: 34vw;
-          }
-          .el-carousel__item--card.is-active {
-            transform: translateX(454.25px) scale(10.9);
-          }
-
-          .el-carousel__mask {
-            width: 34vw;
-            height: calc(100% - 42px);
-          }
-        }
-
-        .el-carousel__arrow i {
-          font-size: 30px;
-        }
-      }
-    }
-  }
-
-  .el-dialog__header {
-    padding: 0;
-    margin-right: 0;
-    background: #000;
-  }
-
-  .el-dialog__body {
-    padding: 0 0 200px;
-    height: calc(100vh - 80px);
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .el-dialog__headerbtn {
-    // top: 10px;
-    right: 10px;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-}
 </style>
 <style lang="scss" scoped>
 .wk-experience {
-  position: relative;
-
-  .sider-content {
-    position: absolute;
-    bottom: 220px;
-    right: -231px;
-    color: #fff;
-    .nav-item {
-      margin-bottom: 16px;
-      text-align: center;
-      cursor: pointer;
-      &-img {
-        width: 80px;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.1);
-        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-        font-size: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      &-text {
-        font-size: 14px;
-        font-weight: 400;
-        color: #b2b2b2;
-        line-height: 20px;
-        margin-top: 8px;
-      }
-    }
+  .clear-input {
+    cursor: pointer;
   }
 
   :deep(.el-input) {
@@ -595,7 +541,7 @@ function carouselChangeHandle(a) {
 
       .el-input__inner {
         font-size: 14px;
-        color: #b2b2b2;
+        color: #fff;
       }
 
       .el-input__count .el-input__count-inner {
@@ -627,6 +573,7 @@ function carouselChangeHandle(a) {
     .example-items {
       flex: 1;
       display: flex;
+      flex-wrap: wrap;
       p {
         color: #b2b2b2;
         border: 1px solid #0d8dff;
@@ -671,6 +618,58 @@ function carouselChangeHandle(a) {
         padding: 8px 24px 24px;
         width: 100%;
         min-height: 93px;
+        position: relative;
+        .triangle0 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          top: -10px;
+          left: 62px;
+        }
+        .triangle1 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 202px;
+          top: -10px;
+        }
+        .triangle2 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 358px;
+          top: -10px;
+        }
+        .triangle3 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 498px;
+          top: -10px;
+        }
+        .triangle4 {
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+          position: absolute;
+          left: 638px;
+          top: -10px;
+        }
+
         .sort-item {
           background: rgba(13, 141, 255, 0.3);
           border-radius: 8px;

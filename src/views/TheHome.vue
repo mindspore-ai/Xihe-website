@@ -5,11 +5,12 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, FreeMode, Navigation } from 'swiper';
+import { Pagination, Autoplay, FreeMode, Navigation, EffectFade } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
+import 'swiper/css/effect-fade';
 
 import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
@@ -90,7 +91,8 @@ const i18n = {
   mouse: '滑动鼠标探索更多',
   gallery: {
     title: '精选画廊',
-    introduce: '此处文案待提供此处文案待提供',
+    introduce:
+      '进入精选画廊体验中文文图生成模型-悟空画画模型创作的多样风格图片',
   },
   page: {
     title: '个人主页',
@@ -308,6 +310,7 @@ function goActivity() {
             centered-slides
             :slides-per-view="3"
             :slides-per-group="1"
+            :speed="2000"
             :space-between="30"
             :free-mode="true"
             :navigation="true"
@@ -373,7 +376,8 @@ function goActivity() {
             </OButton>
           </div>
           <div class="gallery-right">
-            <img
+            <div class="mantle"></div>
+            <!-- <img
               class="gallery1"
               :src="gallery1"
               alt=""
@@ -390,37 +394,90 @@ function goActivity() {
               :src="gallery3"
               alt=""
               @click="toggleGallery(true, 2)"
-            />
+            /> -->
+            <swiper
+              centered-slides
+              :slides-per-view="3"
+              :slides-per-group="1"
+              :speed="3000"
+              :space-between="0"
+              :navigation="true"
+              :modules="[Navigation, Autoplay]"
+              :autoplay="{ disableOnInteraction: false, autoplay: true }"
+              prevent-interaction-on-transition
+              class="my-swiper3"
+              loop
+              @swiper="onSwiper"
+            >
+              <swiper-slide
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/上海陆家嘴 未来城市 科幻风格_00444217.png"
+                  alt=""
+                />
+              </swiper-slide>
+              <swiper-slide
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00000.png
+"
+                  alt=""
+                />
+              </swiper-slide>
+              <swiper-slide
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00001.png
+"
+                  alt=""
+                />
+              </swiper-slide>
+              <swiper-slide
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00003.png
+"
+                  alt=""
+                />
+              </swiper-slide>
+              <swiper-slide
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/书房 淡雅 写实 高清-00000.png
+"
+                  alt=""
+                />
+              </swiper-slide>
+              <swiper-slide><img :src="gallery" alt="" /> </swiper-slide>
+              <swiper-slide><img :src="gallery" alt="" /> </swiper-slide>
+            </swiper>
           </div>
-          <OIcon class="arrow-right" @click="toggleGallery(true, 3)"
+          <!-- <OIcon class="arrow-right" @click="toggleGallery(true, 3)"
             ><IconArrowRight2
-          /></OIcon>
+          /></OIcon> -->
         </div>
         <!-- 个人主页 -->
-        <div
-          class="content-page"
-          data-aos="slide-up"
-          data-aos-duration="1200"
-          data-aos-offset="-121"
-          data-aos-once="true"
-        >
-          <img class="page-right" :src="homePageImg" alt="" />
-          <div class="page-left">
-            <p class="page-title">{{ i18n.page.title }}</p>
-            <p class="page-desc">{{ i18n.page.introduce }}</p>
-            <OButton
-              animation
-              class="page-entry"
-              data-aos="slide-up"
-              data-aos-offset="200"
-              data-aos-duration="1600"
-              @click="handleBtnClick"
-            >
-              {{ quickStartLabel }}
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
-            </OButton>
+        <div class="page-content">
+          <div
+            class="content-page"
+            data-aos="slide-up"
+            data-aos-duration="1200"
+            data-aos-offset="-121"
+            data-aos-once="true"
+          >
+            <img class="page-right" :src="homePageImg" alt="" />
+            <div class="page-left">
+              <p class="page-title">{{ i18n.page.title }}</p>
+              <p class="page-desc">{{ i18n.page.introduce }}</p>
+              <OButton
+                animation
+                class="page-entry"
+                data-aos="slide-up"
+                data-aos-offset="200"
+                data-aos-duration="1600"
+                @click="handleBtnClick"
+              >
+                {{ quickStartLabel }}
+                <template #suffix>
+                  <OIcon><IconArrowRight /></OIcon>
+                </template>
+              </OButton>
+            </div>
           </div>
         </div>
         <!-- 项目-->
@@ -482,78 +539,85 @@ function goActivity() {
         </div>
 
         <!-- modelzoo -->
-        <div
-          class="content-modelzoo"
-          data-aos-duration="1200"
-          data-aos-offset="200"
-          data-aos-once="true"
-        >
-          <div class="modelzoo-entry">
-            <div class="entry-left">
-              <p class="entry-title">{{ i18n.modelzoo.title }}</p>
-              <p class="entry-desc">{{ i18n.modelzoo.introduce }}</p>
+        <div class="modelzoo-content">
+          <div
+            class="content-modelzoo"
+            data-aos-duration="1200"
+            data-aos-offset="200"
+            data-aos-once="true"
+          >
+            <div class="modelzoo-entry">
+              <div class="entry-left">
+                <p class="entry-title">{{ i18n.modelzoo.title }}</p>
+                <p class="entry-desc">{{ i18n.modelzoo.introduce }}</p>
+              </div>
+              <OButton
+                animation
+                class="right"
+                data-aos="slide-up"
+                data-aos-offset="200"
+                data-aos-duration="1600"
+                @click="handleBtnClick3"
+              >
+                {{ i18n.modelzoo.quickStartLabel }}
+                <template #suffix>
+                  <OIcon><IconArrowRight /></OIcon>
+                </template>
+              </OButton>
             </div>
-            <OButton
-              animation
-              class="right"
-              data-aos="slide-up"
-              data-aos-offset="200"
-              data-aos-duration="1600"
-              @click="handleBtnClick3"
-            >
-              {{ i18n.modelzoo.quickStartLabel }}
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
-            </OButton>
-          </div>
-          <div class="modelzoo-card-list">
-            <a
-              class="modelzoo-card"
-              :href="`https://${DOMAIN}/modelzoo/codegeex`"
-            >
-              <div class="card-header">
-                <img :src="modelzoo3" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="modelzoo-title">
-                  <p>{{ i18n.modelzoo.modelzoo3 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
+            <div class="modelzoo-card-list">
+              <a
+                class="modelzoo-card"
+                :href="`https://${DOMAIN}/modelzoo/codegeex`"
+              >
+                <div class="card-header">
+                  <img :src="modelzoo3" alt="" />
                 </div>
-                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
-              </div>
-            </a>
-            <a
-              class="modelzoo-card"
-              :href="`https://${DOMAIN}/modelzoo/taichu`"
-            >
-              <div class="card-header">
-                <img :src="modelzoo1" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="modelzoo-title">
-                  <p>{{ i18n.modelzoo.modelzoo1 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
+                <div class="card-body">
+                  <div class="modelzoo-title">
+                    <p>{{ i18n.modelzoo.modelzoo3 }}</p>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </div>
+                  <div class="modelzoo-desc">
+                    {{ i18n.modelzoo.introduce3 }}
+                  </div>
                 </div>
-                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce1 }}</div>
-              </div>
-            </a>
-            <a
-              class="modelzoo-card"
-              :href="`https://${DOMAIN}/modelzoo/luojia`"
-            >
-              <div class="card-header">
-                <img :src="modelzoo2" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="modelzoo-title">
-                  <p>{{ i18n.modelzoo.modelzoo2 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
+              </a>
+              <a
+                class="modelzoo-card"
+                :href="`https://${DOMAIN}/modelzoo/taichu`"
+              >
+                <div class="card-header">
+                  <img :src="modelzoo1" alt="" />
                 </div>
-                <div class="modelzoo-desc">{{ i18n.modelzoo.introduce2 }}</div>
-              </div>
-            </a>
-            <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
+                <div class="card-body">
+                  <div class="modelzoo-title">
+                    <p>{{ i18n.modelzoo.modelzoo1 }}</p>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </div>
+                  <div class="modelzoo-desc">
+                    {{ i18n.modelzoo.introduce1 }}
+                  </div>
+                </div>
+              </a>
+              <a
+                class="modelzoo-card"
+                :href="`https://${DOMAIN}/modelzoo/luojia`"
+              >
+                <div class="card-header">
+                  <img :src="modelzoo2" alt="" />
+                </div>
+                <div class="card-body">
+                  <div class="modelzoo-title">
+                    <p>{{ i18n.modelzoo.modelzoo2 }}</p>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </div>
+                  <div class="modelzoo-desc">
+                    {{ i18n.modelzoo.introduce2 }}
+                  </div>
+                </div>
+              </a>
+              <!-- <a class="modelzoo-card" :href="`https://${DOMAIN}/modelzoo/pangu`">
               <div class="card-header">
                 <img :src="modelzoo3" alt="" />
               </div>
@@ -565,117 +629,120 @@ function goActivity() {
                 <div class="modelzoo-desc">{{ i18n.modelzoo.introduce3 }}</div>
               </div>
             </a> -->
+            </div>
           </div>
-        </div>
 
-        <!-- 模型 -->
-        <div
-          class="content-model"
-          data-aos-duration="1200"
-          data-aos-offset="-121"
-          data-aos-once="true"
-        >
-          <a
-            class="model-card"
-            href="https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10"
+          <!-- 模型 -->
+          <div
+            class="content-model"
+            data-aos-duration="1200"
+            data-aos-offset="-121"
+            data-aos-once="true"
           >
-            <div class="card-header">
-              <img :src="models1" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="model-title">
-                <p>{{ i18n.model.models1 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
+            <a
+              class="model-card"
+              href="https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10"
+            >
+              <div class="card-header">
+                <img :src="models1" alt="" />
               </div>
-              <p class="model-label">VGG16｜ResNet-101｜InceptionV4 …</p>
-              <div class="model-tag">CV</div>
-            </div>
-          </a>
-          <a
-            class="model-card"
-            href="https://xihe.mindspore.cn/models/MindSpore/yolov5shape640"
-          >
-            <div class="card-header">
-              <img :src="models2" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="model-title">
-                <p>{{ i18n.model.models2 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
+              <div class="card-body">
+                <div class="model-title">
+                  <p>{{ i18n.model.models1 }}</p>
+                  <OIcon><IconArrowRight /></OIcon>
+                </div>
+                <p class="model-label">VGG16｜ResNet-101｜InceptionV4 …</p>
+                <div class="model-tag">CV</div>
               </div>
-              <p class="model-label">YOLOv5｜SSD ｜MobileNet …</p>
-              <div class="model-tag">CV</div>
-            </div>
-          </a>
-          <a
-            class="model-card"
-            href="https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128"
-          >
-            <div class="card-header">
-              <img :src="models3" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="model-title">
-                <p>{{ i18n.model.models3 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
+            </a>
+            <a
+              class="model-card"
+              href="https://xihe.mindspore.cn/models/MindSpore/yolov5shape640"
+            >
+              <div class="card-header">
+                <img :src="models2" alt="" />
               </div>
-              <p class="model-label">BERT｜GRU｜Transformer …</p>
-              <div class="model-tag">NLP</div>
-            </div>
-          </a>
-          <a
-            class="model-card"
-            href="https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo"
-          >
-            <div class="card-header">
-              <img :src="models4" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="model-title">
-                <p>{{ i18n.model.models4 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
+              <div class="card-body">
+                <div class="model-title">
+                  <p>{{ i18n.model.models2 }}</p>
+                  <OIcon><IconArrowRight /></OIcon>
+                </div>
+                <p class="model-label">YOLOv5｜SSD ｜MobileNet …</p>
+                <div class="model-tag">CV</div>
               </div>
-              <p class="model-label">DeepFM｜Wide&Deep｜NCF …</p>
-              <div class="model-tag">Recommendation</div>
-            </div>
-          </a>
-          <a class="model-entry" :href="`https://${DOMAIN}/models`">
-            <div class="entry-header">
-              <p class="entry-title">{{ i18n.model.title }}</p>
-              <p class="entry-desc">{{ i18n.model.introduce }}</p>
-            </div>
-            <p class="entry-body">
-              {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
-            </p>
-          </a>
+            </a>
+            <a
+              class="model-card"
+              href="https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128"
+            >
+              <div class="card-header">
+                <img :src="models3" alt="" />
+              </div>
+              <div class="card-body">
+                <div class="model-title">
+                  <p>{{ i18n.model.models3 }}</p>
+                  <OIcon><IconArrowRight /></OIcon>
+                </div>
+                <p class="model-label">BERT｜GRU｜Transformer …</p>
+                <div class="model-tag">NLP</div>
+              </div>
+            </a>
+            <a
+              class="model-card"
+              href="https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo"
+            >
+              <div class="card-header">
+                <img :src="models4" alt="" />
+              </div>
+              <div class="card-body">
+                <div class="model-title">
+                  <p>{{ i18n.model.models4 }}</p>
+                  <OIcon><IconArrowRight /></OIcon>
+                </div>
+                <p class="model-label">DeepFM｜Wide&Deep｜NCF …</p>
+                <div class="model-tag">Recommendation</div>
+              </div>
+            </a>
+            <a class="model-entry" :href="`https://${DOMAIN}/models`">
+              <div class="entry-header">
+                <p class="entry-title">{{ i18n.model.title }}</p>
+                <p class="entry-desc">{{ i18n.model.introduce }}</p>
+              </div>
+              <p class="entry-body">
+                {{ i18n.model.more }}<OIcon><IconArrowRight /></OIcon>
+              </p>
+            </a>
+          </div>
         </div>
 
         <!-- 数据集 -->
-        <div
-          class="content-dataset"
-          data-aos="slide-up"
-          data-aos-duration="800"
-          data-aos-offset="-800"
-          data-aos-once="true"
-        >
-          <div class="dataset-right">
-            <p class="dataset-title">{{ i18n.dataset.title }}</p>
-            <p class="dataset-desc">{{ i18n.dataset.introduce }}</p>
-            <OButton
-              animation
-              class="dataset-entry"
-              data-aos="slide-up"
-              data-aos-offset="200"
-              data-aos-duration="1600"
-              @click="handleBtnClick2"
-            >
-              {{ i18n.dataset.quickStartLabel }}
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
-            </OButton>
+        <div class="dataset-content">
+          <div
+            class="content-dataset"
+            data-aos="slide-up"
+            data-aos-duration="800"
+            data-aos-offset="-800"
+            data-aos-once="true"
+          >
+            <div class="dataset-right">
+              <p class="dataset-title">{{ i18n.dataset.title }}</p>
+              <p class="dataset-desc">{{ i18n.dataset.introduce }}</p>
+              <OButton
+                animation
+                class="dataset-entry"
+                data-aos="slide-up"
+                data-aos-offset="200"
+                data-aos-duration="1600"
+                @click="handleBtnClick2"
+              >
+                {{ i18n.dataset.quickStartLabel }}
+                <template #suffix>
+                  <OIcon><IconArrowRight /></OIcon>
+                </template>
+              </OButton>
+            </div>
+            <img class="dataset-left" :src="datasetPageImg" alt="" />
           </div>
-          <img class="dataset-left" :src="datasetPageImg" alt="" />
         </div>
       </div>
     </div>
@@ -860,9 +927,11 @@ function goActivity() {
     width: 100%;
     background-color: #f5f6f8;
     .wrapper {
-      max-width: 1472px;
-      margin: 0 auto;
-      padding: 60px 16px 128px;
+      // padding: 60px 16px 128px;
+      // margin: 0 16px;
+      // display: flex;
+      // flex-direction: column;
+      // align-items: center;
       :deep(.el-dialog) {
         background: rgba(0, 0, 0, 0.85);
         .el-dialog__headerbtn {
@@ -937,19 +1006,22 @@ function goActivity() {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 64px;
-        .arrow-right {
-          background: #000;
-          position: absolute;
-          font-size: 36px;
-          top: 35%;
-          border-radius: 50%;
-          right: 16px;
-          cursor: pointer;
-          display: none;
-        }
+        padding: 64px 16px;
+        max-width: 1472px;
+        margin: 0 auto;
+        // .arrow-right {
+        //   background: #000;
+        //   position: absolute;
+        //   font-size: 36px;
+        //   top: 35%;
+        //   border-radius: 50%;
+        //   right: 16px;
+        //   cursor: pointer;
+        //   display: none;
+        // }
 
         .gallery-left {
+          margin-right: 24px;
           .gallery-title {
             font-size: 54px;
             font-weight: 400;
@@ -968,35 +1040,85 @@ function goActivity() {
             margin-top: 48px;
           }
         }
-        perspective: 800px;
+
         .gallery-right {
-          width: 68%;
-          display: flex;
-          justify-content: right;
-          align-items: center;
-          // transform: rotateY(345deg);
-          // transform-origin: right;
-          cursor: pointer;
-          img {
-            width: 30%;
-            margin-left: 24px;
+          position: relative;
+          .mantle {
+            position: absolute;
+            height: 100%;
+            width: 100px;
+            left: 0;
+            // background: linear-gradient(
+            //   to right,
+            //   hsla(220, 18%, 97%, 1),
+            //   hsla(240, 14%, 99%, 0)
+            // );
+            z-index: 180;
           }
-          .gallery1 {
-            height: 78%;
-          }
-          .gallery2 {
-            height: 89%;
-          }
-          &:hover + .arrow-right {
-            display: block;
+          :deep(.my-swiper3) {
+            --swiper-navigation-size: 24px;
+            --swiper-navigation-color: #fff;
+            max-width: 1000px;
+            .swiper-button-prev {
+              display: none;
+            }
+            .swiper-button-next {
+              width: 40px;
+              height: 40px;
+              background: #000;
+              border-radius: 50%;
+              font-weight: 600;
+              top: 50%;
+            }
+            .swiper-slide {
+              height: 328px;
+              display: flex;
+              align-items: center;
+              img {
+                transition-property: all;
+                transition-duration: 1s;
+                // transition-timing-function: linear;
+                width: 100%;
+              }
+              perspective: 800px;
+              img {
+                transform: rotateY(345deg);
+                transform-origin: right;
+                height: 228px;
+                border: 1px solid #00fbfbfc;
+              }
+            }
+            .swiper-slide-prev {
+              img {
+                height: 256px;
+                // margin-top: 32px;
+              }
+            }
+            .swiper-slide-active {
+              img {
+                height: 289px;
+                // margin-top: 17px;
+              }
+            }
+            .swiper-slide-next {
+              img {
+                height: 325px;
+              }
+            }
           }
         }
       }
 
+      .page-content {
+        background-color: #ffffff;
+      }
       .content-page {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        max-width: 1472px;
+        margin: 0 auto;
+        padding: 64px 16px;
         .page-left {
           .page-title {
             font-size: 54px;
@@ -1024,7 +1146,10 @@ function goActivity() {
 
       .content-project {
         display: flex;
-        margin-top: 120px;
+        background: linear-gradient(to right, #f7f3f7, #fafaff);
+        max-width: 1472px;
+        margin: 0 auto;
+        padding: 64px 16px 0;
         .project-card {
           max-width: 277px;
           flex-basis: 277px;
@@ -1138,8 +1263,14 @@ function goActivity() {
         }
       }
 
+      .modelzoo-content {
+        background: linear-gradient(to right, #fbfbfc, #f5f6f8);
+      }
       .content-modelzoo {
+        max-width: 1472px;
+        margin: 0 auto;
         margin-top: 64px;
+        padding: 64px 16px 0;
         .modelzoo-entry {
           display: flex;
           justify-content: space-between;
@@ -1239,7 +1370,9 @@ function goActivity() {
       }
 
       .content-model {
-        margin-top: 64px;
+        padding: 64px 16px;
+        max-width: 1472px;
+        margin: 0 auto;
         // display: grid;
         // grid-template-columns: repeat(6, 1fr);
         // column-gap: 24px;
@@ -1314,7 +1447,7 @@ function goActivity() {
           // grid-column: 5 / 7;
           background: rgba(255, 255, 255, 0.95);
           box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-          max-width: 448px;
+          // max-width: 448px;
           display: flex;
           flex-shrink: 4;
           flex-direction: column;
@@ -1359,12 +1492,17 @@ function goActivity() {
           }
         }
       }
-
+      .dataset-content {
+        background-color: #ffffff;
+      }
       .content-dataset {
-        margin-top: 128px;
+        padding: 128px 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        max-width: 1472px;
+        margin: 0 auto;
 
         .dataset-left {
           max-width: 791px;

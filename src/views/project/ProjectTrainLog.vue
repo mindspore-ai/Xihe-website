@@ -174,11 +174,8 @@ async function handleGetOutput() {
       downloadElement.click(); // 点击下载
       document.body.removeChild(downloadElement); // 下载完成移除元素
       window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
-    } catch (err) {
-      ElMessage({
-        type: 'warning',
-        message: err.msg,
-      });
+    } catch (e) {
+      console.error(e);
     }
   } else {
     return;

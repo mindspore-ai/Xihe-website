@@ -534,26 +534,26 @@ watch(
                   <span>运行中</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'scheduling'"
                   class="status-item"
                 >
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
-                </div>
+                </div> -->
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'schedule_failed'"
                   class="status-item"
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
-                </div>
+                </div> -->
               </div>
             </div>
           </li>

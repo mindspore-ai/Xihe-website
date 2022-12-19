@@ -174,11 +174,8 @@ async function handleGetOutput() {
       downloadElement.click(); // 点击下载
       document.body.removeChild(downloadElement); // 下载完成移除元素
       window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
-    } catch (err) {
-      ElMessage({
-        type: 'warning',
-        message: err.msg,
-      });
+    } catch (e) {
+      console.error(e);
     }
   } else {
     return;
@@ -537,26 +534,26 @@ watch(
                   <span>运行中</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'scheduling'"
                   class="status-item"
                 >
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
-                </div>
+                </div> -->
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'schedule_failed'"
                   class="status-item"
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
-                </div>
+                </div> -->
               </div>
             </div>
           </li>

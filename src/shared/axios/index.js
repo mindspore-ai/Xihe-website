@@ -28,7 +28,7 @@ let pendingPool = new Map();
  */
 const requestInterceptorId = request.interceptors.request.use(
   (config) => {
-    if (loadingCount === 0 && !config.url.includes('fork')) {
+    if (loadingCount === 0 && !config.$noLoading) {
       useLoadingState().setloadingState(true);
       loadingInstance = ElLoading.service({
         fullscreen: true,

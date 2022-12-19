@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue';
 
-import one from '@/assets/imgs/wukong/style-bg-1.png';
-import two from '@/assets/imgs/wukong/style-bg-2.png';
-import three from '@/assets/imgs/wukong/style-bg-3.png';
-import four from '@/assets/imgs/wukong/style-bg-4.png';
-import five from '@/assets/imgs/wukong/style-bg-5.png';
+import comic from '@/assets/imgs/wukong/style-bg-1.png';
+import classic from '@/assets/imgs/wukong/style-bg-2.png';
+import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
+import more from '@/assets/imgs/wukong/style-bg-4.png';
+import random from '@/assets/imgs/wukong/style-bg-5.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/wukong-download';
@@ -23,9 +23,10 @@ const inputText = ref('');
 const sortTag = ref('');
 const styleIndex = ref(0);
 
+const showInferDlg = ref(false);
 const isInferred = ref(false);
 
-const styleBackgrounds = ref([one, two, three, four, five]);
+const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
 
 const styleData = ref([
@@ -166,6 +167,7 @@ const lists = ref([
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
+// 选择样例
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
     item.isSelected = false;
@@ -173,7 +175,7 @@ function exampleSelectHandler(item) {
   item.isSelected = true;
   inputText.value = item.text;
 }
-
+// 清除输入样例
 function clearInputText() {
   inputText.value = '';
 
@@ -191,11 +193,11 @@ function handleInput() {
     }
   });
 }
-
+// 选择风格类别
 function choseStyleSort(val) {
   styleIndex.value = val;
 }
-
+// 选择风格标签
 function choseSortTag(val) {
   if (val.tag === sortTag.value) {
     val.isSelected = !val.isSelected;
@@ -215,7 +217,7 @@ function choseSortTag(val) {
     sortTag.value = val.tag;
   }
 }
-
+// 随机风格
 function getRandomStyle(index) {
   if (index === 4) {
     const i = Math.floor(Math.random() * randomList.value.length);
@@ -224,8 +226,6 @@ function getRandomStyle(index) {
     return;
   }
 }
-
-const showInferDlg = ref(false);
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
@@ -257,14 +257,12 @@ async function handleInfer() {
     }
   }
 }
-
 // 推理dlg关闭-触发
 function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
 }
-
 // 随机选取五个样例
 function getDescExamples(arr, count) {
   let shuffled = arr.slice(0),
@@ -280,7 +278,7 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
-
+// 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);
 }
@@ -349,7 +347,7 @@ function refreshTags() {
             {{ item.tag }}
           </div>
 
-          <div :class="`triangle${styleIndex}`"></div>
+          <div class="triangle" :class="`triangle${styleIndex}`"></div>
         </div>
       </div>
     </div>
@@ -625,53 +623,31 @@ function refreshTags() {
         width: 100%;
         min-height: 93px;
         position: relative;
-        .triangle0 {
+        .triangle {
           width: 0;
           height: 0;
           border-left: 6px solid transparent;
           border-right: 6px solid transparent;
           border-bottom: 10px solid rgba(85, 85, 85, 0.3);
           position: absolute;
+        }
+        .triangle0 {
           top: -10px;
           left: 62px;
         }
         .triangle1 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 202px;
           top: -10px;
         }
         .triangle2 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 358px;
           top: -10px;
         }
         .triangle3 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 498px;
           top: -10px;
         }
         .triangle4 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 638px;
           top: -10px;
         }

@@ -203,145 +203,6 @@ watch(
     </el-dialog>
   </div>
 </template>
-<style lang="scss">
-// .collection-dlg {
-//   background: rgba(0, 0, 0, 0.85);
-
-//   .el-dialog__headerbtn {
-//     right: 10px;
-//     z-index: 2010;
-//     .el-dialog__close {
-//       color: #fff;
-//       font-size: 40px;
-//     }
-//   }
-//   .is-fullscreen {
-//     background: rgba(0, 0, 0, 0.85) !important;
-//   }
-// }
-
-.my-swiper2 {
-  --swiper-navigation-size: 24px;
-  --swiper-navigation-color: #fff;
-
-  .handler {
-    position: absolute;
-    bottom: 64px;
-    right: 24px;
-    display: none;
-    .icon-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      .o-icon {
-        font-size: 16px;
-      }
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-      &:first-child {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .collect-title {
-    position: fixed;
-    top: 22px;
-    left: -40px;
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 24px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #000000;
-    background: #000;
-    border-radius: 50%;
-    font-weight: 600;
-    top: 55%;
-  }
-  .swiper-slide {
-    &:hover {
-      .handler {
-        display: block;
-      }
-    }
-    img {
-      width: 100%;
-      height: auto;
-      margin-top: 16%;
-    }
-    p {
-      color: #ffffff;
-      text-align: center;
-      line-height: 26px;
-      font-size: 18px;
-      margin-top: 16px;
-    }
-  }
-  .my-pagination-clickable {
-    position: fixed;
-  }
-  .swiper-pagination-fraction {
-    color: #fff;
-    font-size: 16px;
-    line-height: 26px;
-    position: fixed;
-    top: 22px;
-    left: 50px;
-    bottom: unset;
-  }
-}
-
-// .album-dlg {
-//   padding-left: 6%;
-//   padding-right: 6%;
-//   background: rgb(0, 0, 0);
-//   &::-webkit-scrollbar {
-//     width: 6px;
-//     height: 6px;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     border-radius: 3px;
-//     background-color: #d8d8d8;
-//     background-clip: content-box;
-//   }
-
-//   &::-webkit-scrollbar-track {
-//     border-radius: 3px;
-//     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-//     background: #ffffff;
-//   }
-
-//   .is-fullscreen {
-//     background: rgba(0, 0, 0, 0.85) !important;
-//   }
-
-//   .el-dialog__body {
-//     background: rgba(0, 0, 0, 0.85);
-//   }
-
-//   .el-dialog__headerbtn {
-//     right: 10px;
-//     .el-dialog__close {
-//       color: #fff;
-//       font-size: 40px;
-//     }
-//   }
-// }
-</style>
 <style lang="scss" scoped>
 :deep(.el-dialog) {
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
@@ -526,7 +387,7 @@ watch(
 
 .sider-content {
   position: fixed;
-  bottom: 220px;
+  bottom: 400px;
   right: 40px;
   color: #fff;
   .nav-item {
@@ -550,6 +411,90 @@ watch(
       line-height: 20px;
       margin-top: 8px;
     }
+  }
+}
+
+.my-swiper2 {
+  --swiper-navigation-size: 24px;
+  --swiper-navigation-color: #fff;
+
+  .handler {
+    position: absolute;
+    bottom: 64px;
+    right: 24px;
+    display: none;
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      .o-icon {
+        font-size: 16px;
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+  }
+
+  .collect-title {
+    position: fixed;
+    top: 22px;
+    left: -40px;
+    font-size: 24px;
+    color: #ffffff;
+    line-height: 24px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    background: #000;
+    border-radius: 50%;
+    font-weight: 600;
+    top: 55%;
+  }
+  .swiper-slide {
+    &:hover {
+      .handler {
+        display: block;
+      }
+    }
+    img {
+      width: 100%;
+      height: auto;
+      margin-top: 16%;
+    }
+    p {
+      color: #ffffff;
+      text-align: center;
+      line-height: 26px;
+      font-size: 18px;
+      margin-top: 16px;
+    }
+  }
+  .my-pagination-clickable {
+    position: fixed;
+  }
+  .swiper-pagination-fraction {
+    color: #fff;
+    font-size: 16px;
+    line-height: 26px;
+    position: fixed;
+    top: 22px;
+    left: 50px;
+    bottom: unset;
   }
 }
 </style>

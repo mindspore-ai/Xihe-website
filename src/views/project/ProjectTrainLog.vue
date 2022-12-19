@@ -168,7 +168,7 @@ async function handleGetOutput() {
 
       const downloadElement = document.createElement('a');
       downloadElement.href = res.data.data.log_url;
-      downloadElement.target = '_blank';
+      // downloadElement.target = '_blank';
       downloadElement.download = 'output.tar.gz';
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载
@@ -228,7 +228,7 @@ socket.onmessage = function (event) {
           isEvaluating.value = true;
           isCusEvaluating.value = true;
         } else if (trainDetail.value.status === 'Running') {
-          logName.value = '训练中';
+          logName.value = 'train.log';
           outputName.value = '训练中';
           isEvaluating.value = true;
           isCusEvaluating.value = true;
@@ -440,7 +440,7 @@ const downloadBlob = (blob, fileName) => {
       // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
-      downloadElement.target = '_blank';
+      // downloadElement.target = '_blank';
       downloadElement.download = fileName;
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载

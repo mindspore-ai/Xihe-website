@@ -125,6 +125,41 @@ function sendMessage() {
   }
 }
 
+// async function sendMessage() {
+//   if (inputMsg.value.trim() === '') return;
+
+//   if (!isLogined.value) {
+//     goAuthorize();
+//   } else {
+//     try {
+//       msgList.value.push({
+//         message: inputMsg.value,
+//         type: 1,
+//         isLoading: true,
+//       });
+
+//       examples.value.forEach((item) => {
+//         item.isSelected = false;
+//       });
+
+//       const res = await handlePanguInfer({ question: inputMsg.value });
+//       console.log(res);
+
+//       msgList.value.forEach((item) => (item.isLoading = false));
+
+//       msgList.value.push({
+//         message: res.data.data.answer,
+//         type: 0,
+//         isLoading: false,
+//       });
+//     } catch (e) {
+//       console.log(e);
+//       msgList.value.forEach((item) => (item.isLoading = false));
+//       // 根据catch的状态码来判断提示内容
+//     }
+//   }
+// }
+
 function handleTextChange() {
   examples.value.forEach((item) => {
     if (item.text === inputMsg.value) {

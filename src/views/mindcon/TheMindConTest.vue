@@ -26,6 +26,8 @@ const queryData = ref({
   times: 0,
 });
 
+const isAnswering = ref(false);
+
 const activityQuestions = ref([
   {
     desc: '',
@@ -140,7 +142,10 @@ function handlePreClick() {
 function handleNextClick() {
   subjectIndex.value += 1;
 }
-const isAnswering = ref(false);
+
+function toggleDialog(val) {
+  isShow.value = val;
+}
 
 function submitPaperFn() {
   activityQuestions.value.forEach((item, index) => {
@@ -166,10 +171,6 @@ function submitPaperFn() {
   });
 }
 
-function toggleDialog(val) {
-  isShow.value = val;
-}
-
 function confirmSubmitpaper() {
   isAnswering.value = false;
   submitPaperFn().then((res) => {
@@ -185,11 +186,11 @@ function cancelSubmit() {
 }
 
 function backToMindCon() {
-  isShow1.value = true;
+  // isShow1.value = true;
   router.push('/activity');
 }
 
-function cancleBack() {
+function cancelBack() {
   isShow1.value = false;
 }
 
@@ -246,8 +247,8 @@ async function getData() {
 }
 getData();
 
+//离开当前的组件，触发
 onBeforeRouteLeave((to, from, next) => {
-  //离开当前的组件，触发
   routePath.value = to.path;
 
   if (isAllowed.value) {
@@ -269,9 +270,9 @@ watch(
   () => testTime.value,
   () => {
     if (testTime.value === 0) {
-      // 发请求交卷; 切到分数页面
       submitPaperFn().then((res) => {
         isAnswering.value = false;
+        isAllowed.value = true;
         router.push({
           path: '/activity-result',
           query: { times: 3 - queryData.value.times, score: res.score },
@@ -297,7 +298,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', beforeunloadHandler);
   window.removeEventListener('pagehide', beforeunloadHandler);
-  // 离开页面提交试卷信息，清除计时器,
+  // 离开页面提交试卷
   if (isAnswering.value) {
     isAnswering.value = false;
     submitPaperFn();
@@ -464,7 +465,7 @@ onUnmounted(() => {
             <o-button
               type="primary"
               style="margin-right: 16px"
-              @click="cancleBack"
+              @click="cancelBack"
               >取消</o-button
             >
             <o-button @click="confirmBack">继续</o-button>

@@ -29,7 +29,8 @@ import models3 from '@/assets/imgs/home/models3.png';
 import models4 from '@/assets/imgs/home/models4.png';
 import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
 import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
-import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
+// import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
+import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 import gallery from '@/assets/imgs/wukong/ceshi1.png';
 import gallery1 from '@/assets/imgs/home/gallery1.png';
@@ -117,6 +118,8 @@ const i18n = {
     introduce2: '全球首个遥感专用框架及最大遥感样本库',
     modelzoo3: 'CodeGeeX',
     introduce3: '一个具有130亿参数的多编程语言代码生成预训练模型',
+    modelzoo4: '鹏程.盘古',
+    introduce4: '业界首个千亿级参数中文自然语言处理大模型',
   },
   model: {
     title: '模型',

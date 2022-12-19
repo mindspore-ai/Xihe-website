@@ -194,7 +194,7 @@ watch(
       }
     }
     .tab-content {
-      padding: 40px;
+      // padding: 40px;
       background: #fff;
     }
   }

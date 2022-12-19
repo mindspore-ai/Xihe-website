@@ -3,11 +3,11 @@ import ModelzooCard from '@/components/ModelzooCard.vue';
 
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
-import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
+// import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
 import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
-import wukong from '@/assets/imgs/modelzoo/wukong.png';
+import wukong from '@/assets/imgs/wukong/wukong-banner1.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -24,18 +24,19 @@ let i18n = {
   more: '更多',
   clear: '清除',
   cardLists: [
+    // {
+    //   title: 'CodeGeeX',
+    //   introduce: '130亿参数的多编程语言代码生成预训练模型',
+    //   url: codegeex,
+    //   path: '/modelzoo/codegeex',
+    //   openness: true,
+    // },
     {
-      title: '悟空.画画',
-      introduce: '拥有目前最大的中文开源多模态数据集',
+      title: '悟空',
+      introduce:
+        '华为诺亚方舟实验室与MindSpore社区联合打造的中文图像生成大模型',
       url: wukong,
       path: '/modelzoo/wukong',
-      openness: true,
-    },
-    {
-      title: 'CodeGeeX',
-      introduce: '130亿参数的多编程语言代码生成预训练模型',
-      url: codegeex,
-      path: '/modelzoo/codegeex',
       openness: true,
     },
     {

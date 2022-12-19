@@ -197,3 +197,40 @@ export function handleLuoJiaHistory() {
       return e;
     });
 }
+
+/**
+ * 悟空-获取样例
+ * @returns
+ */
+export function getWkExamples() {
+  const url = '/server/bigmodel/wukong/samples/5';
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 悟空-推理
+ * @returns
+ */
+export function wuKongInfer(params) {
+  const url = '/server/bigmodel/wukong';
+  return request
+    .post(url, params, {
+      $noLoading: true,
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+      timeout: 60000,
+    })
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

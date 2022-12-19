@@ -189,7 +189,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .experience {
-  padding: 40px;
+  padding: 40px 80px;
   background: #fff;
   &-head {
     &-title {

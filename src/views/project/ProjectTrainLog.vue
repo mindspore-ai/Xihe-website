@@ -21,6 +21,7 @@ import IconFailed from '~icons/app/failed';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -35,7 +36,7 @@ const route = useRoute();
 const router = useRouter();
 
 const logUrl = ref('');
-const outputUrl = ref('');
+// const outputUrl = ref('');
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -145,7 +146,7 @@ function handleGetLog() {
     trainId: route.params.trainId,
     type: 'log',
   }).then((res) => {
-    if (res.status === 202 && res.data.data) {
+    if (res.data.data) {
       logUrl.value = res.data.data.log_url;
 
       logName.value = 'train.log';
@@ -156,20 +157,29 @@ function handleGetLog() {
 }
 
 // 获取输出
-function handleGetOutput() {
-  getTrainLog({
-    projectId: detailData.value.id,
-    trainId: route.params.trainId,
-    type: 'output',
-  }).then((res) => {
-    if (res.status === 202 && res.data.data) {
-      outputUrl.value = res.data.data.log_url;
+async function handleGetOutput() {
+  if (outputName.value === 'output.tar.gz') {
+    try {
+      const res = await getTrainLog({
+        projectId: detailData.value.id,
+        trainId: route.params.trainId,
+        type: 'output',
+      });
 
-      outputName.value = 'output.tar.gz';
-    } else {
-      outputName.value = '';
+      const downloadElement = document.createElement('a');
+      downloadElement.href = res.data.data.log_url;
+      // downloadElement.target = '_blank';
+      downloadElement.download = 'output.tar.gz';
+      document.body.appendChild(downloadElement);
+      downloadElement.click(); // 点击下载
+      document.body.removeChild(downloadElement); // 下载完成移除元素
+      window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
+    } catch (e) {
+      console.error(e);
     }
-  });
+  } else {
+    return;
+  }
 }
 
 const isAim = ref(null);
@@ -199,7 +209,9 @@ socket.onmessage = function (event) {
         // 训练未完成 true ；自定义时 aim_path为空时 true
         if (trainDetail.value.status === 'Completed') {
           handleGetLog();
-          handleGetOutput();
+          // handleGetOutput();
+          outputName.value = 'output.tar.gz';
+
           isCusEvaluating.value = false;
           if (
             (trainDetail.value.enable_aim && trainDetail.value.aim_path) ||
@@ -216,7 +228,7 @@ socket.onmessage = function (event) {
           isEvaluating.value = true;
           isCusEvaluating.value = true;
         } else if (trainDetail.value.status === 'Running') {
-          logName.value = '训练中';
+          logName.value = 'train.log';
           outputName.value = '训练中';
           isEvaluating.value = true;
           isCusEvaluating.value = true;
@@ -428,7 +440,7 @@ const downloadBlob = (blob, fileName) => {
       // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
-      downloadElement.target = '_blank';
+      // downloadElement.target = '_blank';
       downloadElement.download = fileName;
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载
@@ -522,26 +534,26 @@ watch(
                   <span>运行中</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'scheduling'"
                   class="status-item"
                 >
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
-                </div>
+                </div> -->
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
 
-                <div
+                <!-- <div
                   v-if="trainDetail.status === 'schedule_failed'"
                   class="status-item"
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
-                </div>
+                </div> -->
               </div>
             </div>
           </li>
@@ -591,10 +603,11 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document">
-              <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
+              <!-- <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
               <p v-else>
                 <span>{{ outputName }}</span>
-              </p>
+              </p> -->
+              <div @click="handleGetOutput">{{ outputName }}</div>
             </div>
           </li>
 

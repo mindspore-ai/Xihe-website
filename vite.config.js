@@ -2,7 +2,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-import cesium from 'vite-plugin-cesium';
+// import cesium from 'vite-plugin-cesium';
 
 import Icons from 'unplugin-icons/vite';
 import { FileSystemIconLoader } from 'unplugin-icons/loaders';
@@ -27,7 +27,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    cesium(),
+    // cesium(),
     vue(),
     AutoImport({
       resolvers: [ElementPlusResolver()],

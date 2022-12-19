@@ -174,27 +174,9 @@ async function handleGetOutput() {
       downloadElement.click(); // 点击下载
       document.body.removeChild(downloadElement); // 下载完成移除元素
       window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
-    } catch (err) {
-      ElMessage({
-        type: 'warning',
-        message: err.msg,
-      });
+    } catch (e) {
+      console.error(e);
     }
-
-    // getTrainLog({
-    //   projectId: detailData.value.id,
-    //   trainId: route.params.trainId,
-    //   type: 'output',
-    // }).then((res) => {
-    //   if (res.status === 202 && res.data.data) {
-    //     outputUrl.value = res.data.data.log_url;
-
-    //     // outputName.value = 'output.tar.gz';
-    //   }
-    //   // else {
-    //   //   outputName.value = '';
-    //   // }
-    // });
   } else {
     return;
   }

@@ -62,6 +62,11 @@ export default defineConfig({
         target: 'https://chenzeng-test1.obs.cn-north-4.myhuaweicloud.com/',
         changeOrigin: true,
       },
+      '/obs-big-model/': {
+        target: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/obs-big-model/, ''),
+      },
     },
   },
 });

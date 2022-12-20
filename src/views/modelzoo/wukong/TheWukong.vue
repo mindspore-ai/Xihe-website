@@ -61,6 +61,21 @@ function toggleAlbum() {
   showAlbum.value = true;
 }
 
+function downloadImage(item) {
+  let x = new XMLHttpRequest();
+  x.open('GET', item, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.png';
+    a.click();
+  };
+  x.send();
+}
+
 function learnWukongMore() {
   window.open(
     'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
@@ -95,7 +110,7 @@ watch(
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
             >大模型</el-breadcrumb-item
           >
-          <el-breadcrumb-item>悟空</el-breadcrumb-item>
+          <el-breadcrumb-item>悟空画画</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
 
@@ -112,7 +127,7 @@ watch(
 
         <div class="wukong-head-right">
           <div class="wukong-head-right-top">
-            <div class="wukong-head-right-top-title">悟空</div>
+            <div class="wukong-head-right-top-title">悟空画画</div>
             <div class="wukong-head-right-top-content">
               借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。
             </div>
@@ -184,7 +199,7 @@ watch(
           <p>来自深渊 风景 绘画 写实风格</p>
 
           <div class="handler">
-            <span class="icon-btn">
+            <span class="icon-btn" @click="downloadImage(item)">
               <o-icon><icon-download></icon-download></o-icon>
             </span>
             <span class="icon-btn heart">
@@ -387,8 +402,9 @@ watch(
 
 .sider-content {
   position: fixed;
-  bottom: 400px;
-  right: 40px;
+  top: 50%;
+  right: 60px;
+  transform: translateY(-50%);
   color: #fff;
   .nav-item {
     margin-bottom: 16px;

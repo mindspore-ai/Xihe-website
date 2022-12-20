@@ -278,6 +278,23 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
+
+// function downloadImage(item) {
+//   console.log(item);
+//   let x = new XMLHttpRequest();
+//   x.open('GET', item, true);
+//   x.responseType = 'blob';
+//   x.onload = function () {
+//     const blobs = new Blob([x.response], { type: 'image/png' });
+//     let url = window.URL.createObjectURL(blobs);
+//     let a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'infer.png';
+//     a.click();
+//   };
+//   x.send();
+// }
+
 // 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);
@@ -630,26 +647,22 @@ function refreshTags() {
           border-right: 6px solid transparent;
           border-bottom: 10px solid rgba(85, 85, 85, 0.3);
           position: absolute;
+          top: -10px;
         }
         .triangle0 {
-          top: -10px;
           left: 62px;
         }
         .triangle1 {
           left: 202px;
-          top: -10px;
         }
         .triangle2 {
           left: 358px;
-          top: -10px;
         }
         .triangle3 {
           left: 498px;
-          top: -10px;
         }
         .triangle4 {
           left: 638px;
-          top: -10px;
         }
 
         .sort-item {

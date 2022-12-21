@@ -247,6 +247,7 @@ watch(
     }
   }
 }
+
 .wukong-bg1 {
   background: #f5f6f8;
 }
@@ -254,6 +255,8 @@ watch(
   background-image: url('@/assets/imgs/wukong/wukong-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+  min-height: calc(100vh - 200px);
+  background-color: #000;
   .wukong-bread {
     margin-bottom: 40px;
     .el-breadcrumb {
@@ -314,7 +317,8 @@ watch(
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
-  min-height: calc(100vh - 200px);
+  height: 100%;
+  // min-height: calc(100vh - 200px);
 
   &-bread {
     margin-bottom: 40px;

@@ -236,12 +236,14 @@ async function handleInfer() {
       showInferDlg.value = true;
       try {
         const res = await wuKongInfer({
-          sample: inputText.value,
+          desc: inputText.value,
           style: sortTag.value,
         });
 
         isInferred.value = true;
+
         styleBackground.value = res.data.data.pictures;
+        console.log(styleBackground.value);
       } catch (e) {
         ElMessage({
           type: 'warning',
@@ -279,21 +281,21 @@ function getDescExamples(arr, count) {
   return shuffled.slice(min);
 }
 
-// function downloadImage(item) {
-//   console.log(item);
-//   let x = new XMLHttpRequest();
-//   x.open('GET', item, true);
-//   x.responseType = 'blob';
-//   x.onload = function () {
-//     const blobs = new Blob([x.response], { type: 'image/png' });
-//     let url = window.URL.createObjectURL(blobs);
-//     let a = document.createElement('a');
-//     a.href = url;
-//     a.download = 'infer.png';
-//     a.click();
-//   };
-//   x.send();
-// }
+function downloadImage(item) {
+  console.log(item);
+  let x = new XMLHttpRequest();
+  x.open('GET', item, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.png';
+    a.click();
+  };
+  x.send();
+}
 
 // 换一批
 function refreshTags() {
@@ -393,11 +395,15 @@ function refreshTags() {
       </div>
 
       <div v-else class="infer-dlg-result">
-        <div v-for="item in styleBackground" :key="item" class="result-item">
-          <img :src="item" alt="" />
+        <div
+          v-for="(value, key) in styleBackground"
+          :key="key"
+          class="result-item"
+        >
+          <img :src="value" alt="" />
           <div class="handles">
             <div class="handles-contain">
-              <p>
+              <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
               <p>

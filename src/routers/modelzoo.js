@@ -1,5 +1,5 @@
 export default [
-  // 大模型
+  // 大模型体验
   {
     path: '/modelzoo',
     name: 'modelzoo',
@@ -183,5 +183,21 @@ export default [
         redirect: '/modelzoo/wukong',
       },
     ],
+  },
+  // 大模型微调
+  {
+    path: '/modelzoo-tune',
+    name: 'modelzooTune',
+    component: () => {
+      return import('@/views/modelzoo/modelzoo-tune/TheModelzooTune.vue');
+    },
+  },
+  // 创建大模型微调任务
+  {
+    path: '/modelzoo-createtune',
+    name: 'modelzooCreatetune',
+    component: () => {
+      return import('@/views/modelzoo/modelzoo-tune/modelzooCreateTune.vue');
+    },
   },
 ];

@@ -236,7 +236,7 @@ async function handleInfer() {
       showInferDlg.value = true;
       try {
         const res = await wuKongInfer({
-          sample: inputText.value,
+          desc: inputText.value,
           style: sortTag.value,
         });
 

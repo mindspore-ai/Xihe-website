@@ -70,7 +70,7 @@ function downloadImage(item) {
     let url = window.URL.createObjectURL(blobs);
     let a = document.createElement('a');
     a.href = url;
-    a.download = 'infer.png';
+    a.download = 'collection.png';
     a.click();
   };
   x.send();

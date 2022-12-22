@@ -231,12 +231,6 @@ function sendMessage() {
               isPicture: false,
             });
           }
-          // if (res.code === 'bigmodel_sensitive_info') {
-          //   ElMessage({
-          //     type: 'error',
-          //     message: '内容审核不通过，请重新输入',
-          //   });
-          // }
         });
       }
 

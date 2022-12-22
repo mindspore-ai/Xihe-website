@@ -231,25 +231,22 @@ async function handleInfer() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    //  && sortTag.value
     if (inputText.value) {
       showInferDlg.value = true;
+
       try {
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
         });
-
+        console.log(res);
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
-        console.log(styleBackground.value);
-      } catch (e) {
-        ElMessage({
-          type: 'warning',
-          message: e.msg,
-        });
-        showInferDlg.value = false;
+      } catch (err) {
+        setTimeout(() => {
+          showInferDlg.value = false;
+        }, 1500);
       }
     } else if (!inputText.value) {
       ElMessage({

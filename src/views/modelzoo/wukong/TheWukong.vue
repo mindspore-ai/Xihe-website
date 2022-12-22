@@ -11,7 +11,6 @@ import 'swiper/css/navigation';
 
 import ONav from '@/components/ONav.vue';
 
-import gallery from '@/assets/imgs/wukong/ceshi1.png';
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
 import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
 
@@ -58,12 +57,19 @@ function toggleCollectionDlg(val) {
   showCollection.value = val;
   getCollectedPictures();
 }
+
 const collectList = ref([]);
+const haveCollections = ref(false);
 //获取收藏图片
 function getCollectedPictures() {
   collectedPictures().then((res) => {
     if (res.data.data) {
       collectList.value = res.data.data;
+      if (collectList.value) {
+        haveCollections.value = true;
+      } else {
+        haveCollections.value = false;
+      }
     }
   });
 }
@@ -206,6 +212,7 @@ watch(
     <!-- 我的收藏dialog -->
     <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
+        v-if="collectList.length"
         :slides-per-view="3"
         :slides-per-group="1"
         :speed="500"
@@ -240,6 +247,7 @@ watch(
 
         <div class="collect-title">我的收藏</div>
       </swiper>
+      <div v-else class="no-collections">您暂时还没有收藏图片</div>
     </el-dialog>
 
     <!-- AI画集 -->
@@ -249,6 +257,13 @@ watch(
   </div>
 </template>
 <style lang="scss">
+.no-collections {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: #ffffff;
+  margin-top: calc(40vh - 56px);
+}
 .my-swiper2 {
   --swiper-navigation-size: 24px;
   --swiper-navigation-color: #fff;

@@ -234,3 +234,18 @@ export function wuKongInfer(params) {
       return e;
     });
 }
+/**
+ * 悟空-画集
+ * @returns
+ */
+export function getWuKongPic(params) {
+  const url = '/server/bigmodel/wukong/pictures';
+  return request
+    .get(url, { params, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

@@ -34,7 +34,7 @@ const styleData = ref([
     style: '动漫',
     options: [
       { tag: '宫崎骏', isSelected: false },
-      { tag: '新海城', isSelected: false },
+      { tag: '新海诚', isSelected: false },
     ],
   },
   {
@@ -91,7 +91,7 @@ const styleData = ref([
 
 const randomList = ref([
   { tag: '宫崎骏', isSelected: false },
-  { tag: '新海城', isSelected: false },
+  { tag: '新海诚', isSelected: false },
   { tag: '达芬奇', isSelected: false },
   { tag: '毕加索', isSelected: false },
   { tag: '梵高', isSelected: false },
@@ -183,7 +183,6 @@ function clearInputText() {
     item.isSelected = false;
   });
 }
-
 function handleInput() {
   exampleData.value.forEach((item) => {
     if (item.text === inputText.value) {
@@ -199,23 +198,25 @@ function choseStyleSort(val) {
 }
 // 选择风格标签
 function choseSortTag(val) {
-  if (val.tag === sortTag.value) {
-    val.isSelected = !val.isSelected;
-    if (val.isSelected) {
-      sortTag.value = val.tag;
-    } else {
-      sortTag.value = '';
-    }
-  } else {
-    styleData.value.forEach((item) => {
-      item.options.forEach((tag) => {
-        tag.isSelected = false;
-      });
-    });
+  val.isSelected = !val.isSelected;
 
-    val.isSelected = !val.isSelected;
-    sortTag.value = val.tag;
-  }
+  // if (val.tag === sortTag.value) {
+  //   val.isSelected = !val.isSelected;
+  //   if (val.isSelected) {
+  //     sortTag.value = val.tag;
+  //   } else {
+  //     sortTag.value = '';
+  //   }
+  // } else {
+  //   styleData.value.forEach((item) => {
+  //     item.options.forEach((tag) => {
+  //       tag.isSelected = false;
+  //     });
+  //   });
+
+  //   val.isSelected = !val.isSelected;
+  //   sortTag.value = val.tag;
+  // }
 }
 // 随机风格
 function getRandomStyle(index) {
@@ -234,12 +235,27 @@ async function handleInfer() {
     if (inputText.value) {
       showInferDlg.value = true;
 
+      let count = 0;
+      styleData.value.forEach((item) => {
+        item.options.forEach((style) => {
+          if (style.isSelected) {
+            count++;
+            console.log(style);
+            if (count <= 1) {
+              sortTag.value = style.tag;
+            } else {
+              sortTag.value = sortTag.value + ' ' + style.tag;
+            }
+          }
+        });
+      });
+      console.log(sortTag.value);
+
       try {
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
         });
-        console.log(res);
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
@@ -255,6 +271,21 @@ async function handleInfer() {
       });
     }
   }
+}
+// 下载图片
+function downloadImage(item) {
+  let x = new XMLHttpRequest();
+  x.open('GET', item, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.png';
+    a.click();
+  };
+  x.send();
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -277,23 +308,6 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
-
-function downloadImage(item) {
-  console.log(item);
-  let x = new XMLHttpRequest();
-  x.open('GET', item, true);
-  x.responseType = 'blob';
-  x.onload = function () {
-    const blobs = new Blob([x.response], { type: 'image/png' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'infer.png';
-    a.click();
-  };
-  x.send();
-}
-
 // 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);

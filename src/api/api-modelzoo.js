@@ -249,3 +249,50 @@ export function getWuKongPic(params) {
       return e;
     });
 }
+/**
+ * 悟空-收藏
+ * @returns
+ */
+export function addLikePicture(params) {
+  const url = '/server/bigmodel/wukong';
+  return request
+    .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-取消收藏
+ * @returns
+ */
+export function cancelLikePicture(id) {
+  const url = `/server/bigmodel/wukong/${id}`;
+  return request
+    .delete(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-收藏图片
+ * @returns
+ */
+export function collectedPictures() {
+  const url = '/server/bigmodel/wukong';
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

@@ -25,6 +25,9 @@ import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import { collectedPictures, cancelLikePicture } from '@/api/api-modelzoo.js';
+import { ElMessage } from 'element-plus';
+
 const route = useRoute();
 const router = useRouter();
 const activeNavItem = ref('');
@@ -53,6 +56,29 @@ function handleNavClick(item) {
 const showCollection = ref(false);
 function toggleCollectionDlg(val) {
   showCollection.value = val;
+  getCollectedPictures();
+}
+const collectList = ref([]);
+//获取收藏图片
+function getCollectedPictures() {
+  collectedPictures().then((res) => {
+    if (res.data.data) {
+      collectList.value = res.data.data;
+    }
+  });
+}
+
+// 取消收藏
+function handleCancelLike(id, index) {
+  cancelLikePicture(id).then((res) => {
+    if (res.status === 204) {
+      collectList.value.splice(index, 1);
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
+      });
+    }
+  });
 }
 
 const showAlbum = ref(false);
@@ -194,18 +220,22 @@ watch(
         loop
         class="my-swiper2"
       >
-        <swiper-slide v-for="item in 5" :key="item"
-          ><img :src="gallery" alt="" />
-          <p>来自深渊 风景 绘画 写实风格</p>
+        <swiper-slide v-for="(item, index) in collectList" :key="item.id"
+          ><img :src="item.link" alt="" />
+          <p>{{ item.desc }}</p>
 
           <div class="handler">
-            <span class="icon-btn" @click="downloadImage(item)">
+            <span class="icon-btn" @click="downloadImage(item.link)">
               <o-icon><icon-download></icon-download></o-icon>
             </span>
-            <span class="icon-btn heart">
+            <span
+              class="icon-btn heart"
+              @click="handleCancelLike(item.id, index)"
+            >
               <o-icon><icon-heart></icon-heart></o-icon>
             </span>
           </div>
+          <div class="mask"></div>
         </swiper-slide>
 
         <div class="collect-title">我的收藏</div>
@@ -218,6 +248,106 @@ watch(
     </el-dialog>
   </div>
 </template>
+<style lang="scss">
+.my-swiper2 {
+  --swiper-navigation-size: 24px;
+  --swiper-navigation-color: #fff;
+  .mask {
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+    width: 100%;
+    height: 35%;
+    display: none;
+  }
+  .handler {
+    position: absolute;
+    bottom: 64px;
+    right: 24px;
+    z-index: 9;
+    display: none;
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      .o-icon {
+        font-size: 24px;
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+    .heart {
+      .o-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .collect-title {
+    position: fixed;
+    top: 22px;
+    left: -40px;
+    font-size: 24px;
+    color: #ffffff;
+    line-height: 24px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    background: #000;
+    border-radius: 50%;
+    font-weight: 600;
+    top: 55%;
+  }
+  .swiper-slide {
+    &:hover {
+      .handler,
+      .mask {
+        display: block;
+      }
+    }
+    img {
+      width: 100%;
+      height: auto;
+      margin-top: 16%;
+    }
+    p {
+      color: #ffffff;
+      text-align: center;
+      line-height: 26px;
+      font-size: 18px;
+      margin-top: 16px;
+    }
+  }
+  .my-pagination-clickable {
+    position: fixed;
+  }
+
+  .swiper-pagination-fraction {
+    color: #fff;
+    font-size: 16px;
+    line-height: 26px;
+    position: fixed;
+    top: 22px;
+    left: 50px;
+    bottom: unset;
+  }
+}
+</style>
 <style lang="scss" scoped>
 :deep(.el-dialog) {
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
@@ -431,95 +561,6 @@ watch(
       line-height: 20px;
       margin-top: 8px;
     }
-  }
-}
-
-.my-swiper2 {
-  --swiper-navigation-size: 24px;
-  --swiper-navigation-color: #fff;
-
-  .handler {
-    position: absolute;
-    bottom: 64px;
-    right: 24px;
-    display: none;
-    .icon-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      .o-icon {
-        font-size: 24px;
-      }
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-      &:first-child {
-        margin-right: 16px;
-      }
-    }
-    .heart {
-      .o-icon {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .collect-title {
-    position: fixed;
-    top: 22px;
-    left: -40px;
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 24px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #000000;
-    background: #000;
-    border-radius: 50%;
-    font-weight: 600;
-    top: 55%;
-  }
-  .swiper-slide {
-    &:hover {
-      .handler {
-        display: block;
-      }
-    }
-    img {
-      width: 100%;
-      height: auto;
-      margin-top: 16%;
-    }
-    p {
-      color: #ffffff;
-      text-align: center;
-      line-height: 26px;
-      font-size: 18px;
-      margin-top: 16px;
-    }
-  }
-  .my-pagination-clickable {
-    position: fixed;
-  }
-  .swiper-pagination-fraction {
-    color: #fff;
-    font-size: 16px;
-    line-height: 26px;
-    position: fixed;
-    top: 22px;
-    left: 50px;
-    bottom: unset;
   }
 }
 </style>

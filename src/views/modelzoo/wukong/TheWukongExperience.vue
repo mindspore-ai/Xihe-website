@@ -15,7 +15,7 @@ import IconX from '~icons/app/x';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { wuKongInfer } from '@/api/api-modelzoo.js';
+import { wuKongInfer, addLikePicture } from '@/api/api-modelzoo.js';
 
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -227,6 +227,21 @@ function getRandomStyle(index) {
     return;
   }
 }
+// 初始化推理数据
+function initData() {
+  inputText.value = '';
+  sortTag.value = '';
+
+  styleData.value.forEach((item) => {
+    item.options.forEach((tag) => {
+      tag.isSelected = false;
+    });
+  });
+
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
+}
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
@@ -240,7 +255,6 @@ async function handleInfer() {
         item.options.forEach((style) => {
           if (style.isSelected) {
             count++;
-            console.log(style);
             if (count <= 1) {
               sortTag.value = style.tag;
             } else {
@@ -249,7 +263,6 @@ async function handleInfer() {
           }
         });
       });
-      console.log(sortTag.value);
 
       try {
         const res = await wuKongInfer({
@@ -259,10 +272,14 @@ async function handleInfer() {
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
+
+        initData();
       } catch (err) {
         setTimeout(() => {
           showInferDlg.value = false;
         }, 1500);
+
+        initData();
       }
     } else if (!inputText.value) {
       ElMessage({
@@ -272,6 +289,18 @@ async function handleInfer() {
     }
   }
 }
+// 收藏
+function handleCollecte(key) {
+  addLikePicture({ obspath: key }).then((res) => {
+    if (res.data.data === 'success') {
+      ElMessage({
+        type: 'success',
+        message: '收藏成功，可在我的收藏中查看',
+      });
+    }
+  });
+}
+
 // 下载图片
 function downloadImage(item) {
   let x = new XMLHttpRequest();
@@ -417,11 +446,12 @@ function refreshTags() {
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p>
+              <p @click="handleCollecte(key)">
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
             </div>
           </div>
+          <div class="mask"></div>
         </div>
       </div>
     </el-dialog>
@@ -447,7 +477,8 @@ function refreshTags() {
       width: 23vw;
       height: 23vw;
       &:hover {
-        .handles {
+        .handles,
+        .mask {
           display: block;
         }
       }
@@ -467,10 +498,20 @@ function refreshTags() {
         width: 100%;
       }
 
+      .mask {
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        width: 100%;
+        height: 16vh;
+        display: none;
+      }
+
       .handles {
         position: absolute;
         bottom: 24px;
         right: 24px;
+        z-index: 20;
         display: none;
         @media screen and (max-width: 1450px) {
           bottom: 10px;

@@ -75,7 +75,7 @@ const responseInterceptorId = request.interceptors.response.use(
   // 对异常响应处理
   (err) => {
     useLoadingState().setloadingState(false);
-    loadingInstance.close();
+    loadingInstance?.close();
     loadingCount = 0;
     const { config } = request;
     if (!axios.isCancel(err)) {

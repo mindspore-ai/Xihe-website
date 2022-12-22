@@ -453,13 +453,18 @@ watch(
       justify-content: center;
       align-items: center;
       .o-icon {
-        font-size: 16px;
+        font-size: 24px;
       }
       &:hover {
         background: rgba(255, 255, 255, 0.3);
       }
       &:first-child {
         margin-right: 16px;
+      }
+    }
+    .heart {
+      .o-icon {
+        font-size: 20px;
       }
     }
   }

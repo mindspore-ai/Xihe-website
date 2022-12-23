@@ -13,13 +13,10 @@ const imgs = ref([
 ]);
 const params = { page_num: 1, count_per_page: 28 };
 getWuKongPic(params).then((res) => {
-  console.log(res);
   imgs.value = res.data.pictures;
 });
-// const scrollTop = ref();
-
+let timer = null;
 onMounted(() => {
-  // scrollTop.value = document.getElementsByClassName('el-dialog')[0];
   document
     .getElementsByClassName('el-dialog')[0]
     .addEventListener('scroll', (e) => {
@@ -28,12 +25,17 @@ onMounted(() => {
       let scrollHeight = e.target.scrollHeight;
       let total = scrollTop + windowHeitht;
       if (Math.floor(total) === scrollHeight) {
-        params.page_num++;
-        console.log('到底了');
-        getWuKongPic(params).then((res) => {
-          console.log(imgs.value);
-          imgs.value = imgs.value.concat(res.data.pictures);
-        });
+        if (timer) {
+          return;
+        }
+        timer = setTimeout(() => {
+          params.page_num++;
+          getWuKongPic(params).then((res) => {
+            // console.log(Math.floor(total), scrollHeight);
+            imgs.value = imgs.value.concat(res.data.pictures);
+          });
+          timer = null;
+        }, 100);
       }
     });
 });
@@ -49,52 +51,70 @@ onMounted(() => {
         <div class="album-item1">
           <div v-for="items in 7" :key="items" class="img-box">
             <div v-if="imgs[items + (item - 1) * 28 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 - 1]" alt="" />
+              <img :src="imgs[items + (item - 1) * 28 - 1].link" alt="" />
               <div class="imgs-info">
-                <div class="style">#风格：动漫 宫崎骏</div>
+                <div class="style">
+                  #风格：{{ imgs[items + (item - 1) * 28 - 1].style }}
+                </div>
                 <div class="source">
-                  来自深渊 风景 绘画写实风格来自深渊 风景深渊 风景 绘画写实风格
+                  {{ imgs[items + (item - 1) * 28 - 1].desc }}
                 </div>
               </div>
+              <div class="img-mask"></div>
             </div>
           </div>
         </div>
         <div class="album-item2">
           <div v-for="items in 7" :key="items" class="img-box">
             <div v-if="imgs[items + (item - 1) * 28 + 7 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 7 - 1]" alt="" />
+              <img :src="imgs[items + (item - 1) * 28 + 7 - 1].link" alt="" />
               <div class="imgs-info">
-                <div class="style">#风格：动漫 宫崎骏</div>
+                <div class="style">
+                  #风格：{{ imgs[items + (item - 1) * 28 + 7 - 1].style }}
+                </div>
                 <div class="source">
-                  来自深渊 风景 绘画写实风格来自深渊 风景深渊 风景 绘画写实风格
+                  {{ imgs[items + (item - 1) * 28 + 7 - 1].desc }}
                 </div>
               </div>
             </div>
+            <div
+              v-if="imgs[items + (item - 1) * 28 + 7 - 1]"
+              class="img-mask"
+            ></div>
           </div>
         </div>
         <div class="album-item3">
           <div v-for="items in 7" :key="items" class="img-box">
             <div v-if="imgs[items + (item - 1) * 28 + 14 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 14 - 1]" alt="" />
+              <img :src="imgs[items + (item - 1) * 28 + 14 - 1].link" alt="" />
               <div class="imgs-info">
-                <div class="style">#风格：动漫 宫崎骏</div>
+                <div class="style">
+                  #风格：{{ imgs[items + (item - 1) * 28 + 14 - 1].style }}
+                </div>
                 <div class="source">
-                  来自深渊 风景 绘画写实风格来自深渊 风景深渊 风景 绘画写实风格
+                  {{ imgs[items + (item - 1) * 28 + 14 - 1].desc }}
                 </div>
               </div>
+              <div
+                v-if="imgs[items + (item - 1) * 28 + 14 - 1]"
+                class="img-mask"
+              ></div>
             </div>
           </div>
         </div>
         <div class="album-item4">
           <div v-for="items in 7" :key="items" class="img-box">
             <div v-if="imgs[items + (item - 1) * 28 + 21 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 21 - 1]" alt="" />
+              <img :src="imgs[items + (item - 1) * 28 + 21 - 1].link" alt="" />
               <div class="imgs-info">
-                <div class="style">#风格：动漫 宫崎骏</div>
+                <div class="style">
+                  #风格：{{ imgs[items + (item - 1) * 28 + 21 - 1].style }}
+                </div>
                 <div class="source">
-                  来自深渊 风景 绘画写实风格来自深渊 风景深渊 风景 绘画写实风格
+                  {{ imgs[items + (item - 1) * 28 + 21 - 1].desc }}
                 </div>
               </div>
+              <div class="img-mask"></div>
             </div>
           </div>
         </div>
@@ -106,31 +126,65 @@ onMounted(() => {
 <style lang="scss" scoped>
 .picture-album {
   .album-list {
+    .img-mask {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 10%;
+      background-color: #ffffff;
+      display: none;
+    }
     .album-item1 {
       .img-box {
+        position: relative;
         &:first-child {
           grid-area: 1 / 1 / 3 / 3;
+        }
+        &:hover {
+          .img-mask {
+            display: block;
+          }
         }
       }
     }
     .album-item2 {
       .img-box {
+        position: relative;
         &:nth-child(2) {
           grid-area: 1 / 2 / 3 / 4;
+        }
+        &:hover {
+          .img-mask {
+            display: block;
+          }
         }
       }
     }
     .album-item3 {
       .img-box {
+        position: relative;
         &:nth-child(3) {
           grid-area: 1 / 3 / 3 / 5;
+        }
+        &:hover {
+          .img-mask {
+            display: block;
+          }
         }
       }
     }
     .album-item4 {
       .img-box {
+        position: relative;
         &:nth-child(4) {
           grid-area: 1 / 4 / 3 / 6;
+        }
+        &:hover {
+          .img-mask {
+            display: block;
+          }
         }
       }
     }

@@ -132,8 +132,8 @@ onMounted(() => {
       right: 0;
       bottom: 0;
       left: 0;
-      opacity: 10%;
-      background-color: #ffffff;
+      opacity: 50%;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
       display: none;
     }
     .album-item1 {

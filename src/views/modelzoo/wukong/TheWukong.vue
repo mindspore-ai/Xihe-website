@@ -252,6 +252,9 @@ watch(
 
     <!-- AI画集 -->
     <el-dialog v-model="showAlbum" :fullscreen="true" center>
+      <template #title>
+        <div>AI画集</div>
+      </template>
       <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
@@ -366,7 +369,19 @@ watch(
 <style lang="scss" scoped>
 :deep(.el-dialog) {
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
-
+  .el-dialog__header {
+    padding: 15px 0 15px;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    background: #000;
+    z-index: 200;
+  }
+  .el-dialog__body {
+    // position: sticky;
+    // top: 62px;
+    padding-top: 0;
+  }
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -384,7 +399,9 @@ watch(
     background: #ffffff;
   }
   .el-dialog__headerbtn {
-    right: 10px;
+    position: fixed;
+    top: 6px;
+    right: 15px;
     z-index: 2010;
     .el-dialog__close {
       color: #fff;

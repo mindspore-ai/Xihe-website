@@ -1,5 +1,5 @@
 export default [
-  // 大模型
+  // 大模型体验
   {
     path: '/modelzoo',
     name: 'modelzoo',
@@ -153,6 +153,51 @@ export default [
     name: 'shennong',
     component: () => {
       return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');
+    },
+  },
+  // 悟空
+  {
+    path: '/modelzoo/wukong',
+    name: 'wukong',
+    component: () => {
+      return import('@/views/modelzoo/wukong/TheWukong.vue');
+    },
+    children: [
+      {
+        path: '',
+        name: 'wukongExperience',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'wukongIntroduce',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+        },
+      },
+      {
+        path: 'experience',
+        name: 'wukongTest',
+        redirect: '/modelzoo/wukong',
+      },
+    ],
+  },
+  // 大模型微调
+  {
+    path: '/modelzoo-tune',
+    name: 'modelzooTune',
+    component: () => {
+      return import('@/views/modelzoo/modelzoo-tune/TheModelzooTune.vue');
+    },
+  },
+  // 创建大模型微调任务
+  {
+    path: '/modelzoo-createtune',
+    name: 'modelzooCreatetune',
+    component: () => {
+      return import('@/views/modelzoo/modelzoo-tune/modelzooCreateTune.vue');
     },
   },
 ];

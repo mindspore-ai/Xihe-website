@@ -50,7 +50,20 @@ let query = reactive({
   name: '',
 });
 
-const navItems = [
+const menuList = reactive([
+  {
+    id: 'test',
+    label: '大模型体验',
+    href: '/modelzoo',
+  },
+  {
+    id: 'tune',
+    label: '大模型微调',
+    href: '/modelzoo-tune',
+  },
+]);
+
+const navItems = reactive([
   {
     id: 'projects',
     label: '项目',
@@ -63,8 +76,20 @@ const navItems = [
   },
   {
     id: 'modelzoo',
-    label: '大模型体验',
+    label: '大模型',
     href: '/modelzoo',
+    menuList: [
+      {
+        id: 'test',
+        label: '大模型体验',
+        href: '/modelzoo',
+      },
+      {
+        id: 'tune',
+        label: '大模型微调',
+        href: '/modelzoo-tune',
+      },
+    ],
   },
   {
     id: 'datasets',
@@ -81,23 +106,23 @@ const navItems = [
     label: '活动',
     href: '/activity',
   },
+  {
+    id: 'docs',
+    label: '文档',
+    href: '/docs',
+    windowOpen: true,
+  },
   /*  {
     id: 'leaderboards',
     label: '排行榜',
     href: '/leaderboard',
   }, */
-  {
-    id: 'docs',
-    label: '文档',
-    href: 'https://xihe-docs.mindspore.cn/',
-    windowOpen: true,
-  },
   // {
   //   id: 'teams',
   //   label: '团队',
   //   href: '/teams',
   // },
-];
+]);
 const loginedDropdownItems = [
   {
     id: 'user',
@@ -149,7 +174,6 @@ const loginedDropdownItems = [
     },
   },
 ];
-
 const activeNavItem = ref('');
 watch(
   () => {
@@ -175,11 +199,21 @@ function handleLogoClick() {
 }
 
 // 点击导航
-function handleNavClick(item) {
-  if (item.windowOpen) {
+// function handleNavClick(item) {
+//   if (item.windowOpen) {
+//     window.open('https://xihe-docs.mindspore.cn');
+//   } else {
+//     router.push({ path: item.href });
+//   }
+// }
+
+// 点击导航
+function handleSelect(item) {
+  // console.log('item,: ', item);
+  if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
-    router.push({ path: item.href });
+    router.push({ path: item });
   }
 }
 
@@ -450,6 +484,9 @@ function handleBlur() {
     emptyValue();
   }
 }
+function goModelzoo(item) {
+  router.push(item.href);
+}
 </script>
 
 <template>
@@ -458,12 +495,54 @@ function handleBlur() {
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <o-nav
+      <!-- <o-nav
         v-if="show"
         :nav-items="navItems"
         :active-item="activeNavItem"
         @nav-click="handleNavClick"
-      ></o-nav>
+      ></o-nav> -->
+      <el-menu
+        v-if="show"
+        class="modelzoo-menu"
+        :default-active="route.path"
+        mode="horizontal"
+        text-color="#fff"
+        active-text-color="#0d8dff"
+        @select="handleSelect"
+      >
+        <template v-for="item in navItems">
+          <el-menu-item
+            v-if="item.id !== 'modelzoo'"
+            :key="item.id"
+            :index="item.href"
+          >
+            {{ item.label }}
+          </el-menu-item>
+          <el-menu-item
+            v-else
+            :key="item.label"
+            style="cursor: pointer"
+            disabled
+            :index="item.href"
+          >
+            <!-- {{ item.label }} -->
+            <el-dropdown popper-class="header-nav">
+              <p>大模型</p>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="val in item.menuList"
+                    :key="val.id"
+                    @click="goModelzoo(val)"
+                  >
+                    {{ val.label }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </el-menu-item>
+        </template>
+      </el-menu>
       <div v-else class="header-center">
         <div class="header-input">
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
@@ -658,6 +737,13 @@ function handleBlur() {
 </template>
 
 <style lang="scss" scoped>
+/* :deep(.el-popper) {
+  .el-menu--horizontal {
+    .el-menu--popup {
+      width: 1000px !important;
+    }
+  }
+} */
 .header {
   display: flex;
   align-items: center;
@@ -685,7 +771,51 @@ function handleBlur() {
     height: 100%;
     width: 100%;
     margin-left: 96px;
-
+    :deep(.el-menu) {
+      width: 100%;
+      height: 100%;
+      border-bottom: none;
+      background-color: inherit;
+      font-size: 18px;
+      line-height: 24px;
+      .el-menu--popup {
+        min-width: 100px !important;
+      }
+      .el-menu-item {
+        background-color: inherit;
+        font-size: 18px;
+        padding: 0;
+        margin-left: 32px;
+        &:first-child {
+          margin-left: 0px;
+        }
+        &:hover {
+          // background-color: transparent;
+          color: #0d8dff;
+        }
+        .el-dropdown {
+          font-size: 18px;
+          height: 100%;
+          color: #fff;
+          &:hover {
+            color: #0d8dff;
+          }
+          .el-tooltip__trigger {
+            display: flex;
+            align-items: center;
+            p {
+              color: #fff;
+            }
+          }
+        }
+      }
+      .el-menu-item.is-disabled {
+        opacity: 1;
+      }
+      .el-menu-item.is-active.is-disabled p {
+        color: var(--el-menu-active-color) !important;
+      }
+    }
     .header-center {
       width: 48%;
       // background-color: red;

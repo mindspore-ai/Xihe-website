@@ -50,6 +50,7 @@ function jumpDetail() {
 <style lang="scss" scoped>
 .card {
   max-width: 464px;
+  height: 100%;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: pointer;
   .o-icon {
@@ -69,7 +70,7 @@ function jumpDetail() {
   }
   .card-bottom {
     width: 100%;
-    height: 156px;
+    // height: 156px;
     padding: 0 40px;
     background-color: rgba(255, 255, 255, 0.95);
     &-title {
@@ -93,9 +94,9 @@ function jumpDetail() {
       font-size: 16px;
       color: #555555;
       line-height: 24px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
     }
   }
   &:hover {

@@ -28,7 +28,7 @@ let pendingPool = new Map();
  */
 const requestInterceptorId = request.interceptors.request.use(
   (config) => {
-    if (loadingCount === 0 && !config.url.includes('fork')) {
+    if (loadingCount === 0 && !config.$noLoading) {
       useLoadingState().setloadingState(true);
       loadingInstance = ElLoading.service({
         fullscreen: true,
@@ -75,7 +75,7 @@ const responseInterceptorId = request.interceptors.response.use(
   // 对异常响应处理
   (err) => {
     useLoadingState().setloadingState(false);
-    loadingInstance.close();
+    loadingInstance?.close();
     loadingCount = 0;
     const { config } = request;
     if (!axios.isCancel(err)) {

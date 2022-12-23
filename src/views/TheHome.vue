@@ -72,7 +72,7 @@ const onSwiper = (val) => {
   mySwiper.value = val;
 };
 
-const modules = [Pagination, Autoplay];
+// const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -305,20 +305,19 @@ function goActivity() {
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <swiper
+    <!-- <swiper
       :modules="modules"
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
-      class="my-swiper"
-    >
-      <swiper-slide>
-        <div class="photo7 cursor" @click="goActivity()"></div>
-      </swiper-slide>
-      <!-- <swiper-slide>
+    > -->
+    <div class="my-swiper">
+      <div class="photo7 cursor" @click="goActivity()"></div>
+    </div>
+    <!-- <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide> -->
-    </swiper>
+    <!-- </swiper> -->
 
     <div class="home-content">
       <div class="wrapper">

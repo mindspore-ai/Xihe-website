@@ -47,7 +47,7 @@ const toggleTip = (val) => {
   tipVisible.value = val;
 };
 
-const modules = [Pagination, Autoplay];
+// const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -257,19 +257,19 @@ function goActivity() {
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <swiper
+    <!-- <swiper
       :modules="modules"
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
-    >
-      <swiper-slide>
-        <div class="photo7 cursor" @click="goActivity()"></div>
-      </swiper-slide>
-      <!-- <swiper-slide>
+    > -->
+    <div class="my-swiper">
+      <div class="photo7 cursor" @click="goActivity()"></div>
+    </div>
+    <!-- <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide> -->
-    </swiper>
+    <!-- </swiper> -->
 
     <div class="home-content">
       <div class="wrapper">
@@ -681,7 +681,7 @@ function goActivity() {
   //     }
   //   }
   // }
-  .swiper {
+  .my-swiper {
     margin-top: 80px;
     @media screen and (max-width: 1920px) {
       img {

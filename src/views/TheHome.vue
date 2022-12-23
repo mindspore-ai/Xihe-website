@@ -196,11 +196,11 @@ function goActivity() {
 // function loopFix() {
 //   const abnormality = document.getElementsByClassName('abnormality-img');
 //   abnormality[2].style.transitionPproperty = 'height';
-//   abnormality[2].style.height = '325px';
+//   abnormality[2].style.height = '225px';
 //   abnormality[1].style.transitionPproperty = 'height';
-//   abnormality[1].style.height = '289px';
+//   abnormality[1].style.height = '225px';
 //   abnormality[0].style.transitionPproperty = 'height';
-//   abnormality[0].style.height = '256px';
+//   abnormality[0].style.height = '225px';
 // }
 </script>
 
@@ -353,12 +353,12 @@ function goActivity() {
             /></swiper-slide>
             <swiper-slide
               ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
                 alt=""
             /></swiper-slide>
             <swiper-slide
               ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/大海 集装箱 货轮 日出-00.png"
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
                 alt=""
             /></swiper-slide>
             <swiper-slide
@@ -378,7 +378,7 @@ function goActivity() {
             /></swiper-slide>
             <swiper-slide
               ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/莫奈 撑阳伞的女人 月亮 梦幻-00.png"
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
                 alt=""
             /></swiper-slide>
             <swiper-slide

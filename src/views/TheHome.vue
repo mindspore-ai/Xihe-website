@@ -344,53 +344,71 @@ function goActivity() {
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png"
                 alt=""
               />
-              <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
+              <p>上海陆家嘴 未来城市 科幻风格</p></swiper-slide
             >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>华为 大厦 晴朗 写实</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>城市夜景 像素风格</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>城市夜景 油画</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>城市夜景 赛博朋克</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-01.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>城市夜景 赛博朋克</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>沙漠 美景 高清</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>街道 新海诚</p></swiper-slide
+            >
             <swiper-slide
               ><img
                 src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/诺亚方舟在世界末日起航 科幻插画-00.png"
                 alt=""
-            /></swiper-slide>
+              />
+              <p>诺亚方舟在世界末日起航</p></swiper-slide
+            >
             <!-- <swiper-slide><img src="gallery" alt="" /></swiper-slide> -->
           </swiper>
 
@@ -1070,6 +1088,7 @@ function goActivity() {
             font-size: 16px;
             position: fixed;
             top: 22px;
+            right: 50px;
             bottom: unset;
           }
         }

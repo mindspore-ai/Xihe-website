@@ -293,7 +293,7 @@ async function handleInfer() {
   }
 }
 
-const isCollected = ref(false);
+// const isCollected = ref(false);
 // 收藏
 async function handleCollecte(key) {
   try {
@@ -303,7 +303,7 @@ async function handleCollecte(key) {
         type: 'success',
         message: '收藏成功，可在我的收藏中查看',
       });
-      isCollected.value = true;
+      // isCollected.value = true;
     }
   } catch (e) {
     ElMessage({
@@ -323,17 +323,17 @@ async function handleCollecte(key) {
 }
 
 // 取消收藏
-function handleCancelCollecte(key) {
-  cancelLikePicture(key).then((res) => {
-    if (res.status === 204) {
-      isCollected.value = false;
-      ElMessage({
-        type: 'success',
-        message: '取消收藏成功',
-      });
-    }
-  });
-}
+// function handleCancelCollecte(key) {
+//   cancelLikePicture(key).then((res) => {
+//     if (res.status === 204) {
+//       isCollected.value = false;
+//       ElMessage({
+//         type: 'success',
+//         message: '取消收藏成功',
+//       });
+//     }
+//   });
+// }
 
 // 下载图片
 function downloadImage(item) {
@@ -355,7 +355,6 @@ function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
-
   initData();
 }
 // 随机选取五个样例
@@ -482,12 +481,10 @@ function refreshTags() {
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p v-if="!isCollected" @click="handleCollecte(key)">
+              <p @click="handleCollecte(key)">
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
-              <p v-if="isCollected" class="liked">
-                <o-icon><icon-heart></icon-heart></o-icon>
-              </p>
+
               <!-- <p v-if="isCollected" class="liked" @click="handleCancelCollecte(key)">
                 <o-icon><icon-heart></icon-heart></o-icon>
               </p> -->

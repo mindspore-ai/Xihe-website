@@ -307,6 +307,7 @@ watch(
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 999;
   // .page {
   //   font-size: 16px;
   //   color: #ffffff;
@@ -396,7 +397,7 @@ watch(
     font-size: 16px;
     line-height: 26px;
     position: fixed;
-    top: 22px;
+    top: 24px;
     left: 80px;
     bottom: unset;
   }
@@ -438,7 +439,7 @@ watch(
     position: fixed;
     top: 6px;
     right: 15px;
-    z-index: 2010;
+    z-index: 201;
     .el-dialog__close {
       color: #fff;
       font-size: 40px;

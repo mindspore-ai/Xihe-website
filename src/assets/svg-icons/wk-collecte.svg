@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <g id="完整" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="大模型/悟空-我的收藏空" transform="translate(-935.000000, -458.000000)" fill="#999999">
+            <g id="编组-11" transform="translate(928.000000, 458.000000)">
+                <g id="ico-/-24-/-actions-/-clear" transform="translate(7.000000, 0.000000)">
+                    <path d="M22.34,12 L24.6,14.24 C25.719234,15.3606559 27.2361725,15.9933127 28.82,16 L40,16 L40,36 L8,36 L8,12 L22.34,12 L22.34,12 Z M23.18,8 L8,8 C5.790861,8 4,9.790861 4,12 L4,36 C4,38.209139 5.790861,40 8,40 L40,40 C42.209139,40 44,38.209139 44,36 L44,16 C44,13.790861 42.209139,12 40,12 L28.82,12 C28.2953202,11.9977908 27.7925213,11.7894883 27.42,11.42 L24.58,8.58 C24.2074787,8.21051167 23.7046798,8.00220924 23.18,8 Z" id="Icon-color"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

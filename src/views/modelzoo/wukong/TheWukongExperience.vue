@@ -11,11 +11,16 @@ import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
+import IconHeart from '~icons/app/collected';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { wuKongInfer, addLikePicture } from '@/api/api-modelzoo.js';
+import {
+  wuKongInfer,
+  addLikePicture,
+  cancelLikePicture,
+} from '@/api/api-modelzoo.js';
 
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -272,8 +277,6 @@ async function handleInfer() {
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
-
-        initData();
       } catch (err) {
         setTimeout(() => {
           showInferDlg.value = false;
@@ -289,13 +292,44 @@ async function handleInfer() {
     }
   }
 }
+
+const isCollected = ref(false);
 // 收藏
-function handleCollecte(key) {
-  addLikePicture({ obspath: key }).then((res) => {
+async function handleCollecte(key) {
+  try {
+    const res = await addLikePicture({ obspath: key });
     if (res.data.data === 'success') {
       ElMessage({
         type: 'success',
         message: '收藏成功，可在我的收藏中查看',
+      });
+      isCollected.value = true;
+    }
+  } catch (e) {
+    ElMessage({
+      type: 'success',
+      message: e.msg,
+    });
+  }
+
+  // addLikePicture({ obspath: key }).then((res) => {
+  //   if (res.data.data === 'success') {
+  //     ElMessage({
+  //       type: 'success',
+  //       message: '收藏成功，可在我的收藏中查看',
+  //     });
+  //   }
+  // });
+}
+
+// 取消收藏
+function handleCancelCollecte(key) {
+  cancelLikePicture(key).then((res) => {
+    if (res.status === 204) {
+      isCollected.value = false;
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
       });
     }
   });
@@ -321,6 +355,8 @@ function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
+
+  initData();
 }
 // 随机选取五个样例
 function getDescExamples(arr, count) {
@@ -446,9 +482,15 @@ function refreshTags() {
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p @click="handleCollecte(key)">
+              <p v-if="!isCollected" @click="handleCollecte(key)">
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
+              <p v-if="isCollected" class="liked">
+                <o-icon><icon-heart></icon-heart></o-icon>
+              </p>
+              <!-- <p v-if="isCollected" class="liked" @click="handleCancelCollecte(key)">
+                <o-icon><icon-heart></icon-heart></o-icon>
+              </p> -->
             </div>
           </div>
           <div class="mask"></div>
@@ -519,6 +561,11 @@ function refreshTags() {
         }
         &-contain {
           display: flex;
+          .liked {
+            .o-icon {
+              font-size: 20px;
+            }
+          }
           p {
             width: 40px;
             height: 40px;

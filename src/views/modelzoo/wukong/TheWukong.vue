@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -19,6 +19,7 @@ import IconCollection from '~icons/app/wukong-collection';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconDownload from '~icons/app/wukong-download';
 import IconHeart from '~icons/app/collected';
+import IconCollected from '~icons/app/wk-collecte';
 
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
@@ -26,6 +27,11 @@ import { ArrowRight } from '@element-plus/icons-vue';
 
 import { collectedPictures, cancelLikePicture } from '@/api/api-modelzoo.js';
 import { ElMessage } from 'element-plus';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const route = useRoute();
 const router = useRouter();
@@ -54,8 +60,12 @@ function handleNavClick(item) {
 // 我的收藏
 const showCollection = ref(false);
 function toggleCollectionDlg(val) {
-  showCollection.value = val;
-  getCollectedPictures();
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    showCollection.value = val;
+    getCollectedPictures();
+  }
 }
 
 const collectList = ref([]);
@@ -76,6 +86,7 @@ function getCollectedPictures() {
 
 // 取消收藏
 function handleCancelLike(id, index) {
+  console.log(id);
   cancelLikePicture(id).then((res) => {
     if (res.status === 204) {
       collectList.value.splice(index, 1);
@@ -94,8 +105,12 @@ function toggleAlbum() {
 }
 
 function downloadImage(item) {
+  const link = item.replace(
+    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
+    '/obs-big-model/'
+  );
   let x = new XMLHttpRequest();
-  x.open('GET', item, true);
+  x.open('GET', link, true);
   x.responseType = 'blob';
   x.onload = function () {
     const blobs = new Blob([x.response], { type: 'image/png' });
@@ -244,10 +259,14 @@ watch(
           </div>
           <div class="mask"></div>
         </swiper-slide>
-
-        <div class="collect-title">我的收藏</div>
       </swiper>
-      <div v-else class="no-collections">您暂时还没有收藏图片</div>
+
+      <div v-else class="no-collections">
+        <o-icon><icon-collected></icon-collected></o-icon>
+        <p>暂无收藏</p>
+      </div>
+
+      <div class="collect-title">我的收藏</div>
     </el-dialog>
 
     <!-- AI画集 -->
@@ -266,16 +285,44 @@ watch(
   font-weight: 400;
   color: #ffffff;
   margin-top: calc(40vh - 56px);
+  .o-icon {
+    font-size: 48px;
+  }
+  p {
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 18px;
+    margin-top: 16px;
+  }
 }
+.collect-title {
+  position: fixed;
+  top: 22px;
+  left: -4px;
+  font-size: 24px;
+  color: #ffffff;
+  line-height: 24px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // .page {
+  //   font-size: 16px;
+  //   color: #ffffff;
+  //   margin-left: 24px;
+  // }
+}
+
 .my-swiper2 {
   --swiper-navigation-size: 24px;
   --swiper-navigation-color: #fff;
   .mask {
     position: absolute;
-    bottom: 0;
+    bottom: 42px;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
     width: 100%;
-    height: 35%;
+    height: 60%;
     display: none;
   }
   .handler {
@@ -308,17 +355,6 @@ watch(
         font-size: 20px;
       }
     }
-  }
-
-  .collect-title {
-    position: fixed;
-    top: 22px;
-    left: -40px;
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 24px;
-    text-align: center;
-    width: 100%;
   }
 
   .swiper-button-prev,
@@ -361,7 +397,7 @@ watch(
     line-height: 26px;
     position: fixed;
     top: 22px;
-    left: 50px;
+    left: 80px;
     bottom: unset;
   }
 }

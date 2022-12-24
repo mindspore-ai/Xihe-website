@@ -1,21 +1,26 @@
 <script setup>
 import { ref, computed } from 'vue';
 
-import one from '@/assets/imgs/wukong/style-bg-1.png';
-import two from '@/assets/imgs/wukong/style-bg-2.png';
-import three from '@/assets/imgs/wukong/style-bg-3.png';
-import four from '@/assets/imgs/wukong/style-bg-4.png';
-import five from '@/assets/imgs/wukong/style-bg-5.png';
+import comic from '@/assets/imgs/wukong/style-bg-1.png';
+import classic from '@/assets/imgs/wukong/style-bg-2.png';
+import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
+import more from '@/assets/imgs/wukong/style-bg-4.png';
+import random from '@/assets/imgs/wukong/style-bg-5.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
+import IconHeart from '~icons/app/collected';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { wuKongInfer } from '@/api/api-modelzoo.js';
+import {
+  wuKongInfer,
+  addLikePicture,
+  cancelLikePicture,
+} from '@/api/api-modelzoo.js';
 
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -23,9 +28,10 @@ const inputText = ref('');
 const sortTag = ref('');
 const styleIndex = ref(0);
 
+const showInferDlg = ref(false);
 const isInferred = ref(false);
 
-const styleBackgrounds = ref([one, two, three, four, five]);
+const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
 
 const styleData = ref([
@@ -33,7 +39,7 @@ const styleData = ref([
     style: '动漫',
     options: [
       { tag: '宫崎骏', isSelected: false },
-      { tag: '新海城', isSelected: false },
+      { tag: '新海诚', isSelected: false },
     ],
   },
   {
@@ -90,7 +96,7 @@ const styleData = ref([
 
 const randomList = ref([
   { tag: '宫崎骏', isSelected: false },
-  { tag: '新海城', isSelected: false },
+  { tag: '新海诚', isSelected: false },
   { tag: '达芬奇', isSelected: false },
   { tag: '毕加索', isSelected: false },
   { tag: '梵高', isSelected: false },
@@ -166,6 +172,7 @@ const lists = ref([
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
+// 选择样例
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
     item.isSelected = false;
@@ -173,7 +180,7 @@ function exampleSelectHandler(item) {
   item.isSelected = true;
   inputText.value = item.text;
 }
-
+// 清除输入样例
 function clearInputText() {
   inputText.value = '';
 
@@ -181,7 +188,6 @@ function clearInputText() {
     item.isSelected = false;
   });
 }
-
 function handleInput() {
   exampleData.value.forEach((item) => {
     if (item.text === inputText.value) {
@@ -191,31 +197,33 @@ function handleInput() {
     }
   });
 }
-
+// 选择风格类别
 function choseStyleSort(val) {
   styleIndex.value = val;
 }
-
+// 选择风格标签
 function choseSortTag(val) {
-  if (val.tag === sortTag.value) {
-    val.isSelected = !val.isSelected;
-    if (val.isSelected) {
-      sortTag.value = val.tag;
-    } else {
-      sortTag.value = '';
-    }
-  } else {
-    styleData.value.forEach((item) => {
-      item.options.forEach((tag) => {
-        tag.isSelected = false;
-      });
-    });
+  val.isSelected = !val.isSelected;
 
-    val.isSelected = !val.isSelected;
-    sortTag.value = val.tag;
-  }
+  // if (val.tag === sortTag.value) {
+  //   val.isSelected = !val.isSelected;
+  //   if (val.isSelected) {
+  //     sortTag.value = val.tag;
+  //   } else {
+  //     sortTag.value = '';
+  //   }
+  // } else {
+  //   styleData.value.forEach((item) => {
+  //     item.options.forEach((tag) => {
+  //       tag.isSelected = false;
+  //     });
+  //   });
+
+  //   val.isSelected = !val.isSelected;
+  //   sortTag.value = val.tag;
+  // }
 }
-
+// 随机风格
 function getRandomStyle(index) {
   if (index === 4) {
     const i = Math.floor(Math.random() * randomList.value.length);
@@ -224,30 +232,57 @@ function getRandomStyle(index) {
     return;
   }
 }
+// 初始化推理数据
+function initData() {
+  inputText.value = '';
+  sortTag.value = '';
 
-const showInferDlg = ref(false);
+  styleData.value.forEach((item) => {
+    item.options.forEach((tag) => {
+      tag.isSelected = false;
+    });
+  });
+
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
+}
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    //  && sortTag.value
     if (inputText.value) {
       showInferDlg.value = true;
+
+      let count = 0;
+      styleData.value.forEach((item) => {
+        item.options.forEach((style) => {
+          if (style.isSelected) {
+            count++;
+            if (count <= 1) {
+              sortTag.value = style.tag;
+            } else {
+              sortTag.value = sortTag.value + ' ' + style.tag;
+            }
+          }
+        });
+      });
+
       try {
         const res = await wuKongInfer({
-          sample: inputText.value,
+          desc: inputText.value,
           style: sortTag.value,
         });
-
         isInferred.value = true;
+
         styleBackground.value = res.data.data.pictures;
-      } catch (e) {
-        ElMessage({
-          type: 'warning',
-          message: e.msg,
-        });
-        showInferDlg.value = false;
+      } catch (err) {
+        setTimeout(() => {
+          showInferDlg.value = false;
+        }, 1500);
+
+        initData();
       }
     } else if (!inputText.value) {
       ElMessage({
@@ -258,13 +293,70 @@ async function handleInfer() {
   }
 }
 
+// const isCollected = ref(false);
+// 收藏
+async function handleCollecte(key) {
+  try {
+    const res = await addLikePicture({ obspath: key });
+    if (res.data.data === 'success') {
+      ElMessage({
+        type: 'success',
+        message: '收藏成功，可在我的收藏中查看',
+      });
+      // isCollected.value = true;
+    }
+  } catch (e) {
+    ElMessage({
+      type: 'success',
+      message: e.msg,
+    });
+  }
+
+  // addLikePicture({ obspath: key }).then((res) => {
+  //   if (res.data.data === 'success') {
+  //     ElMessage({
+  //       type: 'success',
+  //       message: '收藏成功，可在我的收藏中查看',
+  //     });
+  //   }
+  // });
+}
+
+// 取消收藏
+// function handleCancelCollecte(key) {
+//   cancelLikePicture(key).then((res) => {
+//     if (res.status === 204) {
+//       isCollected.value = false;
+//       ElMessage({
+//         type: 'success',
+//         message: '取消收藏成功',
+//       });
+//     }
+//   });
+// }
+
+// 下载图片
+function downloadImage(item) {
+  let x = new XMLHttpRequest();
+  x.open('GET', item, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.png';
+    a.click();
+  };
+  x.send();
+}
 // 推理dlg关闭-触发
 function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
+  initData();
 }
-
 // 随机选取五个样例
 function getDescExamples(arr, count) {
   let shuffled = arr.slice(0),
@@ -280,7 +372,7 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
-
+// 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);
 }
@@ -349,7 +441,7 @@ function refreshTags() {
             {{ item.tag }}
           </div>
 
-          <div :class="`triangle${styleIndex}`"></div>
+          <div class="triangle" :class="`triangle${styleIndex}`"></div>
         </div>
       </div>
     </div>
@@ -378,18 +470,27 @@ function refreshTags() {
       </div>
 
       <div v-else class="infer-dlg-result">
-        <div v-for="item in styleBackground" :key="item" class="result-item">
-          <img :src="item" alt="" />
+        <div
+          v-for="(value, key) in styleBackground"
+          :key="key"
+          class="result-item"
+        >
+          <img :src="value" alt="" />
           <div class="handles">
             <div class="handles-contain">
-              <p>
+              <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p>
+              <p @click="handleCollecte(key)">
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
+
+              <!-- <p v-if="isCollected" class="liked" @click="handleCancelCollecte(key)">
+                <o-icon><icon-heart></icon-heart></o-icon>
+              </p> -->
             </div>
           </div>
+          <div class="mask"></div>
         </div>
       </div>
     </el-dialog>
@@ -414,6 +515,12 @@ function refreshTags() {
       margin-right: 24px;
       width: 23vw;
       height: 23vw;
+      &:hover {
+        .handles,
+        .mask {
+          display: block;
+        }
+      }
 
       &:last-child {
         margin-right: 0;
@@ -430,16 +537,32 @@ function refreshTags() {
         width: 100%;
       }
 
+      .mask {
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        width: 100%;
+        height: 16vh;
+        display: none;
+      }
+
       .handles {
         position: absolute;
         bottom: 24px;
         right: 24px;
+        z-index: 20;
+        display: none;
         @media screen and (max-width: 1450px) {
           bottom: 10px;
           right: 10px;
         }
         &-contain {
           display: flex;
+          .liked {
+            .o-icon {
+              font-size: 20px;
+            }
+          }
           p {
             width: 40px;
             height: 40px;
@@ -619,7 +742,7 @@ function refreshTags() {
         width: 100%;
         min-height: 93px;
         position: relative;
-        .triangle0 {
+        .triangle {
           width: 0;
           height: 0;
           border-left: 6px solid transparent;
@@ -627,47 +750,21 @@ function refreshTags() {
           border-bottom: 10px solid rgba(85, 85, 85, 0.3);
           position: absolute;
           top: -10px;
+        }
+        .triangle0 {
           left: 62px;
         }
         .triangle1 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 202px;
-          top: -10px;
         }
         .triangle2 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 358px;
-          top: -10px;
         }
         .triangle3 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 498px;
-          top: -10px;
         }
         .triangle4 {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 10px solid rgba(85, 85, 85, 0.3);
-          position: absolute;
           left: 638px;
-          top: -10px;
         }
 
         .sort-item {

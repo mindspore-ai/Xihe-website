@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -11,7 +11,6 @@ import 'swiper/css/navigation';
 
 import ONav from '@/components/ONav.vue';
 
-import gallery from '@/assets/imgs/wukong/ceshi1.png';
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
 import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
 
@@ -20,10 +19,19 @@ import IconCollection from '~icons/app/wukong-collection';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconDownload from '~icons/app/wukong-download';
 import IconHeart from '~icons/app/collected';
+import IconCollected from '~icons/app/wk-collecte';
 
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
+
+import { collectedPictures, cancelLikePicture } from '@/api/api-modelzoo.js';
+import { ElMessage } from 'element-plus';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore } from '@/stores';
+
+const isLogined = computed(() => useLoginStore().isLogined);
 
 const route = useRoute();
 const router = useRouter();
@@ -52,13 +60,67 @@ function handleNavClick(item) {
 // 我的收藏
 const showCollection = ref(false);
 function toggleCollectionDlg(val) {
-  showCollection.value = val;
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    showCollection.value = val;
+    getCollectedPictures();
+  }
+}
+
+const collectList = ref([]);
+const haveCollections = ref(false);
+//获取收藏图片
+function getCollectedPictures() {
+  collectedPictures().then((res) => {
+    if (res.data.data) {
+      collectList.value = res.data.data;
+      if (collectList.value) {
+        haveCollections.value = true;
+      } else {
+        haveCollections.value = false;
+      }
+    }
+  });
+}
+
+// 取消收藏
+function handleCancelLike(id, index) {
+  console.log(id);
+  cancelLikePicture(id).then((res) => {
+    if (res.status === 204) {
+      collectList.value.splice(index, 1);
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
+      });
+    }
+  });
 }
 
 const showAlbum = ref(false);
 // AI画集
 function toggleAlbum() {
   showAlbum.value = true;
+}
+
+function downloadImage(item) {
+  const link = item.replace(
+    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
+    '/obs-big-model/'
+  );
+  let x = new XMLHttpRequest();
+  x.open('GET', link, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'collection.png';
+    a.click();
+  };
+  x.send();
 }
 
 function learnWukongMore() {
@@ -95,7 +157,7 @@ watch(
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
             >大模型</el-breadcrumb-item
           >
-          <el-breadcrumb-item>悟空</el-breadcrumb-item>
+          <el-breadcrumb-item>悟空画画</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
 
@@ -112,7 +174,7 @@ watch(
 
         <div class="wukong-head-right">
           <div class="wukong-head-right-top">
-            <div class="wukong-head-right-top-title">悟空</div>
+            <div class="wukong-head-right-top-title">悟空画画</div>
             <div class="wukong-head-right-top-content">
               借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。
             </div>
@@ -165,6 +227,7 @@ watch(
     <!-- 我的收藏dialog -->
     <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
+        v-if="collectList.length"
         :slides-per-view="3"
         :slides-per-group="1"
         :speed="500"
@@ -179,55 +242,95 @@ watch(
         loop
         class="my-swiper2"
       >
-        <swiper-slide v-for="item in 5" :key="item"
-          ><img :src="gallery" alt="" />
-          <p>来自深渊 风景 绘画 写实风格</p>
+        <swiper-slide v-for="(item, index) in collectList" :key="item.id"
+          ><img :src="item.link" alt="" />
+          <p>{{ item.desc }}</p>
 
           <div class="handler">
-            <span class="icon-btn">
+            <span class="icon-btn" @click="downloadImage(item.link)">
               <o-icon><icon-download></icon-download></o-icon>
             </span>
-            <span class="icon-btn heart">
+            <span
+              class="icon-btn heart"
+              @click="handleCancelLike(item.id, index)"
+            >
               <o-icon><icon-heart></icon-heart></o-icon>
             </span>
           </div>
+          <div class="mask"></div>
         </swiper-slide>
-
-        <div class="collect-title">我的收藏</div>
       </swiper>
+
+      <div v-else class="no-collections">
+        <o-icon><icon-collected></icon-collected></o-icon>
+        <p>暂无收藏</p>
+      </div>
+
+      <div class="collect-title">我的收藏</div>
     </el-dialog>
 
     <!-- AI画集 -->
     <el-dialog v-model="showAlbum" :fullscreen="true" center>
+      <template #title>
+        <div>AI画集</div>
+      </template>
       <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
 </template>
 <style lang="scss">
-// .collection-dlg {
-//   background: rgba(0, 0, 0, 0.85);
-
-//   .el-dialog__headerbtn {
-//     right: 10px;
-//     z-index: 2010;
-//     .el-dialog__close {
-//       color: #fff;
-//       font-size: 40px;
-//     }
-//   }
-//   .is-fullscreen {
-//     background: rgba(0, 0, 0, 0.85) !important;
-//   }
-// }
+.no-collections {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: #ffffff;
+  margin-top: calc(40vh - 56px);
+  .o-icon {
+    font-size: 48px;
+  }
+  p {
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 18px;
+    margin-top: 16px;
+  }
+}
+.collect-title {
+  position: fixed;
+  top: 22px;
+  left: -4px;
+  font-size: 24px;
+  color: #ffffff;
+  line-height: 24px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  // .page {
+  //   font-size: 16px;
+  //   color: #ffffff;
+  //   margin-left: 24px;
+  // }
+}
 
 .my-swiper2 {
   --swiper-navigation-size: 24px;
   --swiper-navigation-color: #fff;
-
+  .mask {
+    position: absolute;
+    bottom: 42px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+    width: 100%;
+    height: 60%;
+    display: none;
+  }
   .handler {
     position: absolute;
     bottom: 64px;
     right: 24px;
+    z-index: 9;
     display: none;
     .icon-btn {
       width: 40px;
@@ -239,7 +342,7 @@ watch(
       justify-content: center;
       align-items: center;
       .o-icon {
-        font-size: 16px;
+        font-size: 24px;
       }
       &:hover {
         background: rgba(255, 255, 255, 0.3);
@@ -248,17 +351,11 @@ watch(
         margin-right: 16px;
       }
     }
-  }
-
-  .collect-title {
-    position: fixed;
-    top: 22px;
-    left: -40px;
-    font-size: 24px;
-    color: #ffffff;
-    line-height: 24px;
-    text-align: center;
-    width: 100%;
+    .heart {
+      .o-icon {
+        font-size: 20px;
+      }
+    }
   }
 
   .swiper-button-prev,
@@ -273,7 +370,8 @@ watch(
   }
   .swiper-slide {
     &:hover {
-      .handler {
+      .handler,
+      .mask {
         display: block;
       }
     }
@@ -293,59 +391,34 @@ watch(
   .my-pagination-clickable {
     position: fixed;
   }
+
   .swiper-pagination-fraction {
     color: #fff;
     font-size: 16px;
     line-height: 26px;
     position: fixed;
-    top: 22px;
-    left: 50px;
+    top: 24px;
+    left: 80px;
     bottom: unset;
   }
 }
-
-// .album-dlg {
-//   padding-left: 6%;
-//   padding-right: 6%;
-//   background: rgb(0, 0, 0);
-//   &::-webkit-scrollbar {
-//     width: 6px;
-//     height: 6px;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     border-radius: 3px;
-//     background-color: #d8d8d8;
-//     background-clip: content-box;
-//   }
-
-//   &::-webkit-scrollbar-track {
-//     border-radius: 3px;
-//     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-//     background: #ffffff;
-//   }
-
-//   .is-fullscreen {
-//     background: rgba(0, 0, 0, 0.85) !important;
-//   }
-
-//   .el-dialog__body {
-//     background: rgba(0, 0, 0, 0.85);
-//   }
-
-//   .el-dialog__headerbtn {
-//     right: 10px;
-//     .el-dialog__close {
-//       color: #fff;
-//       font-size: 40px;
-//     }
-//   }
-// }
 </style>
 <style lang="scss" scoped>
 :deep(.el-dialog) {
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
-
+  .el-dialog__header {
+    padding: 15px 0 15px;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    background: #000;
+    z-index: 200;
+  }
+  .el-dialog__body {
+    // position: sticky;
+    // top: 62px;
+    padding-top: 0;
+  }
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -363,14 +436,17 @@ watch(
     background: #ffffff;
   }
   .el-dialog__headerbtn {
-    right: 10px;
-    z-index: 2010;
+    position: fixed;
+    top: 6px;
+    right: 15px;
+    z-index: 201;
     .el-dialog__close {
       color: #fff;
       font-size: 40px;
     }
   }
 }
+
 .wukong-bg1 {
   background: #f5f6f8;
 }
@@ -378,6 +454,8 @@ watch(
   background-image: url('@/assets/imgs/wukong/wukong-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+  min-height: calc(100vh - 200px);
+  background-color: #000;
   .wukong-bread {
     margin-bottom: 40px;
     .el-breadcrumb {
@@ -438,7 +516,8 @@ watch(
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
-  min-height: calc(100vh - 200px);
+  height: 100%;
+  // min-height: calc(100vh - 200px);
 
   &-bread {
     margin-bottom: 40px;
@@ -526,8 +605,9 @@ watch(
 
 .sider-content {
   position: fixed;
-  bottom: 220px;
-  right: 40px;
+  top: 50%;
+  right: 60px;
+  transform: translateY(-50%);
   color: #fff;
   .nav-item {
     margin-bottom: 16px;

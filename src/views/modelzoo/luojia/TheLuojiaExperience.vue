@@ -108,11 +108,11 @@ function handleInferClick() {
     formData.append('picture', tblob.value);
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
-      if (res.status === 201 && res.data.data) {
+      if (res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          if (res.status === 201 && res.data.data) {
+          if (res.data.data) {
             const aurl = res.data.data.answer;
             const tempimg = document.createElement('img');
             tempimg.src = aurl;

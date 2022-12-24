@@ -293,20 +293,11 @@ function goActivity() {
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
-<<<<<<< HEAD
-      class="my-swiper"
-    >
-      <swiper-slide>
-        <div class="photo7 cursor" @click="goActivity()"></div>
-      </swiper-slide>
-      <swiper-slide>
-=======
     > -->
     <div class="my-swiper">
       <div class="photo7 cursor" @click="goActivity()"></div>
     </div>
     <!-- <swiper-slide>
->>>>>>> e9bddcae9d532e442f40b1e01decbf706ea1aca8
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide> -->
     <!-- </swiper> -->

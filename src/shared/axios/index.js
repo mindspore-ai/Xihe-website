@@ -36,8 +36,8 @@ const requestInterceptorId = request.interceptors.request.use(
         background: 'transparent',
       });
     }
+    config.$noLoading ? '' : loadingCount++;
 
-    loadingCount++;
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
     request.config = Object.assign({}, config);
     // 在发送请求之前做些什么
@@ -60,13 +60,14 @@ const requestInterceptorId = request.interceptors.request.use(
  */
 const responseInterceptorId = request.interceptors.response.use(
   (response) => {
-    loadingCount--;
+    const { config } = response;
+    config.$noLoading ? '' : loadingCount--;
+
     if (loadingCount === 0 && loadingInstance) {
       useLoadingState().setloadingState(false);
       loadingInstance.close();
       loadingInstance = null;
     }
-    const { config } = response;
     pendingPool.delete(config.url);
 
     return Promise.resolve(handleResponse(response));

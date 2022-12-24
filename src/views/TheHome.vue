@@ -26,8 +26,8 @@ import models1 from '@/assets/imgs/home/models1.png';
 import models2 from '@/assets/imgs/home/models2.png';
 import models3 from '@/assets/imgs/home/models3.png';
 import models4 from '@/assets/imgs/home/models4.png';
-import modelzoo1 from '@/assets/imgs/home/modelzoo1.png';
-import modelzoo2 from '@/assets/imgs/home/modelzoo2.png';
+import modelzoo1 from '@/assets/imgs/home/modelzoo1.jpg';
+import modelzoo2 from '@/assets/imgs/home/modelzoo2.jpg';
 // import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
 import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
@@ -74,7 +74,7 @@ const onSwiper = (val) => {
   mySwiper.value = val;
 };
 
-const modules = [Pagination, Autoplay];
+// const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -179,9 +179,9 @@ function handleBtnClick3() {
 //     params: { id: id },
 //   });
 // }
-function goCode() {
-  router.push({ path: '/modelzoo/codegeex' });
-}
+// function goCode() {
+//   router.push({ path: '/modelzoo/codegeex' });
+// }
 function goActivity() {
   router.push({ path: '/activity' });
 }
@@ -288,20 +288,28 @@ function goActivity() {
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <swiper
+    <!-- <swiper
       :modules="modules"
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
+<<<<<<< HEAD
       class="my-swiper"
     >
       <swiper-slide>
         <div class="photo7 cursor" @click="goActivity()"></div>
       </swiper-slide>
       <swiper-slide>
+=======
+    > -->
+    <div class="my-swiper">
+      <div class="photo7 cursor" @click="goActivity()"></div>
+    </div>
+    <!-- <swiper-slide>
+>>>>>>> e9bddcae9d532e442f40b1e01decbf706ea1aca8
         <div class="photo6 cursor" @click="goCode()"></div>
-      </swiper-slide>
-    </swiper>
+      </swiper-slide> -->
+    <!-- </swiper> -->
 
     <div class="home-content">
       <div class="wrapper">

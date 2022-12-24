@@ -294,46 +294,41 @@ async function handleInfer() {
 }
 
 // const isCollected = ref(false);
+
+const inferList = ref([
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+]);
 // 收藏
-async function handleCollecte(key) {
-  try {
-    const res = await addLikePicture({ obspath: key });
-    if (res.data.data === 'success') {
+function handleCollecte(key, index) {
+  addLikePicture({ obspath: key }).then((res) => {
+    if (res.data.data) {
+      inferList.value[index].isCollected = true;
+      inferList.value[index].id = res.data.data.id;
       ElMessage({
         type: 'success',
         message: '收藏成功，可在我的收藏中查看',
       });
-      // isCollected.value = true;
     }
-  } catch (e) {
-    ElMessage({
-      type: 'success',
-      message: e.msg,
-    });
-  }
-
-  // addLikePicture({ obspath: key }).then((res) => {
-  //   if (res.data.data === 'success') {
-  //     ElMessage({
-  //       type: 'success',
-  //       message: '收藏成功，可在我的收藏中查看',
-  //     });
-  //   }
-  // });
+  });
 }
 
 // 取消收藏
-// function handleCancelCollecte(key) {
-//   cancelLikePicture(key).then((res) => {
-//     if (res.status === 204) {
-//       isCollected.value = false;
-//       ElMessage({
-//         type: 'success',
-//         message: '取消收藏成功',
-//       });
-//     }
-//   });
-// }
+function handleCancelCollecte(index) {
+  cancelLikePicture(inferList.value[index].id).then((res) => {
+    console.log(res);
+    if (res.status === 204) {
+      inferList.value[index].isCollected = false;
+      inferList.value[index].id = '';
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
+      });
+    }
+  });
+}
 
 // 下载图片
 function downloadImage(item) {
@@ -355,6 +350,12 @@ function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
+
+  inferList.value.forEach((item) => {
+    item.isCollected = false;
+    item.id = '';
+  });
+
   initData();
 }
 // 随机选取五个样例
@@ -471,7 +472,7 @@ function refreshTags() {
 
       <div v-else class="infer-dlg-result">
         <div
-          v-for="(value, key) in styleBackground"
+          v-for="(value, key, index) in styleBackground"
           :key="key"
           class="result-item"
         >
@@ -481,13 +482,20 @@ function refreshTags() {
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p @click="handleCollecte(key)">
+              <p
+                v-if="!inferList[index].isCollected"
+                @click="handleCollecte(key, index)"
+              >
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
 
-              <!-- <p v-if="isCollected" class="liked" @click="handleCancelCollecte(key)">
+              <p
+                v-if="inferList[index].isCollected"
+                class="liked"
+                @click="handleCancelCollecte(index)"
+              >
                 <o-icon><icon-heart></icon-heart></o-icon>
-              </p> -->
+              </p>
             </div>
           </div>
           <div class="mask"></div>

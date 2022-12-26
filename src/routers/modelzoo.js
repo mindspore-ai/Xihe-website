@@ -197,7 +197,7 @@ export default [
     path: '/modelzoo-createtune',
     name: 'modelzooCreatetune',
     component: () => {
-      return import('@/views/modelzoo/modelzoo-tune/modelzooCreateTune.vue');
+      return import('@/views/modelzoo/modelzoo-tune/ModelzooCreateTune.vue');
     },
   },
 ];

@@ -50,19 +50,6 @@ let query = reactive({
   name: '',
 });
 
-const menuList = reactive([
-  {
-    id: 'test',
-    label: '大模型体验',
-    href: '/modelzoo',
-  },
-  {
-    id: 'tune',
-    label: '大模型微调',
-    href: '/modelzoo-tune',
-  },
-]);
-
 const navItems = reactive([
   {
     id: 'projects',
@@ -81,12 +68,12 @@ const navItems = reactive([
     menuList: [
       {
         id: 'test',
-        label: '大模型体验',
+        label: '在线体验',
         href: '/modelzoo',
       },
       {
         id: 'tune',
-        label: '大模型微调',
+        label: '模型微调',
         href: '/modelzoo-tune',
       },
     ],
@@ -199,17 +186,17 @@ function handleLogoClick() {
 }
 
 // 点击导航
-// function handleNavClick(item) {
-//   if (item.windowOpen) {
-//     window.open('https://xihe-docs.mindspore.cn');
-//   } else {
-//     router.push({ path: item.href });
-//   }
-// }
+function handleNavClick(item) {
+  if (item.windowOpen) {
+    window.open('https://xihe-docs.mindspore.cn');
+  } else {
+    router.push({ path: item.href });
+  }
+}
 
 // 点击导航
 function handleSelect(item) {
-  // console.log('item,: ', item);
+  console.log('item,: ', item);
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
@@ -484,9 +471,6 @@ function handleBlur() {
     emptyValue();
   }
 }
-function goModelzoo(item) {
-  router.push(item.href);
-}
 </script>
 
 <template>
@@ -518,29 +502,25 @@ function goModelzoo(item) {
           >
             {{ item.label }}
           </el-menu-item>
-          <el-menu-item
+          <el-sub-menu
             v-else
-            :key="item.label"
-            style="cursor: pointer"
-            disabled
-            :index="item.href"
+            :key="item"
+            popper-class="modelzooItem"
+            :popper-offset="0"
+            :index="item.id"
           >
-            <!-- {{ item.label }} -->
-            <el-dropdown popper-class="header-nav">
-              <p>大模型</p>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    v-for="val in item.menuList"
-                    :key="val.id"
-                    @click="goModelzoo(val)"
-                  >
-                    {{ val.label }}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </el-menu-item>
+            <template #title>{{ item.label }}</template>
+            <div class="sub-menu">
+              <el-menu-item
+                v-for="val in item.menuList"
+                :key="val.id"
+                :index="val.href"
+              >
+                <!-- style="width: 100px" -->
+                {{ val.label }}
+              </el-menu-item>
+            </div>
+          </el-sub-menu>
         </template>
       </el-menu>
       <div v-else class="header-center">
@@ -735,15 +715,31 @@ function goModelzoo(item) {
     </div>
   </div>
 </template>
+<style lang="scss">
+.el-popper.modelzooItem {
+  position: absolute;
+  left: 400px !important;
+  .el-menu--popup {
+    min-width: 118px;
+    padding-left: 16px;
+    padding-right: 16px;
+    .sub-menu {
+      .el-menu-item {
+        color: #000;
+        &:first-child {
+          border-bottom: 1px solid #ddd;
+        }
 
-<style lang="scss" scoped>
-/* :deep(.el-popper) {
-  .el-menu--horizontal {
-    .el-menu--popup {
-      width: 1000px !important;
+        &:hover {
+          background-color: transparent;
+          color: #0d8dff;
+        }
+      }
     }
   }
-} */
+}
+</style>
+<style lang="scss" scoped>
 .header {
   display: flex;
   align-items: center;
@@ -793,27 +789,23 @@ function goModelzoo(item) {
           // background-color: transparent;
           color: #0d8dff;
         }
-        .el-dropdown {
-          font-size: 18px;
-          height: 100%;
-          color: #fff;
-          &:hover {
-            color: #0d8dff;
-          }
-          .el-tooltip__trigger {
-            display: flex;
-            align-items: center;
-            p {
-              color: #fff;
-            }
-          }
+      }
+      .el-sub-menu {
+        // background-color: inherit;
+        font-size: 18px;
+
+        &:hover .el-sub-menu__title {
+          background-color: inherit;
+          color: #0d8dff !important;
         }
-      }
-      .el-menu-item.is-disabled {
-        opacity: 1;
-      }
-      .el-menu-item.is-active.is-disabled p {
-        color: var(--el-menu-active-color) !important;
+        .el-sub-menu__title {
+          font-size: 18px;
+          padding: 0;
+          margin-left: 32px;
+        }
+        .el-icon {
+          display: none;
+        }
       }
     }
     .header-center {

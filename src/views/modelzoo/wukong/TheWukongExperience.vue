@@ -20,6 +20,7 @@ import {
   wuKongInfer,
   addLikePicture,
   cancelLikePicture,
+  temporaryLink,
 } from '@/api/api-modelzoo.js';
 
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -293,8 +294,6 @@ async function handleInfer() {
   }
 }
 
-// const isCollected = ref(false);
-
 const inferList = ref([
   { isCollected: false, id: '' },
   { isCollected: false, id: '' },
@@ -318,7 +317,6 @@ function handleCollecte(key, index) {
 // 取消收藏
 function handleCancelCollecte(index) {
   cancelLikePicture(inferList.value[index].id).then((res) => {
-    console.log(res);
     if (res.status === 204) {
       inferList.value[index].isCollected = false;
       inferList.value[index].id = '';
@@ -331,7 +329,7 @@ function handleCancelCollecte(index) {
 }
 
 // 下载图片
-function downloadImage(item) {
+function requestImg(item) {
   let x = new XMLHttpRequest();
   x.open('GET', item, true);
   x.responseType = 'blob';
@@ -344,6 +342,27 @@ function downloadImage(item) {
     a.click();
   };
   x.send();
+}
+
+function downloadImage(item) {
+  const index1 = item.indexOf('=');
+  const index2 = item.indexOf('=', index1 + 1);
+
+  const i1 = item.indexOf('&');
+  const i2 = item.indexOf('&', i1 + 1);
+
+  const deadTime = item.substring(index2 + 1, i2);
+  const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+  if ((deadTime - currentTime) / 60 < 1) {
+    temporaryLink({ link: item }).then((res) => {
+      if (res.data.data) {
+        requestImg(res.data.data.link);
+      }
+    });
+  } else {
+    requestImg(item);
+  }
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {

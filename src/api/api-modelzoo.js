@@ -296,3 +296,19 @@ export function collectedPictures() {
       return e;
     });
 }
+
+/**
+ * 悟空-重新获取临时url
+ * @returns
+ */
+export function temporaryLink(params) {
+  const url = '/server/bigmodel/wukong/link';
+  return request
+    .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}

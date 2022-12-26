@@ -245,7 +245,10 @@ onMounted(() => {
       <div class="tip">温馨提示：加载较慢，请耐心等待，或刷新重试。</div>
     </div>
     <!-- 列表 -->
-    <el-dialog v-model="dialogTableVisible" title="历史记录">
+    <el-dialog v-model="dialogTableVisible">
+      <template #header>
+        <p>历史记录</p>
+      </template>
       <el-table :data="gridData">
         <el-table-column property="name" label="任务类型" />
         <el-table-column property="origin" label="地图源数据" />

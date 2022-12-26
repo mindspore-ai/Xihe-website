@@ -461,10 +461,12 @@ function goRule() {
     <div v-if="isShow" class="activity-dlg">
       <el-dialog
         v-model="isShow"
-        title="知识挑战赛"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
       >
+        <template #header>
+          <p>知识挑战赛</p>
+        </template>
         <div class="tip">
           <o-icon>
             <icon-warning></icon-warning>
@@ -544,12 +546,11 @@ function goRule() {
         font-size: 16px;
         position: absolute;
         left: 16px;
-        top: 14px;
+        top: 11px;
       }
       span {
         font-size: 14px;
         color: #555555;
-        // line-height: 22px;
       }
     }
 

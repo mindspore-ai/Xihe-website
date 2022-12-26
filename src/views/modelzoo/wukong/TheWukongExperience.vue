@@ -11,11 +11,16 @@ import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
+import IconHeart from '~icons/app/collected';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { wuKongInfer } from '@/api/api-modelzoo.js';
+import {
+  wuKongInfer,
+  addLikePicture,
+  cancelLikePicture,
+} from '@/api/api-modelzoo.js';
 
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -34,7 +39,7 @@ const styleData = ref([
     style: '动漫',
     options: [
       { tag: '宫崎骏', isSelected: false },
-      { tag: '新海城', isSelected: false },
+      { tag: '新海诚', isSelected: false },
     ],
   },
   {
@@ -91,7 +96,7 @@ const styleData = ref([
 
 const randomList = ref([
   { tag: '宫崎骏', isSelected: false },
-  { tag: '新海城', isSelected: false },
+  { tag: '新海诚', isSelected: false },
   { tag: '达芬奇', isSelected: false },
   { tag: '毕加索', isSelected: false },
   { tag: '梵高', isSelected: false },
@@ -183,7 +188,6 @@ function clearInputText() {
     item.isSelected = false;
   });
 }
-
 function handleInput() {
   exampleData.value.forEach((item) => {
     if (item.text === inputText.value) {
@@ -199,23 +203,25 @@ function choseStyleSort(val) {
 }
 // 选择风格标签
 function choseSortTag(val) {
-  if (val.tag === sortTag.value) {
-    val.isSelected = !val.isSelected;
-    if (val.isSelected) {
-      sortTag.value = val.tag;
-    } else {
-      sortTag.value = '';
-    }
-  } else {
-    styleData.value.forEach((item) => {
-      item.options.forEach((tag) => {
-        tag.isSelected = false;
-      });
-    });
+  val.isSelected = !val.isSelected;
 
-    val.isSelected = !val.isSelected;
-    sortTag.value = val.tag;
-  }
+  // if (val.tag === sortTag.value) {
+  //   val.isSelected = !val.isSelected;
+  //   if (val.isSelected) {
+  //     sortTag.value = val.tag;
+  //   } else {
+  //     sortTag.value = '';
+  //   }
+  // } else {
+  //   styleData.value.forEach((item) => {
+  //     item.options.forEach((tag) => {
+  //       tag.isSelected = false;
+  //     });
+  //   });
+
+  //   val.isSelected = !val.isSelected;
+  //   sortTag.value = val.tag;
+  // }
 }
 // 随机风格
 function getRandomStyle(index) {
@@ -226,6 +232,21 @@ function getRandomStyle(index) {
     return;
   }
 }
+// 初始化推理数据
+function initData() {
+  inputText.value = '';
+  sortTag.value = '';
+
+  styleData.value.forEach((item) => {
+    item.options.forEach((tag) => {
+      tag.isSelected = false;
+    });
+  });
+
+  exampleData.value.forEach((item) => {
+    item.isSelected = false;
+  });
+}
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
@@ -234,12 +255,25 @@ async function handleInfer() {
     if (inputText.value) {
       showInferDlg.value = true;
 
+      let count = 0;
+      styleData.value.forEach((item) => {
+        item.options.forEach((style) => {
+          if (style.isSelected) {
+            count++;
+            if (count <= 1) {
+              sortTag.value = style.tag;
+            } else {
+              sortTag.value = sortTag.value + ' ' + style.tag;
+            }
+          }
+        });
+      });
+
       try {
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
         });
-        console.log(res);
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
@@ -247,6 +281,8 @@ async function handleInfer() {
         setTimeout(() => {
           showInferDlg.value = false;
         }, 1500);
+
+        initData();
       }
     } else if (!inputText.value) {
       ElMessage({
@@ -256,11 +292,71 @@ async function handleInfer() {
     }
   }
 }
+
+// const isCollected = ref(false);
+
+const inferList = ref([
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+  { isCollected: false, id: '' },
+]);
+// 收藏
+function handleCollecte(key, index) {
+  addLikePicture({ obspath: key }).then((res) => {
+    if (res.data.data) {
+      inferList.value[index].isCollected = true;
+      inferList.value[index].id = res.data.data.id;
+      ElMessage({
+        type: 'success',
+        message: '收藏成功，可在我的收藏中查看',
+      });
+    }
+  });
+}
+
+// 取消收藏
+function handleCancelCollecte(index) {
+  cancelLikePicture(inferList.value[index].id).then((res) => {
+    console.log(res);
+    if (res.status === 204) {
+      inferList.value[index].isCollected = false;
+      inferList.value[index].id = '';
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
+      });
+    }
+  });
+}
+
+// 下载图片
+function downloadImage(item) {
+  let x = new XMLHttpRequest();
+  x.open('GET', item, true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/png' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.png';
+    a.click();
+  };
+  x.send();
+}
 // 推理dlg关闭-触发
 function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
+
+  inferList.value.forEach((item) => {
+    item.isCollected = false;
+    item.id = '';
+  });
+
+  initData();
 }
 // 随机选取五个样例
 function getDescExamples(arr, count) {
@@ -277,23 +373,6 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
-
-function downloadImage(item) {
-  console.log(item);
-  let x = new XMLHttpRequest();
-  x.open('GET', item, true);
-  x.responseType = 'blob';
-  x.onload = function () {
-    const blobs = new Blob([x.response], { type: 'image/png' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'infer.png';
-    a.click();
-  };
-  x.send();
-}
-
 // 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);
@@ -393,7 +472,7 @@ function refreshTags() {
 
       <div v-else class="infer-dlg-result">
         <div
-          v-for="(value, key) in styleBackground"
+          v-for="(value, key, index) in styleBackground"
           :key="key"
           class="result-item"
         >
@@ -403,11 +482,23 @@ function refreshTags() {
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
               </p>
-              <p>
+              <p
+                v-if="!inferList[index].isCollected"
+                @click="handleCollecte(key, index)"
+              >
                 <o-icon><icon-like></icon-like></o-icon>
+              </p>
+
+              <p
+                v-if="inferList[index].isCollected"
+                class="liked"
+                @click="handleCancelCollecte(index)"
+              >
+                <o-icon><icon-heart></icon-heart></o-icon>
               </p>
             </div>
           </div>
+          <div class="mask"></div>
         </div>
       </div>
     </el-dialog>
@@ -433,7 +524,8 @@ function refreshTags() {
       width: 23vw;
       height: 23vw;
       &:hover {
-        .handles {
+        .handles,
+        .mask {
           display: block;
         }
       }
@@ -453,10 +545,20 @@ function refreshTags() {
         width: 100%;
       }
 
+      .mask {
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        width: 100%;
+        height: 16vh;
+        display: none;
+      }
+
       .handles {
         position: absolute;
         bottom: 24px;
         right: 24px;
+        z-index: 20;
         display: none;
         @media screen and (max-width: 1450px) {
           bottom: 10px;
@@ -464,6 +566,11 @@ function refreshTags() {
         }
         &-contain {
           display: flex;
+          .liked {
+            .o-icon {
+              font-size: 20px;
+            }
+          }
           p {
             width: 40px;
             height: 40px;

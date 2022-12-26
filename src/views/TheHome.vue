@@ -5,7 +5,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, FreeMode, Navigation } from 'swiper';
+import { Pagination, Autoplay, FreeMode, Navigation, Virtual } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
@@ -32,7 +32,7 @@ import modelzoo2 from '@/assets/imgs/home/modelzoo2.jpg';
 // import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
 import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
-import gallery from '@/assets/imgs/wukong/ceshi1.png';
+// import gallery from '@/assets/imgs/wukong/ceshi1.png';
 // import slideImg from '@/assets/gifs/slide.gif';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -72,7 +72,7 @@ const onSwiper = (val) => {
   mySwiper.value = val;
 };
 
-const modules = [Pagination, Autoplay];
+// const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -184,6 +184,24 @@ function handleBtnClick3() {
 function goActivity() {
   router.push({ path: '/activity' });
 }
+// function beforeLoopFix() {
+//   const abnormality = document.getElementsByClassName('abnormality-img');
+//   abnormality[2].style.transitionPproperty = 'none';
+//   abnormality[2].style.height = '325px';
+//   abnormality[1].style.transitionPproperty = 'none';
+//   abnormality[1].style.height = '289px';
+//   abnormality[0].style.transitionPproperty = 'none';
+//   abnormality[0].style.height = '256px';
+// }
+// function loopFix() {
+//   const abnormality = document.getElementsByClassName('abnormality-img');
+//   abnormality[2].style.transitionPproperty = 'height';
+//   abnormality[2].style.height = '225px';
+//   abnormality[1].style.transitionPproperty = 'height';
+//   abnormality[1].style.height = '225px';
+//   abnormality[0].style.transitionPproperty = 'height';
+//   abnormality[0].style.height = '225px';
+// }
 </script>
 
 <template>
@@ -287,20 +305,19 @@ function goActivity() {
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <swiper
+    <!-- <swiper
       :modules="modules"
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
-      class="my-swiper"
-    >
-      <swiper-slide>
-        <div class="photo7 cursor" @click="goActivity()"></div>
-      </swiper-slide>
-      <!-- <swiper-slide>
+    > -->
+    <div class="my-swiper">
+      <div class="photo7 cursor" @click="goActivity()"></div>
+    </div>
+    <!-- <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
       </swiper-slide> -->
-    </swiper>
+    <!-- </swiper> -->
 
     <div class="home-content">
       <div class="wrapper">
@@ -310,46 +327,96 @@ function goActivity() {
             centered-slides
             :slides-per-view="3"
             :slides-per-group="1"
-            :speed="2000"
             :space-between="30"
-            :free-mode="true"
             :navigation="true"
             :pagination="{
               type: 'fraction',
               clickableClass: 'my-pagination-clickable',
             }"
-            :modules="[Pagination, FreeMode, Navigation]"
+            :modules="[Pagination, Navigation]"
             class="my-swiper2"
             loop
             @swiper="onSwiper"
           >
             <swiper-slide
-              ><img :src="gallery" alt="" />
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png"
+                alt=""
+              />
+              <p>上海陆家嘴 未来城市 科幻风格</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png"
+                alt=""
+              />
+              <p>华为 大厦 晴朗 写实</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
+                alt=""
+              />
+              <p>城市夜景 像素风格</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
+                alt=""
+              />
+              <p>城市夜景 油画</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-00.png"
+                alt=""
+              />
+              <p>城市夜景 赛博朋克</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-01.png"
+                alt=""
+              />
+              <p>城市夜景 赛博朋克</p></swiper-slide
+            >
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png"
+                alt=""
+              />
               <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
             >
             <swiper-slide
-              ><img :src="gallery" alt="" />
-              <p @click="currPage = 8">
-                城市夜景 赛博朋克 格雷格·鲁特科夫斯基
-              </p></swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
+                alt=""
+              />
+              <p>沙漠 美景 高清</p></swiper-slide
             >
             <swiper-slide
-              ><img :src="gallery" alt="" />
-              <p @click="currPage = 6">
-                诺亚方舟在世界末日起航 科幻插画
-              </p></swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png"
+                alt=""
+              />
+              <p>街道 新海诚</p></swiper-slide
             >
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
-            <swiper-slide><img :src="gallery" alt="" /></swiper-slide>
+            <swiper-slide
+              ><img
+                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/诺亚方舟在世界末日起航 科幻插画-00.png"
+                alt=""
+              />
+              <p>诺亚方舟在世界末日起航</p></swiper-slide
+            >
+            <!-- <swiper-slide><img src="gallery" alt="" /></swiper-slide> -->
           </swiper>
 
           <div class="button">
-            <OButton animation class="gallery-entry" @click="handleBtnClick">
+            <OButton
+              animation
+              class="gallery-entry"
+              @click="router.push('/modelzoo/wukong')"
+            >
               {{ i18n.modelzoo.quickStartLabel }}
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
@@ -367,7 +434,7 @@ function goActivity() {
               data-aos="slide-up"
               data-aos-offset="200"
               data-aos-duration="1600"
-              @click="handleBtnClick"
+              @click="router.push('/modelzoo/wukong')"
             >
               {{ i18n.modelzoo.quickStartLabel }}
               <template #suffix>
@@ -399,60 +466,79 @@ function goActivity() {
               centered-slides
               :slides-per-view="3"
               :slides-per-group="1"
-              :speed="3000"
               :space-between="0"
               :navigation="true"
               :modules="[Navigation, Autoplay]"
-              :autoplay="{ disableOnInteraction: false, autoplay: true }"
-              prevent-interaction-on-transition
+              :autoplay="{ disableOnInteraction: false, autoplay: false }"
               class="my-swiper3"
+              no-swiping
               loop
-              @swiper="onSwiper"
             >
-              <swiper-slide
+              <swiper-slide class="swiper-no-swiping"
                 ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/上海陆家嘴 未来城市 科幻风格_00444217.png"
+                  class="abnormality-img"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png"
                   alt=""
-                  @click="toggleGallery(true, 0)"
                 />
+                <div class="mantle" @click="toggleGallery(true, 0)"></div>
               </swiper-slide>
-              <swiper-slide
+              <swiper-slide class="swiper-no-swiping"
                 ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00000.png
-"
+                  class="abnormality-img"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png"
                   alt=""
-                  @click="toggleGallery(true, 1)"
                 />
+                <div class="mantle" @click="toggleGallery(true, 1)"></div>
               </swiper-slide>
-              <swiper-slide
+              <swiper-slide class="swiper-no-swiping"
                 ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00001.png
-"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
                   alt=""
-                  @click="toggleGallery(true, 2)"
                 />
+                <div class="mantle" @click="toggleGallery(true, 2)"></div>
               </swiper-slide>
-              <swiper-slide
+              <swiper-slide class="swiper-no-swiping"
                 ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/乡村 田野 屏保-00003.png
-"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
                   alt=""
-                  @click="toggleGallery(true, 3)"
                 />
+                <div class="mantle" @click="toggleGallery(true, 3)"></div>
               </swiper-slide>
-              <swiper-slide
+              <swiper-slide class="swiper-no-swiping"
                 ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/大模型平台 画廊/书房 淡雅 写实 高清-00000.png
-"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-00.png"
                   alt=""
-                  @click="toggleGallery(true, 4)"
                 />
+                <div class="mantle" @click="toggleGallery(true, 4)"></div>
               </swiper-slide>
-              <swiper-slide
-                ><img :src="gallery" alt="" @click="toggleGallery(true, 5)" />
+              <swiper-slide class="swiper-no-swiping"
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-01.png"
+                  alt=""
+                />
+                <div class="mantle" @click="toggleGallery(true, 5)"></div>
               </swiper-slide>
-              <swiper-slide
-                ><img :src="gallery" alt="" @click="toggleGallery(true, 6)" />
+              <swiper-slide class="swiper-no-swiping"
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png"
+                  alt=""
+                />
+                <div class="mantle" @click="toggleGallery(true, 6)"></div>
+              </swiper-slide>
+              <swiper-slide class="swiper-no-swiping"
+                ><img
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
+                  alt=""
+                />
+                <div class="mantle" @click="toggleGallery(true, 7)"></div>
+              </swiper-slide>
+              <swiper-slide class="swiper-no-swiping"
+                ><img
+                  class="abnormality-img"
+                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png"
+                  alt=""
+                />
+                <div class="mantle" @click="toggleGallery(true, 8)"></div>
               </swiper-slide>
             </swiper>
           </div>
@@ -950,6 +1036,7 @@ function goActivity() {
         background: rgba(0, 0, 0, 0.85);
         .el-dialog__headerbtn {
           z-index: 200;
+          right: 10px;
         }
         .el-icon {
           color: #fff;
@@ -1000,6 +1087,7 @@ function goActivity() {
             font-size: 16px;
             position: fixed;
             top: 22px;
+            right: 50px;
             bottom: unset;
           }
         }
@@ -1062,12 +1150,12 @@ function goActivity() {
             height: 100%;
             width: 100px;
             left: 0;
-            // background: linear-gradient(
-            //   to right,
-            //   hsla(220, 18%, 97%, 1),
-            //   hsla(240, 14%, 99%, 0)
-            // );
-            z-index: 180;
+            background: linear-gradient(
+              to right,
+              hsla(220, 18%, 97%, 1),
+              hsla(240, 14%, 99%, 0)
+            );
+            z-index: 50;
           }
           :deep(.my-swiper3) {
             --swiper-navigation-size: 24px;
@@ -1083,40 +1171,67 @@ function goActivity() {
               border-radius: 50%;
               font-weight: 600;
               top: 50%;
+              visibility: hidden;
+            }
+            &:hover {
+              .swiper-button-next {
+                visibility: visible;
+              }
             }
             .swiper-slide {
               height: 328px;
               display: flex;
               align-items: center;
+              // cursor: pointer;
+              position: relative;
+              .mantle {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 20px;
+                width: 100%;
+                background: #f5f6f8;
+                opacity: 20%;
+                z-index: 208;
+                cursor: pointer;
+                display: none;
+              }
+              &:hover {
+                .mantle {
+                  display: block;
+                }
+              }
               img {
-                transition-property: all;
-                transition-duration: 1s;
+                transition-property: height;
+                transition-duration: 0.5s;
                 // transition-timing-function: linear;
                 width: 100%;
-              }
-              perspective: 800px;
-              img {
                 transform: rotateY(345deg);
                 transform-origin: right;
-                height: 228px;
+                height: 225px !important;
                 border: 1px solid #00fbfbfc;
+                cursor: pointer;
               }
+              perspective: 800px;
+              // .abnormality-img {
+              //   height: 225px !important;
+              // }
             }
             .swiper-slide-prev {
               img {
-                height: 256px;
-                // margin-top: 32px;
+                height: 256px !important;
               }
             }
             .swiper-slide-active {
               img {
-                height: 289px;
+                height: 289px !important;
                 // margin-top: 17px;
               }
             }
             .swiper-slide-next {
               img {
-                height: 325px;
+                height: 325px !important;
               }
             }
           }
@@ -1160,7 +1275,7 @@ function goActivity() {
 
       .content-project {
         display: flex;
-        background: linear-gradient(to right, #f7f3f7, #fafaff);
+        // background: linear-gradient(to right, #f7f3f7, #fafaff);
         max-width: 1472px;
         margin: 0 auto;
         padding: 64px 16px 0;

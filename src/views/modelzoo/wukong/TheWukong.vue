@@ -25,7 +25,11 @@ import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { collectedPictures, cancelLikePicture } from '@/api/api-modelzoo.js';
+import {
+  collectedPictures,
+  cancelLikePicture,
+  temporaryLink,
+} from '@/api/api-modelzoo.js';
 import { ElMessage } from 'element-plus';
 
 import { goAuthorize } from '@/shared/login';
@@ -86,7 +90,6 @@ function getCollectedPictures() {
 
 // 取消收藏
 function handleCancelLike(id, index) {
-  console.log(id);
   cancelLikePicture(id).then((res) => {
     if (res.status === 204) {
       collectList.value.splice(index, 1);
@@ -104,7 +107,8 @@ function toggleAlbum() {
   showAlbum.value = true;
 }
 
-function downloadImage(item) {
+// 下载图片
+function requestImg(item) {
   const link = item.replace(
     'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
     '/obs-big-model/'
@@ -121,6 +125,27 @@ function downloadImage(item) {
     a.click();
   };
   x.send();
+}
+
+function downloadImage(item) {
+  const index1 = item.indexOf('=');
+  const index2 = item.indexOf('=', index1 + 1);
+
+  const i1 = item.indexOf('&');
+  const i2 = item.indexOf('&', i1 + 1);
+
+  const deadTime = item.substring(index2 + 1, i2);
+  const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+  if ((deadTime - currentTime) / 60 < 1) {
+    temporaryLink({ link: item }).then((res) => {
+      if (res.data.data) {
+        requestImg(res.data.data.link);
+      }
+    });
+  } else {
+    requestImg(item);
+  }
 }
 
 function learnWukongMore() {
@@ -227,7 +252,7 @@ watch(
     <!-- 我的收藏dialog -->
     <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
-        v-if="collectList.length"
+        v-if="collectList.length >= 3"
         :slides-per-view="3"
         :slides-per-group="1"
         :speed="500"
@@ -241,6 +266,40 @@ watch(
         :modules="[Pagination, FreeMode, Navigation]"
         loop
         class="my-swiper2"
+      >
+        <swiper-slide v-for="(item, index) in collectList" :key="item.id"
+          ><img :src="item.link" alt="" />
+          <p>{{ item.desc }}</p>
+
+          <div class="handler">
+            <span class="icon-btn" @click="downloadImage(item.link)">
+              <o-icon><icon-download></icon-download></o-icon>
+            </span>
+            <span
+              class="icon-btn heart"
+              @click="handleCancelLike(item.id, index)"
+            >
+              <o-icon><icon-heart></icon-heart></o-icon>
+            </span>
+          </div>
+          <div class="mask"></div>
+        </swiper-slide>
+      </swiper>
+
+      <swiper
+        v-else-if="collectList.length > 0"
+        :slides-per-view="3"
+        :slides-per-group="1"
+        :speed="500"
+        :space-between="30"
+        :free-mode="true"
+        :navigation="true"
+        :pagination="{
+          type: 'fraction',
+          clickableClass: 'my-pagination-clickable',
+        }"
+        :modules="[Pagination, FreeMode, Navigation]"
+        class="my-swiper2 special"
       >
         <swiper-slide v-for="(item, index) in collectList" :key="item.id"
           ><img :src="item.link" alt="" />
@@ -308,13 +367,14 @@ watch(
   align-items: center;
   justify-content: center;
   z-index: 999;
-  // .page {
-  //   font-size: 16px;
-  //   color: #ffffff;
-  //   margin-left: 24px;
-  // }
+  width: 97%;
+  padding-left: 3%;
 }
-
+.special {
+  .swiper-wrapper {
+    justify-content: space-around;
+  }
+}
 .my-swiper2 {
   --swiper-navigation-size: 24px;
   --swiper-navigation-color: #fff;

@@ -186,18 +186,18 @@ export default [
   },
   // 大模型微调
   {
-    path: '/modelzoo-tune',
-    name: 'modelzooTune',
+    path: '/finetune',
+    name: 'finetune',
     component: () => {
-      return import('@/views/modelzoo/modelzoo-tune/TheModelzooTune.vue');
+      return import('@/views/finetune/TheFinetune.vue');
     },
   },
   // 创建大模型微调任务
   {
-    path: '/modelzoo-createtune',
-    name: 'modelzooCreatetune',
+    path: '/finetune-creating',
+    name: 'finetuneCreating',
     component: () => {
-      return import('@/views/modelzoo/modelzoo-tune/ModelzooCreateTune.vue');
+      return import('@/views/finetune/FinetuneCreating.vue');
     },
   },
 ];

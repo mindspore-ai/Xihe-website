@@ -1,8 +1,8 @@
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import { getWuKongPic } from '@/api/api-modelzoo.js';
-const imgsVisible = ref(false);
+// const imgsVisible = ref(false);
 
 const imgs = ref([
   // {
@@ -24,7 +24,7 @@ onMounted(() => {
       let windowHeitht = e.target.clientHeight;
       let scrollHeight = e.target.scrollHeight;
       let total = scrollTop + windowHeitht;
-      if (Math.floor(total) === scrollHeight) {
+      if (Math.floor(total) === scrollHeight && imgs.value.length < 108) {
         if (timer) {
           return;
         }
@@ -66,52 +66,46 @@ onMounted(() => {
         </div>
         <div class="album-item2">
           <div v-for="items in 7" :key="items" class="img-box">
-            <div v-if="imgs[items + (item - 1) * 28 + 7 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 7 - 1].link" alt="" />
+            <div v-if="imgs[items + (item - 1) * 28 + 6]">
+              <img :src="imgs[items + (item - 1) * 28 + 6].link" alt="" />
               <div class="imgs-info">
                 <div class="style">
-                  #风格：{{ imgs[items + (item - 1) * 28 + 7 - 1].style }}
+                  #风格：{{ imgs[items + (item - 1) * 28 + 6].style }}
                 </div>
                 <div class="source">
-                  {{ imgs[items + (item - 1) * 28 + 7 - 1].desc }}
+                  {{ imgs[items + (item - 1) * 28 + 6].desc }}
                 </div>
               </div>
+              <div class="img-mask"></div>
             </div>
-            <div
-              v-if="imgs[items + (item - 1) * 28 + 7 - 1]"
-              class="img-mask"
-            ></div>
           </div>
         </div>
         <div class="album-item3">
           <div v-for="items in 7" :key="items" class="img-box">
-            <div v-if="imgs[items + (item - 1) * 28 + 14 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 14 - 1].link" alt="" />
+            <div v-if="imgs[items + (item - 1) * 28 + 13]">
+              <img :src="imgs[items + (item - 1) * 28 + 13].link" alt="" />
               <div class="imgs-info">
                 <div class="style">
-                  #风格：{{ imgs[items + (item - 1) * 28 + 14 - 1].style }}
+                  #风格：{{ imgs[items + (item - 1) * 28 + 13].style }}
                 </div>
                 <div class="source">
-                  {{ imgs[items + (item - 1) * 28 + 14 - 1].desc }}
+                  {{ imgs[items + (item - 1) * 28 + 13].desc }}
                 </div>
               </div>
-              <div
-                v-if="imgs[items + (item - 1) * 28 + 14 - 1]"
-                class="img-mask"
-              ></div>
+              <div class="img-mask"></div>
             </div>
           </div>
         </div>
         <div class="album-item4">
           <div v-for="items in 7" :key="items" class="img-box">
-            <div v-if="imgs[items + (item - 1) * 28 + 21 - 1]">
-              <img :src="imgs[items + (item - 1) * 28 + 21 - 1].link" alt="" />
+            <div v-if="imgs[items + (item - 1) * 28 + 20]">
+              <img :src="imgs[items + (item - 1) * 28 + 20].link" alt="" />
               <div class="imgs-info">
                 <div class="style">
-                  #风格：{{ imgs[items + (item - 1) * 28 + 21 - 1].style }}
+                  #风格：{{ imgs[items + (item - 1) * 28 + 20].style }}
                 </div>
                 <div class="source">
-                  {{ imgs[items + (item - 1) * 28 + 21 - 1].desc }}
+                  {{ imgs[items + (item - 1) * 28 + 20].desc }}
                 </div>
               </div>
               <div class="img-mask"></div>
@@ -125,6 +119,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .picture-album {
+  max-width: 1440px;
+  margin: 0 auto;
   .album-list {
     .img-mask {
       position: absolute;

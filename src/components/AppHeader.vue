@@ -74,7 +74,7 @@ const navItems = reactive([
       {
         id: 'tune',
         label: '模型微调',
-        href: '/modelzoo-tune',
+        href: '/finetune',
       },
     ],
   },
@@ -379,15 +379,6 @@ function getUserResult(userData) {
   });
   userResult.value = dataList;
 }
-
-// 高亮函数
-// function heightLight(str, keyword) {
-//   let kw = escapeHtml(keyword);
-//   const reg = new RegExp(kw, 'gi');
-//   return str.replace(reg, (val) => {
-//     return `<span style="color:#000;font-weight:bold">${val}</span>`;
-//   });
-// }
 
 // 获得搜索结果第一条数据
 const firstData = computed(() => {

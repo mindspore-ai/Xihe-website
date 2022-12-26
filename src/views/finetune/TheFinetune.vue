@@ -110,7 +110,7 @@ function toggleApplication() {
 }
 
 function goCreateTune() {
-  router.push('/modelzoo-createtune');
+  router.push('/finetune-creating');
 }
 
 const showDel = ref(false);

@@ -202,7 +202,6 @@ function checkName(rule, value, callback) {
         </el-popover>
       </el-form-item>
       <el-form-item class="des item" prop="desc">
-        <!-- :rules="[{ validator: checkDesc, trigger: 'blur' }]" -->
         <div>
           <span>{{ i18n.datasetDescribe }}</span>
         </div>

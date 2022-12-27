@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onUnmounted, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
@@ -14,11 +14,11 @@ import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
 import IconArrowRight from '~icons/app/arrow-right';
 
-import step1 from '@/assets/imgs/modelzoo-tune/step1.png';
-import step2 from '@/assets/imgs/modelzoo-tune/step2.png';
-import step3 from '@/assets/imgs/modelzoo-tune/step3.png';
-import step4 from '@/assets/imgs/modelzoo-tune/step4.png';
-import arrows from '@/assets/imgs/modelzoo-tune/arrows.png';
+import step1 from '@/assets/imgs/finetune/step1.png';
+import step2 from '@/assets/imgs/finetune/step2.png';
+import step3 from '@/assets/imgs/finetune/step3.png';
+import step4 from '@/assets/imgs/finetune/step4.png';
+import arrows from '@/assets/imgs/finetune/arrows.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';

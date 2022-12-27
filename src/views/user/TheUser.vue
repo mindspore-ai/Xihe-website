@@ -7,10 +7,8 @@ import ONav from '@/components/ONav.vue';
 
 import IconMenu from '~icons/app/menu';
 import IconPlus from '~icons/app/plus';
-// import IconLocation from '~icons/app/location';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
-// import IconHome from '~icons/app/home';
 import IconEmail from '~icons/app/email';
 import { Search } from '@element-plus/icons-vue';
 

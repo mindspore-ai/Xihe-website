@@ -5,7 +5,6 @@ import IconBack from '~icons/app/back.svg';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 import IconAddList from '~icons/app/add-list';
-// import IconAddBlue from '~icons/app/add-blue';
 import IconRemove from '~icons/app/remove';
 import warningImg from '@/assets/icons/warning.png';
 

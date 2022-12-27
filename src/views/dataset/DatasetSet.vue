@@ -1,0 +1,453 @@
+<script setup>
+import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import OButton from '@/components/OButton.vue';
+import OSelect from '@/components/OSelect.vue';
+import ODialog from '@/components/ODialog.vue';
+
+import { useUserInfoStore, useFileData } from '@/stores';
+import { modifyDataset, deleteDataset } from '@/api/api-dataset';
+
+import IconPoppver from '~icons/app/popover.svg';
+import warningImg from '@/assets/icons/warning.png';
+import successImg from '@/assets/icons/success.png';
+
+let detailData = reactive(useFileData().fileStoreData);
+
+const router = useRouter();
+let routerParams = router.currentRoute.value.params;
+
+const userInfoStore = useUserInfoStore();
+const organizationAdminList = reactive(userInfoStore.organizationAdminList);
+
+const i18n = {
+  visible: {
+    title: '仓库属性',
+    description: '更改描述',
+    options: [
+      {
+        value: 'Private',
+        label: 'Private',
+        id: 1,
+        describe:
+          '其他用户将无法搜索、查看你的数据集，仅你及你的团队成员可查看和编辑此数据集仓库。',
+      },
+      {
+        value: 'Public',
+        label: 'Public',
+        id: 2,
+        describe:
+          '其他用户可浏览、收藏、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集仓库。',
+      },
+    ],
+    btnText: '保存更改',
+  },
+  rename: {
+    title: '重命名和转移',
+    newOwn: '新拥有者',
+    newName: '新数据集名',
+    placeholder: '请输入数据集名',
+    describe: '你可重命名数据集，并转移你的数据集仓库至组织。',
+    btnText: '确定',
+  },
+  delete: {
+    title: '删除数据集',
+    describe:
+      '此操作将会删除与数据集相关的所有资源，且此操作不可逆，请谨慎确认是否要删除此数据集。',
+    describe1: '此删除不可逆，确认删除吗？',
+    describe2: '删除成功，你可再次创建新数据集，点击确定回到个人主页。',
+    btnText: '删除',
+    cancel: '取消',
+    confirm: '确认',
+  },
+};
+const visibleOptions = reactive(i18n.visible.options);
+const visibleValue = ref(detailData.is_private);
+const description = ref(detailData.desc);
+const newOwn = ref('');
+const visibleIndex = ref(0);
+const showDel = ref(false);
+const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
+const queryRef = ref(null);
+
+let query = reactive({
+  name: detailData.name,
+});
+
+detailData.repo_type === 'private'
+  ? (visibleIndex.value = 0)
+  : (visibleIndex.value = 1);
+
+function getIndex(value) {
+  visibleIndex.value = value;
+}
+function getOwnSelect(value) {
+  newOwn.value = value;
+}
+function getVisiableSelect(value) {
+  value === 'Private'
+    ? (visibleValue.value = 'private')
+    : (visibleValue.value = 'public');
+}
+async function confirmRename(formEl) {
+  if (!formEl) return;
+  if (!query.name.trim()) {
+    return false;
+  }
+  formEl.validate((valid) => {
+    if (valid) {
+      try {
+        modifyDataset(query, detailData.owner, detailData.id).then((res) => {
+          detailData.name = res.data.name;
+          ElMessage({
+            type: 'success',
+            message: '仓库信息更新成功',
+          });
+          router.push({
+            name: 'datasetSet',
+            params: {
+              user: routerParams.user,
+              name: detailData.name,
+            },
+          });
+          routerParams.name = detailData.name;
+        });
+      } catch (error) {
+        ElMessage({
+          type: 'error',
+          message: error,
+        });
+      }
+    } else {
+      console.error('error submit!');
+      return false;
+    }
+  });
+}
+function confirmPrivate() {
+  let query = {
+    type: visibleValue.value,
+    desc: description.value,
+  };
+  modifyDataset(query, detailData.owner, detailData.id)
+    .then((res) => {
+      detailData.desc = res.data.desc;
+      detailData.repo_type = res.data.repo_type;
+      ElMessage({
+        type: 'success',
+        message: '修改成功',
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '修改失败，请待会重试',
+      });
+    });
+}
+function confirmDel() {
+  deleteDataset(detailData.owner, detailData.name)
+    .then(() => {
+      showDel.value = false;
+      showConfirm.value = true;
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: '删除失败',
+      });
+    });
+}
+function toggleDelDlg(flag) {
+  if (flag === undefined) {
+    showDel.value = !showDel.value;
+  } else {
+    showDel.value = flag;
+  }
+}
+</script>
+<template>
+  <div class="setting-wrap">
+    <div class="setting-inner">
+      <div class="setting-main">
+        <div class="setting-title">{{ i18n.visible.title }}</div>
+        <o-select
+          :select-data="visibleOptions"
+          keys="value"
+          value="value"
+          :default-value="i18n.visible.options[visibleIndex].value"
+          @click="getIndex"
+          @change="getVisiableSelect"
+        ></o-select>
+        <p class="setting-tip">
+          {{ i18n.visible.options[visibleIndex].describe }}
+        </p>
+        <!-- 新增更改描述 -->
+        <div class="setting-title description">
+          {{ i18n.visible.description }}
+        </div>
+        <el-input
+          v-model="description"
+          :rows="2"
+          type="textarea"
+          maxlength="100"
+          show-word-limit
+        />
+        <o-button @click="confirmPrivate">{{ i18n.visible.btnText }}</o-button>
+        <div class="setting-title">{{ i18n.rename.title }} <el-divider /></div>
+        <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
+        <o-select
+          :select-data="organizationAdminList"
+          :placeholder="detailData.owner"
+          keys="id"
+          value="name"
+          @change="getOwnSelect"
+        ></o-select>
+        <el-form
+          ref="queryRef"
+          class="creating-box"
+          :model="query"
+          prop="region"
+          @submit.prevent
+        >
+          <p class="setting-tip">{{ i18n.rename.newName }}</p>
+          <el-form-item
+            class="item"
+            prop="name"
+            :rules="[
+              { required: true, message: '必填项', trigger: 'blur' },
+              {
+                pattern: /^[^\*/?\\<>|:;]*$/g,
+                message: '不能含有:/\\*;?<>|等特殊字符',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^[^.].*[^.]$/,
+                message: '不能以.开头或结尾',
+                trigger: 'blur',
+              },
+              {
+                pattern: /^(?!.*(-)\1+).*$/,
+                message: '不能连续两个及以上中划线',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              v-model="query.name"
+              :placeholder="i18n.rename.placeholder"
+            >
+            </el-input>
+            <el-popover
+              placement="bottom-start"
+              :width="372"
+              trigger="hover"
+              :teleported="false"
+            >
+              <template #reference>
+                <o-icon><icon-poppver></icon-poppver></o-icon>
+              </template>
+              <div>- 仓库名目前只支持英文</div>
+              <div>
+                - 仓库名名称不能以英文句号(<span class="remind">.</span
+                >)开头或结尾，且不能包含以下字符<span class="remind"
+                  >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
+                >
+              </div>
+              <div>
+                -&nbsp;仓库名建议简短，仓库下的文件或文件夹绝对路径长度<span
+                  class="remind"
+                  >不能超过1000字符</span
+                >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
+              </div>
+            </el-popover>
+          </el-form-item>
+        </el-form>
+        <p class="setting-tip">{{ i18n.rename.describe }}</p>
+        <o-button @click="confirmRename(queryRef)">{{
+          i18n.rename.btnText
+        }}</o-button>
+        <div class="setting-title">{{ i18n.delete.title }} <el-divider /></div>
+        <p class="setting-tip">{{ i18n.delete.describe }}</p>
+        <o-button class="delete-btn" status="error" @click="showDel = true">{{
+          i18n.delete.btnText
+        }}</o-button>
+      </div>
+      <o-dialog
+        :show="showDel"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
+        <template #head>
+          <div
+            class="dlg-title"
+            :style="{ textAlign: 'center', paddingTop: '40px' }"
+          >
+            <img :src="warningImg" alt="" />
+          </div>
+        </template>
+        <div
+          class="dlg-body"
+          :style="{
+            padding: '8px 0 12px',
+            fontSize: '18px',
+            textAlign: 'center',
+            width: '100%',
+          }"
+        >
+          {{ i18n.delete.describe1 }}
+        </div>
+        <template #foot>
+          <div
+            class="dlg-actions"
+            :style="{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingBottom: '56px',
+            }"
+          >
+            <o-button
+              :style="{ marginRight: '24px' }"
+              @click="toggleDelDlg(false)"
+              >{{ i18n.delete.cancel }}</o-button
+            >
+            <o-button type="primary" @click="confirmDel">{{
+              i18n.delete.confirm
+            }}</o-button>
+          </div>
+        </template>
+      </o-dialog>
+      <o-dialog
+        :show="showConfirm"
+        :close="false"
+        @close-click="toggleDelDlg(false)"
+      >
+        <template #head>
+          <div
+            class="dlg-title"
+            :style="{ textAlign: 'center', paddingTop: '40px' }"
+          >
+            <img :src="successImg" alt="" />
+          </div>
+        </template>
+        <div
+          class="dlg-body"
+          :style="{
+            fontSize: '18px',
+            textAlign: 'center',
+          }"
+        >
+          {{ i18n.delete.describe2 }}
+        </div>
+        <template #foot>
+          <div
+            class="dlg-actions"
+            :style="{
+              display: 'flex',
+              justifyContent: 'center',
+              paddingBottom: '56px',
+            }"
+          >
+            <router-link :to="{ path: `/${userInfoStore.userName}` }">
+              <o-button type="primary">{{ i18n.delete.confirm }}</o-button>
+            </router-link>
+          </div>
+        </template>
+      </o-dialog>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.setting-inner {
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  min-height: calc(100vh - 554px);
+  .setting-main {
+    max-width: 600px;
+    margin-bottom: 40px;
+    width: 100%;
+    .el-form-item {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      .el-popover.el-popper {
+        padding: 24px 16px 16px 16px;
+        font-size: 12px;
+        line-height: 16px;
+        color: #656565;
+        .remind {
+          color: #f13b35;
+        }
+      }
+      position: relative;
+      .el-tooltip__trigger {
+        cursor: pointer;
+        position: absolute;
+        right: -32px;
+        top: 5px;
+        font-size: 24px;
+      }
+      .requirement {
+        line-height: 34px;
+      }
+      margin-top: 24px;
+      width: 400px;
+      display: flex;
+      :deep(.el-form-item__content) {
+        display: flex;
+        justify-content: start;
+      }
+      justify-content: space-between;
+      :deep(.el-select__popper) {
+        top: 390px;
+      }
+      .text {
+        height: 40px;
+        line-height: 40px;
+      }
+      .radio {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        .explain {
+          color: #999999;
+          font-size: 14px;
+        }
+      }
+    }
+    .setting-title {
+      margin: 80px 0 16px;
+      font-size: 18px;
+      color: #000000;
+      line-height: 24px;
+      position: relative;
+      :deep .el-divider {
+        position: absolute;
+        top: -65px;
+        left: -40px;
+      }
+      &:first-child {
+        margin-top: 40px;
+      }
+    }
+    .description {
+      margin-top: 24px;
+    }
+    .el-textarea {
+      display: block;
+      margin-bottom: 24px;
+      width: 532px !important;
+      :deep(.el-textarea__inner) {
+        height: 89px;
+      }
+    }
+    .setting-tip {
+      font-size: 14px;
+      margin: 8px 0 16px;
+      color: #999999;
+    }
+  }
+}
+</style>

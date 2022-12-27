@@ -1,0 +1,50 @@
+{
+  "name": "xihe-website",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "vite",
+    "build:staging": "vite build --mode staging",
+    "build": "vite build",
+    "lint": "eslint \"src/**/*.{js,ts,vue,jsx,tsx}\""
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^1.1.4",
+    "aos": "^2.3.4",
+    "authing-js-sdk": "^4.23.35",
+    "axios": "^0.26.1",
+    "cesium": "^1.98.1",
+    "element-plus": "^2.2.26",
+    "highlight.js": "^11.5.1",
+    "js-base64": "^3.7.2",
+    "lodash": "^4.17.21",
+    "markdown-it": "^12.3.2",
+    "markdown-it-anchor": "^8.6.4",
+    "markdown-it-for-inline": "^0.1.1",
+    "markdown-it-toc": "^1.1.0",
+    "monaco-editor": "^0.33.0",
+    "normalize.css": "^8.0.1",
+    "pinia": "^2.0.13",
+    "sass": "^1.50.0",
+    "swiper": "^8.4.4",
+    "vue": "^3.2.25",
+    "vue-clipboard3": "^2.0.0",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.13.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.6.0",
+    "husky": "^7.0.4",
+    "prettier": "^2.6.2",
+    "unplugin-auto-import": "^0.7.1",
+    "unplugin-element-plus": "^0.4.0",
+    "unplugin-icons": "^0.14.1",
+    "unplugin-vue-components": "^0.19.3",
+    "vite": "^2.9.5",
+    "vite-plugin-cesium": "^1.2.22"
+  }
+}

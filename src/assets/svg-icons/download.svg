@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-下载_L" transform="translate(-1272.000000, -558.000000)" fill="currentColor" fill-rule="nonzero">
+            <g id="Server" transform="translate(252.000000, 458.000000)">
+                <g id="Group-3" transform="translate(1000.000000, 40.000000)">
+                    <g id="buttons" transform="translate(0.000000, 48.000000)">
+                        <g id="icon/download" transform="translate(20.000000, 12.000000)">
+                            <path d="M11.3,16.8 C11.4,16.9 11.6,17 11.8,17 L12.2,17 C12.4,17 12.6,16.9 12.7,16.8 L17.8,11.7 C18,11.5 18,11.2 17.8,11 C17.8,11 17.8,11 17.8,11 L17.1,10.3 C16.9,10.1 16.6,10.1 16.4,10.3 C16.4,10.3 16.4,10.3 16.4,10.3 L13,13.7 L13,3.5 C13,3.2 12.8,3 12.5,3 L11.5,3 C11.2,3 11,3.2 11,3.5 L11,13.7 L7.6,10.3 C7.4,10 7,10 6.9,10.2 C6.9,10.2 6.9,10.2 6.9,10.2 L6.2,10.9 C6,11.1 6,11.4 6.2,11.6 C6.2,11.6 6.2,11.6 6.2,11.6 L11.3,16.8 Z M21,19 L3,19 L3,21 L21,21 L21,19 Z" id="Icon-color"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

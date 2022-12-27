@@ -138,7 +138,7 @@ function selectHyperParams(value) {
     <div class="createtune-wrap">
       <div class="tune-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo-tune' }"
+          <el-breadcrumb-item :to="{ path: '/finetune' }"
             >大模型微调</el-breadcrumb-item
           >
           <el-breadcrumb-item>创建微调任务</el-breadcrumb-item>

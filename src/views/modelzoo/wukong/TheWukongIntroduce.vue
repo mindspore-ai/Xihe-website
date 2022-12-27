@@ -138,10 +138,10 @@ const effectImg = reactive([
       <div class="title">生成效果：</div>
       <div class="effect-list">
         <div v-for="item in effectImg" :key="item.title" class="effect-item">
-          <div class="text">{{ item.title }}</div>
           <div class="effect-img">
             <img :src="item.imgUrl" alt="" />
           </div>
+          <div class="text">{{ item.title }}</div>
         </div>
       </div>
     </div>
@@ -258,15 +258,15 @@ const effectImg = reactive([
       justify-content: space-between;
       .effect-item {
         width: 32%;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
         .text {
           line-height: 22px;
           font-size: 14px;
           color: #555555;
-          margin-bottom: 10px;
           text-align: center;
         }
         .effect-img {
+          margin-bottom: 10px;
           width: 100%;
           img {
             width: 100%;

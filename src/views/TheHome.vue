@@ -1087,7 +1087,7 @@ function goActivity() {
             font-size: 16px;
             position: fixed;
             top: 22px;
-            right: 50px;
+            left: 0;
             bottom: unset;
           }
         }

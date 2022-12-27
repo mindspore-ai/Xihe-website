@@ -124,12 +124,15 @@ onMounted(() => {
   .album-list {
     .img-mask {
       position: absolute;
-      top: 0;
-      right: 0;
+      // top: 0;
+      // right: 0;
       bottom: 0;
-      left: 0;
-      opacity: 50%;
-      background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+      // left: 0;
+      // opacity: 50%;
+      // background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      width: 100%;
+      height: 60%;
       display: none;
     }
     .album-item1 {
@@ -220,6 +223,7 @@ onMounted(() => {
           bottom: 24px;
           left: 0;
           padding: 0 24px;
+          z-index: 200;
           .style {
             margin-bottom: 10px;
             white-space: nowrap;

@@ -6,7 +6,6 @@ import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconCopy from '~icons/app/copy-nickname';
 import IconPlus from '~icons/app/plus';
-// import IconPopver from '~icons/app/popover.svg';
 import IconFork from '~icons/app/fork';
 
 import OButton from '@/components/OButton.vue';
@@ -157,8 +156,6 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      // 不能含有:;*?\<>|等特殊字符
-      // pattern: /^[^\*/?\\<>|:;]$/g,
       pattern: /^[^\*/?\\<>|:;]*$/g,
       message: '不能含有:/\\*;?<>|等特殊字符',
       trigger: 'blur',
@@ -175,10 +172,7 @@ const rules = reactive({
     },
     { validator: checkName, trigger: 'change' },
   ],
-  describe: [
-    // { required: true, message: '必填项', trigger: 'blur' },
-    { min: 1, max: 100, message: '内容不能为空', trigger: 'blur' },
-  ],
+  describe: [{ min: 1, max: 100, message: '内容不能为空', trigger: 'blur' }],
 });
 
 const forkForm = reactive({
@@ -189,7 +183,6 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
-// let timer = null;
 // 项目详情数据
 function getDetailData() {
   try {
@@ -216,21 +209,15 @@ function getDetailData() {
           tabTitle[0].label = '项目卡片';
           activeName.value = '项目卡片';
         }
-
-        // digCount.value = detailData.value.type;
         isDigged.value = detailData.value.liked;
-
         const { tags } = detailData.value;
         modelTags.value = [];
         headTags.value = [];
         if (tags) {
-          // modelTags.value = [{ name: protocol }, { name: training }];
           tags.forEach((item) => {
             modelTags.value.push({ name: item });
           });
-        } // else {
-        //   modelTags.value = [{ name: protocol }, { name: training }];
-        // }
+        }
         modelTags.value = modelTags.value.map((item) => {
           return item;
         });
@@ -641,7 +628,7 @@ function checkName(rule, value, callback) {
             </el-tab-pane>
             <el-tab-pane
               v-else
-              :key="item.id"
+              :key="item.label"
               class="center-tab-pane"
               :name="item.path"
               :disabled="userInfoStore.userName === detailData.owner"
@@ -649,17 +636,7 @@ function checkName(rule, value, callback) {
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">
                   <!-- <p>训练 </p> -->
-                  <p>
-                    训练
-                    <!-- <span
-                        v-if="runingStatus"
-                        class="status train-status1"
-                      ></span>
-                      <span v-else class="status train-status"></span> -->
-
-                    <!-- <span v-else class="status train-status2"></span> -->
-                    <!-- <span v-else class="status train-status3"></span> -->
-                  </p>
+                  <p>训练</p>
                   <template
                     v-if="userInfoStore.userName === detailData.owner"
                     #dropdown

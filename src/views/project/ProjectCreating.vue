@@ -8,9 +8,7 @@ import { setNewProject, checkNames } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
 
-// import IconPopver from '~icons/app/popover.svg';
 import IconNecessary from '~icons/app/necessary.svg';
-// import OButton from '@/components/OButton.vue';
 import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -53,7 +51,6 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      // 不能含有:;*?\<>|等特殊字符
       pattern: /^[^\*/?\\<>|:;]*$/g,
       message: '不能含有:/\\*;?<>|等特殊字符',
       trigger: 'blur',
@@ -75,11 +72,7 @@ const rules = reactive({
     },
     { validator: checkName, trigger: 'change' },
   ],
-  desc: [
-    // { required: true, message: '必填项', trigger: 'blur' },
-    { min: 1, max: 200, message: '内容不能为空', trigger: 'blur' },
-    // { validator: checkDesc, trigger: 'blur' },
-  ],
+  desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
 let time = null;
 function checkName(rule, value, callback) {
@@ -96,31 +89,9 @@ function checkName(rule, value, callback) {
     });
   }, 500);
 }
-// 校验描述的长度200个字符
-/* function checkDesc(rule, value, callback) {
-  if (getByteLength(value) <= 200) {
-    callback();
-  } else {
-    callback(new Error('字符长度不能超过200个'));
-  }
-}
-function getByteLength(str) {
-  let len = 0;
-  for (let i = 0; i < str.length; i++) {
-    if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
-      len += 2;
-    } else {
-      len++;
-    }
-  }
-  return len;
-} */
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);
-// const trainSdk = ref([]);
-// const inferSdk = ref([]);
-// const protocol = ref([]);
 
 nameList.value.push(userInfo.userName);
 proList.owner = nameList.value[0];

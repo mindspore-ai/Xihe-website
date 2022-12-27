@@ -142,7 +142,6 @@ function handleTabClick(item) {
 }
 // 点击标签
 function tagClick(it, key) {
-  // if (key === 'task' || key === 'licenses') {
   if (key === 'licenses') {
     if (it.isActive) {
       it.isActive = false;

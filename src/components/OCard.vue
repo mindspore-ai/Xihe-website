@@ -33,34 +33,11 @@ const i18n = {
 const tagList = JSON.stringify(props.cardData);
 
 if (props.cardType === 'model') {
-  const {
-    /* licenses_list,
-    libraries_list,
-    task_list,
-    tags_list,
-    device_target_list,
-    files_list, */
-    tags,
-  } = JSON.parse(tagList);
+  const { tags } = JSON.parse(tagList);
   labelList.value = tags;
-  /*  labelList.value = [
-    ...licenses_list,
-    ...task_list,
-    ...tags_list,
-    ...libraries_list,
-    ...device_target_list,
-    ...files_list,
-    ...tags,
-  ]; */
 } else if (props.cardType === 'dataset') {
-  const {
-    /* licenses_list, task_list, files_list, */
-    tags,
-  } = JSON.parse(tagList);
+  const { tags } = JSON.parse(tagList);
   labelList.value = tags;
-  /*  labelList.value = [
-    ...licenses_list, ...task_list, ...files_list,
-  ]; */
 }
 </script>
 <template>

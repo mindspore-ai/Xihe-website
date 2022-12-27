@@ -169,24 +169,6 @@ function clearItem1(index) {
   });
   queryData.tag_kinds = null;
 }
-// 训练平台标签
-/* function othersClick(index, index2) {
-  otherCondition.value[index].haveActive = true;
-  // 高亮
-  otherCondition.value[index].condition[index2].isActive =
-    !otherCondition.value[index].condition[index2].isActive;
-  otherCondition.value[index].condition[0].items[index2].isActive =
-    !otherCondition.value[index].condition[0].items[index2].isActive;
-  goSearch(otherCondition.value);
-} */
-// 清除训练平台标签
-/* function clearItem3(index) {
-  otherCondition.value[index].haveActive = false;
-  otherCondition.value[index].condition.forEach((item) => {
-    item.isActive = false;
-  });
-  queryData[otherCondition.value[index].title.key] = null;
-} */
 
 // 单选(sdk,状态，协议)
 function conditionClick(index, index2) {
@@ -697,36 +679,6 @@ onUnmounted(() => {
             <span @click="checkAllClick(item, index)">查看全部</span>
           </div>
         </div>
-        <!-- 其他-->
-        <!-- <div
-          v-for="(item, index) in otherCondition"
-          :key="item.title"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.title.text }}</span>
-            <div
-              v-if="item.haveActive"
-              class="clear"
-              @click="clearItem3(index)"
-            >
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-          <div class="condition-box">
-            <div
-              v-for="(tag, index2) in item.condition[0].items"
-              :key="tag"
-              class="condition-detail"
-              :class="[{ 'condition-active1': tag.isActive }]"
-              @click="othersClick(index, index2)"
-            >
-              {{ tag.name }}
-              <o-icon class="icon-x"><icon-x></icon-x></o-icon>
-            </div>
-          </div>
-        </div> -->
       </div>
 
       <div class="card-box">

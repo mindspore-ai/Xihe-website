@@ -33,17 +33,12 @@ const props = defineProps({
 const emit = defineEmits(['delete', 'jump', 'cancel']);
 
 function removeItemClick(item) {
-  // emit('delete', [item, props.name]);
   emit('delete', item);
 }
 
 function goDetailClick(item) {
   emit('jump', item);
 }
-
-/* function cancelClick() {
-  emit('cancel');
-} */
 
 const delRelate = ref(null);
 

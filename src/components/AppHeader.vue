@@ -12,7 +12,7 @@ import userImg from '@/assets/icons/user.png';
 import { goAuthorize, logout } from '@/shared/login';
 import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
-import ONav from '@/components/ONav.vue';
+// import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -186,13 +186,13 @@ function handleLogoClick() {
 }
 
 // 点击导航
-function handleNavClick(item) {
+/* function handleNavClick(item) {
   if (item.windowOpen) {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
     router.push({ path: item.href });
   }
-}
+} */
 
 // 点击导航
 function handleSelect(item) {
@@ -706,30 +706,6 @@ function handleBlur() {
     </div>
   </div>
 </template>
-<style lang="scss">
-.el-popper.modelzooItem {
-  position: absolute;
-  left: 400px !important;
-  .el-menu--popup {
-    min-width: 118px;
-    padding-left: 16px;
-    padding-right: 16px;
-    .sub-menu {
-      .el-menu-item {
-        color: #000;
-        &:first-child {
-          border-bottom: 1px solid #ddd;
-        }
-
-        &:hover {
-          background-color: transparent;
-          color: #0d8dff;
-        }
-      }
-    }
-  }
-}
-</style>
 <style lang="scss" scoped>
 .header {
   display: flex;
@@ -768,35 +744,73 @@ function handleBlur() {
       .el-menu--popup {
         min-width: 100px !important;
       }
+
       .el-menu-item {
         background-color: inherit;
         font-size: 18px;
         padding: 0;
-        margin-left: 32px;
+        // margin-left: 32px;
+        border-bottom: none;
+        padding: 0 16px;
         &:first-child {
-          margin-left: 0px;
+          padding-left: 0px;
         }
         &:hover {
           // background-color: transparent;
           color: #0d8dff;
         }
       }
+      // 蓝色下边框
+      .el-menu-item.is-active {
+        border: none;
+        &::after {
+          content: '';
+          height: 2px;
+          background-color: #0d8dff;
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          bottom: 0;
+          border-radius: 1px;
+          transition: background 0.3s;
+        }
+      }
+      .el-menu-item.is-active:first-child {
+        &::after {
+          position: absolute;
+          left: 0;
+        }
+      }
       .el-sub-menu {
         // background-color: inherit;
         font-size: 18px;
-
+        position: relative;
         &:hover .el-sub-menu__title {
           background-color: inherit;
           color: #0d8dff !important;
         }
         .el-sub-menu__title {
-          font-size: 18px;
           padding: 0;
-          margin-left: 32px;
+          font-size: 18px;
+          padding: 0 16px;
+          border: none;
         }
+
         .el-icon {
           display: none;
         }
+      }
+      // 蓝色下边框
+      .el-sub-menu.is-active .el-sub-menu__title::after {
+        content: '';
+        height: 2px;
+        background-color: #0d8dff;
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 0;
+        border-radius: 1px;
+        transition: background 0.3s;
       }
     }
     .header-center {
@@ -996,6 +1010,29 @@ function handleBlur() {
               height: 100%;
             }
           }
+        }
+      }
+    }
+  }
+}
+</style>
+<style lang="scss">
+.el-popper.modelzooItem {
+  .el-menu--popup {
+    width: 86px;
+    min-width: 86px;
+    padding-left: 6px;
+    padding-right: 6px;
+    .sub-menu {
+      .el-menu-item {
+        color: #000;
+        &:first-child {
+          border-bottom: 1px solid #ddd;
+        }
+
+        &:hover {
+          background-color: transparent;
+          color: #0d8dff;
         }
       }
     }

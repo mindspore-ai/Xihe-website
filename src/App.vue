@@ -67,6 +67,15 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
+// 处理开启弹窗页面闪动
+body {
+  width: 100% !important;
+  padding-right: 0px !important;
+}
+.el-popup-parent--hidden {
+  overflow: auto !important;
+}
+
 #app {
   min-width: 1280px;
 }

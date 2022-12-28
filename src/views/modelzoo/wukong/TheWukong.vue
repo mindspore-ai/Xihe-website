@@ -329,10 +329,10 @@ watch(
     </el-dialog>
 
     <!-- AI画集 -->
-    <el-dialog v-model="showAlbum" :fullscreen="true" center>
-      <template #title>
+    <el-dialog v-model="showAlbum" title="AI 画集" :fullscreen="true" center>
+      <!-- <template #title>
         <div>AI画集</div>
-      </template>
+      </template> -->
       <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
@@ -468,11 +468,15 @@ watch(
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
   .el-dialog__header {
     padding: 15px 0 15px;
-    color: #fff;
+    // color: #fff;
     position: sticky;
     top: 0;
     background: #000;
     z-index: 200;
+    span {
+      color: #fff;
+      font-size: 24px;
+    }
   }
   .el-dialog__body {
     // position: sticky;

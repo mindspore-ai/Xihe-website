@@ -4,7 +4,6 @@ import { useRouter, useRoute } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
 
-import IconRebuild from '~icons/app/rebuild';
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
@@ -25,6 +24,8 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 import ResetTrain from '@/components/ResetTrain.vue';
+
+import { getFinetune } from '@/api/api-finetune';
 
 let i18n = {
   head: {
@@ -103,6 +104,18 @@ const trainData = [
   },
 ];
 
+// 获取微调任务列表
+function getFinetuneList() {
+  try {
+    getFinetune().then((res) => {
+      console.log('res: ', res);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+// getFinetuneList();
+
 // 切换申请步骤弹窗
 function toggleApplication() {
   showtable.value = true;
@@ -169,47 +182,12 @@ function showStopClick(val, id) {
   }
 }
 
-// 重建
-const showReset = ref(false);
-function showResetClick(val) {
-  let bool = trainData.value.some(
-    (item) => item.status === 'scheduling' || item.status === 'Running'
-  );
-  if (bool) {
-    ElMessage({
-      type: 'warning',
-      message: '只能有一个运行中的训练',
-    });
-  } else if (trainData.value.length >= 5) {
-    ElMessage({
-      type: 'warning',
-      message: '最多创建5条训练',
-    });
-  } else {
-    resetedId.value = val;
-    showReset.value = true;
-  }
-}
-
-function resetClick(val) {
-  if (val === 1) {
-    showReset.value = false;
-  } else {
-    rebuildTrain(projectId, val).then((res) => {
-      if (res.status === 201) {
-        showReset.value = false;
-        getTrainList();
-      }
-    });
-  }
-}
-
 function goTrainLog(trainId) {
   router.push({
-    name: 'projectTrainLog',
-    params: {
+    name: 'finetuneLog',
+    /* params: {
       trainId: trainId,
-    },
+    }, */
   });
 }
 </script>
@@ -305,9 +283,7 @@ function goTrainLog(trainId) {
           <el-table-column label="任务框架" width="180">
             <template #default="scope">
               <div>
-                <span class="task-frame" @click="goTrainLog(scope.row.id)">{{
-                  scope.row.frame
-                }}</span>
+                <span class="task-frame">{{ scope.row.frame }}</span>
               </div>
             </template>
           </el-table-column>
@@ -324,12 +300,6 @@ function goTrainLog(trainId) {
                 :show-stop="showStop"
                 @click="quitClick"
               />
-
-              <ResetTrain
-                :reset-id="resetedId"
-                :show-reset="showReset"
-                @click="resetClick"
-              />
               <div class="description">
                 <div class="description-content">
                   {{ scope.row.type }}
@@ -344,10 +314,6 @@ function goTrainLog(trainId) {
                       <o-icon><icon-stop></icon-stop></o-icon>
                       <p>终止</p>
                     </div>
-                    <div class="tools" @click="showResetClick(scope.row.id)">
-                      <o-icon><icon-rebuild></icon-rebuild></o-icon>
-                      <p>重建</p>
-                    </div>
                     <div class="tools" @click="showDelClick(scope.row.id)">
                       <o-icon><icon-remove></icon-remove></o-icon>
                       <p>删除</p>
@@ -360,7 +326,7 @@ function goTrainLog(trainId) {
 
           <el-table-column label="资源占用" prop="resource" width="190">
           </el-table-column>
-          <el-table-column label="更新时间" prop="created_at" width="152">
+          <el-table-column label="创建时间" prop="created_at" width="152">
           </el-table-column>
           <template #empty>
             <div class="instance-box">

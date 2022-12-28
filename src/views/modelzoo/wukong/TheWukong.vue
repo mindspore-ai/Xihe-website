@@ -250,7 +250,12 @@ watch(
     </div>
 
     <!-- 我的收藏dialog -->
-    <el-dialog v-model="showCollection" :fullscreen="true" center>
+    <el-dialog
+      v-model="showCollection"
+      :lock-scroll="true"
+      :fullscreen="true"
+      center
+    >
       <swiper
         v-if="collectList.length >= 3"
         :slides-per-view="3"
@@ -329,7 +334,13 @@ watch(
     </el-dialog>
 
     <!-- AI画集 -->
-    <el-dialog v-model="showAlbum" title="AI 画集" :fullscreen="true" center>
+    <el-dialog
+      v-model="showAlbum"
+      title="AI 画集"
+      :destroy-on-close="true"
+      :fullscreen="true"
+      center
+    >
       <!-- <template #title>
         <div>AI画集</div>
       </template> -->

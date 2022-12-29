@@ -18,12 +18,12 @@ import OButton from '@/components/OButton.vue';
 // const router = useRouter();
 const tips = ref(false); //控制创建训练弹窗
 const queryRef = ref(null);
-const codeDirInt = ref(null); //代码目录输入框
-const bootFileInt = ref(null); //启动文件输入框
+const dataset = ref(''); //输入数据集输入框
+const model = ref(''); //预训练模型输入框
 
 const form = reactive({
   name: '', //任务名称
-  tastType: '', //任务类型
+  taskType: '', //任务类型
   jobType: '微调', //任务类型
   code_dir: '',
   boot_file: '',
@@ -37,23 +37,15 @@ const form = reactive({
 // 任务类型
 const options = reactive([
   {
-    value: '以文生图',
-    label: '以文生图',
-  },
-  {
     value: '以图生文',
     label: '以图生文',
-  },
-  {
-    value: '紫东太初',
-    label: '紫东太初',
   },
 ]);
 // 超参选项
 const hyperParams = reactive([
-  { label: 'epochs =', value: '1' },
-  { label: 'start learning_rate =', value: '2' },
-  { label: 'end learning_rate =', value: '3' },
+  { label: 'epochs =', value: '' },
+  { label: 'start learning_rate =', value: '' },
+  { label: 'end learning_rate =', value: '' },
 ]);
 
 // 按顺序校验表单数据是否校验通过
@@ -132,6 +124,13 @@ const rules = reactive({
 function selectHyperParams(value) {
   console.log('value: ', value);
 }
+
+function changeTasktype(val) {
+  console.log('val: ', val);
+  if (val === '以图生文') {
+    (dataset.value = '以图生文数据集'), (model.value = '以图生文预训练模型');
+  }
+}
 </script>
 <template>
   <div class="createtune">
@@ -177,7 +176,11 @@ function selectHyperParams(value) {
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
               <el-form-item prop="SDK" label="任务类型">
-                <el-select v-model="form.tastType" placeholder="请选择">
+                <el-select
+                  v-model="form.taskType"
+                  placeholder="请选择"
+                  @change="changeTasktype"
+                >
                   <!-- <el-option label="ModelArts" value="ModelArts" /> -->
                   <el-option
                     v-for="item in options"
@@ -194,12 +197,7 @@ function selectHyperParams(value) {
               </div>
               <el-form-item label="训练输入数据">
                 <div class="option">
-                  <el-input
-                    ref="codeDirInt"
-                    v-model="form.tastType"
-                    disabled
-                    :placeholder="form.tastType"
-                  />
+                  <el-input v-model="dataset" disabled />
                 </div>
               </el-form-item>
             </div>
@@ -209,12 +207,7 @@ function selectHyperParams(value) {
               </div>
               <el-form-item label="预训练模型">
                 <div class="option">
-                  <el-input
-                    ref="bootFileInt"
-                    v-model="form.tastType"
-                    disabled
-                    :placeholder="form.tastType"
-                  />
+                  <el-input v-model="model" disabled />
                 </div>
               </el-form-item>
             </div>
@@ -253,7 +246,7 @@ function selectHyperParams(value) {
                   <span>
                     {{ item.label }}
                   </span>
-                  <el-input v-model="item.value" placeholder="请输入任务名称" />
+                  <el-input v-model="item.value" />
                 </el-checkbox>
               </el-form-item>
             </div>
@@ -262,7 +255,7 @@ function selectHyperParams(value) {
 
         <div class="createtune-content-action">
           <o-button
-            v-if="form.name && form.tastType"
+            v-if="form.name && form.taskType"
             class="confim"
             type="primary"
             loading

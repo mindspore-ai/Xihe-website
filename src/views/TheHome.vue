@@ -5,7 +5,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, FreeMode, Navigation, Virtual } from 'swiper';
+import { Pagination, Autoplay, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';

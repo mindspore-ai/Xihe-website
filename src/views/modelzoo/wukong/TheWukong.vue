@@ -250,12 +250,7 @@ watch(
     </div>
 
     <!-- 我的收藏dialog -->
-    <el-dialog
-      v-model="showCollection"
-      :lock-scroll="true"
-      :fullscreen="true"
-      center
-    >
+    <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
         v-if="collectList.length >= 3"
         :slides-per-view="3"

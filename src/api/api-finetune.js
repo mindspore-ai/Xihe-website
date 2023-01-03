@@ -18,7 +18,17 @@ function getHeaderConfig() {
  */
 export function getFinetune() {
   const url = `/server/finetune`;
-  return request.get(url).then((res) => {
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 获取微调任务列表
+ * @returns
+ */
+export function createFinetune(params) {
+  const url = `/server/finetune`;
+  return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

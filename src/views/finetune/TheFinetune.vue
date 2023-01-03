@@ -1,16 +1,22 @@
 <script setup>
-import { ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, reactive, onUnmounted, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
+import moment from 'moment';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/runing';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
+import IconStopping from '~icons/app/stopping';
+import IconWaiting from '~icons/app/waiting';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -23,33 +29,54 @@ import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
-import ResetTrain from '@/components/ResetTrain.vue';
 
-import { getFinetune } from '@/api/api-finetune';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
+
+import {
+  getFinetune,
+  deleteFinetune,
+  terminateFinetune,
+} from '@/api/api-finetune';
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+const router = useRouter();
+
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
+const listId = ref(null);
+const trainId = ref(null);
+const showStep = ref(false);
+const showtable = ref(false);
+const showFinetune = ref(false);
+const finetuneData = ref([]);
+const showBtn = ref(false);
+const expiry = ref(''); //体验截止时间
+
+const isLogined = useLoginStore().isLogined;
+const userInfo = useUserInfoStore();
 
 let i18n = {
   head: {
     title: '大模型微调',
     introduce:
-      '基于平台内置的自动太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
+      '基于平台内置的紫东.太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
   },
   table: {
     title: '任务列表',
-    remainTime: '剩余体验时间：',
+    remainTime: '体验截止时间：',
   },
 };
-
-// const route = useRoute();
-const router = useRouter();
-// const userInfoStore = useUserInfoStore();
-
-// const projectId = detailData.value.id;
-const listId = ref(null);
-const trainId = ref(null);
-const resetedId = ref(null);
-const showStep = ref(false);
-const showtable = ref(false);
-
 const applySteps = reactive([
   {
     stepImg: step1,
@@ -69,61 +96,92 @@ const applySteps = reactive([
   {
     stepImg: step4,
     stepTitle: '04  完成微调任务',
-    // stepArrows: arrows,
   },
 ]);
 
-// 训练数据TODO:
-// const trainData = [];
-const trainData = [
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-];
-
 // 获取微调任务列表
+let socket;
 function getFinetuneList() {
-  try {
-    getFinetune().then((res) => {
-      console.log('res: ', res);
-    });
-  } catch (error) {
-    console.error(error);
+  if (isLogined) {
+    try {
+      getFinetune()
+        .then((res) => {
+          showFinetune.value = true;
+          showtable.value = true;
+          expiry.value = res.data.expiry;
+          finetuneData.value = res.data.datas;
+          console.log('微调任务: ', finetuneData.value);
+          if (!finetuneData.value) {
+            showBtn.value = false;
+          } else {
+            let bool = finetuneData.value.some((item) => {
+              return item.is_done === false;
+            });
+            if (finetuneData.value.length < 5) {
+              if (bool) {
+                showBtn.value = true;
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                return;
+              }
+            } else if (finetuneData.value.length === 5) {
+              showBtn.value = true;
+              if (bool) {
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                return;
+              }
+            }
+          }
+        })
+        .catch((res) => {
+          if (res.code === 'finetune_no_permission') {
+            showFinetune.value = true;
+            showtable.value = false;
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    showFinetune.value = true;
+    showtable.value = false;
   }
 }
-// getFinetuneList();
+getFinetuneList();
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [
+    getHeaderConfig().headers['private-token'],
+  ]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    // console.log('微调列表页event: ', event);
+    try {
+      finetuneData.value = JSON.parse(event.data).data;
+      console.log('ws返回的信息: ', finetuneData.value);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
+
+// 毫秒级时间戳换算成日期
+function getFullTime(val) {
+  const stamp = new Date(val);
+  const time = moment(stamp).format('YYYY-MM-DD HH:mm:ss');
+  return time;
+}
 
 // 切换申请步骤弹窗
 function toggleApplication() {
-  showtable.value = true;
   showStep.value = false;
 }
 
 function goCreateTune() {
-  router.push('/finetune-creating');
+  router.push({ path: `/finetune-creating/${userInfo.userName}` });
 }
 
 const showDel = ref(false);
@@ -132,32 +190,25 @@ function showDelClick(val) {
   showDel.value = true;
 }
 
-// 删除
-function deleteTrainList(id) {
-  deleteTainList(projectId, id).then((res) => {
-    if (res.status === 204) {
-      getTrainList();
-      showDel.value = false;
-    }
-  });
-}
-
+// 删除微调任务
 function delClick(val) {
   if (val === 2) {
     showDel.value = false;
   } else {
-    deleteTrainList(val);
+    deleteFinetune(val).then(() => {
+      getFinetuneList();
+      showDel.value = false;
+      showBtn.value = false;
+    });
   }
 }
 
 // 终止训练
 const showStop = ref(false);
-function stopTrainList(id) {
-  stopTrain(projectId, id).then((res) => {
-    if (res.status === 202) {
-      getTrainList();
-      showStop.value = false;
-    }
+function stopFinetuneList(id) {
+  terminateFinetune(id).then(() => {
+    getFinetuneList();
+    showStop.value = false;
   });
 }
 
@@ -165,7 +216,8 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopTrainList(trainId.value);
+    stopFinetuneList(trainId.value);
+    showBtn.value = false;
   }
 }
 
@@ -185,15 +237,29 @@ function showStopClick(val, id) {
 function goTrainLog(trainId) {
   router.push({
     name: 'finetuneLog',
-    /* params: {
-      trainId: trainId,
-    }, */
+    params: {
+      finetuneId: trainId,
+    },
   });
 }
+
+const closeSocket = () => {
+  socket.close();
+};
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', closeSocket);
+});
+
+onUnmounted(() => {
+  socket && socket.close();
+  window.removeEventListener('beforeunload', closeSocket);
+});
 </script>
 
 <template>
-  <div class="modelzoo-tune">
+  <div v-if="showFinetune" class="modelzoo-tune">
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
@@ -208,13 +274,23 @@ function goTrainLog(trainId) {
       <div class="modelzoo-table">
         <div class="table-title">
           <div class="title">
-            {{ i18n.table.title }}
+            <span>
+              {{ i18n.table.title }}
+            </span>
+            <span>
+              <div class="list-tip">
+                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
+              </div>
+            </span>
           </div>
           <div class="remain-time">
-            {{ i18n.table.remainTime }}
+            <span @click="goCreateTune">
+              {{ i18n.table.remainTime }}
+            </span>
+            <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
         </div>
-        <el-table :data="trainData" style="width: 100%">
+        <el-table :data="finetuneData" style="width: 100%">
           <el-table-column label="任务名称/ID" width="180">
             <template #default="scope">
               <div>
@@ -243,22 +319,35 @@ function goTrainLog(trainId) {
                   <span>已停止</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Running'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>运行中</span>
+                <div
+                  v-if="scope.row.status === 'Terminating'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopping></icon-stopping></o-icon>
+                  <span>停止中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                  <o-icon><icon-waiting></icon-waiting></o-icon>
+                  <span>等待中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-creating></icon-creating></o-icon>
+                  <span>创建中</span>
                 </div>
 
                 <div
                   v-if="scope.row.status === 'scheduling'"
                   class="status-item"
                 >
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-running></icon-running></o-icon>
                   <span> 启动中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Failed'" class="status-item">
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>训练失败</span>
+                <div v-if="scope.row.status === 'Running'" class="status-item">
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span>运行中</span>
                 </div>
 
                 <div
@@ -267,6 +356,16 @@ function goTrainLog(trainId) {
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
+                </div>
+
+                <div v-if="scope.row.status === 'Failed'" class="status-item">
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>训练失败</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+                  <o-icon><icon-abnormal></icon-abnormal></o-icon>
+                  <span>异常</span>
                 </div>
               </div>
             </template>
@@ -281,13 +380,11 @@ function goTrainLog(trainId) {
           </el-table-column>
 
           <el-table-column label="任务框架" width="180">
-            <template #default="scope">
-              <div>
-                <span class="task-frame">{{ scope.row.frame }}</span>
-              </div>
-            </template>
+            <div>
+              <span class="task-frame">mindspore</span>
+            </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="460">
+          <el-table-column label="作业类型" width="450">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -301,13 +398,15 @@ function goTrainLog(trainId) {
                 @click="quitClick"
               />
               <div class="description">
-                <div class="description-content">
-                  {{ scope.row.type }}
-                </div>
+                <div class="description-content">finetune</div>
                 <div class="hide-box">
                   <div class="tools-box">
                     <div
-                      v-if="scope.row.status === 'Running'"
+                      v-if="
+                        scope.row.status === 'Pending' ||
+                        scope.row.status === 'Creating' ||
+                        scope.row.status === 'Running'
+                      "
                       class="tools"
                       @click="showStopClick(scope.row.status, scope.row.id)"
                     >
@@ -324,7 +423,8 @@ function goTrainLog(trainId) {
             </template>
           </el-table-column>
 
-          <el-table-column label="资源占用" prop="resource" width="190">
+          <el-table-column label="资源占用" prop="resource" width="200">
+            1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="152">
           </el-table-column>
@@ -336,8 +436,12 @@ function goTrainLog(trainId) {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button type="primary" @click="goCreateTune">
-            创建训练实例
+          <o-button
+            :disabled="showBtn || Math.round(new Date() / 1000) > expiry"
+            type="primary"
+            @click="goCreateTune"
+          >
+            创建微调任务
           </o-button>
         </div>
       </div>
@@ -445,6 +549,14 @@ $theme: #0d8dff;
         line-height: 24px;
         font-size: 18px;
         color: #000000;
+        display: flex;
+        align-items: center;
+        .list-tip {
+          font-size: 14px;
+          font-weight: 400;
+          color: #555;
+          line-height: 26px;
+        }
       }
       .remain-time {
         line-height: 24px;

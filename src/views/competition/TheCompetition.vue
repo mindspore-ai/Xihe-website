@@ -497,9 +497,7 @@ function toTop() {
     :deep(.demo-tabs) {
       .el-tabs__header {
         border: none;
-        margin-top: 40px;
-        margin-bottom: 24px;
-
+        margin: 40px 0px 0px;
         .el-tabs__nav {
           border: none;
         }
@@ -529,6 +527,7 @@ function toTop() {
         }
       }
       .el-tabs__content {
+        margin-top: 24px;
         .competition-box {
           font-size: 14px;
           // padding: 40px 48px 24px 40px;

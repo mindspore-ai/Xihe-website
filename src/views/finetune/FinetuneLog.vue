@@ -1,21 +1,65 @@
 <script setup>
-import { ref, reactive } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
-// import IconAddBlue from '~icons/app/add-blue';
+import { ref, nextTick, onUnmounted, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-// import { createTrainProject } from '@/api/api-project';
+import { LOGIN_KEYS } from '@/shared/login';
 
-// import { useUserInfoStore } from '@/stores';
-import OButton from '@/components/OButton.vue';
+const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-// const userInfoStore = useUserInfoStore();
-
-// const route = useRoute();
-// const router = useRouter();
+const route = useRoute();
+// console.log('route: ', route.params);
 
 const finetuneLog = ref('');
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+// 日志
+const socket = new WebSocket(
+  `wss://${DOMAIN}/server/finetune/${route.params.finetuneId}/log/ws`,
+  [getHeaderConfig().headers['private-token']]
+);
+socket.onmessage = function (event) {
+  console.log('event: ', event);
+  nextTick(() => {
+    if (JSON.parse(event.data).data.log) {
+      finetuneLog.value = JSON.parse(event.data).data.log;
+    }
+  });
+};
+
+// 页面刷新
+function reloadPage() {
+  socket.close();
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', reloadPage);
+});
+
+onUnmounted(() => {
+  socket.close();
+  window.removeEventListener('beforeunload', reloadPage);
+});
+watch(
+  () => finetuneLog.value,
+  () => {
+    const obj = document.querySelector('#txt');
+    nextTick(() => {
+      obj.scrollTop = obj.scrollHeight;
+    });
+  }
+);
 </script>
 <template>
   <div class="finetune-log">

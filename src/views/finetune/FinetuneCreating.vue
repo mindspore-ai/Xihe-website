@@ -1,37 +1,38 @@
 <script setup>
 import { ref, reactive } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
-// import IconAddBlue from '~icons/app/add-blue';
+import IconPoppver from '~icons/app/popover.svg';
 
-import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-// import { createTrainProject } from '@/api/api-project';
+import { createFinetune } from '@/api/api-finetune';
 
-// import { useUserInfoStore } from '@/stores';
+// import {  useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
 
 // const userInfoStore = useUserInfoStore();
 
 // const route = useRoute();
-// const router = useRouter();
-const tips = ref(false); //控制创建训练弹窗
+const router = useRouter();
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
+const jobType = ref('微调');
+const params1 = ref(false);
+const params2 = ref(false);
+const params3 = ref(false);
+const epochsChecked = ref(true);
+const startChecked = ref(true);
+const endChecked = ref(true);
 
 const form = reactive({
   name: '', //任务名称
   taskType: '', //任务类型
-  jobType: '微调', //任务类型
-  code_dir: '',
-  boot_file: '',
-  datasets: [],
-  hyperparameter: [],
-  env: [],
-  models: [],
-  desc: '',
+  jobType: '', //作业类型
+  epochs: '',
+  start_learning_rate: '',
+  end_learning_rate: '',
 });
 
 // 任务类型
@@ -41,47 +42,19 @@ const options = reactive([
     label: '以图生文',
   },
 ]);
-// 超参选项
-const hyperParams = reactive([
-  { label: 'epochs =', value: '' },
-  { label: 'start learning_rate =', value: '' },
-  { label: 'end learning_rate =', value: '' },
-]);
 
-// 按顺序校验表单数据是否校验通过
-function verify(node, code, message) {
-  return new Promise((resolve, reject) => {
-    node.validateField(code, (valid) => {
-      if (!valid) {
-        ElMessage({
-          type: 'error',
-          message,
-          duration: 4000,
-          center: true,
-        });
-        reject('未通过');
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
-const checkBootfile = (rule, value, callback) => {
+const checkRange = (rule, value, callback) => {
   if (value === '') {
     callback();
   } else {
-    // 判断数组的第一个元素只含有数字，字母，下划线
-    let arr = value.split('.');
-    if (arr[0].match(/^[a-zA-Z0-9_/]+$/) && arr[1] === 'py') {
+    if (value <= form.start_learning_rate) {
       callback();
     } else {
-      callback(
-        new Error('启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件')
-      );
+      callback(new Error('请输入一个小于或等于start_learning_rate的值'));
     }
   }
 };
+
 const rules = reactive({
   name: [
     {
@@ -90,46 +63,102 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      pattern: /^[a-zA-Z0-9_]{5,50}$/,
-      message: '请输入一个5-50位且只包含大小写字母、数字、下划线的名称',
+      pattern: /^[a-zA-Z0-9_]{1,25}$/,
+      message: '请输入一个1-25位且只包含大小写字母、数字、下划线的名称',
       trigger: 'blur',
     },
   ],
-  SDK: [
+  taskType: [
     {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
   ],
-  code_dir: [
+  epochs: [
     {
-      required: true,
-      message: '必填项',
+      pattern: /^[+]{0,1}(\d+)$/,
+      message: '请输入一个正整数',
       trigger: 'blur',
     },
-    { pattern: /\/$/, message: '请输入以 / 结尾的路径格式', trigger: 'blur' },
   ],
-  boot_file: [
+  start_learning_rate: [
     {
-      required: true,
-      message: '必填项',
+      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
+      message: '请输入一个正浮点数',
       trigger: 'blur',
     },
-    { validator: checkBootfile, trigger: 'blur' },
+  ],
+  end_learning_rate: [
+    {
+      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
+      message: '请输入一个正浮点数,且需小于start_learning_rate的值',
+      trigger: 'blur',
+    },
+    { validator: checkRange, trigger: 'blur' },
   ],
 });
 
-// 多选超参
-function selectHyperParams(value) {
-  console.log('value: ', value);
+function changeEpochs(val) {
+  epochsChecked.value = !val;
+}
+function changeStart(val) {
+  startChecked.value = !val;
+}
+function changeEnd(val) {
+  endChecked.value = !val;
 }
 
 function changeTasktype(val) {
-  console.log('val: ', val);
   if (val === '以图生文') {
-    (dataset.value = '以图生文数据集'), (model.value = '以图生文预训练模型');
+    dataset.value = '以图生文数据集';
+    model.value = '以图生文预训练模型';
   }
+}
+
+// 创建微调任务
+function confirmCreating(formEl) {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      let hyperparameter = [
+        {
+          key: 'epochs',
+          value: form.epochs,
+        },
+        {
+          key: 'start_learning_rate',
+          value: form.start_learning_rate,
+        },
+        {
+          key: 'end_learning_rate',
+          value: form.end_learning_rate,
+        },
+      ];
+      let params = {
+        hyperparameter: hyperparameter,
+        model: 'opt-caption',
+        name: form.name,
+        task: 'finetune',
+      };
+      console.log(params);
+      createFinetune(params).then((res) => {
+        console.log('res: ', res);
+        ElMessage({
+          type: 'success',
+          message: '创建微调任务成功',
+          center: true,
+        });
+        setTimeout(() => {
+          router.push({
+            name: 'finetune',
+          });
+        }, 500);
+      });
+    } else {
+      return false;
+    }
+  });
 }
 </script>
 <template>
@@ -137,23 +166,15 @@ function changeTasktype(val) {
     <div class="createtune-wrap">
       <div class="tune-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/finetune' }"
-            >大模型微调</el-breadcrumb-item
-          >
+          <el-breadcrumb-item :to="{ path: '/finetune' }">
+            大模型微调
+          </el-breadcrumb-item>
           <el-breadcrumb-item>创建微调任务</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
-        <div class="createtune-content-tip">
-          TODO~~~~~
-          <!-- <a
-            href="https://xihe-docs.mindspore.cn/zh/tutorial/train/"
-            target="_blank"
-            style="color: #0d8dff"
-            >表单方式-创建训练实例</a
-          > -->
-        </div>
+        <div class="createtune-content-tip">TODO~~~~~</div>
         <div class="createtune-form-wrap">
           <el-form
             ref="queryRef"
@@ -175,7 +196,7 @@ function changeTasktype(val) {
               <div class="item-title">
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
-              <el-form-item prop="SDK" label="任务类型">
+              <el-form-item prop="taskType" label="任务类型">
                 <el-select
                   v-model="form.taskType"
                   placeholder="请选择"
@@ -217,7 +238,7 @@ function changeTasktype(val) {
               </div>
               <el-form-item label="作业类型">
                 <el-select
-                  v-model="form.jobType"
+                  v-model="jobType"
                   placeholder="请选择"
                   class="job-type"
                 >
@@ -235,19 +256,74 @@ function changeTasktype(val) {
                 </div>
               </el-form-item>
             </div>
-            <div class="createtune-form-item">
-              <el-form-item label="超参">
-                <el-checkbox
-                  v-for="item in hyperParams"
-                  :key="item.value"
-                  :label="item.label"
-                  @change="selectHyperParams(item.value)"
+            <div class="createtune-form-item hyperparameter">
+              <div class="item-icon">
+                <el-popover
+                  placement="bottom-start"
+                  :width="372"
+                  trigger="hover"
+                  :teleported="true"
                 >
-                  <span>
-                    {{ item.label }}
-                  </span>
-                  <el-input v-model="item.value" />
-                </el-checkbox>
+                  <template #reference>
+                    <o-icon style="font-size: 20px"
+                      ><icon-poppver></icon-poppver
+                    ></o-icon>
+                  </template>
+                  <div>
+                    <span style="color: red">epochs: </span>
+                    值为正整数。<br />
+                    <span style="color: red">start_learning_rate: </span>
+                    值为正浮点数，比如：0.1。<br />
+                    <span style="color: red">end_learning_rate: </span>
+                    值为正浮点数，且需小于start_learning_rate的值，比如：0.01。<br />
+                  </div>
+                </el-popover>
+              </div>
+              <el-form-item prop="epochs" label="超参">
+                <el-checkbox
+                  v-model="params1"
+                  label="epochs"
+                  size="large"
+                  @change="changeEpochs"
+                />
+                <el-input
+                  v-model="form.epochs"
+                  :disabled="epochsChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
+              </el-form-item>
+            </div>
+            <div class="createtune-form-item hyperparameter">
+              <el-form-item prop="start_learning_rate" label=" ">
+                <el-checkbox
+                  v-model="params2"
+                  label="start_learning_rate"
+                  size="large"
+                  @change="changeStart"
+                />
+                <el-input
+                  v-model="form.start_learning_rate"
+                  :disabled="startChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
+              </el-form-item>
+            </div>
+            <div class="createtune-form-item hyperparameter">
+              <el-form-item prop="end_learning_rate" label=" ">
+                <el-checkbox
+                  v-model="params3"
+                  label="end_learning_rate"
+                  size="large"
+                  @change="changeEnd"
+                />
+                <el-input
+                  v-model="form.end_learning_rate"
+                  :disabled="endChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
               </el-form-item>
             </div>
           </el-form>
@@ -259,7 +335,7 @@ function changeTasktype(val) {
             class="confim"
             type="primary"
             loading
-            @click="tips = true"
+            @click="confirmCreating(queryRef)"
             >创建</o-button
           >
           <o-button v-else class="confim2" disabled>创建</o-button>
@@ -321,6 +397,11 @@ function changeTasktype(val) {
       .createtune-form-wrap {
         .createtune-form-item {
           position: relative;
+          .item-icon {
+            position: absolute;
+            top: 5px;
+            left: 50px;
+          }
           .item-title {
             position: absolute;
             top: 50%;
@@ -335,6 +416,17 @@ function changeTasktype(val) {
               min-width: 80px;
               padding: 5px 28px;
               margin-left: 8px;
+            }
+          }
+        }
+        .hyperparameter {
+          :deep(.el-form-item) {
+            .el-form-item__content {
+              .el-form-item__error {
+                white-space: nowrap;
+                top: calc(100% + 12px);
+                left: 240px;
+              }
             }
           }
         }
@@ -372,6 +464,8 @@ function changeTasktype(val) {
       width: 546px;
       max-width: 546px;
       margin-left: 27px;
+      display: flex;
+      justify-content: space-between;
       .o-icon {
         font-size: 16px;
       }
@@ -385,6 +479,9 @@ function changeTasktype(val) {
         .el-input__wrapper {
           box-shadow: 0 0 0 1px #999 inset;
         }
+      }
+      .paramsInt {
+        width: 56%;
       }
       .el-input.is-disabled .el-input__wrapper {
         background-color: var(--el-disabled-bg-color);
@@ -406,23 +503,6 @@ function changeTasktype(val) {
     .el-form-item__label::before {
       width: 18px;
       height: 18px;
-    }
-  }
-}
-:deep(.el-checkbox) {
-  width: 100%;
-  margin-bottom: 16px;
-  // background-color: #bfa;
-  margin-right: 0px;
-  .el-checkbox__label {
-    width: 100%;
-    color: #555;
-    padding-left: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .el-input {
-      width: 60% !important;
     }
   }
 }

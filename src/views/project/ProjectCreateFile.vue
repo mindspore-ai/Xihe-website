@@ -57,7 +57,6 @@ const modelList = reactive([]); //模型列表
 const datasetList = reactive([]); //数据集列表
 const hyperparamsList = reactive([]); //超参列表
 const environmentList = reactive([]); //环境变量列表
-// const hyperparamsList = reactive([{ id: 1, key: 'key值', value: 'value值' }]);
 
 const form = reactive({
   name: '',
@@ -203,24 +202,13 @@ function getDetailData() {
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
-      // if (res.results.status === 200) {
       detailData.value = res.data;
-      // }
     });
   } catch (error) {
     console.error(error);
   }
 }
 getDetailData();
-// 跳转到选择文件创建训练实例页TODO:暂时注释
-/* function goSelectFile() {
-  router.push({
-    path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
-    query: {
-      id: detailData.value.id,
-    },
-  });
-} */
 // 按顺序校验表单数据是否校验通过
 function verify(node, code, message) {
   return new Promise((resolve, reject) => {
@@ -282,19 +270,17 @@ async function confirmCreating(formEl) {
         hyperparameter: form.hyperparameter,
       };
       createTrainProject(params, detailData.value.id)
-        .then((res) => {
-          if (res.status === 201) {
-            ElMessage({
-              type: 'success',
-              message: '创建训练实例成功',
-              center: true,
+        .then(() => {
+          ElMessage({
+            type: 'success',
+            message: '创建训练实例成功',
+            center: true,
+          });
+          setTimeout(() => {
+            router.push({
+              name: 'projectTrainList',
             });
-            setTimeout(() => {
-              router.push({
-                name: 'projectTrainList',
-              });
-            }, 500);
-          }
+          }, 500);
         })
         .catch((error) => {
           if (error.response.data.msg === "can't find repo id") {
@@ -344,8 +330,6 @@ async function confirmCreating(formEl) {
     'boot_file',
     '启动文件名只能包含数字，字母，下划线，斜杠，且为.py文件,请重新输入'
   );
-  // await verify(formEl, 'modelsName', '模型名是以model-开头,请重新输入');
-  // await verify(formEl, 'datasetsName', '数据集名是以dataset-开头,请重新输入');
 }
 
 const checkBootfile = (rule, value, callback) => {
@@ -852,8 +836,6 @@ function selectFile(item) {
         </div>
 
         <div class="createfile-content-action">
-          <!-- form.train_instance_type && -->
-          <!-- @click="confirmCreating(queryRef)" -->
           <o-button
             v-if="form.name && form.code_dir && form.boot_file && form.compute"
             class="confim"

@@ -113,7 +113,6 @@ function goSelectFile() {
   } else {
     // 点击在新页签打开
     let routerData = router.resolve({
-      // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
       path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     });
     window.open(routerData.href, '_blank');

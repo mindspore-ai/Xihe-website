@@ -24,7 +24,11 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
-import { getFinetune } from '@/api/api-finetune';
+import {
+  getFinetune,
+  deleteFinetune,
+  terminateFinetune,
+} from '@/api/api-finetune';
 
 let i18n = {
   head: {
@@ -130,32 +134,25 @@ function showDelClick(val) {
   showDel.value = true;
 }
 
-// 删除
-function deleteTrainList(id) {
-  deleteTainList(projectId, id).then((res) => {
-    if (res.status === 204) {
-      getTrainList();
-      showDel.value = false;
-    }
-  });
-}
-
+// 删除微调任务
 function delClick(val) {
+  console.log('val: ', val);
   if (val === 2) {
     showDel.value = false;
   } else {
-    deleteTrainList(val);
+    deleteFinetune(val).then((res) => {
+      console.log('res: ', res);
+    });
   }
 }
 
 // 终止训练
 const showStop = ref(false);
 function stopTrainList(id) {
-  stopTrain(projectId, id).then((res) => {
-    if (res.status === 202) {
-      getTrainList();
-      showStop.value = false;
-    }
+  terminateFinetune(id).then((res) => {
+    console.log('终止训练res: ', res);
+    getTrainList();
+    showStop.value = false;
   });
 }
 
@@ -183,9 +180,9 @@ function showStopClick(val, id) {
 function goTrainLog(trainId) {
   router.push({
     name: 'finetuneLog',
-    /* params: {
-      trainId: trainId,
-    }, */
+    params: {
+      finetuneId: '111',
+    },
   });
 }
 </script>

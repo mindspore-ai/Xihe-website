@@ -12,7 +12,7 @@ import userImg from '@/assets/icons/user.png';
 import { goAuthorize, logout } from '@/shared/login';
 import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
-// import ONav from '@/components/ONav.vue';
+import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -50,7 +50,7 @@ let query = reactive({
   name: '',
 });
 
-const navItems = reactive([
+const navItems = [
   {
     id: 'projects',
     label: '项目',
@@ -63,20 +63,8 @@ const navItems = reactive([
   },
   {
     id: 'modelzoo',
-    label: '大模型',
+    label: '大模型体验',
     href: '/modelzoo',
-    menuList: [
-      {
-        id: 'test',
-        label: '在线体验',
-        href: '/modelzoo',
-      },
-      {
-        id: 'tune',
-        label: '模型微调',
-        href: '/finetune',
-      },
-    ],
   },
   {
     id: 'datasets',
@@ -93,23 +81,23 @@ const navItems = reactive([
     label: '活动',
     href: '/activity',
   },
-  {
-    id: 'docs',
-    label: '文档',
-    href: '/docs',
-    windowOpen: true,
-  },
   /*  {
     id: 'leaderboards',
     label: '排行榜',
     href: '/leaderboard',
   }, */
+  {
+    id: 'docs',
+    label: '文档',
+    href: 'https://xihe-docs.mindspore.cn/',
+    windowOpen: true,
+  },
   // {
   //   id: 'teams',
   //   label: '团队',
   //   href: '/teams',
   // },
-]);
+];
 const loginedDropdownItems = [
   {
     id: 'user',
@@ -161,6 +149,7 @@ const loginedDropdownItems = [
     },
   },
 ];
+
 const activeNavItem = ref('');
 watch(
   () => {
@@ -186,21 +175,11 @@ function handleLogoClick() {
 }
 
 // 点击导航
-/* function handleNavClick(item) {
+function handleNavClick(item) {
   if (item.windowOpen) {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
     router.push({ path: item.href });
-  }
-} */
-
-// 点击导航
-function handleSelect(item) {
-  // console.log('item,: ', item);
-  if (item === '/docs') {
-    window.open('https://xihe-docs.mindspore.cn');
-  } else {
-    router.push({ path: item });
   }
 }
 
@@ -380,6 +359,15 @@ function getUserResult(userData) {
   userResult.value = dataList;
 }
 
+// 高亮函数
+// function heightLight(str, keyword) {
+//   let kw = escapeHtml(keyword);
+//   const reg = new RegExp(kw, 'gi');
+//   return str.replace(reg, (val) => {
+//     return `<span style="color:#000;font-weight:bold">${val}</span>`;
+//   });
+// }
+
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
   return projectData.value.length !== 0
@@ -470,50 +458,12 @@ function handleBlur() {
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <!-- <o-nav
+      <o-nav
         v-if="show"
         :nav-items="navItems"
         :active-item="activeNavItem"
         @nav-click="handleNavClick"
-      ></o-nav> -->
-      <el-menu
-        v-if="show"
-        class="modelzoo-menu"
-        :default-active="route.path"
-        mode="horizontal"
-        text-color="#fff"
-        active-text-color="#0d8dff"
-        @select="handleSelect"
-      >
-        <template v-for="item in navItems">
-          <el-menu-item
-            v-if="item.id !== 'modelzoo'"
-            :key="item.id"
-            :index="item.href"
-          >
-            {{ item.label }}
-          </el-menu-item>
-          <el-sub-menu
-            v-else
-            :key="item"
-            popper-class="modelzooItem"
-            :popper-offset="0"
-            :index="item.id"
-          >
-            <template #title>{{ item.label }}</template>
-            <div class="sub-menu">
-              <el-menu-item
-                v-for="val in item.menuList"
-                :key="val.id"
-                :index="val.href"
-              >
-                <!-- style="width: 100px" -->
-                {{ val.label }}
-              </el-menu-item>
-            </div>
-          </el-sub-menu>
-        </template>
-      </el-menu>
+      ></o-nav>
       <div v-else class="header-center">
         <div class="header-input">
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
@@ -706,6 +656,7 @@ function handleBlur() {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .header {
   display: flex;
@@ -734,85 +685,7 @@ function handleBlur() {
     height: 100%;
     width: 100%;
     margin-left: 96px;
-    :deep(.el-menu) {
-      width: 100%;
-      height: 100%;
-      border-bottom: none;
-      background-color: inherit;
-      font-size: 18px;
-      line-height: 24px;
-      .el-menu--popup {
-        min-width: 100px !important;
-      }
 
-      .el-menu-item {
-        background-color: inherit;
-        font-size: 18px;
-        padding: 0;
-        // margin-left: 32px;
-        border-bottom: none;
-        padding: 0 16px;
-        &:first-child {
-          padding-left: 0px;
-        }
-        &:hover {
-          // background-color: transparent;
-          color: #0d8dff;
-        }
-      }
-      // 蓝色下边框
-      .el-menu-item.is-active {
-        border: none;
-        &::after {
-          content: '';
-          height: 2px;
-          background-color: #0d8dff;
-          position: absolute;
-          left: 16px;
-          right: 16px;
-          bottom: 0;
-          border-radius: 1px;
-          transition: background 0.3s;
-        }
-      }
-      .el-menu-item.is-active:first-child {
-        &::after {
-          position: absolute;
-          left: 0;
-        }
-      }
-      .el-sub-menu {
-        // background-color: inherit;
-        font-size: 18px;
-        position: relative;
-        &:hover .el-sub-menu__title {
-          background-color: inherit;
-          color: #0d8dff !important;
-        }
-        .el-sub-menu__title {
-          padding: 0;
-          font-size: 18px;
-          padding: 0 16px;
-          border: none;
-        }
-
-        .el-icon {
-          display: none;
-        }
-      }
-      // 蓝色下边框
-      .el-sub-menu.is-active .el-sub-menu__title::after {
-        content: '';
-        height: 2px;
-        background-color: #0d8dff;
-        position: absolute;
-        left: 16px;
-        right: 16px;
-        bottom: 0;
-        border-radius: 1px;
-        transition: background 0.3s;
-      }
-    }
     .header-center {
       width: 48%;
       // background-color: red;
@@ -1010,29 +883,6 @@ function handleBlur() {
               height: 100%;
             }
           }
-        }
-      }
-    }
-  }
-}
-</style>
-<style lang="scss">
-.el-popper.modelzooItem {
-  .el-menu--popup {
-    width: 86px;
-    min-width: 86px;
-    padding-left: 6px;
-    padding-right: 6px;
-    .sub-menu {
-      .el-menu-item {
-        color: #000;
-        &:first-child {
-          border-bottom: 1px solid #ddd;
-        }
-
-        &:hover {
-          background-color: transparent;
-          color: #0d8dff;
         }
       }
     }

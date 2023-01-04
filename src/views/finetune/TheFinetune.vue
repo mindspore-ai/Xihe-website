@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
 
@@ -23,7 +23,6 @@ import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
-import ResetTrain from '@/components/ResetTrain.vue';
 
 import { getFinetune } from '@/api/api-finetune';
 
@@ -46,7 +45,6 @@ const router = useRouter();
 // const projectId = detailData.value.id;
 const listId = ref(null);
 const trainId = ref(null);
-const resetedId = ref(null);
 const showStep = ref(false);
 const showtable = ref(false);
 

@@ -68,6 +68,7 @@ const i18n = {
   relatedItem: '相关模型',
   addModel: '添加相关模型',
   editor: '编辑',
+  fork: 'Fork量',
   uploadReadMe: [
     '当前无项目文件，点击',
     '新建README.md文件',
@@ -571,8 +572,14 @@ onUnmounted(() => {
     </div>
     <div v-if="loading" class="right-data">
       <div class="download-data">
-        <h4 class="download-title">{{ i18n.recentDownload }}</h4>
-        <span class="download-count">{{ detailData.download_count }}</span>
+        <div class="download-data-left">
+          <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+          <span class="download-count">{{ detailData.download_count }}</span>
+        </div>
+        <div class="download-data-right">
+          <h4 class="download-title">{{ i18n.fork }}</h4>
+          <span class="download-count">{{ detailData.fork_count }}</span>
+        </div>
       </div>
       <!-- 添加数据集 -->
       <div class="dataset-data">
@@ -799,14 +806,24 @@ onUnmounted(() => {
     width: 100%;
     color: #000;
     .download-data {
+      display: flex;
+      &-left {
+        margin-right: 24px;
+        width: 126px;
+      }
+      &-right {
+        width: 126px;
+      }
       .download-title {
         margin-bottom: 8px;
-        font-size: 16px;
-        color: #555;
+        font-size: 14px;
+        color: #555555;
+        line-height: 24px;
       }
       .download-count {
         font-size: 18px;
-        color: #000;
+        color: #000000;
+        line-height: 24px;
       }
     }
     .card-top {

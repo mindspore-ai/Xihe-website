@@ -1,14 +1,12 @@
 <script setup>
 import { ref, reactive } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
-// import IconAddBlue from '~icons/app/add-blue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-// import { createTrainProject } from '@/api/api-project';
+import { getFinetuneLog } from '@/api/api-finetune';
 
 // import { useUserInfoStore } from '@/stores';
-import OButton from '@/components/OButton.vue';
 
 // const userInfoStore = useUserInfoStore();
 
@@ -16,6 +14,10 @@ import OButton from '@/components/OButton.vue';
 // const router = useRouter();
 
 const finetuneLog = ref('');
+// getFinetuneLog().then((res) => {
+//   console.log('res: ', res);
+// });
+// getFinetuneLog();
 </script>
 <template>
   <div class="finetune-log">

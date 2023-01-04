@@ -72,39 +72,9 @@ body {
   width: 100% !important;
   padding-right: 0px !important;
 }
-.el-popup-parent--hidden {
+body.el-popup-parent--hidden {
   overflow: auto !important;
 }
-
-// html,
-// body {
-//   width: 100% !important;
-//   height: 100%;
-//   overflow: hidden;
-//   margin: 0;
-// }
-// #app {
-//   width: 100%;
-//   height: 100%;
-//   overflow-y: auto;
-//   max-width: none !important;
-//   &::-webkit-scrollbar {
-//     width: 6px;
-//     height: 6px;
-//   }
-
-//   &::-webkit-scrollbar-track {
-//     border-radius: 3px;
-//     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-//     background: #ffffff;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     border-radius: 3px;
-//     background-color: #d8d8d8;
-//     background-clip: content-box;
-//   }
-// }
 
 #app {
   min-width: 1280px;

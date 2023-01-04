@@ -498,8 +498,6 @@ function toTop() {
       .el-tabs__header {
         border: none;
         margin: 40px 0px 0px;
-        // margin-bottom: 24px;
-
         .el-tabs__nav {
           border: none;
         }

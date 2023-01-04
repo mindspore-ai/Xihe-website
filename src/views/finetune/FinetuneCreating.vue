@@ -19,6 +19,7 @@ const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
 const jobType = ref('微调');
+const taskType = ref('');
 
 const form = reactive({
   name: '', //任务名称
@@ -36,9 +37,9 @@ const options = reactive([
 ]);
 // 超参选项
 const hyperParams = reactive([
-  { label: 'epochs =', checked: false, val: '' },
-  { label: 'start_learning_rate =', checked: false, val: '' },
-  { label: 'end_learning_rate =', checked: false, val: '' },
+  { label: 'epochs', checked: false, val: '' },
+  { label: 'start_learning_rate', checked: false, val: '' },
+  { label: 'end_learning_rate', checked: false, val: '' },
 ]);
 
 // const checkList = ref(['selected and disabled', 'disabled', 'Option A']);
@@ -93,14 +94,29 @@ function changeTasktype(val) {
 
 // 创建微调任务
 function confirmCreating(formEl) {
-  console.log('formEl: ', formEl);
+  // console.log('formEl: ', formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log(form);
-      hyperParams.forEach((item) => {
-        console.log('item: ', item);
+      let newParams = hyperParams.filter((item) => {
+        // console.log('item: ', item);
+        return item.checked;
       });
+      console.log('hyperParams: ', newParams);
+      newParams.forEach((item) => {
+        console.log('item: ', item);
+        form.hyperparameter.push({ key: item.label, value: item.val });
+        // newObj.forEach((val) => {
+        //   val.key = item.label;
+        // });
+      });
+      let params = {
+        hyperparameter: form.hyperparameter,
+        model: 'opt-caption',
+        name: form.name,
+        task: 'finetune',
+      };
+      console.log(params);
       // createFinetune(params).then((res) => {
       //   console.log('res: ', res);
       // ElMessage({
@@ -231,9 +247,12 @@ function confirmCreating(formEl) {
                   v-model="item.checked"
                   :label="item.label"
                 >
-                  <span>
-                    {{ item.label }}
-                  </span>
+                  <div class="paramsName">
+                    <span>
+                      {{ item.label }}
+                    </span>
+                    <span>=</span>
+                  </div>
                   <el-input v-model="item.val" :disabled="!item.checked" />
                 </el-checkbox>
               </el-form-item>
@@ -411,6 +430,13 @@ function confirmCreating(formEl) {
     align-items: center;
     .el-input {
       width: 60% !important;
+    }
+    .paramsName {
+      span {
+        &:first-child {
+          margin-right: 16px;
+        }
+      }
     }
   }
 }

@@ -553,12 +553,6 @@ function refreshTags() {
         margin-right: 0;
       }
 
-      &:hover {
-        .handles {
-          display: block;
-        }
-      }
-
       img {
         height: 100%;
         width: 100%;

@@ -256,7 +256,7 @@ export function getWuKongPic(params) {
 export function addLikePicture(params) {
   const url = '/server/bigmodel/wukong';
   return request
-    .put(url, params, getHeaderConfig())
+    .put(url, params, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })
@@ -272,7 +272,7 @@ export function addLikePicture(params) {
 export function cancelLikePicture(id) {
   const url = `/server/bigmodel/wukong/${id}`;
   return request
-    .delete(url, getHeaderConfig())
+    .delete(url, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })

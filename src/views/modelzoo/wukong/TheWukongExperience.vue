@@ -238,6 +238,8 @@ function initData() {
   inputText.value = '';
   sortTag.value = '';
 
+  styleBackground.value = [];
+
   styleData.value.forEach((item) => {
     item.options.forEach((tag) => {
       tag.isSelected = false;

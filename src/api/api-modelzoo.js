@@ -1,5 +1,6 @@
 import { request } from '@/shared/axios';
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 // import { useUserInfoStore } from '@/stores';
 
 // function getUserInfo() {
@@ -221,6 +222,7 @@ export function wuKongInfer(params) {
   const url = '/server/bigmodel/wukong';
   return request
     .post(url, params, {
+      $doException: true,
       $noLoading: true,
       headers: {
         'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
@@ -231,6 +233,13 @@ export function wuKongInfer(params) {
       return res;
     })
     .catch((e) => {
+      console.log(e.code);
+      if (e.code === 'bigmodel_sensitive_info') {
+        ElMessage({
+          type: 'error',
+          message: '输入的内容不合规,请重新输入！',
+        });
+      }
       return e;
     });
 }

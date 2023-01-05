@@ -13,6 +13,7 @@ import ONav from '@/components/ONav.vue';
 
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
 import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
+import background from '@/assets/imgs/wukong/wukong-bg.jpg';
 
 import IconAlbum from '~icons/app/wukong-album';
 import IconCollection from '~icons/app/wukong-collection';
@@ -55,12 +56,10 @@ const navItems = [
     href: '/modelzoo/wukong',
   },
 ];
-
 // 点击导航
 function handleNavClick(item) {
   router.push({ path: item.href });
 }
-
 // 我的收藏
 const showCollection = ref(false);
 function toggleCollectionDlg(val) {
@@ -71,10 +70,9 @@ function toggleCollectionDlg(val) {
     getCollectedPictures();
   }
 }
-
 const collectList = ref([]);
 const haveCollections = ref(false);
-//获取收藏图片
+//获取我的收藏图片
 function getCollectedPictures() {
   collectedPictures().then((res) => {
     if (res.data.data) {
@@ -87,7 +85,6 @@ function getCollectedPictures() {
     }
   });
 }
-
 // 取消收藏
 function handleCancelLike(id, index) {
   cancelLikePicture(id).then((res) => {
@@ -100,13 +97,11 @@ function handleCancelLike(id, index) {
     }
   });
 }
-
 const showAlbum = ref(false);
 // AI画集
 function toggleAlbum() {
   showAlbum.value = true;
 }
-
 // 下载图片
 function requestImg(item) {
   const link = item.replace(
@@ -126,15 +121,14 @@ function requestImg(item) {
   };
   x.send();
 }
-
 function downloadImage(item) {
-  const index1 = item.indexOf('=');
-  const index2 = item.indexOf('=', index1 + 1);
+  const j1 = item.indexOf('=');
+  const j2 = item.indexOf('=', j1 + 1);
 
   const i1 = item.indexOf('&');
   const i2 = item.indexOf('&', i1 + 1);
 
-  const deadTime = item.substring(index2 + 1, i2);
+  const deadTime = item.substring(j2 + 1, i2);
   const currentTime = (new Date().getTime() + '').substring(0, 10);
 
   if ((deadTime - currentTime) / 60 < 1) {
@@ -147,13 +141,11 @@ function downloadImage(item) {
     requestImg(item);
   }
 }
-
 function learnWukongMore() {
   window.open(
     'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
   );
 }
-
 watch(
   () => activeNavItem.value,
   () => {
@@ -176,12 +168,7 @@ watch(
 </script>
 <template>
   <div :class="isToggle ? 'wukong-bg2' : 'wukong-bg1'">
-    <img
-      v-if="isToggle"
-      class="bg2-image"
-      src="@/assets/imgs/wukong/wukong-bg.jpg"
-      alt=""
-    />
+    <img v-if="isToggle" class="bg2-image" :src="background" alt="" />
     <div class="wukong">
       <div class="wukong-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -254,7 +241,6 @@ watch(
         <p class="nav-item-text">我的收藏</p>
       </div>
     </div>
-
     <!-- 我的收藏dialog -->
     <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
@@ -333,7 +319,6 @@ watch(
 
       <div class="collect-title">我的收藏</div>
     </el-dialog>
-
     <!-- AI画集 -->
     <el-dialog
       v-model="showAlbum"
@@ -343,9 +328,6 @@ watch(
       lock-scroll
       center
     >
-      <!-- <template #title>
-        <div>AI画集</div>
-      </template> -->
       <WukongAlbum></WukongAlbum>
     </el-dialog>
   </div>
@@ -430,7 +412,6 @@ watch(
       }
     }
   }
-
   .swiper-button-prev,
   .swiper-button-next {
     width: 40px;
@@ -497,13 +478,11 @@ watch(
     width: 6px;
     height: 6px;
   }
-
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background-color: #d8d8d8;
     background-clip: content-box;
   }
-
   &::-webkit-scrollbar-track {
     border-radius: 3px;
     box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
@@ -557,7 +536,6 @@ watch(
           color: #fff;
           line-height: 48px;
         }
-
         &-content {
           font-size: 14px;
           color: #b2b2b2;
@@ -566,7 +544,6 @@ watch(
       }
     }
   }
-
   .wukong-main {
     .nav-tab {
       margin-top: 16px;
@@ -596,7 +573,6 @@ watch(
   margin: 0 auto;
   max-width: 1472px;
   height: 100%;
-  // min-height: calc(100vh - 200px);
 
   &-bread {
     margin-bottom: 40px;
@@ -620,7 +596,6 @@ watch(
       }
     }
   }
-
   &-head {
     padding: 80px;
     background-color: #fff;
@@ -630,11 +605,9 @@ watch(
     &-left {
       margin-right: 40px;
     }
-
     img {
       width: 416px;
     }
-
     &-right {
       display: flex;
       flex-direction: column;
@@ -646,7 +619,6 @@ watch(
           color: #000000;
           margin-bottom: 16px;
         }
-
         &-content {
           font-size: 14px;
           color: #555555;
@@ -655,7 +627,6 @@ watch(
       }
     }
   }
-
   &-main {
     .nav-tab {
       margin-top: 16px;
@@ -681,7 +652,6 @@ watch(
     }
   }
 }
-
 .sider-content {
   position: fixed;
   top: 50%;

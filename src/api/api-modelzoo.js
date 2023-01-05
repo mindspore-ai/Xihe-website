@@ -1,20 +1,7 @@
 import { request } from '@/shared/axios';
 import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
-// import { useUserInfoStore } from '@/stores';
 
-// function getUserInfo() {
-//   return useUserInfoStore();
-// }
-// function getHeaderConfig() {
-//   let headersConfig = {
-//     headers: {
-//       Authorization: getUserInfo().token ? `Bearer ${getUserInfo().token}` : '',
-//     },
-//     timeout: 50000,
-//   };
-//   return headersConfig;
-// }
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -239,7 +226,6 @@ export function wuKongInfer(params) {
           message: '输入的内容不合规,请重新输入',
         });
       }
-      return e;
     });
 }
 /**
@@ -264,11 +250,21 @@ export function getWuKongPic(params) {
 export function addLikePicture(params) {
   const url = '/server/bigmodel/wukong';
   return request
-    .put(url, params, { $noLoading: true, ...getHeaderConfig() })
+    .put(url, params, {
+      $doException: true,
+      $noLoading: true,
+      ...getHeaderConfig(),
+    })
     .then((res) => {
       return res;
     })
     .catch((e) => {
+      if (e.code === 'wukong_excced_max_like_num') {
+        ElMessage({
+          type: 'warning',
+          message: '收藏上限为10张，请取消收藏后再操作',
+        });
+      }
       return e;
     });
 }
@@ -290,7 +286,7 @@ export function cancelLikePicture(id) {
 }
 
 /**
- * 悟空-收藏图片
+ * 悟空-我的收藏图片
  * @returns
  */
 export function collectedPictures() {

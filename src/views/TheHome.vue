@@ -100,33 +100,92 @@ const i18n = {
     title: '项目',
     introduce:
       '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间',
-    gradio1: '手写数字识别',
-    gradio2: '图像识别',
-    gradio3: '情感分析',
     more: '探索更多项目',
+    gradio: [
+      {
+        name: '手写数字识别',
+        type: 'Mnist',
+        img: digitRecognition,
+        herf: `https://${DOMAIN}/projects/wesley/lenet5_demo`,
+      },
+      {
+        name: '图像识别',
+        type: 'CV',
+        img: imageRcognition,
+        herf: `https://${DOMAIN}/projects/drizzlezyk/ResNet50`,
+      },
+      {
+        name: '情感分析',
+        type: 'NLP',
+        img: emtionalNalysis,
+        herf: `https://${DOMAIN}/projects/drizzlezyk/LSTM`,
+      },
+    ],
   },
   modelzoo: {
     title: '大模型体验',
     introduce: '在线体验预训练超大模型任务',
     quickStartLabel: '立即体验',
-    modelzoo1: '紫东.太初',
-    introduce1: '全球首个三模态千亿参数大模型',
-    modelzoo2: '武大.Luojia',
-    introduce2: '全球首个遥感专用框架及最大遥感样本库',
-    modelzoo3: 'CodeGeeX',
-    introduce3: '一个具有130亿参数的多编程语言代码生成预训练模型',
-    modelzoo4: '鹏程.盘古',
-    introduce4: '业界首个千亿级参数中文自然语言处理大模型',
+    ex: [
+      {
+        modelzoo: '紫东.太初',
+        introduce: '全球首个三模态千亿参数大模型',
+        img: modelzoo1,
+        href: `https://${DOMAIN}/modelzoo/taichu`,
+      },
+      {
+        modelzoo: '武大.Luojia',
+        introduce: '全球首个遥感专用框架及最大遥感样本库',
+        img: modelzoo2,
+        href: `https://${DOMAIN}/modelzoo/luojia`,
+      },
+      // {
+      //   modelzoo: 'CodeGeeX',
+      //   introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
+      // },
+      {
+        modelzoo: '鹏程.盘古',
+        introduce: '业界首个千亿级参数中文自然语言处理大模型',
+        img: modelzoo_pangu,
+        href: `https://${DOMAIN}/modelzoo/pangu`,
+      },
+    ],
   },
   model: {
     title: '模型',
     introduce:
       '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件',
-    models1: '图像分类',
-    models2: '目标检测',
-    models3: '自然语言处理',
-    models4: '推荐',
     more: '探索更多模型',
+    ex: [
+      {
+        models: '图像分类',
+        img: models1,
+        name: 'VGG16｜ResNet-101｜InceptionV4 …',
+        type: 'CV',
+        herf: 'https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10',
+      },
+      {
+        models: '目标检测',
+        img: models2,
+        name: 'YOLOv5｜SSD ｜MobileNet …',
+        type: 'CV',
+        herf: 'https://xihe.mindspore.cn/models/MindSpore/yolov5shape640',
+      },
+      {
+        models: '自然语言处理',
+        img: models3,
+        name: 'BERT｜GRU｜Transformer …',
+        type: 'NLP',
+        herf: 'https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128',
+      },
+      {
+        models: '推荐',
+        img: models4,
+        name: 'DeepFM｜Wide&Deep｜NCF …',
+        type: 'Recommendation',
+        herf: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
+      },
+    ],
   },
   dataset: {
     title: '数据集',
@@ -184,24 +243,6 @@ function handleBtnClick3() {
 function goActivity() {
   router.push({ path: '/activity' });
 }
-// function beforeLoopFix() {
-//   const abnormality = document.getElementsByClassName('abnormality-img');
-//   abnormality[2].style.transitionPproperty = 'none';
-//   abnormality[2].style.height = '325px';
-//   abnormality[1].style.transitionPproperty = 'none';
-//   abnormality[1].style.height = '289px';
-//   abnormality[0].style.transitionPproperty = 'none';
-//   abnormality[0].style.height = '256px';
-// }
-// function loopFix() {
-//   const abnormality = document.getElementsByClassName('abnormality-img');
-//   abnormality[2].style.transitionPproperty = 'height';
-//   abnormality[2].style.height = '225px';
-//   abnormality[1].style.transitionPproperty = 'height';
-//   abnormality[1].style.height = '225px';
-//   abnormality[0].style.transitionPproperty = 'height';
-//   abnormality[0].style.height = '225px';
-// }
 </script>
 
 <template>
@@ -587,48 +628,20 @@ function goActivity() {
             </p>
           </a>
           <a
+            v-for="item in i18n.project.gradio"
+            :key="item.name"
             class="project-card"
-            :href="`https://${DOMAIN}/projects/wesley/lenet5_demo`"
+            :href="item.herf"
           >
             <div class="card-header">
-              <img :src="digitRecognition" alt="" />
+              <img :src="item.img" alt="" />
             </div>
             <div class="card-body">
               <div class="project-title">
-                <p>{{ i18n.project.gradio1 }}</p>
+                <p>{{ item.name }}</p>
                 <OIcon><IconArrowRight /></OIcon>
               </div>
-              <div class="project-tag">Mnist</div>
-            </div>
-          </a>
-          <a
-            class="project-card"
-            :href="`https://${DOMAIN}/projects/drizzlezyk/ResNet50`"
-          >
-            <div class="card-header">
-              <img :src="imageRcognition" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="project-title">
-                <p>{{ i18n.project.gradio2 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
-              </div>
-              <div class="project-tag">CV</div>
-            </div>
-          </a>
-          <a
-            class="project-card"
-            :href="`https://${DOMAIN}/projects/drizzlezyk/LSTM`"
-          >
-            <div class="card-header">
-              <img :src="emtionalNalysis" alt="" />
-            </div>
-            <div class="card-body">
-              <div class="project-title">
-                <p>{{ i18n.project.gradio3 }}</p>
-                <OIcon><IconArrowRight /></OIcon>
-              </div>
-              <div class="project-tag">NLP</div>
+              <div class="project-tag">{{ item.type }}</div>
             </div>
           </a>
         </div>
@@ -661,71 +674,22 @@ function goActivity() {
               </OButton>
             </div>
             <div class="modelzoo-card-list">
-              <!-- <a
-                class="modelzoo-card"
-                :href="`https://${DOMAIN}/modelzoo/codegeex`"
-              >
-                <div class="card-header">
-                  <img :src="modelzoo3" alt="" />
-                </div>
-                <div class="card-body">
-                  <div class="modelzoo-title">
-                    <p>{{ i18n.modelzoo.modelzoo3 }}</p>
-                    <OIcon><IconArrowRight /></OIcon>
-                  </div>
-                  <div class="modelzoo-desc">
-                    {{ i18n.modelzoo.introduce3 }}
-                  </div>
-                </div>
-              </a> -->
               <a
+                v-for="item in i18n.modelzoo.ex"
+                :key="item.img"
                 class="modelzoo-card"
-                :href="`https://${DOMAIN}/modelzoo/taichu`"
+                :href="item.href"
               >
                 <div class="card-header">
-                  <img :src="modelzoo1" alt="" />
+                  <img :src="item.img" alt="" />
                 </div>
                 <div class="card-body">
                   <div class="modelzoo-title">
-                    <p>{{ i18n.modelzoo.modelzoo1 }}</p>
+                    <p>{{ item.modelzoo }}</p>
                     <OIcon><IconArrowRight /></OIcon>
                   </div>
                   <div class="modelzoo-desc">
-                    {{ i18n.modelzoo.introduce1 }}
-                  </div>
-                </div>
-              </a>
-              <a
-                class="modelzoo-card"
-                :href="`https://${DOMAIN}/modelzoo/luojia`"
-              >
-                <div class="card-header">
-                  <img :src="modelzoo2" alt="" />
-                </div>
-                <div class="card-body">
-                  <div class="modelzoo-title">
-                    <p>{{ i18n.modelzoo.modelzoo2 }}</p>
-                    <OIcon><IconArrowRight /></OIcon>
-                  </div>
-                  <div class="modelzoo-desc">
-                    {{ i18n.modelzoo.introduce2 }}
-                  </div>
-                </div>
-              </a>
-              <a
-                class="modelzoo-card"
-                :href="`https://${DOMAIN}/modelzoo/pangu`"
-              >
-                <div class="card-header">
-                  <img :src="modelzoo_pangu" alt="" />
-                </div>
-                <div class="card-body">
-                  <div class="modelzoo-title">
-                    <p>{{ i18n.modelzoo.modelzoo4 }}</p>
-                    <OIcon><IconArrowRight /></OIcon>
-                  </div>
-                  <div class="modelzoo-desc">
-                    {{ i18n.modelzoo.introduce4 }}
+                    {{ item.introduce }}
                   </div>
                 </div>
               </a>
@@ -740,67 +704,21 @@ function goActivity() {
             data-aos-once="true"
           >
             <a
+              v-for="item in i18n.model.ex"
+              :key="item"
               class="model-card"
-              href="https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10"
+              :href="item.herf"
             >
               <div class="card-header">
-                <img :src="models1" alt="" />
+                <img :src="item.img" alt="" />
               </div>
               <div class="card-body">
                 <div class="model-title">
-                  <p>{{ i18n.model.models1 }}</p>
+                  <p>{{ item.models }}</p>
                   <OIcon><IconArrowRight /></OIcon>
                 </div>
-                <p class="model-label">VGG16｜ResNet-101｜InceptionV4 …</p>
-                <div class="model-tag">CV</div>
-              </div>
-            </a>
-            <a
-              class="model-card"
-              href="https://xihe.mindspore.cn/models/MindSpore/yolov5shape640"
-            >
-              <div class="card-header">
-                <img :src="models2" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="model-title">
-                  <p>{{ i18n.model.models2 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
-                </div>
-                <p class="model-label">YOLOv5｜SSD ｜MobileNet …</p>
-                <div class="model-tag">CV</div>
-              </div>
-            </a>
-            <a
-              class="model-card"
-              href="https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128"
-            >
-              <div class="card-header">
-                <img :src="models3" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="model-title">
-                  <p>{{ i18n.model.models3 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
-                </div>
-                <p class="model-label">BERT｜GRU｜Transformer …</p>
-                <div class="model-tag">NLP</div>
-              </div>
-            </a>
-            <a
-              class="model-card"
-              href="https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo"
-            >
-              <div class="card-header">
-                <img :src="models4" alt="" />
-              </div>
-              <div class="card-body">
-                <div class="model-title">
-                  <p>{{ i18n.model.models4 }}</p>
-                  <OIcon><IconArrowRight /></OIcon>
-                </div>
-                <p class="model-label">DeepFM｜Wide&Deep｜NCF …</p>
-                <div class="model-tag">Recommendation</div>
+                <p class="model-label">{{ item.name }}</p>
+                <div class="model-tag">{{ item.type }}</div>
               </div>
             </a>
             <a class="model-entry" :href="`https://${DOMAIN}/models`">

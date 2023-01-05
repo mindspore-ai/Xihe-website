@@ -1,5 +1,6 @@
 import { request } from '@/shared/axios';
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 // import { useUserInfoStore } from '@/stores';
 
 // function getUserInfo() {
@@ -221,6 +222,7 @@ export function wuKongInfer(params) {
   const url = '/server/bigmodel/wukong';
   return request
     .post(url, params, {
+      $doException: true,
       $noLoading: true,
       headers: {
         'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
@@ -231,6 +233,12 @@ export function wuKongInfer(params) {
       return res;
     })
     .catch((e) => {
+      if (e.code === 'bigmodel_sensitive_info') {
+        ElMessage({
+          type: 'warning',
+          message: '输入的内容不合规,请重新输入',
+        });
+      }
       return e;
     });
 }
@@ -256,7 +264,7 @@ export function getWuKongPic(params) {
 export function addLikePicture(params) {
   const url = '/server/bigmodel/wukong';
   return request
-    .put(url, params, getHeaderConfig())
+    .put(url, params, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })
@@ -272,7 +280,7 @@ export function addLikePicture(params) {
 export function cancelLikePicture(id) {
   const url = `/server/bigmodel/wukong/${id}`;
   return request
-    .delete(url, getHeaderConfig())
+    .delete(url, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })

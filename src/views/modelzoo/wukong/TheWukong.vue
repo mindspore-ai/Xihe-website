@@ -176,6 +176,12 @@ watch(
 </script>
 <template>
   <div :class="isToggle ? 'wukong-bg2' : 'wukong-bg1'">
+    <img
+      v-if="isToggle"
+      class="bg2-image"
+      src="@/assets/imgs/wukong/wukong-bg.jpg"
+      alt=""
+    />
     <div class="wukong">
       <div class="wukong-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -250,12 +256,7 @@ watch(
     </div>
 
     <!-- 我的收藏dialog -->
-    <el-dialog
-      v-model="showCollection"
-      :lock-scroll="true"
-      :fullscreen="true"
-      center
-    >
+    <el-dialog v-model="showCollection" :fullscreen="true" center>
       <swiper
         v-if="collectList.length >= 3"
         :slides-per-view="3"
@@ -339,6 +340,7 @@ watch(
       title="AI 画集"
       :destroy-on-close="true"
       :fullscreen="true"
+      lock-scroll
       center
     >
       <!-- <template #title>
@@ -479,7 +481,6 @@ watch(
   --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
   .el-dialog__header {
     padding: 15px 0 15px;
-    // color: #fff;
     position: sticky;
     top: 0;
     background: #000;
@@ -490,8 +491,6 @@ watch(
     }
   }
   .el-dialog__body {
-    // position: sticky;
-    // top: 62px;
     padding-top: 0;
   }
   &::-webkit-scrollbar {
@@ -526,11 +525,16 @@ watch(
   background: #f5f6f8;
 }
 .wukong-bg2 {
-  background-image: url('@/assets/imgs/wukong/wukong-bg.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
   min-height: calc(100vh - 200px);
   background-color: #000;
+  position: relative;
+  overflow: hidden;
+  .bg2-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
   .wukong-bread {
     margin-bottom: 40px;
     .el-breadcrumb {

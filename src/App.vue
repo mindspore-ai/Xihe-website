@@ -72,7 +72,7 @@ body {
   width: 100% !important;
   padding-right: 0px !important;
 }
-.el-popup-parent--hidden {
+body.el-popup-parent--hidden {
   overflow: auto !important;
 }
 

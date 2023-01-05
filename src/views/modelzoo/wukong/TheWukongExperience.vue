@@ -238,6 +238,8 @@ function initData() {
   inputText.value = '';
   sortTag.value = '';
 
+  styleBackground.value = [];
+
   styleData.value.forEach((item) => {
     item.options.forEach((tag) => {
       tag.isSelected = false;
@@ -275,6 +277,7 @@ async function handleInfer() {
           desc: inputText.value,
           style: sortTag.value,
         });
+
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;
@@ -551,12 +554,6 @@ function refreshTags() {
 
       &:last-child {
         margin-right: 0;
-      }
-
-      &:hover {
-        .handles {
-          display: block;
-        }
       }
 
       img {

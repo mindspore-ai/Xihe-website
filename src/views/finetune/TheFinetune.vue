@@ -25,6 +25,7 @@ import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
 
 import {
   getFinetune,
@@ -32,11 +33,23 @@ import {
   terminateFinetune,
 } from '@/api/api-finetune';
 
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
 // const route = useRoute();
 const router = useRouter();
 // const userInfoStore = useUserInfoStore();
 
-// const projectId = detailData.value.id;
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 const listId = ref(null);
 const trainId = ref(null);
 const showStep = ref(false);
@@ -84,38 +97,8 @@ const applySteps = reactive([
   },
 ]);
 
-// 训练数据TODO:
-// const trainData = [];
-const trainData = [
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-];
-
 // 获取微调任务列表
+// let socket;
 function getFinetuneList() {
   if (isLogined) {
     try {
@@ -123,9 +106,24 @@ function getFinetuneList() {
         .then((res) => {
           showFinetune.value = true;
           showtable.value = true;
-          console.log('res: ', res);
           finetuneData.value = res.data.datas;
-          console.log('finetuneData.value: ', finetuneData.value);
+          if (!finetuneData.value) {
+            console.log('微调列表为空');
+          } else {
+            let bool = finetuneData.value.some((item) => {
+              item.status === 'scheduling' || item.status === 'Running';
+            });
+            if (finetuneData.value.length < 5) {
+              if (bool) {
+                console.log('有运行中');
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                console.log('没有运行中');
+              }
+            } else {
+              console.log('超过5个');
+            }
+          }
         })
         .catch((res) => {
           if (res.code === 'finetune_no_permission') {
@@ -142,6 +140,22 @@ function getFinetuneList() {
   }
 }
 getFinetuneList();
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [
+    getHeaderConfig().headers['private-token'],
+  ]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      finetuneData.value = JSON.parse(event.data).data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
 
 // 切换申请步骤弹窗
 function toggleApplication() {
@@ -167,6 +181,8 @@ function delClick(val) {
   } else {
     deleteFinetune(val).then((res) => {
       console.log('res: ', res);
+      getFinetuneList();
+      showDel.value = false;
     });
   }
 }

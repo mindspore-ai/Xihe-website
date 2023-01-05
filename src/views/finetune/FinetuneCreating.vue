@@ -123,7 +123,6 @@ function changeTasktype(val) {
 
 // 创建微调任务
 function confirmCreating(formEl) {
-  console.log('formEl: ', formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {

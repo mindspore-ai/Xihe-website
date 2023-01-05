@@ -42,6 +42,7 @@ const trainId = ref(null);
 const showStep = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
+const finetuneData = ref([]);
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
@@ -123,9 +124,10 @@ function getFinetuneList() {
           showFinetune.value = true;
           showtable.value = true;
           console.log('res: ', res);
+          finetuneData.value = res.data.datas;
+          console.log('finetuneData.value: ', finetuneData.value);
         })
         .catch((res) => {
-          console.log('res: ', res.code);
           if (res.code === 'finetune_no_permission') {
             showFinetune.value = true;
             showtable.value = false;
@@ -232,7 +234,7 @@ function goTrainLog(trainId) {
             {{ i18n.table.remainTime }}
           </div>
         </div>
-        <el-table :data="trainData" style="width: 100%">
+        <el-table :data="finetuneData" style="width: 100%">
           <el-table-column label="任务名称/ID" width="180">
             <template #default="scope">
               <div>
@@ -299,11 +301,11 @@ function goTrainLog(trainId) {
           </el-table-column>
 
           <el-table-column label="任务框架" width="180">
-            <template #default="scope">
-              <div>
-                <span class="task-frame">{{ scope.row.frame }}</span>
-              </div>
-            </template>
+            <!-- <template> -->
+            <div>
+              <span class="task-frame">mindspore</span>
+            </div>
+            <!-- </template> -->
           </el-table-column>
           <el-table-column label="作业类型" width="460">
             <template #default="scope">
@@ -319,9 +321,7 @@ function goTrainLog(trainId) {
                 @click="quitClick"
               />
               <div class="description">
-                <div class="description-content">
-                  {{ scope.row.type }}
-                </div>
+                <div class="description-content">微调</div>
                 <div class="hide-box">
                   <div class="tools-box">
                     <div
@@ -343,6 +343,7 @@ function goTrainLog(trainId) {
           </el-table-column>
 
           <el-table-column label="资源占用" prop="resource" width="190">
+            1*Ascend 910D备份 4
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="152">
           </el-table-column>

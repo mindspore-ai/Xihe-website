@@ -2,15 +2,8 @@
 import { ref, onMounted } from 'vue';
 
 import { getWuKongPic } from '@/api/api-modelzoo.js';
-// const imgsVisible = ref(false);
 
-const imgs = ref([
-  // {
-  //   link: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2Fa%2F586ddfd220e8b.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1673076183&t=37b258a21bc8060d74d78e956c6698d3',
-  //   style: '#风格：动漫 宫崎骏',
-  //   source: '来自深渊 风景 绘画 写实风格',
-  // },
-]);
+const imgs = ref([]);
 const params = { page_num: 1, count_per_page: 28 };
 getWuKongPic(params).then((res) => {
   imgs.value = res.data.pictures;
@@ -31,7 +24,6 @@ onMounted(() => {
         timer = setTimeout(() => {
           params.page_num++;
           getWuKongPic(params).then((res) => {
-            // console.log(Math.floor(total), scrollHeight);
             imgs.value = imgs.value.concat(res.data.pictures);
           });
           timer = null;
@@ -124,12 +116,7 @@ onMounted(() => {
   .album-list {
     .img-mask {
       position: absolute;
-      // top: 0;
-      // right: 0;
       bottom: 0;
-      // left: 0;
-      // opacity: 50%;
-      // background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
       width: 100%;
       height: 60%;
@@ -194,12 +181,10 @@ onMounted(() => {
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-      // grid-template-columns: repeat(4, 100px);
       column-gap: 24px;
       row-gap: 24px;
       margin-bottom: 24px;
       .img-box {
-        // background-color: #bfa;
         position: relative;
         cursor: pointer;
         &:hover {
@@ -207,9 +192,6 @@ onMounted(() => {
             display: block;
           }
         }
-        // &:first-child {
-        //   grid-area: 1 / 1 / 3 / 3;
-        // }
         img {
           width: 100%;
           height: 100%;

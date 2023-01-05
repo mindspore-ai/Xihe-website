@@ -233,11 +233,10 @@ export function wuKongInfer(params) {
       return res;
     })
     .catch((e) => {
-      console.log(e.code);
       if (e.code === 'bigmodel_sensitive_info') {
         ElMessage({
           type: 'warning',
-          message: '输入的内容不合规,请重新输入！',
+          message: '输入的内容不合规,请重新输入',
         });
       }
       return e;

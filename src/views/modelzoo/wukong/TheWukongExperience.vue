@@ -277,6 +277,7 @@ async function handleInfer() {
           desc: inputText.value,
           style: sortTag.value,
         });
+
         isInferred.value = true;
 
         styleBackground.value = res.data.data.pictures;

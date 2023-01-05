@@ -18,9 +18,12 @@ function getHeaderConfig() {
  */
 export function getFinetune() {
   const url = `/server/finetune`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      console.log('res: ', res);
+      return res.data;
+    });
 }
 /**
  * 创建微调任务

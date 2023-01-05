@@ -243,6 +243,48 @@ function handleBtnClick3() {
 function goActivity() {
   router.push({ path: '/activity' });
 }
+const galleryPic = [
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png',
+    desc: '上海陆家嘴 未来城市 科幻风格',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png',
+    desc: '华为 大厦 晴朗 写实',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/西湖 美景-00.jpg',
+    desc: '西湖 美景',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png',
+    desc: '城市夜景 油画',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/水彩 山水-00.jpg',
+    desc: '水彩 山水',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/莫奈 撑阳伞的女人 月亮 梦幻-00.png',
+    desc: '莫奈 撑阳伞的女人 月亮 梦幻',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/极地 极光-00.jpg',
+    desc: '极地 极光',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png',
+    desc: '来自深渊 风景 绘画 写实风格',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/孤舟 江景-00.jpg',
+    desc: '孤舟 江景',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png',
+    desc: '街道 新海诚',
+  },
+];
 </script>
 
 <template>
@@ -379,75 +421,9 @@ function goActivity() {
             loop
             @swiper="onSwiper"
           >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png"
-                alt=""
-              />
-              <p>上海陆家嘴 未来城市 科幻风格</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png"
-                alt=""
-              />
-              <p>华为 大厦 晴朗 写实</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
-                alt=""
-              />
-              <p>城市夜景 像素风格</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
-                alt=""
-              />
-              <p>城市夜景 油画</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-00.png"
-                alt=""
-              />
-              <p>城市夜景 赛博朋克</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-01.png"
-                alt=""
-              />
-              <p>城市夜景 赛博朋克</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png"
-                alt=""
-              />
-              <p>来自深渊 风景 绘画 写实风格</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
-                alt=""
-              />
-              <p>沙漠 美景 高清</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png"
-                alt=""
-              />
-              <p>街道 新海诚</p></swiper-slide
-            >
-            <swiper-slide
-              ><img
-                src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/诺亚方舟在世界末日起航 科幻插画-00.png"
-                alt=""
-              />
-              <p>诺亚方舟在世界末日起航</p></swiper-slide
+            <swiper-slide v-for="item in galleryPic" :key="item"
+              ><img :src="item.img" alt="" />
+              <p>{{ item.desc }}</p></swiper-slide
             >
             <!-- <swiper-slide><img src="gallery" alt="" /></swiper-slide> -->
           </swiper>
@@ -515,71 +491,12 @@ function goActivity() {
               no-swiping
               loop
             >
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  class="abnormality-img"
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 0)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  class="abnormality-img"
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 1)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 像素风格-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 2)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 3)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 4)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 赛博朋克 格雷格·鲁特科夫斯基-01.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 5)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 6)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/沙漠 美景 高清-02.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 7)"></div>
-              </swiper-slide>
-              <swiper-slide class="swiper-no-swiping"
-                ><img
-                  class="abnormality-img"
-                  src="https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png"
-                  alt=""
-                />
-                <div class="mantle" @click="toggleGallery(true, 8)"></div>
+              <swiper-slide
+                v-for="(item, index) in galleryPic.slice(0, 9)"
+                :key="index"
+                class="swiper-no-swiping"
+                ><img class="abnormality-img" :src="item.img" alt="" />
+                <div class="mantle" @click="toggleGallery(true, index)"></div>
               </swiper-slide>
             </swiper>
           </div>

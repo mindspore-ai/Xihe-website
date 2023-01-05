@@ -20,6 +20,7 @@ const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
 const jobType = ref('微调');
 const taskType = ref('');
+const tips = ref(null);
 
 const form = reactive({
   name: '', //任务名称
@@ -37,9 +38,9 @@ const options = reactive([
 ]);
 // 超参选项
 const hyperParams = reactive([
-  { label: 'epochs', checked: false, val: '' },
-  { label: 'start_learning_rate', checked: false, val: '' },
-  { label: 'end_learning_rate', checked: false, val: '' },
+  { label: 'epochs', checked: false, val: '', tips: '' },
+  { label: 'start_learning_rate', checked: false, val: '', tips: '' },
+  { label: 'end_learning_rate', checked: false, val: '', tips: '' },
 ]);
 
 // const checkList = ref([]);
@@ -91,11 +92,19 @@ const rules = reactive({
 // 校验超参
 function checkInt(item) {
   // console.log('item: ', item);
+  console.log(tips.value);
   if (item.label === 'epochs') {
     const reg = /^[+]{0,1}(\d+)$/;
-    if (!reg.test(item.val)) {
+    // if (item.val) {
+    if (item.val && !reg.test(item.val)) {
       console.log(11111);
+      item.tips = '请输入一个正整数';
+    } else {
+      item.tips = '';
     }
+    // } else {
+    //   item.tips = '';
+    // }
     console.log('epochs');
   } else if (item.label === 'start_learning_rate') {
     console.log('start_learning_rate');
@@ -114,6 +123,7 @@ function changeTasktype(val) {
 
 // 创建微调任务
 function confirmCreating(formEl) {
+  console.log('formEl: ', formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -264,7 +274,7 @@ function confirmCreating(formEl) {
                     :disabled="!item.checked"
                     @blur="checkInt(item)"
                   />
-                  <p class="tips">a</p>
+                  <p ref="tips" class="tips">{{ item.tips }}</p>
                 </el-checkbox>
               </el-form-item>
             </div>
@@ -450,7 +460,11 @@ function confirmCreating(formEl) {
       }
     }
     .tips {
+      font-size: 12px;
       position: absolute;
+      color: var(--el-color-danger);
+      left: 240px;
+      bottom: -20px;
     }
   }
 }

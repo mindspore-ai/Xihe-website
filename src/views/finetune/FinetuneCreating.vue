@@ -42,8 +42,11 @@ const hyperParams = reactive([
   { label: 'end_learning_rate', checked: false, val: '' },
 ]);
 
-// const checkList = ref(['selected and disabled', 'disabled', 'Option A']);
+// const checkList = ref([]);
 
+function a(a) {
+  console.log(a);
+}
 // 按顺序校验表单数据是否校验通过
 /* function verify(node, code, message) {
   return new Promise((resolve, reject) => {
@@ -85,6 +88,23 @@ const rules = reactive({
   ],
 });
 
+// 校验超参
+function checkInt(item) {
+  // console.log('item: ', item);
+  if (item.label === 'epochs') {
+    const reg = /^[+]{0,1}(\d+)$/;
+    if (!reg.test(item.val)) {
+      console.log(11111);
+    }
+    console.log('epochs');
+  } else if (item.label === 'start_learning_rate') {
+    console.log('start_learning_rate');
+  } else {
+    console.log('inputValue: ', hyperParams[1].val);
+    console.log('end_learning_rate');
+  }
+}
+
 function changeTasktype(val) {
   if (val === '以图生文') {
     dataset.value = '以图生文数据集';
@@ -94,21 +114,15 @@ function changeTasktype(val) {
 
 // 创建微调任务
 function confirmCreating(formEl) {
-  // console.log('formEl: ', formEl);
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
       let newParams = hyperParams.filter((item) => {
-        // console.log('item: ', item);
         return item.checked;
       });
       console.log('hyperParams: ', newParams);
       newParams.forEach((item) => {
-        console.log('item: ', item);
         form.hyperparameter.push({ key: item.label, value: item.val });
-        // newObj.forEach((val) => {
-        //   val.key = item.label;
-        // });
       });
       let params = {
         hyperparameter: form.hyperparameter,
@@ -117,19 +131,19 @@ function confirmCreating(formEl) {
         task: 'finetune',
       };
       console.log(params);
-      // createFinetune(params).then((res) => {
-      //   console.log('res: ', res);
-      // ElMessage({
-      //   type: 'success',
-      //   message: '创建微调任务成功',
-      //   center: true,
-      // });
-      // setTimeout(() => {
-      //   router.push({
-      //     name: 'finetune',
-      //   });
-      // }, 500);
-      // });
+      createFinetune(params).then((res) => {
+        console.log('res: ', res);
+        ElMessage({
+          type: 'success',
+          message: '创建微调任务成功',
+          center: true,
+        });
+        setTimeout(() => {
+          router.push({
+            name: 'finetune',
+          });
+        }, 500);
+      });
     } else {
       return false;
     }
@@ -149,15 +163,7 @@ function confirmCreating(formEl) {
       </div>
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
-        <div class="createtune-content-tip">
-          TODO~~~~~
-          <!-- <a
-            href="https://xihe-docs.mindspore.cn/zh/tutorial/train/"
-            target="_blank"
-            style="color: #0d8dff"
-            >表单方式-创建训练实例</a
-          > -->
-        </div>
+        <div class="createtune-content-tip">TODO~~~~~</div>
         <div class="createtune-form-wrap">
           <el-form
             ref="queryRef"
@@ -253,7 +259,12 @@ function confirmCreating(formEl) {
                     </span>
                     <span>=</span>
                   </div>
-                  <el-input v-model="item.val" :disabled="!item.checked" />
+                  <el-input
+                    v-model="item.val"
+                    :disabled="!item.checked"
+                    @blur="checkInt(item)"
+                  />
+                  <p class="tips">a</p>
                 </el-checkbox>
               </el-form-item>
             </div>
@@ -418,7 +429,7 @@ function confirmCreating(formEl) {
 }
 :deep(.el-checkbox) {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 26px;
   // background-color: #bfa;
   margin-right: 0px;
   .el-checkbox__label {
@@ -437,6 +448,9 @@ function confirmCreating(formEl) {
           margin-right: 16px;
         }
       }
+    }
+    .tips {
+      position: absolute;
     }
   }
 }

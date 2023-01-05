@@ -24,11 +24,30 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
+import { useLoginStore, useUserInfoStore } from '@/stores';
+
 import {
   getFinetune,
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
+
+// const route = useRoute();
+const router = useRouter();
+// const userInfoStore = useUserInfoStore();
+
+// const projectId = detailData.value.id;
+const listId = ref(null);
+const trainId = ref(null);
+const showStep = ref(false);
+const showtable = ref(false);
+const showFinetune = ref(false);
+
+const isLogined = useLoginStore().isLogined;
+const userInfo = useUserInfoStore();
+console.log('userInfo: ', userInfo);
+
+console.log('isLogined: ', isLogined);
 
 let i18n = {
   head: {
@@ -41,17 +60,6 @@ let i18n = {
     remainTime: '剩余体验时间：',
   },
 };
-
-// const route = useRoute();
-const router = useRouter();
-// const userInfoStore = useUserInfoStore();
-
-// const projectId = detailData.value.id;
-const listId = ref(null);
-const trainId = ref(null);
-const showStep = ref(false);
-const showtable = ref(false);
-
 const applySteps = reactive([
   {
     stepImg: step1,
@@ -108,15 +116,30 @@ const trainData = [
 
 // 获取微调任务列表
 function getFinetuneList() {
-  try {
-    getFinetune().then((res) => {
-      console.log('res: ', res);
-    });
-  } catch (error) {
-    console.error(error);
+  if (isLogined) {
+    try {
+      getFinetune()
+        .then((res) => {
+          showFinetune.value = true;
+          showtable.value = true;
+          console.log('res: ', res);
+        })
+        .catch((res) => {
+          console.log('res: ', res.code);
+          if (res.code === 'finetune_no_permission') {
+            showFinetune.value = true;
+            showtable.value = false;
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    showFinetune.value = true;
+    showtable.value = false;
   }
 }
-// getFinetuneList();
+getFinetuneList();
 
 // 切换申请步骤弹窗
 function toggleApplication() {
@@ -125,7 +148,7 @@ function toggleApplication() {
 }
 
 function goCreateTune() {
-  router.push('/finetune-creating');
+  router.push({ path: `/finetune-creating/${userInfo.userName}` });
 }
 
 const showDel = ref(false);
@@ -188,7 +211,7 @@ function goTrainLog(trainId) {
 </script>
 
 <template>
-  <div class="modelzoo-tune">
+  <div v-if="showFinetune" class="modelzoo-tune">
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">

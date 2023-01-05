@@ -111,7 +111,7 @@ function getFinetuneList() {
             console.log('微调列表为空');
           } else {
             let bool = finetuneData.value.some((item) => {
-              item.status === 'scheduling' || item.status === 'Running';
+              item.is_done === false;
             });
             if (finetuneData.value.length < 5) {
               if (bool) {

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
 // import IconAddBlue from '~icons/app/add-blue';
 
@@ -14,7 +14,7 @@ import OButton from '@/components/OButton.vue';
 // const userInfoStore = useUserInfoStore();
 
 // const route = useRoute();
-// const router = useRouter();
+const router = useRouter();
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框

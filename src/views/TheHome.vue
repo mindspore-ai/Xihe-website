@@ -257,8 +257,8 @@ const galleryPic = [
     desc: '西湖 美景',
   },
   {
-    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/城市夜景 油画-00.png',
-    desc: '城市夜景 油画',
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/星河欲坠时-00.jpg',
+    desc: '星河欲坠时',
   },
   {
     img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/水彩 山水-00.jpg',

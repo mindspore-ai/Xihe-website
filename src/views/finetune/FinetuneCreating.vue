@@ -45,9 +45,6 @@ const hyperParams = reactive([
 
 // const checkList = ref([]);
 
-function a(a) {
-  console.log(a);
-}
 // 按顺序校验表单数据是否校验通过
 /* function verify(node, code, message) {
   return new Promise((resolve, reject) => {

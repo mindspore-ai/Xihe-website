@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -14,9 +14,9 @@ import { getFinetuneLog } from '@/api/api-finetune';
 // const router = useRouter();
 
 const finetuneLog = ref('');
-// getFinetuneLog().then((res) => {
-//   console.log('res: ', res);
-// });
+getFinetuneLog().then((res) => {
+  console.log('res: ', res);
+});
 // getFinetuneLog();
 </script>
 <template>

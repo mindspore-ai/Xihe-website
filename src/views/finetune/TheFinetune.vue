@@ -56,12 +56,10 @@ const showStep = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
 const finetuneData = ref([]);
+const showBtn = ref(false);
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
-console.log('userInfo: ', userInfo);
-
-console.log('isLogined: ', isLogined);
 
 let i18n = {
   head: {
@@ -71,7 +69,7 @@ let i18n = {
   },
   table: {
     title: '任务列表',
-    remainTime: '剩余体验时间：',
+    remainTime: '体验截止时间：',
   },
 };
 const applySteps = reactive([
@@ -107,21 +105,31 @@ function getFinetuneList() {
           showFinetune.value = true;
           showtable.value = true;
           finetuneData.value = res.data.datas;
+          console.log('微调任务: ', finetuneData.value);
           if (!finetuneData.value) {
             console.log('微调列表为空');
           } else {
             let bool = finetuneData.value.some((item) => {
               item.is_done === false;
             });
+
             if (finetuneData.value.length < 5) {
               if (bool) {
-                console.log('有运行中');
+                console.log('任务少于5个，有运行中');
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
-                console.log('没有运行中');
+                console.log('任务少于5个，没有运行中任务');
+                return;
               }
-            } else {
-              console.log('超过5个');
+            } else if (finetuneData.value.length === 5) {
+              showBtn.value = true;
+              if (bool) {
+                console.log('任务等于5个，有运行中');
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                console.log('任务等于5个，没有运行中任务');
+                return;
+              }
             }
           }
         })
@@ -222,7 +230,7 @@ function goTrainLog(trainId) {
   router.push({
     name: 'finetuneLog',
     params: {
-      finetuneId: '111',
+      finetuneId: trainId,
     },
   });
 }
@@ -244,7 +252,9 @@ function goTrainLog(trainId) {
       <div class="modelzoo-table">
         <div class="table-title">
           <div class="title">
-            {{ i18n.table.title }}
+            <span>
+              {{ i18n.table.title }}
+            </span>
           </div>
           <div class="remain-time">
             {{ i18n.table.remainTime }}
@@ -371,8 +381,8 @@ function goTrainLog(trainId) {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button type="primary" @click="goCreateTune">
-            创建训练实例
+          <o-button :disabled="showBtn" type="primary" @click="goCreateTune">
+            创建微调任务
           </o-button>
         </div>
       </div>

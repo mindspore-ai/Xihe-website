@@ -112,9 +112,8 @@ function getFinetuneList() {
             console.log('微调列表为空');
           } else {
             let bool = finetuneData.value.some((item) => {
-              item.is_done === false;
+              return item.is_done === false;
             });
-
             if (finetuneData.value.length < 5) {
               if (bool) {
                 console.log('任务少于5个，有运行中');

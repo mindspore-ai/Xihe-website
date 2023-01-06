@@ -97,7 +97,7 @@ const applySteps = reactive([
 ]);
 
 // 获取微调任务列表
-// let socket;
+let socket;
 function getFinetuneList() {
   if (isLogined) {
     try {
@@ -121,6 +121,7 @@ function getFinetuneList() {
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
                 console.log('任务少于5个，没有运行中任务');
+
                 return;
               }
             } else if (finetuneData.value.length === 5) {
@@ -166,6 +167,20 @@ function setWebsocket(url) {
   };
   return socket;
 }
+
+const closeSocket = () => {
+  socket.close();
+};
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', closeSocket);
+});
+
+onUnmounted(() => {
+  socket && socket.close();
+  window.removeEventListener('beforeunload', closeSocket);
+});
 
 // 切换申请步骤弹窗
 function toggleApplication() {

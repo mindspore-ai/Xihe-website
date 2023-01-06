@@ -42,11 +42,25 @@ const socket = new WebSocket(
 socket.onmessage = function (event) {
   console.log('event: ', event);
   nextTick(() => {
-    if (JSON.parse(event.data).log) {
-      finetuneLog.value = JSON.parse(event.data).log;
+    if (JSON.parse(event.data)) {
+      finetuneLog.value = JSON.parse(event.data);
     }
   });
 };
+
+// 页面刷新
+function reloadPage() {
+  socket.close();
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', reloadPage);
+});
+
+onUnmounted(() => {
+  socket.close();
+  window.removeEventListener('beforeunload', reloadPage);
+});
 </script>
 <template>
   <div class="finetune-log">

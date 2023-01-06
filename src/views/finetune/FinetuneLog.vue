@@ -1,19 +1,14 @@
 <script setup>
-import { ref, nextTick, onUnmounted, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, nextTick, onUnmounted, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { getFinetuneLog } from '@/api/api-finetune';
 import { LOGIN_KEYS } from '@/shared/login';
 
-// import { useUserInfoStore } from '@/stores';
-// const userInfoStore = useUserInfoStore();
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const route = useRoute();
-console.log('route: ', route.params);
-// const router = useRouter();
 
 const finetuneLog = ref('');
 
@@ -27,12 +22,6 @@ function getHeaderConfig() {
     : {};
   return headersConfig;
 }
-
-// getFinetuneLog().then((res) => {
-//   console.log('res: ', res);
-//   finetuneLog.value = res.data;
-// });
-// getFinetuneLog();
 
 // 日志
 const socket = new WebSocket(
@@ -61,6 +50,15 @@ onUnmounted(() => {
   socket.close();
   window.removeEventListener('beforeunload', reloadPage);
 });
+watch(
+  () => finetuneLog.value,
+  () => {
+    const obj = document.querySelector('#txt');
+    nextTick(() => {
+      obj.scrollTop = obj.scrollHeight;
+    });
+  }
+);
 </script>
 <template>
   <div class="finetune-log">

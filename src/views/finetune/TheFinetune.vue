@@ -44,9 +44,7 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-// const route = useRoute();
 const router = useRouter();
-// const userInfoStore = useUserInfoStore();
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -92,7 +90,6 @@ const applySteps = reactive([
   {
     stepImg: step4,
     stepTitle: '04  完成微调任务',
-    // stepArrows: arrows,
   },
 ]);
 
@@ -110,6 +107,7 @@ function getFinetuneList() {
           console.log('微调任务: ', finetuneData.value);
           if (!finetuneData.value) {
             console.log('微调列表为空');
+            showBtn.value = false;
           } else {
             let bool = finetuneData.value.some((item) => {
               return item.is_done === false;
@@ -121,7 +119,6 @@ function getFinetuneList() {
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
                 console.log('任务少于5个，没有运行中任务');
-
                 return;
               }
             } else if (finetuneData.value.length === 5) {
@@ -187,14 +184,13 @@ function showDelClick(val) {
 
 // 删除微调任务
 function delClick(val) {
-  console.log('val: ', val);
   if (val === 2) {
     showDel.value = false;
   } else {
-    deleteFinetune(val).then((res) => {
-      console.log('res: ', res);
+    deleteFinetune(val).then(() => {
       getFinetuneList();
       showDel.value = false;
+      showBtn.value = false;
     });
   }
 }
@@ -202,8 +198,7 @@ function delClick(val) {
 // 终止训练
 const showStop = ref(false);
 function stopTrainList(id) {
-  terminateFinetune(id).then((res) => {
-    console.log('终止训练res: ', res);
+  terminateFinetune(id).then(() => {
     getTrainList();
     showStop.value = false;
   });
@@ -214,6 +209,7 @@ function quitClick(val) {
     showStop.value = false;
   } else {
     stopTrainList(trainId.value);
+    showBtn.value = false;
   }
 }
 

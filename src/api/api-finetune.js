@@ -50,7 +50,7 @@ export function deleteFinetune(finetuneId) {
  */
 export function terminateFinetune(finetuneId) {
   const url = `/server/finetune/${finetuneId}`;
-  return request.put(url, getHeaderConfig()).then((res) => {
+  return request.put(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

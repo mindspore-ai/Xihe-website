@@ -159,6 +159,7 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
+    console.log('微调列表页event: ', event);
     try {
       finetuneData.value = JSON.parse(event.data).data;
     } catch (e) {
@@ -167,20 +168,6 @@ function setWebsocket(url) {
   };
   return socket;
 }
-
-const closeSocket = () => {
-  socket.close();
-};
-
-// 页面刷新
-onMounted(() => {
-  window.addEventListener('beforeunload', closeSocket);
-});
-
-onUnmounted(() => {
-  socket && socket.close();
-  window.removeEventListener('beforeunload', closeSocket);
-});
 
 // 切换申请步骤弹窗
 function toggleApplication() {
@@ -251,6 +238,20 @@ function goTrainLog(trainId) {
     },
   });
 }
+
+const closeSocket = () => {
+  socket.close();
+};
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', closeSocket);
+});
+
+onUnmounted(() => {
+  socket && socket.close();
+  window.removeEventListener('beforeunload', closeSocket);
+});
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';

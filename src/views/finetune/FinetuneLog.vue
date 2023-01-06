@@ -42,8 +42,8 @@ const socket = new WebSocket(
 socket.onmessage = function (event) {
   console.log('event: ', event);
   nextTick(() => {
-    if (JSON.parse(event.data)) {
-      finetuneLog.value = JSON.parse(event.data);
+    if (JSON.parse(event.data).data.log) {
+      finetuneLog.value = JSON.parse(event.data).data.log;
     }
   });
 };

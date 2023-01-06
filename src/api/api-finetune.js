@@ -21,7 +21,6 @@ export function getFinetune() {
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {
-      console.log('res: ', res);
       return res.data;
     });
 }

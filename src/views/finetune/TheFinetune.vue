@@ -117,6 +117,7 @@ function getFinetuneList() {
             if (finetuneData.value.length < 5) {
               if (bool) {
                 console.log('任务少于5个，有运行中');
+                showBtn.value = true;
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
                 console.log('任务少于5个，没有运行中任务');
@@ -306,6 +307,10 @@ function goTrainLog(trainId) {
                 <div v-if="scope.row.status === 'Pending'" class="status-item">
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
+                </div>
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span> 创建中</span>
                 </div>
 
                 <div v-if="scope.row.status === 'Failed'" class="status-item">

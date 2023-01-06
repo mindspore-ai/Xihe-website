@@ -57,6 +57,7 @@ const showtable = ref(false);
 const showFinetune = ref(false);
 const finetuneData = ref([]);
 const showBtn = ref(false);
+const expiry = ref(''); //体验截止时间
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
@@ -104,6 +105,7 @@ function getFinetuneList() {
         .then((res) => {
           showFinetune.value = true;
           showtable.value = true;
+          expiry.value = res.data.expiry;
           finetuneData.value = res.data.datas;
           console.log('微调任务: ', finetuneData.value);
           if (!finetuneData.value) {
@@ -255,9 +257,17 @@ function goTrainLog(trainId) {
             <span>
               {{ i18n.table.title }}
             </span>
+            <span>
+              <div class="list-tip">
+                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
+              </div>
+            </span>
           </div>
           <div class="remain-time">
-            {{ i18n.table.remainTime }}
+            <span>
+              {{ i18n.table.remainTime }}
+            </span>
+            <span>{{ expiry }}</span>
           </div>
         </div>
         <el-table :data="finetuneData" style="width: 100%">
@@ -294,10 +304,7 @@ function goTrainLog(trainId) {
                   <span>运行中</span>
                 </div>
 
-                <div
-                  v-if="scope.row.status === 'scheduling'"
-                  class="status-item"
-                >
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
                 </div>
@@ -333,7 +340,7 @@ function goTrainLog(trainId) {
             </div>
             <!-- </template> -->
           </el-table-column>
-          <el-table-column label="作业类型" width="460">
+          <el-table-column label="作业类型" width="450">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -368,7 +375,7 @@ function goTrainLog(trainId) {
             </template>
           </el-table-column>
 
-          <el-table-column label="资源占用" prop="resource" width="190">
+          <el-table-column label="资源占用" prop="resource" width="200">
             1*Ascend 910D备份 4
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="152">
@@ -490,6 +497,14 @@ $theme: #0d8dff;
         line-height: 24px;
         font-size: 18px;
         color: #000000;
+        display: flex;
+        align-items: center;
+        .list-tip {
+          font-size: 14px;
+          font-weight: 400;
+          color: #555;
+          line-height: 26px;
+        }
       }
       .remain-time {
         line-height: 24px;

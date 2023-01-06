@@ -1,23 +1,52 @@
 <script setup>
-import { ref } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
+import { ref, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import { getFinetuneLog } from '@/api/api-finetune';
+import { LOGIN_KEYS } from '@/shared/login';
 
 // import { useUserInfoStore } from '@/stores';
-
 // const userInfoStore = useUserInfoStore();
+const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-// const route = useRoute();
+const route = useRoute();
+console.log('route: ', route.params);
 // const router = useRouter();
 
 const finetuneLog = ref('');
-getFinetuneLog().then((res) => {
-  console.log('res: ', res);
-});
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+// getFinetuneLog().then((res) => {
+//   console.log('res: ', res);
+//   finetuneLog.value = res.data;
+// });
 // getFinetuneLog();
+
+// 日志
+const socket = new WebSocket(
+  `wss://${DOMAIN}/server/finetune/${route.params.finetuneId}/log/ws`,
+  [getHeaderConfig().headers['private-token']]
+);
+socket.onmessage = function (event) {
+  console.log('event: ', event);
+  nextTick(() => {
+    if (JSON.parse(event.data).log) {
+      finetuneLog.value = JSON.parse(event.data).log;
+    }
+  });
+};
 </script>
 <template>
   <div class="finetune-log">

@@ -19,7 +19,6 @@ const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
 const jobType = ref('微调');
-const taskType = ref('');
 const tips = ref(null);
 
 const form = reactive({
@@ -104,8 +103,30 @@ function checkInt(item) {
     // }
     console.log('epochs');
   } else if (item.label === 'start_learning_rate') {
+    // let reg = /^([1-9]+(\.\d+)?|0\.\d+)$/;
+
+    // 正浮点数正则表达式
+    // const reg = /^[+]{0,1}(\d+)$/;
+    const reg = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
+    if (item.val && !reg.test(item.val)) {
+      item.tips = '请输入一个正浮点数';
+    } else {
+      item.tips = '';
+    }
     console.log('start_learning_rate');
-  } else {
+  } else if (item.label === 'end_learning_rate') {
+    // 小于4的正则表达式
+    const reg = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
+    let reg2;
+    if (item.val > hyperParams[1].val) {
+      reg2 = true;
+    }
+    if (item.val && (!reg.test(item.val) || reg2)) {
+      item.tips = '请输入一个正浮点数,且需小于start_learning_rate的值';
+    } else {
+      item.tips = '';
+    }
+    // if(item.val)
     console.log('inputValue: ', hyperParams[1].val);
     console.log('end_learning_rate');
   }

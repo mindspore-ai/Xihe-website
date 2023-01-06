@@ -319,6 +319,21 @@ onUnmounted(() => {
               <span>已停止</span>
             </div>
 
+            <div v-if="scope.row.status === 'Terminating'" class="status-item">
+              <o-icon><icon-stopped></icon-stopped></o-icon>
+              <span>停止中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Pending'" class="status-item">
+              <o-icon><icon-runing></icon-runing></o-icon>
+              <span>等待中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Creating'" class="status-item">
+              <o-icon><icon-runing></icon-runing></o-icon>
+              <span>创建中</span>
+            </div>
+
             <div v-if="scope.row.status === 'Running'" class="status-item">
               <o-icon><icon-runing></icon-runing></o-icon>
               <span>运行中</span>
@@ -329,17 +344,22 @@ onUnmounted(() => {
               <span> 启动中</span>
             </div>
 
-            <div v-if="scope.row.status === 'Failed'" class="status-item">
-              <o-icon><icon-failed></icon-failed></o-icon>
-              <span>训练失败</span>
-            </div>
-
             <div
               v-if="scope.row.status === 'schedule_failed'"
               class="status-item"
             >
               <o-icon><icon-failed></icon-failed></o-icon>
               <span> 启动失败 </span>
+            </div>
+
+            <div v-if="scope.row.status === 'Failed'" class="status-item">
+              <o-icon><icon-failed></icon-failed></o-icon>
+              <span>训练失败</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+              <o-icon><icon-failed></icon-failed></o-icon>
+              <span>异常</span>
             </div>
           </div>
         </template>

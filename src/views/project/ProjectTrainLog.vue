@@ -36,7 +36,6 @@ const route = useRoute();
 const router = useRouter();
 
 const logUrl = ref('');
-// const outputUrl = ref('');
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -168,7 +167,6 @@ async function handleGetOutput() {
 
       const downloadElement = document.createElement('a');
       downloadElement.href = res.data.data.log_url;
-      // downloadElement.target = '_blank';
       downloadElement.download = 'output.tar.gz';
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载
@@ -196,7 +194,6 @@ socket.onmessage = function (event) {
       trainDetail.value = JSON.parse(event.data).data;
       if (trainDetail.value) {
         form.name = trainDetail.value.name;
-        // form.desc = trainDetail.value.log;
         configurationInfo.value = trainDetail.value.compute;
         isDone.value = trainDetail.value.is_done;
         isAim.value = trainDetail.value.enable_aim;
@@ -209,7 +206,6 @@ socket.onmessage = function (event) {
         // 训练未完成 true ；自定义时 aim_path为空时 true
         if (trainDetail.value.status === 'Completed') {
           handleGetLog();
-          // handleGetOutput();
           outputName.value = 'output.tar.gz';
 
           isCusEvaluating.value = false;
@@ -223,7 +219,6 @@ socket.onmessage = function (event) {
           }
         } else if (trainDetail.value.status === 'Failed') {
           handleGetLog();
-          // handleGetOutput();
           outputName.value = '';
           isEvaluating.value = true;
           isCusEvaluating.value = true;
@@ -259,7 +254,6 @@ function setEvaluateWebscoket(id, type) {
     // 推理出url 断开websocket
     if (type === 'standard') {
       // 自动评估
-
       try {
         if (JSON.parse(event.data).data.access_url) {
           btnContent.value = '查看报告';

@@ -9,6 +9,7 @@ import { LOGIN_KEYS } from '@/shared/login';
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const route = useRoute();
+// console.log('route: ', route.params);
 
 const finetuneLog = ref('');
 

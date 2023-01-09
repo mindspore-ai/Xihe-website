@@ -16,8 +16,13 @@ import { formatSeconds } from '@/shared/utils';
 
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/runing';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
+import IconWaiting from '~icons/app/waiting';
+import IconStopping from '~icons/app/stopping';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
@@ -505,6 +510,73 @@ watch(
             <div class="info-list-detail">
               <div class="status-box">
                 <div
+                  v-if="scope.row.status === 'Completed'"
+                  class="status-item"
+                >
+                  <o-icon><icon-finished></icon-finished></o-icon>
+                  <span>已完成</span>
+                </div>
+
+                <div
+                  v-if="scope.row.status === 'Terminated'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopped></icon-stopped></o-icon>
+                  <span>已停止</span>
+                </div>
+
+                <div
+                  v-if="scope.row.status === 'Terminating'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopping></icon-stopping></o-icon>
+                  <span>停止中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                  <o-icon><icon-waiting></icon-waiting></o-icon>
+                  <span>等待中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-creating></icon-creating></o-icon>
+                  <span>创建中</span>
+                </div>
+
+                <div
+                  v-if="scope.row.status === 'scheduling'"
+                  class="status-item"
+                >
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span> 启动中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Running'" class="status-item">
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span>运行中</span>
+                </div>
+
+                <div
+                  v-if="scope.row.status === 'schedule_failed'"
+                  class="status-item"
+                >
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span> 启动失败 </span>
+                </div>
+
+                <div v-if="scope.row.status === 'Failed'" class="status-item">
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>训练失败</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+                  <o-icon><icon-abnormal></icon-abnormal></o-icon>
+                  <span>异常</span>
+                </div>
+              </div>
+
+              <!-- <div class="status-box">
+                <div
                   v-if="trainDetail.status === 'Completed'"
                   class="status-item"
                 >
@@ -524,31 +596,15 @@ watch(
                   v-if="trainDetail.status === 'Running'"
                   class="status-item"
                 >
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-running></icon-running></o-icon>
                   <span>运行中</span>
                 </div>
-
-                <!-- <div
-                  v-if="trainDetail.status === 'scheduling'"
-                  class="status-item"
-                >
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 启动中</span>
-                </div> -->
 
                 <div v-if="trainDetail.status === 'Failed'" class="status-item">
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 训练失败</span>
                 </div>
-
-                <!-- <div
-                  v-if="trainDetail.status === 'schedule_failed'"
-                  class="status-item"
-                >
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span> 启动失败 </span>
-                </div> -->
-              </div>
+              </div> -->
             </div>
           </li>
           <li class="info-list">

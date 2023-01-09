@@ -8,7 +8,7 @@ import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/runing';
+import IconRuning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
 import IconArrowRight from '~icons/app/arrow-right';

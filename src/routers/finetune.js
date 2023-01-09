@@ -18,14 +18,6 @@ export default [
     meta: {
       isPrivate: true,
     },
-    /* beforeEnter: async () => {
-      const loginStore = useLoginStore();
-      if (!loginStore.loginStatus) {
-        return {
-          name: '404',
-        };
-      }
-    }, */
   },
   {
     path: '/finetune-log/:finetuneId',
@@ -33,5 +25,8 @@ export default [
     component: () => {
       return import('@/views/finetune/FinetuneLog.vue');
     },
+    /*  meta: {
+      isPrivate: true,
+    }, */
   },
 ];

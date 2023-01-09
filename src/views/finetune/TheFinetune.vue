@@ -60,6 +60,8 @@ const expiry = ref(''); //体验截止时间
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
 
+// let nowTime = new Date();
+// console.log('nowTime: ', nowTime);
 let i18n = {
   head: {
     title: '大模型微调',
@@ -106,7 +108,6 @@ function getFinetuneList() {
           finetuneData.value = res.data.datas;
           console.log('微调任务: ', finetuneData.value);
           if (!finetuneData.value) {
-            console.log('微调列表为空');
             showBtn.value = false;
           } else {
             let bool = finetuneData.value.some((item) => {
@@ -114,20 +115,16 @@ function getFinetuneList() {
             });
             if (finetuneData.value.length < 5) {
               if (bool) {
-                console.log('任务少于5个，有运行中');
                 showBtn.value = true;
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
-                console.log('任务少于5个，没有运行中任务');
                 return;
               }
             } else if (finetuneData.value.length === 5) {
               showBtn.value = true;
               if (bool) {
-                console.log('任务等于5个，有运行中');
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
-                console.log('任务等于5个，没有运行中任务');
                 return;
               }
             }
@@ -140,7 +137,7 @@ function getFinetuneList() {
           }
         });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   } else {
     showFinetune.value = true;
@@ -198,9 +195,9 @@ function delClick(val) {
 
 // 终止训练
 const showStop = ref(false);
-function stopTrainList(id) {
+function stopFinetuneList(id) {
   terminateFinetune(id).then(() => {
-    getTrainList();
+    getFinetuneList();
     showStop.value = false;
   });
 }
@@ -209,7 +206,7 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopTrainList(trainId.value);
+    stopFinetuneList(trainId.value);
     showBtn.value = false;
   }
 }

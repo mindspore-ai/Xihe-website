@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
-// import IconAddBlue from '~icons/app/add-blue';
+import IconPoppver from '~icons/app/popover.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -19,13 +19,20 @@ const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
 const jobType = ref('微调');
-const tips = ref(null);
+const params1 = ref(false);
+const params2 = ref(false);
+const params3 = ref(false);
+const epochsChecked = ref(true);
+const startChecked = ref(true);
+const endChecked = ref(true);
 
 const form = reactive({
   name: '', //任务名称
   taskType: '', //任务类型
   jobType: '', //作业类型
-  hyperparameter: [],
+  epochs: '',
+  start_learning_rate: '',
+  end_learning_rate: '',
 });
 
 // 任务类型
@@ -35,33 +42,18 @@ const options = reactive([
     label: '以图生文',
   },
 ]);
-// 超参选项
-const hyperParams = reactive([
-  { label: 'epochs', checked: false, val: '', tips: '' },
-  { label: 'start_learning_rate', checked: false, val: '', tips: '' },
-  { label: 'end_learning_rate', checked: false, val: '', tips: '' },
-]);
 
-// const checkList = ref([]);
-
-// 按顺序校验表单数据是否校验通过
-/* function verify(node, code, message) {
-  return new Promise((resolve, reject) => {
-    node.validateField(code, (valid) => {
-      if (!valid) {
-        ElMessage({
-          type: 'error',
-          message,
-          duration: 4000,
-          center: true,
-        });
-        reject('未通过');
-      } else {
-        resolve();
-      }
-    });
-  });
-} */
+const checkRange = (rule, value, callback) => {
+  if (value === '') {
+    callback();
+  } else {
+    if (value <= form.start_learning_rate) {
+      callback();
+    } else {
+      callback(new Error('请输入一个小于或等于start_learning_rate的值'));
+    }
+  }
+};
 
 const rules = reactive({
   name: [
@@ -83,53 +75,38 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
+  epochs: [
+    {
+      pattern: /^[+]{0,1}(\d+)$/,
+      message: '请输入一个正整数',
+      trigger: 'blur',
+    },
+  ],
+  start_learning_rate: [
+    {
+      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
+      message: '请输入一个正浮点数',
+      trigger: 'blur',
+    },
+  ],
+  end_learning_rate: [
+    {
+      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
+      message: '请输入一个正浮点数,且需小于start_learning_rate的值',
+      trigger: 'blur',
+    },
+    { validator: checkRange, trigger: 'blur' },
+  ],
 });
 
-// 校验超参
-function checkInt(item) {
-  // console.log('item: ', item);
-  console.log(tips.value);
-  if (item.label === 'epochs') {
-    const reg = /^[+]{0,1}(\d+)$/;
-    // if (item.val) {
-    if (item.val && !reg.test(item.val)) {
-      console.log(11111);
-      item.tips = '请输入一个正整数';
-    } else {
-      item.tips = '';
-    }
-    // } else {
-    //   item.tips = '';
-    // }
-    console.log('epochs');
-  } else if (item.label === 'start_learning_rate') {
-    // let reg = /^([1-9]+(\.\d+)?|0\.\d+)$/;
-
-    // 正浮点数正则表达式
-    // const reg = /^[+]{0,1}(\d+)$/;
-    const reg = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
-    if (item.val && !reg.test(item.val)) {
-      item.tips = '请输入一个正浮点数';
-    } else {
-      item.tips = '';
-    }
-    console.log('start_learning_rate');
-  } else if (item.label === 'end_learning_rate') {
-    // 小于4的正则表达式
-    const reg = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
-    let reg2;
-    if (item.val > hyperParams[1].val) {
-      reg2 = true;
-    }
-    if (item.val && (!reg.test(item.val) || reg2)) {
-      item.tips = '请输入一个正浮点数,且需小于start_learning_rate的值';
-    } else {
-      item.tips = '';
-    }
-    // if(item.val)
-    console.log('inputValue: ', hyperParams[1].val);
-    console.log('end_learning_rate');
-  }
+function changeEpochs(val) {
+  epochsChecked.value = !val;
+}
+function changeStart(val) {
+  startChecked.value = !val;
+}
+function changeEnd(val) {
+  endChecked.value = !val;
 }
 
 function changeTasktype(val) {
@@ -144,15 +121,22 @@ function confirmCreating(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      let newParams = hyperParams.filter((item) => {
-        return item.checked;
-      });
-      console.log('hyperParams: ', newParams);
-      newParams.forEach((item) => {
-        form.hyperparameter.push({ key: item.label, value: item.val });
-      });
+      let hyperparameter = [
+        {
+          key: 'epochs',
+          value: form.epochs,
+        },
+        {
+          key: 'start_learning_rate',
+          value: form.start_learning_rate,
+        },
+        {
+          key: 'end_learning_rate',
+          value: form.end_learning_rate,
+        },
+      ];
       let params = {
-        hyperparameter: form.hyperparameter,
+        hyperparameter: hyperparameter,
         model: 'opt-caption',
         name: form.name,
         task: 'finetune',
@@ -272,27 +256,74 @@ function confirmCreating(formEl) {
                 </div>
               </el-form-item>
             </div>
-            <div class="createtune-form-item">
-              <el-form-item label="超参">
-                <el-checkbox
-                  v-for="item in hyperParams"
-                  :key="item.label"
-                  v-model="item.checked"
-                  :label="item.label"
+            <div class="createtune-form-item hyperparameter">
+              <div class="item-icon">
+                <el-popover
+                  placement="bottom-start"
+                  :width="372"
+                  trigger="hover"
+                  :teleported="true"
                 >
-                  <div class="paramsName">
-                    <span>
-                      {{ item.label }}
-                    </span>
-                    <span>=</span>
+                  <template #reference>
+                    <o-icon style="font-size: 20px"
+                      ><icon-poppver></icon-poppver
+                    ></o-icon>
+                  </template>
+                  <div>
+                    <span style="color: red">epochs: </span>
+                    值为正整数。<br />
+                    <span style="color: red">start_learning_rate: </span>
+                    值为正浮点数，比如：0.1。<br />
+                    <span style="color: red">end_learning_rate: </span>
+                    值为正浮点数，且需小于start_learning_rate的值，比如：0.01。<br />
                   </div>
-                  <el-input
-                    v-model="item.val"
-                    :disabled="!item.checked"
-                    @blur="checkInt(item)"
-                  />
-                  <p ref="tips" class="tips">{{ item.tips }}</p>
-                </el-checkbox>
+                </el-popover>
+              </div>
+              <el-form-item prop="epochs" label="超参">
+                <el-checkbox
+                  v-model="params1"
+                  label="epochs"
+                  size="large"
+                  @change="changeEpochs"
+                />
+                <el-input
+                  v-model="form.epochs"
+                  :disabled="epochsChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
+              </el-form-item>
+            </div>
+            <div class="createtune-form-item hyperparameter">
+              <el-form-item prop="start_learning_rate" label=" ">
+                <el-checkbox
+                  v-model="params2"
+                  label="start_learning_rate"
+                  size="large"
+                  @change="changeStart"
+                />
+                <el-input
+                  v-model="form.start_learning_rate"
+                  :disabled="startChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
+              </el-form-item>
+            </div>
+            <div class="createtune-form-item hyperparameter">
+              <el-form-item prop="end_learning_rate" label=" ">
+                <el-checkbox
+                  v-model="params3"
+                  label="end_learning_rate"
+                  size="large"
+                  @change="changeEnd"
+                />
+                <el-input
+                  v-model="form.end_learning_rate"
+                  :disabled="endChecked"
+                  placeholder="请输入"
+                  class="paramsInt"
+                />
               </el-form-item>
             </div>
           </el-form>
@@ -366,6 +397,11 @@ function confirmCreating(formEl) {
       .createtune-form-wrap {
         .createtune-form-item {
           position: relative;
+          .item-icon {
+            position: absolute;
+            top: 5px;
+            left: 50px;
+          }
           .item-title {
             position: absolute;
             top: 50%;
@@ -380,6 +416,17 @@ function confirmCreating(formEl) {
               min-width: 80px;
               padding: 5px 28px;
               margin-left: 8px;
+            }
+          }
+        }
+        .hyperparameter {
+          :deep(.el-form-item) {
+            .el-form-item__content {
+              .el-form-item__error {
+                white-space: nowrap;
+                top: calc(100% + 12px);
+                left: 240px;
+              }
             }
           }
         }
@@ -417,6 +464,8 @@ function confirmCreating(formEl) {
       width: 546px;
       max-width: 546px;
       margin-left: 27px;
+      display: flex;
+      justify-content: space-between;
       .o-icon {
         font-size: 16px;
       }
@@ -430,6 +479,9 @@ function confirmCreating(formEl) {
         .el-input__wrapper {
           box-shadow: 0 0 0 1px #999 inset;
         }
+      }
+      .paramsInt {
+        width: 56%;
       }
       .el-input.is-disabled .el-input__wrapper {
         background-color: var(--el-disabled-bg-color);
@@ -451,37 +503,6 @@ function confirmCreating(formEl) {
     .el-form-item__label::before {
       width: 18px;
       height: 18px;
-    }
-  }
-}
-:deep(.el-checkbox) {
-  width: 100%;
-  margin-bottom: 26px;
-  // background-color: #bfa;
-  margin-right: 0px;
-  .el-checkbox__label {
-    width: 100%;
-    color: #555;
-    padding-left: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .el-input {
-      width: 60% !important;
-    }
-    .paramsName {
-      span {
-        &:first-child {
-          margin-right: 16px;
-        }
-      }
-    }
-    .tips {
-      font-size: 12px;
-      position: absolute;
-      color: var(--el-color-danger);
-      left: 240px;
-      bottom: -20px;
     }
   }
 }

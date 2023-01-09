@@ -156,9 +156,10 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
-    console.log('微调列表页event: ', event);
+    // console.log('微调列表页event: ', event);
     try {
       finetuneData.value = JSON.parse(event.data).data;
+      console.log('ws返回的信息: ', finetuneData.value);
     } catch (e) {
       console.error(e);
     }
@@ -311,18 +312,27 @@ onUnmounted(() => {
                   <span>已停止</span>
                 </div>
 
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span> 等待中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <span> 创建中</span>
+                </div>
+
                 <div v-if="scope.row.status === 'Running'" class="status-item">
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span>运行中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                <div
+                  v-if="scope.row.status === 'scheduling'"
+                  class="status-item"
+                >
                   <o-icon><icon-runing></icon-runing></o-icon>
                   <span> 启动中</span>
-                </div>
-                <div v-if="scope.row.status === 'Creating'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 创建中</span>
                 </div>
 
                 <div v-if="scope.row.status === 'Failed'" class="status-item">
@@ -370,11 +380,15 @@ onUnmounted(() => {
                 @click="quitClick"
               />
               <div class="description">
-                <div class="description-content">微调</div>
+                <div class="description-content">finetune</div>
                 <div class="hide-box">
                   <div class="tools-box">
                     <div
-                      v-if="scope.row.status === 'Running'"
+                      v-if="
+                        scope.row.status === 'Pending' ||
+                        scope.row.status === 'Creating' ||
+                        scope.row.status === 'Running'
+                      "
                       class="tools"
                       @click="showStopClick(scope.row.status, scope.row.id)"
                     >
@@ -392,7 +406,7 @@ onUnmounted(() => {
           </el-table-column>
 
           <el-table-column label="资源占用" prop="resource" width="200">
-            1*Ascend 910D备份 4
+            1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="152">
           </el-table-column>

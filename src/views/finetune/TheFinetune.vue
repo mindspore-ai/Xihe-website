@@ -3,14 +3,20 @@ import { ref, reactive, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
+import moment from 'moment';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/running';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
+import IconStopping from '~icons/app/stopping';
+import IconWaiting from '~icons/app/waiting';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -60,13 +66,11 @@ const expiry = ref(''); //体验截止时间
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
 
-// let nowTime = new Date();
-// console.log('nowTime: ', nowTime);
 let i18n = {
   head: {
     title: '大模型微调',
     introduce:
-      '基于平台内置的自动太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
+      '基于平台内置的紫东.太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
   },
   table: {
     title: '任务列表',
@@ -156,7 +160,7 @@ function setWebsocket(url) {
     // console.log('微调列表页event: ', event);
     try {
       finetuneData.value = JSON.parse(event.data).data;
-      console.log('ws返回的信息: ', finetuneData.value);
+      // console.log('ws返回的信息: ', finetuneData.value);
     } catch (e) {
       console.error(e);
     }
@@ -164,9 +168,15 @@ function setWebsocket(url) {
   return socket;
 }
 
+// 毫秒级时间戳换算成日期
+function getFullTime(val) {
+  const stamp = new Date(val);
+  const time = moment(stamp).format('YYYY-MM-DD HH:mm:ss');
+  return time;
+}
+
 // 切换申请步骤弹窗
 function toggleApplication() {
-  showtable.value = true;
   showStep.value = false;
 }
 
@@ -274,10 +284,10 @@ onUnmounted(() => {
             </span>
           </div>
           <div class="remain-time">
-            <span>
+            <span @click="goCreateTune">
               {{ i18n.table.remainTime }}
             </span>
-            <span>{{ expiry }}</span>
+            <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
         </div>
         <el-table :data="finetuneData" style="width: 100%">
@@ -309,32 +319,35 @@ onUnmounted(() => {
                   <span>已停止</span>
                 </div>
 
+                <div
+                  v-if="scope.row.status === 'Terminating'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopping></icon-stopping></o-icon>
+                  <span>停止中</span>
+                </div>
+
                 <div v-if="scope.row.status === 'Pending'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 等待中</span>
+                  <o-icon><icon-waiting></icon-waiting></o-icon>
+                  <span>等待中</span>
                 </div>
 
                 <div v-if="scope.row.status === 'Creating'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 创建中</span>
-                </div>
-
-                <div v-if="scope.row.status === 'Running'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>运行中</span>
+                  <o-icon><icon-creating></icon-creating></o-icon>
+                  <span>创建中</span>
                 </div>
 
                 <div
                   v-if="scope.row.status === 'scheduling'"
                   class="status-item"
                 >
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-running></icon-running></o-icon>
                   <span> 启动中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Failed'" class="status-item">
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>训练失败</span>
+                <div v-if="scope.row.status === 'Running'" class="status-item">
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span>运行中</span>
                 </div>
 
                 <div
@@ -343,6 +356,16 @@ onUnmounted(() => {
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
+                </div>
+
+                <div v-if="scope.row.status === 'Failed'" class="status-item">
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>训练失败</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+                  <o-icon><icon-abnormal></icon-abnormal></o-icon>
+                  <span>异常</span>
                 </div>
               </div>
             </template>
@@ -357,11 +380,9 @@ onUnmounted(() => {
           </el-table-column>
 
           <el-table-column label="任务框架" width="180">
-            <!-- <template> -->
             <div>
               <span class="task-frame">mindspore</span>
             </div>
-            <!-- </template> -->
           </el-table-column>
           <el-table-column label="作业类型" width="450">
             <template #default="scope">
@@ -415,7 +436,11 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button :disabled="showBtn" type="primary" @click="goCreateTune">
+          <o-button
+            :disabled="showBtn || Math.round(new Date() / 1000) > expiry"
+            type="primary"
+            @click="goCreateTune"
+          >
             创建微调任务
           </o-button>
         </div>

@@ -2,8 +2,6 @@
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
 
-// import OButton from '@/components/OButton.vue';
-// import FileTree from './FileTree.vue';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import { getGitlabTree } from '@/api/api-gitlab';
@@ -29,11 +27,8 @@ const filePath = ref(''); // 启动文件自定义路径，末尾不带/
 const inp = ref(null);
 const dirHeadPath = ref([]); // 代码目录弹窗头部路径，最终代码目录路径(数组)
 const fileHeadPath = ref([]); // 启动文件弹窗头部路径
-// const bootFile = ref('');
-// const radio = ref();
 
 let routerParams = router.currentRoute.value.params;
-// let contents = routerParams.contents;
 const dirTableData = ref([]); //代码目录文件树table内容
 const fileTableData = ref([]); //启动文件文件树table内容
 
@@ -130,7 +125,6 @@ function pathClick(item, index) {
       fileHeadPath.value = dirHeadPath.value.map((item) => {
         return item;
       });
-      // filePath.value = dirPath.value;
     } else {
       // 返回根目录
       dirPath.value = '';
@@ -148,8 +142,6 @@ function pathClick(item, index) {
       fileRelativePath.value.splice(index);
     } else {
       return;
-      // getFileByPath();
-      // fileHeadPath.value = [];
     }
   }
 }
@@ -172,9 +164,6 @@ function goBlob(item) {
       filePath.value = item.path;
       let lastPath = filePath.value.split('/').slice(-1).toString();
       fileHeadPath.value.push(lastPath);
-      // fileRelativePath.value = fileHeadPath.value.slice(
-      //   dirHeadPath.value.length
-      // );
     }
   } else {
     return;
@@ -268,8 +257,6 @@ function handleFile(item) {
           </el-table-column>
           <el-table-column label="描述" />
         </el-table>
-
-        <!-- <div v-if="!dirTableData.length" class="empyt-folder">空文件夹</div> -->
       </div>
       <!-- 启动文件弹窗内容 -->
       <div v-else class="tree">
@@ -400,16 +387,6 @@ input {
           &:hover {
             background: #f7f8fa;
           }
-          /* .el-radio-group {
-            // width: 100% !important;
-            width: 640px;
-            height: 48px;
-
-            background-color: #bfa;
-            .el-radio {
-              width: 100%;
-            }
-          } */
           td {
             overflow: hidden;
             word-wrap: break-word;
@@ -486,9 +463,6 @@ input {
           }
         }
         &-item-inner {
-          // display: flex;
-          // align-items: center;
-          // justify-content: space-between;
           padding: 16px 0;
           border-bottom: 1px solid #e5e5e5;
           & > div {
@@ -517,8 +491,6 @@ input {
     }
   }
   // 主体样式
-  // .el-table__body-wrapper {
-  // padding: 0 12px;
   .el-table__body {
     color: #555;
     // 行
@@ -539,7 +511,6 @@ input {
       }
     }
   }
-  // }
 }
 
 .o-icon {

@@ -5,7 +5,8 @@ import warningImg from '@/assets/icons/warning.png';
 
 const deleteCondition = reactive({
   title: '删除项目',
-  describe: '确认是否将此训练实例终止，终止后将无法复原。',
+  describe1: '确认是否将此训练实例终止，终止后将无法复原。',
+  describe2: '确认是否将此微调任务终止，终止后将无法复原。',
   btnText: '删除',
   cancel: '取消',
   confirm: '确认',
@@ -20,7 +21,12 @@ const prop = defineProps({
     type: String,
     default: '',
   },
+  displayType: {
+    type: String,
+    default: '',
+  },
 });
+console.log('displayType: ', prop.displayType);
 
 const stopShow = ref(false);
 const emit = defineEmits(['click']);
@@ -60,7 +66,12 @@ watch(
         width: '100%',
       }"
     >
-      {{ deleteCondition.describe }}
+      <span v-if="displayType === 'train'">
+        {{ deleteCondition.describe1 }}
+      </span>
+      <span v-if="displayType === 'finetune'">
+        {{ deleteCondition.describe2 }}
+      </span>
     </div>
     <template #foot>
       <div

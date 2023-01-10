@@ -62,6 +62,7 @@ const showFinetune = ref(false);
 const finetuneData = ref([]);
 const showBtn = ref(false);
 const expiry = ref(''); //体验截止时间
+const displayType = ref('finetune');
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
@@ -389,12 +390,14 @@ onUnmounted(() => {
               <DeleteTrain
                 :list-id="listId"
                 :show-del="showDel"
+                :display-type="displayType"
                 @click="delClick"
               />
 
               <StopTrain
                 :train-id="trainId"
                 :show-stop="showStop"
+                :display-type="displayType"
                 @click="quitClick"
               />
               <div class="description">

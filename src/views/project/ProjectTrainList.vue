@@ -71,6 +71,7 @@ const resetedId = ref(null);
 const tips = ref(false);
 const btnShow = ref(false);
 const description = ref('');
+const displayType = ref('train');
 
 const i18n = {
   description1:
@@ -385,12 +386,14 @@ onUnmounted(() => {
           <DeleteTrain
             :list-id="listId"
             :show-del="showDel"
+            :display-type="displayType"
             @click="delClick"
           />
 
           <StopTrain
             :train-id="trainId"
             :show-stop="showStop"
+            :display-type="displayType"
             @click="quitClick"
           />
 

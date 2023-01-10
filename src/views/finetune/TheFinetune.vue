@@ -1,16 +1,22 @@
 <script setup>
-import { ref, reactive, onUnmounted, onMounted } from 'vue';
+import { ref, reactive, onUnmounted, onMounted, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
+import moment from 'moment';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/running';
+import IconRunning from '~icons/app/runnning';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
+import IconStopping from '~icons/app/stopping';
+import IconWaiting from '~icons/app/waiting';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -24,12 +30,19 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLouseLoginStorinStore, useUserInfoStore } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
+
+import {
+  ge, useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
 import {
   getFinetune,
+,
   deleteFinetune,
+  terminateFinetune,
+ deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
 
@@ -60,13 +73,38 @@ const expiry = ref(''); //体验截止时间
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
 
-// let nowTime = new Date();
-// console.log('nowTime: ', nowTime);
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+const router = useRouter();
+
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
+const listId = ref(null);
+const trainId = ref(null);
+const showStep = ref(false);
+const showtable = ref(false);
+const showFinetune = ref(false);
+const finetuneData = ref([]);
+const showBtn = ref(false);
+const expiry = ref(''); //体验截止时间
+
+const isLogined = useLoginStore().isLogined;
+const userInfo = useUserInfoStore();
+
 let i18n = {
   head: {
     title: '大模型微调',
     introduce:
-      '基于平台内置的自动太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
+      '基于平台内置的紫东.太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
   },
   table: {
     title: '任务列表',
@@ -97,7 +135,53 @@ const applySteps = reactive([
 
 // 获取微调任务列表
 let socket;
+let socket;
 function getFinetuneList() {
+  if (isLogined) {
+    try {
+      getFinetune()
+        .then((res) => {
+          showFinetune.value = true;
+          showtable.value = true;
+          expiry.value = res.data.expiry;
+          finetuneData.value = res.data.datas;
+          console.log('微调任务: ', finetuneData.value);
+          if (!finetuneData.value) {
+            showBtn.value = false;
+          } else {
+            let bool = finetuneData.value.some((item) => {
+              return item.is_done === false;
+            });
+            if (finetuneData.value.length < 5) {
+              if (bool) {
+                showBtn.value = true;
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                return;
+              }
+            } else if (finetuneData.value.length === 5) {
+              showBtn.value = true;
+              if (bool) {
+                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+              } else {
+                return;
+              }
+            }
+          }
+        })
+        .catch((res) => {
+          if (res.code === 'finetune_no_permission') {
+            showFinetune.value = true;
+            showtable.value = false;
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    showFinetune.value = true;
+    showtable.value = false;
+  }
   if (isLogined) {
     try {
       getFinetune()
@@ -151,6 +235,28 @@ function setWebsocket(url) {
     getHeaderConfig().headers['private-token'],
   ]);
 
+  当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    // console.log('微调列表页event: ', event);
+    try {
+      finetuneData.value = JSON.parse(event.data).data;
+      // console.log('ws返回的信息: ', finetuneData.value);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
+
+// 毫秒级时间戳换算成日期
+function getFullTime(val) {
+  const stamp = new Date(val);
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [
+    getHeaderConfig().headers['private-token'],
+  ]);
+
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
     // console.log('微调列表页event: ', event);
@@ -163,14 +269,17 @@ function setWebsocket(url) {
   };
   return socket;
 }
+  const time = moment(stamp).format('YYYY-MM-DD HH:mm:ss');
+  return time;
+}
 
 // 切换申请步骤弹窗
 function toggleApplication() {
-  showtable.value = true;
   showStep.value = false;
 }
 
 function goCreateTune() {
+  router.push({ path: `/finetune-creating/${userInfo.userName}` });
   router.push({ path: `/finetune-creating/${userInfo.userName}` });
 }
 
@@ -181,10 +290,16 @@ function showDelClick(val) {
 }
 
 // 删除微调任务
+// 删除微调任务
 function delClick(val) {
   if (val === 2) {
     showDel.value = false;
   } else {
+    deleteFinetune(val).then(() => {
+      getFinetuneList();
+      showDel.value = false;
+      showBtn.value = false;
+    });
     deleteFinetune(val).then(() => {
       getFinetuneList();
       showDel.value = false;
@@ -199,6 +314,10 @@ function stopFinetuneList(id) {
   terminateFinetune(id).then(() => {
     getFinetuneList();
     showStop.value = false;
+function stopFinetuneList(id) {
+  terminateFinetune(id).then(() => {
+    getFinetuneList();
+    showStop.value = false;
   });
 }
 
@@ -206,6 +325,8 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
+    stopFinetuneList(trainId.value);
+    showBtn.value = false;
     stopFinetuneList(trainId.value);
     showBtn.value = false;
   }
@@ -230,8 +351,25 @@ function goTrainLog(trainId) {
     params: {
       finetuneId: trainId,
     },
+    params: {
+      finetuneId: trainId,
+    },
   });
 }
+
+const closeSocket = () => {
+  socket.close();
+};
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', closeSocket);
+});
+
+onUnmounted(() => {
+  socket && socket.close();
+  window.removeEventListener('beforeunload', closeSocket);
+});
 
 const closeSocket = () => {
   socket.close();
@@ -249,7 +387,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="showFinetune" class="modelzoo-tune">
+  <div v-if="showFinetune" v-if="showFinetune" class="modelzoo-tune">
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
@@ -265,7 +403,14 @@ onUnmounted(() => {
         <div class="table-title">
           <div class="title">
             <span>
+              <span>
               {{ i18n.table.title }}
+            </span>
+            <span>
+              <div class="list-tip">
+                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
+              </div>
+            </span>
             </span>
             <span>
               <div class="list-tip">
@@ -275,9 +420,12 @@ onUnmounted(() => {
           </div>
           <div class="remain-time">
             <span>
+              <span @click="goCreateTune">
               {{ i18n.table.remainTime }}
             </span>
             <span>{{ expiry }}</span>
+            </span>
+            <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
         </div>
         <el-table :data="finetuneData" style="width: 100%">
@@ -319,22 +467,35 @@ onUnmounted(() => {
                   <span> 创建中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Running'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>运行中</span>
+                <div
+                  v-if="scope.row.status === 'Terminating'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopping></icon-stopping></o-icon>
+                  <span>停止中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                  <o-icon><icon-waiting></icon-waiting></o-icon>
+                  <span>等待中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-creating></icon-creating></o-icon>
+                  <span>创建中</span>
                 </div>
 
                 <div
                   v-if="scope.row.status === 'scheduling'"
                   class="status-item"
                 >
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-running></icon-running></o-icon>
                   <span> 启动中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Failed'" class="status-item">
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>训练失败</span>
+                <div v-if="scope.row.status === 'Running'" class="status-item">
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span>运行中</span>
                 </div>
 
                 <div
@@ -343,6 +504,16 @@ onUnmounted(() => {
                 >
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
+                </div>
+
+                <div v-if="scope.row.status === 'Failed'" class="status-item">
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>训练失败</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+                  <o-icon><icon-abnormal></icon-abnormal></o-icon>
+                  <span>异常</span>
                 </div>
               </div>
             </template>
@@ -357,11 +528,9 @@ onUnmounted(() => {
           </el-table-column>
 
           <el-table-column label="任务框架" width="180">
-            <!-- <template> -->
             <div>
               <span class="task-frame">mindspore</span>
             </div>
-            <!-- </template> -->
           </el-table-column>
           <el-table-column label="作业类型" width="450">
             <template #default="scope">
@@ -415,7 +584,11 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button :disabled="showBtn" type="primary" @click="goCreateTune">
+          <o-button
+            :disabled="showBtn || Math.round(new Date() / 1000) > expiry"
+            type="primary"
+            @click="goCreateTune"
+          >
             创建微调任务
           </o-button>
         </div>

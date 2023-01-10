@@ -7,7 +7,9 @@ import IconPoppver from '~icons/app/popover.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import { createFinetune } from '@/api/api-finetune';
+import { createFinetune } from '@/api/api-finetune';
 
+// import {  useUserInfoStore } from '@/stores';
 // import {  useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
 
@@ -65,9 +67,12 @@ const rules = reactive({
     {
       pattern: /^[a-zA-Z0-9_]{1,25}$/,
       message: '请输入一个1-25位且只包含大小写字母、数字、下划线的名称',
+      pattern: /^[a-zA-Z0-9_]{1,25}$/,
+      message: '请输入一个1-25位且只包含大小写字母、数字、下划线的名称',
       trigger: 'blur',
     },
   ],
+  taskType: [
   taskType: [
     {
       required: true,
@@ -111,6 +116,8 @@ function changeEnd(val) {
 
 function changeTasktype(val) {
   if (val === '以图生文') {
+    dataset.value = '以图生文数据集';
+    model.value = '以图生文预训练模型';
     dataset.value = '以图生文数据集';
     model.value = '以图生文预训练模型';
   }
@@ -166,6 +173,9 @@ function confirmCreating(formEl) {
     <div class="createtune-wrap">
       <div class="tune-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
+          <el-breadcrumb-item :to="{ path: '/finetune' }">
+            大模型微调
+          </el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/finetune' }">
             大模型微调
           </el-breadcrumb-item>

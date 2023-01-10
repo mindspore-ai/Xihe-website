@@ -3,7 +3,6 @@ import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
-import IconPoppver from '~icons/app/popover.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -16,17 +15,10 @@ import OButton from '@/components/OButton.vue';
 
 // const route = useRoute();
 const router = useRouter();
-const router = useRouter();
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框
 const jobType = ref('微调');
-const params1 = ref(false);
-const params2 = ref(false);
-const params3 = ref(false);
-const epochsChecked = ref(true);
-const startChecked = ref(true);
-const endChecked = ref(true);
 const params1 = ref(false);
 const params2 = ref(false);
 const params3 = ref(false);
@@ -41,9 +33,6 @@ const form = reactive({
   epochs: '',
   start_learning_rate: '',
   end_learning_rate: '',
-  epochs: '',
-  start_learning_rate: '',
-  end_learning_rate: '',
 });
 
 // 任务类型
@@ -54,17 +43,6 @@ const options = reactive([
   },
 ]);
 
-const checkRange = (rule, value, callback) => {
-  if (value === '') {
-    callback();
-  } else {
-    if (value <= form.start_learning_rate) {
-      callback();
-    } else {
-      callback(new Error('请输入一个小于或等于start_learning_rate的值'));
-    }
-  }
-};
 const checkRange = (rule, value, callback) => {
   if (value === '') {
     callback();
@@ -119,39 +97,7 @@ const rules = reactive({
     },
     { validator: checkRange, trigger: 'blur' },
   ],
-  epochs: [
-    {
-      pattern: /^[+]{0,1}(\d+)$/,
-      message: '请输入一个正整数',
-      trigger: 'blur',
-    },
-  ],
-  start_learning_rate: [
-    {
-      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
-      message: '请输入一个正浮点数',
-      trigger: 'blur',
-    },
-  ],
-  end_learning_rate: [
-    {
-      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
-      message: '请输入一个正浮点数,且需小于start_learning_rate的值',
-      trigger: 'blur',
-    },
-    { validator: checkRange, trigger: 'blur' },
-  ],
 });
-
-function changeEpochs(val) {
-  epochsChecked.value = !val;
-}
-function changeStart(val) {
-  startChecked.value = !val;
-}
-function changeEnd(val) {
-  endChecked.value = !val;
-}
 
 function changeEpochs(val) {
   epochsChecked.value = !val;
@@ -208,39 +154,6 @@ function confirmCreating(formEl) {
             name: 'finetune',
           });
         }, 500);
-      let hyperparameter = [
-        {
-          key: 'epochs',
-          value: form.epochs,
-        },
-        {
-          key: 'start_learning_rate',
-          value: form.start_learning_rate,
-        },
-        {
-          key: 'end_learning_rate',
-          value: form.end_learning_rate,
-        },
-      ];
-      let params = {
-        hyperparameter: hyperparameter,
-        model: 'opt-caption',
-        name: form.name,
-        task: 'finetune',
-      };
-      console.log(params);
-      createFinetune(params).then((res) => {
-        console.log('res: ', res);
-        ElMessage({
-          type: 'success',
-          message: '创建微调任务成功',
-          center: true,
-        });
-        setTimeout(() => {
-          router.push({
-            name: 'finetune',
-          });
-        }, 500);
       });
     } else {
       return false;
@@ -261,7 +174,6 @@ function confirmCreating(formEl) {
       </div>
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
-        <div class="createtune-content-tip">TODO~~~~~</div>
         <div class="createtune-content-tip">TODO~~~~~</div>
         <div class="createtune-form-wrap">
           <el-form
@@ -400,74 +312,7 @@ function confirmCreating(formEl) {
             </div>
             <div class="createtune-form-item hyperparameter">
               <el-form-item prop="end_learning_rate" label=" ">
-            <div class="createtune-form-item hyperparameter">
-              <div class="item-icon">
-                <el-popover
-                  placement="bottom-start"
-                  :width="372"
-                  trigger="hover"
-                  :teleported="true"
-                >
-                  <template #reference>
-                    <o-icon style="font-size: 20px"
-                      ><icon-poppver></icon-poppver
-                    ></o-icon>
-                  </template>
-                  <div>
-                    <span style="color: red">epochs: </span>
-                    值为正整数。<br />
-                    <span style="color: red">start_learning_rate: </span>
-                    值为正浮点数，比如：0.1。<br />
-                    <span style="color: red">end_learning_rate: </span>
-                    值为正浮点数，且需小于start_learning_rate的值，比如：0.01。<br />
-                  </div>
-                </el-popover>
-              </div>
-              <el-form-item prop="epochs" label="超参">
                 <el-checkbox
-                  v-model="params1"
-                  label="epochs"
-                  size="large"
-                  @change="changeEpochs"
-                />
-                <el-input
-                  v-model="form.epochs"
-                  :disabled="epochsChecked"
-                  placeholder="请输入"
-                  class="paramsInt"
-                />
-              </el-form-item>
-            </div>
-            <div class="createtune-form-item hyperparameter">
-              <el-form-item prop="start_learning_rate" label=" ">
-                <el-checkbox
-                  v-model="params2"
-                  label="start_learning_rate"
-                  size="large"
-                  @change="changeStart"
-                />
-                <el-input
-                  v-model="form.start_learning_rate"
-                  :disabled="startChecked"
-                  placeholder="请输入"
-                  class="paramsInt"
-                />
-              </el-form-item>
-            </div>
-            <div class="createtune-form-item hyperparameter">
-              <el-form-item prop="end_learning_rate" label=" ">
-                <el-checkbox
-                  v-model="params3"
-                  label="end_learning_rate"
-                  size="large"
-                  @change="changeEnd"
-                />
-                <el-input
-                  v-model="form.end_learning_rate"
-                  :disabled="endChecked"
-                  placeholder="请输入"
-                  class="paramsInt"
-                />
                   v-model="params3"
                   label="end_learning_rate"
                   size="large"

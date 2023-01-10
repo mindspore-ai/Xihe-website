@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onUnmounted, onMounted, onUnmounted, onMounted } from 'vue';
+import { ref, reactive, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
@@ -9,7 +9,7 @@ import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRunning from '~icons/app/runnning';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
 import IconStopping from '~icons/app/stopping';
@@ -30,48 +30,14 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
-import { useLouseLoginStorinStore, useUserInfoStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
-
-import {
-  ge, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
 import {
   getFinetune,
-,
   deleteFinetune,
   terminateFinetune,
- deleteFinetune,
-  terminateFinetune,
 } from '@/api/api-finetune';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
-const router = useRouter();
-
-const DOMAIN = import.meta.env.VITE_DOMAIN;
-
-const listId = ref(null);
-const trainId = ref(null);
-const showStep = ref(false);
-const showtable = ref(false);
-const showFinetune = ref(false);
-const finetuneData = ref([]);
-const showBtn = ref(false);
-const expiry = ref(''); //体验截止时间
-
-const isLogined = useLoginStore().isLogined;
-const userInfo = useUserInfoStore();
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -135,53 +101,7 @@ const applySteps = reactive([
 
 // 获取微调任务列表
 let socket;
-let socket;
 function getFinetuneList() {
-  if (isLogined) {
-    try {
-      getFinetune()
-        .then((res) => {
-          showFinetune.value = true;
-          showtable.value = true;
-          expiry.value = res.data.expiry;
-          finetuneData.value = res.data.datas;
-          console.log('微调任务: ', finetuneData.value);
-          if (!finetuneData.value) {
-            showBtn.value = false;
-          } else {
-            let bool = finetuneData.value.some((item) => {
-              return item.is_done === false;
-            });
-            if (finetuneData.value.length < 5) {
-              if (bool) {
-                showBtn.value = true;
-                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
-              } else {
-                return;
-              }
-            } else if (finetuneData.value.length === 5) {
-              showBtn.value = true;
-              if (bool) {
-                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
-              } else {
-                return;
-              }
-            }
-          }
-        })
-        .catch((res) => {
-          if (res.code === 'finetune_no_permission') {
-            showFinetune.value = true;
-            showtable.value = false;
-          }
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    showFinetune.value = true;
-    showtable.value = false;
-  }
   if (isLogined) {
     try {
       getFinetune()
@@ -235,7 +155,7 @@ function setWebsocket(url) {
     getHeaderConfig().headers['private-token'],
   ]);
 
-  当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
     // console.log('微调列表页event: ', event);
     try {
@@ -251,24 +171,6 @@ function setWebsocket(url) {
 // 毫秒级时间戳换算成日期
 function getFullTime(val) {
   const stamp = new Date(val);
-
-function setWebsocket(url) {
-  const socket = new WebSocket(url, [
-    getHeaderConfig().headers['private-token'],
-  ]);
-
-  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-  socket.onmessage = function (event) {
-    // console.log('微调列表页event: ', event);
-    try {
-      finetuneData.value = JSON.parse(event.data).data;
-      console.log('ws返回的信息: ', finetuneData.value);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  return socket;
-}
   const time = moment(stamp).format('YYYY-MM-DD HH:mm:ss');
   return time;
 }
@@ -280,7 +182,6 @@ function toggleApplication() {
 
 function goCreateTune() {
   router.push({ path: `/finetune-creating/${userInfo.userName}` });
-  router.push({ path: `/finetune-creating/${userInfo.userName}` });
 }
 
 const showDel = ref(false);
@@ -290,16 +191,10 @@ function showDelClick(val) {
 }
 
 // 删除微调任务
-// 删除微调任务
 function delClick(val) {
   if (val === 2) {
     showDel.value = false;
   } else {
-    deleteFinetune(val).then(() => {
-      getFinetuneList();
-      showDel.value = false;
-      showBtn.value = false;
-    });
     deleteFinetune(val).then(() => {
       getFinetuneList();
       showDel.value = false;
@@ -314,10 +209,6 @@ function stopFinetuneList(id) {
   terminateFinetune(id).then(() => {
     getFinetuneList();
     showStop.value = false;
-function stopFinetuneList(id) {
-  terminateFinetune(id).then(() => {
-    getFinetuneList();
-    showStop.value = false;
   });
 }
 
@@ -325,8 +216,6 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    stopFinetuneList(trainId.value);
-    showBtn.value = false;
     stopFinetuneList(trainId.value);
     showBtn.value = false;
   }
@@ -351,25 +240,8 @@ function goTrainLog(trainId) {
     params: {
       finetuneId: trainId,
     },
-    params: {
-      finetuneId: trainId,
-    },
   });
 }
-
-const closeSocket = () => {
-  socket.close();
-};
-
-// 页面刷新
-onMounted(() => {
-  window.addEventListener('beforeunload', closeSocket);
-});
-
-onUnmounted(() => {
-  socket && socket.close();
-  window.removeEventListener('beforeunload', closeSocket);
-});
 
 const closeSocket = () => {
   socket.close();
@@ -387,7 +259,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="showFinetune" v-if="showFinetune" class="modelzoo-tune">
+  <div v-if="showFinetune" class="modelzoo-tune">
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
@@ -403,14 +275,7 @@ onUnmounted(() => {
         <div class="table-title">
           <div class="title">
             <span>
-              <span>
               {{ i18n.table.title }}
-            </span>
-            <span>
-              <div class="list-tip">
-                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
-              </div>
-            </span>
             </span>
             <span>
               <div class="list-tip">
@@ -419,11 +284,8 @@ onUnmounted(() => {
             </span>
           </div>
           <div class="remain-time">
-            <span>
-              <span @click="goCreateTune">
+            <span @click="goCreateTune">
               {{ i18n.table.remainTime }}
-            </span>
-            <span>{{ expiry }}</span>
             </span>
             <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
@@ -455,16 +317,6 @@ onUnmounted(() => {
                 >
                   <o-icon><icon-stopped></icon-stopped></o-icon>
                   <span>已停止</span>
-                </div>
-
-                <div v-if="scope.row.status === 'Pending'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 等待中</span>
-                </div>
-
-                <div v-if="scope.row.status === 'Creating'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span> 创建中</span>
                 </div>
 
                 <div

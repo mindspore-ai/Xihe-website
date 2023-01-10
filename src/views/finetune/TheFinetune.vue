@@ -160,7 +160,7 @@ function setWebsocket(url) {
     // console.log('微调列表页event: ', event);
     try {
       finetuneData.value = JSON.parse(event.data).data;
-      console.log('ws返回的信息: ', finetuneData.value);
+      // console.log('ws返回的信息: ', finetuneData.value);
     } catch (e) {
       console.error(e);
     }

@@ -29,7 +29,6 @@ getFinetune().then((res) => {
     return item.id === route.params.finetuneId;
   });
   getLog();
-  // console.log('finetuneData.value: ', finetuneData.value);
 });
 
 // 日志
@@ -39,16 +38,15 @@ const socket = new WebSocket(
 );
 
 function getLog() {
-  console.log('日志页微调信息: ', finetuneData.value);
+  // console.log('日志页微调信息: ', finetuneData.value);
   if (finetuneData.value.is_done) {
     getFinetuneLog(route.params.finetuneId).then((res) => {
       finetuneLog.value = res.data.log;
-      console.log('http微调日志: ', finetuneLog.value);
+      // console.log('http微调日志: ', finetuneLog.value);
     });
   } else {
-    console.log('isWs', 111111);
     socket.onmessage = function (event) {
-      console.log('event: ', event);
+      // console.log('event: ', event);
       nextTick(() => {
         if (JSON.parse(event.data).data.log) {
           finetuneLog.value = JSON.parse(event.data).data.log;
@@ -93,7 +91,10 @@ watch(
         </el-breadcrumb>
       </div>
       <div class="finetune-log-content">
-        <div class="finetune-log-title">任务名</div>
+        <div class="finetune-log-title">
+          <span> 任务名: </span>
+          <span>{{ finetuneData.name }}</span>
+        </div>
         <div class="finetune-log-detail">
           <el-input id="txt" v-model="finetuneLog" type="textarea" readonly />
         </div>

@@ -1,4 +1,5 @@
-// import { useLoginStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+
 export default [
   // 大模型微调
   {
@@ -20,14 +21,13 @@ export default [
     },
   },
   {
-    path: '/finetune-log/:finetuneId',
+    path: '/finetune-log/:user/:finetuneId',
     name: 'finetuneLog',
     component: () => {
       return import('@/views/finetune/FinetuneLog.vue');
     },
-    /* meta: {
-      index: 1,
+    meta: {
       isPrivate: true,
-    }, */
+    },
   },
 ];

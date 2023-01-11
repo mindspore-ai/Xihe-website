@@ -111,7 +111,6 @@ function getFinetuneList() {
           showtable.value = true;
           expiry.value = res.data.expiry;
           finetuneData.value = res.data.datas;
-          console.log('微调任务: ', finetuneData.value);
           if (!finetuneData.value) {
             showBtn.value = false;
           } else {
@@ -158,10 +157,8 @@ function setWebsocket(url) {
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
-    // console.log('微调列表页event: ', event);
     try {
       finetuneData.value = JSON.parse(event.data).data;
-      // console.log('ws返回的信息: ', finetuneData.value);
     } catch (e) {
       console.error(e);
     }
@@ -239,6 +236,7 @@ function goFinetuneLog(finetuneId) {
   router.push({
     name: 'finetuneLog',
     params: {
+      user: userInfo.userName,
       finetuneId: finetuneId,
     },
   });
@@ -288,7 +286,8 @@ onUnmounted(() => {
             <span @click="goCreateTune">
               {{ i18n.table.remainTime }}
             </span>
-            <span>{{ getFullTime(expiry * 1000) }}</span>
+            <span>2023-01-30 08:00:00</span>
+            <!-- TODO:<span>{{ getFullTime(expiry * 1000) }}</span> -->
           </div>
         </div>
         <el-table :data="finetuneData" style="width: 100%">
@@ -439,11 +438,8 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button
-            :disabled="showBtn || Math.round(new Date() / 1000) > expiry"
-            type="primary"
-            @click="goCreateTune"
-          >
+          <!-- TODO:|| Math.round(new Date() / 1000) > expiry -->
+          <o-button :disabled="showBtn" type="primary" @click="goCreateTune">
             创建微调任务
           </o-button>
         </div>

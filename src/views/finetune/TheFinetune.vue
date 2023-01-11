@@ -235,11 +235,11 @@ function showStopClick(val, id) {
   }
 }
 
-function goTrainLog(trainId) {
+function goFinetuneLog(finetuneId) {
   router.push({
     name: 'finetuneLog',
     params: {
-      finetuneId: trainId,
+      finetuneId: finetuneId,
     },
   });
 }
@@ -295,7 +295,7 @@ onUnmounted(() => {
           <el-table-column label="任务名称/ID" width="180">
             <template #default="scope">
               <div>
-                <span class="train-name" @click="goTrainLog(scope.row.id)">{{
+                <span class="train-name" @click="goFinetuneLog(scope.row.id)">{{
                   scope.row.name
                 }}</span>
               </div>
@@ -385,7 +385,7 @@ onUnmounted(() => {
               <span class="task-frame">mindspore</span>
             </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="450">
+          <el-table-column label="作业类型" width="430">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -426,7 +426,7 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="资源占用" prop="resource" width="200">
+          <el-table-column label="资源占用" prop="resource" width="220">
             1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="152">
@@ -467,9 +467,6 @@ onUnmounted(() => {
             <span v-if="item.stepImg !== step4" class="step-arrows">
               <img :src="arrows" alt="" />
             </span>
-            <!-- <div v-if="item.stepImg !== step4" class="step-arrows">
-              <img :src="item.stepArrows" alt="" />
-            </div> -->
           </div>
         </div>
         <div class="apply-btn" @click="showStep = true">

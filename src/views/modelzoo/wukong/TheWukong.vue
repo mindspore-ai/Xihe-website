@@ -531,9 +531,11 @@ watch(
     .el-breadcrumb {
       :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
         color: #fff;
+        z-index: 99;
       }
       :deep(.el-breadcrumb__item:first-child .el-breadcrumb__inner) {
         color: #b2b2b2;
+        z-index: 99;
       }
     }
   }

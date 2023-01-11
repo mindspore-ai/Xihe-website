@@ -55,7 +55,7 @@ const router = useRouter();
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const listId = ref(null);
-const trainId = ref(null);
+const finetuneId = ref(null);
 const showStep = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
@@ -211,7 +211,7 @@ function delClick(val) {
 
 const showStop = ref(false);
 function showStopClick(val, id) {
-  trainId.value = id;
+  finetuneId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
@@ -226,8 +226,8 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    // stopFinetuneList(trainId.value);
-    terminateFinetune(id).then(() => {
+    // stopFinetuneList(finetuneId.value);
+    terminateFinetune(finetuneId.value).then(() => {
       getFinetuneList();
       showStop.value = false;
       showBtn.value = false;
@@ -397,7 +397,7 @@ onUnmounted(() => {
               />
 
               <StopTrain
-                :train-id="trainId"
+                :train-id="finetuneId"
                 :show-stop="showStop"
                 :display-type="displayType"
                 @click="quitClick"

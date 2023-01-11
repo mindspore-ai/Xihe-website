@@ -26,7 +26,6 @@ const prop = defineProps({
     default: '',
   },
 });
-console.log('displayType: ', prop.displayType);
 
 const id = ref(null);
 const isShow = ref(false);

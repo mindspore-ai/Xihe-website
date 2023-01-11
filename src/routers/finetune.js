@@ -25,7 +25,8 @@ export default [
     component: () => {
       return import('@/views/finetune/FinetuneLog.vue');
     },
-    /*  meta: {
+    /* meta: {
+      index: 1,
       isPrivate: true,
     }, */
   },

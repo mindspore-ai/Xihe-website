@@ -26,7 +26,6 @@ const prop = defineProps({
     default: '',
   },
 });
-console.log('displayType: ', prop.displayType);
 
 const stopShow = ref(false);
 const emit = defineEmits(['click']);

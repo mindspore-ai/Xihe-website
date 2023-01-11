@@ -141,9 +141,7 @@ function confirmCreating(formEl) {
         name: form.name,
         task: 'finetune',
       };
-      console.log(params);
-      createFinetune(params).then((res) => {
-        console.log('res: ', res);
+      createFinetune(params).then(() => {
         ElMessage({
           type: 'success',
           message: '创建微调任务成功',

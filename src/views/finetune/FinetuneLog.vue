@@ -46,12 +46,11 @@ function getLog() {
     });
   } else {
     socket.onmessage = function (event) {
-      // console.log('event: ', event);
-      nextTick(() => {
-        if (JSON.parse(event.data).data.log) {
-          finetuneLog.value = JSON.parse(event.data).data.log;
-        }
-      });
+      // nextTick(() => {
+      if (JSON.parse(event.data).data.log) {
+        finetuneLog.value = JSON.parse(event.data).data.log;
+      }
+      // });
     };
   }
 }
@@ -84,9 +83,9 @@ watch(
     <div class="finetune-log-wrap">
       <div class="finetune-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/finetune' }"
-            >大模型微调</el-breadcrumb-item
-          >
+          <el-breadcrumb-item :to="{ path: '/finetune' }">
+            大模型微调
+          </el-breadcrumb-item>
           <el-breadcrumb-item>任务日志</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -97,6 +96,16 @@ watch(
         </div>
         <div class="finetune-log-detail">
           <el-input id="txt" v-model="finetuneLog" type="textarea" readonly />
+          <div
+            v-if="
+              finetuneData.status === 'scheduling' ||
+              finetuneData.status === 'Pending'
+            "
+            class="loading"
+          >
+            <img src="@/assets/gifs/loading.gif" alt="" />
+            <p>微调任务启动中,请稍等。</p>
+          </div>
         </div>
       </div>
     </div>
@@ -164,6 +173,22 @@ watch(
           :deep .el-textarea__inner {
             min-height: 560px !important;
             height: 100%;
+          }
+        }
+        .loading {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          img {
+            width: 100px;
+          }
+          p {
+            font-size: 18px;
+            color: #555555;
           }
         }
         :deep #txt {

@@ -1,5 +1,3 @@
-import { useLoginStore, useUserInfoStore } from '@/stores';
-
 export default [
   // 大模型微调
   {

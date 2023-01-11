@@ -202,23 +202,14 @@ function delClick(val) {
 }
 
 // 终止训练
-const showStop = ref(false);
-function stopFinetuneList(id) {
+/* function stopFinetuneList(id) {
   terminateFinetune(id).then(() => {
     getFinetuneList();
     showStop.value = false;
   });
-}
+} */
 
-function quitClick(val) {
-  if (val === 1) {
-    showStop.value = false;
-  } else {
-    stopFinetuneList(trainId.value);
-    showBtn.value = false;
-  }
-}
-
+const showStop = ref(false);
 function showStopClick(val, id) {
   trainId.value = id;
   if (val === 'Terminated') {
@@ -229,6 +220,18 @@ function showStopClick(val, id) {
     return;
   } else {
     showStop.value = true;
+  }
+}
+function quitClick(val) {
+  if (val === 1) {
+    showStop.value = false;
+  } else {
+    // stopFinetuneList(trainId.value);
+    terminateFinetune(id).then(() => {
+      getFinetuneList();
+      showStop.value = false;
+      showBtn.value = false;
+    });
   }
 }
 
@@ -485,8 +488,20 @@ onUnmounted(() => {
       <p class="dlg-title">申请步骤</p>
     </template>
 
-    <div class="dlg-body">
-      申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字
+    <div class="dlg-body" style="color: #555; font-size: 14px">
+      <div style="height: 24px">
+        1. 填写申请信息（用户名、邮箱、职业、申请理由)。
+      </div>
+      <div style="height: 24px" class="send-email">
+        <span> 2. 发送申请信息至官方邮箱: </span>
+        <span style="color: #0d8dff" class="email">
+          public@xihe.mindspore.cn
+        </span>
+        <span>。</span>
+      </div>
+      <div style="height: 24px">
+        3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
+      </div>
     </div>
 
     <template #foot>
@@ -508,7 +523,6 @@ $theme: #0d8dff;
 }
 .modelzoo-tune {
   background-color: #f5f6f8;
-  // height: calc(100vh - 434px);
   .modelzoo-head {
     padding-top: 80px;
     background-size: cover;
@@ -603,16 +617,9 @@ $theme: #0d8dff;
         display: flex;
         justify-content: space-between;
         margin-bottom: 48px;
-        // background-color: blue;
-        // display: grid;
-        // grid-template-columns: repeat(4, 25%);
-        // column-gap: 7%;
         .step-item {
-          // width: 25%;
           display: flex;
           align-items: center;
-          // float: left;
-          // justify-content: space-between;
           .step-desc {
             width: 200px;
             .step-img {
@@ -633,10 +640,6 @@ $theme: #0d8dff;
             position: relative;
             top: -14px;
             margin-left: 73px;
-            // margin: 0 73px;
-            // @media screen and (max-width: 1280px) {
-            //   margin: 0 50px;
-            // }
             img {
               width: 100%;
             }
@@ -666,7 +669,6 @@ $theme: #0d8dff;
   --el-table-header-bg-color: #e5e8f0;
   --el-table-header-text-color: #555;
   .el-table__header {
-    // width: 100% !important;
     height: 48px;
     background: #e5e8f0;
   }

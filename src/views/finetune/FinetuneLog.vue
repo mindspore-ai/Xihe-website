@@ -38,19 +38,16 @@ const socket = new WebSocket(
 );
 
 function getLog() {
-  // console.log('日志页微调信息: ', finetuneData.value);
   if (finetuneData.value.is_done) {
     getFinetuneLog(route.params.finetuneId).then((res) => {
       finetuneLog.value = res.data.log;
-      // console.log('http微调日志: ', finetuneLog.value);
     });
   } else {
     socket.onmessage = function (event) {
-      // nextTick(() => {
       if (JSON.parse(event.data).data.log) {
         finetuneLog.value = JSON.parse(event.data).data.log;
+        finetuneData.value.status = 'Running';
       }
-      // });
     };
   }
 }

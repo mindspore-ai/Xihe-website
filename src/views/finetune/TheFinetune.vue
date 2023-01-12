@@ -122,6 +122,7 @@ function getFinetuneList() {
                 showBtn.value = true;
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
+                showBtn.value = false;
                 return;
               }
             } else if (finetuneData.value.length === 5) {
@@ -303,7 +304,7 @@ onUnmounted(() => {
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="130">
+          <el-table-column label="状态" width="125">
             <template #default="scope">
               <div class="status-box">
                 <div
@@ -374,7 +375,7 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="运行时长" width="148">
+          <el-table-column label="运行时长" width="146">
             <template #default="scope">
               <div>
                 {{ formatSeconds(scope.row.duration) }}
@@ -382,12 +383,12 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="任务框架" width="180">
+          <el-table-column label="任务框架" width="176">
             <div>
               <span class="task-frame">mindspore</span>
             </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="430">
+          <el-table-column label="作业类型" width="443">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -431,7 +432,7 @@ onUnmounted(() => {
           <el-table-column label="资源占用" prop="resource" width="220">
             1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
-          <el-table-column label="创建时间" prop="created_at" width="152">
+          <el-table-column label="创建时间" prop="created_at" width="150">
           </el-table-column>
           <template #empty>
             <div class="instance-box">
@@ -684,12 +685,13 @@ $theme: #0d8dff;
       }
       .hide-box {
         display: none;
-        width: 150px;
+        // width: 150px;
       }
       .tools-box {
         display: flex;
         align-items: center;
         margin-right: 29px;
+        margin-right: 68px;
         color: rgba(13, 141, 255, 1);
         .tools {
           cursor: pointer;

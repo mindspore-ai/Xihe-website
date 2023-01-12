@@ -6,14 +6,10 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { createFinetune } from '@/api/api-finetune';
-
-// import {  useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
 
-// const userInfoStore = useUserInfoStore();
+import { createFinetune } from '@/api/api-finetune';
 
-// const route = useRoute();
 const router = useRouter();
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
@@ -200,7 +196,6 @@ function confirmCreating(formEl) {
                   placeholder="请选择"
                   @change="changeTasktype"
                 >
-                  <!-- <el-option label="ModelArts" value="ModelArts" /> -->
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -280,10 +275,12 @@ function confirmCreating(formEl) {
               <el-form-item prop="epochs" label="超参">
                 <el-checkbox
                   v-model="params1"
-                  label="epochs"
                   size="large"
                   @change="changeEpochs"
-                />
+                >
+                  <span class="itemLabel">epochs</span>
+                  <span class="equal-sign">=</span>
+                </el-checkbox>
                 <el-input
                   v-model="form.epochs"
                   :disabled="epochsChecked"
@@ -296,10 +293,13 @@ function confirmCreating(formEl) {
               <el-form-item prop="start_learning_rate" label=" ">
                 <el-checkbox
                   v-model="params2"
-                  label="start_learning_rate"
                   size="large"
                   @change="changeStart"
-                />
+                >
+                  <span class="itemLabel">start_learning_rate</span>
+                  <span class="equal-sign">=</span>
+                </el-checkbox>
+
                 <el-input
                   v-model="form.start_learning_rate"
                   :disabled="startChecked"
@@ -310,12 +310,10 @@ function confirmCreating(formEl) {
             </div>
             <div class="createtune-form-item hyperparameter">
               <el-form-item prop="end_learning_rate" label=" ">
-                <el-checkbox
-                  v-model="params3"
-                  label="end_learning_rate"
-                  size="large"
-                  @change="changeEnd"
-                />
+                <el-checkbox v-model="params3" size="large" @change="changeEnd">
+                  <span class="itemLabel">end_learning_rate</span>
+                  <span class="equal-sign">=</span>
+                </el-checkbox>
                 <el-input
                   v-model="form.end_learning_rate"
                   :disabled="endChecked"
@@ -458,7 +456,6 @@ function confirmCreating(formEl) {
       color: #555555;
     }
     .el-form-item__content {
-      // width: 100%;
       width: 546px;
       max-width: 546px;
       margin-left: 27px;
@@ -478,8 +475,14 @@ function confirmCreating(formEl) {
           box-shadow: 0 0 0 1px #999 inset;
         }
       }
+      .el-input.is-disabled .el-input__wrapper {
+        background-color: #eee !important;
+        .el-input__inner {
+          -webkit-text-fill-color: #999;
+        }
+      }
       .paramsInt {
-        width: 56%;
+        width: 60%;
       }
       .el-input.is-disabled .el-input__wrapper {
         background-color: var(--el-disabled-bg-color);
@@ -498,10 +501,37 @@ function confirmCreating(formEl) {
         }
       }
     }
-    .el-form-item__label::before {
+    .el-form-item__label {
+      color: #555;
+    }
+    // .el-form-item__label::before {
+    //   width: 18px;
+    //   height: 18px;
+    // }
+  }
+}
+:deep(.el-checkbox) {
+  .el-checkbox__input {
+    .el-checkbox__inner {
       width: 18px;
       height: 18px;
+      border: 2px solid #999;
+      &::after {
+        position: absolute;
+        left: 6px;
+        top: 2px;
+      }
     }
+  }
+  .el-checkbox__label {
+    color: #555;
+    padding-left: 16px;
+    .equal-sign {
+      margin-left: 20px;
+    }
+  }
+  .el-checkbox__input.is-checked .el-checkbox__inner {
+    border: 2px solid var(--el-checkbox-checked-bg-color);
   }
 }
 </style>

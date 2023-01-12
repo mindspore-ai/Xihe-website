@@ -9,6 +9,7 @@ import { getFinetune, getFinetuneLog } from '@/api/api-finetune';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
+const showLog = ref(false);
 const route = useRoute();
 const finetuneData = ref([]); //当前微调任务信息
 const finetuneLog = ref('');
@@ -28,6 +29,12 @@ getFinetune().then((res) => {
   finetuneData.value = res.data.datas.find((item) => {
     return item.id === route.params.finetuneId;
   });
+  if (
+    finetuneData.value.status === 'scheduling' ||
+    finetuneData.value.status === 'Pending'
+  ) {
+    showLog.value = true;
+  }
   getLog();
 });
 
@@ -46,7 +53,7 @@ function getLog() {
     socket.onmessage = function (event) {
       if (JSON.parse(event.data).data.log) {
         finetuneLog.value = JSON.parse(event.data).data.log;
-        finetuneData.value.status = 'Running';
+        showLog.value = false;
       }
     };
   }
@@ -93,13 +100,7 @@ watch(
         </div>
         <div class="finetune-log-detail">
           <el-input id="txt" v-model="finetuneLog" type="textarea" readonly />
-          <div
-            v-if="
-              finetuneData.status === 'scheduling' ||
-              finetuneData.status === 'Pending'
-            "
-            class="loading"
-          >
+          <div v-if="showLog" class="loading">
             <img src="@/assets/gifs/loading.gif" alt="" />
             <p>微调任务启动中,请稍等。</p>
           </div>
@@ -118,7 +119,7 @@ watch(
   .finetune-log-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 90px 64px;
+    padding: 40px 0px 64px;
     margin: 0 auto;
     .finetune-bread {
       margin-bottom: 40px;

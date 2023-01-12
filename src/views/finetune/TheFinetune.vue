@@ -24,6 +24,7 @@ import step2 from '@/assets/imgs/finetune/step2.png';
 import step3 from '@/assets/imgs/finetune/step3.png';
 import step4 from '@/assets/imgs/finetune/step4.png';
 import arrows from '@/assets/imgs/finetune/arrows.png';
+import warningImg from '@/assets/icons/warning.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
@@ -57,17 +58,24 @@ const DOMAIN = import.meta.env.VITE_DOMAIN;
 const listId = ref(null);
 const finetuneId = ref(null);
 const showStep = ref(false);
+const showTip = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
 const finetuneData = ref([]);
-const showBtn = ref(false);
 const expiry = ref(''); //体验截止时间
 const displayType = ref('finetune');
+const describe = ref(''); //已有运行中的任务或已有5个任务提示
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
 
 let i18n = {
+  createFinetune: '创建训练实例',
+  confirm: '确认',
+  describe1:
+    '已有正在运行中的任务，暂不能创建新的微调任务。你可等待运行完成或终止当前任务来创建新的微调任务。',
+  describe2:
+    '最多只能创建5个微调任务，若需再创建，请删除之前的微调任务后再创建。',
   head: {
     title: '大模型微调',
     introduce:
@@ -111,28 +119,26 @@ function getFinetuneList() {
           showtable.value = true;
           expiry.value = res.data.expiry;
           finetuneData.value = res.data.datas;
-          if (!finetuneData.value) {
-            showBtn.value = false;
-          } else {
+          if (finetuneData.value) {
             let bool = finetuneData.value.some((item) => {
               return item.is_done === false;
             });
-            if (finetuneData.value.length < 5) {
+            if (bool) {
+              socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+            }
+            /* if (finetuneData.value.length < 5) {
               if (bool) {
-                showBtn.value = true;
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
-                showBtn.value = false;
                 return;
               }
             } else if (finetuneData.value.length === 5) {
-              showBtn.value = true;
               if (bool) {
                 socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
               } else {
                 return;
               }
-            }
+            } */
           }
         })
         .catch((res) => {
@@ -179,7 +185,29 @@ function toggleApplication() {
   showStep.value = false;
 }
 
+// 跳转创建微调任务页面
 function goCreateTune() {
+  if (finetuneData.value !== null && finetuneData.value.length === 5) {
+    describe.value = i18n.describe2;
+    showTip.value = true;
+  } else if (
+    finetuneData.value !== null &&
+    finetuneData.value.some(
+      (item) =>
+        item.status === 'scheduling' ||
+        item.status === 'Pending' ||
+        item.status === 'Creating' ||
+        item.status === 'Running'
+    )
+  ) {
+    describe.value = i18n.describe1;
+    showTip.value = true;
+  } else {
+    router.push({ path: `/finetune-creating/${userInfo.userName}` });
+  }
+}
+
+function goCreate() {
   router.push({ path: `/finetune-creating/${userInfo.userName}` });
 }
 
@@ -195,21 +223,13 @@ function delClick(val) {
     showDel.value = false;
   } else {
     deleteFinetune(val).then(() => {
-      getFinetuneList();
       showDel.value = false;
-      showBtn.value = false;
+      getFinetuneList();
     });
   }
 }
 
 // 终止训练
-/* function stopFinetuneList(id) {
-  terminateFinetune(id).then(() => {
-    getFinetuneList();
-    showStop.value = false;
-  });
-} */
-
 const showStop = ref(false);
 function showStopClick(val, id) {
   finetuneId.value = id;
@@ -227,11 +247,9 @@ function quitClick(val) {
   if (val === 1) {
     showStop.value = false;
   } else {
-    // stopFinetuneList(finetuneId.value);
     terminateFinetune(finetuneId.value).then(() => {
-      getFinetuneList();
       showStop.value = false;
-      showBtn.value = false;
+      getFinetuneList();
     });
   }
 }
@@ -287,7 +305,8 @@ onUnmounted(() => {
             </span>
           </div>
           <div class="remain-time">
-            <span @click="goCreateTune">
+            <!-- TODO:删除点击时间 -->
+            <span @click="goCreate">
               {{ i18n.table.remainTime }}
             </span>
             <span>2023-01-30 08:00:00</span>
@@ -409,6 +428,7 @@ onUnmounted(() => {
                   <div class="tools-box">
                     <div
                       v-if="
+                        scope.row.status === 'scheduling' ||
                         scope.row.status === 'Pending' ||
                         scope.row.status === 'Creating' ||
                         scope.row.status === 'Running'
@@ -443,8 +463,15 @@ onUnmounted(() => {
         </el-table>
         <div class="create-btn">
           <!-- TODO:|| Math.round(new Date() / 1000) > expiry -->
-          <o-button :disabled="showBtn" type="primary" @click="goCreateTune">
+          <o-button
+            v-if="Math.round(new Date() / 1000) > expiry"
+            disabled
+            type="secondary"
+          >
             创建微调任务
+          </o-button>
+          <o-button v-else type="primary" @click="goCreateTune">
+            {{ i18n.createFinetune }}
           </o-button>
         </div>
       </div>
@@ -484,6 +511,7 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+  <!-- 申请微调资格弹窗 -->
   <o-dialog :show="showStep" :close="false">
     <template #head>
       <p class="dlg-title">申请步骤</p>
@@ -510,6 +538,43 @@ onUnmounted(() => {
         <OButton type="primary" size="small" @click="toggleApplication"
           >我知道啦</OButton
         >
+      </div>
+    </template>
+  </o-dialog>
+  <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
+  <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
+    <template #head>
+      <div
+        class="dlg-title"
+        :style="{ textAlign: 'center', paddingTop: '40px' }"
+      >
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      :style="{
+        padding: '8px 60px 0px',
+        fontSize: '18px',
+        textAlign: 'center',
+        width: '100%',
+        lineHeight: '30px',
+      }"
+    >
+      {{ describe }}
+    </div>
+    <template #foot>
+      <div
+        class="dlg-actions"
+        :style="{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingBottom: '56px',
+        }"
+      >
+        <o-button type="primary" @click="showTip = false">{{
+          i18n.confirm
+        }}</o-button>
       </div>
     </template>
   </o-dialog>

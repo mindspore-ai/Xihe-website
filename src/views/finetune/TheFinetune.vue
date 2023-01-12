@@ -462,15 +462,17 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <!-- TODO:|| Math.round(new Date() / 1000) > expiry -->
-          <o-button
-            v-if="Math.round(new Date() / 1000) > expiry"
+          <!-- <o-button
+            v-if="Math.round(new Date() / 1000) >= expiry"
             disabled
             type="secondary"
           >
             创建微调任务
           </o-button>
           <o-button v-else type="primary" @click="goCreateTune">
+            {{ i18n.createFinetune }}
+          </o-button> -->
+          <o-button type="primary" @click="goCreateTune">
             {{ i18n.createFinetune }}
           </o-button>
         </div>

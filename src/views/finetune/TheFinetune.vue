@@ -70,7 +70,7 @@ const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
 
 let i18n = {
-  createFinetune: '创建训练实例',
+  createFinetune: '创建微调任务',
   confirm: '确认',
   describe1:
     '已有正在运行中的任务，暂不能创建新的微调任务。你可等待运行完成或终止当前任务来创建新的微调任务。',
@@ -229,14 +229,14 @@ function delClick(val) {
   }
 }
 
-// 终止训练
+// 终止微调任务
 const showStop = ref(false);
 function showStopClick(val, id) {
   finetuneId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
-      message: '该训练已停止',
+      message: '该微调任务已停止',
     });
     return;
   } else {
@@ -428,7 +428,6 @@ onUnmounted(() => {
                   <div class="tools-box">
                     <div
                       v-if="
-                        scope.row.status === 'scheduling' ||
                         scope.row.status === 'Pending' ||
                         scope.row.status === 'Creating' ||
                         scope.row.status === 'Running'

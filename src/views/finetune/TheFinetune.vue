@@ -79,7 +79,7 @@ let i18n = {
   head: {
     title: '大模型微调',
     introduce:
-      '基于平台内置的紫东.太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
+      '基于大模型微调套件，内置多种预训练大模型，包含丰富的下游任务，提供便捷高效的微调/评估/推理能力',
   },
   table: {
     title: '任务列表',
@@ -449,7 +449,7 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="资源占用" prop="resource" width="220">
+          <el-table-column label="计算资源" prop="resource" width="220">
             1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="150">

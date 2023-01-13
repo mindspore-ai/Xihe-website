@@ -26,9 +26,9 @@ const form = reactive({
   name: '', //任务名称
   taskType: '', //任务类型
   jobType: '', //作业类型
-  epochs: '',
-  start_learning_rate: '',
-  end_learning_rate: '',
+  epochs: '10',
+  start_learning_rate: '1e-05',
+  end_learning_rate: '1e-07',
 });
 
 // 任务类型
@@ -39,14 +39,69 @@ const options = reactive([
   },
 ]);
 
-const checkRange = (rule, value, callback) => {
+// 作业类型
+const jobTypeOptions = [
+  {
+    value: 'finetune',
+    label: '微调',
+  },
+  {
+    value: 'evaluate',
+    label: '评估（ 敬请期待 ）',
+    disabled: true,
+  },
+  {
+    value: 'inference',
+    label: '推理（ 敬请期待 ）',
+    disabled: true,
+  },
+];
+
+const checkStartRate = (rule, value, callback) => {
   if (value === '') {
     callback();
   } else {
-    if (value <= form.start_learning_rate) {
+    // 科学计数法
+    const reg1 = /^([\+|-]?\d+(.{0}|.\d+))[Ee]{1}([\+|-]?\d+)$/g;
+    // 正浮点数
+    const reg2 = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/;
+    if (reg1.test(value) || reg2.test(value)) {
       callback();
     } else {
-      callback(new Error('请输入一个小于或等于start_learning_rate的值'));
+      callback(new Error('请输入一个正浮点数'));
+    }
+  }
+};
+
+const checkEndRate = (rule, value, callback) => {
+  if (value === '') {
+    callback();
+  } else {
+    // 科学计数法
+    const reg1 = /^([\+|-]?\d+(.{0}|.\d+))[Ee]{1}([\+|-]?\d+)$/g;
+    // 正浮点数
+    const reg2 = /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/g;
+    if (reg1.test(value) || reg2.test(value)) {
+      // start参数也是科学计数法
+      let bool =
+        form.start_learning_rate.indexOf('E') !== -1 ||
+        value.indexOf('e') !== -1;
+      // 如果start和end都是科学计数法
+      if ((value.indexOf('E') !== -1 || value.indexOf('e') !== -1) && bool) {
+        let newStartRate = new Number(form.start_learning_rate);
+        let newEndRate = new Number(value);
+        if (newEndRate <= newStartRate) {
+          callback();
+        } else {
+          callback(new Error('请输入一个小于或等于start_learning_rate的值'));
+        }
+      } else {
+        if (value <= form.start_learning_rate) {
+          callback();
+        } else {
+          callback(new Error('请输入一个小于或等于start_learning_rate的值'));
+        }
+      }
     }
   }
 };
@@ -79,19 +134,22 @@ const rules = reactive({
     },
   ],
   start_learning_rate: [
-    {
+    /* {
       pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
       message: '请输入一个正浮点数',
       trigger: 'blur',
-    },
+    }, */
+    { validator: checkStartRate, trigger: 'blur' },
   ],
   end_learning_rate: [
-    {
-      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
-      message: '请输入一个正浮点数,且需小于start_learning_rate的值',
-      trigger: 'blur',
-    },
-    { validator: checkRange, trigger: 'blur' },
+    // 含有E或者e的正则
+
+    // {
+    //   pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
+    //   message: '请输入一个正浮点数,且需小于start_learning_rate的值',
+    //   trigger: 'blur',
+    // },
+    { validator: checkEndRate, trigger: 'blur' },
   ],
 });
 
@@ -117,6 +175,11 @@ function confirmCreating(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
+      if (!params1.value || !params2.value || !params3.value) {
+        form.epochs = '';
+        form.start_learning_rate = '';
+        form.end_learning_rate = '';
+      }
       let hyperparameter = [
         {
           key: 'epochs',
@@ -137,6 +200,7 @@ function confirmCreating(formEl) {
         name: form.name,
         task: 'finetune',
       };
+      console.log('params: ', params);
       createFinetune(params).then(() => {
         ElMessage({
           type: 'success',
@@ -168,7 +232,9 @@ function confirmCreating(formEl) {
       </div>
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
-        <div class="createtune-content-tip">TODO~~~~~</div>
+        <div class="createtune-content-tip">
+          支持多种任务类型，提供微调/评估/推理能力，可自定义关键超参数，目前仅支持内置数据集体验
+        </div>
         <div class="createtune-form-wrap">
           <el-form
             ref="queryRef"
@@ -204,6 +270,9 @@ function confirmCreating(formEl) {
                   />
                 </el-select>
               </el-form-item>
+              <div v-if="form.taskType === '以图生文'" class="tasktype-tips">
+                让算法根据输入的一幅图自动生成对应的描述性的文字
+              </div>
             </div>
             <div class="createtune-form-item">
               <div class="item-title">
@@ -230,12 +299,14 @@ function confirmCreating(formEl) {
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
               <el-form-item label="作业类型">
-                <el-select
-                  v-model="jobType"
-                  placeholder="请选择"
-                  class="job-type"
-                >
-                  <el-option label="微调" value="ModelArts" />
+                <el-select v-model="jobType" class="job-type">
+                  <el-option
+                    v-for="item in jobTypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  />
                 </el-select>
               </el-form-item>
             </div>
@@ -243,7 +314,7 @@ function confirmCreating(formEl) {
               <div class="item-title">
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
-              <el-form-item label="训练服务">
+              <el-form-item label="计算资源">
                 <div class="service">
                   1*Ascend 910（32GB）｜ARM： 96核 360GB
                 </div>
@@ -264,11 +335,11 @@ function confirmCreating(formEl) {
                   </template>
                   <div>
                     <span style="color: red">epochs: </span>
-                    值为正整数。<br />
+                    值为正整数<br />
                     <span style="color: red">start_learning_rate: </span>
-                    值为正浮点数，比如：0.1。<br />
+                    值为正浮点数，比如：0.001、1e-03、1E-03<br />
                     <span style="color: red">end_learning_rate: </span>
-                    值为正浮点数，且需小于start_learning_rate的值，比如：0.01。<br />
+                    值为正浮点数，且需小于start_learning_rate的值，比如：0.0001、1e-04、1E-04<br />
                   </div>
                 </el-popover>
               </div>
@@ -392,6 +463,7 @@ function confirmCreating(formEl) {
       }
       .createtune-form-wrap {
         .createtune-form-item {
+          margin-bottom: 26px;
           position: relative;
           .item-icon {
             position: absolute;
@@ -414,6 +486,12 @@ function confirmCreating(formEl) {
               margin-left: 8px;
             }
           }
+          .tasktype-tips {
+            font-size: 12px;
+            position: absolute;
+            bottom: -20px;
+            left: 140px;
+          }
         }
         .hyperparameter {
           :deep(.el-form-item) {
@@ -421,7 +499,7 @@ function confirmCreating(formEl) {
               .el-form-item__error {
                 white-space: nowrap;
                 top: calc(100% + 12px);
-                left: 240px;
+                left: 220px;
               }
             }
           }
@@ -448,7 +526,7 @@ function confirmCreating(formEl) {
   width: 70%;
   margin: 0 auto;
   .el-form-item {
-    margin-bottom: 26px;
+    margin-bottom: 0px;
     margin-left: 10px;
     .service {
       line-height: 17px;

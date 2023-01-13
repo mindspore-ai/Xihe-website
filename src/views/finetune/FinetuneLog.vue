@@ -72,8 +72,8 @@ function getFinetune() {
       finetuneData.value = res.data.datas.find((item) => {
         return item.id === route.params.finetuneId;
       });
+      console.log('无pinia数据请求接口后: ', finetuneData.value);
     });
-    console.log('无pinia数据请求接口后: ', finetuneData.value);
   }
   if (
     finetuneData.value.status === 'scheduling' ||

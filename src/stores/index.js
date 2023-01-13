@@ -163,3 +163,17 @@ export const useCompetitionData = defineStore('competitionInfo', {
     },
   },
 });
+
+// 微调任务
+export const useFinetuneData = defineStore('finetuneInfo', {
+  state: () => {
+    return {
+      finetuneListData: null,
+    };
+  },
+  actions: {
+    setFinetuneData(data) {
+      this.finetuneListData = data;
+    },
+  },
+});

@@ -16,7 +16,7 @@ function getHeaderConfig() {
  * 获取微调任务列表
  * @returns
  */
-export function getFinetune() {
+export function getFinetuneList() {
   const url = `/server/finetune`;
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })

@@ -5,14 +5,16 @@ import { useRoute } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import { LOGIN_KEYS } from '@/shared/login';
-import { getFinetune, getFinetuneLog } from '@/api/api-finetune';
-
+import { getFinetuneList, getFinetuneLog } from '@/api/api-finetune';
+import { useFinetuneData } from '@/stores';
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const showLog = ref(false);
 const route = useRoute();
 const finetuneData = ref([]); //当前微调任务信息
 const finetuneLog = ref('');
+const userFinetune = useFinetuneData();
+// console.log('userFinetune: ', userFinetune.finetuneListData);
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -25,7 +27,7 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-getFinetune().then((res) => {
+/* getFinetuneList().then((res) => {
   finetuneData.value = res.data.datas.find((item) => {
     return item.id === route.params.finetuneId;
   });
@@ -36,7 +38,7 @@ getFinetune().then((res) => {
     showLog.value = true;
   }
   getLog();
-});
+}); */
 
 // 日志
 const socket = new WebSocket(
@@ -58,6 +60,30 @@ function getLog() {
     };
   }
 }
+
+function getFinetune() {
+  if (userFinetune.finetuneListData) {
+    console.log('有pinia数据 ', userFinetune.finetuneListData);
+    finetuneData.value = userFinetune.finetuneListData.find((item) => {
+      return item.id === route.params.finetuneId;
+    });
+  } else {
+    getFinetuneList().then((res) => {
+      finetuneData.value = res.data.datas.find((item) => {
+        return item.id === route.params.finetuneId;
+      });
+    });
+    console.log('无pinia数据请求接口后: ', finetuneData.value);
+  }
+  if (
+    finetuneData.value.status === 'scheduling' ||
+    finetuneData.value.status === 'Pending'
+  ) {
+    showLog.value = true;
+  }
+  getLog();
+}
+getFinetune();
 
 // 页面刷新
 function reloadPage() {

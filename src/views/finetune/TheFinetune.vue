@@ -31,11 +31,11 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
 import {
-  getFinetune,
+  getFinetuneList,
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
@@ -52,7 +52,6 @@ function getHeaderConfig() {
 }
 
 const router = useRouter();
-
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const listId = ref(null);
@@ -68,6 +67,7 @@ const describe = ref(''); //已有运行中的任务或已有5个任务提示
 
 const isLogined = useLoginStore().isLogined;
 const userInfo = useUserInfoStore();
+const userFinetune = useFinetuneData();
 
 let i18n = {
   createFinetune: '创建微调任务',
@@ -110,15 +110,16 @@ const applySteps = reactive([
 
 // 获取微调任务列表
 let socket;
-function getFinetuneList() {
+function getFinetune() {
   if (isLogined) {
     try {
-      getFinetune()
+      getFinetuneList()
         .then((res) => {
           showFinetune.value = true;
           showtable.value = true;
           expiry.value = res.data.expiry;
           finetuneData.value = res.data.datas;
+          userFinetune.setFinetuneData(res.data.datas);
           if (finetuneData.value) {
             let bool = finetuneData.value.some((item) => {
               return item.is_done === false;
@@ -155,7 +156,7 @@ function getFinetuneList() {
     showtable.value = false;
   }
 }
-getFinetuneList();
+getFinetune();
 
 function setWebsocket(url) {
   const socket = new WebSocket(url, [
@@ -224,7 +225,7 @@ function delClick(val) {
   } else {
     deleteFinetune(val).then(() => {
       showDel.value = false;
-      getFinetuneList();
+      getFinetune();
     });
   }
 }
@@ -249,7 +250,7 @@ function quitClick(val) {
   } else {
     terminateFinetune(finetuneId.value).then(() => {
       showStop.value = false;
-      getFinetuneList();
+      getFinetune();
     });
   }
 }

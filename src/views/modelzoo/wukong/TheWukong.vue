@@ -2,8 +2,6 @@
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, FreeMode, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
@@ -16,22 +14,12 @@ import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
 import background from '@/assets/imgs/wukong/wukong-bg.jpg';
 
 import IconAlbum from '~icons/app/wukong-album';
-import IconCollection from '~icons/app/wukong-collection';
+import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
-import IconDownload from '~icons/app/wukong-download';
-import IconHeart from '~icons/app/collected';
-import IconCollected from '~icons/app/wk-collecte';
 
 import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-
-import {
-  collectedPictures,
-  cancelLikePicture,
-  temporaryLink,
-} from '@/api/api-modelzoo.js';
-import { ElMessage } from 'element-plus';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
@@ -61,86 +49,20 @@ function handleNavClick(item) {
   router.push({ path: item.href });
 }
 // 我的收藏
-const showCollection = ref(false);
-function toggleCollectionDlg(val) {
+function toggleCollectionDlg() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    showCollection.value = val;
-    getCollectedPictures();
+    router.push('/modelzoo/wukong/management');
   }
 }
-const collectList = ref([]);
-const haveCollections = ref(false);
-//获取我的收藏图片
-function getCollectedPictures() {
-  collectedPictures().then((res) => {
-    if (res.data.data) {
-      collectList.value = res.data.data;
-      if (collectList.value) {
-        haveCollections.value = true;
-      } else {
-        haveCollections.value = false;
-      }
-    }
-  });
-}
-// 取消收藏
-function handleCancelLike(id, index) {
-  cancelLikePicture(id).then((res) => {
-    if (res.status === 204) {
-      collectList.value.splice(index, 1);
-      ElMessage({
-        type: 'success',
-        message: '取消收藏成功',
-      });
-    }
-  });
-}
+
 const showAlbum = ref(false);
 // AI画集
 function toggleAlbum() {
   showAlbum.value = true;
 }
-// 下载图片
-function requestImg(item) {
-  const link = item.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-    '/obs-big-model/'
-  );
-  let x = new XMLHttpRequest();
-  x.open('GET', link, true);
-  x.responseType = 'blob';
-  x.onload = function () {
-    const blobs = new Blob([x.response], { type: 'image/png' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'collection.png';
-    a.click();
-  };
-  x.send();
-}
-function downloadImage(item) {
-  const j1 = item.indexOf('=');
-  const j2 = item.indexOf('=', j1 + 1);
 
-  const i1 = item.indexOf('&');
-  const i2 = item.indexOf('&', i1 + 1);
-
-  const deadTime = item.substring(j2 + 1, i2);
-  const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-  if ((deadTime - currentTime) / 60 < 1) {
-    temporaryLink({ link: item }).then((res) => {
-      if (res.data.data) {
-        requestImg(res.data.data.link);
-      }
-    });
-  } else {
-    requestImg(item);
-  }
-}
 function learnWukongMore() {
   window.open(
     'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
@@ -234,91 +156,14 @@ watch(
         </p>
         <p class="nav-item-text">AI画集</p>
       </div>
-      <div class="nav-item" @click="toggleCollectionDlg(true)">
+      <div class="nav-item" @click="toggleCollectionDlg()">
         <p class="nav-item-img">
-          <o-icon><icon-collection></icon-collection></o-icon>
+          <o-icon><icon-painting></icon-painting></o-icon>
         </p>
-        <p class="nav-item-text">我的收藏</p>
+        <p class="nav-item-text">画作管理</p>
       </div>
     </div>
-    <!-- 我的收藏dialog -->
-    <el-dialog v-model="showCollection" :fullscreen="true" center>
-      <swiper
-        v-if="collectList.length >= 3"
-        :slides-per-view="3"
-        :slides-per-group="1"
-        :speed="500"
-        :space-between="30"
-        :free-mode="true"
-        :navigation="true"
-        :pagination="{
-          type: 'fraction',
-          clickableClass: 'my-pagination-clickable',
-        }"
-        :modules="[Pagination, FreeMode, Navigation]"
-        loop
-        class="my-swiper2"
-      >
-        <swiper-slide v-for="(item, index) in collectList" :key="item.id"
-          ><img :src="item.link" alt="" />
-          <p>{{ item.desc }}</p>
 
-          <div class="handler">
-            <span class="icon-btn" @click="downloadImage(item.link)">
-              <o-icon><icon-download></icon-download></o-icon>
-            </span>
-            <span
-              class="icon-btn heart"
-              @click="handleCancelLike(item.id, index)"
-            >
-              <o-icon><icon-heart></icon-heart></o-icon>
-            </span>
-          </div>
-          <div class="mask"></div>
-        </swiper-slide>
-      </swiper>
-
-      <swiper
-        v-else-if="collectList.length > 0"
-        :slides-per-view="3"
-        :slides-per-group="1"
-        :speed="500"
-        :space-between="30"
-        :free-mode="true"
-        :navigation="true"
-        :pagination="{
-          type: 'fraction',
-          clickableClass: 'my-pagination-clickable',
-        }"
-        :modules="[Pagination, FreeMode, Navigation]"
-        class="my-swiper2 special"
-      >
-        <swiper-slide v-for="(item, index) in collectList" :key="item.id"
-          ><img :src="item.link" alt="" />
-          <p>{{ item.desc }}</p>
-
-          <div class="handler">
-            <span class="icon-btn" @click="downloadImage(item.link)">
-              <o-icon><icon-download></icon-download></o-icon>
-            </span>
-            <span
-              class="icon-btn heart"
-              @click="handleCancelLike(item.id, index)"
-            >
-              <o-icon><icon-heart></icon-heart></o-icon>
-            </span>
-          </div>
-          <div class="mask"></div>
-        </swiper-slide>
-      </swiper>
-
-      <div v-else class="no-collections">
-        <o-icon><icon-collected></icon-collected></o-icon>
-        <p>暂无收藏</p>
-      </div>
-
-      <div class="collect-title">我的收藏</div>
-    </el-dialog>
     <!-- AI画集 -->
     <el-dialog
       v-model="showAlbum"

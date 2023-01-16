@@ -431,8 +431,7 @@ onUnmounted(() => {
                         scope.row.status === 'Pending' ||
                         scope.row.status === 'Creating' ||
                         scope.row.status === 'Running' ||
-                        scope.row.status === 'Creating' ||
-                        scope.row.status === 'scheduling'
+                        scope.row.status === 'Creating'
                       "
                       class="tools"
                       @click="showStopClick(scope.row.status, scope.row.id)"
@@ -516,7 +515,38 @@ onUnmounted(() => {
   </div>
 
   <!-- 申请微调资格弹窗 -->
-  <o-dialog :show="showStep" :close="false">
+  <el-dialog
+    v-model="showStep"
+    title="申请步骤"
+    width="40%"
+    center
+    class="apply-dlg"
+    :show-close="false"
+  >
+    <div class="dlg-body" style="color: #555; font-size: 14px">
+      <div style="height: 24px">
+        1. 填写申请信息（用户名、邮箱、职业、申请理由)。
+      </div>
+      <div style="height: 24px" class="send-email">
+        <span> 2. 发送申请信息至官方邮箱: </span>
+        <span style="color: #0d8dff" class="email">
+          public@xihe.mindspore.cn
+        </span>
+        <span>。</span>
+      </div>
+      <div style="height: 24px">
+        3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
+      </div>
+    </div>
+    <template #footer>
+      <div class="dlg-btn">
+        <OButton type="primary" size="small" @click="toggleApplication"
+          >我知道啦</OButton
+        >
+      </div>
+    </template>
+  </el-dialog>
+  <!-- <o-dialog :show="showStep" :close="false">
     <template #head>
       <p class="dlg-title">申请步骤</p>
     </template>
@@ -544,7 +574,7 @@ onUnmounted(() => {
         >
       </div>
     </template>
-  </o-dialog>
+  </o-dialog> -->
   <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
   <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
     <template #head>
@@ -834,6 +864,18 @@ $theme: #0d8dff;
         margin-right: 8px;
       }
     }
+  }
+}
+</style>
+<style lang="scss">
+.apply-dlg {
+  .el-dialog__header {
+    .el-dialog__title {
+      color: #000;
+    }
+  }
+  .el-dialog__body {
+    padding: 8px 64px 0px;
   }
 }
 </style>

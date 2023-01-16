@@ -512,106 +512,77 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- 申请微调资格弹窗 -->
-  <el-dialog
-    v-model="showStep"
-    title="申请步骤"
-    width="40%"
-    center
-    class="apply-dlg"
-    :show-close="false"
-  >
-    <div class="dlg-body" style="color: #555; font-size: 14px">
-      <div style="height: 24px">
-        1. 填写申请信息（用户名、邮箱、职业、申请理由)。
-      </div>
-      <div style="height: 24px" class="send-email">
-        <span> 2. 发送申请信息至官方邮箱: </span>
-        <span style="color: #0d8dff" class="email">
-          public@xihe.mindspore.cn
-        </span>
-        <span>。</span>
-      </div>
-      <div style="height: 24px">
-        3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
-      </div>
-    </div>
-    <template #footer>
-      <div class="dlg-btn">
-        <OButton type="primary" size="small" @click="toggleApplication"
-          >我知道啦</OButton
-        >
-      </div>
-    </template>
-  </el-dialog>
-  <!-- <o-dialog :show="showStep" :close="false">
-    <template #head>
-      <p class="dlg-title">申请步骤</p>
-    </template>
-
-    <div class="dlg-body" style="color: #555; font-size: 14px">
-      <div style="height: 24px">
-        1. 填写申请信息（用户名、邮箱、职业、申请理由)。
-      </div>
-      <div style="height: 24px" class="send-email">
-        <span> 2. 发送申请信息至官方邮箱: </span>
-        <span style="color: #0d8dff" class="email">
-          public@xihe.mindspore.cn
-        </span>
-        <span>。</span>
-      </div>
-      <div style="height: 24px">
-        3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
-      </div>
-    </div>
-
-    <template #foot>
-      <div class="dlg-btn">
-        <OButton type="primary" size="small" @click="toggleApplication"
-          >我知道啦</OButton
-        >
-      </div>
-    </template>
-  </o-dialog> -->
-  <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
-  <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
-        <img :src="warningImg" alt="" />
-      </div>
-    </template>
-    <div
-      class="dlg-body"
-      :style="{
-        padding: '8px 60px 0px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '100%',
-        lineHeight: '30px',
-      }"
+    <!-- 申请微调资格弹窗 -->
+    <el-dialog
+      v-model="showStep"
+      title="申请步骤"
+      width="40%"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
     >
-      {{ describe }}
-    </div>
-    <template #foot>
+      <div class="dlg-body" style="color: #555; font-size: 14px">
+        <div style="height: 24px">
+          1. 填写申请信息（用户名、邮箱、职业、申请理由)。
+        </div>
+        <div style="height: 24px" class="send-email">
+          <span> 2. 发送申请信息至官方邮箱: </span>
+          <span style="color: #0d8dff" class="email">
+            public@xihe.mindspore.cn
+          </span>
+          <span>。</span>
+        </div>
+        <div style="height: 24px">
+          3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
+        </div>
+      </div>
+      <template #footer>
+        <div class="dlg-btn">
+          <OButton type="primary" size="small" @click="toggleApplication"
+            >我知道啦</OButton
+          >
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
+    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '40px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
       <div
-        class="dlg-actions"
+        class="dlg-body"
         :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '56px',
+          padding: '8px 60px 0px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '100%',
+          lineHeight: '30px',
         }"
       >
-        <o-button type="primary" @click="showTip = false">{{
-          i18n.confirm
-        }}</o-button>
+        {{ describe }}
       </div>
-    </template>
-  </o-dialog>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '56px',
+          }"
+        >
+          <o-button type="primary" @click="showTip = false">{{
+            i18n.confirm
+          }}</o-button>
+        </div>
+      </template>
+    </o-dialog>
+  </div>
 </template>
 
 <style lang="scss" scoped>

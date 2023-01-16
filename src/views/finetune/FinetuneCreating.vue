@@ -7,10 +7,14 @@ import IconPoppver from '~icons/app/popover.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import OButton from '@/components/OButton.vue';
+// import { useLoginStore } from '@/stores';
+// import { goAuthorize } from '@/shared/login';
 
 import { createFinetune } from '@/api/api-finetune';
 
 const router = useRouter();
+// const isLogined = useLoginStore().isLogined;
+
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
 const model = ref(''); //预训练模型输入框

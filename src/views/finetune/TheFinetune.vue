@@ -60,7 +60,6 @@ const showStep = ref(false);
 const showTip = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
-const finetuneData = ref([]);
 const expiry = ref(''); //体验截止时间
 const displayType = ref('finetune');
 const describe = ref(''); //已有运行中的任务或已有5个任务提示
@@ -119,32 +118,21 @@ function getFinetune() {
           showFinetune.value = true;
           showtable.value = true;
           expiry.value = res.data.expiry;
-          finetuneData.value = res.data.datas;
           userFinetune.setFinetuneData(res.data.datas);
-          if (finetuneData.value) {
-            let bool = finetuneData.value.some((item) => {
+          userFinetune.setFinetuneWhiteList(true);
+          console.log('finetuneListDat: ', userFinetune.finetuneListData);
+          if (userFinetune.finetuneListData) {
+            let bool = userFinetune.finetuneListData.some((item) => {
               return item.is_done === false;
             });
             if (bool) {
               socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
             }
-            /* if (finetuneData.value.length < 5) {
-              if (bool) {
-                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
-              } else {
-                return;
-              }
-            } else if (finetuneData.value.length === 5) {
-              if (bool) {
-                socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
-              } else {
-                return;
-              }
-            } */
           }
         })
         .catch((res) => {
           if (res.code === 'finetune_no_permission') {
+            userFinetune.$reset();
             showFinetune.value = true;
             showtable.value = false;
           }
@@ -167,7 +155,7 @@ function setWebsocket(url) {
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
     try {
-      finetuneData.value = JSON.parse(event.data).data;
+      userFinetune.setFinetuneData(JSON.parse(event.data).data);
     } catch (e) {
       console.error(e);
     }
@@ -189,12 +177,15 @@ function toggleApplication() {
 
 // 跳转创建微调任务页面
 function goCreateTune() {
-  if (finetuneData.value !== null && finetuneData.value.length === 5) {
+  if (
+    userFinetune.finetuneListData !== null &&
+    userFinetune.finetuneListData.length === 5
+  ) {
     describe.value = i18n.describe2;
     showTip.value = true;
   } else if (
-    finetuneData.value !== null &&
-    finetuneData.value.some(
+    userFinetune.finetuneListData !== null &&
+    userFinetune.finetuneListData.some(
       (item) =>
         item.status === 'scheduling' ||
         item.status === 'Pending' ||
@@ -205,34 +196,34 @@ function goCreateTune() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({ path: `/${userInfo.userName}/finetune/new` });
+    router.push({ path: `/finetune/new` });
   }
 }
 
 function goCreate() {
-  router.push({ path: `/${userInfo.userName}/finetune/new` });
+  router.push({ path: `/finetune/new` });
 }
 
-const showDel = ref(false);
+const isDelDialogVisible = ref(false);
 function showDelClick(val) {
   listId.value = val;
-  showDel.value = true;
+  isDelDialogVisible.value = true;
 }
 
 // 删除微调任务
 function delClick(val) {
   if (val === 2) {
-    showDel.value = false;
+    isDelDialogVisible.value = false;
   } else {
     deleteFinetune(val).then(() => {
-      showDel.value = false;
+      isDelDialogVisible.value = false;
       getFinetune();
     });
   }
 }
 
 // 终止微调任务
-const showStop = ref(false);
+const isStopDialogVisible = ref(false);
 function showStopClick(val, id) {
   finetuneId.value = id;
   if (val === 'Terminated') {
@@ -242,15 +233,15 @@ function showStopClick(val, id) {
     });
     return;
   } else {
-    showStop.value = true;
+    isStopDialogVisible.value = true;
   }
 }
 function quitClick(val) {
   if (val === 1) {
-    showStop.value = false;
+    isStopDialogVisible.value = false;
   } else {
     terminateFinetune(finetuneId.value).then(() => {
-      showStop.value = false;
+      isStopDialogVisible.value = false;
       getFinetune();
     });
   }
@@ -313,7 +304,7 @@ onUnmounted(() => {
             <!-- TODO:<span>{{ getFullTime(expiry * 1000) }}</span> -->
           </div>
         </div>
-        <el-table :data="finetuneData" style="width: 100%">
+        <el-table :data="userFinetune.finetuneListData" style="width: 100%">
           <el-table-column label="任务名称/ID" width="180">
             <template #default="scope">
               <div>
@@ -411,14 +402,14 @@ onUnmounted(() => {
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
-                :show-del="showDel"
+                :show-del="isDelDialogVisible"
                 :display-type="displayType"
                 @click="delClick"
               />
 
               <StopTrain
                 :train-id="finetuneId"
-                :show-stop="showStop"
+                :show-stop="isStopDialogVisible"
                 :display-type="displayType"
                 @click="quitClick"
               />

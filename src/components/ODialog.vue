@@ -86,7 +86,7 @@ function onCloseClick() {
     top: 0;
     bottom: 0;
     z-index: 0;
-    background-color: rgba($color: #000000, $alpha: 0.4);
+    background-color: rgba(0, 0, 0, 0.4);
   }
 
   &-wrap {

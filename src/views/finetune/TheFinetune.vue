@@ -433,13 +433,13 @@ onUnmounted(() => {
                         scope.row.status === 'Running' ||
                         scope.row.status === 'Creating'
                       "
-                      class="tools"
+                      class="termination"
                       @click="showStopClick(scope.row.status, scope.row.id)"
                     >
                       <o-icon><icon-stop></icon-stop></o-icon>
                       <p>终止</p>
                     </div>
-                    <div class="tools" @click="showDelClick(scope.row.id)">
+                    <div class="delete" @click="showDelClick(scope.row.id)">
                       <o-icon><icon-remove></icon-remove></o-icon>
                       <p>删除</p>
                     </div>
@@ -550,7 +550,7 @@ onUnmounted(() => {
       <template #head>
         <div
           class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '40px' }"
+          :style="{ textAlign: 'center', paddingTop: '24px' }"
         >
           <img :src="warningImg" alt="" />
         </div>
@@ -558,7 +558,6 @@ onUnmounted(() => {
       <div
         class="dlg-body"
         :style="{
-          padding: '8px 60px 0px',
           fontSize: '18px',
           textAlign: 'center',
           width: '100%',
@@ -573,12 +572,12 @@ onUnmounted(() => {
           :style="{
             display: 'flex',
             justifyContent: 'center',
-            paddingBottom: '56px',
+            paddingBottom: '40px',
           }"
         >
-          <o-button type="primary" @click="showTip = false">{{
-            i18n.confirm
-          }}</o-button>
+          <o-button type="primary" @click="showTip = false">
+            {{ i18n.confirm }}
+          </o-button>
         </div>
       </template>
     </o-dialog>
@@ -633,7 +632,7 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         .list-tip {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 400;
           color: #555;
           line-height: 26px;
@@ -783,20 +782,22 @@ $theme: #0d8dff;
         align-items: center;
         margin-right: 68px;
         color: rgba(13, 141, 255, 1);
-        .tools {
+        .termination,
+        .delete {
           cursor: pointer;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          &:first-child {
-            margin-right: 20px;
-          }
+
           p {
             font-size: 12px;
             line-height: 14px;
             margin-top: 5px;
           }
+        }
+        .termination {
+          margin-right: 20px;
         }
       }
     }

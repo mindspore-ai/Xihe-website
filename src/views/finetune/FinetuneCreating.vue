@@ -192,7 +192,6 @@ function confirmCreating(formEl) {
       }
       if (!params3.value) {
         form.end_learning_rate = '';
-        console.log(3333);
       }
       let hyperparameter = [
         {
@@ -214,7 +213,6 @@ function confirmCreating(formEl) {
         name: form.name,
         task: 'finetune',
       };
-      console.log('params: ', params);
       createFinetune(params).then(() => {
         ElMessage({
           type: 'success',

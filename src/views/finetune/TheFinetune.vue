@@ -846,7 +846,7 @@ $theme: #0d8dff;
     }
   }
   .el-dialog__body {
-    padding: 8px 64px 0px;
+    padding: 8px 64px 0px !important;
   }
 }
 </style>

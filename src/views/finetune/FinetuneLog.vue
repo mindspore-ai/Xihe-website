@@ -14,7 +14,6 @@ const route = useRoute();
 const finetuneData = ref([]); //当前微调任务信息
 const finetuneLog = ref('');
 const userFinetune = useFinetuneData();
-// console.log('userFinetune: ', userFinetune.finetuneListData);
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -26,19 +25,6 @@ function getHeaderConfig() {
     : {};
   return headersConfig;
 }
-
-/* getFinetuneList().then((res) => {
-  finetuneData.value = res.data.datas.find((item) => {
-    return item.id === route.params.finetuneId;
-  });
-  if (
-    finetuneData.value.status === 'scheduling' ||
-    finetuneData.value.status === 'Pending'
-  ) {
-    showLog.value = true;
-  }
-  getLog();
-}); */
 
 // 日志
 const socket = new WebSocket(
@@ -63,7 +49,6 @@ function getLog() {
 
 function getFinetune() {
   if (userFinetune.finetuneListData) {
-    console.log('有pinia数据 ', userFinetune.finetuneListData);
     finetuneData.value = userFinetune.finetuneListData.find((item) => {
       return item.id === route.params.finetuneId;
     });
@@ -72,7 +57,6 @@ function getFinetune() {
       finetuneData.value = res.data.datas.find((item) => {
         return item.id === route.params.finetuneId;
       });
-      console.log('无pinia数据请求接口后: ', finetuneData.value);
     });
   }
   if (

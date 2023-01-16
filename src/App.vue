@@ -5,9 +5,6 @@ import { useRoute } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-import tipImg from '@/assets/imgs/questionnaire.png';
-import tipCloseImg from '@/assets/imgs/close.png';
-
 const route = useRoute();
 
 const showFooter = computed(() => {
@@ -24,15 +21,6 @@ const setHeader = () => {
   isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
-
-const tipVisible = ref(true);
-const toggleTip = (val) => {
-  tipVisible.value = val;
-};
-
-function goDetail() {
-  window.open('https://huaweicompute.wjx.cn/vm/w2lbNFb.aspx?udsid=830516');
-}
 
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
@@ -57,13 +45,6 @@ onUnmounted(() => {
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
-
-  <div v-if="tipVisible" class="app-questionnaire">
-    <div class="tip-content">
-      <img class="tip-img" :src="tipImg" @click="goDetail" />
-      <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
-    </div>
-  </div>
 </template>
 
 <style lang="scss">

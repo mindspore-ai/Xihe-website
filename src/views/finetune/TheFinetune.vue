@@ -70,6 +70,7 @@ const userInfo = useUserInfoStore();
 const userFinetune = useFinetuneData();
 
 let i18n = {
+  tips: '温馨提示：最多可创建5个微调任务，且只有一个运行中',
   createFinetune: '创建微调任务',
   confirm: '确认',
   describe1:
@@ -204,12 +205,12 @@ function goCreateTune() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({ path: `/finetune-creating/${userInfo.userName}` });
+    router.push({ path: `/${userInfo.userName}/finetune/new` });
   }
 }
 
 function goCreate() {
-  router.push({ path: `/finetune-creating/${userInfo.userName}` });
+  router.push({ path: `/${userInfo.userName}/finetune/new` });
 }
 
 const showDel = ref(false);
@@ -300,9 +301,7 @@ onUnmounted(() => {
               {{ i18n.table.title }}
             </span>
             <span>
-              <div class="list-tip">
-                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
-              </div>
+              <div class="list-tip">&nbsp;&nbsp;{{ i18n.tips }}</div>
             </span>
           </div>
           <div class="remain-time">
@@ -324,7 +323,7 @@ onUnmounted(() => {
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="125">
+          <el-table-column label="状态" width="128">
             <template #default="scope">
               <div class="status-box">
                 <div
@@ -408,7 +407,7 @@ onUnmounted(() => {
               <span class="task-frame">mindspore</span>
             </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="443">
+          <el-table-column label="作业类型" width="410">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -431,15 +430,16 @@ onUnmounted(() => {
                       v-if="
                         scope.row.status === 'Pending' ||
                         scope.row.status === 'Creating' ||
-                        scope.row.status === 'Running'
+                        scope.row.status === 'Running' ||
+                        scope.row.status === 'Creating'
                       "
-                      class="tools"
+                      class="termination"
                       @click="showStopClick(scope.row.status, scope.row.id)"
                     >
                       <o-icon><icon-stop></icon-stop></o-icon>
                       <p>终止</p>
                     </div>
-                    <div class="tools" @click="showDelClick(scope.row.id)">
+                    <div class="delete" @click="showDelClick(scope.row.id)">
                       <o-icon><icon-remove></icon-remove></o-icon>
                       <p>删除</p>
                     </div>
@@ -449,7 +449,7 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="计算资源" prop="resource" width="220">
+          <el-table-column label="计算资源" prop="resource" width="250">
             1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="150">
@@ -512,74 +512,76 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-  </div>
-  <!-- 申请微调资格弹窗 -->
-  <o-dialog :show="showStep" :close="false">
-    <template #head>
-      <p class="dlg-title">申请步骤</p>
-    </template>
-
-    <div class="dlg-body" style="color: #555; font-size: 14px">
-      <div style="height: 24px">
-        1. 填写申请信息（用户名、邮箱、职业、申请理由)。
-      </div>
-      <div style="height: 24px" class="send-email">
-        <span> 2. 发送申请信息至官方邮箱: </span>
-        <span style="color: #0d8dff" class="email">
-          public@xihe.mindspore.cn
-        </span>
-        <span>。</span>
-      </div>
-      <div style="height: 24px">
-        3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
-      </div>
-    </div>
-
-    <template #foot>
-      <div class="dlg-btn">
-        <OButton type="primary" size="small" @click="toggleApplication"
-          >我知道啦</OButton
-        >
-      </div>
-    </template>
-  </o-dialog>
-  <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
-  <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
-        <img :src="warningImg" alt="" />
-      </div>
-    </template>
-    <div
-      class="dlg-body"
-      :style="{
-        padding: '8px 60px 0px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '100%',
-        lineHeight: '30px',
-      }"
+    <!-- 申请微调资格弹窗 -->
+    <el-dialog
+      v-model="showStep"
+      title="申请步骤"
+      width="40%"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
     >
-      {{ describe }}
-    </div>
-    <template #foot>
+      <div class="dlg-body" style="color: #555; font-size: 14px">
+        <div style="height: 24px">
+          1. 填写申请信息（用户名、邮箱、职业、申请理由)。
+        </div>
+        <div style="height: 24px" class="send-email">
+          <span> 2. 发送申请信息至官方邮箱: </span>
+          <span style="color: #0d8dff" class="email">
+            public@xihe.mindspore.cn
+          </span>
+          <span>。</span>
+        </div>
+        <div style="height: 24px">
+          3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
+        </div>
+      </div>
+      <template #footer>
+        <div class="dlg-btn">
+          <OButton type="primary" size="small" @click="toggleApplication"
+            >我知道啦</OButton
+          >
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
+    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '24px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
       <div
-        class="dlg-actions"
+        class="dlg-body"
         :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '56px',
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '100%',
+          lineHeight: '30px',
         }"
       >
-        <o-button type="primary" @click="showTip = false">{{
-          i18n.confirm
-        }}</o-button>
+        {{ describe }}
       </div>
-    </template>
-  </o-dialog>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '40px',
+          }"
+        >
+          <o-button type="primary" @click="showTip = false">
+            {{ i18n.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </o-dialog>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -630,7 +632,7 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         .list-tip {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 400;
           color: #555;
           line-height: 26px;
@@ -739,10 +741,31 @@ $theme: #0d8dff;
   .el-table__header {
     height: 48px;
     background: #e5e8f0;
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
   }
   .el-table__row {
     height: 56px;
-
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
     .description {
       display: flex;
       justify-content: space-between;
@@ -757,21 +780,24 @@ $theme: #0d8dff;
       .tools-box {
         display: flex;
         align-items: center;
-        margin-right: 29px;
         margin-right: 68px;
         color: rgba(13, 141, 255, 1);
-        .tools {
+        .termination,
+        .delete {
           cursor: pointer;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-right: 16px;
+
           p {
             font-size: 12px;
             line-height: 14px;
             margin-top: 5px;
           }
+        }
+        .termination {
+          margin-right: 20px;
         }
       }
     }
@@ -810,6 +836,18 @@ $theme: #0d8dff;
         margin-right: 8px;
       }
     }
+  }
+}
+</style>
+<style lang="scss">
+.apply-dlg {
+  .el-dialog__header {
+    .el-dialog__title {
+      color: #000;
+    }
+  }
+  .el-dialog__body {
+    padding: 8px 64px 0px !important;
   }
 }
 </style>

@@ -21,6 +21,7 @@ const params3 = ref(false);
 const epochsChecked = ref(true);
 const startChecked = ref(true);
 const endChecked = ref(true);
+const taskType = ref(null);
 
 const form = reactive({
   name: '', //任务名称
@@ -142,8 +143,6 @@ const rules = reactive({
     { validator: checkStartRate, trigger: 'blur' },
   ],
   end_learning_rate: [
-    // 含有E或者e的正则
-
     // {
     //   pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
     //   message: '请输入一个正浮点数,且需小于start_learning_rate的值',
@@ -154,16 +153,26 @@ const rules = reactive({
 });
 
 function changeEpochs(val) {
+  if (!val) {
+    form.epochs = '10';
+  }
   epochsChecked.value = !val;
 }
 function changeStart(val) {
+  if (!val) {
+    form.start_learning_rate = '1e-05';
+  }
   startChecked.value = !val;
 }
 function changeEnd(val) {
+  if (!val) {
+    form.end_learning_rate = '1e-07';
+  }
   endChecked.value = !val;
 }
 
 function changeTasktype(val) {
+  taskType.value.style.marginBottom = '38px';
   if (val === '以图生文') {
     dataset.value = '以图生文数据集';
     model.value = '以图生文预训练模型';
@@ -175,9 +184,13 @@ function confirmCreating(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      if (!params1.value || !params2.value || !params3.value) {
+      if (!params1.value) {
         form.epochs = '';
+      }
+      if (!params2.value) {
         form.start_learning_rate = '';
+      }
+      if (!params3.value) {
         form.end_learning_rate = '';
       }
       let hyperparameter = [
@@ -200,7 +213,6 @@ function confirmCreating(formEl) {
         name: form.name,
         task: 'finetune',
       };
-      console.log('params: ', params);
       createFinetune(params).then(() => {
         ElMessage({
           type: 'success',
@@ -233,7 +245,7 @@ function confirmCreating(formEl) {
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
         <div class="createtune-content-tip">
-          支持多种任务类型，提供微调/评估/推理能力，可自定义关键超参数，目前仅支持内置数据集体验
+          支持多种任务类型，提供微调/评估/推理能力，可自定义关键超参数，目前仅支持内置数据集体验。
         </div>
         <div class="createtune-form-wrap">
           <el-form
@@ -252,7 +264,7 @@ function confirmCreating(formEl) {
                 <el-input v-model="form.name" placeholder="请输入任务名称" />
               </el-form-item>
             </div>
-            <div class="createtune-form-item">
+            <div ref="taskType" class="createtune-form-item taskType">
               <div class="item-title">
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
@@ -271,7 +283,15 @@ function confirmCreating(formEl) {
                 </el-select>
               </el-form-item>
               <div v-if="form.taskType === '以图生文'" class="tasktype-tips">
-                让算法根据输入的一幅图自动生成对应的描述性的文字
+                <span>
+                  以图生文，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。您可以
+                </span>
+                <a
+                  href="https://xihe.mindspore.cn/modelzoo/taichu"
+                  target="_blank"
+                  >在线体验</a
+                >
+                <span> 以图生文。 </span>
               </div>
             </div>
             <div class="createtune-form-item">
@@ -315,9 +335,7 @@ function confirmCreating(formEl) {
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
               <el-form-item label="计算资源">
-                <div class="service">
-                  1*Ascend 910（32GB）｜ARM： 96核 360GB
-                </div>
+                <div class="service">1*Ascend 910(32G)|ARM:24核 96GB</div>
               </el-form-item>
             </div>
             <div class="createtune-form-item hyperparameter">
@@ -355,7 +373,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.epochs"
                   :disabled="epochsChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>
@@ -374,7 +391,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.start_learning_rate"
                   :disabled="startChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>
@@ -388,7 +404,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.end_learning_rate"
                   :disabled="endChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>
@@ -421,7 +436,7 @@ function confirmCreating(formEl) {
   .createtune-wrap {
     max-width: 1440px;
     height: 100%;
-    padding: 50px 90px 64px;
+    padding: 40px 0px 64px;
     margin: 0 auto;
     .tune-bread {
       margin-bottom: 40px;
@@ -446,7 +461,7 @@ function confirmCreating(formEl) {
       }
     }
     .createtune-content {
-      padding: 16px 32px;
+      padding: 24px 40px 64px;
       background-color: #fff;
 
       &-title {
@@ -487,11 +502,20 @@ function confirmCreating(formEl) {
             }
           }
           .tasktype-tips {
+            // width: 75%;
+            margin-right: 28%;
             font-size: 12px;
             position: absolute;
-            bottom: -20px;
+            bottom: -34px;
             left: 140px;
+            a {
+              color: #0d8dff;
+            }
           }
+        }
+        .taskType {
+          // margin-bottom: 40px;
+          line-height: 15px;
         }
         .hyperparameter {
           :deep(.el-form-item) {
@@ -509,7 +533,6 @@ function confirmCreating(formEl) {
         display: flex;
         justify-content: center;
         margin-top: 48px;
-        margin-bottom: 32px;
         .confim2 {
           background: #cee8ff;
           color: #fff;
@@ -610,6 +633,13 @@ function confirmCreating(formEl) {
   }
   .el-checkbox__input.is-checked .el-checkbox__inner {
     border: 2px solid var(--el-checkbox-checked-bg-color);
+  }
+}
+.el-select-dropdown {
+  .el-select-dropdown__list {
+    .el-select-dropdown__item.is-disabled {
+      color: var(--el-text-color-placeholder) !important;
+    }
   }
 }
 </style>

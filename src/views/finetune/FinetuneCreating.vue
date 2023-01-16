@@ -247,7 +247,7 @@ function confirmCreating(formEl) {
       <div class="createtune-content">
         <div class="createtune-content-title">创建微调任务</div>
         <div class="createtune-content-tip">
-          支持多种任务类型，提供微调/评估/推理能力，可自定义关键超参数，目前仅支持内置数据集体验
+          支持多种任务类型，提供微调/评估/推理能力，可自定义关键超参数，目前仅支持内置数据集体验。
         </div>
         <div class="createtune-form-wrap">
           <el-form

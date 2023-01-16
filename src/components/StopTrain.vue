@@ -51,7 +51,7 @@ watch(
     <template #head>
       <div
         class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
+        :style="{ textAlign: 'center', paddingTop: '24px' }"
       >
         <img :src="warningImg" alt="" />
       </div>
@@ -59,7 +59,6 @@ watch(
     <div
       class="dlg-body"
       :style="{
-        padding: '8px 0 30px',
         fontSize: '18px',
         textAlign: 'center',
         width: '100%',
@@ -78,7 +77,7 @@ watch(
         :style="{
           display: 'flex',
           justifyContent: 'center',
-          paddingBottom: '56px',
+          paddingBottom: '40px',
         }"
       >
         <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{

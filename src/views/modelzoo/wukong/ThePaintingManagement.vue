@@ -4,15 +4,6 @@ import { useRouter } from 'vue-router';
 
 import html2canvas from 'html2canvas';
 
-import {
-  collectedPictures,
-  cancelLikePicture,
-  temporaryLink,
-} from '@/api/api-modelzoo.js';
-
-import { goAuthorize } from '@/shared/login';
-import { useLoginStore, useUserInfoStore } from '@/stores';
-
 import IconArrow from '~icons/app/arrow-top';
 import IconLike from '~icons/app/like';
 import IconCollected from '~icons/app/wk-collecte';
@@ -23,6 +14,15 @@ import IconPublic from '~icons/app/public';
 import IconFingure from '~icons/app/fingure';
 import IconCancel from '~icons/app/cancel-public';
 import IconCopy from '~icons/app/copy-nickname';
+
+import {
+  collectedPictures,
+  cancelLikePicture,
+  temporaryLink,
+} from '@/api/api-modelzoo.js';
+
+import { goAuthorize } from '@/shared/login';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 
 const router = useRouter();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -36,7 +36,6 @@ const navItems = ref([
   { tag: '我的公开', icon: '2' },
 ]);
 const currentNav = ref('1');
-
 const collecteImages = ref([]);
 const publicList = ref([]);
 
@@ -72,6 +71,10 @@ function cancelCollect(id) {
     console.log(res);
     if (res.status === 204) {
       getCollectedImages();
+      ElMessage({
+        type: 'success',
+        message: '取消收藏成功',
+      });
     }
   });
 }
@@ -97,7 +100,7 @@ userAvatar.value = userInfoStore.avatar.replace(
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
   '/obs-xihe-avatar/'
 );
-// 分享图片
+// 开启分享海报dlg
 function shareImage(link, desc, style) {
   posterInfo.value = desc + '  ' + style;
   posterLink.value = link.replace(
@@ -131,7 +134,7 @@ function handleDlgClose() {
 }
 
 // 下载图片
-function requestImg(item) {
+function requestImage(item) {
   const link = item.replace(
     'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
     '/obs-big-model/'
@@ -163,11 +166,11 @@ function downloadImage(item) {
   if ((deadTime - currentTime) / 60 < 1) {
     temporaryLink({ link: item }).then((res) => {
       if (res.data.data) {
-        requestImg(res.data.data.link);
+        requestImage(res.data.data.link);
       }
     });
   } else {
-    requestImg(item);
+    requestImage(item);
   }
 }
 
@@ -175,7 +178,7 @@ function handleNavClick(i) {
   currentNav.value = i;
 }
 
-function goTobigModel() {
+function goToBigmodel() {
   router.push('/modelzoo');
 }
 function goToWukong() {
@@ -186,7 +189,7 @@ function goToWukong() {
   <div class="wrapper">
     <div class="painting-management">
       <div class="painting-management-bread">
-        <p @click="goTobigModel">大模型</p>
+        <p @click="goToBigmodel">大模型</p>
         <span>></span>
         <p @click="goToWukong">悟空</p>
         <span>></span>
@@ -400,7 +403,7 @@ function goToWukong() {
       }
       img {
         width: 100%;
-        // height: 100%;
+        height: 402px;
       }
       .info {
         width: 100%;

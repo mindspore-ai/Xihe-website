@@ -310,7 +310,7 @@ function getRandomStyle(index) {
   }
 }
 // 重新输入描述
-function reenterDesc() {
+function reEnterDesc() {
   showInferDlg.value = false;
   isError.value = false;
   initData();
@@ -581,9 +581,6 @@ function refreshTags() {
               <p @click="publicImage">
                 <o-icon><icon-arrow></icon-arrow></o-icon>
               </p>
-              <!-- <p v-else class="cancel-public" @click="publicImage">
-                <o-icon><icon-cancel></icon-cancel></o-icon>
-              </p> -->
             </div>
             <!-- 下载收藏 -->
             <div class="handles-contain">
@@ -621,7 +618,7 @@ function refreshTags() {
 
         <p>内容不合规，请重新输入描述词</p>
 
-        <p @click="reenterDesc">
+        <p @click="reEnterDesc">
           <span>重新输入</span>
           <o-icon><icon-right></icon-right></o-icon>
         </p>
@@ -665,7 +662,8 @@ function refreshTags() {
         <div class="poster-download">
           <div class="link">
             <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
-            <o-icon @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+            <o-icon
+              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
               ><icon-copy></icon-copy
             ></o-icon>
           </div>
@@ -707,6 +705,7 @@ function refreshTags() {
       }
       img {
         width: 100%;
+        height: 402px;
       }
       .info {
         width: 100%;
@@ -925,8 +924,6 @@ function refreshTags() {
         cursor: pointer;
         position: relative;
         &:hover {
-          color: #0d8dff;
-          border: 1px solid #0d8dff;
           .o-icon {
             right: 16px;
           }
@@ -972,7 +969,7 @@ function refreshTags() {
 <style lang="scss" scoped>
 .input-dom {
   position: fixed;
-  top: -700px;
+  top: -1200px;
 }
 .wk-experience {
   .clear-input {

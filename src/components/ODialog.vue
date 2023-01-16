@@ -95,6 +95,7 @@ function onCloseClick() {
     z-index: 2000;
     background-color: #fff;
     width: 50%;
+    width: 40%;
     box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2);
     @media screen and (max-width: 1023px) {
       min-width: auto;

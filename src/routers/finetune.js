@@ -9,7 +9,7 @@ export default [
   },
   // 创建大模型微调任务
   {
-    path: '/finetune-creating/:user',
+    path: '/:user/finetune/new',
     name: 'finetuneCreating',
     component: () => {
       return import('@/views/finetune/FinetuneCreating.vue');
@@ -19,7 +19,7 @@ export default [
     },
   },
   {
-    path: '/finetune-log/:user/:finetuneId',
+    path: '/finetunelog/:user/:finetuneId',
     name: 'finetuneLog',
     component: () => {
       return import('@/views/finetune/FinetuneLog.vue');

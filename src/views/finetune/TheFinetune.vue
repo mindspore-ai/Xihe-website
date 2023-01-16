@@ -70,6 +70,7 @@ const userInfo = useUserInfoStore();
 const userFinetune = useFinetuneData();
 
 let i18n = {
+  tips: '温馨提示：最多可创建5个微调任务，且只有一个运行中',
   createFinetune: '创建微调任务',
   confirm: '确认',
   describe1:
@@ -204,12 +205,12 @@ function goCreateTune() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({ path: `/finetune-creating/${userInfo.userName}` });
+    router.push({ path: `/${userInfo.userName}/finetune/new` });
   }
 }
 
 function goCreate() {
-  router.push({ path: `/finetune-creating/${userInfo.userName}` });
+  router.push({ path: `/${userInfo.userName}/finetune/new` });
 }
 
 const showDel = ref(false);
@@ -300,9 +301,7 @@ onUnmounted(() => {
               {{ i18n.table.title }}
             </span>
             <span>
-              <div class="list-tip">
-                （&nbsp;温馨提示：最多可创建5个微调任务，且只有一个运行中。）
-              </div>
+              <div class="list-tip">&nbsp;&nbsp;{{ i18n.tips }}</div>
             </span>
           </div>
           <div class="remain-time">

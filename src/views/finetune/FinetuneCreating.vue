@@ -337,9 +337,7 @@ function confirmCreating(formEl) {
                 <o-icon><icon-necessary></icon-necessary></o-icon>
               </div>
               <el-form-item label="计算资源">
-                <div class="service">
-                  1*Ascend 910（32GB）｜ARM： 96核 360GB
-                </div>
+                <div class="service">1*Ascend 910(32G)|ARM:24核 96GB</div>
               </el-form-item>
             </div>
             <div class="createtune-form-item hyperparameter">
@@ -377,7 +375,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.epochs"
                   :disabled="epochsChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>
@@ -396,7 +393,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.start_learning_rate"
                   :disabled="startChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>
@@ -410,7 +406,6 @@ function confirmCreating(formEl) {
                 <el-input
                   v-model="form.end_learning_rate"
                   :disabled="endChecked"
-                  placeholder="请输入"
                   class="paramsInt"
                 />
               </el-form-item>

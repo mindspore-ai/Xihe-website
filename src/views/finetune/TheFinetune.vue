@@ -323,7 +323,7 @@ onUnmounted(() => {
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="125">
+          <el-table-column label="状态" width="128">
             <template #default="scope">
               <div class="status-box">
                 <div
@@ -407,7 +407,7 @@ onUnmounted(() => {
               <span class="task-frame">mindspore</span>
             </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="443">
+          <el-table-column label="作业类型" width="410">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
@@ -430,7 +430,9 @@ onUnmounted(() => {
                       v-if="
                         scope.row.status === 'Pending' ||
                         scope.row.status === 'Creating' ||
-                        scope.row.status === 'Running'
+                        scope.row.status === 'Running' ||
+                        scope.row.status === 'Creating' ||
+                        scope.row.status === 'scheduling'
                       "
                       class="tools"
                       @click="showStopClick(scope.row.status, scope.row.id)"
@@ -448,7 +450,7 @@ onUnmounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="计算资源" prop="resource" width="220">
+          <el-table-column label="计算资源" prop="resource" width="250">
             1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
           <el-table-column label="创建时间" prop="created_at" width="150">
@@ -512,6 +514,7 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+
   <!-- 申请微调资格弹窗 -->
   <o-dialog :show="showStep" :close="false">
     <template #head>
@@ -738,10 +741,31 @@ $theme: #0d8dff;
   .el-table__header {
     height: 48px;
     background: #e5e8f0;
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
   }
   .el-table__row {
     height: 56px;
-
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
     .description {
       display: flex;
       justify-content: space-between;
@@ -756,7 +780,6 @@ $theme: #0d8dff;
       .tools-box {
         display: flex;
         align-items: center;
-        margin-right: 29px;
         margin-right: 68px;
         color: rgba(13, 141, 255, 1);
         .tools {
@@ -765,7 +788,9 @@ $theme: #0d8dff;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-right: 16px;
+          &:first-child {
+            margin-right: 20px;
+          }
           p {
             font-size: 12px;
             line-height: 14px;

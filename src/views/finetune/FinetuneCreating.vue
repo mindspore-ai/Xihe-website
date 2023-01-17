@@ -7,13 +7,10 @@ import IconPoppver from '~icons/app/popover.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import OButton from '@/components/OButton.vue';
-// import { useLoginStore } from '@/stores';
-// import { goAuthorize } from '@/shared/login';
 
 import { createFinetune } from '@/api/api-finetune';
 
 const router = useRouter();
-// const isLogined = useLoginStore().isLogined;
 
 const queryRef = ref(null);
 const dataset = ref(''); //输入数据集输入框
@@ -138,22 +135,8 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  start_learning_rate: [
-    /* {
-      pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
-      message: '请输入一个正浮点数',
-      trigger: 'blur',
-    }, */
-    { validator: checkStartRate, trigger: 'blur' },
-  ],
-  end_learning_rate: [
-    // {
-    //   pattern: /^(?:[1-9][0-9]*\.[0-9]+|0\.(?!0+$)[0-9]+)$/,
-    //   message: '请输入一个正浮点数,且需小于start_learning_rate的值',
-    //   trigger: 'blur',
-    // },
-    { validator: checkEndRate, trigger: 'blur' },
-  ],
+  start_learning_rate: [{ validator: checkStartRate, trigger: 'blur' }],
+  end_learning_rate: [{ validator: checkEndRate, trigger: 'blur' }],
 });
 
 function changeEpochs(val) {

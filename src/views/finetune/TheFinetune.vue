@@ -31,7 +31,7 @@ import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
-import { useLoginStore, useUserInfoStore, useFinetuneData } from '@/stores';
+import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
 import {
@@ -65,7 +65,6 @@ const displayType = ref('finetune');
 const describe = ref(''); //已有运行中的任务或已有5个任务提示
 
 const isLogined = useLoginStore().isLogined;
-const userInfo = useUserInfoStore();
 const userFinetune = useFinetuneData();
 
 let i18n = {
@@ -120,7 +119,7 @@ function getFinetune() {
           expiry.value = res.data.expiry;
           userFinetune.setFinetuneData(res.data.datas);
           userFinetune.setFinetuneWhiteList(true);
-          console.log('finetuneListDat: ', userFinetune.finetuneListData);
+          // console.log('finetuneListDat: ', userFinetune.finetuneListData);
           if (userFinetune.finetuneListData) {
             let bool = userFinetune.finetuneListData.some((item) => {
               return item.is_done === false;
@@ -200,10 +199,6 @@ function goCreateTune() {
   }
 }
 
-function goCreate() {
-  router.push({ path: `/finetune/new` });
-}
-
 const isDelDialogVisible = ref(false);
 function showDelClick(val) {
   listId.value = val;
@@ -251,7 +246,6 @@ function goFinetuneLog(finetuneId) {
   router.push({
     name: 'finetuneLog',
     params: {
-      user: userInfo.userName,
       finetuneId: finetuneId,
     },
   });
@@ -296,12 +290,10 @@ onUnmounted(() => {
             </span>
           </div>
           <div class="remain-time">
-            <!-- TODO:删除点击时间 -->
-            <span @click="goCreate">
+            <span>
               {{ i18n.table.remainTime }}
             </span>
-            <span>2023-01-30 08:00:00</span>
-            <!-- TODO:<span>{{ getFullTime(expiry * 1000) }}</span> -->
+            <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
         </div>
         <el-table :data="userFinetune.finetuneListData" style="width: 100%">
@@ -453,12 +445,12 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <!-- <o-button
+          <!--  <o-button
             v-if="Math.round(new Date() / 1000) >= expiry"
             disabled
             type="secondary"
           >
-            创建微调任务
+            {{ i18n.createFinetune }}
           </o-button>
           <o-button v-else type="primary" @click="goCreateTune">
             {{ i18n.createFinetune }}

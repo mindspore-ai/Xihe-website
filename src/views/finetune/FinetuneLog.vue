@@ -59,7 +59,6 @@ function getFinetune() {
       });
     });
   }
-  console.log('finetuneData.value: ', finetuneData.value);
   if (
     finetuneData.value &&
     (finetuneData.value.status === 'scheduling' ||

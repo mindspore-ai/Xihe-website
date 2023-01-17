@@ -119,7 +119,6 @@ function getFinetune() {
           expiry.value = res.data.expiry;
           userFinetune.setFinetuneData(res.data.datas);
           userFinetune.setFinetuneWhiteList(true);
-          // console.log('finetuneListDat: ', userFinetune.finetuneListData);
           if (userFinetune.finetuneListData) {
             let bool = userFinetune.finetuneListData.some((item) => {
               return item.is_done === false;
@@ -445,7 +444,7 @@ onUnmounted(() => {
           </template>
         </el-table>
         <div class="create-btn">
-          <!--  <o-button
+          <o-button
             v-if="Math.round(new Date() / 1000) >= expiry"
             disabled
             type="secondary"
@@ -453,9 +452,6 @@ onUnmounted(() => {
             {{ i18n.createFinetune }}
           </o-button>
           <o-button v-else type="primary" @click="goCreateTune">
-            {{ i18n.createFinetune }}
-          </o-button> -->
-          <o-button type="primary" @click="goCreateTune">
             {{ i18n.createFinetune }}
           </o-button>
         </div>

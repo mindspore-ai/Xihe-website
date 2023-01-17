@@ -33,7 +33,7 @@ const socket = new WebSocket(
 );
 
 function getLog() {
-  if (finetuneData.value.is_done) {
+  if (finetuneData.value && finetuneData.value.is_done) {
     getFinetuneLog(route.params.finetuneId).then((res) => {
       finetuneLog.value = res.data.log;
     });

@@ -272,7 +272,7 @@ onUpdated(() => {
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="time">22222赛期:{{ competitionData.duration }}</div>
+                <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
             </div>
           </div>

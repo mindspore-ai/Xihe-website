@@ -1,16 +1,22 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onUnmounted, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
+import moment from 'moment';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/runing';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
 import IconFile from '~icons/app/project';
+import IconStopping from '~icons/app/stopping';
+import IconWaiting from '~icons/app/waiting';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -18,40 +24,67 @@ import step2 from '@/assets/imgs/finetune/step2.png';
 import step3 from '@/assets/imgs/finetune/step3.png';
 import step4 from '@/assets/imgs/finetune/step4.png';
 import arrows from '@/assets/imgs/finetune/arrows.png';
+import warningImg from '@/assets/icons/warning.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import DeleteTrain from '@/components/DeleteTrain.vue';
 import StopTrain from '@/components/StopTrain.vue';
 
+import { useLoginStore, useFinetuneData } from '@/stores';
+import { LOGIN_KEYS } from '@/shared/login';
+
 import {
-  getFinetune,
+  getFinetuneList,
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
 
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
+const router = useRouter();
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
+const listId = ref(null);
+const finetuneId = ref(null);
+const showStep = ref(false);
+const showTip = ref(false);
+const showtable = ref(false);
+const showFinetune = ref(false);
+const expiry = ref(''); //体验截止时间
+const displayType = ref('finetune');
+const describe = ref(''); //已有运行中的任务或已有5个任务提示
+
+const isLogined = useLoginStore().isLogined;
+const userFinetune = useFinetuneData();
+
 let i18n = {
+  tips: '温馨提示：最多可创建5个微调任务，且只有一个运行中',
+  createFinetune: '创建微调任务',
+  confirm: '确认',
+  describe1:
+    '已有正在运行中的任务，暂不能创建新的微调任务。你可等待运行完成或终止当前任务来创建新的微调任务。',
+  describe2:
+    '最多只能创建5个微调任务，若需再创建，请删除之前的微调任务后再创建。',
   head: {
     title: '大模型微调',
     introduce:
-      '基于平台内置的自动太初跨模态预训练大模型，提供多种典型下游任务模板；极简模式、零代码开发、仅需少量配置即可快速启动训练',
+      '基于大模型微调套件，内置多种预训练大模型，包含丰富的下游任务，提供便捷高效的微调/评估/推理能力',
   },
   table: {
     title: '任务列表',
-    remainTime: '剩余体验时间：',
+    remainTime: '体验截止时间：',
   },
 };
-
-// const route = useRoute();
-const router = useRouter();
-// const userInfoStore = useUserInfoStore();
-
-// const projectId = detailData.value.id;
-const listId = ref(null);
-const trainId = ref(null);
-const showStep = ref(false);
-const showtable = ref(false);
-
 const applySteps = reactive([
   {
     stepImg: step1,
@@ -71,124 +104,169 @@ const applySteps = reactive([
   {
     stepImg: step4,
     stepTitle: '04  完成微调任务',
-    // stepArrows: arrows,
   },
 ]);
 
-// 训练数据TODO:
-// const trainData = [];
-const trainData = [
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-  {
-    created_at: '2022-11-28',
-    desc: '',
-    duration: 150,
-    error: '',
-    id: '63847c0f61d98bcc9bc7db51',
-    is_done: true,
-    name: 'aaaaaaaa',
-    status: 'Completed',
-    frame: 'mindspore',
-    type: '微调',
-    resource: '1*Ascend 910D备份 4',
-  },
-];
-
 // 获取微调任务列表
-function getFinetuneList() {
-  try {
-    getFinetune().then((res) => {
-      console.log('res: ', res);
-    });
-  } catch (error) {
-    console.error(error);
+let socket;
+function getFinetune() {
+  if (isLogined) {
+    try {
+      getFinetuneList()
+        .then((res) => {
+          showFinetune.value = true;
+          showtable.value = true;
+          expiry.value = res.data.expiry;
+          userFinetune.setFinetuneData(res.data.datas);
+          userFinetune.setFinetuneWhiteList(true);
+          if (userFinetune.finetuneListData) {
+            let bool = userFinetune.finetuneListData.some((item) => {
+              return item.is_done === false;
+            });
+            if (bool) {
+              socket = setWebsocket(`wss://${DOMAIN}/server/finetune/ws`);
+            }
+          }
+        })
+        .catch((res) => {
+          if (res.code === 'finetune_no_permission') {
+            userFinetune.$reset();
+            showFinetune.value = true;
+            showtable.value = false;
+          }
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    showFinetune.value = true;
+    showtable.value = false;
   }
 }
-// getFinetuneList();
+getFinetune();
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [
+    getHeaderConfig().headers['private-token'],
+  ]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      userFinetune.setFinetuneData(JSON.parse(event.data).data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
+
+// 毫秒级时间戳换算成日期
+function getFullTime(val) {
+  const stamp = new Date(val);
+  const time = moment(stamp).format('YYYY-MM-DD HH:mm:ss');
+  return time;
+}
 
 // 切换申请步骤弹窗
 function toggleApplication() {
-  showtable.value = true;
   showStep.value = false;
 }
 
+// 跳转创建微调任务页面
 function goCreateTune() {
-  router.push('/finetune-creating');
+  if (
+    userFinetune.finetuneListData !== null &&
+    userFinetune.finetuneListData.length === 5
+  ) {
+    describe.value = i18n.describe2;
+    showTip.value = true;
+  } else if (
+    userFinetune.finetuneListData !== null &&
+    userFinetune.finetuneListData.some(
+      (item) =>
+        item.status === 'scheduling' ||
+        item.status === 'Pending' ||
+        item.status === 'Creating' ||
+        item.status === 'Running'
+    )
+  ) {
+    describe.value = i18n.describe1;
+    showTip.value = true;
+  } else {
+    router.push({ path: `/finetune/new` });
+  }
 }
 
-const showDel = ref(false);
+const isDelDialogVisible = ref(false);
 function showDelClick(val) {
   listId.value = val;
-  showDel.value = true;
+  isDelDialogVisible.value = true;
 }
 
 // 删除微调任务
 function delClick(val) {
-  console.log('val: ', val);
   if (val === 2) {
-    showDel.value = false;
+    isDelDialogVisible.value = false;
   } else {
-    deleteFinetune(val).then((res) => {
-      console.log('res: ', res);
+    deleteFinetune(val).then(() => {
+      isDelDialogVisible.value = false;
+      getFinetune();
     });
   }
 }
 
-// 终止训练
-const showStop = ref(false);
-function stopTrainList(id) {
-  terminateFinetune(id).then((res) => {
-    console.log('终止训练res: ', res);
-    getTrainList();
-    showStop.value = false;
-  });
-}
-
-function quitClick(val) {
-  if (val === 1) {
-    showStop.value = false;
-  } else {
-    stopTrainList(trainId.value);
-  }
-}
-
+// 终止微调任务
+const isStopDialogVisible = ref(false);
 function showStopClick(val, id) {
-  trainId.value = id;
+  finetuneId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
-      message: '该训练已停止',
+      message: '该微调任务已停止',
     });
     return;
   } else {
-    showStop.value = true;
+    isStopDialogVisible.value = true;
+  }
+}
+function quitClick(val) {
+  if (val === 1) {
+    isStopDialogVisible.value = false;
+  } else {
+    terminateFinetune(finetuneId.value).then(() => {
+      isStopDialogVisible.value = false;
+      getFinetune();
+    });
   }
 }
 
-function goTrainLog(trainId) {
+function goFinetuneLog(finetuneId) {
   router.push({
     name: 'finetuneLog',
     params: {
-      finetuneId: '111',
+      finetuneId: finetuneId,
     },
   });
 }
+
+const closeSocket = () => {
+  socket.close();
+};
+
+// 页面刷新
+onMounted(() => {
+  window.addEventListener('beforeunload', closeSocket);
+});
+
+onUnmounted(() => {
+  socket && socket.close();
+  window.removeEventListener('beforeunload', closeSocket);
+});
 </script>
 
 <template>
-  <div class="modelzoo-tune">
+  <div v-if="showFinetune" class="modelzoo-tune">
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
@@ -203,23 +281,31 @@ function goTrainLog(trainId) {
       <div class="modelzoo-table">
         <div class="table-title">
           <div class="title">
-            {{ i18n.table.title }}
+            <span>
+              {{ i18n.table.title }}
+            </span>
+            <span>
+              <div class="list-tip">&nbsp;&nbsp;{{ i18n.tips }}</div>
+            </span>
           </div>
           <div class="remain-time">
-            {{ i18n.table.remainTime }}
+            <span>
+              {{ i18n.table.remainTime }}
+            </span>
+            <span>{{ getFullTime(expiry * 1000) }}</span>
           </div>
         </div>
-        <el-table :data="trainData" style="width: 100%">
+        <el-table :data="userFinetune.finetuneListData" style="width: 100%">
           <el-table-column label="任务名称/ID" width="180">
             <template #default="scope">
               <div>
-                <span class="train-name" @click="goTrainLog(scope.row.id)">{{
+                <span class="train-name" @click="goFinetuneLog(scope.row.id)">{{
                   scope.row.name
                 }}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" width="130">
+          <el-table-column label="状态" width="128">
             <template #default="scope">
               <div class="status-box">
                 <div
@@ -238,22 +324,35 @@ function goTrainLog(trainId) {
                   <span>已停止</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Running'" class="status-item">
-                  <o-icon><icon-runing></icon-runing></o-icon>
-                  <span>运行中</span>
+                <div
+                  v-if="scope.row.status === 'Terminating'"
+                  class="status-item"
+                >
+                  <o-icon><icon-stopping></icon-stopping></o-icon>
+                  <span>停止中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Pending'" class="status-item">
+                  <o-icon><icon-waiting></icon-waiting></o-icon>
+                  <span>等待中</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Creating'" class="status-item">
+                  <o-icon><icon-creating></icon-creating></o-icon>
+                  <span>创建中</span>
                 </div>
 
                 <div
                   v-if="scope.row.status === 'scheduling'"
                   class="status-item"
                 >
-                  <o-icon><icon-runing></icon-runing></o-icon>
+                  <o-icon><icon-running></icon-running></o-icon>
                   <span> 启动中</span>
                 </div>
 
-                <div v-if="scope.row.status === 'Failed'" class="status-item">
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span>训练失败</span>
+                <div v-if="scope.row.status === 'Running'" class="status-item">
+                  <o-icon><icon-running></icon-running></o-icon>
+                  <span>运行中</span>
                 </div>
 
                 <div
@@ -263,11 +362,21 @@ function goTrainLog(trainId) {
                   <o-icon><icon-failed></icon-failed></o-icon>
                   <span> 启动失败 </span>
                 </div>
+
+                <div v-if="scope.row.status === 'Failed'" class="status-item">
+                  <o-icon><icon-failed></icon-failed></o-icon>
+                  <span>训练失败</span>
+                </div>
+
+                <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+                  <o-icon><icon-abnormal></icon-abnormal></o-icon>
+                  <span>异常</span>
+                </div>
               </div>
             </template>
           </el-table-column>
 
-          <el-table-column label="运行时长" width="148">
+          <el-table-column label="运行时长" width="146">
             <template #default="scope">
               <div>
                 {{ formatSeconds(scope.row.duration) }}
@@ -275,41 +384,44 @@ function goTrainLog(trainId) {
             </template>
           </el-table-column>
 
-          <el-table-column label="任务框架" width="180">
-            <template #default="scope">
-              <div>
-                <span class="task-frame">{{ scope.row.frame }}</span>
-              </div>
-            </template>
+          <el-table-column label="任务框架" width="176">
+            <div>
+              <span class="task-frame">mindspore</span>
+            </div>
           </el-table-column>
-          <el-table-column label="作业类型" width="460">
+          <el-table-column label="作业类型" width="410">
             <template #default="scope">
               <DeleteTrain
                 :list-id="listId"
-                :show-del="showDel"
+                :show-del="isDelDialogVisible"
+                :display-type="displayType"
                 @click="delClick"
               />
 
               <StopTrain
-                :train-id="trainId"
-                :show-stop="showStop"
+                :train-id="finetuneId"
+                :show-stop="isStopDialogVisible"
+                :display-type="displayType"
                 @click="quitClick"
               />
               <div class="description">
-                <div class="description-content">
-                  {{ scope.row.type }}
-                </div>
+                <div class="description-content">finetune</div>
                 <div class="hide-box">
                   <div class="tools-box">
                     <div
-                      v-if="scope.row.status === 'Running'"
-                      class="tools"
+                      v-if="
+                        scope.row.status === 'Pending' ||
+                        scope.row.status === 'Creating' ||
+                        scope.row.status === 'Running' ||
+                        scope.row.status === 'Creating'
+                      "
+                      class="termination"
                       @click="showStopClick(scope.row.status, scope.row.id)"
                     >
                       <o-icon><icon-stop></icon-stop></o-icon>
                       <p>终止</p>
                     </div>
-                    <div class="tools" @click="showDelClick(scope.row.id)">
+                    <div class="delete" @click="showDelClick(scope.row.id)">
                       <o-icon><icon-remove></icon-remove></o-icon>
                       <p>删除</p>
                     </div>
@@ -319,9 +431,10 @@ function goTrainLog(trainId) {
             </template>
           </el-table-column>
 
-          <el-table-column label="资源占用" prop="resource" width="190">
+          <el-table-column label="计算资源" prop="resource" width="250">
+            1*Ascend 910(32G)|ARM:24核 96GB
           </el-table-column>
-          <el-table-column label="创建时间" prop="created_at" width="152">
+          <el-table-column label="创建时间" prop="created_at" width="150">
           </el-table-column>
           <template #empty>
             <div class="instance-box">
@@ -331,8 +444,15 @@ function goTrainLog(trainId) {
           </template>
         </el-table>
         <div class="create-btn">
-          <o-button type="primary" @click="goCreateTune">
-            创建训练实例
+          <o-button
+            v-if="Math.round(new Date() / 1000) >= expiry"
+            disabled
+            type="secondary"
+          >
+            {{ i18n.createFinetune }}
+          </o-button>
+          <o-button v-else type="primary" @click="goCreateTune">
+            {{ i18n.createFinetune }}
           </o-button>
         </div>
       </div>
@@ -355,9 +475,6 @@ function goTrainLog(trainId) {
             <span v-if="item.stepImg !== step4" class="step-arrows">
               <img :src="arrows" alt="" />
             </span>
-            <!-- <div v-if="item.stepImg !== step4" class="step-arrows">
-              <img :src="item.stepArrows" alt="" />
-            </div> -->
           </div>
         </div>
         <div class="apply-btn" @click="showStep = true">
@@ -374,24 +491,76 @@ function goTrainLog(trainId) {
         </div>
       </div>
     </div>
-  </div>
-  <o-dialog :show="showStep" :close="false">
-    <template #head>
-      <p class="dlg-title">申请步骤</p>
-    </template>
-
-    <div class="dlg-body">
-      申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字申请说明文字
-    </div>
-
-    <template #foot>
-      <div class="dlg-btn">
-        <OButton type="primary" size="small" @click="toggleApplication"
-          >我知道啦</OButton
-        >
+    <!-- 申请微调资格弹窗 -->
+    <el-dialog
+      v-model="showStep"
+      title="申请步骤"
+      width="40%"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
+    >
+      <div class="dlg-body" style="color: #555; font-size: 14px">
+        <div style="height: 24px">
+          1. 填写申请信息（用户名、邮箱、职业、申请理由)。
+        </div>
+        <div style="height: 24px" class="send-email">
+          <span> 2. 发送申请信息至官方邮箱: </span>
+          <span style="color: #0d8dff" class="email">
+            public@xihe.mindspore.cn
+          </span>
+          <span>。</span>
+        </div>
+        <div style="height: 24px">
+          3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
+        </div>
       </div>
-    </template>
-  </o-dialog>
+      <template #footer>
+        <div class="dlg-btn">
+          <OButton type="primary" size="small" @click="toggleApplication"
+            >我知道啦</OButton
+          >
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
+    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
+      <template #head>
+        <div
+          class="dlg-title"
+          :style="{ textAlign: 'center', paddingTop: '24px' }"
+        >
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        :style="{
+          fontSize: '18px',
+          textAlign: 'center',
+          width: '100%',
+          lineHeight: '30px',
+        }"
+      >
+        {{ describe }}
+      </div>
+      <template #foot>
+        <div
+          class="dlg-actions"
+          :style="{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingBottom: '40px',
+          }"
+        >
+          <o-button type="primary" @click="showTip = false">
+            {{ i18n.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </o-dialog>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -403,7 +572,6 @@ $theme: #0d8dff;
 }
 .modelzoo-tune {
   background-color: #f5f6f8;
-  // height: calc(100vh - 434px);
   .modelzoo-head {
     padding-top: 80px;
     background-size: cover;
@@ -440,6 +608,14 @@ $theme: #0d8dff;
         line-height: 24px;
         font-size: 18px;
         color: #000000;
+        display: flex;
+        align-items: center;
+        .list-tip {
+          font-size: 12px;
+          font-weight: 400;
+          color: #555;
+          line-height: 26px;
+        }
       }
       .remain-time {
         line-height: 24px;
@@ -490,16 +666,9 @@ $theme: #0d8dff;
         display: flex;
         justify-content: space-between;
         margin-bottom: 48px;
-        // background-color: blue;
-        // display: grid;
-        // grid-template-columns: repeat(4, 25%);
-        // column-gap: 7%;
         .step-item {
-          // width: 25%;
           display: flex;
           align-items: center;
-          // float: left;
-          // justify-content: space-between;
           .step-desc {
             width: 200px;
             .step-img {
@@ -520,10 +689,6 @@ $theme: #0d8dff;
             position: relative;
             top: -14px;
             margin-left: 73px;
-            // margin: 0 73px;
-            // @media screen and (max-width: 1280px) {
-            //   margin: 0 50px;
-            // }
             img {
               width: 100%;
             }
@@ -553,13 +718,33 @@ $theme: #0d8dff;
   --el-table-header-bg-color: #e5e8f0;
   --el-table-header-text-color: #555;
   .el-table__header {
-    // width: 100% !important;
     height: 48px;
     background: #e5e8f0;
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
   }
   .el-table__row {
     height: 56px;
-
+    .el-table__cell {
+      .cell {
+        padding: 0px;
+      }
+      &:first-child {
+        padding: 0 24px;
+      }
+      &:last-child {
+        padding: 0 24px;
+      }
+    }
     .description {
       display: flex;
       justify-content: space-between;
@@ -569,25 +754,29 @@ $theme: #0d8dff;
       }
       .hide-box {
         display: none;
-        width: 150px;
+        // width: 150px;
       }
       .tools-box {
         display: flex;
         align-items: center;
-        margin-right: 29px;
+        margin-right: 68px;
         color: rgba(13, 141, 255, 1);
-        .tools {
+        .termination,
+        .delete {
           cursor: pointer;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-right: 16px;
+
           p {
             font-size: 12px;
             line-height: 14px;
             margin-top: 5px;
           }
+        }
+        .termination {
+          margin-right: 20px;
         }
       }
     }
@@ -626,6 +815,18 @@ $theme: #0d8dff;
         margin-right: 8px;
       }
     }
+  }
+}
+</style>
+<style lang="scss">
+.apply-dlg {
+  .el-dialog__header {
+    .el-dialog__title {
+      color: #000;
+    }
+  }
+  .el-dialog__body {
+    padding: 8px 64px 0px !important;
   }
 }
 </style>

@@ -202,24 +202,13 @@ function getDetailData() {
       repoName: route.params.name,
       modular: 'project',
     }).then((res) => {
-      // if (res.results.status === 200) {
       detailData.value = res.data;
-      // }
     });
   } catch (error) {
     console.error(error);
   }
 }
 getDetailData();
-// 跳转到选择文件创建训练实例页TODO:暂时注释
-/* function goSelectFile() {
-  router.push({
-    path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
-    query: {
-      id: detailData.value.id,
-    },
-  });
-} */
 // 按顺序校验表单数据是否校验通过
 function verify(node, code, message) {
   return new Promise((resolve, reject) => {

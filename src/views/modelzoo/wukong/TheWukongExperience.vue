@@ -6,6 +6,7 @@ import classic from '@/assets/imgs/wukong/style-bg-2.png';
 import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
 import more from '@/assets/imgs/wukong/style-bg-4.png';
 import random from '@/assets/imgs/wukong/style-bg-5.png';
+import loading from '@/assets/gifs/loading.gif';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/wukong-download';
@@ -296,7 +297,6 @@ async function handleInfer() {
     }
   }
 }
-
 const inferList = ref([
   { isCollected: false, id: '' },
   { isCollected: false, id: '' },
@@ -316,7 +316,6 @@ function handleCollecte(key, index) {
     }
   });
 }
-
 // 取消收藏
 function handleCancelCollecte(index) {
   cancelLikePicture(inferList.value[index].id).then((res) => {
@@ -330,7 +329,6 @@ function handleCancelCollecte(index) {
     }
   });
 }
-
 // 下载图片
 function requestImg(item) {
   let x = new XMLHttpRequest();
@@ -346,7 +344,7 @@ function requestImg(item) {
   };
   x.send();
 }
-
+// 临时url小于1min重新获取下载
 function downloadImage(item) {
   const index1 = item.indexOf('=');
   const index2 = item.indexOf('=', index1 + 1);
@@ -415,7 +413,6 @@ function refreshTags() {
           ><icon-x></icon-x></o-icon
       ></template>
     </el-input>
-
     <div class="wk-experience-examples">
       <p class="title">选择样例</p>
       <div class="example-items">
@@ -433,7 +430,6 @@ function refreshTags() {
         <p>换一批</p>
       </div>
     </div>
-
     <div class="wk-experience-styles">
       <p class="title">选择风格</p>
       <div class="content">
@@ -452,7 +448,6 @@ function refreshTags() {
             </div>
           </div>
         </div>
-
         <div class="sort-tag">
           <div
             v-for="item in styleData[styleIndex].options"
@@ -468,9 +463,7 @@ function refreshTags() {
         </div>
       </div>
     </div>
-
     <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
-
     <!-- 推理dialog -->
     <el-dialog
       v-model="showInferDlg"
@@ -488,7 +481,7 @@ function refreshTags() {
       </template>
 
       <div v-if="!isInferred" class="infer-dlg-loading">
-        <img src="@/assets/gifs/loading.gif" alt="" />
+        <img :src="loading" alt="" />
         <p>正在创作中，请耐心等待</p>
       </div>
 
@@ -534,12 +527,10 @@ function refreshTags() {
       color: #fff;
     }
   }
-
   &-result {
     display: flex;
     justify-content: space-between;
     width: 100%;
-
     .result-item {
       position: relative;
       margin-right: 24px;
@@ -551,16 +542,13 @@ function refreshTags() {
           display: block;
         }
       }
-
       &:last-child {
         margin-right: 0;
       }
-
       img {
         height: 100%;
         width: 100%;
       }
-
       .mask {
         position: absolute;
         bottom: 0;
@@ -569,7 +557,6 @@ function refreshTags() {
         height: 16vh;
         display: none;
       }
-
       .handles {
         position: absolute;
         bottom: 24px;
@@ -639,7 +626,6 @@ function refreshTags() {
       text-align: center;
     }
   }
-
   .el-dialog__header {
     height: 80px;
     padding: 0;
@@ -648,7 +634,6 @@ function refreshTags() {
     background: #000;
     margin-right: 0;
   }
-
   .el-dialog__body {
     padding-left: 64px;
     padding-right: 64px;
@@ -658,7 +643,6 @@ function refreshTags() {
     align-items: center;
     background: rgba(0, 0, 0, 0.85);
   }
-
   .el-dialog__headerbtn {
     top: 16px;
     right: 24px;
@@ -674,7 +658,6 @@ function refreshTags() {
   .clear-input {
     cursor: pointer;
   }
-
   :deep(.el-input) {
     max-width: 1416px;
     width: 100%;
@@ -685,12 +668,10 @@ function refreshTags() {
       border-radius: 8px;
       backdrop-filter: blur(5px);
       padding: 8px 24px;
-
       .el-input__inner {
         font-size: 14px;
         color: #fff;
       }
-
       .el-input__count .el-input__count-inner {
         background: none;
       }
@@ -711,12 +692,10 @@ function refreshTags() {
   .active-1 {
     border: 1px solid #008eff;
   }
-
   &-examples {
     display: flex;
     margin-top: 48px;
     align-items: center;
-
     .example-items {
       flex: 1;
       display: flex;
@@ -745,7 +724,6 @@ function refreshTags() {
       }
     }
   }
-
   &-styles {
     margin-top: 48px;
     display: flex;
@@ -790,7 +768,6 @@ function refreshTags() {
         .triangle4 {
           left: 638px;
         }
-
         .sort-item {
           background: rgba(13, 141, 255, 0.3);
           border-radius: 8px;
@@ -835,7 +812,6 @@ function refreshTags() {
       }
     }
   }
-
   &-btn {
     background-image: url('@/assets/imgs/wukong/button-bg.png');
     background-repeat: no-repeat;

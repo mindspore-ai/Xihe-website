@@ -16,11 +16,13 @@ function getHeaderConfig() {
  * 获取微调任务列表
  * @returns
  */
-export function getFinetune() {
+export function getFinetuneList() {
   const url = `/server/finetune`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 创建微调任务
@@ -48,7 +50,7 @@ export function deleteFinetune(finetuneId) {
  */
 export function terminateFinetune(finetuneId) {
   const url = `/server/finetune/${finetuneId}`;
-  return request.put(url, getHeaderConfig()).then((res) => {
+  return request.put(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }

@@ -12,7 +12,6 @@ import ODialog from '@/components/ODialog.vue';
 
 import IconAddFile from '~icons/app/add-file';
 import IconPlus from '~icons/app/plus';
-// import DeleteRelate from '@/components/DeleteRelate.vue';
 import IconInstance from '~icons/app/train-instance';
 
 import { ElMessage } from 'element-plus';
@@ -56,7 +55,6 @@ const pushParams = {
   name: routerParams.name,
   contents: [],
 };
-// contents: ['train'],
 
 const i18n = {
   createTrain: '创建训练实例',
@@ -113,7 +111,6 @@ function goSelectFile() {
   } else {
     // 点击在新页签打开
     let routerData = router.resolve({
-      // path: `/projects/${detailData.value.owner}/${detailData.value.name}/selectfile`,
       path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
     });
     window.open(routerData.href, '_blank');
@@ -461,11 +458,6 @@ function toggleDelDlg(flag) {
           <no-relate v-else :relate-name="'dataset'"></no-relate>
         </div>
       </div>
-      <!-- 删除相关弹框 -->
-      <!-- <delete-relate
-        :delete-relate="deleteRelate"
-        @cancel="cancelClick"
-      ></delete-relate> -->
       <!-- 添加模型 -->
       <div class="related-project">
         <div class="add-title">

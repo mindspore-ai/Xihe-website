@@ -5,7 +5,8 @@ import warningImg from '@/assets/icons/warning.png';
 
 const deleteCondition = reactive({
   title: '删除项目',
-  describe: '确认是否将此训练实例删除，注意此操作不可逆。',
+  describe1: '确认是否将此训练实例删除，注意此操作不可逆。',
+  describe2: '确认是否将此微调任务删除，注意此操作不可逆。',
   btnText: '删除',
   cancel: '取消',
   confirm: '确认',
@@ -20,7 +21,12 @@ const prop = defineProps({
     type: String,
     default: '',
   },
+  displayType: {
+    type: String,
+    default: '',
+  },
 });
+
 const id = ref(null);
 const isShow = ref(false);
 const emit = defineEmits(['click']);
@@ -50,7 +56,7 @@ watch(
     <template #head>
       <div
         class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
+        :style="{ textAlign: 'center', paddingTop: '24px' }"
       >
         <img :src="warningImg" alt="" />
       </div>
@@ -58,13 +64,17 @@ watch(
     <div
       class="dlg-body"
       :style="{
-        padding: '8px 0 30px',
         fontSize: '18px',
         textAlign: 'center',
         width: '100%',
       }"
     >
-      {{ deleteCondition.describe }}
+      <span v-if="displayType === 'train'">
+        {{ deleteCondition.describe1 }}
+      </span>
+      <span v-if="displayType === 'finetune'">
+        {{ deleteCondition.describe2 }}
+      </span>
     </div>
     <template #foot>
       <div
@@ -72,7 +82,7 @@ watch(
         :style="{
           display: 'flex',
           justifyContent: 'center',
-          paddingBottom: '56px',
+          paddingBottom: '40px',
         }"
       >
         <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
@@ -84,42 +94,5 @@ watch(
       </div>
     </template>
   </o-dialog>
-
-  <!-- <div> -->
-  <!-- <o-dialog :show="true">
-      <template #head>
-        <div
-          class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '40px' }"
-        >
-          <img :src="successImg" alt="" />
-        </div>
-      </template>
-      <div
-        class="dlg-body"
-        :style="{
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '640px',
-        }"
-      >
-        {{ deleteCondition.describe2 }}
-      </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '56px',
-          }"
-        >
-          <router-link :to="{ path: `/${userInfoStore.userName}` }">
-            <o-button primary>{{ deleteCondition.confirm }}</o-button>
-          </router-link>
-        </div>
-      </template>
-    </o-dialog> -->
-  <!-- </div> -->
 </template>
 <style lang="scss" scoped></style>

@@ -8,14 +8,21 @@ import { formatSeconds } from '@/shared/utils';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
+
 import IconRebuild from '~icons/app/rebuild';
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
 import IconFinished from '~icons/app/finished';
 import IconStopped from '~icons/app/stopped';
-import IconRuning from '~icons/app/runing';
+import IconRunning from '~icons/app/running';
 import IconFailed from '~icons/app/failed';
+import IconWaiting from '~icons/app/waiting';
+import IconStopping from '~icons/app/stopping';
+import IconCreating from '~icons/app/creating';
+import IconAbnormal from '~icons/app/abnormal';
+
 import IconInstance from '~icons/app/train-instance';
+
 import warningImg from '@/assets/icons/warning.png';
 
 import DeleteTrain from '@/components/DeleteTrain.vue';
@@ -64,6 +71,7 @@ const resetedId = ref(null);
 const tips = ref(false);
 const btnShow = ref(false);
 const description = ref('');
+const displayType = ref('train');
 
 const i18n = {
   description1:
@@ -319,19 +327,29 @@ onUnmounted(() => {
               <span>已停止</span>
             </div>
 
-            <div v-if="scope.row.status === 'Running'" class="status-item">
-              <o-icon><icon-runing></icon-runing></o-icon>
-              <span>运行中</span>
+            <div v-if="scope.row.status === 'Terminating'" class="status-item">
+              <o-icon><icon-stopping></icon-stopping></o-icon>
+              <span>停止中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Pending'" class="status-item">
+              <o-icon><icon-waiting></icon-waiting></o-icon>
+              <span>等待中</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Creating'" class="status-item">
+              <o-icon><icon-creating></icon-creating></o-icon>
+              <span>创建中</span>
             </div>
 
             <div v-if="scope.row.status === 'scheduling'" class="status-item">
-              <o-icon><icon-runing></icon-runing></o-icon>
+              <o-icon><icon-running></icon-running></o-icon>
               <span> 启动中</span>
             </div>
 
-            <div v-if="scope.row.status === 'Failed'" class="status-item">
-              <o-icon><icon-failed></icon-failed></o-icon>
-              <span>训练失败</span>
+            <div v-if="scope.row.status === 'Running'" class="status-item">
+              <o-icon><icon-running></icon-running></o-icon>
+              <span>运行中</span>
             </div>
 
             <div
@@ -340,6 +358,16 @@ onUnmounted(() => {
             >
               <o-icon><icon-failed></icon-failed></o-icon>
               <span> 启动失败 </span>
+            </div>
+
+            <div v-if="scope.row.status === 'Failed'" class="status-item">
+              <o-icon><icon-failed></icon-failed></o-icon>
+              <span>训练失败</span>
+            </div>
+
+            <div v-if="scope.row.status === 'Abnormal'" class="status-item">
+              <o-icon><icon-abnormal></icon-abnormal></o-icon>
+              <span>异常</span>
             </div>
           </div>
         </template>
@@ -358,12 +386,14 @@ onUnmounted(() => {
           <DeleteTrain
             :list-id="listId"
             :show-del="showDel"
+            :display-type="displayType"
             @click="delClick"
           />
 
           <StopTrain
             :train-id="trainId"
             :show-stop="showStop"
+            :display-type="displayType"
             @click="quitClick"
           />
 

@@ -65,8 +65,11 @@ export default [
         } else {
           try {
             const res = await getFinetuneList();
-            userFinetune.setFinetuneData(res.data.datas);
-            userFinetune.setFinetuneWhiteList(true);
+            console.log('res: ', res);
+            if (res.data.datas) {
+              userFinetune.setFinetuneData(res.data.datas);
+            }
+            // userFinetune.setFinetuneWhiteList(true);
             return true;
           } catch (error) {
             if (error.code === 'finetune_no_permission') {

@@ -169,11 +169,15 @@ export const useFinetuneData = defineStore('finetuneInfo', {
   state: () => {
     return {
       finetuneListData: null,
+      isAllowed: false, //是否有微调资格
     };
   },
   actions: {
     setFinetuneData(data) {
       this.finetuneListData = data;
+    },
+    setFinetuneWhiteList(val) {
+      this.isAllowed = val;
     },
   },
 });

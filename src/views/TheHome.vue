@@ -240,9 +240,9 @@ function handleBtnClick3() {
 // function goCode() {
 //   router.push({ path: '/modelzoo/codegeex' });
 // }
-function goActivity() {
-  router.push({ path: '/activity' });
-}
+// function goActivity() {
+//   router.push({ path: '/activity' });
+// }
 const galleryPic = [
   {
     img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png',
@@ -395,7 +395,7 @@ const galleryPic = [
       loop
     > -->
     <div class="my-swiper">
-      <div class="photo7 cursor" @click="goActivity()"></div>
+      <div class="photo8 cursor" @click="router.push('/modelzoo/wukong')"></div>
     </div>
     <!-- <swiper-slide>
         <div class="photo6 cursor" @click="goCode()"></div>
@@ -833,18 +833,28 @@ const galleryPic = [
     //   background-size: cover;
     //   background-position: 50%;
     // }
-    .photo6 {
-      background: url(@/assets/imgs/home/home-banner1.jpg);
-      width: 100%;
-      height: 480px;
-      background-size: cover;
-      background-position: 50%;
-      @media screen and (max-width: 1440px) {
-        height: 400px;
-      }
-    }
-    .photo7 {
-      background: url(@/assets/imgs/home/home-banner2.png);
+    // .photo6 {
+    //   background: url(@/assets/imgs/home/home-banner1.jpg);
+    //   width: 100%;
+    //   height: 480px;
+    //   background-size: cover;
+    //   background-position: 50%;
+    //   @media screen and (max-width: 1440px) {
+    //     height: 400px;
+    //   }
+    // }
+    // .photo7 {
+    //   background: url(@/assets/imgs/home/home-banner2.png);
+    //   width: 100%;
+    //   height: 480px;
+    //   background-size: cover;
+    //   background-position: 50%;
+    //   @media screen and (max-width: 1440px) {
+    //     height: 400px;
+    //   }
+    // }
+    .photo8 {
+      background: url(@/assets/imgs/home/home-banner_wukong.jpg);
       width: 100%;
       height: 480px;
       background-size: cover;

@@ -364,11 +364,7 @@ async function handleInfer() {
 
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
-        // setTimeout(() => {
-        //   showInferDlg.value = false;
-        // }, 1500);
         isError.value = true;
-        // initData();
       }
     } else if (!inputText.value) {
       ElMessage({

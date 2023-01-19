@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref } from 'vue';
 
 // import IconArrowDown from '~icons/app/arrow-down.svg';
 
@@ -281,7 +281,7 @@ function changeTab(index) {
     padding: 24px;
   }
   .rank-body {
-    margin: 0 80px;
+    margin: 52px 80px;
     padding-bottom: 40px;
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;

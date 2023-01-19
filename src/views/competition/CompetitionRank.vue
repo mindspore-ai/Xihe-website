@@ -202,6 +202,11 @@ function changeTab(index) {
   border-radius: 32px 32px 0 0;
 }
 
+.el-tabs--left.el-tabs--border-card {
+  :deep(.el-tabs__header.is-left) {
+    border: 0;
+  }
+}
 .el-tabs {
   border: 0;
   :deep(.el-tabs__header.is-left) {

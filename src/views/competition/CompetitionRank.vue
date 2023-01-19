@@ -96,6 +96,7 @@ function changeTab(index) {
     v-else
     type="border-card"
     tab-position="left"
+    class="tab-left tab-of-left"
     @tab-change="changeTab"
   >
     <el-tab-pane>
@@ -202,12 +203,12 @@ function changeTab(index) {
   border-radius: 32px 32px 0 0;
 }
 
-.el-tabs--left.el-tabs--border-card {
-  :deep(.el-tabs__header.is-left) {
-    border: 0;
-  }
-}
-.el-tabs {
+// :deep(.el-tabs--left.el-tabs--border-card) {
+//   .el-tabs__header.is-left {
+//     border: 0;
+//   }
+// }
+.el-tabs.tab-left.tab-of-left {
   border: 0;
   :deep(.el-tabs__header.is-left) {
     background-color: #fff;

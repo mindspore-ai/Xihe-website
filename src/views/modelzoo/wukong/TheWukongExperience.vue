@@ -647,6 +647,8 @@ function refreshTags() {
             alt=""
           />
 
+          <div class="mask"></div>
+
           <div class="info">
             <p class="desc">{{ posterInfo }}</p>
             <div class="user-info">
@@ -685,12 +687,20 @@ function refreshTags() {
       width: 402px;
       height: 457px;
       position: relative;
+      .mask {
+        width: 100%;
+        height: 198px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        position: absolute;
+        bottom: 55px;
+      }
       .qr-code {
         width: 78px;
         height: 78px;
         position: absolute;
         right: 16px;
         bottom: 72px;
+        z-index: 1;
       }
       .logo {
         position: absolute;
@@ -698,6 +708,7 @@ function refreshTags() {
         bottom: 78px;
         width: 64px;
         height: 21px;
+        z-index: 1;
       }
       img {
         width: 100%;

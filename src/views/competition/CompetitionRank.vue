@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref } from 'vue';
 
 // import IconArrowDown from '~icons/app/arrow-down.svg';
 
@@ -26,12 +26,12 @@ getRank({ id: comInfo.id, phase: 'preliminary' }).then((res) => {
   }
 });
 
-const tabs = ref();
+// const tabs = ref();
 function changeTab(index) {
   if (index === '1') {
     let params = { id: comInfo.id, phase: 'final' };
-    tabs.value[0].classList.remove('tabs-left');
-    tabs.value[1].classList.add('tabs-right');
+    // tabs.value[0].classList.remove('tabs-left');
+    // tabs.value[1].classList.add('tabs-right');
     getRank(params).then((res) => {
       if (res.status === 200) {
         if (res.data.data) {
@@ -41,18 +41,19 @@ function changeTab(index) {
         }
       }
     });
-  } else if (index === '0') {
-    tabs.value[1].classList.remove('tabs-right');
-    tabs.value[0].classList.add('tabs-left');
   }
+  // else if (index === '0') {
+  //   tabs.value[1].classList.remove('tabs-right');
+  //   tabs.value[0].classList.add('tabs-left');
+  // }
 }
-nextTick(() => {
-  tabs.value = document.querySelectorAll('.tabs-item');
-  if (tabs.value.length) {
-    tabs.value[1].classList.remove('tabs-right');
-    tabs.value[0].classList.add('tabs-left');
-  }
-});
+// nextTick(() => {
+//   tabs.value = document.querySelectorAll('.tabs-item');
+//   if (tabs.value.length) {
+//     tabs.value[1].classList.remove('tabs-right');
+//     tabs.value[0].classList.add('tabs-left');
+//   }
+// });
 </script>
 <template>
   <div v-if="comInfo.type === 'challenge'">
@@ -91,7 +92,13 @@ nextTick(() => {
       <p>当前为选拔阶段，暂无排行榜</p>
     </div>
   </div>
-  <el-tabs v-else type="border-card" @tab-change="changeTab">
+  <el-tabs
+    v-else
+    type="border-card"
+    tab-position="left"
+    class="tab-left tab-of-left"
+    @tab-change="changeTab"
+  >
     <el-tab-pane>
       <template #label>
         <div class="tabs-item tabs-left">初赛排行榜</div>
@@ -168,61 +175,96 @@ nextTick(() => {
         <p>暂无决赛排行榜</p>
       </div>
     </el-tab-pane>
+    <el-tab-pane label="晋级决赛名单">
+      <div class="final-list">
+        <img
+          src="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/competition/poster/ai_challenge_2022/AI_challenge_winner.jpg"
+          alt=""
+        />
+      </div>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
 <style lang="scss" scoped>
 :deep(.el-tabs__content) {
   padding: 0;
+  .final-list {
+    margin: 40px 0;
+    display: flex;
+    justify-content: center;
+    img {
+      width: 50%;
+    }
+  }
 }
 :deep(.el-tabs__nav-wrap) {
   margin: 30px 80px 0;
   border-radius: 32px 32px 0 0;
 }
 
-.el-tabs {
-  :deep(.el-tabs__header.is-top) {
+// :deep(.el-tabs--left.el-tabs--border-card) {
+//   .el-tabs__header.is-left {
+//     border: 0;
+//   }
+// }
+.el-tabs.tab-left.tab-of-left {
+  border: 0;
+  :deep(.el-tabs__header.is-left) {
     background-color: #fff;
     border: 0;
+    .el-tabs__nav-prev,
+    .el-tabs__nav-next {
+      display: none;
+    }
+    .el-tabs__nav-wrap {
+      margin-left: 40px;
+    }
     .el-tabs__nav {
       width: 100%;
       background: #fff;
 
       .el-tabs__item {
-        width: 50%;
-        padding: 0 !important;
-        margin: 0 !important;
+        width: 188px;
+        //   padding: 0 !important;
+        //   margin: 0 !important;
         border: 0;
-        color: #ffffff;
-        height: 80px;
-        font-size: 24px;
+        text-align: left;
+        font-size: 18px;
+        line-height: 56px;
+        height: 56px;
+        //   color: #ffffff;
+        //   height: 80px;
+        //   font-size: 24px;
 
-        .tabs-item {
-          background-color: #e5e5e5;
-          height: 100%;
-          text-align: center;
-          line-height: 80px;
-        }
-        .tabs-left {
-          background-image: url(@/assets/imgs/rank-bg.png);
-          background-position: 100%;
-          background-size: cover;
-          border-radius: 0 0 0 -21px;
-          box-shadow: 1px 3px 10px rgba(0, 0, 0, 100%);
-        }
-        .tabs-right {
-          background-image: url(@/assets/imgs/rank-bg1.png);
-          background-position: 0;
-          background-size: cover;
-          // box-shadow: 1px 3px 10px rgba(0, 0, 0, 20%);
-        }
-        &:not(.is-disabled):hover {
-          color: #ffffff;
-        }
+        //   .tabs-item {
+        //     background-color: #e5e5e5;
+        //     height: 100%;
+        //     text-align: center;
+        //     line-height: 80px;
+        //   }
+        //   .tabs-left {
+        //     background-image: url(@/assets/imgs/rank-bg.png);
+        //     background-position: 100%;
+        //     background-size: cover;
+        //     border-radius: 0 0 0 -21px;
+        //     box-shadow: 1px 3px 10px rgba(0, 0, 0, 100%);
+        //   }
+        //   .tabs-right {
+        //     background-image: url(@/assets/imgs/rank-bg1.png);
+        //     background-position: 0;
+        //     background-size: cover;
+        //     // box-shadow: 1px 3px 10px rgba(0, 0, 0, 20%);
+        //   }
+        //   &:not(.is-disabled):hover {
+        //     color: #ffffff;
+        //   }
       }
       .el-tabs__item.is-active {
-        color: #ffffff;
+        color: #000000;
         border: 0;
+        border-right: 2px solid #0d8dff;
+        background: #f7f8fa;
         // background-image: url(@/assets/imgs/rank-bg.png);
         // background-position: 100%;
         // background-size: cover;
@@ -245,7 +287,7 @@ nextTick(() => {
     padding: 24px;
   }
   .rank-body {
-    margin: 0 80px;
+    margin: 52px 80px;
     padding-bottom: 40px;
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;

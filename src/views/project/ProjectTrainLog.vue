@@ -106,7 +106,7 @@ const form = reactive({
   desc: '',
 });
 const userInfoStore = useUserInfoStore();
-
+console.log(userInfoStore);
 // 是否是访客
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;

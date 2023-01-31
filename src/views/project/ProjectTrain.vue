@@ -6,8 +6,8 @@ import { handleMarkdown } from '@/shared/markdown';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import NoRelate from '@/components/NoRelate.vue';
-import RelateCard from '@/components/RelateCard.vue';
+import NoRelate from '@/components//train/NoRelate.vue';
+import RelateCard from '@/components/train/RelateCard.vue';
 import ODialog from '@/components/ODialog.vue';
 
 import IconAddFile from '~icons/app/add-file';

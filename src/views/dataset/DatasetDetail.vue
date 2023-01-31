@@ -8,7 +8,7 @@ import IconClear from '~icons/app/clear';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import OHeart from '@/components/OHeart.vue';
+import TrainLikes from '@/components/train/TrainLikes.vue';
 
 import { getUserDig, cancelCollection } from '@/api/api-project';
 import protocol from '../../../config/protocol';
@@ -388,12 +388,12 @@ watch(
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>
         <div v-if="userInfoStore.userName !== detailData.owner">
-          <o-heart
+          <train-likes
             :is-digged="isDigged"
             :dig-count="detailData.like_count"
             class="loves"
             @click="handleDatasetLike"
-          ></o-heart>
+          ></train-likes>
         </div>
       </div>
       <div class="label-box">

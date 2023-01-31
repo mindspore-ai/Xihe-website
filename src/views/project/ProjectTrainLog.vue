@@ -587,36 +587,6 @@ watch(
                 </div>
               </div>
 
-              <!-- <div class="status-box">
-                <div
-                  v-if="trainDetail.status === 'Completed'"
-                  class="status-item"
-                >
-                  <o-icon><icon-finished></icon-finished></o-icon>
-                  <span>已完成</span>
-                </div>
-
-                <div
-                  v-if="trainDetail.status === 'Terminated'"
-                  class="status-item"
-                >
-                  <o-icon><icon-stopped></icon-stopped></o-icon>
-                  <span>已终止</span>
-                </div>
-
-                <div
-                  v-if="trainDetail.status === 'Running'"
-                  class="status-item"
-                >
-                  <o-icon><icon-running></icon-running></o-icon>
-                  <span>运行中</span>
-                </div>
-
-                <div v-if="trainDetail.status === 'Failed'" class="status-item">
-                  <o-icon><icon-failed></icon-failed></o-icon>
-                  <span> 训练失败</span>
-                </div>
-              </div> -->
             </div>
           </li>
           <li class="info-list">

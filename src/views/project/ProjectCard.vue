@@ -10,8 +10,8 @@ import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/project';
 
-import RelateCard from '@/components/RelateCard.vue';
-import NoRelate from '@/components/NoRelate.vue';
+import RelateCard from '@/components/train/RelateCard.vue';
+import NoRelate from '@/components/train/NoRelate.vue';
 
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import {

@@ -25,9 +25,9 @@ import IconInstance from '~icons/app/train-instance';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import DeleteTrain from '@/components/DeleteTrain.vue';
-import StopTrain from '@/components/StopTrain.vue';
-import ResetTrain from '@/components/ResetTrain.vue';
+import DeleteTrain from '@/components/train/DeleteTrain.vue';
+import StopTrain from '@/components/train/StopTrain.vue';
+import ResetTrain from '@/components/train/ResetTrain.vue';
 
 import {
   trainList,

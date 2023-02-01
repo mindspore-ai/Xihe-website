@@ -587,12 +587,13 @@ watch(
           </li>
           <li class="info-list">
             <div class="info-list-title">运行时长</div>
-            <div v-if="trainDetail.duration === 0" class="info-list-detail">
-              00:00:00
-            </div>
-            <div v-else class="info-list-detail">
+            <div
+              v-if="trainDetail.duration && trainDetail.duration >= 0"
+              class="info-list-detail"
+            >
               {{ formatSeconds(trainDetail.duration) }}
             </div>
+            <div v-else class="info-list-detail">00:00:00</div>
           </li>
           <li class="info-list">
             <div class="info-list-title">AI引擎</div>
@@ -634,10 +635,6 @@ watch(
               </el-popover>
             </div>
             <div class="info-list-detail document">
-              <!-- <a v-if="outputUrl" :href="outputUrl">{{ outputName }}</a>
-              <p v-else>
-                <span>{{ outputName }}</span>
-              </p> -->
               <div @click="handleGetOutput">{{ outputName }}</div>
             </div>
           </li>

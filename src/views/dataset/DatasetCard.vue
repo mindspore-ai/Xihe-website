@@ -5,9 +5,9 @@ import { useRouter, useRoute } from 'vue-router';
 import { handleMarkdown } from '@/shared/markdown';
 
 import OButton from '@/components/OButton.vue';
-import RelateCard from '@/components/RelateCard.vue';
-import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
-import NoRelate from '@/components/NoRelate.vue';
+import RelateCard from '@/components/train/RelateCard.vue';
+import ProjectRelateCard from '@/components/train/ProjectRelateCard.vue';
+import NoRelate from '@/components/train/NoRelate.vue';
 
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';

@@ -3,9 +3,9 @@ import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
-import RelateCard from '@/components/RelateCard.vue';
-import ProjectRelateCard from '@/components/ProjectRelateCard.vue';
-import NoRelate from '@/components/NoRelate.vue';
+import RelateCard from '@/components/train/RelateCard.vue';
+import ProjectRelateCard from '@/components/train/ProjectRelateCard.vue';
+import NoRelate from '@/components/train/NoRelate.vue';
 
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';

@@ -1,5 +1,5 @@
 <script setup>
-import ModelzooCard from '@/components/ModelzooCard.vue';
+import Card from './Card.vue';
 
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
@@ -94,7 +94,7 @@ function goModelzoo() {
     </div>
     <div class="card-lists">
       <div v-for="item in i18n.cardLists" :key="item">
-        <ModelzooCard
+        <Card
           :title="item.title"
           :introduce="item.introduce"
           :url="item.url"

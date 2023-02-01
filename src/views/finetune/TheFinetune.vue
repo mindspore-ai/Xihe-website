@@ -28,8 +28,8 @@ import warningImg from '@/assets/icons/warning.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
-import DeleteTrain from '@/components/DeleteTrain.vue';
-import StopTrain from '@/components/StopTrain.vue';
+import DeleteTrain from '@/components/train/DeleteTrain.vue';
+import StopTrain from '@/components/train/StopTrain.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';

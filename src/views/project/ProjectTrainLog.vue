@@ -583,12 +583,14 @@ watch(
                   <span>异常</span>
                 </div>
               </div>
-
             </div>
           </li>
           <li class="info-list">
             <div class="info-list-title">运行时长</div>
-            <div class="info-list-detail">
+            <div v-if="trainDetail.duration === 0" class="info-list-detail">
+              00:00:00
+            </div>
+            <div v-else class="info-list-detail">
               {{ formatSeconds(trainDetail.duration) }}
             </div>
           </li>

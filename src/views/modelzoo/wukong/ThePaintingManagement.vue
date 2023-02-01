@@ -25,6 +25,7 @@ import {
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import { ElMessageBox } from 'element-plus';
 
 const router = useRouter();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -41,15 +42,19 @@ const currentNav = ref('1');
 const collecteImages = ref([]);
 const publicList = ref([
   {
+    id: 1,
     link: image,
   },
   {
+    id: 2,
     link: image,
   },
   {
+    id: 3,
     link: image,
   },
   {
+    id: 4,
     link: image,
   },
 ]);
@@ -64,19 +69,50 @@ async function getCollectedImages() {
 }
 getCollectedImages();
 
+// 收藏-公开图片
+function publicImage(url) {
+  if (publicList.value.length <= 10) {
+    publicList.value.push({
+      id: publicList.value.length + 1,
+      link: url,
+    });
+    ElMessage({
+      type: 'success',
+      message: '公开成功',
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '超出公开图片数量限制',
+    });
+  }
+}
+
+const cancelPublicId = ref(0);
+
 const showConfirmDlg = ref(false);
 function quitPublicClick(id) {
   console.log(id);
+  cancelPublicId.value = id;
   showConfirmDlg.value = true;
 }
-
+// 继续公开
 function cancelQuitPublic(val) {
   console.log('继续公开');
   showConfirmDlg.value = val;
 }
-
+// 取消公开图片
 function confirmQuitPublic() {
   console.log('确认取消公开');
+
+  publicList.value.forEach((item, index) => {
+    if (item.id === cancelPublicId.value) {
+      publicList.value.splice(index, 1);
+    }
+  });
+
+  console.log(publicList.value);
+
   showConfirmDlg.value = false;
 }
 
@@ -248,7 +284,7 @@ function goToWukong() {
                 <div class="image-box">
                   <img draggable="false" :src="item.link" alt="" />
                   <div class="handles">
-                    <div class="icon-item">
+                    <div class="icon-item" @click="publicImage(item.link)">
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </div>
                     <div class="right">

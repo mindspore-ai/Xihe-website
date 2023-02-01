@@ -1,20 +1,19 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import useClipboard from 'vue-clipboard3';
 
 import { handleMarkdown } from '@/shared/markdown';
 
-import Files from '~icons/app/files';
+import IconFiles from '~icons/app/files';
 import IconCheck from '~icons/app/check';
 import IconCopy from '~icons/app/copy';
 import IconEditing from '~icons/app/editing';
 import IconDelete from '~icons/app/delete';
 import IconDownload from '~icons/app/download';
-
-import { changeByte } from '@/shared/utils';
-
 import warningImg from '@/assets/icons/warning.png';
 
+import { changeByte } from '@/shared/utils';
 import { useLoadingState } from '@/stores/index';
 import {
   getGitlabFileRaw,
@@ -31,6 +30,8 @@ const prop = defineProps({
     default: '',
   },
 });
+
+const { toClipboard } = useClipboard();
 
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
@@ -80,11 +81,13 @@ function previewFile() {
     id: repoDetailData.value.id,
     name: routerParams.name,
   }).then((res) => {
+    // json 文件返回为 object
     if (typeof res === 'object') {
       rawData.value = JSON.stringify(res, null, '\t');
       codeString.value = '```json \n' + rawData.value + '\n```';
       showBlob.value = true;
     } else if (
+      // 以� 判断是否包含乱码
       suffix.value === 'md' ||
       suffix.value === 'json' ||
       suffix.value === 'py' ||
@@ -150,7 +153,7 @@ async function headleDelFile(path) {
       message: '删除成功',
     });
     showDel.value = false;
-    pathClick(route.params.contents.length - 1);
+    handleClick(route.params.contents.length - 1);
   });
 }
 
@@ -171,10 +174,8 @@ function goRaw(blob) {
   window.open(href);
 }
 
-function copyText(textValue) {
-  inputDom.value.value = textValue;
-  inputDom.value.select();
-  document.execCommand('Copy'); // 执行浏览器复制命令
+async function copyText(textValue) {
+  await toClipboard(textValue);
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -188,7 +189,7 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
-function pathClick(index) {
+function handleClick(index) {
   if (route.params.contents.length === index) {
     return false;
   } else {
@@ -218,14 +219,14 @@ watch(
   <div class="file-editing">
     <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="file-path">
-      <div class="item-path" @click="pathClick(null)">
+      <div class="item-path" @click="handleClick(null)">
         {{ routerParams.name }}
       </div>
       <div
         v-for="(item, index) in routerParams.contents"
         :key="item"
         class="item-path"
-        @click="pathClick(index + 1)"
+        @click="handleClick(index + 1)"
       >
         /{{ item }}
       </div>
@@ -233,7 +234,7 @@ watch(
     <div class="editing-card">
       <div class="file">
         <div class="file-operation">
-          <o-icon><files></files></o-icon>
+          <o-icon><icon-files></icon-files></o-icon>
           <span class="text">{{ repoDetailData.desc }}</span>
         </div>
         <div class="file-operation">
@@ -368,7 +369,6 @@ watch(
 .file-editing {
   background-color: #f5f6f8;
   max-width: 1472px;
-  // padding: 27px 185px;
   .input-dom {
     position: absolute;
     width: 0;

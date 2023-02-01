@@ -15,6 +15,8 @@ import IconFingure from '~icons/app/fingure';
 import IconCancel from '~icons/app/cancel-public';
 import IconCopy from '~icons/app/copy-nickname';
 
+import image from '@/assets/imgs/wukong/umbrella-women.png';
+
 import {
   collectedPictures,
   cancelLikePicture,
@@ -37,14 +39,27 @@ const navItems = ref([
 ]);
 const currentNav = ref('1');
 const collecteImages = ref([]);
-const publicList = ref([]);
+const publicList = ref([
+  {
+    link: image,
+  },
+  {
+    link: image,
+  },
+  {
+    link: image,
+  },
+  {
+    link: image,
+  },
+]);
 
 // 获取收藏图片
 async function getCollectedImages() {
   const res = await collectedPictures();
   if (res.data.data) {
     collecteImages.value = res.data.data;
-    publicList.value = res.data.data;
+    // publicList.value = res.data.data;
   }
 }
 getCollectedImages();
@@ -265,7 +280,7 @@ function goToWukong() {
           <div v-else class="public">
             <div v-if="publicList.length !== 0" class="have-public">
               <div
-                v-for="item in collecteImages"
+                v-for="item in publicList"
                 :key="item.id"
                 class="collect-item"
               >

@@ -14,14 +14,12 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
-// eslint-disable-next-line no-unused-vars
-import ModelList from '@/components/ModelList.vue';
-// eslint-disable-next-line no-unused-vars
-import DatasetList from '@/components/DatasetList.vue';
-// eslint-disable-next-line no-unused-vars
-import HyperparamsList from '@/components/HyperparamsList.vue';
-// eslint-disable-next-line no-unused-vars
-import EnvironmentList from '@/components/EnvironmentList.vue';
+
+import TrainModel from '@/views/project/TrainModel.vue';
+import TrainDataset from '@/views/project/TrainDataset.vue';
+import TrainHyperparams from '@/views/project/TrainHyperparams.vue';
+import TrainEnvironment from '@/views/project/TrainEnvironment.vue';
+import TrainDirectory from '@/views/project/TrainDirectory.vue';
 
 const userInfoStore = useUserInfoStore();
 
@@ -668,7 +666,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <model-list ref="model"></model-list>
+                      <TrainModel ref="model"></TrainModel>
                       <div class="delete-btn" @click="deleteModel(item)">
                         <o-icon class="train-icon"
                           ><icon-remove></icon-remove
@@ -712,7 +710,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <dataset-list ref="dataset"></dataset-list>
+                      <TrainDataset ref="dataset"></TrainDataset>
                       <div class="delete-btn" @click="deleteDataset(item)">
                         <o-icon class="train-icon"
                           ><icon-remove></icon-remove
@@ -772,7 +770,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <hyperparams-list ref="hyperparams"></hyperparams-list>
+                      <TrainHyperparams ref="hyperparams"></TrainHyperparams>
                       <div class="delete-btn" @click="deleteHyperparams(item)">
                         <o-icon class="train-icon">
                           <icon-remove></icon-remove>
@@ -817,7 +815,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <environment-list ref="environment"></environment-list>
+                      <TrainEnvironment ref="environment"></TrainEnvironment>
                       <div class="delete-btn" @click="deleteEnvironment(item)">
                         <o-icon class="train-icon">
                           <icon-remove></icon-remove>
@@ -917,12 +915,12 @@ function selectFile(item) {
       }"
     >
       <!-- 弹窗的目录子组件 -->
-      <directory-tree
+      <TrainDirectory
         v-if="detailData.id"
         :repo-detail="detailData"
         :option-type="option"
         @handle="handleClick"
-      ></directory-tree>
+      ></TrainDirectory>
     </div>
     <template #foot>
       <div

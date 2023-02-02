@@ -113,7 +113,7 @@ watch(
 );
 
 // 头部点击选择目录
-function pathClick(item, index) {
+function handleClick(item, index) {
   // 代码目录
   if (props.optionType === 'directory') {
     if (item) {
@@ -189,7 +189,7 @@ function handleFile(item) {
         <div class="file-path">
           <!-- <div v-if="optionType === 'directory'" class="current-path"> -->
           <div class="current-path">当前路径 :</div>
-          <div class="item-path" @click="pathClick()">
+          <div class="item-path" @click="handleClick()">
             {{ repoDetail.name }}
           </div>
           <div v-if="optionType === 'directory'" class="item-path">
@@ -197,7 +197,7 @@ function handleFile(item) {
               v-for="(item, index) in dirHeadPath"
               :key="index"
               class="dir-path"
-              @click="pathClick(item, index)"
+              @click="handleClick(item, index)"
             >
               /{{ item }}
             </div>
@@ -207,7 +207,7 @@ function handleFile(item) {
               v-for="(item, index) in fileHeadPath"
               :key="index"
               class="dir-path"
-              @click="pathClick(item, index)"
+              @click="handleClick(item, index)"
             >
               /{{ item }}
             </div>

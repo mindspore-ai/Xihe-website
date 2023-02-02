@@ -67,7 +67,7 @@ async function upLoad(param) {
         type: 'success',
         message: '上传成功！你可点击“文件-编辑”编辑文件。',
       });
-      pathClick(route.params.contents.length);
+      handleClick(route.params.contents.length);
       Progress.value = '';
       fileList.value = [];
     });
@@ -94,7 +94,7 @@ function beforeUpload(rawFile) {
 const submitUpload = () => {
   uploadRef.value.submit();
 };
-function pathClick(index) {
+function handleClick(index) {
   let contents = '';
   if (route.params.contents) {
     contents = route.params.contents.splice(0, index);
@@ -120,14 +120,14 @@ onMounted(() => {
       <div class="model-name tip-text">
         <o-icon> <icon-plus2></icon-plus2> </o-icon>
         <div class="file-path">
-          <div class="item-path" @click="pathClick(null)">
+          <div class="item-path" @click="handleClick(null)">
             {{ routerParams.name }}
           </div>
           <div
             v-for="(item, index) in routerParams.contents"
             :key="item"
             class="item-path"
-            @click="pathClick(index + 1)"
+            @click="handleClick(index + 1)"
           >
             /{{ item }}
           </div>
@@ -171,7 +171,7 @@ onMounted(() => {
       <div class="upload-bottom">
         <o-button
           class="cancel-btn"
-          @click="pathClick(route.params.contents.length)"
+          @click="handleClick(route.params.contents.length)"
           >{{ i18n.modelUpload.cancel }}</o-button
         >
         <o-button type="primary" @click="submitUpload">{{

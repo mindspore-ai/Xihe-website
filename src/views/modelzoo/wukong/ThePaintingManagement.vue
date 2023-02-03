@@ -72,14 +72,24 @@ getCollectedImages();
 // 收藏-公开图片
 function publicImage(url) {
   if (publicList.value.length <= 10) {
-    publicList.value.push({
-      id: publicList.value.length + 1,
-      link: url,
+    const isPublic = publicList.value.some((item) => {
+      return item.link === url;
     });
-    ElMessage({
-      type: 'success',
-      message: '公开成功',
-    });
+    if (isPublic) {
+      ElMessage({
+        type: 'warning',
+        message: '已公开',
+      });
+    } else {
+      publicList.value.push({
+        id: publicList.value.length + 1,
+        link: url,
+      });
+      ElMessage({
+        type: 'success',
+        message: '公开成功',
+      });
+    }
   } else {
     ElMessage({
       type: 'warning',
@@ -332,7 +342,10 @@ function goToWukong() {
                     </div>
                   </div>
                 </div>
-                <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
+                <p>
+                  {{ item.desc }}&nbsp;{{ item.style }}城市夜景 赛博朋克
+                  格雷格·鲁特科夫斯基
+                </p>
               </div>
             </div>
             <div v-else class="no-public">

@@ -97,14 +97,14 @@ watch(props, () => {
 <template>
   <div v-if="datasetData.length" class="card-box">
     <div class="card-list">
-      <o-card
+      <app-card
         v-for="item in datasetData"
         :key="item.id"
         :avatar-img="avatarImg"
         card-type="dataset"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"
-      ></o-card>
+      ></app-card>
     </div>
     <div v-if="datasetCount > 10" class="pagination">
       <el-pagination

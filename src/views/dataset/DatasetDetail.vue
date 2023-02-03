@@ -126,7 +126,7 @@ function getDetailData() {
       });
     getTagList();
   } catch (error) {
-    router.push('/notfound');
+    router.push('/404');
     console.error(error);
   }
 }

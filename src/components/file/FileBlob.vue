@@ -67,7 +67,6 @@ const i18n = {
 };
 const showBlob = ref(false);
 const suffix = ref('');
-const inputDom = ref(null);
 const showDel = ref(false);
 
 function previewFile() {
@@ -80,34 +79,38 @@ function previewFile() {
     path: path.value,
     id: repoDetailData.value.id,
     name: routerParams.name,
-  }).then((res) => {
-    // json 文件返回为 object
-    if (typeof res === 'object') {
-      rawData.value = JSON.stringify(res, null, '\t');
-      codeString.value = '```json \n' + rawData.value + '\n```';
-      showBlob.value = true;
-    } else if (
-      // 以� 判断是否包含乱码
-      suffix.value === 'md' ||
-      suffix.value === 'json' ||
-      suffix.value === 'py' ||
-      suffix.value === 'txt' ||
-      suffix.value === 'log' ||
-      !res.toString().includes('�')
-    ) {
-      rawData.value = res;
-      // md文件不需加```
-      if (suffix.value === 'md') {
-        codeString.value = res;
+  })
+    .then((res) => {
+      // json 文件返回为 object
+      if (typeof res === 'object') {
+        rawData.value = JSON.stringify(res, null, '\t');
+        codeString.value = '```json \n' + rawData.value + '\n```';
+        showBlob.value = true;
+      } else if (
+        // 以� 判断是否包含乱码
+        suffix.value === 'md' ||
+        suffix.value === 'json' ||
+        suffix.value === 'py' ||
+        suffix.value === 'txt' ||
+        suffix.value === 'log' ||
+        !res.toString().includes('�')
+      ) {
+        rawData.value = res;
+        // md文件不需加```
+        if (suffix.value === 'md') {
+          codeString.value = res;
+        } else {
+          codeString.value =
+            '```' + suffix.value + ' \n' + rawData.value + '\n```';
+        }
+        showBlob.value = true;
       } else {
-        codeString.value =
-          '```' + suffix.value + ' \n' + rawData.value + '\n```';
+        showBlob.value = false;
       }
-      showBlob.value = true;
-    } else {
-      showBlob.value = false;
-    }
-  });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 function verifyFile() {
   const parentDirectory = path.value.includes('/')
@@ -116,14 +119,14 @@ function verifyFile() {
         .splice(0, path.value.split('/').length - 1)
         .join('/')
     : '';
-  try {
-    getGitlabTree({
-      type: prop.moduleName,
-      user: routerParams.user,
-      path: parentDirectory,
-      id: repoDetailData.value.id,
-      name: routerParams.name,
-    }).then((tree) => {
+  getGitlabTree({
+    type: prop.moduleName,
+    user: routerParams.user,
+    path: parentDirectory,
+    id: repoDetailData.value.id,
+    name: routerParams.name,
+  })
+    .then((tree) => {
       const treeItem = tree?.data?.filter((item) => {
         return item.path === path.value;
       });
@@ -132,12 +135,12 @@ function verifyFile() {
       } else if (treeItem?.length && treeItem[0].is_lfs_file) {
         showBlob.value = false;
       } else {
-        router.push('/notfound');
+        router.push('/404');
       }
+    })
+    .catch((error) => {
+      console.error(error);
     });
-  } catch (error) {
-    console.error(error);
-  }
 }
 verifyFile();
 
@@ -217,7 +220,6 @@ watch(
 
 <template>
   <div class="file-editing">
-    <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="file-path">
       <div class="item-path" @click="handleClick(null)">
         {{ routerParams.name }}
@@ -369,12 +371,6 @@ watch(
 .file-editing {
   background-color: #f5f6f8;
   max-width: 1472px;
-  .input-dom {
-    position: absolute;
-    width: 0;
-    height: 0;
-    opacity: 0;
-  }
   .file-path {
     display: flex;
     font-size: 18px;

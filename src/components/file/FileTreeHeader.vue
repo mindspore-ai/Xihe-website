@@ -12,6 +12,7 @@ import IconCopy from '~icons/app/copy-nickname';
 
 import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
+
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 
 const { toClipboard } = useClipboard();
@@ -84,7 +85,7 @@ const handleCopy = async () => {
   }
 };
 
-function pathClick(index) {
+function handleClick(index) {
   let contents = '';
   if (route.params.contents) {
     contents = route.params.contents.splice(0, index);
@@ -109,15 +110,15 @@ async function downloadZip() {
         name: route.params.name,
         user: route.params.user,
       }).then((res) => {
-        href = window.URL.createObjectURL(res); // 创建下载的链接
+        href = window.URL.createObjectURL(res);
       });
     }
-    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let downloadElement = document.createElement('a');
     downloadElement.href = href;
-    downloadElement.download = `${route.params.name}.zip`; // 下载后文件名
+    downloadElement.download = `${route.params.name}.zip`;
     document.body.appendChild(downloadElement);
-    downloadElement.click(); // 点击下载
-    document.body.removeChild(downloadElement); // 下载完成移除元素
+    downloadElement.click();
+    document.body.removeChild(downloadElement);
     window.URL.revokeObjectURL(href);
   } catch (error) {
     throw new Error(error);
@@ -134,14 +135,14 @@ async function downloadZip() {
     >
       <div class="file-top-left">
         <div class="file-path">
-          <div class="item-path" @click="pathClick()">
+          <div class="item-path" @click="handleClick()">
             {{ repoDetailData.name }}
           </div>
           <div
             v-for="(item, index) in route.params.contents"
             :key="item"
             class="item-path"
-            @click="pathClick(index + 1)"
+            @click="handleClick(index + 1)"
           >
             /{{ item }}
           </div>

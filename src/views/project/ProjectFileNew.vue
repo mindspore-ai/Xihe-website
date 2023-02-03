@@ -1,5 +1,5 @@
 <script setup>
-import FileNewVue from '@/components/FileNew.vue';
+import FileNewVue from '@/components/file/FileNew.vue';
 </script>
 <template>
   <file-new-vue module-name="project"></file-new-vue>

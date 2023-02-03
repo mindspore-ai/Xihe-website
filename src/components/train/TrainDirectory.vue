@@ -107,13 +107,12 @@ watch(
     getFileByPath(filePath.value);
   },
   {
-    // immediate: true,
     deep: true,
   }
 );
 
 // 头部点击选择目录
-function pathClick(item, index) {
+function handleClick(item, index) {
   // 代码目录
   if (props.optionType === 'directory') {
     if (item) {
@@ -150,7 +149,6 @@ const fileRelativePath = ref([]);
 // 点击文件夹或者文件
 function goBlob(item) {
   // 如果是文件夹
-  // debugger;
   if (item.is_dir) {
     // 代码目录弹窗
     if (props.optionType === 'directory') {
@@ -189,7 +187,7 @@ function handleFile(item) {
         <div class="file-path">
           <!-- <div v-if="optionType === 'directory'" class="current-path"> -->
           <div class="current-path">当前路径 :</div>
-          <div class="item-path" @click="pathClick()">
+          <div class="item-path" @click="handleClick()">
             {{ repoDetail.name }}
           </div>
           <div v-if="optionType === 'directory'" class="item-path">
@@ -197,7 +195,7 @@ function handleFile(item) {
               v-for="(item, index) in dirHeadPath"
               :key="index"
               class="dir-path"
-              @click="pathClick(item, index)"
+              @click="handleClick(item, index)"
             >
               /{{ item }}
             </div>
@@ -207,7 +205,7 @@ function handleFile(item) {
               v-for="(item, index) in fileHeadPath"
               :key="index"
               class="dir-path"
-              @click="pathClick(item, index)"
+              @click="handleClick(item, index)"
             >
               /{{ item }}
             </div>
@@ -230,7 +228,6 @@ function handleFile(item) {
             class="file-name"
           >
             <template #default="scope">
-              <!-- v-if="optionType === 'file' && !item.is_dir" -->
               <input
                 v-if="optionType === 'file' && !scope.row.is_dir"
                 type="radio"
@@ -272,7 +269,6 @@ function handleFile(item) {
             class="file-name"
           >
             <template #default="scope">
-              <!-- v-if="optionType === 'file' && !item.is_dir" -->
               <input
                 v-if="
                   optionType === 'file' &&
@@ -495,7 +491,6 @@ input {
     color: #555;
     // 行
     .el-table__row {
-      // border-bottom: 1px solid red !important;
       height: 48px;
       .el-table__cell {
         padding-left: 12px;

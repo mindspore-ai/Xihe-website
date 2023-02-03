@@ -15,6 +15,8 @@ import IconFingure from '~icons/app/fingure';
 import IconCancel from '~icons/app/cancel-public';
 import IconCopy from '~icons/app/copy-nickname';
 
+import image from '@/assets/imgs/wukong/umbrella-women.png';
+
 import {
   collectedPictures,
   cancelLikePicture,
@@ -23,6 +25,7 @@ import {
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import { ElMessageBox } from 'element-plus';
 
 const router = useRouter();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -37,31 +40,89 @@ const navItems = ref([
 ]);
 const currentNav = ref('1');
 const collecteImages = ref([]);
-const publicList = ref([]);
+const publicList = ref([
+  {
+    id: 1,
+    link: image,
+  },
+  {
+    id: 2,
+    link: image,
+  },
+  {
+    id: 3,
+    link: image,
+  },
+  {
+    id: 4,
+    link: image,
+  },
+]);
 
 // 获取收藏图片
 async function getCollectedImages() {
   const res = await collectedPictures();
   if (res.data.data) {
     collecteImages.value = res.data.data;
-    publicList.value = res.data.data;
+    // publicList.value = res.data.data;
   }
 }
 getCollectedImages();
 
+// 收藏-公开图片
+function publicImage(url) {
+  if (publicList.value.length <= 10) {
+    const isPublic = publicList.value.some((item) => {
+      return item.link === url;
+    });
+    if (isPublic) {
+      ElMessage({
+        type: 'warning',
+        message: '已公开',
+      });
+    } else {
+      publicList.value.push({
+        id: publicList.value.length + 1,
+        link: url,
+      });
+      ElMessage({
+        type: 'success',
+        message: '公开成功',
+      });
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '超出公开图片数量限制',
+    });
+  }
+}
+
+const cancelPublicId = ref(0);
+
 const showConfirmDlg = ref(false);
 function quitPublicClick(id) {
   console.log(id);
+  cancelPublicId.value = id;
   showConfirmDlg.value = true;
 }
-
+// 继续公开
 function cancelQuitPublic(val) {
   console.log('继续公开');
   showConfirmDlg.value = val;
 }
-
+// 取消公开图片
 function confirmQuitPublic() {
   console.log('确认取消公开');
+
+  publicList.value.forEach((item, index) => {
+    if (item.id === cancelPublicId.value) {
+      publicList.value.splice(index, 1);
+    }
+  });
+
+  console.log(publicList.value);
+
   showConfirmDlg.value = false;
 }
 
@@ -233,7 +294,7 @@ function goToWukong() {
                 <div class="image-box">
                   <img draggable="false" :src="item.link" alt="" />
                   <div class="handles">
-                    <div class="icon-item">
+                    <div class="icon-item" @click="publicImage(item.link)">
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </div>
                     <div class="right">
@@ -265,7 +326,7 @@ function goToWukong() {
           <div v-else class="public">
             <div v-if="publicList.length !== 0" class="have-public">
               <div
-                v-for="item in collecteImages"
+                v-for="item in publicList"
                 :key="item.id"
                 class="collect-item"
               >
@@ -281,7 +342,10 @@ function goToWukong() {
                     </div>
                   </div>
                 </div>
-                <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
+                <p>
+                  {{ item.desc }}&nbsp;{{ item.style }}城市夜景 赛博朋克
+                  格雷格·鲁特科夫斯基
+                </p>
               </div>
             </div>
             <div v-else class="no-public">

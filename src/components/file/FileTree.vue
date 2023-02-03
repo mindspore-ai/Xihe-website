@@ -2,8 +2,6 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-// import ODialog from '@/components/ODialog.vue';
-
 import IconModel from '~icons/app/model-blue';
 import IconDataset from '~icons/app/dataset-blue';
 import IconProject from '~icons/app/project-tree';

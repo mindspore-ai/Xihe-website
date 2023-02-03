@@ -108,7 +108,7 @@ async function upLoad(param) {
   //   },
   //   callback,
   //   function () {
-  //     // pathClick(route.params.contents.length);
+  //     // handleClick(route.params.contents.length);
   //     togglePhoneDlg(false);
   //     Progress.value = '';
   //     fileList.value = [];

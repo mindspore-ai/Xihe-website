@@ -15,12 +15,10 @@ import successImg from '@/assets/icons/success.png';
 let detailData = reactive(useFileData().fileStoreData);
 
 const router = useRouter();
-// const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
 const organizationAdminList = reactive(userInfoStore.organizationAdminList);
-// const fileData = useFileData();
 
 const i18n = {
   visible: {

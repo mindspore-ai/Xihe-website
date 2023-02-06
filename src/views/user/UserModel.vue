@@ -104,13 +104,13 @@ watch(props, () => {
 <template>
   <div v-if="modelData.length" class="card-box">
     <div class="card-list">
-      <o-card
+      <app-card
         v-for="item in modelData"
         :key="item.id"
         :avatar-img="avatarImg"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"
-      ></o-card>
+      ></app-card>
     </div>
     <div v-if="modelCount > 10" class="pagination">
       <el-pagination

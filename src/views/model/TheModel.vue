@@ -701,13 +701,13 @@ onUnmounted(() => {
           </div>
 
           <div v-if="modelData.projects" class="card-list">
-            <o-card
+            <app-card
               v-for="item in modelData.projects"
               :key="item.id"
               :card-data="item"
               :avatar-img="item.avatar_id"
               @click="goDetail(item.owner, item.name)"
-            ></o-card>
+            ></app-card>
             <div v-if="modelCount > 10" class="pagination">
               <el-pagination
                 :page-sizes="[10, 20, 50]"

@@ -107,7 +107,7 @@ function verifyFile() {
         fileData = treeItem[0];
         previewFile();
       } else {
-        router.push('/notfound');
+        router.push('/404');
       }
     });
   } catch (error) {

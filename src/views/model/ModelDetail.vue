@@ -92,68 +92,63 @@ onBeforeRouteLeave(() => {
 let modelTags = ref([]);
 // 模型详情数据
 function getDetailData() {
-  try {
-    getRepoDetailByName({
-      user: route.params.user,
-      repoName: route.params.name,
-      modular: 'model',
-    })
-      .then((res) => {
-        let storeData = res.data;
-        // 判断仓库是否属于自己
-        storeData['is_owner'] = userInfoStore.userName === storeData.owner;
-        // 文件列表是否为空
-        if (detailData.value) {
-          storeData['is_empty'] = detailData.value.is_empty;
-        }
-        fileData.setFileData(storeData);
-        const { tags } = detailData.value;
-        isDigged.value = detailData.value.liked;
+  getRepoDetailByName({
+    user: route.params.user,
+    repoName: route.params.name,
+    modular: 'model',
+  })
+    .then((res) => {
+      let storeData = res.data;
+      // 判断仓库是否属于自己
+      storeData['is_owner'] = userInfoStore.userName === storeData.owner;
+      // 文件列表是否为空
+      if (detailData.value) {
+        storeData['is_empty'] = detailData.value.is_empty;
+      }
+      fileData.setFileData(storeData);
+      const { tags } = detailData.value;
+      isDigged.value = detailData.value.liked;
 
-        modelTags.value = [];
-        headTags.value = [];
-        if (tags) {
-          tags.forEach((item) => {
-            modelTags.value.push({ name: item });
+      modelTags.value = [];
+      headTags.value = [];
+      if (tags) {
+        tags.forEach((item) => {
+          modelTags.value.push({ name: item });
+        });
+        headTags.value = modelTags.value.filter((item) => {
+          let a = protocol.map((it) => {
+            if (it.name === item.name) return false;
           });
-          headTags.value = modelTags.value.filter((item) => {
-            let a = protocol.map((it) => {
-              if (it.name === item.name) return false;
-            });
-            if (!a.indexOf(false)) return false;
-            else return true;
-          });
+          if (!a.indexOf(false)) return false;
+          else return true;
+        });
+      }
+      preStorage.value = JSON.stringify(headTags.value);
+      // 处理框架标签
+      const mindspore = [];
+      modelTags.value.forEach((element, index) => {
+        if (/^MindSpore/.test(element.name)) {
+          mindspore.push(modelTags.value.splice(index, 1, 1)[0]);
         }
-        preStorage.value = JSON.stringify(headTags.value);
-        // 处理框架标签
-        const mindspore = [];
-        modelTags.value.forEach((element, index) => {
-          if (/^MindSpore/.test(element.name)) {
-            mindspore.push(modelTags.value.splice(index, 1, 1)[0]);
-          }
-        });
-        mindspore.forEach((item, index) => {
-          mindspore[index] = item.name.substring(9);
-          mindspore[index] = Number(mindspore[index]);
-        });
-        mindspore.sort();
-        if (mindspore.length) {
-          modelTags.value.push({ name: 'MindSpore' + mindspore.join(', ') });
-        }
-        modelTags.value = modelTags.value.filter((item) => {
-          return item !== 1;
-        });
-
-        getTagList();
-      })
-      .catch((error) => {
-        router.push('/404');
-        console.error(error);
       });
-  } catch (error) {
-    router.push('/notfound');
-    console.error(error);
-  }
+      mindspore.forEach((item, index) => {
+        mindspore[index] = item.name.substring(9);
+        mindspore[index] = Number(mindspore[index]);
+      });
+      mindspore.sort();
+      if (mindspore.length) {
+        modelTags.value.push({ name: 'MindSpore' + mindspore.join(', ') });
+      }
+      modelTags.value = modelTags.value.filter((item) => {
+        return item !== 1;
+      });
+
+      getTagList();
+    })
+    .catch((error) => {
+      router.push('/404');
+      console.error(error);
+    });
 }
 const preStorage = ref();
 getDetailData();

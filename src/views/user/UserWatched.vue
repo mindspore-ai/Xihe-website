@@ -53,14 +53,14 @@ function getFollowList() {
 }
 getFollowList();
 
-const emit = defineEmits(['domChange']);
+const emit = defineEmits(['dom-change']);
 watch(
   () => {
     return currentFollowList.value;
   },
   (val) => {
     if (val && val.length > 6) {
-      emit('domChange', 74);
+      emit('dom-change', 74);
     }
   },
   { immediate: true }

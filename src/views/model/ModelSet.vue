@@ -12,13 +12,13 @@ import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
-let detailData = reactive(useFileData().fileStoreData);
+let detailData = useFileData().fileStoreData;
 
 const router = useRouter();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
-const organizationAdminList = reactive(userInfoStore.organizationAdminList);
+const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   visible: {

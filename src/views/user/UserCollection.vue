@@ -36,14 +36,14 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 
-const emit = defineEmits(['domChange']);
+const emit = defineEmits(['dom-change']);
 // 获得收藏页面数据
 getUserCollection(userInfo.value.userName).then((res) => {
   if (res.data) {
     collectionCount.value = res.data.length;
     collectionData.value = res.data;
     if (collectionCount.value > 6) {
-      emit('domChange', 76);
+      emit('dom-change', 76);
     }
   } else {
     collectionData.value = [];

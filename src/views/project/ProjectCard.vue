@@ -364,7 +364,7 @@ const clientSrc = ref('');
 //   );
 // }
 //拥有者启动推理
-function start2() {
+function handleStart() {
   if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
@@ -426,7 +426,7 @@ function start2() {
 }
 
 //停止推理
-function stop() {
+function handleStop() {
   closeConn();
   msg.value = '';
 }
@@ -474,14 +474,14 @@ onUnmounted(() => {
           frameborder="0"
           :style="{ height: hasPrefix ? '100%' : '800px' }"
         ></iframe>
-        <o-button status="error" @click="stop">停止</o-button>
+        <o-button status="error" @click="handleStop">停止</o-button>
       </div>
       <div v-else-if="msg === '启动中'" class="markdown-body">
         <div class="loading">
           <img src="@/assets/gifs/loading.gif" alt="" />
           <p>启动大约需要5分钟,请耐心等待</p>
         </div>
-        <o-button status="error" @click="stop">停止</o-button>
+        <o-button status="error" @click="handleStop">停止</o-button>
       </div>
       <div
         v-else-if="
@@ -505,7 +505,7 @@ onUnmounted(() => {
         <o-button
           v-if="detailData.owner === userInfo.userName"
           type="primary"
-          @click="start2"
+          @click="handleStart"
           >重新启动</o-button
         >
       </div>
@@ -514,12 +514,12 @@ onUnmounted(() => {
         class="markdown-body"
       >
         <div class="markdown-file" v-html="result2"></div>
-        <o-button type="primary" :disabled="!canStart" @click="start2"
+        <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
       </div>
       <div v-else class="upload-readme markdown-body">
-        <o-button type="primary" :disabled="!canStart" @click="start2"
+        <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
         <div class="upload-readme-img">

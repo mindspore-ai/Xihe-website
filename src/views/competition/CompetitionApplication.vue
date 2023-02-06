@@ -158,10 +158,10 @@ function changeRole(item) {
   query.identity_type = item;
 }
 
-const emit = defineEmits(['handleStep', 'hideForm', 'getActivity']);
+const emit = defineEmits(['handle-step', 'hide-form', 'get-activity']);
 
 function cancelApplication() {
-  emit('hideForm', false);
+  emit('hide-form', false);
 }
 
 // 保存报名
@@ -202,8 +202,8 @@ function saveInfo(formEl) {
           type: 'success',
           duration: 4000,
         });
-        emit('getActivity');
-        emit('hideForm', false);
+        emit('get-activity');
+        emit('hide-form', false);
       });
     } else {
       console.error('error submit!');

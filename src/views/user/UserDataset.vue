@@ -45,7 +45,7 @@ let query = reactive({
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');
-const emit = defineEmits(['getlivecount', 'domChange']);
+const emit = defineEmits(['getlivecount', 'dom-change']);
 
 function goDetail(user, modelName) {
   router.push({
@@ -56,7 +56,7 @@ function getDatasetData() {
   getUserDatasetData(query, userInfo.value.userName).then((res) => {
     if (res.data.total) {
       if (res.data.total > 10) {
-        emit('domChange', 76);
+        emit('dom-change', 76);
       }
       avatarImg.value = res.data.avatar_id;
       datasetCount.value = res.data.total;

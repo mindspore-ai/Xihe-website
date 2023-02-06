@@ -226,13 +226,11 @@ function handelSubmit() {
       type: 'error',
       message: '您今天已经提交过了哦~',
     });
-    // } else if (
-    //   detailData.value.competition_period !== detailData1.value.competition_period
-    // ) {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: '您未进入决赛，无法提交结果！',
-    //   });
+  } else if (detailData1.value.status === 'done') {
+    ElMessage({
+      type: 'error',
+      message: '该比赛已结束！',
+    });
     // } else {
     // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
     //   ElMessage({
@@ -240,6 +238,7 @@ function handelSubmit() {
     //     message: '提交结果通道火速开通中，请您耐心等待哦~',
     //   });
   } else {
+    console.log(detailData1.value);
     togglePhoneDlg(true);
   }
   // }

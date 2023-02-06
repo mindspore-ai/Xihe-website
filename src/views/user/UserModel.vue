@@ -39,7 +39,7 @@ const props = defineProps({
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');
-const emit = defineEmits(['getlivecount', 'domChange']);
+const emit = defineEmits(['getlivecount', 'dom-change']);
 
 const avatarImg = ref('');
 const modelCount = ref(0);
@@ -56,7 +56,7 @@ function getUserModel() {
   getUserModelData(query, userInfo.value.userName).then((res) => {
     if (res.data.total) {
       if (res.data.total > 10) {
-        emit('domChange', 76);
+        emit('dom-change', 76);
       }
       avatarImg.value = res.data.avatar_id;
       modelCount.value = res.data.total;

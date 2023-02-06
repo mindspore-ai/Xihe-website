@@ -398,9 +398,15 @@ function reKeepEmail(formEl) {
     <o-button class="setting-btn" @click="togglePhoneDlg(true)"
       >更换邮箱</o-button
     >
-    <o-dialog :show="showPhoneDlg" :close="false">
-      <template #head>
-        <p class="dlg-title">更换邮箱地址</p>
+    <el-dialog
+      v-model="showPhoneDlg"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">更换邮箱地址</div>
       </template>
       <el-form ref="reRuleFormRef" :model="reRuleForm">
         <el-form-item
@@ -452,28 +458,16 @@ function reKeepEmail(formEl) {
           </div>
         </el-form-item>
       </el-form>
-      <div class="btn">
-        <o-button @click="resetForm(reRuleFormRef)">取消</o-button>
-        <o-button type="primary" @click="reKeepEmail(reRuleFormRef)">{{
-          !qureyData.old_email ? `下一步` : '确认'
-        }}</o-button>
-      </div>
-    </o-dialog>
+      <template #footer>
+        <div class="btn-box" style="display: flex; justify-content: center">
+          <o-button @click="resetForm(reRuleFormRef)">取消</o-button>
+          <o-button type="primary" @click="reKeepEmail(reRuleFormRef)">
+            {{ !qureyData.old_email ? `下一步` : '确认' }}
+          </o-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
-  <!-- <div class="setting-box">
-    <p class="setting-title">备份电子邮箱</p>
-    <div class="setting-content">
-      <o-input
-        v-model="userInfoStore.userName"
-        placeholder="zhw1711@163.com"
-        class="setting-input"
-      ></o-input>
-      <p class="setting-tip">
-        此邮箱为备份邮箱，将会额外用于账号安全相关的通知和密码重置中
-      </p>
-      <OButton class="setting-btn">新增</OButton>
-    </div>
-  </div> -->
 </template>
 
 <style lang="scss" scoped>
@@ -482,7 +476,7 @@ function reKeepEmail(formEl) {
     width: 400px;
   }
 }
-.o-dialog {
+/* .el-dialog {
   :deep(.el-form) {
     margin: 0 30px;
   }
@@ -499,7 +493,7 @@ function reKeepEmail(formEl) {
       margin: 30px 12px 0;
     }
   }
-}
+} */
 
 .el-form {
   width: 520px;

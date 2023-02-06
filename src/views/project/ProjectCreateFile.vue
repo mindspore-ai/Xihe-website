@@ -9,6 +9,7 @@ import IconRemove from '~icons/app/remove';
 import warningImg from '@/assets/icons/warning.png';
 
 import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 import { createTrainProject } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
@@ -843,25 +844,17 @@ function selectFile(item) {
     </div>
   </div>
   <!-- 训练在24小时后终止提示弹窗 -->
-  <o-dialog :show="tips" :close="false" @close-click="toggleDelDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
+  <el-dialog v-model="tips" :show-close="false" center width="640px">
+    <template #header="{ titleId, titleTitle }">
+      <div :id="titleId" :class="titleTitle">
         <img :src="warningImg" alt="" />
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 30px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '100%',
-      }"
+      style="color: #555; font-size: 18px; text-align: center"
     >
-      <div :style="{ marginBottom: '8px' }">
+      <div style="margin-bottom: 10px">
         亲爱的用户您好，为保证用户使用体验，
       </div>
       <div>
@@ -869,16 +862,9 @@ function selectFile(item) {
         >，请您注意使用时长哦~
       </div>
     </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '46px',
-        }"
-      >
-        <o-button :style="{ marginRight: '24px' }" @click="tips = false"
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="tips = false"
           >取消</o-button
         >
         <o-button type="primary" @click="confirmCreating(queryRef)"
@@ -886,48 +872,32 @@ function selectFile(item) {
         </o-button>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
+
   <!-- 代码目录、启动文件弹窗 -->
-  <o-dialog :show="showDir" :close="false">
-    <template #head>
-      <div
-        v-if="option === 'directory'"
-        class="dlg-title"
-        :style="{ textAlign: 'center' }"
-      >
-        代码目录
-      </div>
-      <div v-else class="dlg-title" :style="{ textAlign: 'center' }">
-        启动文件
+  <el-dialog
+    v-model="showDir"
+    :show-close="false"
+    center
+    width="800px"
+    align-center
+  >
+    <template #header="{ titleId, titleTitle }">
+      <div :id="titleId" :class="titleTitle">
+        <div v-if="option === 'directory'">代码目录</div>
+        <div v-else>启动文件</div>
       </div>
     </template>
-    <div
-      class="dlg-body"
-      :style="{
-        padding: '8px 0 12px',
-        fontSize: '18px',
-        textAlign: 'center',
-      }"
-    >
-      <!-- 弹窗的目录子组件 -->
-      <TrainDirectory
-        v-if="detailData.id"
-        :repo-detail="detailData"
-        :option-type="option"
-        @handle="handleClick"
-      ></TrainDirectory>
-    </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '16px',
-        }"
-      >
+    <TrainDirectory
+      v-if="detailData.id"
+      :repo-detail="detailData"
+      :option-type="option"
+      @handle="handleClick"
+    ></TrainDirectory>
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
         <div v-if="option === 'directory'">
-          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+          <o-button style="margin-right: 16px" @click="showDir = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmSelect(option)"
@@ -935,18 +905,17 @@ function selectFile(item) {
           >
         </div>
         <div v-if="option === 'file'">
-          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+          <o-button style="margin-right: 16px" @click="showDir = false"
             >取消</o-button
           >
           <o-button v-if="showbtn" type="primary" @click="confirmSelect(option)"
             >确定</o-button
           >
-          <o-button v-else type="secondary">确定</o-button>
+          <o-button v-else disabled type="secondary">确定</o-button>
         </div>
       </div>
     </template>
-  </o-dialog>
-  
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -1199,4 +1168,14 @@ function selectFile(item) {
     }
   }
 }
+
+/* :deep(.el-dialog) {
+  .el-dialog__header{
+    padding-bottom: 24px !important;
+  }
+  .el-dialog__body{
+    background-color: red;
+
+  }
+} */
 </style>

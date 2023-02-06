@@ -16,6 +16,7 @@ import { getTeamInfoById } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 
 // import { ElMessage } from 'element-plus';
+// import { ElDialog } from 'element-plus';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
@@ -499,23 +500,27 @@ getIndividual(route.params.id);
     </div>
   </div>
   <!-- 删除团队弹窗 -->
-  <!-- <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
+  <!-- <el-dialog
+    v-model="showDel"
+    :show-close="false"
+    center
+    width="640px"
+    align-center
+    destroy-on-close
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">
         <img :src="warningImg" alt="" />
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 12px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '640px',
-      }"
+      style="
+        color: #555;
+        font-size: 18px;
+        text-align: center;
+        line-height: 28px;
+      "
     >
       {{
         userComData.competitionData.phase !== 'final'
@@ -523,49 +528,44 @@ getIndividual(route.params.id);
           : i18n.delete.describe3
       }}
     </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '56px',
-        }"
-      >
-        <o-button
-          :style="{ marginRight: '24px' }"
-          @click="toggleDelDlg(false)"
-          >{{ i18n.delete.cancel }}</o-button
-        >
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">{{
+          i18n.delete.cancel
+        }}</o-button>
         <o-button type="primary" @click="confirmDel">{{
           i18n.delete.confirm
         }}</o-button>
       </div>
     </template>
-  </o-dialog> -->
+  </el-dialog> -->
   <!-- 编辑团队名弹窗 -->
-  <!-- <o-dialog :show="showEdit" :close="false" @close-click="toggleEditDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '8px', color: '#000' }"
-      >
+  <!--  <el-dialog
+    v-model="showEdit"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+    destroy-on-close
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">
         {{ i18n.editTeamName }}
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 12px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '640px',
-      }"
+      style="
+        color: #555;
+        font-size: 18px;
+        text-align: center;
+        line-height: 28px;
+      "
     >
       <el-form
         ref="queryRef3"
         class="dialog-form"
-        :style="{ display: 'flex', justifyContent: 'center', align: 'center' }"
+        style="display: flex; justify-content: center"
         :model="form3"
         :rules="rules3"
       >
@@ -575,7 +575,7 @@ getIndividual(route.params.id);
         >
           <icon-necessary></icon-necessary><span>{{ i18n.newTeamName }}</span>
         </div>
-        <el-form-item :style="{ marginBottom: '0px' }" prop="teamName">
+        <el-form-item style="margin-bottom: 0px" prop="teamName">
           <el-input
             v-model="form3.teamName"
             placeholder="请输入新的团队名"
@@ -583,67 +583,53 @@ getIndividual(route.params.id);
         </el-form-item>
       </el-form>
     </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '24px',
-        }"
-      >
-        <o-button
-          :style="{ marginRight: '24px' }"
-          @click="toggleEditDlg(false)"
-          >{{ i18n.delete.cancel }}</o-button
-        >
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="toggleEditDlg(false)">{{
+          i18n.delete.cancel
+        }}</o-button>
         <o-button type="primary" @click="confirmEdit(queryRef3)">{{
           i18n.delete.confirm
         }}</o-button>
       </div>
     </template>
-  </o-dialog> -->
+  </el-dialog> -->
   <!-- 退出团队弹窗 -->
-  <!-- <o-dialog :show="showQuit" :close="false" @close-click="toggleQuitDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
+  <!--  <el-dialog
+    v-model="showQuit"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+    destroy-on-close
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">
         <img :src="warningImg" alt="" />
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 12px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '640px',
-      }"
+      style="
+        color: #555;
+        font-size: 18px;
+        text-align: center;
+        line-height: 28px;
+      "
     >
       {{ i18n.delete.describe2 }}
     </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '56px',
-        }"
-      >
-        <o-button
-          :style="{ marginRight: '24px' }"
-          @click="toggleQuitDlg(false)"
-          >{{ i18n.delete.cancel }}</o-button
-        >
-        <o-button type="primary" @click="confirmQuit">{{
-          i18n.delete.confirm
-        }}</o-button>
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="toggleQuitDlg(false)">
+          {{ i18n.delete.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmQuit">
+          {{ i18n.delete.confirm }}
+        </o-button>
       </div>
     </template>
-  </o-dialog> -->
+  </el-dialog> -->
 </template>
 
 <style lang="scss" scoped>
@@ -657,7 +643,6 @@ getIndividual(route.params.id);
       line-height: 32px;
       font-size: 24px;
       color: #000000;
-      // margin-bottom: 48px;
     }
     .tips {
       color: #555;

@@ -28,6 +28,8 @@ import warningImg from '@/assets/icons/warning.png';
 import DeleteTrain from '@/components/train/DeleteTrain.vue';
 import StopTrain from '@/components/train/StopTrain.vue';
 import ResetTrain from '@/components/train/ResetTrain.vue';
+import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 
 import {
   trainList,
@@ -35,7 +37,6 @@ import {
   stopTrain,
   rebuildTrain,
 } from '@/api/api-project';
-import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -95,14 +96,6 @@ function goSelectFile() {
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
   });
   window.open(routerData.href, '_blank');
-}
-
-function toggleDelDlg(flag) {
-  if (flag === undefined) {
-    tips.value = !tips.value;
-  } else {
-    tips.value = flag;
-  }
 }
 
 const showDel = ref(false);
@@ -439,41 +432,37 @@ onUnmounted(() => {
     </div>
 
     <!-- 如已有正在训练中的实例，弹窗提示 -->
-    <o-dialog :show="tips" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div
-          class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '40px' }"
-        >
+    <el-dialog
+      v-model="tips"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          padding: '8px 0 30px',
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '100%',
-        }"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
       >
         {{ description }}
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '46px',
-          }"
-        >
-          <o-button type="primary" @click="tips = false">{{
-            i18n.confirm
-          }}</o-button>
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <o-button type="primary" @click="tips = false">
+            {{ i18n.confirm }}
+          </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 

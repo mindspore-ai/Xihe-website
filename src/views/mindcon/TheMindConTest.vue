@@ -8,6 +8,7 @@ import { formatSeconds } from '@/shared/utils';
 
 import IconWarning from '~icons/app/activity-warning';
 import warningImg from '@/assets/icons/warning.png';
+import { ElDialog } from 'element-plus';
 
 const router = useRouter();
 
@@ -427,18 +428,30 @@ onUnmounted(() => {
       </div>
 
       <!-- 交卷弹窗 -->
-      <o-dialog class="warning-tip" :show="isShow" :close="false">
-        <template #head>
-          <div class="tip-icon">
+      <el-dialog
+        v-model="isShow"
+        width="640px"
+        :show-close="false"
+        center
+        align-center
+      >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
             <img :src="warningImg" alt="" />
           </div>
         </template>
-
-        <div class="tip-text">
+        <div
+          class="tip-text"
+          style="
+            color: #555;
+            font-size: 18px;
+            text-align: center;
+            line-height: 28px;
+          "
+        >
           请先确认是否答完所有题目，如已确认请点击继续交卷
         </div>
-
-        <template #foot>
+        <template #footer>
           <div class="tip-btn">
             <o-button
               type="primary"
@@ -449,18 +462,32 @@ onUnmounted(() => {
             <o-button @click="confirmSubmitpaper">继续交卷</o-button>
           </div>
         </template>
-      </o-dialog>
+      </el-dialog>
       <!-- 离开弹窗 -->
-      <o-dialog class="warning-tip" :show="isShow1" :close="false">
-        <template #head>
-          <div class="tip-icon">
+      <el-dialog
+        v-model="isShow1"
+        width="640px"
+        :show-close="false"
+        center
+        align-center
+      >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
             <img :src="warningImg" alt="" />
           </div>
         </template>
-
-        <div class="tip-text">返回将结束本次答题，确认返回请点击继续按钮</div>
-
-        <template #foot>
+        <div
+          class="tip-text"
+          style="
+            color: #555;
+            font-size: 18px;
+            text-align: center;
+            line-height: 28px;
+          "
+        >
+          返回将结束本次答题，确认返回请点击继续按钮
+        </div>
+        <template #footer>
           <div class="tip-btn">
             <o-button
               type="primary"
@@ -471,7 +498,7 @@ onUnmounted(() => {
             <o-button @click="confirmBack">继续</o-button>
           </div>
         </template>
-      </o-dialog>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -482,22 +509,6 @@ onUnmounted(() => {
   align-items: flex-start;
   .el-radio {
     height: 38px;
-  }
-}
-.warning-tip {
-  .tip-icon {
-    text-align: center;
-  }
-  .tip-text {
-    font-size: 18px;
-    color: #555555;
-    line-height: 28px;
-    text-align: center;
-  }
-  .tip-btn {
-    padding-bottom: 16px;
-    display: flex;
-    justify-content: center;
   }
 }
 .wrap {

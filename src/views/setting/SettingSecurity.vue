@@ -350,16 +350,12 @@ function resetForm(formEl) {
       }
     }
     .dlg-body-list {
-      // display: flex;
-      // justify-content: space-between;
       :deep(.el-form-item__content) {
         display: flex;
         justify-content: space-between;
       }
     }
 
-    // .setting-input {
-    // }
     .setting-tip {
       margin-top: 8px;
       font-size: 14px;
@@ -399,7 +395,6 @@ function resetForm(formEl) {
       margin-top: 24px;
       margin-bottom: 0px;
       display: flex;
-      // flex-direction: row-reverse;
       .cancel-btn {
         color: #0d8dff;
         border: 1px solid #0d8dff;
@@ -432,16 +427,6 @@ function resetForm(formEl) {
   .note-btn {
     margin-top: 48px;
     width: 264px;
-  }
-}
-.setting-content {
-  .o-dialog {
-    .el-form {
-      margin: 0 30px;
-    }
-    :deep(&-body) {
-      padding-bottom: 0;
-    }
   }
 }
 </style>

@@ -10,6 +10,8 @@ import NoRelate from '@/components/train/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
+import { ElDialog } from 'element-plus';
+
 import { addDataset, deleteDataset } from '@/api/api-model';
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData, useUserInfoStore } from '@/stores';
@@ -287,11 +289,17 @@ watch(
     <!-- 添加数据集 -->
     <el-dialog
       v-model="isShow"
-      :title="i18n.addDataset"
-      width="30%"
-      destroy-on-close
+      width="640px"
+      :show-close="false"
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addDataset }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/数据集名称">
           <el-input
@@ -302,7 +310,7 @@ watch(
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 38px" @click="isShow = false"
+          <o-button style="margin-right: 16px" @click="isShow = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmAdd">确定</o-button>
@@ -312,11 +320,17 @@ watch(
     <!-- 添加模型 -->
     <el-dialog
       v-model="isShow1"
-      :title="i18n.addModel"
-      width="30%"
-      destroy-on-close
+      width="640px"
+      :show-close="false"
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addProject }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/项目名称">
           <el-input
@@ -338,25 +352,6 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-:deep .el-overlay-dialog {
-  top: 100px;
-}
-:deep .el-dialog {
-  min-height: 292px !important;
-  width: 800px;
-  .el-dialog__header {
-    padding-top: 40px !important;
-    padding-bottom: 15px !important;
-    .el-dialog__title {
-      font-size: 24px;
-      line-height: 32px;
-    }
-  }
-  .el-dialog__body {
-    display: flex;
-    justify-content: center;
-  }
-}
 .model-card {
   display: flex;
   padding-bottom: 40px;
@@ -525,6 +520,16 @@ watch(
       .o-icon {
         margin-left: 4px;
       }
+    }
+  }
+}
+:deep(.el-form) {
+  .el-form-item {
+    margin-bottom: 0px;
+    color: #555;
+    .el-form-item__label {
+      padding-right: 40px;
+      color: #555;
     }
   }
 }

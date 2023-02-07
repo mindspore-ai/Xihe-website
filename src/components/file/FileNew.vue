@@ -122,7 +122,6 @@ async function upLoadObs(formEl) {
   });
 }
 function handleClick() {
-  // !!! 此处填写各自模块的组件名称！！！
   let contents = null;
   if (route.params.contents) {
     contents = route.params.contents;

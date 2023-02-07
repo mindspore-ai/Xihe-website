@@ -42,7 +42,7 @@ if (props.cardType === 'model') {
 </script>
 <template>
   <div
-    class="o-card"
+    class="app-card"
     :class="[
       { 'o-model-hover': cardType === 'model' },
       { 'o-dataset-hover': cardType === 'dataset' },
@@ -91,7 +91,7 @@ if (props.cardType === 'model') {
 </template>
 
 <style lang="scss" scoped>
-.o-card {
+.app-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

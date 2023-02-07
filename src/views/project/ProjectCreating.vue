@@ -373,6 +373,7 @@ onMounted(() => {});
     :deep .el-form-item__label {
       padding-right: 22px;
       line-height: 22px;
+      height: 22px;
     }
 
     .form-item {
@@ -386,7 +387,7 @@ onMounted(() => {});
         margin-bottom: 3px;
       }
       .warning {
-        margin-bottom: 17px;
+        margin-bottom: 20px;
         font-size: 8px;
       }
       .infer-item {

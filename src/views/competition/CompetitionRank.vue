@@ -175,7 +175,9 @@ function changeTab(index) {
         <p>暂无决赛排行榜</p>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="晋级决赛名单">
+    <el-tab-pane
+      :label="comInfo.status === 'in-progress' ? '晋级决赛名单' : '获奖名单'"
+    >
       <div class="final-list">
         <img
           src="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/competition/poster/ai_challenge_2022/AI_challenge_winner.jpg"
@@ -189,6 +191,7 @@ function changeTab(index) {
 <style lang="scss" scoped>
 :deep(.el-tabs__content) {
   padding: 0;
+  margin-top: 52px;
   .final-list {
     margin: 40px 0;
     display: flex;
@@ -287,7 +290,7 @@ function changeTab(index) {
     padding: 24px;
   }
   .rank-body {
-    margin: 52px 80px;
+    margin: 0 80px;
     padding-bottom: 40px;
     :deep(.el-table--fit) {
       --el-table-fixed-box-shadow: none;

@@ -3,7 +3,9 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import OSelect from '@/components/OSelect.vue';
-import ODialog from '@/components/ODialog.vue';
+
+import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { modifyDataset, deleteDataset } from '@/api/api-dataset';
@@ -12,13 +14,13 @@ import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
 import successImg from '@/assets/icons/success.png';
 
-let detailData = reactive(useFileData().fileStoreData);
+let detailData = useFileData().fileStoreData;
 
 const router = useRouter();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
-const organizationAdminList = reactive(userInfoStore.organizationAdminList);
+const organizationAdminList =userInfoStore.organizationAdminList;
 
 const i18n = {
   visible: {
@@ -273,87 +275,78 @@ function toggleDelDlg(flag) {
           i18n.delete.btnText
         }}</o-button>
       </div>
-      <o-dialog
-        :show="showDel"
-        :close="false"
-        @close-click="toggleDelDlg(false)"
+      <el-dialog
+        v-model="showDel"
+        width="640px"
+        :show-close="false"
+        center
+        align-center
       >
-        <template #head>
-          <div
-            class="dlg-title"
-            :style="{ textAlign: 'center', paddingTop: '40px' }"
-          >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
             <img :src="warningImg" alt="" />
           </div>
         </template>
         <div
           class="dlg-body"
-          :style="{
-            padding: '8px 0 12px',
-            fontSize: '18px',
-            textAlign: 'center',
-            width: '100%',
-          }"
+          style="
+            color: #555;
+            font-size: 18px;
+            text-align: center;
+            line-height: 28px;
+          "
         >
           {{ i18n.delete.describe1 }}
         </div>
-        <template #foot>
+        <template #footer>
           <div
             class="dlg-actions"
-            :style="{
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '56px',
-            }"
+            style="display: flex; justify-content: center"
           >
-            <o-button
-              :style="{ marginRight: '24px' }"
-              @click="toggleDelDlg(false)"
-              >{{ i18n.delete.cancel }}</o-button
-            >
-            <o-button type="primary" @click="confirmDel">{{
-              i18n.delete.confirm
-            }}</o-button>
+            <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">
+              {{ i18n.delete.cancel }}
+            </o-button>
+            <o-button type="primary" @click="confirmDel">
+              {{ i18n.delete.confirm }}
+            </o-button>
           </div>
         </template>
-      </o-dialog>
-      <o-dialog
-        :show="showConfirm"
-        :close="false"
-        @close-click="toggleDelDlg(false)"
+      </el-dialog>
+
+      <el-dialog
+        v-model="showConfirm"
+        width="640px"
+        :show-close="false"
+        center
+        align-center
       >
-        <template #head>
-          <div
-            class="dlg-title"
-            :style="{ textAlign: 'center', paddingTop: '40px' }"
-          >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
             <img :src="successImg" alt="" />
           </div>
         </template>
         <div
           class="dlg-body"
-          :style="{
-            fontSize: '18px',
-            textAlign: 'center',
-          }"
+          style="
+            color: #555;
+            font-size: 18px;
+            text-align: center;
+            line-height: 28px;
+          "
         >
           {{ i18n.delete.describe2 }}
         </div>
-        <template #foot>
+        <template #footer>
           <div
             class="dlg-actions"
-            :style="{
-              display: 'flex',
-              justifyContent: 'center',
-              paddingBottom: '56px',
-            }"
+            style="display: flex; justify-content: center"
           >
             <router-link :to="{ path: `/${userInfoStore.userName}` }">
               <o-button type="primary">{{ i18n.delete.confirm }}</o-button>
             </router-link>
           </div>
         </template>
-      </o-dialog>
+      </el-dialog>
     </div>
   </div>
 </template>

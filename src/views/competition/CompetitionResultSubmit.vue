@@ -9,6 +9,7 @@ import ODialog from '@/components/ODialog.vue';
 
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
+import { ElDialog } from 'element-plus';
 
 import { useCompetitionData } from '@/stores';
 import { getSubmissions, submit, addProject } from '@/api/api-competition';
@@ -226,13 +227,11 @@ function handelSubmit() {
       type: 'error',
       message: '您今天已经提交过了哦~',
     });
-    // } else if (
-    //   detailData.value.competition_period !== detailData1.value.competition_period
-    // ) {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: '您未进入决赛，无法提交结果！',
-    //   });
+  } else if (detailData1.value.status === 'done') {
+    ElMessage({
+      type: 'error',
+      message: '该比赛已结束！',
+    });
     // } else {
     // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
     //   ElMessage({
@@ -240,6 +239,7 @@ function handelSubmit() {
     //     message: '提交结果通道火速开通中，请您耐心等待哦~',
     //   });
   } else {
+    console.log(detailData1.value);
     togglePhoneDlg(true);
   }
   // }
@@ -334,8 +334,18 @@ function handelCancel() {
       </div>
     </div>
   </div>
-  <o-dialog :show="showPhoneDlg" :close="false">
-    <template #head> <p class="dlg-title">上传结果</p> </template>
+
+  <el-dialog
+    v-model="showPhoneDlg"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+    destroy-on-close
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">上传结果</div>
+    </template>
     <el-upload
       ref="uploadRef"
       class="upload-demo"
@@ -359,13 +369,15 @@ function handelCancel() {
       </div>
     </el-upload>
     <el-progress v-if="Progress" :percentage="Progress" />
-    <template #foot>
+    <template #footer>
       <div class="dlg-foot">
-        <o-button @click="handelCancel">取消</o-button>
+        <o-button style="margin-right: 16px" @click="handelCancel">
+          取消
+        </o-button>
         <o-button type="primary" @click="submitUpload">确定</o-button>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -403,7 +415,6 @@ function handelCancel() {
       border-bottom: none;
       border-top: none;
       .el-table {
-        // margin-top: 24px;
         --el-table-header-bg-color: #e5e8f0;
         --el-table-header-text-color: #555;
       }
@@ -412,7 +423,6 @@ function handelCancel() {
       .el-table__cell {
         padding: 0;
         .cell {
-          // display: flex;
           text-align: center;
           .o-icon {
             font-size: 24px;
@@ -453,10 +463,6 @@ function handelCancel() {
     .el-input {
       width: 100%;
     }
-    // :deep(.project-item) {
-    //   max-width: 400px;
-    //   width: 100%;
-    // }
     .submit {
       margin-top: 16px;
       display: flex;
@@ -492,31 +498,18 @@ function handelCancel() {
     }
   }
 }
-.o-dialog {
-  .o-dialog-wrap {
-    .dlg-title {
-      text-align: center;
-    }
-    .dlg-foot {
-      text-align: center;
-      .o-button {
-        margin: 0 12px 16px;
-      }
+.upload-demo {
+  :deep(.el-upload) {
+    width: 100%;
+    .el-upload-dragger {
+      width: 100%;
+      height: 210px;
+      border: 1px solid #000000;
+      border-radius: 0;
     }
   }
-  .upload-demo {
-    :deep(.el-upload) {
-      width: 100%;
-      .el-upload-dragger {
-        width: 100%;
-        height: 210px;
-        border: 1px solid #000000;
-        border-radius: 0;
-      }
-    }
-    .el-upload__text {
-      color: #999999;
-    }
+  .el-upload__text {
+    color: #999999;
   }
 }
 </style>

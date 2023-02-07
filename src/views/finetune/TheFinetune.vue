@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
 import moment from 'moment';
+import { ElDialog } from 'element-plus';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
@@ -16,7 +17,6 @@ import IconStopping from '~icons/app/stopping';
 import IconWaiting from '~icons/app/waiting';
 import IconCreating from '~icons/app/creating';
 import IconAbnormal from '~icons/app/abnormal';
-
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -525,41 +525,37 @@ onUnmounted(() => {
       </template>
     </el-dialog>
     <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
-    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div
-          class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '24px' }"
-        >
+    <el-dialog
+      v-model="showTip"
+      :show-close="false"
+      center
+      width="640px"
+      align-center
+    >
+      <template #header="{ titleId, titleTitle }">
+        <div :id="titleId" :class="titleTitle">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '100%',
-          lineHeight: '30px',
-        }"
+        style="
+          color: #000;
+          font-size: 18px;
+          text-align: center;
+          line-height: 30px;
+        "
       >
         {{ describe }}
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '40px',
-          }"
-        >
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
           <o-button type="primary" @click="showTip = false">
             {{ i18n.confirm }}
           </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 

@@ -32,19 +32,19 @@ let queryData = reactive({
 function getFansList() {
   getUserFans(userInfo.value.userName).then((res) => {
     currentFansList.value = res.data.data;
-    emit('getFanslist', currentFansList.value);
+    emit('get-fanslist', currentFansList.value);
   });
 }
 getFansList();
 
-const emit = defineEmits(['domChange', 'getFanslist']);
+const emit = defineEmits(['dom-change', 'get-fanslist']);
 watch(
   () => {
     return currentFansList.value;
   },
   (val) => {
     if (val && val.length > 6) {
-      emit('domChange', 74);
+      emit('dom-change', 74);
     }
   },
   { immediate: true }

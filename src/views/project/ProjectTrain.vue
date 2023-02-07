@@ -8,7 +8,6 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import NoRelate from '@/components//train/NoRelate.vue';
 import RelateCard from '@/components/train/RelateCard.vue';
-import ODialog from '@/components/ODialog.vue';
 
 import IconAddFile from '~icons/app/add-file';
 import IconPlus from '~icons/app/plus';
@@ -369,14 +368,6 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
-
-function toggleDelDlg(flag) {
-  if (flag === undefined) {
-    showTip.value = !showTip.value;
-  } else {
-    showTip.value = flag;
-  }
-}
 </script>
 <template>
   <div class="project-train">
@@ -484,12 +475,17 @@ function toggleDelDlg(flag) {
     <!-- 添加数据集弹窗 -->
     <el-dialog
       v-model="isShow"
-      :title="i18n.addDataset"
+      width="640px"
       :show-close="false"
-      width="30%"
-      destroy-on-close
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addDataset }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/数据集名称">
           <el-input
@@ -500,27 +496,27 @@ function toggleDelDlg(flag) {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button
-            size="small"
-            style="margin-right: 38px"
-            @click="isShow = false"
+          <o-button style="margin-right: 16px" @click="isShow = false"
             >取消</o-button
           >
-          <o-button size="small" type="primary" @click="confirmAdd"
-            >确定</o-button
-          >
+          <o-button type="primary" @click="confirmAdd">确定</o-button>
         </span>
       </template>
     </el-dialog>
     <!-- 添加模型弹窗 -->
     <el-dialog
       v-model="isShow1"
-      :title="i18n.addModel"
+      width="640px"
       :show-close="false"
-      width="30%"
-      destroy-on-close
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addModel }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/模型名称">
           <el-input
@@ -530,8 +526,8 @@ function toggleDelDlg(flag) {
         </el-form-item>
       </el-form>
       <template #footer>
-        <span class="dialog-footer" style="padding-bottom: 48">
-          <o-button style="margin-right: 38px" @click="isShow1 = false"
+        <span class="dialog-footer">
+          <o-button style="margin-right: 16px" @click="isShow1 = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmClick">确定</o-button>
@@ -540,73 +536,41 @@ function toggleDelDlg(flag) {
     </el-dialog>
 
     <!-- 如已有正在训练中的实例或者训练实例已有5个，弹窗提示 -->
-    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div
-          class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '40px' }"
-        >
+    <el-dialog
+      v-model="showTip"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          padding: '8px 0 30px',
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '100%',
-        }"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
       >
         {{ describe }}
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '56px',
-          }"
-        >
-          <o-button type="primary" @click="showTip = false">{{
-            i18n.confirm
-          }}</o-button>
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <o-button type="primary" @click="showTip = false">
+            {{ i18n.confirm }}
+          </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-dialog) {
-  width: 800px;
-  min-height: 284px;
-  --el-dialog-margin-top: 35vh;
-  .el-dialog__header {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    font-size: 24px;
-    color: #000000;
-    line-height: 32px;
-  }
-  .el-dialog__body {
-    padding-top: 0;
-    padding-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    .el-form-item__label {
-      padding-right: 35px;
-    }
-    .el-form-item__content {
-      width: 400px;
-    }
-  }
-  .el-dialog__footer {
-    padding-top: 0;
-    padding-bottom: 48px;
-  }
-}
 .project-train {
   display: flex;
   padding-bottom: 40px;
@@ -797,6 +761,16 @@ function toggleDelDlg(flag) {
         margin-left: 4px;
         font-size: 12px;
       }
+    }
+  }
+}
+:deep(.el-form) {
+  .el-form-item {
+    margin-bottom: 0px;
+    color: #555;
+    .el-form-item__label {
+      padding-right: 40px;
+      color: #555;
     }
   }
 }

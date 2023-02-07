@@ -143,14 +143,12 @@ async function getDetailData(path) {
             },
           });
         } else {
-          router.push('/notfound');
+          router.push('/404');
         }
       })
-      .catch((err) => {
-        ElMessage({
-          type: 'error',
-          message: err.msg,
-        });
+      .catch(() => {
+        contents.value.pop();
+        getDetailData(`${contents.value.join('/')}/`);
       });
   } catch (error) {
     console.error(error);

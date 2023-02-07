@@ -17,6 +17,7 @@
     "cesium": "^1.98.1",
     "element-plus": "^2.2.26",
     "highlight.js": "^11.5.1",
+    "html2canvas": "^1.4.1",
     "js-base64": "^3.7.2",
     "lodash": "^4.17.21",
     "markdown-it": "^12.3.2",
@@ -46,6 +47,6 @@
     "unplugin-icons": "^0.14.1",
     "unplugin-vue-components": "^0.19.3",
     "vite": "^2.9.5",
-    "vite-plugin-cesium": "^1.2.22"
+    "vite-plugin-cesium": "^1.1.1"
   }
 }

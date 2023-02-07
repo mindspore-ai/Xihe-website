@@ -146,11 +146,15 @@ function goChallenge(index) {
         } else {
           window.open(
             'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-            '_black'
+            '_blank'
           );
         }
       } else {
         showApplication.value = true;
+        window.open(
+          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+          '_blank'
+        );
       }
     }
   }

@@ -64,6 +64,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/obs-big-model/, ''),
       },
+      '/obs-xihe-avatar/': {
+        target: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/obs-xihe-avatar/, ''),
+      },
     },
   },
 });

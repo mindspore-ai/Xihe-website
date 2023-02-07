@@ -177,11 +177,19 @@ export default [
           return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
         },
       },
+
       {
         path: 'experience',
         name: 'wukongTest',
         redirect: '/modelzoo/wukong',
       },
     ],
+  },
+  {
+    path: '/modelzoo/wukong/management',
+    name: 'paintingManagement',
+    component: () => {
+      return import('@/views/modelzoo/wukong/ThePaintingManagement.vue');
+    },
   },
 ];

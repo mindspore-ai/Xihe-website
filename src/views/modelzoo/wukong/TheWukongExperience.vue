@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 
+import html2canvas from 'html2canvas';
+
 import comic from '@/assets/imgs/wukong/style-bg-1.png';
 import classic from '@/assets/imgs/wukong/style-bg-2.png';
 import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
@@ -13,9 +15,15 @@ import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
+import IconCancel from '~icons/app/cancel-public';
+import IconArrow from '~icons/app/arrow-top';
+import IconShare from '~icons/app/share';
+import IconCopy from '~icons/app/copy-nickname';
+import IconWarning from '~icons/app/warning1';
+import IconRight from '~icons/app/arrow-right';
 
 import { goAuthorize } from '@/shared/login';
-import { useLoginStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 
 import {
   wuKongInfer,
@@ -23,8 +31,10 @@ import {
   cancelLikePicture,
   temporaryLink,
 } from '@/api/api-modelzoo.js';
+import { ElMessage } from 'element-plus';
 
 const isLogined = computed(() => useLoginStore().isLogined);
+const userInfoStore = useUserInfoStore();
 
 const inputText = ref('');
 const sortTag = ref('');
@@ -32,6 +42,7 @@ const styleIndex = ref(0);
 
 const showInferDlg = ref(false);
 const isInferred = ref(false);
+const isError = ref(false);
 
 const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
@@ -174,6 +185,70 @@ const lists = ref([
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
+const count = ref(0);
+// 公开图片
+function publicImage() {
+  count.value++;
+
+  if (count.value <= 1) {
+    ElMessage({
+      type: 'success',
+      message: '公开成功，可在画作管理中查看',
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '重复操作',
+    });
+  }
+}
+const posterDlg = ref(false);
+const posterLink = ref('');
+const posterInfo = ref('');
+const userAvatar = ref('');
+const inputDom = ref();
+userAvatar.value = userInfoStore.avatar.replace(
+  'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
+  '/obs-xihe-avatar/'
+);
+// 分享图片
+function shareImage(url) {
+  posterDlg.value = true;
+  posterLink.value = url.replace(
+    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
+    '/obs-big-model/'
+  );
+  posterInfo.value = inputText.value + '  ' + sortTag.value;
+}
+// 下载海报截图
+function downloadPoster() {
+  const poster = document.querySelector('#screenshot');
+
+  html2canvas(poster, {
+    useCORS: true,
+  }).then((canvas) => {
+    let url = canvas.toDataURL('image/png');
+
+    let aLink = document.createElement('a');
+    aLink.style.display = 'none';
+    aLink.href = url;
+    aLink.download = 'poster.png';
+    aLink.click();
+    aLink.remove();
+  });
+}
+// 复制用户名
+function copyText(textValue) {
+  inputDom.value.value = textValue;
+  inputDom.value.select();
+  if (document.execCommand('Copy'))
+    ElMessage({
+      type: 'success',
+      message: '复制成功',
+      center: true,
+    });
+}
+
 // 选择样例
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
@@ -234,6 +309,12 @@ function getRandomStyle(index) {
     return;
   }
 }
+// 重新输入描述
+function reEnterDesc() {
+  showInferDlg.value = false;
+  isError.value = false;
+  initData();
+}
 // 初始化推理数据
 function initData() {
   inputText.value = '';
@@ -283,11 +364,7 @@ async function handleInfer() {
 
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
-        setTimeout(() => {
-          showInferDlg.value = false;
-        }, 1500);
-
-        initData();
+        isError.value = true;
       }
     } else if (!inputText.value) {
       ElMessage({
@@ -311,7 +388,7 @@ function handleCollecte(key, index) {
       inferList.value[index].id = res.data.data.id;
       ElMessage({
         type: 'success',
-        message: '收藏成功，可在我的收藏中查看',
+        message: '收藏成功，可在画作管理中查看',
       });
     }
   });
@@ -370,6 +447,8 @@ function handleDlgClose() {
   showInferDlg.value = false;
 
   isInferred.value = false;
+  isError.value = false;
+  posterLink.value = '';
 
   inferList.value.forEach((item) => {
     item.isCollected = false;
@@ -467,9 +546,9 @@ function refreshTags() {
     <!-- 推理dialog -->
     <el-dialog
       v-model="showInferDlg"
+      class="infer-dlg"
       :fullscreen="true"
       :append-to-body="true"
-      class="infer-dlg"
       @close="handleDlgClose"
     >
       <template #header="{ titleClass }">
@@ -479,13 +558,13 @@ function refreshTags() {
           >
         </div>
       </template>
-
+      <!-- 推理中 -->
       <div v-if="!isInferred" class="infer-dlg-loading">
         <img :src="loading" alt="" />
         <p>正在创作中，请耐心等待</p>
       </div>
-
-      <div v-else class="infer-dlg-result">
+      <!-- 推理完成 -->
+      <div v-if="isInferred && !isError" class="infer-dlg-result">
         <div
           v-for="(value, key, index) in styleBackground"
           :key="key"
@@ -493,9 +572,19 @@ function refreshTags() {
         >
           <img :src="value" alt="" />
           <div class="handles">
+            <!-- 公开 -->
+            <div class="public">
+              <p @click="publicImage">
+                <o-icon><icon-arrow></icon-arrow></o-icon>
+              </p>
+            </div>
+            <!-- 下载收藏 -->
             <div class="handles-contain">
               <p @click="downloadImage(value)">
                 <o-icon><icon-download></icon-download></o-icon>
+              </p>
+              <p @click="shareImage(value)">
+                <o-icon><icon-share></icon-share></o-icon>
               </p>
               <p
                 v-if="!inferList[index].isCollected"
@@ -513,15 +602,189 @@ function refreshTags() {
               </p>
             </div>
           </div>
+
           <div class="mask"></div>
         </div>
       </div>
+      <!-- 内容不合规 -->
+      <div v-if="isError" class="infer-dlg-error">
+        <p>
+          <o-icon><icon-warning></icon-warning></o-icon>
+        </p>
+
+        <p>内容不合规，请重新输入描述词</p>
+
+        <p @click="reEnterDesc">
+          <span>重新输入</span>
+          <o-icon><icon-right></icon-right></o-icon>
+        </p>
+      </div>
     </el-dialog>
+    <!-- 海报弹窗 -->
+    <el-dialog
+      v-model="posterDlg"
+      :fullscreen="true"
+      :append-to-body="true"
+      center
+      class="poster-dlg-wk"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div class="poster">
+        <div id="screenshot" class="poster-image">
+          <img draggable="false" :src="posterLink" alt="" />
+
+          <img
+            class="qr-code"
+            draggable="false"
+            src="@/assets/imgs/wukong/qr-code.png"
+            alt=""
+          />
+          <img
+            class="logo"
+            draggable="false"
+            src="@/assets/imgs/logo.png"
+            alt=""
+          />
+
+          <div class="mask"></div>
+
+          <div class="info">
+            <p class="desc">{{ posterInfo }}</p>
+            <div class="user-info">
+              <img :src="userAvatar" alt="" />
+              <p>{{ userInfoStore.userName }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="poster-download">
+          <div class="link">
+            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
+            <o-icon
+              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+              ><icon-copy></icon-copy
+            ></o-icon>
+          </div>
+          <div class="button" @click="downloadPoster">下载海报</div>
+        </div>
+      </div>
+    </el-dialog>
+    <textarea ref="inputDom" class="input-dom"></textarea>
   </div>
 </template>
 <style lang="scss">
-.infer-dlg {
+.infer-dlg,
+.poster-dlg-wk {
   background: none;
+  .poster {
+    width: 434px;
+    height: 566px;
+    background: #ffffff;
+    padding: 16px;
+    margin: 0 auto;
+    margin-top: calc(50vh - 630px);
+    &-image {
+      width: 402px;
+      height: 457px;
+      position: relative;
+      .mask {
+        width: 100%;
+        height: 198px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        position: absolute;
+        bottom: 55px;
+      }
+      .qr-code {
+        width: 78px;
+        height: 78px;
+        position: absolute;
+        right: 16px;
+        bottom: 72px;
+        z-index: 1;
+      }
+      .logo {
+        position: absolute;
+        left: 16px;
+        bottom: 78px;
+        width: 64px;
+        height: 21px;
+        z-index: 1;
+      }
+      img {
+        width: 100%;
+        height: 402px;
+      }
+      .info {
+        width: 100%;
+        height: 56px;
+        background: #f5f6f8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        .desc {
+          font-size: 14px;
+          font-weight: 400;
+          color: #000000;
+          line-height: 24px;
+        }
+        .user-info {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+          }
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            color: #555555;
+            line-height: 24px;
+          }
+        }
+      }
+    }
+    &-download {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .link {
+        flex: 1;
+        height: 36px;
+        line-height: 36px;
+        background: #ffffff;
+        border: 1px solid #999999;
+        padding-left: 16px;
+        padding-right: 10px;
+        margin-right: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p {
+          font-size: 12px;
+        }
+        .o-icon {
+          cursor: pointer;
+          &:hover {
+            color: #40adff;
+          }
+        }
+      }
+      .button {
+        width: 112px;
+        height: 36px;
+        border: 1px solid #40adff;
+        color: #40adff;
+        text-align: center;
+        line-height: 36px;
+        cursor: pointer;
+      }
+    }
+  }
   &-head {
     .title {
       color: #fff;
@@ -539,7 +802,7 @@ function refreshTags() {
       &:hover {
         .handles,
         .mask {
-          display: block;
+          opacity: 1;
         }
       }
       &:last-child {
@@ -555,20 +818,32 @@ function refreshTags() {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
         width: 100%;
         height: 16vh;
-        display: none;
+        opacity: 0;
       }
       .handles {
+        width: 100%;
         position: absolute;
-        bottom: 24px;
-        right: 24px;
+        bottom: 0;
         z-index: 20;
-        display: none;
+        opacity: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 18px 24px;
         @media screen and (max-width: 1450px) {
           bottom: 10px;
-          right: 10px;
         }
-        &-contain {
+        &-contain,
+        .public {
           display: flex;
+          .cancel-public {
+            .o-icon {
+              font-size: 18px;
+            }
+          }
+          .o-icon {
+            color: #fff;
+          }
+
           .liked {
             .o-icon {
               font-size: 20px;
@@ -591,10 +866,10 @@ function refreshTags() {
                 font-size: 16px;
               }
             }
-            &:first-child {
-              margin-right: 16px;
+            &:nth-child(2) {
+              margin: 0 16px;
               @media screen and (max-width: 1450px) {
-                margin-right: 8px;
+                margin: 0 8px;
               }
             }
             &:hover {
@@ -626,6 +901,51 @@ function refreshTags() {
       text-align: center;
     }
   }
+
+  &-error {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+
+    p {
+      align-self: center;
+      &:first-child {
+        .o-icon {
+          font-size: 48px;
+        }
+      }
+      &:nth-child(2) {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 25px;
+        margin-top: 40px;
+      }
+      &:nth-child(3) {
+        border: 1px solid #fff;
+        padding: 12px 60px 12px 28px;
+        font-size: 16px;
+        line-height: 24px;
+        margin-top: 48px;
+        cursor: pointer;
+        position: relative;
+        &:hover {
+          .o-icon {
+            right: 16px;
+          }
+        }
+        .o-icon {
+          margin-left: 16px;
+          font-size: 24px;
+          position: absolute;
+          right: 20px;
+          transition: all 0.2s linear;
+        }
+      }
+    }
+  }
+
   .el-dialog__header {
     height: 80px;
     padding: 0;
@@ -654,6 +974,10 @@ function refreshTags() {
 }
 </style>
 <style lang="scss" scoped>
+.input-dom {
+  position: fixed;
+  top: -1200px;
+}
 .wk-experience {
   .clear-input {
     cursor: pointer;

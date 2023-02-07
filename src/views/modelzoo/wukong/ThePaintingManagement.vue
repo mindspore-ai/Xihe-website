@@ -360,7 +360,7 @@ function goToWukong() {
     <el-dialog
       v-model="showConfirmDlg"
       class="confirm-dlg"
-      width="652"
+      width="640"
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -603,7 +603,6 @@ function goToWukong() {
     text-align: center;
   }
   .el-dialog__footer {
-    padding: 0 40px 40px;
     display: flex;
     justify-content: center;
   }

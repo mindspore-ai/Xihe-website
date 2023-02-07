@@ -494,33 +494,34 @@ onUnmounted(() => {
     <!-- 申请微调资格弹窗 -->
     <el-dialog
       v-model="showStep"
-      title="申请步骤"
-      width="40%"
+      width="640px"
       center
       align-center
       class="apply-dlg"
       :show-close="false"
     >
-      <div class="dlg-body" style="color: #555; font-size: 14px">
-        <div style="height: 24px">
-          1. 填写申请信息（用户名、邮箱、职业、申请理由)。
-        </div>
-        <div style="height: 24px" class="send-email">
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">申请步骤</div>
+      </template>
+      <div
+        class="dlg-body"
+        style="color: #555; font-size: 14px; line-height: 24px; padding: 0 24px"
+      >
+        <div>1. 填写申请信息（用户名、邮箱、职业、申请理由)。</div>
+        <div class="send-email">
           <span> 2. 发送申请信息至官方邮箱: </span>
           <span style="color: #0d8dff" class="email">
             public@xihe.mindspore.cn
           </span>
           <span>。</span>
         </div>
-        <div style="height: 24px">
-          3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
-        </div>
+        <div>3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。</div>
       </div>
       <template #footer>
         <div class="dlg-btn">
-          <OButton type="primary" size="small" @click="toggleApplication"
-            >我知道啦</OButton
-          >
+          <OButton type="primary" size="small" @click="toggleApplication">
+            我知道啦
+          </OButton>
         </div>
       </template>
     </el-dialog>
@@ -815,14 +816,9 @@ $theme: #0d8dff;
 }
 </style>
 <style lang="scss">
-.apply-dlg {
-  .el-dialog__header {
-    .el-dialog__title {
-      color: #000;
-    }
-  }
+/* .apply-dlg {
   .el-dialog__body {
-    padding: 8px 64px 0px !important;
+    padding: 0px 64px !important;
   }
-}
+} */
 </style>

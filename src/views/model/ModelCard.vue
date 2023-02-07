@@ -30,7 +30,7 @@ let README = '';
 
 const isShow = ref(false);
 const addSearch = ref('');
-const isShow1 = ref(false);
+// const isShow1 = ref(false);
 
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -317,8 +317,8 @@ watch(
         </span>
       </template>
     </el-dialog>
-    <!-- 添加模型 -->
-    <el-dialog
+    <!-- 无添加项目 -->
+    <!-- <el-dialog
       v-model="isShow1"
       width="640px"
       :show-close="false"
@@ -347,7 +347,7 @@ watch(
           <o-button type="primary" @click="confirmClick">确定</o-button>
         </span>
       </template>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 

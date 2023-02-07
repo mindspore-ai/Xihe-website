@@ -143,24 +143,17 @@ watch([userDescription, avatar], () => {
   <o-button type="primary" :disabled="disabled" @click="saveData"
     >保存</o-button
   >
-  <o-dialog
-    :close="false"
-    :is-center="true"
-    :show="showAvatarList"
-    class="my-dialog"
-    @close-click="toggleDelDlg(false)"
+  <el-dialog
+    v-model="showAvatarList"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
   >
-    <template #head>
-      <div class="dlg-title" :style="{ textAlign: 'center' }">选择头像</div>
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">选择头像</div>
     </template>
-    <div
-      class="dlg-body"
-      :style="{
-        fontSize: '18px',
-        textAlign: 'center',
-        padding: '0 60px',
-      }"
-    >
+    <div class="dlg-body">
       <ul v-if="filterData" class="avatar-list">
         <li
           v-for="item in filterData.user_avatar.slice(
@@ -175,8 +168,6 @@ watch([userDescription, avatar], () => {
           <img :src="item.url" alt="" />
         </li>
       </ul>
-    </div>
-    <template #foot>
       <div v-if="avatarCount > 5" class="pagination">
         <el-pagination
           :page-sizes="[5, 10, 15]"
@@ -189,37 +180,22 @@ watch([userDescription, avatar], () => {
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '16px',
-        }"
-      >
-        <o-button :style="{ marginRight: '38px' }" @click="toggleDelDlg(false)"
+    </div>
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="toggleDelDlg(false)"
           >取消</o-button
         >
         <o-button type="primary" @click="confirmAvatar">确认</o-button>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
 </template>
 <style lang="scss" scoped>
-.my-dialog {
-  width: 800px;
-  .o-dialog-wrap {
-    top: auto;
-  }
-}
-.el-pagination__sizes {
-  display: none;
-}
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: -24px;
-  margin-bottom: 48px;
+  margin-top: 24px;
   :deep(.el-pagination__sizes) {
     display: none;
   }
@@ -236,9 +212,11 @@ watch([userDescription, avatar], () => {
   }
 }
 .dlg-body {
-  // width: 800px;
-  padding: 0 40px;
-  min-height: 382px;
+  padding: 0 20px;
+  min-height: 438px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .avatar-list {
     display: grid;
     grid-template-columns: repeat(4, minmax(100px, 1fr));

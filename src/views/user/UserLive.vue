@@ -39,7 +39,7 @@ const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
 
-const emit = defineEmits(['getlivecount', 'domChange']);
+const emit = defineEmits(['getlivecount', 'dom-change']);
 
 // 获得动态页面数据
 function getLiveData() {
@@ -48,7 +48,7 @@ function getLiveData() {
       liveCount.value = res.data.length;
       liveData.value = res.data;
       if (liveCount.value > 6) {
-        emit('domChange', 76);
+        emit('dom-change', 76);
       }
     } else {
       liveData.value = [];

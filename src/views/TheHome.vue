@@ -14,6 +14,7 @@ import 'swiper/css/effect-fade';
 
 import OButton from '@/components/OButton.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import { ElDialog } from 'element-plus';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 // import IconArrowRight2 from '~icons/app/arrow-right2.svg';
@@ -294,11 +295,16 @@ const galleryPic = [
       <img class="tip-btn" :src="tipCloseImg" @click="toggleTip(false)" />
     </div>
 
-    <o-dialog :show="dialogVisible" :close="false">
-      <template #head>
-        <p class="dlg-title">新后台上线公告</p>
+    <el-dialog
+      v-model="dialogVisible"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">新后台上线公告</div>
       </template>
-
       <div class="dlg-body">
         <p class="dlg-content">
           致所有用户：<br />
@@ -323,14 +329,14 @@ const galleryPic = [
         </p>
       </div>
 
-      <template #foot>
+      <template #footer>
         <div class="dlg-btn">
           <OButton type="primary" size="small" @click="toggleDlg(fasle)"
             >我知道啦</OButton
           >
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
   <div ref="homeIns" class="home">
     <!-- 首屏-->

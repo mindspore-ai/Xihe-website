@@ -505,19 +505,22 @@ function goRule() {
     </div>
 
     <!-- 报名弹窗 -->
-    <el-dialog
-      v-model="showApplication"
-      destroy-on-close
-      :show-close="false"
-      width="800px"
-    >
-      <CompetitionApplication
-        ref="applicationData"
-        :show-application="showApplication"
-        @hide-form="hideForm"
-        @get-activity="getActivity"
-      ></CompetitionApplication>
-    </el-dialog>
+    <div v-if="showApplication" class="application-dlg">
+      <el-dialog
+        v-model="showApplication"
+        width="800px"
+        :show-close="false"
+        align-center
+        destroy-on-close
+      >
+        <CompetitionApplication
+          ref="applicationData"
+          :show-application="showApplication"
+          @hide-form="hideForm"
+          @get-activity="getActivity"
+        ></CompetitionApplication>
+      </el-dialog>
+    </div>
   </div>
   <div class="qr-code">
     <img :src="qrCode" alt="" />
@@ -1053,36 +1056,44 @@ function goRule() {
   }
 }
 
-:deep(.el-dialog) {
-  // width: 900px;
-  // position: fixed;
-  // left: 0;
-  // right: 0;
-  // // top: 0;
-  // bottom: 0;
-  // width: 100%;
-  .el-dialog__body {
-    padding: 40px;
-    .application {
-      padding: 0px;
-      .application-title {
-        // background-color: red;
-        border: none;
-        padding-bottom: 0px;
-        display: flex;
-        flex-direction: column;
-        .text {
-          margin-bottom: 16px;
-          text-align: center;
+.application-dlg {
+  :deep(.el-dialog) {
+    .el-dialog__header {
+      height: 40px;
+      padding: 0;
+    }
+    .el-dialog__body {
+      padding-bottom: 40px !important;
+      .application {
+        padding: 0px;
+        .application-title {
+          border: none;
+          padding-bottom: 0px;
+          display: flex;
+          flex-direction: column;
+          .text {
+            margin-bottom: 24px;
+            text-align: center;
+            line-height: 32px;
+          }
+          .tips {
+            width: 100%;
+          }
         }
-        .tips {
-          width: 100%;
+        .application-form {
+          display: flex;
+          justify-content: flex-start;
+          padding-left: 50px;
+          .el-form {
+            .el-form-item {
+              .requirement {
+                span {
+                  margin-left: 4px;
+                }
+              }
+            }
+          }
         }
-      }
-      .application-form {
-        display: flex;
-        justify-content: flex-start;
-        padding-left: 50px;
       }
     }
   }

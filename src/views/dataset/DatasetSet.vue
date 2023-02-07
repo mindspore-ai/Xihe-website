@@ -20,7 +20,7 @@ const router = useRouter();
 let routerParams = router.currentRoute.value.params;
 
 const userInfoStore = useUserInfoStore();
-const organizationAdminList =userInfoStore.organizationAdminList;
+const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   visible: {

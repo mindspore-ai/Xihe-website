@@ -844,7 +844,13 @@ function selectFile(item) {
     </div>
   </div>
   <!-- 训练在24小时后终止提示弹窗 -->
-  <el-dialog v-model="tips" :show-close="false" center width="640px">
+  <el-dialog
+    v-model="tips"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+  >
     <template #header="{ titleId, titleTitle }">
       <div :id="titleId" :class="titleTitle">
         <img :src="warningImg" alt="" />

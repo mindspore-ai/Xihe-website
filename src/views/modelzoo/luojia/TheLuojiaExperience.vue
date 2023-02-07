@@ -392,7 +392,7 @@ onMounted(() => {
     }
   }
   .el-dialog__body {
-    padding: 0px 40px 40px;
+    padding: 0px 40px 40px !important;
   }
 }
 .map-container {

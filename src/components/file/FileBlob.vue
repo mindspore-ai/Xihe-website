@@ -22,6 +22,7 @@ import {
   getGitlabTree,
 } from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 import { useFileData } from '@/stores';
 
 const prop = defineProps({
@@ -317,45 +318,43 @@ watch(
         </div>
       </div>
     </div>
-    <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div class="dlg-title" :style="{ textAlign: 'center' }">
+    <el-dialog
+      v-model="showDel"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          padding: '8px 0 12px',
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '640px',
-        }"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
       >
         {{ i18n.delete.description }} {{ path }} 吗？
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '56px',
-          }"
-        >
-          <o-button
-            :style="{ marginRight: '24px' }"
-            @click="toggleDelDlg(false)"
-            >{{ i18n.delete.cancel }}</o-button
-          >
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">
+            {{ i18n.delete.cancel }}
+          </o-button>
           <o-button
             type="primary"
             @click="headleDelFile(path, repoDetailData.repo_id)"
-            >{{ i18n.delete.confirm }}</o-button
           >
+            {{ i18n.delete.confirm }}
+          </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 

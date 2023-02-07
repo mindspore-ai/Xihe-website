@@ -41,43 +41,39 @@ watch(
 );
 </script>
 <template>
-  <o-dialog :show="isShow" :close="false">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
+  <el-dialog
+    v-model="isShow"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">
         <img :src="warningImg" alt="" />
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 30px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '640px',
-      }"
+      style="
+        color: #555;
+        font-size: 18px;
+        text-align: center;
+        line-height: 28px;
+      "
     >
       {{ deleteCondition.describe }}
     </div>
     <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '56px',
-        }"
-      >
-        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
-          deleteCondition.cancel
-        }}</o-button>
-        <o-button type="primary" @click="confirmDel">{{
-          deleteCondition.confirm
-        }}</o-button>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="cancelClick">
+          {{ deleteCondition.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmDel">
+          {{ deleteCondition.confirm }}
+        </o-button>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
 </template>
 <style lang="scss" scoped></style>

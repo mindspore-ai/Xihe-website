@@ -259,7 +259,14 @@ function showDialog2() {
   if (!isLogined) {
     goAuthorize();
   } else {
-    showApplication.value = true;
+    if (isOver.value) {
+      ElMessage({
+        type: 'warning',
+        message: '本次活动已经结束，期待下届MindCon与你相遇',
+      });
+    } else {
+      showApplication.value = true;
+    }
   }
 }
 function goRule() {

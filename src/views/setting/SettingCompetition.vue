@@ -174,6 +174,7 @@ function goDetail(id) {
 <style lang="scss" scoped>
 .competition {
   height: 100%;
+  // background-color: red;
   position: relative;
   left: 0;
   top: 0;
@@ -249,6 +250,7 @@ function goDetail(id) {
           display: flex;
           flex-direction: column;
           align-items: center;
+          margin-top: 40px;
           .empty-text {
             line-height: 28px;
             margin-top: 24px;
@@ -262,6 +264,7 @@ function goDetail(id) {
           display: flex;
           flex-direction: column;
           align-items: center;
+          margin-top: 40px;
           .empty-text {
             line-height: 28px;
             margin-top: 24px;

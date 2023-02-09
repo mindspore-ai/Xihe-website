@@ -47,7 +47,7 @@ function toggleCollectionDlg() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    router.push('/modelzoo/wukong/management');
+    router.push('/modelzoo/wukong/manage');
   }
 }
 

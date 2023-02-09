@@ -1,3 +1,5 @@
+import { LOGIN_STATUS } from '@/shared/login';
+import { useLoginStore } from '@/stores';
 export default [
   // 大模型体验
   {
@@ -177,19 +179,42 @@ export default [
           return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
         },
       },
-
       {
         path: 'experience',
-        name: 'wukongTest',
         redirect: '/modelzoo/wukong',
       },
     ],
   },
   {
-    path: '/modelzoo/wukong/management',
-    name: 'paintingManagement',
+    path: '/modelzoo/wukong/manage',
+    name: 'paintingManage',
     component: () => {
       return import('@/views/modelzoo/wukong/ThePaintingManagement.vue');
     },
+    redirect: '/modelzoo/wukong/manage/collection',
+    beforeEnter: async () => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: 'wukongExperience',
+        };
+      }
+    },
+    children: [
+      {
+        path: 'collection',
+        name: 'wukongCollection',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheCollection.vue');
+        },
+      },
+      {
+        path: 'public',
+        name: 'wukongPublic',
+        component: () => {
+          return import('@/views/modelzoo/wukong/ThePublic.vue');
+        },
+      },
+    ],
   },
 ];

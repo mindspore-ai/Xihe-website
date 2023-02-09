@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-// import { request } from '@/shared/axios';
 const route = useRoute();
 const router = useRouter();
 
@@ -26,6 +25,7 @@ function handleNextStep() {
       name: 'application',
     });
   } else if (active.value === 3) {
+    console.log('跳转 ', 报名成功页);
     router.push({
       name: 'success',
     });

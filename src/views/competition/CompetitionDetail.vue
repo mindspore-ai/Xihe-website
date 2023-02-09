@@ -3,13 +3,9 @@ import { ref, watch, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
-// import { getGroupid } from '@/api/api-competition';
-
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useCompetitionData } from '@/stores';
-
 import OButton from '@/components/OButton.vue';
-
 import { ArrowRight } from '@element-plus/icons-vue';
 
 const userInfoStore = useUserInfoStore();
@@ -17,13 +13,6 @@ const route = useRoute();
 const router = useRouter();
 
 const userComData = useCompetitionData();
-// const detailData = computed(() => {
-//   return userComData.competitionData;
-// });
-// 用户团队id
-/* const teamId = computed(() => {
-  return useCompetitionData().teamId;
-}); */
 
 const competitionData = ref([]);
 const show = ref(true);
@@ -39,17 +28,9 @@ async function getDetailData() {
     if (res.status === 200 && res.data.data.name) {
       competitionData.value = res.data.data;
       userComData.setCompetitionData(res.data.data);
-      // userComData.setTeamId(res.data.data.id);
     } else {
       router.push('/competition');
     }
-    // 获取团队id
-    /* let params = { id: route.params.id };
-    let res2 = await getGroupid(params.id);
-    if (res2.status === 200) {
-      // teamId.value = res2.group_id;
-      userComData.setTeamId(res2.group_id);
-    } */
     showDetail.value = true;
   } catch (error) {
     console.error(error);

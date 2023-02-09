@@ -1,12 +1,11 @@
 <script setup>
 import OButton from '@/components/OButton.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getGroupid } from '@/api/api-competition';
-import { useCompetitionData } from '@/stores';
+// import { useCompetitionData } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
-const userComData = useCompetitionData();
+// const userComData = useCompetitionData();
 
 const i18n = {
   success: '报名成功，祝贺您取得好成绩！',
@@ -16,14 +15,6 @@ const i18n = {
   team: '团队参赛',
 };
 
-// 获取团队id
-function getTeamId() {
-  let params = { id: route.params.id };
-  getGroupid(params.id).then((res) => {
-    userComData.setTeamId(res.group_id);
-  });
-}
-getTeamId();
 // 点击个人参赛进入比赛介绍页
 function goCompetitionIntro() {
   router.push({

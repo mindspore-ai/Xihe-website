@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, defineExpose } from 'vue';
 
-// import { goCompetition } from '@/api/api-competition';
+import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 import { applyActivity } from '@/api/api-activity';
@@ -10,9 +10,10 @@ import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
 import { ElMessage } from 'element-plus';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
+const userComData = useCompetitionData();
 
 const queryRef = ref(null);
 const role = ref(1);
@@ -21,7 +22,7 @@ const agree = ref(false);
 let province = ref([]);
 let citys = ref([]);
 
-defineProps({
+const prop = defineProps({
   showApplication: {
     type: Boolean,
     default: false,
@@ -196,15 +197,27 @@ function saveInfo(formEl) {
         phone: query.phone,
         province: query.loc_province,
       };
-      applyActivity(params).then(() => {
-        ElMessage({
-          message: '报名成功',
-          type: 'success',
-          duration: 4000,
+      if (prop.showApplication) {
+        applyActivity(params).then(() => {
+          ElMessage({
+            message: '报名成功',
+            type: 'success',
+            duration: 4000,
+          });
+          emit('get-activity');
+          emit('hide-form', false);
         });
-        emit('get-activity');
-        emit('hide-form', false);
-      });
+      } else {
+        applyCompetition(userComData.competitionData.id, params).then((res) => {
+          console.log('res: ', res);
+          emit('handle-step');
+          ElMessage({
+            message: '报名成功',
+            type: 'success',
+            duration: 4000,
+          });
+        });
+      }
     } else {
       console.error('error submit!');
       return false;
@@ -424,16 +437,17 @@ function saveInfo(formEl) {
       >
     </div>
     <div v-else class="next-btn">
-      <o-button v-if="!agree" size="small" disabled type="secondary">{{
-        i18n.save
-      }}</o-button>
+      <o-button v-if="!agree" size="small" disabled type="secondary">
+        {{ i18n.save }}
+      </o-button>
       <o-button
         v-if="agree"
-        disabled
+        size="small"
         type="primary"
         @click="saveInfo(queryRef)"
-        >{{ i18n.save }}</o-button
       >
+        {{ i18n.save }}
+      </o-button>
     </div>
     <div class="agree">
       <div class="agree-text" @click="agree = !agree">

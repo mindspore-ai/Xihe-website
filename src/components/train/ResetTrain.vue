@@ -44,10 +44,7 @@ watch(
 <template>
   <o-dialog :show="stopShow" :close="false">
     <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '24px' }"
-      >
+      <div class="dlg-title" :style="{ textAlign: 'center' }">
         <img :src="warningImg" alt="" />
       </div>
     </template>
@@ -67,17 +64,23 @@ watch(
         :style="{
           display: 'flex',
           justifyContent: 'center',
-          paddingBottom: '40px',
+          paddingBottom: '16px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
-          deleteCondition.cancel
-        }}</o-button>
-        <o-button type="primary" @click="confirmReset">{{
-          deleteCondition.confirm
-        }}</o-button>
+        <o-button :style="{ marginRight: '16px' }" @click="cancelClick">
+          {{ deleteCondition.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmReset">
+          {{ deleteCondition.confirm }}
+        </o-button>
       </div>
     </template>
   </o-dialog>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.o-dialog {
+  .o-dialog-wrap {
+    width: 640px !important;
+  }
+}
+</style>

@@ -16,11 +16,11 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
 
-import TrainModel from '@/components/train/TrainModel.vue';
-import TrainDataset from '@/components/train/TrainDataset.vue';
-import TrainHyperparams from '@/components/train/TrainHyperparams.vue';
-import TrainEnvironment from '@/components/train/TrainEnvironment.vue';
-import TrainDirectory from '@/components/train/TrainDirectory.vue';
+import TrainModel from '@/views/project/train/TrainModel.vue';
+import TrainDataset from '@/views/project/train/TrainDataset.vue';
+import TrainHyperparams from '@/views/project/train/TrainHyperparams.vue';
+import TrainEnvironment from '@/views/project/train/TrainEnvironment.vue';
+import TrainDirectory from '@/views/project/train/TrainDirectory.vue';
 
 const userInfoStore = useUserInfoStore();
 

@@ -5,19 +5,19 @@ import warningImg from '@/assets/icons/warning.png';
 
 const deleteCondition = reactive({
   title: '删除项目',
-  describe1: '确认是否将此训练实例终止，终止后将无法复原。',
-  describe2: '确认是否将此微调任务终止，终止后将无法复原。',
+  describe1: '确认是否将此训练实例删除，注意此操作不可逆。',
+  describe2: '确认是否将此微调任务删除，注意此操作不可逆。',
   btnText: '删除',
   cancel: '取消',
   confirm: '确认',
 });
 
 const prop = defineProps({
-  showStop: {
+  showDel: {
     type: Boolean,
     default: false,
   },
-  trainId: {
+  listId: {
     type: String,
     default: '',
   },
@@ -27,32 +27,34 @@ const prop = defineProps({
   },
 });
 
-const stopShow = ref(false);
+const id = ref(null);
+const isShow = ref(false);
 const emit = defineEmits(['click']);
 
-function confirmStop() {
-  stopShow.value = false;
-  emit('click', prop.trainId);
+function confirmDel() {
+  emit('click', id.value);
 }
-
 function cancelClick() {
-  emit('click', 1);
+  emit('click', 2);
 }
 
 watch(
-  () => prop.showStop,
+  () => prop.showDel,
+  (oldValue) => {
+    isShow.value = oldValue;
+  }
+);
+watch(
+  () => prop.listId,
   (newValue) => {
-    stopShow.value = newValue;
+    id.value = newValue;
   }
 );
 </script>
 <template>
-  <o-dialog :show="stopShow" :close="false">
+  <o-dialog :show="isShow" :close="false">
     <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '24px' }"
-      >
+      <div class="dlg-title" :style="{ textAlign: 'center' }">
         <img :src="warningImg" alt="" />
       </div>
     </template>
@@ -77,15 +79,15 @@ watch(
         :style="{
           display: 'flex',
           justifyContent: 'center',
-          paddingBottom: '40px',
+          paddingBottom: '16px',
         }"
       >
-        <o-button :style="{ marginRight: '24px' }" @click="cancelClick">{{
-          deleteCondition.cancel
-        }}</o-button>
-        <o-button type="primary" @click="confirmStop">{{
-          deleteCondition.confirm
-        }}</o-button>
+        <o-button :style="{ marginRight: '16px' }" @click="cancelClick">
+          {{ deleteCondition.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmDel">
+          {{ deleteCondition.confirm }}
+        </o-button>
       </div>
     </template>
   </o-dialog>

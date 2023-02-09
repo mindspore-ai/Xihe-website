@@ -25,8 +25,8 @@ import IconInstance from '~icons/app/train-instance';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import DeleteTrain from '@/components/train/DeleteTrain.vue';
-import StopTrain from '@/components/train/StopTrain.vue';
+import DeleteTrain from '@/components/TaskDelete.vue';
+import StopTrain from '@/components/TaskStop.vue';
 import ResetTrain from '@/components/train/ResetTrain.vue';
 import { ElMessage } from 'element-plus';
 import { ElDialog } from 'element-plus';

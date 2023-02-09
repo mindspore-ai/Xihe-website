@@ -2,7 +2,7 @@
 import IconNecessary from '~icons/app/necessary.svg';
 import { reactive, defineExpose } from 'vue';
 
-const modelData = reactive({
+const datasetData = reactive({
   key: '',
   owner: '',
   name: '',
@@ -41,18 +41,18 @@ async function checkParams(formEl) {
     }
   });
 }
-defineExpose({ modelData, checkParams });
+defineExpose({ datasetData, checkParams });
 </script>
 <template>
-  <div class="model-params">
-    <el-form ref="queryRef" :model="modelData" :rules="rules">
+  <div class="dataset-params">
+    <el-form ref="queryRef" :model="datasetData" :rules="rules">
       <div class="params-key">
         <el-form-item prop="key" class="key-item">
           <div class="key-icon">
             <o-icon><icon-necessary></icon-necessary></o-icon>
             <span>引用参数</span>
           </div>
-          <el-input v-model="modelData.key" placeholder="请输入引用参数" />
+          <el-input v-model="datasetData.key" placeholder="请输入引用参数" />
         </el-form-item>
       </div>
       <div class="params-value">
@@ -60,12 +60,11 @@ defineExpose({ modelData, checkParams });
           <o-icon><icon-necessary></icon-necessary></o-icon>
           <span>参数值</span>
         </div>
-
         <div class="value-input">
           <el-form-item prop="owner" class="user-item">
             <div class="user-name">
               <el-input
-                v-model="modelData.owner"
+                v-model="datasetData.owner"
                 placeholder="请输入用户名"
               /><span>/</span>
             </div>
@@ -73,15 +72,15 @@ defineExpose({ modelData, checkParams });
           <el-form-item prop="name" class="dataset-item">
             <div class="dataset-name">
               <el-input
-                v-model="modelData.name"
-                placeholder="请输入模型名称"
+                v-model="datasetData.name"
+                placeholder="请输入数据集名称"
               /><span>/</span>
             </div>
           </el-form-item>
           <el-form-item class="file-item">
             <div class="file-path">
               <el-input
-                v-model="modelData.File"
+                v-model="datasetData.File"
                 placeholder="请输入文件路径（非必填）"
               />
             </div>
@@ -92,7 +91,7 @@ defineExpose({ modelData, checkParams });
   </div>
 </template>
 <style lang="scss" scoped>
-.model-params {
+.dataset-params {
   padding: 16px 16px 25px;
   margin-bottom: 20px;
   background-color: #f5f6f8;
@@ -105,7 +104,7 @@ defineExpose({ modelData, checkParams });
       .o-icon {
         font-size: 8px !important;
         position: relative;
-        top: 3px;
+        top: 2px;
       }
       .key-icon {
         display: flex;
@@ -117,7 +116,7 @@ defineExpose({ modelData, checkParams });
     .o-icon {
       font-size: 8px !important;
       position: relative;
-      top: 3px;
+      top: 2px;
     }
     .value-icon {
       display: flex;

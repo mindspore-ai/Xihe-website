@@ -28,8 +28,8 @@ import warningImg from '@/assets/icons/warning.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
-import DeleteTrain from '@/components/train/DeleteTrain.vue';
-import StopTrain from '@/components/train/StopTrain.vue';
+import DeleteTask from '@/components/TaskDelete.vue';
+import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -391,14 +391,14 @@ onUnmounted(() => {
           </el-table-column>
           <el-table-column label="作业类型" width="410">
             <template #default="scope">
-              <DeleteTrain
+              <DeleteTask
                 :list-id="listId"
                 :show-del="isDelDialogVisible"
                 :display-type="displayType"
                 @click="delClick"
               />
 
-              <StopTrain
+              <StopTask
                 :train-id="finetuneId"
                 :show-stop="isStopDialogVisible"
                 :display-type="displayType"

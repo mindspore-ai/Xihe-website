@@ -8,9 +8,9 @@ defineExpose({ environmentData });
 </script>
 <template>
   <div class="environment-params">
-    <el-input v-model="environmentData.key" placeholder="请输入用户名" />
+    <el-input v-model="environmentData.key" placeholder="key" />
     <span>=</span>
-    <el-input v-model="environmentData.value" placeholder="请输入用户名" />
+    <el-input v-model="environmentData.value" placeholder="value" />
   </div>
 </template>
 <style lang="scss" scoped>

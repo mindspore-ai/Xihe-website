@@ -185,23 +185,23 @@ const lists = ref([
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
-const count = ref(0);
-// 公开图片
-function publicImage() {
-  count.value++;
+// const count = ref(0);
+// // 公开图片
+// function publicImage() {
+//   count.value++;
 
-  if (count.value <= 1) {
-    ElMessage({
-      type: 'success',
-      message: '公开成功，可在画作管理中查看',
-    });
-  } else {
-    ElMessage({
-      type: 'warning',
-      message: '重复操作',
-    });
-  }
-}
+//   if (count.value <= 1) {
+//     ElMessage({
+//       type: 'success',
+//       message: '公开成功，可在画作管理中查看',
+//     });
+//   } else {
+//     ElMessage({
+//       type: 'warning',
+//       message: '重复操作',
+//     });
+//   }
+// }
 const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
@@ -536,7 +536,7 @@ function refreshTags() {
       <template #header="{ titleClass }">
         <div class="infer-dlg-head">
           <span class="title" :class="titleClass"
-            >{{ inputText }}&nbsp;&nbsp;{{ sortTag }}</span
+            >{{ inputText }}&nbsp;&nbsp;&nbsp;#风格：{{ sortTag }}</span
           >
         </div>
       </template>

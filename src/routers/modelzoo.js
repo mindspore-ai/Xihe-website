@@ -193,7 +193,6 @@ export default [
     },
     redirect: '/modelzoo/wukong/manage/collection',
     beforeEnter: async (to, from, next) => {
-      console.log(from.path);
       const logingStore = useLoginStore();
       if (
         from.path === '/modelzoo/wukong' &&

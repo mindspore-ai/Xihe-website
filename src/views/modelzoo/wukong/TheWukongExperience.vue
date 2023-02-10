@@ -15,8 +15,8 @@ import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
-import IconCancel from '~icons/app/cancel-public';
-import IconArrow from '~icons/app/arrow-top';
+// import IconCancel from '~icons/app/cancel-public';
+// import IconArrow from '~icons/app/arrow-top';
 import IconShare from '~icons/app/share';
 import IconCopy from '~icons/app/copy-nickname';
 import IconWarning from '~icons/app/warning1';
@@ -281,24 +281,6 @@ function choseStyleSort(val) {
 // 选择风格标签
 function choseSortTag(val) {
   val.isSelected = !val.isSelected;
-
-  // if (val.tag === sortTag.value) {
-  //   val.isSelected = !val.isSelected;
-  //   if (val.isSelected) {
-  //     sortTag.value = val.tag;
-  //   } else {
-  //     sortTag.value = '';
-  //   }
-  // } else {
-  //   styleData.value.forEach((item) => {
-  //     item.options.forEach((tag) => {
-  //       tag.isSelected = false;
-  //     });
-  //   });
-
-  //   val.isSelected = !val.isSelected;
-  //   sortTag.value = val.tag;
-  // }
 }
 // 随机风格
 function getRandomStyle(index) {
@@ -573,11 +555,11 @@ function refreshTags() {
           <img :src="value" alt="" />
           <div class="handles">
             <!-- 公开 -->
-            <div class="public">
+            <!-- <div class="public">
               <p @click="publicImage">
                 <o-icon><icon-arrow></icon-arrow></o-icon>
               </p>
-            </div>
+            </div> -->
             <!-- 下载收藏 -->
             <div class="handles-contain">
               <p @click="downloadImage(value)">
@@ -827,7 +809,8 @@ function refreshTags() {
         z-index: 20;
         opacity: 0;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+        // justify-content: space-between;
         padding: 18px 24px;
         @media screen and (max-width: 1450px) {
           bottom: 10px;

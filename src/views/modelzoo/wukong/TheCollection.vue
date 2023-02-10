@@ -137,11 +137,11 @@ function copyText(textValue) {
 }
 
 // 收藏-公开图片
-function publicImage() {}
+// function publicImage() {}
 </script>
 <template>
   <div class="collection">
-    <div v-if="collecteImages.length !== 0" class="have-collections">
+    <div v-if="collecteImages" class="have-collections">
       <div v-for="item in collecteImages" :key="item.id" class="collect-item">
         <div class="image-box">
           <img draggable="false" :src="item.link" alt="" />
@@ -389,7 +389,6 @@ function publicImage() {}
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 160px;
     .o-icon {
       font-size: 48px;
     }

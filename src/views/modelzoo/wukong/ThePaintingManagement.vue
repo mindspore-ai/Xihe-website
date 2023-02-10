@@ -5,15 +5,14 @@ import { useRouter } from 'vue-router';
 import IconArrow from '~icons/app/arrow-top';
 import IconLike from '~icons/app/like';
 
-// import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore } from '@/stores';
 
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 
 const navItems = ref([
-  { tag: '我的收藏', icon: '1', path: '/modelzoo/wukong/manage/collection' },
-  // { tag: '我的公开', icon: '2', path: '/modelzoo/wukong/manage/public' },
+  { tag: '我的收藏', icon: '1', path: '/modelzoo/wukong/admin/collection' },
+  // { tag: '我的公开', icon: '2', path: '/modelzoo/wukong/admin/public' },
 ]);
 const currentNav = ref('1');
 

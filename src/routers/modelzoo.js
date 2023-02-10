@@ -186,12 +186,12 @@ export default [
   },
 
   {
-    path: '/modelzoo/wukong/manage',
+    path: '/modelzoo/wukong/admin',
     name: 'paintingManage',
     component: () => {
       return import('@/views/modelzoo/wukong/ThePaintingManagement.vue');
     },
-    redirect: '/modelzoo/wukong/manage/collection',
+    redirect: '/modelzoo/wukong/admin/collection',
     beforeEnter: async (to, from, next) => {
       const logingStore = useLoginStore();
       if (logingStore.loginStatus === LOGIN_STATUS.DONE) {

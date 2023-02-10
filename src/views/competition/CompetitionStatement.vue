@@ -12,9 +12,9 @@ const i18n = {
   next: '下一步',
 };
 
-const emit = defineEmits(['handle-step']);
+const emit = defineEmits(['go-next-step']);
 function goNextStep() {
-  emit('handle-step');
+  emit('go-next-step');
 }
 </script>
 <template>

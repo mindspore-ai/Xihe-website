@@ -158,7 +158,7 @@ function changeRole(item) {
   query.identity_type = item;
 }
 
-const emit = defineEmits(['handle-step', 'hide-form', 'get-activity']);
+const emit = defineEmits(['go-next-step', 'hide-form', 'get-activity']);
 
 function cancelApplication() {
   emit('hide-form', false);

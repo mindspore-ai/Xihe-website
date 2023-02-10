@@ -14,7 +14,7 @@ const stepData = ref([
 ]);
 
 // 处理跳转法律声明，报名表，报名成功页
-function handleNextStep() {
+function goNextStep() {
   active.value++;
   if (active.value === 1) {
     router.push({
@@ -56,7 +56,7 @@ watch(
         :title="item.title"
       ></el-step>
     </el-steps>
-    <router-view @handle-step="handleNextStep()"></router-view>
+    <router-view @go-next-step="goNextStep()"></router-view>
   </div>
 </template>
 

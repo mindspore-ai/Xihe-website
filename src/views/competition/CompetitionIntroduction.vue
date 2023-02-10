@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onUpdated } from 'vue';
 // import { useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -7,6 +7,22 @@ import { handleMarkdown } from '@/shared/markdown';
 import { useCompetitionData } from '@/stores';
 
 import { getGuide } from '@/api/api-competition';
+
+const TypeSet = async function (elements) {
+  if (!window.MathJax) {
+    return;
+  }
+  window.MathJax.startup.promise = window.MathJax.startup.promise
+    .then(() => {
+      return window.MathJax.typesetPromise(elements);
+    })
+    .catch((err) => console.log('Typeset failed: ' + err.message));
+  return window.MathJax.startup.promise;
+};
+onUpdated(() => {
+  const a = document.querySelectorAll('p');
+  TypeSet(a);
+});
 
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;

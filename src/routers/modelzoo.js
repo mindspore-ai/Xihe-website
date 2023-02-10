@@ -55,7 +55,7 @@ export default [
       },
       {
         path: 'image',
-        name: 'taichuTest',
+        // name: 'taichuTest',
         redirect: '/modelzoo/taichu',
       },
     ],
@@ -86,7 +86,6 @@ export default [
 
       {
         path: 'experience',
-        name: 'test',
         redirect: '/modelzoo/codegeex',
       },
     ],
@@ -115,7 +114,7 @@ export default [
       },
       {
         path: 'experience',
-        name: 'luojiaTest',
+        // name: 'luojiaTest',
         redirect: '/modelzoo/luojia',
       },
     ],
@@ -144,7 +143,7 @@ export default [
       },
       {
         path: 'experience',
-        name: 'pangutest',
+        // name: 'pangutest',
         redirect: '/modelzoo/pangu',
       },
     ],
@@ -185,6 +184,7 @@ export default [
       },
     ],
   },
+
   {
     path: '/modelzoo/wukong/manage',
     name: 'paintingManage',
@@ -194,10 +194,7 @@ export default [
     redirect: '/modelzoo/wukong/manage/collection',
     beforeEnter: async (to, from, next) => {
       const logingStore = useLoginStore();
-      if (
-        from.path === '/modelzoo/wukong' &&
-        logingStore.loginStatus === LOGIN_STATUS.DONE
-      ) {
+      if (logingStore.loginStatus === LOGIN_STATUS.DONE) {
         next();
       } else {
         next('/modelzoo/wukong');

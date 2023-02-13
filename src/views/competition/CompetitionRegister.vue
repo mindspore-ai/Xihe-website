@@ -25,7 +25,6 @@ function goNextStep() {
       name: 'application',
     });
   } else if (active.value === 3) {
-    console.log('跳转 ', 报名成功页);
     router.push({
       name: 'success',
     });

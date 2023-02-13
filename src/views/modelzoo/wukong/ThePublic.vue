@@ -35,13 +35,10 @@ function quitPublicClick(id) {
 }
 // 继续公开
 function cancelQuitPublic(val) {
-  console.log('继续公开');
   showConfirmDlg.value = val;
 }
 // 取消公开图片
 function confirmQuitPublic() {
-  console.log('确认取消公开');
-
   publicList.value.forEach((item, index) => {
     if (item.id === cancelPublicId.value) {
       publicList.value.splice(index, 1);

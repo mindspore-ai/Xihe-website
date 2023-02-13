@@ -208,9 +208,8 @@ function saveInfo(formEl) {
           emit('hide-form', false);
         });
       } else {
-        applyCompetition(userComData.competitionData.id, params).then((res) => {
-          console.log('res: ', res);
-          emit('handle-step');
+        applyCompetition(userComData.competitionData.id, params).then(() => {
+          emit('go-next-step');
           ElMessage({
             message: '报名成功',
             type: 'success',

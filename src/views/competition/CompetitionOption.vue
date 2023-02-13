@@ -8,7 +8,6 @@ const route = useRoute();
 const router = useRouter();
 const activeNavItem = ref('');
 const comInfo = useCompetitionData().competitionData;
-console.log('comInfo: ', comInfo);
 
 const navItems = reactive([
   {

@@ -55,7 +55,6 @@ export function getRank(params) {
  * @returns
  */
 export function applyCompetition(id, params) {
-  console.log('id: ', id);
   const url = `/server/competition/${id}/competitor`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;

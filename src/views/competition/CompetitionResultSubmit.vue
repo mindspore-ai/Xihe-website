@@ -239,7 +239,6 @@ function handelSubmit() {
     //     message: '提交结果通道火速开通中，请您耐心等待哦~',
     //   });
   } else {
-    console.log(detailData1.value);
     togglePhoneDlg(true);
   }
   // }

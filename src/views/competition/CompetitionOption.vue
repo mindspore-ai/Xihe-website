@@ -2,14 +2,11 @@
 import { ref, watch, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ONav from '@/components/ONav.vue';
-// import { getGroupid } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
-// const teamId = ref(null);
 const activeNavItem = ref('');
-// const fixed = ref(false);
 const comInfo = useCompetitionData().competitionData;
 
 const navItems = reactive([
@@ -65,16 +62,18 @@ const navItems = reactive([
   },
 ]);
 
-const renderNav = ref();
+const renderNav = ref([]);
 // 渲染的nav数据 (区分是否报名)
 watch(
   () => comInfo.is_competitor,
   (newValue) => {
     // 如果已经报名
     if (newValue) {
+      // 比赛
       if (comInfo.type === '') {
         renderNav.value = navItems;
       } else {
+        // 活动
         renderNav.value = navItems.filter((item) => {
           return item.competitionType === 'competition';
         });
@@ -140,7 +139,6 @@ watch(
     return props.fixed;
   },
   (newVal) => {
-    // fixed.value = newVal;
     let tab = document.querySelector('.competition-desc-tab');
     let box = document.querySelector('.competition-desc-info');
     if (newVal) {
@@ -174,10 +172,6 @@ watch(
 <style lang="scss">
 .competition-desc {
   &-tab {
-    // position: sticky;
-    // z-index: 1000;
-    // // opacity: 1;
-    // top: 174px;
     font-size: 90px;
     height: 48px;
     background-color: #fbfbfb;

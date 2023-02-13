@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router';
 import OInput from '@/components/OInput.vue';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import OEditor from '@/components/OEditor.vue';
+import AppEditor from '@/components/AppEditor.vue';
 
 import IconPlus2 from '~icons/app/plus-square';
 import IconDescribe from '~icons/app/describe';
@@ -83,7 +83,7 @@ async function uploadGitlab() {
     });
   });
 
-  pathClick(route.params.contents.length);
+  handleClick(route.params.contents.length);
 }
 function verifyFile() {
   const parentDirectory = path.includes('/')
@@ -107,7 +107,7 @@ function verifyFile() {
         fileData = treeItem[0];
         previewFile();
       } else {
-        router.push('/notfound');
+        router.push('/404');
       }
     });
   } catch (error) {
@@ -116,7 +116,7 @@ function verifyFile() {
 }
 verifyFile();
 
-function pathClick(index) {
+function handleClick(index) {
   let routerName = '';
   route.params.contents.length === index
     ? (routerName = `${prop.moduleName}FileBlob`)
@@ -138,14 +138,14 @@ function pathClick(index) {
       <div class="model-name tip-text">
         <o-icon> <icon-plus2></icon-plus2> </o-icon>
         <div class="file-path">
-          <div class="item-path" @click="pathClick(null)">
+          <div class="item-path" @click="handleClick(null)">
             {{ routerParams.name }}
           </div>
           <div
             v-for="(item, index) in routerParams.contents"
             :key="item"
             class="item-path"
-            @click="pathClick(index + 1)"
+            @click="handleClick(index + 1)"
           >
             /{{ item }}
           </div>
@@ -156,12 +156,12 @@ function pathClick(index) {
         <span>{{ i18n.modelUpload.uploadTitle }}</span>
       </div>
       <div class="upload-body" :class="isShowEditor ? '' : 'border'">
-        <o-editor
+        <app-editor
           v-if="isShowEditor"
           v-model="codeString"
           :lang="lang"
           :model-value="codeString"
-        ></o-editor>
+        ></app-editor>
       </div>
       <div v-if="false" class="add-describe tip-text">
         <o-icon> <icon-describe></icon-describe> </o-icon>
@@ -176,7 +176,7 @@ function pathClick(index) {
       <div class="upload-bottom">
         <o-button
           class="cancel-btn"
-          @click="pathClick(route.params.contents.length)"
+          @click="handleClick(route.params.contents.length)"
           >{{ i18n.modelUpload.cancel }}</o-button
         >
         <o-button type="primary" @click="uploadGitlab">{{

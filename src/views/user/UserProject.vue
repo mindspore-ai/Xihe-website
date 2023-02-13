@@ -51,7 +51,7 @@ let query = reactive({
 });
 
 const layout = ref('sizes, prev, pager, next, jumper');
-const emit = defineEmits(['getlivecount', 'domChange']);
+const emit = defineEmits(['getlivecount', 'dom-change']);
 
 function handleSizeChange(val) {
   if (projectCount.value / val < 8) {
@@ -69,7 +69,7 @@ function getUserProject() {
   getUserProjectData(query, userInfo.value.userName).then((res) => {
     if (res.data.total) {
       if (res.data.total > 12) {
-        emit('domChange', 76);
+        emit('dom-change', 76);
       }
       avatarImg.value = res.data.avatar_id;
       projectCount.value = res.data.total;

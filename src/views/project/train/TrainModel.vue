@@ -29,11 +29,6 @@ const rules = reactive({
       message: '必填项',
       trigger: 'blur',
     },
-    // {
-    //   pattern: /^[a-zA-Z0-9_]{5,50}$/,
-    //   message: '请输入一个5-50位且只包含大小写字母、数字、下划线的名称',
-    //   trigger: 'blur',
-    // },
   ],
 });
 async function checkParams(formEl) {
@@ -110,7 +105,7 @@ defineExpose({ modelData, checkParams });
       .o-icon {
         font-size: 8px !important;
         position: relative;
-        top: 3px;
+        top: 2px;
       }
       .key-icon {
         display: flex;
@@ -122,7 +117,7 @@ defineExpose({ modelData, checkParams });
     .o-icon {
       font-size: 8px !important;
       position: relative;
-      top: 3px;
+      top: 2px;
     }
     .value-icon {
       display: flex;

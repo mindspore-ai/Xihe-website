@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 
 import { formatSeconds } from '@/shared/utils';
 import moment from 'moment';
+import { ElDialog } from 'element-plus';
 
 import IconStop from '~icons/app/stop';
 import IconRemove from '~icons/app/remove';
@@ -16,7 +17,6 @@ import IconStopping from '~icons/app/stopping';
 import IconWaiting from '~icons/app/waiting';
 import IconCreating from '~icons/app/creating';
 import IconAbnormal from '~icons/app/abnormal';
-
 import IconArrowRight from '~icons/app/arrow-right';
 
 import step1 from '@/assets/imgs/finetune/step1.png';
@@ -28,8 +28,8 @@ import warningImg from '@/assets/icons/warning.png';
 
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
-import DeleteTrain from '@/components/DeleteTrain.vue';
-import StopTrain from '@/components/StopTrain.vue';
+import DeleteTask from '@/components/TaskDelete.vue';
+import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -391,14 +391,14 @@ onUnmounted(() => {
           </el-table-column>
           <el-table-column label="作业类型" width="410">
             <template #default="scope">
-              <DeleteTrain
+              <DeleteTask
                 :list-id="listId"
                 :show-del="isDelDialogVisible"
                 :display-type="displayType"
                 @click="delClick"
               />
 
-              <StopTrain
+              <StopTask
                 :train-id="finetuneId"
                 :show-stop="isStopDialogVisible"
                 :display-type="displayType"
@@ -494,72 +494,69 @@ onUnmounted(() => {
     <!-- 申请微调资格弹窗 -->
     <el-dialog
       v-model="showStep"
-      title="申请步骤"
-      width="40%"
+      width="640px"
       center
       align-center
       class="apply-dlg"
       :show-close="false"
     >
-      <div class="dlg-body" style="color: #555; font-size: 14px">
-        <div style="height: 24px">
-          1. 填写申请信息（用户名、邮箱、职业、申请理由)。
-        </div>
-        <div style="height: 24px" class="send-email">
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">申请步骤</div>
+      </template>
+      <div
+        class="dlg-body"
+        style="color: #555; font-size: 14px; line-height: 24px; padding: 0 24px"
+      >
+        <div>1. 填写申请信息（用户名、邮箱、职业、申请理由)。</div>
+        <div class="send-email">
           <span> 2. 发送申请信息至官方邮箱: </span>
           <span style="color: #0d8dff" class="email">
             public@xihe.mindspore.cn
           </span>
           <span>。</span>
         </div>
-        <div style="height: 24px">
-          3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。
-        </div>
+        <div>3. 管理员会审核相关信息，并将审核状态发送到申请邮箱中。</div>
       </div>
       <template #footer>
         <div class="dlg-btn">
-          <OButton type="primary" size="small" @click="toggleApplication"
-            >我知道啦</OButton
-          >
+          <OButton type="primary" size="small" @click="toggleApplication">
+            我知道啦
+          </OButton>
         </div>
       </template>
     </el-dialog>
     <!-- 如已有正在运行中的微调任务或者微调任务已有5个，弹窗提示 -->
-    <o-dialog :show="showTip" :close="false" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div
-          class="dlg-title"
-          :style="{ textAlign: 'center', paddingTop: '24px' }"
-        >
+    <el-dialog
+      v-model="showTip"
+      :show-close="false"
+      center
+      width="640px"
+      align-center
+    >
+      <template #header="{ titleId, titleTitle }">
+        <div :id="titleId" :class="titleTitle">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '100%',
-          lineHeight: '30px',
-        }"
+        style="
+          color: #000;
+          font-size: 18px;
+          text-align: center;
+          line-height: 30px;
+        "
       >
         {{ describe }}
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '40px',
-          }"
-        >
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
           <o-button type="primary" @click="showTip = false">
             {{ i18n.confirm }}
           </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -819,14 +816,9 @@ $theme: #0d8dff;
 }
 </style>
 <style lang="scss">
-.apply-dlg {
-  .el-dialog__header {
-    .el-dialog__title {
-      color: #000;
-    }
-  }
+/* .apply-dlg {
   .el-dialog__body {
-    padding: 8px 64px 0px !important;
+    padding: 0px 64px !important;
   }
-}
+} */
 </style>

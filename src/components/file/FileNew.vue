@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import OEditor from '@/components/OEditor.vue';
+import AppEditor from '@/components/AppEditor.vue';
 
 import IconPlus2 from '~icons/app/plus-square';
 import IconDescribe from '~icons/app/describe';
@@ -121,8 +121,7 @@ async function upLoadObs(formEl) {
     }
   });
 }
-function pathClick() {
-  // !!! 此处填写各自模块的组件名称！！！
+function handleClick() {
   let contents = null;
   if (route.params.contents) {
     contents = route.params.contents;
@@ -146,14 +145,14 @@ function pathClick() {
           <div class="model-name tip-text">
             <o-icon> <icon-plus2></icon-plus2> </o-icon>
             <div class="file-path">
-              <div class="item-path" @click="pathClick(null)">
+              <div class="item-path" @click="handleClick(null)">
                 {{ routerParams.name }}
               </div>
               <div
                 v-for="(item, index) in routerParams.contents"
                 :key="item"
                 class="item-path"
-                @click="pathClick(index + 1)"
+                @click="handleClick(index + 1)"
               >
                 /{{ item }}
               </div>
@@ -192,10 +191,10 @@ function pathClick() {
         </el-form-item>
         <el-form-item class="fill" prop="textValue">
           <div class="upload-body">
-            <o-editor
+            <app-editor
               v-model="query.textValue"
               :model-value="query.textValue"
-            ></o-editor>
+            ></app-editor>
           </div>
         </el-form-item>
         <el-form-item v-if="false" class="fill" prop="description">
@@ -214,7 +213,7 @@ function pathClick() {
       <div class="upload-bottom">
         <o-button
           class="cancel-btn"
-          @click="pathClick(route.params.contents.length)"
+          @click="handleClick(route.params.contents.length)"
           >{{ i18n.modelUpload.cancel }}</o-button
         >
         <o-button type="primary" @click="upLoadObs(queryRef)">{{

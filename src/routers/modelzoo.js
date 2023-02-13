@@ -1,3 +1,5 @@
+import { LOGIN_STATUS } from '@/shared/login';
+import { useLoginStore } from '@/stores';
 export default [
   // 大模型体验
   {
@@ -53,7 +55,7 @@ export default [
       },
       {
         path: 'image',
-        name: 'taichuTest',
+        // name: 'taichuTest',
         redirect: '/modelzoo/taichu',
       },
     ],
@@ -84,7 +86,6 @@ export default [
 
       {
         path: 'experience',
-        name: 'test',
         redirect: '/modelzoo/codegeex',
       },
     ],
@@ -113,7 +114,7 @@ export default [
       },
       {
         path: 'experience',
-        name: 'luojiaTest',
+        // name: 'luojiaTest',
         redirect: '/modelzoo/luojia',
       },
     ],
@@ -142,7 +143,7 @@ export default [
       },
       {
         path: 'experience',
-        name: 'pangutest',
+        // name: 'pangutest',
         redirect: '/modelzoo/pangu',
       },
     ],
@@ -179,8 +180,40 @@ export default [
       },
       {
         path: 'experience',
-        name: 'wukongTest',
         redirect: '/modelzoo/wukong',
+      },
+    ],
+  },
+
+  {
+    path: '/modelzoo/wukong/admin',
+    name: 'paintingManage',
+    component: () => {
+      return import('@/views/modelzoo/wukong/ThePaintingManagement.vue');
+    },
+    redirect: '/modelzoo/wukong/admin/collection',
+    beforeEnter: async (to, from, next) => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus === LOGIN_STATUS.DONE) {
+        next();
+      } else {
+        next('/modelzoo/wukong');
+      }
+    },
+    children: [
+      {
+        path: 'collection',
+        name: 'wukongCollection',
+        component: () => {
+          return import('@/views/modelzoo/wukong/TheCollection.vue');
+        },
+      },
+      {
+        path: 'public',
+        name: 'wukongPublic',
+        component: () => {
+          return import('@/views/modelzoo/wukong/ThePublic.vue');
+        },
       },
     ],
   },

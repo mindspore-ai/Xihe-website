@@ -51,27 +51,11 @@ export function getRank(params) {
   });
 }
 /**
- * 获取用户所在团队id（是否报名）
+ * 保存信息，报名比赛----复赛无此功能
  * @returns
  */
-/* export function getGroupid(id) {
-  const url = `/server/competition/${id}/team`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
-export function getGroupid(id) {
-  const url = `/api/competitions/user_group_id/${id}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-/**
- * 保存信息，确定报名----复赛无此功能
- * @returns
- */
-export function goCompetition(params) {
-  const url = `/api/competitions/user_competition_info/`;
+export function applyCompetition(id, params) {
+  const url = `/server/competition/${id}/competitor`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -208,9 +192,11 @@ export function getAreaData() {
  */
 export function addProject(params, id, phase) {
   const url = `/server/competition/${id}/${phase}/realted_project`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .put(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 队长提交结果

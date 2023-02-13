@@ -10,7 +10,7 @@ import IconFork from '~icons/app/fork';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import OHeart from '@/components/OHeart.vue';
+import TrainLikes from '@/components/train/TrainLikes.vue';
 import OPopper from '@/components/OPopper.vue';
 
 import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
@@ -55,7 +55,7 @@ const tabPosition = ref('left');
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '删除',
+    delete: '清除',
   },
   tags: [],
 
@@ -586,12 +586,12 @@ function checkName(rule, value, callback) {
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
             <div v-if="userInfoStore.userName !== detailData.owner">
-              <o-heart
+              <train-likes
                 :is-digged="isDigged"
                 :dig-count="detailData.like_count"
                 class="loves"
                 @click="handleProjectLike"
-              ></o-heart>
+              ></train-likes>
             </div>
           </div>
           <div class="label-box">
@@ -671,24 +671,34 @@ function checkName(rule, value, callback) {
     </div>
     <!-- 标签管理 -->
     <div class="tags-box">
-      <el-dialog v-model="isTagShow" width="804px" :show-close="false">
-        <div class="dialog-head">
-          <div class="head-left">
-            <div class="head-title">{{ dialogList.head.title }}</div>
-            <div class="head-delete" @click="deleteModelTags">
-              <o-icon><icon-clear></icon-clear></o-icon>
-              {{ dialogList.head.delete }}
+      <el-dialog
+        v-model="isTagShow"
+        width="800px"
+        :show-close="false"
+        align-center
+        destroy-on-close
+      >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
+            <div class="dialog-head">
+              <div class="head-left">
+                <div class="head-title">{{ dialogList.head.title }}</div>
+                <div class="head-delete" @click="deleteModelTags">
+                  <o-icon><icon-clear></icon-clear></o-icon>
+                  {{ dialogList.head.delete }}
+                </div>
+              </div>
+              <div v-if="headTags[0]" class="head-tags">
+                <div v-for="it in headTags" :key="it" class="condition-detail">
+                  {{ it.name }}
+                  <o-icon class="icon-x" @click="deleteClick(it)"
+                    ><icon-x></icon-x
+                  ></o-icon>
+                </div>
+              </div>
             </div>
           </div>
-          <div v-if="headTags[0]" class="head-tags">
-            <div v-for="it in headTags" :key="it" class="condition-detail">
-              {{ it.name }}
-              <o-icon class="icon-x" @click="deleteClick(it)"
-                ><icon-x></icon-x
-              ></o-icon>
-            </div>
-          </div>
-        </div>
+        </template>
         <div class="dialog-body">
           <el-tabs :tab-position="tabPosition" style="height: 100%">
             <el-tab-pane
@@ -738,18 +748,28 @@ function checkName(rule, value, callback) {
               </div>
             </el-tab-pane>
           </el-tabs>
-          <div class="btn-box">
-            <o-button style="margin-right: 24px" @click="cancelBtn"
+        </div>
+        <template #footer>
+          <div class="btn-box" style="display: flex; justify-content: center">
+            <o-button style="margin-right: 16px" @click="cancelBtn"
               >取消</o-button
             >
             <o-button type="primary" @click="confirmBtn">确定</o-button>
           </div>
-        </div>
+        </template>
       </el-dialog>
     </div>
     <!-- Fork -->
     <div class="fork-dialog">
-      <el-dialog v-model="forkShow" destroy-on-close title="创建FORK" center>
+      <el-dialog
+        v-model="forkShow"
+        width="640px"
+        title="创建Fork"
+        :show-close="false"
+        destroy-on-close
+        center
+        align-center
+      >
         <el-form
           ref="ruleFormRef"
           :model="forkForm"
@@ -764,7 +784,7 @@ function checkName(rule, value, callback) {
             ></el-input>
             <o-popper></o-popper>
           </el-form-item>
-          <el-form-item label="描述" prop="describe">
+          <el-form-item label="描述" prop="describe" class="fork-desc">
             <el-input
               v-model="forkForm.describe"
               type="textarea"
@@ -773,11 +793,18 @@ function checkName(rule, value, callback) {
               show-word-limit
             ></el-input>
           </el-form-item>
-          <el-form-item>
-            <o-button @click="forkShow = false">取消</o-button>
-            <o-button type="primary" @click="forkCreateClick">确定</o-button>
-          </el-form-item>
         </el-form>
+        <template #footer>
+          <div
+            class="dlg-actions"
+            style="display: flex; justify-content: center"
+          >
+            <o-button style="margin-right: 16px" @click="forkShow = false"
+              >取消</o-button
+            >
+            <o-button type="primary" @click="forkCreateClick">确定</o-button>
+          </div>
+        </template>
       </el-dialog>
     </div>
     <!-- loading -->
@@ -799,7 +826,7 @@ function checkName(rule, value, callback) {
 $theme: #0d8dff;
 .loading {
   :deep .el-dialog {
-    width: 800px;
+    // width: 800px;
     // min-height: 502px;
     --el-dialog-margin-top: 24vh;
     .el-dialog__body {
@@ -825,13 +852,8 @@ $theme: #0d8dff;
 }
 .fork-dialog {
   :deep .el-dialog {
-    width: 800px;
     // min-height: 502px;
     --el-dialog-margin-top: 24vh;
-    .el-dialog__header {
-      padding-bottom: 15px;
-      padding-top: 40px;
-    }
     .el-dialog__title {
       font-size: 24px;
       line-height: 32px;
@@ -839,7 +861,7 @@ $theme: #0d8dff;
     .el-form {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      // align-items: center;
       justify-content: center;
       .store-name {
         position: relative;
@@ -854,9 +876,8 @@ $theme: #0d8dff;
         }
         .o-popper {
           position: absolute;
-          right: -40px;
-          font-size: 24px;
-          top: 8px;
+          right: 15px;
+          top: 6px;
         }
       }
       .el-form-item {
@@ -864,14 +885,18 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
       }
+      .fork-desc {
+        margin-bottom: 0px;
+      }
       .o-button {
         margin: 24px 38px 0 0;
       }
     }
 
     .el-form--label-left .el-form-item__label {
-      width: 88px;
+      width: 90px;
       font-size: 14px;
+      margin-right: 18px;
     }
   }
 }
@@ -882,14 +907,11 @@ $theme: #0d8dff;
   .dialog-head {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #d8d8d8;
     .head-left {
       width: 188px;
       display: flex;
-      padding-left: 20px;
       align-items: center;
-      margin-bottom: 7px;
+      margin-top: 10px;
       .head-title {
         margin-right: 16px;
         font-size: 18px;
@@ -899,7 +921,6 @@ $theme: #0d8dff;
       .head-delete {
         font-size: 12px;
         line-height: 18px;
-        // margin-right: 52px;
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -922,10 +943,9 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         padding: 0 12px;
-        margin: 0 16px 10px 0;
+        margin: 10px 16px 0 0;
         height: 28px;
         font-size: 14px;
-        // color: #555;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
@@ -939,12 +959,15 @@ $theme: #0d8dff;
     }
   }
   .dialog-body {
+    border-top: 1px solid #d8d8d8;
+    padding-top: 7px;
     :deep .el-tabs__item {
       width: 188px;
       height: 56px;
       text-align: left;
       line-height: 56px;
       font-size: 18px;
+      padding-left: 24px;
     }
     :deep .el-tabs .el-tabs__header {
       box-shadow: none;
@@ -1016,11 +1039,6 @@ $theme: #0d8dff;
   }
 }
 
-.btn-box {
-  display: flex;
-  justify-content: center;
-  margin: 48px 0 14px 0;
-}
 .wrap {
   margin: 0 auto;
   padding: 0 16px;

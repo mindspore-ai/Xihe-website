@@ -8,7 +8,7 @@ import IconClear from '~icons/app/clear';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
-import OHeart from '@/components/OHeart.vue';
+import TrainLikes from '@/components/train/TrainLikes.vue';
 
 import { getUserDig, cancelCollection } from '@/api/api-project';
 import protocol from '../../../config/protocol';
@@ -38,7 +38,7 @@ let renderList = ref([]);
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '删除',
+    delete: '清除',
   },
   tags: [],
 
@@ -126,7 +126,7 @@ function getDetailData() {
       });
     getTagList();
   } catch (error) {
-    router.push('/notfound');
+    router.push('/404');
     console.error(error);
   }
 }
@@ -388,12 +388,12 @@ watch(
           <o-icon><icon-copy></icon-copy></o-icon>
         </div>
         <div v-if="userInfoStore.userName !== detailData.owner">
-          <o-heart
+          <train-likes
             :is-digged="isDigged"
             :dig-count="detailData.like_count"
             class="loves"
             @click="handleDatasetLike"
-          ></o-heart>
+          ></train-likes>
         </div>
       </div>
       <div class="label-box">
@@ -422,25 +422,35 @@ watch(
       <router-view class="wrap"></router-view>
     </div>
     <div class="tags-box">
-      <el-dialog v-model="isTagShow" width="804px" :show-close="false">
-        <div class="dialog-head">
-          <div class="head-left">
-            <div class="head-title">{{ dialogList.head.title }}</div>
-            <div class="head-delete" @click="deleteModelTags">
-              <o-icon><icon-clear></icon-clear></o-icon>
-              {{ dialogList.head.delete }}
-            </div>
-          </div>
+      <el-dialog
+        v-model="isTagShow"
+        width="800px"
+        :show-close="false"
+        align-center
+        destroy-on-close
+      >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
+            <div class="dialog-head">
+              <div class="head-left">
+                <div class="head-title">{{ dialogList.head.title }}</div>
+                <div class="head-delete" @click="deleteModelTags">
+                  <o-icon><icon-clear></icon-clear></o-icon>
+                  {{ dialogList.head.delete }}
+                </div>
+              </div>
 
-          <div v-if="headTags[0]" class="head-tags">
-            <div v-for="it in headTags" :key="it" class="condition-detail">
-              {{ it.name }}
-              <o-icon class="icon-x" @click="deleteClick(it)"
-                ><icon-x></icon-x
-              ></o-icon>
+              <div v-if="headTags[0]" class="head-tags">
+                <div v-for="it in headTags" :key="it" class="condition-detail">
+                  {{ it.name }}
+                  <o-icon class="icon-x" @click="deleteClick(it)"
+                    ><icon-x></icon-x
+                  ></o-icon>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
         <div class="dialog-body">
           <el-tabs :tab-position="tabPosition" style="height: 100%">
             <el-tab-pane
@@ -449,7 +459,6 @@ watch(
               :label="menu.tab"
             >
               <div class="body-right-container">
-                <!-- <div v-if="menu.key == 'task'" class="body-right"> -->
                 <div
                   v-for="item in renderList[menu.key].items"
                   :key="item"
@@ -475,13 +484,15 @@ watch(
               </div>
             </el-tab-pane>
           </el-tabs>
-          <div class="btn-box">
-            <o-button style="margin-right: 24px" @click="cancelBtn"
+        </div>
+        <template #footer>
+          <div class="btn-box" style="display: flex; justify-content: center">
+            <o-button style="margin-right: 16px" @click="cancelBtn"
               >取消</o-button
             >
             <o-button type="primary" @click="confirmBtn">确定</o-button>
           </div>
-        </div>
+        </template>
       </el-dialog>
     </div>
   </div>
@@ -498,12 +509,11 @@ $theme: #0d8dff;
 .dialog-head {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
   .head-left {
     width: 188px;
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    margin-top: 10px;
     .head-title {
       margin-right: 16px;
       font-size: 18px;
@@ -513,7 +523,6 @@ $theme: #0d8dff;
     .head-delete {
       font-size: 12px;
       line-height: 18px;
-      // margin-right: 52px;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -536,7 +545,7 @@ $theme: #0d8dff;
       display: flex;
       align-items: center;
       padding: 0 12px;
-      margin: 0 16px 10px 0;
+      margin: 10px 16px 0 0;
       height: 28px;
       font-size: 14px;
       color: $theme;
@@ -551,18 +560,16 @@ $theme: #0d8dff;
     }
   }
 }
-:deep .el-dialog {
-  width: 800px;
-  min-height: 502px;
-}
 .dialog-body {
-  margin-bottom: 18px;
+  border-top: 1px solid #d8d8d8;
+  padding-top: 7px;
   :deep .el-tabs__item {
     width: 188px;
     height: 56px;
     text-align: left;
     line-height: 56px;
     font-size: 18px;
+    padding-left: 24px;
   }
   :deep .el-tabs .el-tabs__header {
     box-shadow: none;
@@ -615,7 +622,6 @@ $theme: #0d8dff;
       display: flex;
     }
     .body-right {
-      // margin-left: 24px;
       .tan-title {
         font-size: 16px;
         line-height: 24px;
@@ -634,11 +640,6 @@ $theme: #0d8dff;
   }
 }
 
-.btn-box {
-  display: flex;
-  justify-content: center;
-  margin-top: 48px;
-}
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
@@ -751,7 +752,6 @@ $theme: #0d8dff;
     color: #555555;
     font-weight: normal;
     line-height: 48px;
-    padding-bottom: 7px;
 
     &:hover {
       color: #0d8dff;

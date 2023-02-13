@@ -9,9 +9,10 @@ import { useUserInfoStore } from '@/stores';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/project';
+import { ElDialog } from 'element-plus';
 
-import RelateCard from '@/components/RelateCard.vue';
-import NoRelate from '@/components/NoRelate.vue';
+import RelateCard from '@/components/train/RelateCard.vue';
+import NoRelate from '@/components/train/NoRelate.vue';
 
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import {
@@ -364,7 +365,7 @@ const clientSrc = ref('');
 //   );
 // }
 //拥有者启动推理
-function start2() {
+function handleStart() {
   if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
@@ -426,7 +427,7 @@ function start2() {
 }
 
 //停止推理
-function stop() {
+function handleStop() {
   closeConn();
   msg.value = '';
 }
@@ -474,14 +475,14 @@ onUnmounted(() => {
           frameborder="0"
           :style="{ height: hasPrefix ? '100%' : '800px' }"
         ></iframe>
-        <o-button status="error" @click="stop">停止</o-button>
+        <o-button status="error" @click="handleStop">停止</o-button>
       </div>
       <div v-else-if="msg === '启动中'" class="markdown-body">
         <div class="loading">
           <img src="@/assets/gifs/loading.gif" alt="" />
           <p>启动大约需要5分钟,请耐心等待</p>
         </div>
-        <o-button status="error" @click="stop">停止</o-button>
+        <o-button status="error" @click="handleStop">停止</o-button>
       </div>
       <div
         v-else-if="
@@ -505,7 +506,7 @@ onUnmounted(() => {
         <o-button
           v-if="detailData.owner === userInfo.userName"
           type="primary"
-          @click="start2"
+          @click="handleStart"
           >重新启动</o-button
         >
       </div>
@@ -514,12 +515,12 @@ onUnmounted(() => {
         class="markdown-body"
       >
         <div class="markdown-file" v-html="result2"></div>
-        <o-button type="primary" :disabled="!canStart" @click="start2"
+        <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
       </div>
       <div v-else class="upload-readme markdown-body">
-        <o-button type="primary" :disabled="!canStart" @click="start2"
+        <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
         <div class="upload-readme-img">
@@ -627,15 +628,20 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- 添加数据集 -->
+    <!-- 添加数据集弹窗 -->
     <el-dialog
       v-model="isShow"
-      :title="i18n.addDataset"
-      width="30%"
-      destroy-on-close
+      width="640px"
       :show-close="false"
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addDataset }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/数据集名称">
           <el-input
@@ -646,7 +652,7 @@ onUnmounted(() => {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 38px" @click="isShow = false"
+          <o-button style="margin-right: 16px" @click="isShow = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmAdd">确定</o-button>
@@ -656,12 +662,17 @@ onUnmounted(() => {
     <!-- 添加模型 -->
     <el-dialog
       v-model="isShow1"
-      :title="i18n.addModel"
-      width="30%"
-      destroy-on-close
+      width="640px"
       :show-close="false"
       center
+      align-center
+      destroy-on-close
     >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          {{ i18n.addModel }}
+        </div>
+      </template>
       <el-form>
         <el-form-item label="拥有者/模型名称">
           <el-input
@@ -671,8 +682,8 @@ onUnmounted(() => {
         </el-form-item>
       </el-form>
       <template #footer>
-        <span class="dialog-footer" style="padding-bottom: 48">
-          <o-button style="margin-right: 38px" @click="isShow1 = false"
+        <span class="dialog-footer">
+          <o-button style="margin-right: 16px" @click="isShow1 = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmClick">确定</o-button>
@@ -683,25 +694,6 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-:deep .el-overlay-dialog {
-  top: 100px;
-}
-:deep .el-dialog {
-  min-height: 292px !important;
-  width: 800px;
-  .el-dialog__header {
-    padding-top: 40px !important;
-    padding-bottom: 15px !important;
-    .el-dialog__title {
-      font-size: 24px;
-      line-height: 32px;
-    }
-  }
-  .el-dialog__body {
-    display: flex;
-    justify-content: center;
-  }
-}
 .model-card {
   display: flex;
   padding-bottom: 40px;
@@ -859,9 +851,7 @@ onUnmounted(() => {
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        // margin-top: 24px;
         .dataset-item {
-          // max-width: 424px;
           width: 100%;
           padding: 24px;
           background-color: #fff;
@@ -921,6 +911,16 @@ onUnmounted(() => {
         margin-left: 4px;
         font-size: 12px;
       }
+    }
+  }
+}
+:deep(.el-form) {
+  .el-form-item {
+    margin-bottom: 0px;
+    color: #555;
+    .el-form-item__label {
+      padding-right: 40px;
+      color: #555;
     }
   }
 }

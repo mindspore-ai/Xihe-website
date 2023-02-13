@@ -30,7 +30,7 @@ const referencevideo =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E7%B4%AB%E4%B8%9C%E5%A4%AA%E5%88%9D.mp4';
 const instancevideo =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%BA%94%E7%94%A8%E8%A7%86%E9%A2%91%E8%B0%83%E8%89%B2%E7%89%88-0614.mp4';
-// const videoSrc = ref('');
+
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
@@ -60,18 +60,13 @@ const videoImgArr2 = [
   },
 ];
 function playVideo(videoUrl) {
-  // 获得视频元素
-  const video = document.getElementById('video');
   showVideo.value = true;
-  video.src = videoUrl;
-  video.play();
-}
-function toggleDialog() {
-  const video = document.getElementById('video');
-  showVideo.value = false;
-  // 结束视频
-  video.pause();
-  video.currentTime = 0;
+  nextTick(() => {
+    // 获得视频元素
+    const video = document.getElementById('video');
+    video.src = videoUrl;
+    video.play();
+  });
 }
 // 播放参考设计部分的视频
 function playReferenceVideo() {
@@ -143,10 +138,6 @@ function closeInstanceVideo() {
                   <img class="video-img1" :src="item.src" alt="" />
                   <img class="video-img2" :src="taichuPlay" alt="" />
                 </div>
-                <!-- <div class="audio-video-img" @click="playVideo">
-                  <img class="audio-video-img1" :src="taichuVideo3" alt="" />
-                  <img class="audio-video-img2" :src="taichuPlay" alt="" />
-                </div> -->
                 <p>以图生音</p>
               </div>
               <div class="diagram-video">
@@ -159,10 +150,6 @@ function closeInstanceVideo() {
                   <img class="video-img1" :src="taichuVideo2" alt="" />
                   <img class="video-img2" :src="taichuPlay" alt="" />
                 </div>
-                <!-- <div class="audio-video-img" @click="playVideo">
-                  <img class="audio-video-img1" :src="taichuVideo2" alt="" />
-                  <img class="audio-video-img2" :src="taichuPlay" alt="" />
-                </div> -->
                 <p>以音生图</p>
               </div>
             </div>
@@ -189,15 +176,12 @@ function closeInstanceVideo() {
             <p>全球首个三模态大模型</p>
           </div>
           <div v-if="showReferenceVideo" class="video-content">
-            <!-- <span class="close-btn" @click="closeReferenceVideo"> -->
-            <!-- <img src="" alt=""> -->
             <img
               class="close-btn"
               :src="taichuClose"
               alt=""
               @click="closeReferenceVideo"
             />
-            <!-- </span> -->
             <video
               id="referenceVideo"
               controls="controls"
@@ -343,16 +327,21 @@ function closeInstanceVideo() {
           </div>
         </div>
       </div>
-      <o-dialog :is-center="true" :show="showVideo" @close-click="toggleDialog">
+      <el-dialog
+        v-model="showVideo"
+        width="640px"
+        align-center
+        class="video-dlg"
+        destroy-on-close
+      >
         <video
           id="video"
-          width="198"
-          height="90"
+          height="500"
           controls="controls"
           :src="taichuvideo1"
           class="home-video"
         ></video>
-      </o-dialog>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -1012,13 +1001,18 @@ function closeInstanceVideo() {
     }
   }
 }
-.o-dialog {
+:deep(.el-dialog) {
+  .el-dialog__header {
+    .el-dialog__headerbtn {
+      font-size: 24px;
+    }
+  }
   video {
     width: 100%;
-    height: 520px;
+    // height: 500px;
     @media screen and (max-width: 768px) {
       width: 100%;
-      max-height: 20vh;
+      height: 40vh;
     }
   }
 }

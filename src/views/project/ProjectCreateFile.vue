@@ -9,19 +9,18 @@ import IconRemove from '~icons/app/remove';
 import warningImg from '@/assets/icons/warning.png';
 
 import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 import { createTrainProject } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
-// eslint-disable-next-line no-unused-vars
-import ModelList from '@/components/ModelList.vue';
-// eslint-disable-next-line no-unused-vars
-import DatasetList from '@/components/DatasetList.vue';
-// eslint-disable-next-line no-unused-vars
-import HyperparamsList from '@/components/HyperparamsList.vue';
-// eslint-disable-next-line no-unused-vars
-import EnvironmentList from '@/components/EnvironmentList.vue';
+
+import TrainModel from '@/views/project/train/TrainModel.vue';
+import TrainDataset from '@/views/project/train/TrainDataset.vue';
+import TrainHyperparams from '@/views/project/train/TrainHyperparams.vue';
+import TrainEnvironment from '@/views/project/train/TrainEnvironment.vue';
+import TrainDirectory from '@/views/project/train/TrainDirectory.vue';
 
 const userInfoStore = useUserInfoStore();
 
@@ -235,7 +234,6 @@ async function confirmCreating(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       // 获取模型数据
-      // debugger;
       model.value.forEach((element) => {
         form.models.push(element.modelData);
       });
@@ -497,10 +495,6 @@ function selectFile(item) {
         <div class="createfile-content-title">
           <div class="createfile-content-title-left">创建训练实例</div>
           <div class="createfile-content-title-right">
-            <!-- TODO:暂时关闭入口 -->
-            <!-- <div class="selectfile-option" @click="goSelectFile">
-              选择配置文件
-            </div> -->
             <div class="createfile-option">创建配置文件</div>
           </div>
         </div>
@@ -668,7 +662,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <model-list ref="model"></model-list>
+                      <TrainModel ref="model"></TrainModel>
                       <div class="delete-btn" @click="deleteModel(item)">
                         <o-icon class="train-icon"
                           ><icon-remove></icon-remove
@@ -712,7 +706,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <dataset-list ref="dataset"></dataset-list>
+                      <TrainDataset ref="dataset"></TrainDataset>
                       <div class="delete-btn" @click="deleteDataset(item)">
                         <o-icon class="train-icon"
                           ><icon-remove></icon-remove
@@ -772,7 +766,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <hyperparams-list ref="hyperparams"></hyperparams-list>
+                      <TrainHyperparams ref="hyperparams"></TrainHyperparams>
                       <div class="delete-btn" @click="deleteHyperparams(item)">
                         <o-icon class="train-icon">
                           <icon-remove></icon-remove>
@@ -817,7 +811,7 @@ function selectFile(item) {
                       :key="item.id"
                       class="model-list"
                     >
-                      <environment-list ref="environment"></environment-list>
+                      <TrainEnvironment ref="environment"></TrainEnvironment>
                       <div class="delete-btn" @click="deleteEnvironment(item)">
                         <o-icon class="train-icon">
                           <icon-remove></icon-remove>
@@ -850,25 +844,23 @@ function selectFile(item) {
     </div>
   </div>
   <!-- 训练在24小时后终止提示弹窗 -->
-  <o-dialog :show="tips" :close="false" @close-click="toggleDelDlg(false)">
-    <template #head>
-      <div
-        class="dlg-title"
-        :style="{ textAlign: 'center', paddingTop: '40px' }"
-      >
+  <el-dialog
+    v-model="tips"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+  >
+    <template #header="{ titleId, titleTitle }">
+      <div :id="titleId" :class="titleTitle">
         <img :src="warningImg" alt="" />
       </div>
     </template>
     <div
       class="dlg-body"
-      :style="{
-        padding: '8px 0 30px',
-        fontSize: '18px',
-        textAlign: 'center',
-        width: '100%',
-      }"
+      style="color: #555; font-size: 18px; text-align: center"
     >
-      <div :style="{ marginBottom: '8px' }">
+      <div style="margin-bottom: 10px">
         亲爱的用户您好，为保证用户使用体验，
       </div>
       <div>
@@ -876,16 +868,9 @@ function selectFile(item) {
         >，请您注意使用时长哦~
       </div>
     </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '46px',
-        }"
-      >
-        <o-button :style="{ marginRight: '24px' }" @click="tips = false"
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="tips = false"
           >取消</o-button
         >
         <o-button type="primary" @click="confirmCreating(queryRef)"
@@ -893,48 +878,32 @@ function selectFile(item) {
         </o-button>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
+
   <!-- 代码目录、启动文件弹窗 -->
-  <o-dialog :show="showDir" :close="false">
-    <template #head>
-      <div
-        v-if="option === 'directory'"
-        class="dlg-title"
-        :style="{ textAlign: 'center' }"
-      >
-        代码目录
-      </div>
-      <div v-else class="dlg-title" :style="{ textAlign: 'center' }">
-        启动文件
+  <el-dialog
+    v-model="showDir"
+    :show-close="false"
+    center
+    width="800px"
+    align-center
+  >
+    <template #header="{ titleId, titleTitle }">
+      <div :id="titleId" :class="titleTitle">
+        <div v-if="option === 'directory'">代码目录</div>
+        <div v-else>启动文件</div>
       </div>
     </template>
-    <div
-      class="dlg-body"
-      :style="{
-        padding: '8px 0 12px',
-        fontSize: '18px',
-        textAlign: 'center',
-      }"
-    >
-      <!-- 弹窗的目录子组件 -->
-      <directory-tree
-        v-if="detailData.id"
-        :repo-detail="detailData"
-        :option-type="option"
-        @handle="handleClick"
-      ></directory-tree>
-    </div>
-    <template #foot>
-      <div
-        class="dlg-actions"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingBottom: '16px',
-        }"
-      >
+    <TrainDirectory
+      v-if="detailData.id"
+      :repo-detail="detailData"
+      :option-type="option"
+      @handle="handleClick"
+    ></TrainDirectory>
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
         <div v-if="option === 'directory'">
-          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+          <o-button style="margin-right: 16px" @click="showDir = false"
             >取消</o-button
           >
           <o-button type="primary" @click="confirmSelect(option)"
@@ -942,17 +911,17 @@ function selectFile(item) {
           >
         </div>
         <div v-if="option === 'file'">
-          <o-button :style="{ marginRight: '24px' }" @click="showDir = false"
+          <o-button style="margin-right: 16px" @click="showDir = false"
             >取消</o-button
           >
           <o-button v-if="showbtn" type="primary" @click="confirmSelect(option)"
             >确定</o-button
           >
-          <o-button v-else type="secondary">确定</o-button>
+          <o-button v-else disabled type="secondary">确定</o-button>
         </div>
       </div>
     </template>
-  </o-dialog>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -1205,4 +1174,14 @@ function selectFile(item) {
     }
   }
 }
+
+/* :deep(.el-dialog) {
+  .el-dialog__header{
+    padding-bottom: 24px !important;
+  }
+  .el-dialog__body{
+    background-color: red;
+
+  }
+} */
 </style>

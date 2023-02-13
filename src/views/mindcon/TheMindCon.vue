@@ -35,6 +35,7 @@ import { GetRankingList } from '@/api/api-activity';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 
 const router = useRouter();
 
@@ -145,11 +146,15 @@ function goChallenge(index) {
         } else {
           window.open(
             'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-            '_black'
+            '_blank'
           );
         }
       } else {
         showApplication.value = true;
+        window.open(
+          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+          '_blank'
+        );
       }
     }
   }
@@ -254,7 +259,14 @@ function showDialog2() {
   if (!isLogined) {
     goAuthorize();
   } else {
-    showApplication.value = true;
+    if (isOver.value) {
+      ElMessage({
+        type: 'warning',
+        message: '本次活动已经结束，期待下届MindCon与你相遇',
+      });
+    } else {
+      showApplication.value = true;
+    }
   }
 }
 function goRule() {
@@ -469,11 +481,13 @@ function goRule() {
     <div v-if="isShow" class="activity-dlg">
       <el-dialog
         v-model="isShow"
+        width="640px"
+        center
         :close-on-click-modal="false"
         :close-on-press-escape="false"
       >
-        <template #header>
-          <p>知识挑战赛</p>
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">知识挑战赛</div>
         </template>
         <div class="tip">
           <o-icon>
@@ -491,29 +505,33 @@ function goRule() {
         <p v-if="isInProgress" class="progress_tip">
           （提示：您有其他页面正在答题中，如果继续点击开始答题将结束上次答题）
         </p>
-
-        <div class="dlg-foot">
-          <o-button type="primary" size="small" @click="handleStartAnswer"
-            >开始答题</o-button
-          >
-        </div>
+        <template #footer>
+          <div class="dlg-foot">
+            <o-button type="primary" size="small" @click="handleStartAnswer"
+              >开始答题</o-button
+            >
+          </div>
+        </template>
       </el-dialog>
     </div>
 
     <!-- 报名弹窗 -->
-    <el-dialog
-      v-model="showApplication"
-      destroy-on-close
-      :show-close="false"
-      width="900"
-    >
-      <CompetitionApplication
-        ref="applicationData"
-        :show-application="showApplication"
-        @hide-form="hideForm"
-        @get-activity="getActivity"
-      ></CompetitionApplication>
-    </el-dialog>
+    <div v-if="showApplication" class="application-dlg">
+      <el-dialog
+        v-model="showApplication"
+        width="800px"
+        :show-close="false"
+        align-center
+        destroy-on-close
+      >
+        <CompetitionApplication
+          ref="applicationData"
+          :show-application="showApplication"
+          @hide-form="hideForm"
+          @get-activity="getActivity"
+        ></CompetitionApplication>
+      </el-dialog>
+    </div>
   </div>
   <div class="qr-code">
     <img :src="qrCode" alt="" />
@@ -523,17 +541,17 @@ function goRule() {
 <style lang="scss" scoped>
 .activity-dlg {
   :deep(.el-dialog) {
-    width: 817px !important;
+    // width: 817px !important;
     --el-dialog-margin-top: 32vh;
-    .el-dialog__header {
-      display: block;
-      // font-size: 24px;
-      // line-height: 32px;
-      // padding-top: 40px;
-      color: #000000;
-      text-align: center;
-      margin-right: 0;
-    }
+    // .el-dialog__header {
+    //   display: block;
+    //   // font-size: 24px;
+    //   // line-height: 32px;
+    //   // padding-top: 40px;
+    //   color: #000000;
+    //   text-align: center;
+    //   margin-right: 0;
+    // }
 
     .el-dialog__body {
       padding: 0px 40px 40px;
@@ -580,7 +598,6 @@ function goRule() {
     .dlg-foot {
       display: flex;
       justify-content: center;
-      margin-top: 40px;
     }
   }
 }
@@ -1050,39 +1067,44 @@ function goRule() {
   }
 }
 
-:deep(.el-dialog) {
-  width: 900px;
-  // position: fixed;
-  // left: 0;
-  // right: 0;
-  // // top: 0;
-  // bottom: 0;
-  // width: 100%;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 40px;
-    .application {
-      padding: 0px;
-      .application-title {
-        // background-color: red;
-        border: none;
-        padding-bottom: 0px;
-        display: flex;
-        flex-direction: column;
-        .text {
-          margin-bottom: 16px;
-          text-align: center;
+.application-dlg {
+  :deep(.el-dialog) {
+    .el-dialog__header {
+      height: 40px;
+      padding: 0;
+    }
+    .el-dialog__body {
+      padding-bottom: 40px !important;
+      .application {
+        padding: 0px;
+        .application-title {
+          border: none;
+          padding-bottom: 0px;
+          display: flex;
+          flex-direction: column;
+          .text {
+            margin-bottom: 24px;
+            text-align: center;
+            line-height: 32px;
+          }
+          .tips {
+            width: 100%;
+          }
         }
-        .tips {
-          width: 100%;
+        .application-form {
+          display: flex;
+          justify-content: flex-start;
+          padding-left: 50px;
+          .el-form {
+            .el-form-item {
+              .requirement {
+                span {
+                  margin-left: 4px;
+                }
+              }
+            }
+          }
         }
-      }
-      .application-form {
-        display: flex;
-        justify-content: flex-start;
-        padding-left: 50px;
       }
     }
   }

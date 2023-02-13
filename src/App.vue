@@ -162,11 +162,4 @@ body.el-popup-parent--hidden {
     font-weight: 600;
   }
 }
-
-.dlg-btn {
-  display: flex;
-  margin-top: 24px;
-  margin-bottom: 16px;
-  justify-content: center;
-}
 </style>

@@ -1,20 +1,19 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import useClipboard from 'vue-clipboard3';
 
 import { handleMarkdown } from '@/shared/markdown';
 
-import Files from '~icons/app/files';
+import IconFiles from '~icons/app/files';
 import IconCheck from '~icons/app/check';
 import IconCopy from '~icons/app/copy';
 import IconEditing from '~icons/app/editing';
 import IconDelete from '~icons/app/delete';
 import IconDownload from '~icons/app/download';
-
-import { changeByte } from '@/shared/utils';
-
 import warningImg from '@/assets/icons/warning.png';
 
+import { changeByte } from '@/shared/utils';
 import { useLoadingState } from '@/stores/index';
 import {
   getGitlabFileRaw,
@@ -23,6 +22,7 @@ import {
   getGitlabTree,
 } from '@/api/api-gitlab';
 import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 import { useFileData } from '@/stores';
 
 const prop = defineProps({
@@ -31,6 +31,8 @@ const prop = defineProps({
     default: '',
   },
 });
+
+const { toClipboard } = useClipboard();
 
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
@@ -66,7 +68,6 @@ const i18n = {
 };
 const showBlob = ref(false);
 const suffix = ref('');
-const inputDom = ref(null);
 const showDel = ref(false);
 
 function previewFile() {
@@ -79,32 +80,38 @@ function previewFile() {
     path: path.value,
     id: repoDetailData.value.id,
     name: routerParams.name,
-  }).then((res) => {
-    if (typeof res === 'object') {
-      rawData.value = JSON.stringify(res, null, '\t');
-      codeString.value = '```json \n' + rawData.value + '\n```';
-      showBlob.value = true;
-    } else if (
-      suffix.value === 'md' ||
-      suffix.value === 'json' ||
-      suffix.value === 'py' ||
-      suffix.value === 'txt' ||
-      suffix.value === 'log' ||
-      !res.toString().includes('�')
-    ) {
-      rawData.value = res;
-      // md文件不需加```
-      if (suffix.value === 'md') {
-        codeString.value = res;
+  })
+    .then((res) => {
+      // json 文件返回为 object
+      if (typeof res === 'object') {
+        rawData.value = JSON.stringify(res, null, '\t');
+        codeString.value = '```json \n' + rawData.value + '\n```';
+        showBlob.value = true;
+      } else if (
+        // 以� 判断是否包含乱码
+        suffix.value === 'md' ||
+        suffix.value === 'json' ||
+        suffix.value === 'py' ||
+        suffix.value === 'txt' ||
+        suffix.value === 'log' ||
+        !res.toString().includes('�')
+      ) {
+        rawData.value = res;
+        // md文件不需加```
+        if (suffix.value === 'md') {
+          codeString.value = res;
+        } else {
+          codeString.value =
+            '```' + suffix.value + ' \n' + rawData.value + '\n```';
+        }
+        showBlob.value = true;
       } else {
-        codeString.value =
-          '```' + suffix.value + ' \n' + rawData.value + '\n```';
+        showBlob.value = false;
       }
-      showBlob.value = true;
-    } else {
-      showBlob.value = false;
-    }
-  });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 function verifyFile() {
   const parentDirectory = path.value.includes('/')
@@ -113,14 +120,14 @@ function verifyFile() {
         .splice(0, path.value.split('/').length - 1)
         .join('/')
     : '';
-  try {
-    getGitlabTree({
-      type: prop.moduleName,
-      user: routerParams.user,
-      path: parentDirectory,
-      id: repoDetailData.value.id,
-      name: routerParams.name,
-    }).then((tree) => {
+  getGitlabTree({
+    type: prop.moduleName,
+    user: routerParams.user,
+    path: parentDirectory,
+    id: repoDetailData.value.id,
+    name: routerParams.name,
+  })
+    .then((tree) => {
       const treeItem = tree?.data?.filter((item) => {
         return item.path === path.value;
       });
@@ -129,12 +136,12 @@ function verifyFile() {
       } else if (treeItem?.length && treeItem[0].is_lfs_file) {
         showBlob.value = false;
       } else {
-        router.push('/notfound');
+        router.push('/404');
       }
+    })
+    .catch((error) => {
+      console.error(error);
     });
-  } catch (error) {
-    console.error(error);
-  }
 }
 verifyFile();
 
@@ -150,7 +157,7 @@ async function headleDelFile(path) {
       message: '删除成功',
     });
     showDel.value = false;
-    pathClick(route.params.contents.length - 1);
+    handleClick(route.params.contents.length - 1);
   });
 }
 
@@ -171,10 +178,8 @@ function goRaw(blob) {
   window.open(href);
 }
 
-function copyText(textValue) {
-  inputDom.value.value = textValue;
-  inputDom.value.select();
-  document.execCommand('Copy'); // 执行浏览器复制命令
+async function copyText(textValue) {
+  await toClipboard(textValue);
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -188,7 +193,7 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
-function pathClick(index) {
+function handleClick(index) {
   if (route.params.contents.length === index) {
     return false;
   } else {
@@ -216,16 +221,15 @@ watch(
 
 <template>
   <div class="file-editing">
-    <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="file-path">
-      <div class="item-path" @click="pathClick(null)">
+      <div class="item-path" @click="handleClick(null)">
         {{ routerParams.name }}
       </div>
       <div
         v-for="(item, index) in routerParams.contents"
         :key="item"
         class="item-path"
-        @click="pathClick(index + 1)"
+        @click="handleClick(index + 1)"
       >
         /{{ item }}
       </div>
@@ -233,7 +237,7 @@ watch(
     <div class="editing-card">
       <div class="file">
         <div class="file-operation">
-          <o-icon><files></files></o-icon>
+          <o-icon><icon-files></icon-files></o-icon>
           <span class="text">{{ repoDetailData.desc }}</span>
         </div>
         <div class="file-operation">
@@ -314,45 +318,43 @@ watch(
         </div>
       </div>
     </div>
-    <o-dialog :show="showDel" :close="false" @close-click="toggleDelDlg(false)">
-      <template #head>
-        <div class="dlg-title" :style="{ textAlign: 'center' }">
+    <el-dialog
+      v-model="showDel"
+      width="640px"
+      :show-close="false"
+      center
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
           <img :src="warningImg" alt="" />
         </div>
       </template>
       <div
         class="dlg-body"
-        :style="{
-          padding: '8px 0 12px',
-          fontSize: '18px',
-          textAlign: 'center',
-          width: '640px',
-        }"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
       >
         {{ i18n.delete.description }} {{ path }} 吗？
       </div>
-      <template #foot>
-        <div
-          class="dlg-actions"
-          :style="{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '56px',
-          }"
-        >
-          <o-button
-            :style="{ marginRight: '24px' }"
-            @click="toggleDelDlg(false)"
-            >{{ i18n.delete.cancel }}</o-button
-          >
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">
+            {{ i18n.delete.cancel }}
+          </o-button>
           <o-button
             type="primary"
             @click="headleDelFile(path, repoDetailData.repo_id)"
-            >{{ i18n.delete.confirm }}</o-button
           >
+            {{ i18n.delete.confirm }}
+          </o-button>
         </div>
       </template>
-    </o-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -368,13 +370,6 @@ watch(
 .file-editing {
   background-color: #f5f6f8;
   max-width: 1472px;
-  // padding: 27px 185px;
-  .input-dom {
-    position: absolute;
-    width: 0;
-    height: 0;
-    opacity: 0;
-  }
   .file-path {
     display: flex;
     font-size: 18px;

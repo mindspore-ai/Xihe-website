@@ -15,8 +15,8 @@ import IconDownload from '~icons/app/wukong-download';
 import IconLike from '~icons/app/wukong-like';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
-// import IconCancel from '~icons/app/cancel-public';
-// import IconArrow from '~icons/app/arrow-top';
+import IconCancel from '~icons/app/cancel-public';
+import IconArrow from '~icons/app/arrow-top';
 import IconShare from '~icons/app/share';
 import IconCopy from '~icons/app/copy-nickname';
 import IconWarning from '~icons/app/warning1';
@@ -30,6 +30,8 @@ import {
   addLikePicture,
   cancelLikePicture,
   temporaryLink,
+  publicTemporaryPicture,
+  cancelPublic,
 } from '@/api/api-modelzoo.js';
 import { ElMessage } from 'element-plus';
 
@@ -185,32 +187,49 @@ const lists = ref([
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
 
-// const count = ref(0);
-// // 公开图片
-// function publicImage() {
-//   count.value++;
-
-//   if (count.value <= 1) {
-//     ElMessage({
-//       type: 'success',
-//       message: '公开成功，可在画作管理中查看',
-//     });
-//   } else {
-//     ElMessage({
-//       type: 'warning',
-//       message: '重复操作',
-//     });
-//   }
-// }
 const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
 const inputDom = ref();
+
 userAvatar.value = userInfoStore.avatar.replace(
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
   '/obs-xihe-avatar/'
 );
+
+// 公开图片
+async function publicImage(val, index) {
+  try {
+    const res = await publicTemporaryPicture({ obspath: val });
+    if (res.data) {
+      inferList.value[index].publicId = res.data.data.id;
+
+      ElMessage({
+        type: 'success',
+        message: '公开成功，可在画作管理中查看',
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  // count.value++;
+}
+// 取消公开
+async function cancelPublicImage(i) {
+  try {
+    const res = await cancelPublic(inferList.value[i].publicId);
+    inferList.value[i].publicId = '';
+    ElMessage({
+      type: 'success',
+      message: '已取消公开',
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 // 分享图片
 function shareImage(url) {
   posterDlg.value = true;
@@ -357,13 +376,13 @@ async function handleInfer() {
   }
 }
 const inferList = ref([
-  { isCollected: false, id: '' },
-  { isCollected: false, id: '' },
-  { isCollected: false, id: '' },
-  { isCollected: false, id: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
 ]);
 // 收藏
-function handleCollecte(key, index) {
+function handleCollect(key, index) {
   addLikePicture({ obspath: key }).then((res) => {
     if (res.data.data) {
       inferList.value[index].isCollected = true;
@@ -376,7 +395,7 @@ function handleCollecte(key, index) {
   });
 }
 // 取消收藏
-function handleCancelCollecte(index) {
+function handleCancelCollect(index) {
   cancelLikePicture(inferList.value[index].id).then((res) => {
     if (res.status === 204) {
       inferList.value[index].isCollected = false;
@@ -414,7 +433,7 @@ function downloadImage(item) {
   const deadTime = item.substring(index2 + 1, i2);
   const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-  if ((deadTime - currentTime) / 60 < 1) {
+  if ((deadTime - currentTime) / 60 < 60) {
     temporaryLink({ link: item }).then((res) => {
       if (res.data.data) {
         requestImg(res.data.data.link);
@@ -535,17 +554,17 @@ function refreshTags() {
     >
       <template #header="{ titleClass }">
         <div class="infer-dlg-head">
-          <span class="title" :class="titleClass"
-            >{{ inputText }}&nbsp;&nbsp;&nbsp;#风格：{{ sortTag }}</span
-          >
+          <p class="title" :class="titleClass">
+            {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
+            >{{ sortTag }}
+          </p>
         </div>
       </template>
-      <!-- 推理中 -->
       <div v-if="!isInferred" class="infer-dlg-loading">
         <img :src="loading" alt="" />
         <p>正在创作中，请耐心等待</p>
       </div>
-      <!-- 推理完成 -->
+
       <div v-if="isInferred && !isError" class="infer-dlg-result">
         <div
           v-for="(value, key, index) in styleBackground"
@@ -555,11 +574,17 @@ function refreshTags() {
           <img :src="value" alt="" />
           <div class="handles">
             <!-- 公开 -->
-            <!-- <div class="public">
-              <p @click="publicImage">
+            <div class="public">
+              <p
+                v-if="!inferList[index].publicId"
+                @click="publicImage(key, index)"
+              >
                 <o-icon><icon-arrow></icon-arrow></o-icon>
               </p>
-            </div> -->
+              <p v-else class="icon-item" @click="cancelPublicImage(index)">
+                <o-icon><icon-cancel></icon-cancel></o-icon>
+              </p>
+            </div>
             <!-- 下载收藏 -->
             <div class="handles-contain">
               <p @click="downloadImage(value)">
@@ -570,7 +595,7 @@ function refreshTags() {
               </p>
               <p
                 v-if="!inferList[index].isCollected"
-                @click="handleCollecte(key, index)"
+                @click="handleCollect(key, index)"
               >
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
@@ -578,7 +603,7 @@ function refreshTags() {
               <p
                 v-if="inferList[index].isCollected"
                 class="liked"
-                @click="handleCancelCollecte(index)"
+                @click="handleCancelCollect(index)"
               >
                 <o-icon><icon-heart></icon-heart></o-icon>
               </p>
@@ -588,7 +613,7 @@ function refreshTags() {
           <div class="mask"></div>
         </div>
       </div>
-      <!-- 内容不合规 -->
+
       <div v-if="isError" class="infer-dlg-error">
         <p>
           <o-icon><icon-warning></icon-warning></o-icon>
@@ -602,7 +627,7 @@ function refreshTags() {
         </p>
       </div>
     </el-dialog>
-    <!-- 海报弹窗 -->
+
     <el-dialog
       v-model="posterDlg"
       :fullscreen="true"
@@ -767,12 +792,14 @@ function refreshTags() {
       }
     }
   }
-  &-head {
+  .infer-dlg-head {
     .title {
       color: #fff;
+      padding-top: 27px;
     }
   }
-  &-result {
+
+  .infer-dlg-result {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -810,7 +837,7 @@ function refreshTags() {
         opacity: 0;
         display: flex;
         justify-content: flex-end;
-        // justify-content: space-between;
+        justify-content: space-between;
         padding: 18px 24px;
         @media screen and (max-width: 1450px) {
           bottom: 10px;
@@ -818,13 +845,10 @@ function refreshTags() {
         &-contain,
         .public {
           display: flex;
-          .cancel-public {
-            .o-icon {
-              font-size: 18px;
-            }
-          }
+
           .o-icon {
             color: #fff;
+            font-size: 24px;
           }
 
           .liked {
@@ -864,7 +888,7 @@ function refreshTags() {
     }
   }
 
-  &-loading {
+  .infer-dlg-loading {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -885,7 +909,7 @@ function refreshTags() {
     }
   }
 
-  &-error {
+  .infer-dlg-error {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -999,7 +1023,7 @@ function refreshTags() {
   .active-1 {
     border: 1px solid #008eff;
   }
-  &-examples {
+  .wk-experience-examples {
     display: flex;
     margin-top: 48px;
     align-items: center;
@@ -1031,7 +1055,7 @@ function refreshTags() {
       }
     }
   }
-  &-styles {
+  .wk-experience-styles {
     margin-top: 48px;
     display: flex;
     .content {
@@ -1119,7 +1143,7 @@ function refreshTags() {
       }
     }
   }
-  &-btn {
+  .wk-experience-btn {
     background-image: url('@/assets/imgs/wukong/button-bg.png');
     background-repeat: no-repeat;
     background-size: cover;

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 import IconArrow from '~icons/app/arrow-top';
 import IconLike from '~icons/app/like';
@@ -8,13 +8,16 @@ import IconLike from '~icons/app/like';
 import { useUserInfoStore } from '@/stores';
 
 const router = useRouter();
+const route = useRoute();
 const userInfoStore = useUserInfoStore();
 
 const navItems = ref([
   { tag: '我的收藏', icon: '1', path: '/modelzoo/wukong/admin/collection' },
-  // { tag: '我的公开', icon: '2', path: '/modelzoo/wukong/admin/public' },
+  { tag: '我的公开', icon: '2', path: '/modelzoo/wukong/admin/public' },
 ]);
-const currentNav = ref('1');
+const currentNav = ref('');
+currentNav.value =
+  route.path === '/modelzoo/wukong/admin/collection' ? '1' : '2';
 
 function handleNavClick(item) {
   currentNav.value = item.icon;
@@ -104,7 +107,7 @@ function goToWukong() {
     margin-top: 40px;
     display: flex;
     .left {
-      width: 436px;
+      min-width: 438px;
       margin-right: 24px;
       min-height: calc(100vh - 442px);
       background-color: #fff;

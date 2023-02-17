@@ -220,12 +220,6 @@ export function wuKongInfer(params) {
       return res;
     })
     .catch((e) => {
-      // if (e.code === 'bigmodel_sensitive_info') {
-      //   ElMessage({
-      //     type: 'warning',
-      //     message: '输入的内容不合规,请重新输入',
-      //   });
-      // }
       return e;
     });
 }
@@ -249,9 +243,9 @@ export function getWuKongPic(params) {
  * @returns
  */
 export function addLikePicture(params) {
-  const url = '/server/bigmodel/wukong';
+  const url = '/server/bigmodel/wukong/like';
   return request
-    .put(url, params, {
+    .post(url, params, {
       $doException: true,
       $noLoading: true,
       ...getHeaderConfig(),
@@ -275,7 +269,7 @@ export function addLikePicture(params) {
  * @returns
  */
 export function cancelLikePicture(id) {
-  const url = `/server/bigmodel/wukong/${id}`;
+  const url = `/server/bigmodel/wukong/like/${id}`;
   return request
     .delete(url, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
@@ -310,6 +304,70 @@ export function temporaryLink(params) {
   const url = '/server/bigmodel/wukong/link';
   return request
     .put(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-我的公开图片
+ * @returns
+ */
+export function publicPictures() {
+  const url = '/server/bigmodel/wukong/public';
+  return request
+    .get(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-公开临时图片
+ * @returns
+ */
+export function publicTemporaryPicture(params) {
+  const url = '/server/bigmodel/wukong/public';
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-取消公开临时图片
+ * @returns
+ */
+export function cancelPublic(id) {
+  const url = `/server/bigmodel/wukong/public/${id}`;
+  return request
+    .delete(url, getHeaderConfig())
+    .then((res) => {
+      return res;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+
+/**
+ * 悟空-公开收藏图片
+ * @returns
+ */
+export function publicCollectedPicture(params) {
+  const url = '/server/bigmodel/wukong/public';
+  return request
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res;
     })

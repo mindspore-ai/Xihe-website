@@ -5,46 +5,47 @@ import IconPublic from '~icons/app/public';
 import IconFingure from '~icons/app/fingure';
 import IconCancel from '~icons/app/cancel-public';
 
-import image from '@/assets/imgs/wukong/umbrella-women.png';
+import { publicPictures, cancelPublic } from '@/api/api-modelzoo.js';
 
-const publicList = ref([
-  {
-    id: 1,
-    link: image,
-  },
-  {
-    id: 2,
-    link: image,
-  },
-  {
-    id: 3,
-    link: image,
-  },
-  {
-    id: 4,
-    link: image,
-  },
-]);
+const publicList = ref([]);
+const cancelPublicId = ref('');
 
-const cancelPublicId = ref(0);
-
+// 开启取消公开弹窗
 const showConfirmDlg = ref(false);
 function quitPublicClick(id) {
   cancelPublicId.value = id;
   showConfirmDlg.value = true;
 }
+
+// 获取公开图片
+async function getPublicPictures() {
+  try {
+    const res = await publicPictures();
+    publicList.value = res.data.data ? res.data.data : [];
+  } catch (e) {
+    console.error(e);
+  }
+}
+getPublicPictures();
+
 // 继续公开
 function cancelQuitPublic(val) {
   showConfirmDlg.value = val;
 }
 // 取消公开图片
-function confirmQuitPublic() {
-  publicList.value.forEach((item, index) => {
-    if (item.id === cancelPublicId.value) {
-      publicList.value.splice(index, 1);
+async function confirmQuitPublic() {
+  try {
+    const res = await cancelPublic(cancelPublicId.value);
+    if (res.status === 204) {
+      ElMessage({
+        type: 'success',
+        message: '取消公开成功',
+      });
     }
-  });
-
+    getPublicPictures();
+  } catch (err) {
+    console.error(err);
+  }
   showConfirmDlg.value = false;
 }
 </script>
@@ -60,21 +61,18 @@ function confirmQuitPublic() {
             </div>
             <div class="right">
               <o-icon><icon-fingure></icon-fingure></o-icon>
-              <p class="dig-counts">999+</p>
+              <p class="dig-counts">{{ item.digg_count }}</p>
             </div>
           </div>
         </div>
-        <p>
-          {{ item.desc }}&nbsp;{{ item.style }}城市夜景 赛博朋克
-          格雷格·鲁特科夫斯基
-        </p>
+        <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
       </div>
     </div>
     <div v-else class="no-public">
       <o-icon><icon-public></icon-public></o-icon>
       <p>暂无公开画作</p>
     </div>
-    <!-- 确认弹窗 -->
+
     <el-dialog
       v-model="showConfirmDlg"
       class="confirm-dlg"
@@ -120,6 +118,8 @@ function confirmQuitPublic() {
   }
 }
 .public {
+  width: 100%;
+  height: 100%;
   .no-public {
     width: 100%;
     height: 100%;
@@ -127,7 +127,6 @@ function confirmQuitPublic() {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 160px;
     .o-icon {
       font-size: 48px;
     }
@@ -176,30 +175,36 @@ function confirmQuitPublic() {
           justify-content: space-between;
           align-items: flex-end;
           opacity: 0;
-
-          .right {
-            display: flex;
-            .middle {
-              margin: 0 8px;
-            }
-          }
-          .icon-item {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            &:hover {
-              background: rgba(255, 255, 255, 0.3);
-            }
-          }
           .o-icon {
             color: #fff;
-            font-size: 18px;
+            font-size: 24px;
           }
         }
+        .right {
+          display: flex;
+          .o-icon {
+            align-self: center;
+            margin-right: 8px;
+            // font-size: 18px;
+          }
+          .dig-counts {
+            margin: 0;
+            color: #ffffff;
+          }
+        }
+        .icon-item {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+        }
+
         img {
           width: 310px;
           height: 310px;

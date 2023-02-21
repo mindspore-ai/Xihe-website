@@ -1,26 +1,24 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 import html2canvas from 'html2canvas';
 
 import IconArrow from '~icons/app/arrow-top';
-import IconLike from '~icons/app/like';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
 import IconHeart from '~icons/app/collected';
 import IconDownload from '~icons/app/wukong-download';
-import IconPublic from '~icons/app/public';
-import IconFingure from '~icons/app/fingure';
-import IconCancel from '~icons/app/cancel-public';
 import IconCopy from '~icons/app/copy-nickname';
 
 import {
   collectedPictures,
   cancelLikePicture,
   temporaryLink,
+  publicCollectedPicture,
 } from '@/api/api-modelzoo.js';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useUserInfoStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 
@@ -136,8 +134,20 @@ function copyText(textValue) {
     });
 }
 
-// 收藏-公开图片
-// function publicImage() {}
+// 公开收藏图片
+async function publicImage(imgId) {
+  try {
+    const res = await publicCollectedPicture({ id: imgId });
+    if (res.data.data.id) {
+      ElMessage({
+        type: 'success',
+        message: '公开成功',
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
 </script>
 <template>
   <div class="collection">
@@ -146,9 +156,9 @@ function copyText(textValue) {
         <div class="image-box">
           <img draggable="false" :src="item.link" alt="" />
           <div class="handles">
-            <!-- <div class="icon-item" @click="publicImage(item.link)">
+            <div class="icon-item" @click="publicImage(item.id)">
               <o-icon><icon-arrow></icon-arrow></o-icon>
-            </div> -->
+            </div>
             <div class="right">
               <div class="icon-item" @click="downloadImage(item.link)">
                 <o-icon><icon-download></icon-download></o-icon>
@@ -170,9 +180,8 @@ function copyText(textValue) {
     </div>
     <div v-else class="no-collection">
       <o-icon><icon-collected></icon-collected></o-icon>
-      <p>无收藏</p>
+      <p>暂无收藏</p>
     </div>
-    <!-- 海报弹窗 -->
     <el-dialog
       v-model="posterDlg"
       :fullscreen="true"
@@ -434,16 +443,22 @@ function copyText(textValue) {
           bottom: 0;
           padding: 0 16px 16px;
           display: flex;
-          //   justify-content: space-between;
-          justify-content: flex-end;
+          justify-content: space-between;
           align-items: flex-end;
           opacity: 0;
-
+          .o-icon {
+            color: #fff;
+            font-size: 24px;
+          }
           .right {
             display: flex;
             .middle {
               margin: 0 8px;
             }
+            // .o-icon {
+            //   color: #fff;
+            //   font-size: 18px;
+            // }
           }
           .icon-item {
             width: 40px;
@@ -456,10 +471,6 @@ function copyText(textValue) {
             &:hover {
               background: rgba(255, 255, 255, 0.3);
             }
-          }
-          .o-icon {
-            color: #fff;
-            font-size: 18px;
           }
         }
         img {

@@ -208,13 +208,13 @@ export default [
           return import('@/views/modelzoo/wukong/TheCollection.vue');
         },
       },
-      {
-        path: 'public',
-        name: 'wukongPublic',
-        component: () => {
-          return import('@/views/modelzoo/wukong/ThePublic.vue');
-        },
-      },
+      // {
+      //   path: 'public',
+      //   name: 'wukongPublic',
+      //   component: () => {
+      //     return import('@/views/modelzoo/wukong/ThePublic.vue');
+      //   },
+      // },
     ],
   },
 ];

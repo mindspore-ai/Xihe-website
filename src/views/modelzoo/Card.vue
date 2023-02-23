@@ -70,10 +70,9 @@ function jumpDetail() {
   }
   .card-bottom {
     width: 100%;
-    // height: 156px;
     padding: 0 40px;
     background-color: rgba(255, 255, 255, 0.95);
-    &-title {
+    .card-bottom-title {
       font-size: 24px;
       font-weight: normal;
       color: #000000;
@@ -89,7 +88,7 @@ function jumpDetail() {
         line-height: 24px;
       }
     }
-    &-text {
+    .card-bottom-text {
       padding: 24px 0;
       font-size: 16px;
       color: #555555;
@@ -114,7 +113,7 @@ function jumpDetail() {
 .card-closed {
   max-width: 464px;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-  cursor: pointer;
+  cursor: auto;
   .o-icon {
     transform: translate(0);
     transition: all 0.2s linear;
@@ -135,7 +134,7 @@ function jumpDetail() {
     height: 156px;
     padding: 0 40px;
     background-color: rgba(255, 255, 255, 0.95);
-    &-title {
+    .card-bottom-title {
       font-size: 24px;
       font-weight: normal;
       color: #000000;
@@ -151,7 +150,7 @@ function jumpDetail() {
         line-height: 24px;
       }
     }
-    &-text {
+    .card-bottom-text {
       padding: 24px 0;
       font-size: 16px;
       color: #555555;

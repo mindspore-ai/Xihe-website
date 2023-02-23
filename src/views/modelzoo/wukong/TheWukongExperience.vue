@@ -574,7 +574,7 @@ function refreshTags() {
           <img :src="value" alt="" />
           <div class="handles">
             <!-- 公开 -->
-            <div class="public">
+            <!-- <div class="public">
               <p
                 v-if="!inferList[index].publicId"
                 @click="publicImage(key, index)"
@@ -584,7 +584,7 @@ function refreshTags() {
               <p v-else class="icon-item" @click="cancelPublicImage(index)">
                 <o-icon><icon-cancel></icon-cancel></o-icon>
               </p>
-            </div>
+            </div> -->
             <!-- 下载收藏 -->
             <div class="handles-contain">
               <p @click="downloadImage(value)">
@@ -837,7 +837,7 @@ function refreshTags() {
         opacity: 0;
         display: flex;
         justify-content: flex-end;
-        justify-content: space-between;
+        // justify-content: space-between;
         padding: 18px 24px;
         @media screen and (max-width: 1450px) {
           bottom: 10px;

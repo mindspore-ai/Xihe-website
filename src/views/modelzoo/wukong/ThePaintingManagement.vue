@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconArrow from '~icons/app/arrow-top';
+// import IconArrow from '~icons/app/arrow-top';
 import IconLike from '~icons/app/like';
 
 import { useUserInfoStore } from '@/stores';
@@ -11,16 +11,25 @@ const router = useRouter();
 const route = useRoute();
 const userInfoStore = useUserInfoStore();
 
-const navItems = ref([
-  { tag: '我的收藏', icon: '1', path: '/modelzoo/wukong/admin/collection' },
-  { tag: '我的公开', icon: '2', path: '/modelzoo/wukong/admin/public' },
-]);
-const currentNav = ref('');
-currentNav.value =
-  route.path === '/modelzoo/wukong/admin/collection' ? '1' : '2';
+const navItems = [
+  {
+    id: 1,
+    icon: IconLike,
+    tag: '我的收藏',
+    path: '/modelzoo/wukong/admin/collection',
+  },
+  // {
+  //   id: 2,
+  //   icon: IconArrow,
+  //   tag: '我的公开',
+  //   path: '/modelzoo/wukong/admin/public',
+  // },
+];
+const currentNav = ref(1);
+currentNav.value = route.path === '/modelzoo/wukong/admin/collection' ? 1 : 2;
 
 function handleNavClick(item) {
-  currentNav.value = item.icon;
+  currentNav.value = item.id;
   router.push(item.path);
 }
 
@@ -54,15 +63,16 @@ function goToWukong() {
               v-for="item in navItems"
               :key="item.tag"
               class="nav-item"
-              :class="currentNav === item.icon ? 'active' : ''"
+              :class="currentNav === item.id ? 'active' : ''"
               @click="handleNavClick(item)"
             >
-              <o-icon v-if="item.icon === '1'">
+              <!-- <o-icon v-if="item.icon === '1'">
                 <icon-like></icon-like>
               </o-icon>
               <o-icon v-else>
                 <icon-arrow></icon-arrow>
-              </o-icon>
+              </o-icon> -->
+              <OIcon><component :is="item.icon"></component></OIcon>
               <p>{{ item.tag }}</p>
             </div>
           </div>

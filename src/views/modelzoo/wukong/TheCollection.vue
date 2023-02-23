@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-import IconArrow from '~icons/app/arrow-top';
+// import IconArrow from '~icons/app/arrow-top';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
 import IconHeart from '~icons/app/collected';
@@ -14,7 +14,7 @@ import {
   collectedPictures,
   cancelLikePicture,
   temporaryLink,
-  publicCollectedPicture,
+  // publicCollectedPicture,
 } from '@/api/api-modelzoo.js';
 
 import { useUserInfoStore } from '@/stores';
@@ -135,19 +135,19 @@ function copyText(textValue) {
 }
 
 // 公开收藏图片
-async function publicImage(imgId) {
-  try {
-    const res = await publicCollectedPicture({ id: imgId });
-    if (res.data.data.id) {
-      ElMessage({
-        type: 'success',
-        message: '公开成功',
-      });
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
+// async function publicImage(imgId) {
+//   try {
+//     const res = await publicCollectedPicture({ id: imgId });
+//     if (res.data.data.id) {
+//       ElMessage({
+//         type: 'success',
+//         message: '公开成功',
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
 </script>
 <template>
   <div class="collection">
@@ -156,9 +156,9 @@ async function publicImage(imgId) {
         <div class="image-box">
           <img draggable="false" :src="item.link" alt="" />
           <div class="handles">
-            <div class="icon-item" @click="publicImage(item.id)">
+            <!-- <div class="icon-item" @click="publicImage(item.id)">
               <o-icon><icon-arrow></icon-arrow></o-icon>
-            </div>
+            </div> -->
             <div class="right">
               <div class="icon-item" @click="downloadImage(item.link)">
                 <o-icon><icon-download></icon-download></o-icon>
@@ -443,7 +443,8 @@ async function publicImage(imgId) {
           bottom: 0;
           padding: 0 16px 16px;
           display: flex;
-          justify-content: space-between;
+          // justify-content: space-between;
+          justify-content: flex-end;
           align-items: flex-end;
           opacity: 0;
           .o-icon {

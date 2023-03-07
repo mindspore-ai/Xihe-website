@@ -140,9 +140,9 @@ export function getUserAuth() {
 // 退出
 export async function logout() {
   try {
-    // const userName = useUserInfoStore().userName;
-    // const idTokenRes = await queryUserIdToken({ userName });
-    // const { info: idToken } = idTokenRes.data;
+    const userName = useUserInfoStore().userName;
+    const idTokenRes = await queryUserIdToken({ userName });
+    const { info: idToken } = idTokenRes.data;
     const redirectUri = `${window.location.origin}/`;
     // const client = new AuthenticationClient({
     //   appId: APP_ID,
@@ -159,7 +159,7 @@ export async function logout() {
     // });
     setStatus(LOGIN_STATUS.NOT);
     saveUserAuth();
-    window.location.href = `https://id.mindspore.cn/logout?redirect_uri=${redirectUri}`;
+    window.location.href = `https://id.mindspore.cn/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
   } catch (error) {
     console.error('退出失败！');
   }

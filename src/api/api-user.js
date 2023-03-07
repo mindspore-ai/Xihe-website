@@ -13,7 +13,7 @@ function getHeaderConfig() {
 }
 
 export function buildAuthenticationClient(params) {
-  const url = 'https://omapi.osinfra.cn/oneid/oidc/authorize';
+  const url = 'https://xiheapi.osinfra.cn/oneid/oidc/authorize';
   return request.get(url, { params }).then((res) => res.data);
 }
 

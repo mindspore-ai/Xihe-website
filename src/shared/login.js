@@ -2,7 +2,6 @@ import {
   queryUserInfo,
   queryUserToken,
   queryUserIdToken,
-  buildAuthenticationClient,
 } from '@/api/api-user';
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -58,11 +57,10 @@ async function getUserToken(params) {
   //   params.invited = localStorage.getItem('XIHE_INVITED');
   // }
   try {
-    await queryUserToken(params);
     // 去掉url中的code
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
+    await queryUserToken({ ...params, redirect_uri: newUrl });
     window.location.href = newUrl;
-
     // WARNING: 该方法会导致code无法清除
     // if (window.history.replaceState) {
     //   window.history.replaceState({}, '', newUrl);

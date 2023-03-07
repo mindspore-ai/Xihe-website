@@ -2,6 +2,7 @@ import {
   queryUserInfo,
   queryUserToken,
   queryUserIdToken,
+  buildAuthenticationClient,
 } from '@/api/api-user';
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -193,17 +194,24 @@ export async function requestUserInfo() {
 // authing认证
 export async function goAuthorize() {
   try {
-    const client = new AuthenticationClient({
-      appId: APP_ID,
-      appHost: APP_HOST,
-      redirectUri: `${window.location.href}`,
-    });
-
+    // const client = new AuthenticationClient({
+    //   appId: APP_ID,
+    //   appHost: APP_HOST,
+    //   redirectUri: `${window.location.href}`,
+    // });
     // 构造 OIDC 授权登录 URL
-    const url = client.buildAuthorizeUrl({
+    // const url = client.buildAuthorizeUrl({
+    //   scope: 'openid profile email phone address username',
+    // });
+    // window.location.href = url;
+
+    // 登录
+    buildAuthenticationClient({
+      client_id: APP_ID,
+      redirect_uri: `${window.location.href}`,
+      response_type: 'code',
       scope: 'openid profile email phone address username',
     });
-    window.location.href = url;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

@@ -206,12 +206,14 @@ export async function goAuthorize() {
     // window.location.href = url;
 
     // 登录
-    buildAuthenticationClient({
-      client_id: APP_ID,
-      redirect_uri: `${window.location.href}`,
-      response_type: 'code',
-      scope: 'openid profile email phone address username',
-    });
+    // const url = buildAuthenticationClient({
+    //   client_id: APP_ID,
+    //   redirect_uri: `${window.location.href}`,
+    //   response_type: 'code',
+    //   scope: 'openid profile email phone address username',
+    // });
+
+    window.location.href = `https://xiheapi.osinfra.cn/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

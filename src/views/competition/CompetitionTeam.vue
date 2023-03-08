@@ -4,38 +4,36 @@ import { ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCompetitionData } from '@/stores';
 
-// import { changeTeam } from '@/api/api-competition';
-// import { joinTeam } from '@/api/api-competition';
-// import { getTeamInfoByName } from '@/api/api-competition';
-import { getTeamInfoById } from '@/api/api-competition';
-// import { deleteTeam } from '@/api/api-competition';
-// import { quitTeam } from '@/api/api-competition';
-// import { removeMember } from '@/api/api-competition';
-// import { transferCaptain } from '@/api/api-competition';
-// import { getGroupid } from '@/api/api-competition';
-// import { createTeam } from '@/api/api-competition';
-
-// import { ElMessage } from 'element-plus';
-// import { ElDialog } from 'element-plus';
+import { ElMessage } from 'element-plus';
+import { ElDialog } from 'element-plus';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 import IconGroup from '~icons/app/group.svg';
 import IconCancel from '~icons/app/cancel.svg';
-import IconDelivery from '~icons/app/delivery.svg';
-// import warningImg from '@/assets/icons/warning.png';
+import IconTransition from '~icons/app/transition.svg';
 import IconTips from '~icons/app/tips.svg';
-// import ODialog from '@/components/ODialog.vue';
 import OButton from '@/components/OButton.vue';
+import warningImg from '@/assets/icons/warning.png';
 
-import IconCancel2 from '~icons/app/cancelBlue.svg';
-import IconDelivery2 from '~icons/app/deliveryBlue.svg';
+import {
+  createTeam,
+  getTeamInfor,
+  getCompetition,
+  joinTeam,
+  changTeamName,
+  transferCaptain,
+  removeMember,
+  quitTeam,
+} from '@/api/api-competition';
+
 const route = useRoute();
 const i18n = {
   title: '您现在是个人参赛，您可以：',
   teamTips:
     '提示：选择团队参赛后，个人参赛的成绩会重置，请以团队名义重新上传结果',
   teamName: '团队名',
+  leaderName: '队长账号',
   tips: '一个团队最多有3名成员',
   newTeamName: '新团队名',
   createTeam: '创建团队',
@@ -53,28 +51,27 @@ const i18n = {
   },
 };
 const activeName = ref('first');
-const queryRef1 = ref(null);
-const queryRef2 = ref(null);
-// const queryRef3 = ref(null);
+const teamName1 = ref(null);
+const leaderName = ref(null);
+const queryRef3 = ref(null);
 const teamData = ref([]); //团队信息
 const teamMemberData = ref([]); //团队成员信息
 const leaderData = ref([]); //队长信息
+const showTeam = ref(false);
 const showDel = ref(false);
 const showEdit = ref(false);
 const showQuit = ref(false);
-const is_individual = ref(true); //判断是否个人参赛
-const show = ref(false);
 const userComData = useCompetitionData();
 
 const form1 = reactive({
   teamName: '',
 });
 const form2 = reactive({
+  leaderName: '',
+});
+const form3 = reactive({
   teamName: '',
 });
-/* const form3 = reactive({
-  teamName: '',
-}); */
 const rules1 = reactive({
   teamName: [
     {
@@ -90,7 +87,17 @@ const rules1 = reactive({
     },
   ],
 });
+// 队长账号校验
 const rules2 = reactive({
+  leaderName: [
+    {
+      required: true,
+      message: '必填项',
+      trigger: 'blur',
+    },
+  ],
+});
+const rules3 = reactive({
   teamName: [
     {
       required: true,
@@ -105,258 +112,185 @@ const rules2 = reactive({
     },
   ],
 });
-/* const rules3 = reactive({
-  teamName: [
-    {
-      required: true,
-      message: '必填项',
-      trigger: 'blur',
-    },
-    {
-      // 只支持中英文，不超过20个字符
-      pattern: /^[a-zA-Z\u4e00-\u9fa5]{1,20}$/,
-      message: '团队名仅支持中英文，不超过20个字符',
-      trigger: 'blur',
-    },
-  ],
-}); */
 
-function handleClick() {}
-
-// 进入页面获得is_individual值，判断是否个人参赛
-async function getIndividual(id) {
-  // 通过团队id获得团队信息
-  let res = await getTeamInfoById(id);
-  if (res.status === 200) {
-    teamData.value = res.data.data;
-    teamMemberData.value = res.data.data.members;
-    leaderData.value = teamMemberData.value.filter((item) => {
-      return item.role === 'leader';
+function getTeamData() {
+  if (userComData.competitionData.team_id) {
+    getTeamInfor(userComData.competitionData.id).then((res) => {
+      teamData.value = res.data.data;
+      teamMemberData.value = res.data.data.members;
+      leaderData.value = teamMemberData.value.filter((item) => {
+        return item.role === 'leader';
+      });
+      showTeam.value = true;
     });
-    // 判断是否个人参赛
-    is_individual.value = teamData.value.name ? false : true;
-    show.value = true;
   }
 }
-getIndividual(route.params.id);
-// 点击创建团队（修改团队）
-/* function fountTeam(formEl) {
+getTeamData();
+// 创建团队
+async function foundTeam(formEl) {
   if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      let params = {
-        name: form1.teamName,
-        is_individual: false,
-      };
-      // 修改团队
-      changeTeam(params, teamId.value).then((res) => {
-        if (res.status === 200) {
-          teamData.value = res.data;
-          teamMemberData.value = res.data.members_order_list;
-          is_individual.value = false;
-          form1.teamName = '';
-          ElMessage({
-            type: 'success',
-            message: '创建团队成功！',
-          });
-        }
+  try {
+    const valid = await new Promise((resolve) => {
+      formEl.validate((valid) => {
+        resolve(valid);
       });
-    } else {
-      console.error('error submit!');
-      return false;
-    }
-  });
-} */
-// 加入团队
-/* function addTeam(formEl) {
-  if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      // 通过团队名获取团队信息判断团队名是否存在
-      let newTeamId = null; //新加入的团队id
-      let params = {
-        name: form2.teamName,
-        relate_competition: route.params.id,
-      };
-      getTeamInfoByName(params.name, params.relate_competition).then((res) => {
-        if (res.status === 200 && res.data.length !== 0) {
-          newTeamId = res.data[0].id;
-          joinTeam({ id: newTeamId }).then((res) => {
-            if (res.status === 200) {
-              form2.teamName = '';
-              userComData.setTeamId(newTeamId);
-              ElMessage({
-                type: 'success',
-                message: '加入团队成功!',
-              });
-            } else if (
-              res.status === -1 &&
-              res.msg === '加入失败，团队成员已达上限'
-            ) {
-              ElMessage({
-                type: 'warning',
-                message: '加入失败，团队成员已达上限!',
-              });
-            }
-          });
-        } else {
-          ElMessage({
-            type: 'warning',
-            message: '团队不存在！',
-          });
-          return;
-        }
-      });
-    } else {
-      console.error('error submit!');
-      return false;
-    }
-  });
-} */
-
-// 移除成员
-/* async function deleteMember(memberId) {
-  const memberIds = teamMemberData.value.map((item) => {
-    return item.id;
-  });
-  let index = memberIds.indexOf(memberId);
-  memberIds.splice(index, 1);
-  let params = { members: memberIds };
-  let res = await removeMember(params, teamId.value);
-  if (res.status === 200) {
-    teamMemberData.value = res.data.members_order_list;
-    ElMessage({
-      type: 'success',
-      message: '移除成功！',
     });
-  }
-} */
-
-// 移交队长
-/* function handleCaptain(memberId) {
-  let params = {
-    id: teamId.value,
-    leader: memberId,
-  };
-  transferCaptain(params).then((res) => {
-    if (res.status === 200) {
-      teamData.value = res.data;
-      teamMemberData.value = res.data.members_order_list;
+    if (valid) {
+      let params = {
+        team_name: form1.teamName,
+      };
+      await createTeam(userComData.competitionData.id, params);
+      const res = await getCompetition({ id: route.params.id });
+      userComData.setCompetitionData(res.data.data);
+      getTeamData();
       ElMessage({
         type: 'success',
-        message: '移交队长成功！',
+        message: '创建团队成功！',
+      });
+    } else {
+      console.error('error submit!');
+      return false;
+    }
+  } catch (error) {
+    if (error.response.data.code === 'competition_team_exists') {
+      ElMessage({
+        type: 'warning',
+        message: '此团队名已存在，请重新输入!',
       });
     }
-  });
-} */
+  }
+}
 
-// 删除团队
-/* async function confirmDel() {
-  let res = await deleteTeam(teamId.value);
-  if (res.status === 200) {
-    showDel.value = false;
-    ElMessage({
-      type: 'success',
-      message: '团队删除成功！',
-    });
-    router.push({
-      name: 'introduction',
-      params: {
-        id: route.params.id, //比赛id
-      },
-    });
-    // is_individual.value = true;
-  } else {
-    ElMessage({
-      type: 'error',
-      message: res.msg,
-    });
+// 加入团队
+async function addTeam(formEl) {
+  if (!formEl) return;
+  try {
+    const valid = await formEl.validate();
+    if (valid) {
+      // 通过团队名获取团队信息判断团队名是否存在
+      const params = {
+        leader_account: form2.leaderName,
+      };
+      await joinTeam(userComData.competitionData.id, params);
+      const res = await getCompetition({ id: route.params.id });
+      userComData.setCompetitionData(res.data.data);
+      getTeamData();
+      ElMessage({
+        type: 'success',
+        message: '加入团队成功!',
+      });
+      form2.leaderName = '';
+    } else {
+      console.error('error submit!');
+      return false;
+    }
+  } catch (error) {
+    if (error.response.data.code === 'competition_team_members_enough') {
+      ElMessage({
+        type: 'warning',
+        message: '加入失败，团队成员已达上限!',
+      });
+    } else if (
+      error.response.data.code === 'competition_no_corresponding_team' ||
+      error.response.data.msg === 'it is not a team' ||
+      error.response.data.msg === 'invalid user name'
+    ) {
+      ElMessage({
+        type: 'warning',
+        message: '无对应的比赛团队，请检查队长用户名!',
+      });
+      form2.leaderName = '';
+    }
   }
-  // 更新团队id
-  let res2 = await getGroupid(route.params.id);
-  if (res2.status === 200) {
-    userComData.setTeamId(res2.group_id);
-  }
-} */
-/* function toggleDelDlg(flag) {
-  if (flag === undefined) {
-    showDel.value = !showDel.value;
-  } else {
-    showDel.value = flag;
-  }
-} */
+}
 
 // 编辑团队名
-/* function confirmEdit(formEl) {
+function confirmEdit(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
       let params = {
-        name: form3.teamName,
+        team_name: form3.teamName,
       };
-      changeTeam(params, teamId.value).then((res) => {
-        if (res.status === 200) {
-          teamData.value = res.data;
-          showEdit.value = false;
-          form3.teamName = '';
-          ElMessage({
-            type: 'success',
-            message: '团队名修改成功！',
-          });
-        }
+      changTeamName(userComData.competitionData.id, params).then(() => {
+        getTeamData();
+        showEdit.value = false;
+        form3.teamName = '';
+        ElMessage({
+          type: 'success',
+          message: '修改团队名成功!',
+        });
       });
     } else {
       console.error('error submit!');
       return false;
     }
   });
-} */
-/* function toggleEditDlg(flag) {
-  if (flag === undefined) {
-    showEdit.value = !showEdit.value;
-  } else {
-    showEdit.value = flag;
-  }
-} */
+}
 
+// 移除队员
+function deleteMember(account) {
+  if (userComData.competitionData.phase === 'preliminary') {
+    const params = { competitor_account: account };
+    removeMember(userComData.competitionData.id, params).then(() => {
+      getTeamData();
+      ElMessage({
+        type: 'success',
+        message: '移除成员成功!',
+      });
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '仅初赛期间可移除队员!',
+    });
+  }
+}
+
+// 移交队长
+function handleCaptain(account) {
+  if (userComData.competitionData.phase === 'preliminary') {
+    const params = { competitor_account: account };
+    transferCaptain(userComData.competitionData.id, params).then(() => {
+      userComData.competitionData.team_role = '';
+      getTeamData();
+      ElMessage({
+        type: 'success',
+        message: '移交队长成功!',
+      });
+    });
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '仅初赛期间可移交队长!',
+    });
+  }
+}
 // 退出团队
-/* async function confirmQuit() {
-  let params = { id: teamId.value };
-  let res = await quitTeam(params);
-  if (res.status === 200) {
+function confirmQuit() {
+  quitTeam(userComData.competitionData.id).then(() => {
     ElMessage({
       type: 'success',
-      message: '退出团队成功！',
+      message: '退出团队成功!',
     });
+    userComData.competitionData.team_id = '';
     showQuit.value = false;
-  }
-  // 更新团队id
-  let res2 = await getGroupid(route.params.id);
-  if (res2.status === 200) {
-    userComData.setTeamId(res2.group_id);
-  }
-} */
-/* function toggleQuitDlg(flag) {
-  if (flag === undefined) {
-    showQuit.value = !showQuit.value;
-  } else {
-    showQuit.value = flag;
-  }
-} */
+  });
+}
 </script>
 <template>
-  <div v-if="show" class="competitionTeam">
-    <div v-if="is_individual" class="noteam-page">
+  <div class="competitionTeam">
+    <div v-if="!userComData.competitionData.team_id" class="personal-page">
       <div class="title">
         {{ i18n.title }}
       </div>
       <div class="tips">
         {{ i18n.teamTips }}
       </div>
-      <el-tabs v-model="activeName" class="team-tabs" @tab-click="handleClick">
+      <el-tabs v-model="activeName" class="team-tabs">
         <el-tab-pane label="创建团队" name="first">
           <div class="creating">
-            <el-form ref="queryRef1" :model="form1" :rules="rules1">
+            <el-form ref="teamName1" :model="form1" :rules="rules1">
               <div class="requirement">
                 <icon-necessary></icon-necessary
                 ><span>{{ i18n.teamName }}</span>
@@ -380,37 +314,51 @@ getIndividual(route.params.id);
                   placeholder="请输入团队名"
                 ></el-input>
                 <o-button
-                  disabled
+                  v-if="userComData.competitionData.phase === 'preliminary'"
                   type="primary"
-                  @click="fountTeam(queryRef1)"
-                  >{{ i18n.createTeam }}</o-button
+                  @click="foundTeam(teamName1)"
                 >
+                  {{ i18n.createTeam }}
+                </o-button>
+                <o-button v-else disabled type="primary">
+                  {{ i18n.createTeam }}
+                </o-button>
               </el-form-item>
             </el-form>
           </div>
         </el-tab-pane>
         <el-tab-pane label="加入团队" name="second">
-          <div class="join">
-            <el-form ref="queryRef2" :model="form2" :rules="rules2">
+          <div class="join-team">
+            <el-form ref="leaderName" :model="form2" :rules="rules2">
               <div class="requirement">
-                <icon-necessary></icon-necessary
-                ><span>{{ i18n.teamName }}</span>
+                <icon-necessary></icon-necessary>
+                <span>{{ i18n.leaderName }}</span>
               </div>
-              <el-form-item prop="teamName">
+              <el-form-item prop="leaderName">
                 <el-input
-                  v-model="form2.teamName"
-                  placeholder="请输入团队名"
+                  v-model="form2.leaderName"
+                  placeholder="请输入队长用户名"
                 ></el-input>
-                <o-button disabled type="primary" @click="addTeam(queryRef2)">{{
-                  i18n.joinTeam
-                }}</o-button>
+                <o-button
+                  v-if="userComData.competitionData.phase === 'preliminary'"
+                  type="primary"
+                  @click="addTeam(leaderName)"
+                >
+                  {{ i18n.joinTeam }}
+                </o-button>
+                <o-button v-else disabled type="primary">
+                  {{ i18n.joinTeam }}
+                </o-button>
               </el-form-item>
             </el-form>
           </div>
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div v-else class="haveteam-page">
+    <div
+      v-if="userComData.competitionData.team_id && showTeam"
+      class="team-page"
+    >
       <div class="header">
         <div class="header-title">
           <div class="text">
@@ -439,21 +387,29 @@ getIndividual(route.params.id);
             >{{ i18n.delete.btnText }}</OButton
           >
           <OButton
-            disabled
+            v-if="userComData.competitionData.phase === 'preliminary'"
             type="primary"
             size="small"
             @click="showEdit = true"
-            >{{ i18n.edit }}</OButton
           >
+            {{ i18n.edit }}
+          </OButton>
+          <OButton v-else disabled type="primary" size="small">
+            {{ i18n.edit }}
+          </OButton>
         </div>
         <div v-else class="quit-button">
           <OButton
-            disabled
+            v-if="userComData.competitionData.phase === 'preliminary'"
             type="primary"
             size="small"
             @click="showQuit = true"
-            >{{ i18n.quit }}</OButton
           >
+            {{ i18n.quit }}
+          </OButton>
+          <OButton v-else disabled type="primary" size="small">
+            {{ i18n.quit }}
+          </OButton>
         </div>
       </div>
       <el-table :data="teamMemberData" style="width: 100%">
@@ -465,7 +421,7 @@ getIndividual(route.params.id);
           <template #default="scope">
             <div style="display: flex; align-items: center">
               <span>{{ scope.row.name }}</span>
-              <span v-if="leaderData[0].name === scope.row.name">(队长)</span>
+              <span v-if="scope.row.role === 'leader'">(队长)</span>
             </div>
           </template>
         </el-table-column>
@@ -477,20 +433,22 @@ getIndividual(route.params.id);
           width="350"
         >
           <template
-            v-if="userComData.competitionData.phase !== 'final'"
+            v-if="userComData.competitionData.phase === 'preliminary'"
             #default="scope"
           >
-            <div v-if="leaderData[0].name === scope.row.name" class="operate">
-              <div class="delete" @click="deleteMember(scope.row.id)">
-                <o-icon class="del"><icon-cancel></icon-cancel></o-icon>
-                <o-icon class="del2"><icon-cancel2></icon-cancel2></o-icon>
+            <div v-if="scope.row.role !== 'leader'" class="operate">
+              <div
+                class="delete"
+                disabled
+                @click="deleteMember(scope.row.account)"
+              >
+                <o-icon class="del2"><icon-cancel></icon-cancel></o-icon>
                 <span>移除</span>
               </div>
-              <div class="delivery" @click="handleCaptain(scope.row.id)">
-                <o-icon class="remove"><icon-delivery></icon-delivery></o-icon>
-                <o-icon class="remove2"
-                  ><icon-delivery2></icon-delivery2
-                ></o-icon>
+              <div class="delivery" @click="handleCaptain(scope.row.account)">
+                <o-icon class="remove2">
+                  <icon-transition></icon-transition>
+                </o-icon>
                 <span>移交队长</span>
               </div>
             </div>
@@ -499,48 +457,8 @@ getIndividual(route.params.id);
       </el-table>
     </div>
   </div>
-  <!-- 删除团队弹窗 -->
-  <!-- <el-dialog
-    v-model="showDel"
-    :show-close="false"
-    center
-    width="640px"
-    align-center
-    destroy-on-close
-  >
-    <template #header="{ titleId, title }">
-      <div :id="titleId" :class="title">
-        <img :src="warningImg" alt="" />
-      </div>
-    </template>
-    <div
-      class="dlg-body"
-      style="
-        color: #555;
-        font-size: 18px;
-        text-align: center;
-        line-height: 28px;
-      "
-    >
-      {{
-        userComData.competitionData.phase !== 'final'
-          ? i18n.delete.describe1
-          : i18n.delete.describe3
-      }}
-    </div>
-    <template #footer>
-      <div class="dlg-actions" style="display: flex; justify-content: center">
-        <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">{{
-          i18n.delete.cancel
-        }}</o-button>
-        <o-button type="primary" @click="confirmDel">{{
-          i18n.delete.confirm
-        }}</o-button>
-      </div>
-    </template>
-  </el-dialog> -->
   <!-- 编辑团队名弹窗 -->
-  <!--  <el-dialog
+  <el-dialog
     v-model="showEdit"
     width="640px"
     :show-close="false"
@@ -569,13 +487,11 @@ getIndividual(route.params.id);
         :model="form3"
         :rules="rules3"
       >
-        <div
-          class="requirement"
-          :style="{ lineHeight: '36px', marginRight: '55px' }"
-        >
-          <icon-necessary></icon-necessary><span>{{ i18n.newTeamName }}</span>
+        <div class="requirement" style="margin-right: 55px">
+          <icon-necessary></icon-necessary>
+          <span>{{ i18n.newTeamName }} </span>
         </div>
-        <el-form-item style="margin-bottom: 0px" prop="teamName">
+        <el-form-item prop="teamName">
           <el-input
             v-model="form3.teamName"
             placeholder="请输入新的团队名"
@@ -585,17 +501,20 @@ getIndividual(route.params.id);
     </div>
     <template #footer>
       <div class="dlg-actions" style="display: flex; justify-content: center">
-        <o-button style="margin-right: 16px" @click="toggleEditDlg(false)">{{
-          i18n.delete.cancel
-        }}</o-button>
-        <o-button type="primary" @click="confirmEdit(queryRef3)">{{
-          i18n.delete.confirm
-        }}</o-button>
+        <o-button
+          style="margin-right: 16px"
+          @click="(showEdit = false), (form3.teamName = '')"
+        >
+          {{ i18n.delete.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmEdit(queryRef3)">
+          {{ i18n.delete.confirm }}
+        </o-button>
       </div>
     </template>
-  </el-dialog> -->
+  </el-dialog>
   <!-- 退出团队弹窗 -->
-  <!--  <el-dialog
+  <el-dialog
     v-model="showQuit"
     width="640px"
     :show-close="false"
@@ -621,7 +540,7 @@ getIndividual(route.params.id);
     </div>
     <template #footer>
       <div class="dlg-actions" style="display: flex; justify-content: center">
-        <o-button style="margin-right: 16px" @click="toggleQuitDlg(false)">
+        <o-button style="margin-right: 16px" @click="showQuit = false">
           {{ i18n.delete.cancel }}
         </o-button>
         <o-button type="primary" @click="confirmQuit">
@@ -629,12 +548,12 @@ getIndividual(route.params.id);
         </o-button>
       </div>
     </template>
-  </el-dialog> -->
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
 .competitionTeam {
-  .noteam-page {
+  .personal-page {
     width: 640px;
     margin: 0 auto;
     padding: 48px 0 100px;
@@ -662,7 +581,7 @@ getIndividual(route.params.id);
       }
       .el-tabs__content {
         .creating,
-        .join {
+        .join-team {
           .el-form {
             width: 100%;
             margin-bottom: 20px;
@@ -675,6 +594,7 @@ getIndividual(route.params.id);
               span {
                 font-size: 14px;
                 color: #555;
+                margin-left: 4px;
               }
               .el-tooltip__trigger {
                 margin-left: 6px;
@@ -702,7 +622,7 @@ getIndividual(route.params.id);
       }
     }
   }
-  .haveteam-page {
+  .team-page {
     padding: 60px 40px 64px;
     .header {
       display: flex;
@@ -756,14 +676,10 @@ getIndividual(route.params.id);
           padding: 0;
           .cell {
             display: flex;
-            // align-items: center;
-            .delivery {
-              margin-left: -22px;
-            }
             .o-icon {
               font-size: 16px;
               line-height: 24px;
-              margin-right: 6px;
+              margin-right: 3px;
               display: flex;
               align-items: center;
             }
@@ -777,21 +693,10 @@ getIndividual(route.params.id);
         }
         .el-table__body {
           .el-table__row {
-            .del,
-            .remove {
-              position: relative;
-              left: 22px;
-              // display: none;
-              // opacity: 0;
-            }
             &:hover {
               .el-table_1_column_3 {
                 .cell {
                   color: #0d8dff;
-                  .del,
-                  .remove {
-                    opacity: 0;
-                  }
                 }
               }
             }
@@ -830,9 +735,12 @@ getIndividual(route.params.id);
   }
 }
 :deep(.dialog-form, .el-form) {
-  .el-form-item__error {
-    top: 55px !important;
-    left: 0px !important;
+  .el-form-item {
+    margin-bottom: 0px;
+    .el-form-item__error {
+      top: 48px;
+      left: 0px;
+    }
   }
 }
 </style>

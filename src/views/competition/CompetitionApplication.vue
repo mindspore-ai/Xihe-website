@@ -1,10 +1,11 @@
 <script setup>
-import { ref, reactive, defineExpose } from 'vue';
+import { ref, reactive, defineExpose, computed } from 'vue';
 
 import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 import { applyActivity } from '@/api/api-activity';
+import { applyCourse } from '@/api/api-course';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
@@ -24,8 +25,12 @@ let citys = ref([]);
 
 const prop = defineProps({
   showApplication: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: '',
+  },
+  courseId: {
+    type: String,
+    default: '',
   },
 });
 
@@ -33,12 +38,12 @@ const i18n = {
   application: '报名表',
   tips: '请确保录入信息真实有效，以确保填写成功后我们能联系到您',
   name: '姓名',
-  username: '用户名',
+  userName: '用户名',
   location: '所在地',
   email: '邮箱',
   phone: '手机号',
   identity: '身份',
-  schoolname: '学校名称',
+  schoolName: '学校名称',
   specialty: '专业',
   student: '学生',
   teacher: '教师',
@@ -53,7 +58,7 @@ const i18n = {
 };
 const query = reactive({
   name: '',
-  username: userInfoStore.userName,
+  userName: userInfoStore.userName,
   loc_province: '',
   loc_city: '',
   email: '',
@@ -78,7 +83,7 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  username: [
+  userName: [
     {
       required: true,
       message: '必填项',
@@ -117,13 +122,16 @@ const rules = reactive({
       trigger: 'blur',
     },
   ],
-  loc_province: [
+  loc_city: [
     {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
   ],
+});
+const combinedRules = computed(() => {
+  return [{ required: true, message: '必填项', trigger: 'change' }];
 });
 // 获取城市数据
 function getArea() {
@@ -162,7 +170,7 @@ function changeRole(item) {
 const emit = defineEmits(['go-next-step', 'hide-form', 'get-activity']);
 
 function cancelApplication() {
-  emit('hide-form', false);
+  emit('hide-form', false, 'course');
 }
 
 // 保存报名
@@ -197,7 +205,8 @@ function saveInfo(formEl) {
         phone: query.phone,
         province: query.loc_province,
       };
-      if (prop.showApplication) {
+      // 报名MindCon
+      if (prop.showApplication === 'MindCon') {
         applyActivity(params).then(() => {
           ElMessage({
             message: '报名成功',
@@ -207,9 +216,21 @@ function saveInfo(formEl) {
           emit('get-activity');
           emit('hide-form', false);
         });
+      } else if (prop.showApplication === 'course') {
+        // 报名课程
+        applyCourse(prop.courseId, params).then(() => {
+          emit('hide-form', false);
+          ElMessage({
+            message: '报名成功',
+            type: 'success',
+            duration: 4000,
+          });
+        });
       } else {
+        // 报名比赛
         applyCompetition(userComData.competitionData.id, params).then(() => {
           emit('go-next-step');
+          userComData.competitionData.is_competitor = true;
           ElMessage({
             message: '报名成功',
             type: 'success',
@@ -242,12 +263,12 @@ function saveInfo(formEl) {
           </div>
           <el-input v-model="query.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-        <el-form-item prop="username" :rules="rules.username">
+        <el-form-item prop="userName" :rules="rules.userName">
           <div class="requirement">
-            <icon-necessary></icon-necessary><span>{{ i18n.username }}</span>
+            <icon-necessary></icon-necessary><span>{{ i18n.userName }}</span>
           </div>
           <el-input
-            v-model="query.username"
+            v-model="query.userName"
             placeholder="请输入用户名"
             readonly
           ></el-input>
@@ -257,11 +278,7 @@ function saveInfo(formEl) {
           <div class="requirement">
             <icon-necessary></icon-necessary><span>{{ i18n.location }}</span>
           </div>
-          <el-form-item
-            class="location"
-            prop="loc_province"
-            :rules="rules.loc_province"
-          >
+          <el-form-item class="location">
             <el-select
               v-model="query.loc_province"
               placeholder="请选择省份"
@@ -276,7 +293,7 @@ function saveInfo(formEl) {
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item class="location">
+          <el-form-item class="location" prop="loc_city" :rules="combinedRules">
             <el-select v-model="query.loc_city" placeholder="请选择城市">
               <el-option
                 v-for="item in citys"
@@ -330,13 +347,12 @@ function saveInfo(formEl) {
               <el-form-item prop="schoolName1">
                 <div class="organization">
                   <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.schoolname }}</span>
+                    <icon-necessary></icon-necessary>
+                    <span>{{ i18n.schoolName }}</span>
                   </span>
                   <el-input
                     v-model="query.schoolName1"
                     placeholder="请输入所在学校名称"
-                    required="required"
                   ></el-input>
                 </div>
               </el-form-item>
@@ -358,8 +374,8 @@ function saveInfo(formEl) {
               <el-form-item prop="schoolName2">
                 <div class="organization">
                   <span class="requirement">
-                    <icon-necessary></icon-necessary
-                    ><span>{{ i18n.schoolname }}</span>
+                    <icon-necessary></icon-necessary>
+                    <span>{{ i18n.schoolName }}</span>
                   </span>
                   <el-input
                     v-model="query.schoolName2"
@@ -428,23 +444,18 @@ function saveInfo(formEl) {
     </div>
     <div v-if="showApplication" class="next-btn">
       <o-button size="small" @click="cancelApplication">暂不报名</o-button>
-      <o-button v-if="!agree" size="small" disabled type="secondary"
-        >立即报名</o-button
-      >
-      <o-button v-else size="small" type="primary" @click="saveInfo(queryRef)"
-        >立即报名</o-button
-      >
+      <o-button v-if="!agree" size="small" disabled type="secondary">
+        立即报名
+      </o-button>
+      <o-button v-else size="small" type="primary" @click="saveInfo(queryRef)">
+        立即报名
+      </o-button>
     </div>
     <div v-else class="next-btn">
-      <o-button v-if="!agree" size="small" disabled type="secondary">
+      <o-button v-if="!agree" disabled type="secondary">
         {{ i18n.save }}
       </o-button>
-      <o-button
-        v-if="agree"
-        size="small"
-        type="primary"
-        @click="saveInfo(queryRef)"
-      >
+      <o-button v-if="agree" type="primary" @click="saveInfo(queryRef)">
         {{ i18n.save }}
       </o-button>
     </div>
@@ -454,9 +465,9 @@ function saveInfo(formEl) {
         <span>{{ i18n.agree }}</span>
       </div>
       <div class="statement">
-        <router-link target="_blank" to="/privacy">{{
-          i18n.statement
-        }}</router-link>
+        <router-link target="_blank" to="/privacy">
+          {{ i18n.statement }}
+        </router-link>
       </div>
     </div>
   </div>
@@ -469,8 +480,6 @@ function saveInfo(formEl) {
   padding: 67px 144px 0;
   &-title {
     line-height: 38px;
-    // margin-left: 11%;
-    // margin-right: 11%;
     padding-bottom: 22px;
     margin-bottom: 22px;
     border-bottom: 1px solid #d8d8d8;
@@ -485,7 +494,6 @@ function saveInfo(formEl) {
     .tips {
       display: flex;
       align-items: center;
-      // width: calc(100% - 140px);
       width: 87%;
       position: relative;
       background: rgba(13, 141, 255, 0.03);
@@ -518,6 +526,9 @@ function saveInfo(formEl) {
           .requirement {
             width: 90px;
             margin-right: 18px;
+            span {
+              margin-left: 4px;
+            }
           }
           .el-form-item__error {
             left: calc(100% - 142px);
@@ -582,7 +593,7 @@ function saveInfo(formEl) {
               margin-right: 8px;
             }
             .el-form-item__error {
-              left: calc(100% + 210px);
+              left: calc(100% + 6px);
             }
           }
         }
@@ -594,11 +605,6 @@ function saveInfo(formEl) {
     justify-content: center;
     margin-top: 12px;
     .o-button {
-      // width: 90px;
-      // height: 32px;
-      // padding: 14px !important;
-      // padding-top: 5px;
-      // padding-bottom: 5px;
       &:first-child {
         margin-right: 20px;
       }

@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 
-// import IconArrowDown from '~icons/app/arrow-down.svg';
-
 import emptyImg from '@/assets/imgs/dataset-empty.png';
 import firstImg from '@/assets/imgs/first.png';
 import secondImg from '@/assets/imgs/second.png';
@@ -16,10 +14,10 @@ const comInfo = useCompetitionData().competitionData; //比赛详情
 
 const preliminaryData = ref([]); //初赛排行榜数据
 const finalData = ref([]); //决赛排行榜数据
-getRank({ id: comInfo.id, phase: 'preliminary' }).then((res) => {
+getRank({ id: comInfo.id }).then((res) => {
   if (res.status === 200) {
     if (res.data.data) {
-      preliminaryData.value = res.data.data;
+      preliminaryData.value = res.data.data.preliminary;
     } else {
       preliminaryData.value = [];
     }
@@ -35,7 +33,7 @@ function changeTab(index) {
     getRank(params).then((res) => {
       if (res.status === 200) {
         if (res.data.data) {
-          finalData.value = res.data.data;
+          finalData.value = res.data.data.final;
         } else {
           finalData.value = [];
         }
@@ -57,7 +55,7 @@ function changeTab(index) {
 </script>
 <template>
   <div v-if="comInfo.type === 'challenge'">
-    <div v-if="preliminaryData.length" class="rank-page">
+    <div v-if="preliminaryData && preliminaryData.length" class="rank-page">
       <div class="rank-header">排行榜</div>
       <div class="rank-body">
         <el-table :data="preliminaryData">
@@ -103,7 +101,7 @@ function changeTab(index) {
       <template #label>
         <div class="tabs-item tabs-left">初赛排行榜</div>
       </template>
-      <div v-if="preliminaryData.length" class="rank-page">
+      <div v-if="preliminaryData && preliminaryData.length" class="rank-page">
         <!-- <div class="rank-header">排行榜</div> -->
         <div class="rank-body">
           <el-table :data="preliminaryData">
@@ -142,7 +140,7 @@ function changeTab(index) {
       <template #label>
         <div class="tabs-item">决赛排行榜</div>
       </template>
-      <div v-if="finalData.length" class="rank-page">
+      <div v-if="finalData && finalData.length" class="rank-page">
         <!-- <div class="rank-header">排行榜</div> -->
         <div class="rank-body">
           <el-table :data="finalData">
@@ -176,13 +174,11 @@ function changeTab(index) {
       </div>
     </el-tab-pane>
     <el-tab-pane
+      v-if="comInfo.winners"
       :label="comInfo.status === 'in-progress' ? '晋级决赛名单' : '获奖名单'"
     >
       <div class="final-list">
-        <img
-          src="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/competition/poster/ai_challenge_2022/AI_challenge_winner.jpg"
-          alt=""
-        />
+        <img :src="comInfo.winners" alt="" />
       </div>
     </el-tab-pane>
   </el-tabs>

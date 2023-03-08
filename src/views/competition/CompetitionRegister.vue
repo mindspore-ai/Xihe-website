@@ -77,14 +77,19 @@ watch(
       .el-step__head {
         .el-step__line {
           border-top: 2px dashed #ccd1de;
-          height: 0;
+          // height: 0px;
           background-color: transparent;
           position: absolute;
           left: 84%;
           right: -40%;
           .el-step__line-inner {
-            border-width: 0px;
+            border-width: 0px !important;
           }
+        }
+      }
+      .is-finish {
+        .el-step__line {
+          border-color: #0d8dff;
         }
       }
       .el-step__main {

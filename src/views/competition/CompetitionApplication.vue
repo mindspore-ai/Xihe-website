@@ -5,7 +5,7 @@ import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
 // import { createTeam } from '@/api/api-competition';
 import { applyActivity } from '@/api/api-activity';
-import { applyCourse } from '@/api/api-course';
+// import { applyCourse } from '@/api/api-course';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';

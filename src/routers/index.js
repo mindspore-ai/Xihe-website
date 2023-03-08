@@ -12,6 +12,7 @@ import project from './project';
 import competition from './competition';
 import activity from './activity';
 import finetune from './finetune';
+import industry from './industry';
 
 export const routes = [
   // 主页
@@ -94,6 +95,8 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
+  // 产业
+  ...industry,
   // 404页面
   {
     path: '/404',
@@ -182,6 +185,7 @@ router.beforeEach(async (to, from) => {
     'modelzoo',
     'privacy',
     'legal',
+    'industry',
     '404',
   ];
   if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {

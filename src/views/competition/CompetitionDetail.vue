@@ -48,7 +48,7 @@ function goApplication() {
     if (competitionData.value.type === 'challenge') {
       router.push('/activity');
     } else {
-      // show.value = false;
+      show.value = false;
       router.push({
         path: `/competition/${competitionData.value.id}/1/statement`,
       });

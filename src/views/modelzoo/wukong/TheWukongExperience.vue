@@ -318,7 +318,7 @@ function reEnterDesc() {
 }
 // 初始化推理数据
 function initData() {
-  inputText.value = '';
+  // inputText.value = '';
   sortTag.value = '';
 
   styleBackground.value = [];
@@ -333,6 +333,8 @@ function initData() {
     item.isSelected = false;
   });
 }
+
+const errorMsg = ref('');
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
@@ -360,11 +362,17 @@ async function handleInfer() {
           desc: inputText.value,
           style: sortTag.value,
         });
-
         isInferred.value = true;
-
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
+        if (err.code === 'bigmodel_sensitive_info') {
+          errorMsg.value = '内容不合规，请重新输入描述词';
+        } else if (err.code === 'bigmodel_resource_busy') {
+          errorMsg.value = '前方道路拥挤，请稍后再试';
+        } else if (err.code === 'system_error') {
+          errorMsg.value = '系统错误';
+        }
+        isInferred.value = true;
         isError.value = true;
       }
     } else if (!inputText.value) {
@@ -619,7 +627,7 @@ function refreshTags() {
           <o-icon><icon-warning></icon-warning></o-icon>
         </p>
 
-        <p>内容不合规，请重新输入描述词</p>
+        <p>{{ errorMsg }}</p>
 
         <p @click="reEnterDesc">
           <span>重新输入</span>

@@ -218,9 +218,6 @@ export function wuKongInfer(params) {
     })
     .then((res) => {
       return res;
-    })
-    .catch((e) => {
-      return e;
     });
 }
 /**

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo } from '@/api/api-user';
-import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import whiteList from '@/whitelist/whitelist-router';
 import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
 
@@ -16,11 +16,14 @@ import activity from './activity';
 import finetune from './finetune';
 import course from './course';
 
+import i18n from '../i18n';
+
 export const routes = [
   // 主页
   {
     path: '/',
-    alias: '/home',
+    // alias: '/home',
+    alias: '/en',
     name: 'home',
     component: () => {
       return import('@/views/TheHome1.vue');
@@ -129,8 +132,9 @@ router.beforeEach(async (to, from) => {
     document.body.classList.remove('mobile-fit');
   }
   // 设置语言
-  const langStore = useLangStore();
-  langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
+  // const langStore = useLangStore();
+  // langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
+  i18n.global.locale.value = to.fullPath.includes('en') ? 'en' : 'zh';
 
   const loginStore = useLoginStore();
   const userInfoStore = useUserInfoStore();

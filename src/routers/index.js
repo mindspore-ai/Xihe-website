@@ -12,7 +12,7 @@ import project from './project';
 import competition from './competition';
 import activity from './activity';
 import finetune from './finetune';
-import industry from './industry';
+import industry from './estate';
 
 export const routes = [
   // 主页

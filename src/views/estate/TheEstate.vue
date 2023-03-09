@@ -1,6 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+
+import IconElectricity from '~icons/app/electricity';
+
 const router = useRouter();
 const route = useRoute();
 
@@ -34,7 +37,7 @@ const sections = [
     icon: '',
   },
 ];
-const activeIndex = ref(0);
+/* const activeIndex = ref(0);
 
 function toggleSection(path, index) {
   activeIndex.value = index;
@@ -51,19 +54,38 @@ watch(
     });
   },
   { immediate: true }
-);
+); */
+const activeName = ref('first');
+const handleClick = (tab, event) => {
+  console.log(tab, event);
+};
 </script>
 <template>
   <div class="industry">
     <div class="industry-head">
       <img src="@/assets/imgs/industry/industry-banner.png" alt="" />
       <div class="industry-banner"></div>
-      <!-- <div class="wrap">
-        <div class="industry-prefecture"></div>
-      </div> -->
     </div>
     <div class="wrap">
-      <div class="tab">
+      <el-tabs
+        v-model="activeName"
+        class="industry-tabs"
+        @tab-click="handleClick"
+      >
+        <el-tab-pane name="first">
+          <template #label>
+            <span class="industry-tabs-title">
+              <o-icon><icon-electricity></icon-electricity></o-icon>
+              <span class="electricity">电力专区</span>
+            </span>
+          </template>
+          User
+        </el-tab-pane>
+        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+        <el-tab-pane label="Role" name="third">Role</el-tab-pane>
+        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+      </el-tabs>
+      <!-- <div class="tab">
         <div
           v-for="item in sections"
           :key="item.name"
@@ -76,7 +98,7 @@ watch(
       </div>
       <div>
         <router-view></router-view>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -86,7 +108,7 @@ $theme: #0d8dff;
 .wrap {
   //   background-color: red;
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
+  padding: 0px 16px 64px 16px;
   max-width: 1472px;
   .tab {
     display: flex;
@@ -111,6 +133,47 @@ $theme: #0d8dff;
       width: 100%;
 
       height: 100%;
+    }
+  }
+}
+:deep(.el-tabs) {
+  .el-tabs__header {
+    .el-tabs__nav-wrap {
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      .el-tabs__nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        .el-tabs__active-bar {
+          display: none;
+        }
+        .el-tabs__item {
+          height: 128px;
+          font-size: 24px;
+          line-height: 33px;
+          color: #555;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // backdrop-filter: blur(10px);
+          .industry-tabs-title {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            .o-icon {
+              font-size: 48px;
+            }
+            .electricity {
+              margin-left: 24px;
+            }
+          }
+        }
+        .is-active {
+          background: rgba(13, 141, 255, 0.65);
+          color: #ffffff;
+        }
+      }
     }
   }
 }

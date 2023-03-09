@@ -84,9 +84,9 @@ const navItems = reactive([
     href: '/datasets',
   },
   {
-    id: 'industry',
+    id: 'estate',
     label: '产业',
-    href: '/industry',
+    href: '/estate',
   },
   {
     id: 'competition',
@@ -173,7 +173,7 @@ watch(
   },
   (val) => {
     if (
-      /^models|datasets|projects|industry|modelzoo|competition|activity|teams/g.test(
+      /^models|datasets|projects|estate|modelzoo|competition|activity|teams/g.test(
         val
       )
     ) {

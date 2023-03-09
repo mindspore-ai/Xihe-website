@@ -12,6 +12,11 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
+export function buildAuthenticationClient(params) {
+  const url = '/oneid/oidc/authorize';
+  return request.get(url, { params }).then((res) => res.data);
+}
+
 /**
  * 获取用户token
  * @returns

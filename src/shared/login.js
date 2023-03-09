@@ -57,11 +57,10 @@ async function getUserToken(params) {
   //   params.invited = localStorage.getItem('XIHE_INVITED');
   // }
   try {
-    await queryUserToken(params);
     // 去掉url中的code
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
+    await queryUserToken({ ...params, redirect_uri: newUrl });
     window.location.href = newUrl;
-
     // WARNING: 该方法会导致code无法清除
     // if (window.history.replaceState) {
     //   window.history.replaceState({}, '', newUrl);
@@ -145,22 +144,22 @@ export async function logout() {
     const idTokenRes = await queryUserIdToken({ userName });
     const { info: idToken } = idTokenRes.data;
     const redirectUri = `${window.location.origin}/`;
-    const client = new AuthenticationClient({
-      appId: APP_ID,
-      appHost: APP_HOST,
-      redirectUri,
-      idToken,
-    });
+    // const client = new AuthenticationClient({
+    //   appId: APP_ID,
+    //   appHost: APP_HOST,
+    //   redirectUri,
+    //   idToken,
+    // });
     // 构造 OIDC 登出URL
-    const url = client.buildLogoutUrl({
-      protocol: 'oidc',
-      expert: true,
-      redirectUri,
-      idToken,
-    });
+    // const url = client.buildLogoutUrl({
+    //   protocol: 'oidc',
+    //   expert: true,
+    //   redirectUri,
+    //   idToken,
+    // });
     setStatus(LOGIN_STATUS.NOT);
     saveUserAuth();
-    window.location.href = url;
+    window.location.href = `https://id.mindspore.cn/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
   } catch (error) {
     console.error('退出失败！');
   }
@@ -193,17 +192,26 @@ export async function requestUserInfo() {
 // authing认证
 export async function goAuthorize() {
   try {
-    const client = new AuthenticationClient({
-      appId: APP_ID,
-      appHost: APP_HOST,
-      redirectUri: `${window.location.href}`,
-    });
-
+    // const client = new AuthenticationClient({
+    //   appId: APP_ID,
+    //   appHost: APP_HOST,
+    //   redirectUri: `${window.location.href}`,
+    // });
     // 构造 OIDC 授权登录 URL
-    const url = client.buildAuthorizeUrl({
-      scope: 'openid profile email phone address username',
-    });
-    window.location.href = url;
+    // const url = client.buildAuthorizeUrl({
+    //   scope: 'openid profile email phone address username',
+    // });
+    // window.location.href = url;
+
+    // 登录
+    // const url = buildAuthenticationClient({
+    //   client_id: APP_ID,
+    //   redirect_uri: `${window.location.href}`,
+    //   response_type: 'code',
+    //   scope: 'openid profile email phone address username',
+    // });
+
+    window.location.href = `https://xiheapi.osinfra.cn/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

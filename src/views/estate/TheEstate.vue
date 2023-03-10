@@ -2,12 +2,19 @@
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+import estateBanner from '@/assets/imgs/estate/estate-banner.png';
+import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
+import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
+
 import IconElectricity from '~icons/app/electricity';
+import IconFinance from '~icons/app/finance';
+import IconMedicine from '~icons/app/medicine';
+import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
 const route = useRoute();
 
-const sections = [
+/* const sections = [
   {
     id: 0,
     name: '电力专区',
@@ -36,54 +43,72 @@ const sections = [
     routeName: 'industrialZone',
     icon: '',
   },
-];
-/* const activeIndex = ref(0);
-
-function toggleSection(path, index) {
-  activeIndex.value = index;
-  router.push(path);
-}
-
-watch(
-  () => route.name,
-  () => {
-    sections.forEach((item) => {
-      if (item.routeName === route.name) {
-        activeIndex.value = item.id;
-      }
-    });
-  },
-  { immediate: true }
-); */
-const activeName = ref('first');
+]; */
 const handleClick = (tab, event) => {
   console.log(tab, event);
 };
+
+// 跳转到电力专区
+function goElectricityDetail(id) {
+  router.push(`/estate/electricity/${id}`);
+}
 </script>
 <template>
-  <div class="industry">
-    <div class="industry-head">
-      <img src="@/assets/imgs/industry/industry-banner.png" alt="" />
-      <div class="industry-banner"></div>
+  <div class="estate">
+    <div class="estate-head">
+      <img :src="estateBanner" alt="" />
+      <div class="estate-banner"></div>
     </div>
-    <div class="wrap">
-      <el-tabs
-        v-model="activeName"
-        class="industry-tabs"
-        @tab-click="handleClick"
-      >
-        <el-tab-pane name="first">
+    <div class="estate-wrap">
+      <el-tabs class="estate-tabs" @tab-click="handleClick">
+        <el-tab-pane>
           <template #label>
-            <span class="industry-tabs-title">
+            <span class="estate-tabs-title">
               <o-icon><icon-electricity></icon-electricity></o-icon>
               <span class="electricity">电力专区</span>
             </span>
           </template>
-          User
+          <div class="electricity-wrap">
+            <div class="application-case">
+              <div class="case-title">应用案例</div>
+              <div class="case-content">
+                <div class="defect-detecting" @click="goElectricityDetail(1)">
+                  <img :src="defectDetecting" alt="" />
+                </div>
+                <div class="anomaly-detection" @click="goElectricityDetail(2)">
+                  <img :src="anomalyDetection" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
-        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-        <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+        <el-tab-pane>
+          <template #label>
+            <span class="estate-tabs-title">
+              <o-icon><icon-finance></icon-finance></o-icon>
+              <span class="finance">金融专区</span>
+            </span>
+          </template>
+          <div class="finance-wrap">金融专区</div>
+        </el-tab-pane>
+        <el-tab-pane>
+          <template #label>
+            <span class="estate-tabs-title">
+              <o-icon><icon-medicine></icon-medicine></o-icon>
+              <span class="medicine">医疗专区</span>
+            </span>
+          </template>
+          <div class="medicine-wrap">医疗专区</div>
+        </el-tab-pane>
+        <el-tab-pane>
+          <template #label>
+            <span class="estate-tabs-title">
+              <o-icon><icon-industry></icon-industry></o-icon>
+              <span class="industry">工业专区</span>
+            </span>
+          </template>
+          <div class="industry-wrap">工业专区</div>
+        </el-tab-pane>
       </el-tabs>
       <!-- <div class="tab">
         <div
@@ -105,39 +130,63 @@ const handleClick = (tab, event) => {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
-.wrap {
-  //   background-color: red;
-  margin: 0 auto;
-  padding: 0px 16px 64px 16px;
-  max-width: 1472px;
-  .tab {
-    display: flex;
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(6px);
-    .tab-item {
-      padding: 12px 16px;
-      cursor: pointer;
-    }
-    .active {
-      color: #fff;
-      background: $theme;
-    }
-  }
-}
-.industry {
+
+.estate {
+  min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
-  .industry-head {
+  .estate-head {
     width: 100%;
     height: 560px;
     img {
       width: 100%;
-
       height: 100%;
+    }
+  }
+  .estate-wrap {
+    margin: 0 auto;
+    padding: 0px 16px 64px 16px;
+    max-width: 1472px;
+    .electricity-wrap {
+      // margin-top: -25px;
+      .application-case {
+        .case-title {
+          height: 48px;
+          line-height: 48px;
+          font-size: 36px;
+          color: #000;
+          margin-bottom: 40px;
+          text-align: center;
+        }
+        .case-content {
+          display: flex;
+          justify-content: space-between;
+          .defect-detecting,
+          .anomaly-detection {
+            width: 696px;
+            height: 400px;
+            cursor: pointer;
+            img {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+    .finance-wrap,
+    .medicine-wrap,
+    .industry-wrap {
+      text-align: center;
+      line-height: 48px;
+      font-size: 36px;
+      color: #000000;
     }
   }
 }
 :deep(.el-tabs) {
   .el-tabs__header {
+    margin: 0px;
+    position: relative;
+    top: -64px;
     .el-tabs__nav-wrap {
       border-radius: 16px;
       backdrop-filter: blur(10px);
@@ -153,18 +202,22 @@ $theme: #0d8dff;
           font-size: 24px;
           line-height: 33px;
           color: #555;
+          background: rgba(255, 255, 255, 0.75);
           display: flex;
           justify-content: center;
           align-items: center;
           // backdrop-filter: blur(10px);
-          .industry-tabs-title {
+          .estate-tabs-title {
             display: flex;
             align-items: center;
             height: 48px;
             .o-icon {
               font-size: 48px;
             }
-            .electricity {
+            .electricity,
+            .finance,
+            .medicine,
+            .industry {
               margin-left: 24px;
             }
           }
@@ -173,6 +226,9 @@ $theme: #0d8dff;
           background: rgba(13, 141, 255, 0.65);
           color: #ffffff;
         }
+      }
+      &::after {
+        display: none;
       }
     }
   }

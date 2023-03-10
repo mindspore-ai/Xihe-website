@@ -5,43 +5,39 @@ export default [
     component: () => {
       return import('@/views/estate/TheEstate.vue');
     },
-    // redirect: '/estate/electric',
+  },
+  {
+    path: '/estate/electricity/:id',
+    name: 'electricityDetail',
+    component: () => {
+      return import('@/views/estate/electricity/ElectricityDetail.vue');
+    },
+    redirect: { name: 'projectExplain' },
     children: [
+      // 项目说明
       {
-        path: 'electric',
-        name: 'electricPower',
+        path: 'project-explain',
+        name: 'projectExplain',
         component: () => {
-          return import('@/views/estate/eletric/TheEletric.vue');
-        },
-        children: [
-          {
-            path: 'case-1',
-            name: 'case-1',
-            component: () => {
-              return import('@/views/estate/eletric/cases/TheCase.vue');
-            },
-          },
-        ],
-      },
-      {
-        path: 'finance',
-        name: 'finance',
-        component: () => {
-          return import('@/views/estate/finance/TheFinance.vue');
+          return import('@/views/estate/electricity/ElectricityExplain.vue');
         },
       },
+      // 数据准备
       {
-        path: 'medical',
-        name: 'medicalTreatment',
+        path: 'data-prepare',
+        name: 'dataPrepare',
         component: () => {
-          return import('@/views/estate/medical/TheMedicalTreatment.vue');
+          return import(
+            '@/views/estate/electricity/ElectricityDataPrepare.vue'
+          );
         },
       },
+      // 模型训练
       {
-        path: 'industrial-zone',
-        name: 'industrialZone',
+        path: 'model-train',
+        name: 'modelTrain',
         component: () => {
-          return import('@/views/estate/industrialZoo/TheIndustrialZone.vue');
+          return import('@/views/estate/electricity/ElectricityModelTrain.vue');
         },
       },
     ],

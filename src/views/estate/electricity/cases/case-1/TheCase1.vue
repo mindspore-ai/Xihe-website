@@ -187,8 +187,8 @@ function handleNavClick(item) {
       }
       .electricity-content-desc {
         background: #fff;
-        border-radius: 16px 16px 0 0;
-
+        border-radius: 16px;
+        box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
         // .o-nav {
         //   border-radius: 15px;
         // }
@@ -201,6 +201,8 @@ function handleNavClick(item) {
           max-width: 1440px;
           margin: 0 auto;
           height: 48px;
+          box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
+          border-radius: 16px 16px 0 0;
           // background-color: #fbfbfb;
           :deep(.o-nav) {
             width: 100%;
@@ -212,9 +214,10 @@ function handleNavClick(item) {
               color: #555;
             }
           }
-          .electricity-info {
-            // background-color: #f5f6f8;
-          }
+        }
+        .electricity-info {
+          // background-color: #f5f6f8;
+          padding: 40px;
         }
       }
     }

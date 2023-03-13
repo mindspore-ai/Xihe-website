@@ -12,6 +12,7 @@ import project from './project';
 import competition from './competition';
 import activity from './activity';
 import finetune from './finetune';
+import course from './course';
 
 export const routes = [
   // 主页
@@ -94,6 +95,8 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
+  // 课程
+  ...course,
   // 404页面
   {
     path: '/404',

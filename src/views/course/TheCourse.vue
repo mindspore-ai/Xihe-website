@@ -102,7 +102,7 @@ function getCourse(tabName) {
         );
       }
     });
-  } else {
+  } else if (tabName === 'over') {
     let params = { status: 'over' };
     getCourseList(params).then((res) => {
       if (res.data.data) {
@@ -507,7 +507,7 @@ function goCompetitionDetail(id) {
             <p>敬请期待</p>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="已结束" name="done">
+        <el-tab-pane label="已结束" name="over">
           <div v-if="overCourse.length">
             <div
               v-for="item in currentOverCourse"

@@ -177,3 +177,17 @@ export const useFinetuneData = defineStore('finetuneInfo', {
     },
   },
 });
+
+// 课程信息
+export const useCourseData = defineStore('courseInfo', {
+  state: () => {
+    return {
+      courseData: null,
+    };
+  },
+  actions: {
+    setCourseData(data) {
+      this.courseData = data;
+    },
+  },
+});

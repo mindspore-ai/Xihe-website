@@ -97,7 +97,7 @@ function submitUpload() {
       analysis.value = '';
       loading.value = true;
 
-      formData.delete('file');
+      formData.delete('picture');
       formData = new FormData();
 
       formData.append('picture', fileList.value[fileList.value.length - 1].raw);
@@ -119,17 +119,20 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  if (val.size > 204800) {
-    fileList.value.pop();
+  if (val.size > 2097152) {
+    // fileList.value.pop();
     return ElMessage({
       type: 'warning',
-      message: '图片大小不应超过200K',
+      message: '图片大小不应超过2M',
     });
   } else {
     analysis.value = '';
-    formData.delete('file');
+    formData.delete('picture');
     formData = new FormData();
-    fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+    // fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+    fileList.value = [];
+    fileList.value[0] = { raw: val.raw };
+
     activeIndex.value = -1;
     imageUrl.value = URL.createObjectURL(val.raw);
   }
@@ -139,7 +142,7 @@ function selectImage(item, index) {
   activeIndex.value = index;
   if (imageUrl.value !== getImage(item)) {
     analysis.value = '';
-    formData.delete('file');
+    formData.delete('picture');
     formData = new FormData();
     imageUrl.value = getImage(item);
 

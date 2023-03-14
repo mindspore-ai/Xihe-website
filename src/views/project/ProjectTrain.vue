@@ -31,11 +31,9 @@ const TypeSet = async function (elements) {
   if (!window.MathJax) {
     return;
   }
-  window.MathJax.startup.promise = window.MathJax.startup.promise
-    .then(() => {
-      return window.MathJax.typesetPromise(elements);
-    })
-    .catch((err) => console.log('Typeset failed: ' + err.message));
+  window.MathJax.startup.promise = window.MathJax.startup.promise.then(() => {
+    return window.MathJax.typesetPromise(elements);
+  });
   return window.MathJax.startup.promise;
 };
 onUpdated(() => {

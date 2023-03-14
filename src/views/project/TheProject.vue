@@ -466,6 +466,14 @@ function getKeyWord() {
   queryData.page_num = 1;
   queryData.name = keyWord.value;
 }
+//打开jupyter useLoginStore
+function openJupyter() {
+  if (loginStore.isLogined) {
+    router.push('/settings/clouddev', '_blank');
+  } else {
+    goAuthorize();
+  }
+}
 
 // 二次点击数据集，跳转刷新数据集页面数据
 watch(
@@ -511,6 +519,13 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="banner-right">
+          <o-button
+            type="primary"
+            style="margin-right: 16px"
+            @click="openJupyter"
+            >打开jupyter</o-button
+          >
+
           <o-button type="primary" @click="goSetNew">{{
             i18n.head.btn
           }}</o-button>

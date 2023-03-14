@@ -84,6 +84,11 @@ const navItems = reactive([
     href: '/datasets',
   },
   {
+    id: 'course',
+    label: '课程',
+    href: '/course',
+  },
+  {
     id: 'competition',
     label: '比赛',
     href: '/competition',
@@ -196,7 +201,6 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(item) {
-  // console.log('item,: ', item);
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
@@ -507,7 +511,6 @@ function handleBlur() {
                 :key="val.id"
                 :index="val.href"
               >
-                <!-- style="width: 100px" -->
                 {{ val.label }}
               </el-menu-item>
             </div>

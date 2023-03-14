@@ -801,7 +801,8 @@ function refreshTags() {
 
   .infer-dlg-result {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: center;
     width: 100%;
     .result-item {
       position: relative;

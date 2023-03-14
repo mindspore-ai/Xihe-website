@@ -18,18 +18,21 @@ import { getAllCompetition } from '@/api/api-competition';
 const router = useRouter();
 
 const activeName = ref('first');
-// const state = ref('doing'); //比赛状态：will-do，doing，done
 
-const tableData = ref([]);
-const tableData1 = ref([]);
-const tableData2 = ref([]);
-const tableData3 = ref([]);
+const allData = ref(null);
+const preparingData = ref(null);
+const overData = ref(null);
+const inProgressData = ref(null);
 
-let queryData = reactive({
+let allPager = reactive({
   page: 1,
   size: 5,
 });
-let queryData3 = reactive({
+let inProgressPager = reactive({
+  page: 1,
+  size: 5,
+});
+let overPager = reactive({
   page: 1,
   size: 5,
 });
@@ -40,37 +43,40 @@ const handleClick = (tab) => {
   }
 };
 // 获取进行中、已结束、未开始的比赛
-const perPage3 = ref([]);
+const perPageInprogressData = ref(null); //进行中比赛的每页数据
 function getCompetitions1(tab) {
   if (tab === '1') {
     getAllCompetition({ status: 'preparing' }).then((res) => {
       if (res.status === 200) {
-        tableData1.value = res.data.data;
+        preparingData.value = res.data.data;
       }
     });
   } else if (tab === '2') {
-    getAllCompetition({ status: 'done' }).then((res) => {
-      if (res.status === 200) {
-        tableData2.value = res.data.data;
+    getAllCompetition({ status: 'over' }).then((res) => {
+      if (res.status === 200 && res.data.data) {
+        overData.value = res.data.data.reverse();
+        perPageOverData.value = overData.value.slice(0, overPager.size);
       }
     });
   } else if (tab === '3') {
     getAllCompetition({ status: 'in-progress' }).then((res) => {
-      if (res.status === 200) {
-        tableData3.value = res.data.data.reverse();
-        perPage3.value = tableData3.value.slice(0, queryData3.size);
+      if (res.status === 200 && res.data.data) {
+        inProgressData.value = res.data.data.reverse();
+        perPageInprogressData.value = inProgressData.value.slice(
+          0,
+          inProgressPager.size
+        );
       }
     });
   }
 }
 // 获取所有的比赛
 function getCompetitions2() {
-  // { status: 'in-progress' }preparing
   getAllCompetition()
     .then((res) => {
-      if (res.status === 200) {
-        tableData.value = res.data.data.reverse();
-        perPage.value = tableData.value.slice(0, queryData.size);
+      if (res.status === 200 && res.data.data) {
+        allData.value = res.data.data.reverse();
+        perPageAllData.value = allData.value.slice(0, allPager.size);
       }
     })
     .catch((err) => {
@@ -80,7 +86,7 @@ function getCompetitions2() {
 getCompetitions2();
 // 跳转到比赛详情页
 function goDetail(competitionName) {
-  let competitionList = tableData.value.filter((item) => {
+  let competitionList = allData.value.filter((item) => {
     return item.name === competitionName;
   });
   router.push({
@@ -96,29 +102,33 @@ function goCompetitionDetail(id) {
 }
 // 分页器
 const layout = ref('prev, pager, next');
-/* function handleSizeChange(val) {
-  if (tableData.value.length / val < 8) {
-    layout.value = layout.value.split(',').splice(0, 4).join(',');
-  }
-  queryData.size = val;
-} */
-const perPage = ref([]);
-function handleCurrentChange(val) {
-  queryData.page = val;
-  perPage.value = tableData.value.slice(
-    queryData.page * queryData.size - queryData.size,
-    queryData.page * queryData.size
+const perPageAllData = ref(null); //所有比赛的每页数据
+const perPageOverData = ref(null); //已结束比赛的每页数据
+function handleAllPager(val) {
+  allPager.page = val;
+  perPageAllData.value = allData.value.slice(
+    allPager.page * allPager.size - allPager.size,
+    allPager.page * allPager.size
   );
   toTop();
 }
-function handleCurrentChange3(val) {
-  queryData3.page = val;
-  perPage3.value = tableData3.value.slice(
-    queryData3.page * queryData3.size - queryData3.size,
-    queryData3.page * queryData3.size
+function handleInprogressPager(val) {
+  inProgressPager.page = val;
+  perPageInprogressData.value = inProgressData.value.slice(
+    inProgressPager.page * inProgressPager.size - inProgressPager.size,
+    inProgressPager.page * inProgressPager.size
   );
   toTop();
 }
+function handleOverPager(val) {
+  overPager.page = val;
+  perPageOverData.value = overData.value.slice(
+    overPager.page * overPager.size - overPager.size,
+    overPager.page * overPager.size
+  );
+  toTop();
+}
+
 function toTop() {
   document.documentElement.scrollTop = 0;
 }
@@ -170,9 +180,9 @@ function toTop() {
       >
         <el-tab-pane label="竞赛状态" name="" disabled></el-tab-pane>
         <el-tab-pane label="全部" name="first">
-          <div v-if="tableData">
+          <div v-if="allData">
             <div
-              v-for="item in perPage"
+              v-for="item in perPageAllData"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"
@@ -237,11 +247,11 @@ function toTop() {
             <div class="pagination">
               <el-pagination
                 hide-on-single-page
-                :current-page="queryData.page"
-                :page-size="queryData.size"
-                :total="tableData.length"
+                :current-page="allPager.page"
+                :page-size="allPager.size"
+                :total="allData.length"
                 :layout="layout"
-                @current-change="handleCurrentChange"
+                @current-change="handleAllPager"
               ></el-pagination>
             </div>
           </div>
@@ -251,9 +261,9 @@ function toTop() {
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="3">
-          <div v-if="tableData3">
+          <div v-if="perPageInprogressData">
             <div
-              v-for="item in perPage3"
+              v-for="item in perPageInprogressData"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"
@@ -310,11 +320,11 @@ function toTop() {
             <div class="pagination">
               <el-pagination
                 hide-on-single-page
-                :current-page="queryData3.page"
-                :page-size="queryData3.size"
-                :total="tableData3.length"
+                :current-page="inProgressPager.page"
+                :page-size="inProgressPager.size"
+                :total="inProgressData.length"
                 :layout="layout"
-                @current-change="handleCurrentChange3"
+                @current-change="handleInprogressPager"
               ></el-pagination>
             </div>
           </div>
@@ -324,9 +334,9 @@ function toTop() {
           </div>
         </el-tab-pane>
         <el-tab-pane label="已结束" name="2">
-          <div v-if="tableData2">
+          <div v-if="perPageOverData">
             <div
-              v-for="item in tableData2"
+              v-for="item in perPageOverData"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"
@@ -343,7 +353,6 @@ function toTop() {
                     已结束
                   </div>
                 </div>
-                <!-- <div class="card-body">{{ item.description }}</div> -->
                 <div class="card-body">
                   {{ item.desc }}
                 </div>
@@ -380,6 +389,17 @@ function toTop() {
                 </div>
               </div>
             </div>
+            <!-- 已结束比赛页的分页器 -->
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="overPager.page"
+                :page-size="overPager.size"
+                :total="overData.length"
+                :layout="layout"
+                @current-change="handleOverPager"
+              ></el-pagination>
+            </div>
           </div>
           <div v-else class="empty">
             <img :src="emptyImg" alt="" />
@@ -387,9 +407,9 @@ function toTop() {
           </div>
         </el-tab-pane>
         <el-tab-pane label="未开始" name="1">
-          <div v-if="tableData1">
+          <div v-if="preparingData">
             <div
-              v-for="item in tableData1"
+              v-for="item in preparingData"
               :key="item.id"
               class="competition-box"
               @click="goCompetitionDetail(item.id)"

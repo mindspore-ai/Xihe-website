@@ -20,7 +20,6 @@ const isLogined = useLoginStore().isLogined;
 const userCourseData = useCourseData();
 
 const currentCourseData = ref({});
-const showBread = ref(false);
 const fixed = ref(false);
 const showApplication = ref(false);
 const showCourse = ref('course');
@@ -29,6 +28,7 @@ const showDetail = ref(false);
 function getDetailData() {
   getCourseData(route.params.courseId).then((res) => {
     currentCourseData.value = res.data;
+    console.log('currentCourseData.value: ', currentCourseData.value);
     userCourseData.setCourseData(currentCourseData.value);
     showDetail.value = true;
   });
@@ -60,12 +60,11 @@ onUpdated(() => {
   window.addEventListener('scroll', function () {
     if (
       window.pageYOffset > top1 &&
-      (route.name === 'introduction' ||
-        route.name === 'leaderboard' ||
-        route.name === 'dataset' ||
-        route.name === 'result' ||
-        route.name === 'team' ||
-        route.name === 'agreement')
+      (route.name === 'courseIntroduction' ||
+        route.name === 'courseChapter' ||
+        route.name === 'courseTask' ||
+        route.name === 'courseTeacher' ||
+        route.name === 'courseCertificate')
     ) {
       box.style.display = 'flex';
       fixed.value = true;
@@ -94,7 +93,6 @@ onBeforeRouteLeave(() => {
             <el-breadcrumb-item class="breadcrumb-item">
               {{ currentCourseData.name }}
             </el-breadcrumb-item>
-            <el-breadcrumb-item v-if="showBread">报名</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
       </div>
@@ -164,6 +162,7 @@ onBeforeRouteLeave(() => {
                     <OIcon><IconArrowRight /></OIcon>
                   </template>
                 </OButton>
+                <!-- TODO:暂时隐藏 -->
                 <!-- <div class="number">
                   报名人数：{{ currentCourseData.count }}
                 </div> -->
@@ -183,8 +182,8 @@ onBeforeRouteLeave(() => {
         <!-- 下滑后展示的课程信息 -->
         <div class="course-box course-info">
           <div class="left">
-            <div class="card-head">
-              <div class="card-title">
+            <div class="card-header">
+              <div class="course-title">
                 {{ currentCourseData.name }}
               </div>
               <div
@@ -195,50 +194,42 @@ onBeforeRouteLeave(() => {
               </div>
               <div
                 v-if="currentCourseData.status === 'preparing'"
-                class="course-state will-do"
+                class="course-state preparing"
               >
                 未开始
               </div>
               <div
                 v-if="currentCourseData.status === 'over'"
-                class="course-state done"
+                class="course-state finished"
               >
                 已结束
               </div>
             </div>
           </div>
           <div v-if="!currentCourseData.is_apply" class="right1">
-            <div class="right1-bonus">
-              <div class="time">赛期:{{ currentCourseData.duration }}</div>
-            </div>
             <div class="right-immediate">
               <div class="right-wrap">
                 <div v-if="currentCourseData.status === 'in-progress'">
-                  <OButton
-                    :disabled="currentCourseData.is_apply === 'true'"
-                    type="primary"
-                    animation
-                    @click="goApplication"
-                  >
+                  <OButton type="primary" animation @click="goApplication">
                     立即报名
                   </OButton>
                 </div>
                 <div v-if="currentCourseData.status === 'preparing'">
-                  <div class="competitionState">报名未开始</div>
+                  <div class="course-state">报名未开始</div>
                 </div>
-                <div v-if="currentCourseData.status === 'done'">
-                  <div class="competitionState">比赛已结束</div>
+                <div v-if="currentCourseData.status === 'over'">
+                  <div class="course-state">课程已结束</div>
                 </div>
               </div>
             </div>
           </div>
           <div v-else class="right2">
             <div class="right2-bonus">
-              <div class="time">赛期:{{ currentCourseData.duration }}</div>
+              <div class="time">日期: {{ currentCourseData.duration }}</div>
             </div>
           </div>
         </div>
-        <div v-if="userCourseData.courseData" class="competition-desc">
+        <div v-if="userCourseData.courseData" class="course-desc">
           <CourseOption :fixed="fixed"></CourseOption>
         </div>
       </div>
@@ -308,11 +299,10 @@ onBeforeRouteLeave(() => {
     .course-content {
       scroll-behavior: smooth;
       .course-box {
-        min-height: 216px;
+        // min-height: 216px;
         font-size: 14px;
         color: #555555;
         background-color: #ffffff;
-        margin-bottom: 24px;
         display: flex;
         justify-content: space-between;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
@@ -414,51 +404,73 @@ onBeforeRouteLeave(() => {
         scroll-behavior: smooth;
         z-index: 10;
         width: 100%;
-        top: 80px;
-        overflow: hidden;
         max-width: 1440px;
         height: 128px;
+        top: 80px;
+        overflow: hidden;
+        padding: 0 40px;
+        vertical-align: middle;
         .left {
-          padding: 0 0 0 40px;
+          display: flex;
+          align-items: center;
+          .card-header {
+            display: flex;
+            align-items: center;
+            .course-title {
+              font-size: 24px;
+              color: #000;
+            }
+            .course-state {
+              font-size: 12px;
+              height: 20px;
+              line-height: 20px;
+              margin-left: 15px;
+              padding: 0 8px;
+            }
+            .preparing {
+              color: #ffffff;
+              background-color: #6189ff;
+            }
+            .doing {
+              color: #ffffff;
+              background-color: #ff7f0d;
+            }
+            .finished {
+              color: #555555;
+              background-color: #efefef;
+            }
+          }
         }
         .right1 {
-          padding-right: 80px;
+          display: flex;
+          align-items: center;
           .right-immediate {
             border-left: 0px;
-            .right1-bonus {
-              margin: 0px 90px 0px 88px;
-              .time {
-                margin-top: 0px;
+            .right-wrap {
+              .course-state {
+                font-size: 16px;
+                color: #cccccc;
+                line-height: 22px;
               }
             }
           }
         }
         .right2 {
+          display: flex;
+          align-items: center;
           .time {
+            line-height: 24px;
+            padding: 12px 40px;
+            color: #555555;
+            background-color: #f4faff;
             margin-top: 0px;
           }
         }
       }
     }
-    .competition-desc {
+    .course-desc {
       margin-top: 24px;
       background-color: #fff;
-      /* &-tab {
-          height: 48px;
-          background-color: #fbfbfb;
-          :deep(.o-nav) {
-            .nav-item {
-              margin-left: 40px;
-            }
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 0 auto;
-            .nav-item {
-              color: #555;
-            }
-          }
-        } */
     }
   }
 }

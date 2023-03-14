@@ -82,6 +82,9 @@ const videaData2 = computed(() => {
         <div class="course-videa">
           <video
             controls="controls"
+            controlslist="nodownload"
+            disablepictureinpicture
+            preload="auto"
             height="720"
             :src="videaData1.video"
             class="video-detail"
@@ -93,6 +96,9 @@ const videaData2 = computed(() => {
         <div class="course-videa">
           <video
             controls="controls"
+            controlslist="nodownload"
+            disablepictureinpicture
+            preload="auto"
             height="720"
             :src="videaData2.video"
             class="video-detail"

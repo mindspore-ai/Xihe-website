@@ -28,7 +28,6 @@ const showDetail = ref(false);
 function getDetailData() {
   getCourseData(route.params.courseId).then((res) => {
     currentCourseData.value = res.data;
-    console.log('currentCourseData.value: ', currentCourseData.value);
     userCourseData.setCourseData(currentCourseData.value);
     showDetail.value = true;
   });

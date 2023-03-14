@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -26,6 +26,22 @@ import {
   addModel,
   deleteModel,
 } from '@/api/api-project';
+
+const TypeSet = async function (elements) {
+  if (!window.MathJax) {
+    return;
+  }
+  window.MathJax.startup.promise = window.MathJax.startup.promise
+    .then(() => {
+      return window.MathJax.typesetPromise(elements);
+    })
+    .catch((err) => console.log('Typeset failed: ' + err.message));
+  return window.MathJax.startup.promise;
+};
+onUpdated(() => {
+  TypeSet(document.querySelectorAll('p'));
+  TypeSet(document.querySelectorAll('li'));
+});
 
 const route = useRoute();
 const router = useRouter();

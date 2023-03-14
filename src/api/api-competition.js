@@ -45,7 +45,7 @@ export function getAllCompetition(params) {
  * @returns
  */
 export function getRank(params) {
-  const url = `/server/competition/${params.id}/ranking/${params.phase}`;
+  const url = `/server/competition/${params.id}/ranking`;
   return request.get(url).then((res) => {
     return res;
   });
@@ -64,42 +64,20 @@ export function applyCompetition(id, params) {
  * 创建团队----复赛无此功能
  * @returns
  */
-export function createTeam(params) {
-  const url = `/api/competitions/groups/`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-/**
- * 修改团队信息(点击创建团队，修改团队名)----复赛无此功能
- * @returns
- */
-export function changeTeam(params, id) {
-  const url = `/api/competitions/groups/${id}`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+export function createTeam(id, params) {
+  const url = `/server/competition/${id}/team`;
+  return request
+    .post(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 获取团队信息
  * @returns
  */
-export function getTeamInfo(params) {
-  const url = `/api/competitions/groups/${params.id}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-// 通过团队名获取团队信息
-export function getTeamInfoByName(name, competitionId) {
-  const url = `/api/competitions/groups/?name=${name}&relate_competition=${competitionId}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-// 通过比赛id获取团队信息
-export function getTeamInfoById(id) {
-  const url = `/server/competition/${id}/team`;
+export function getTeamInfor(competitionId) {
+  const url = `/server/competition/${competitionId}/team`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });
@@ -108,8 +86,8 @@ export function getTeamInfoById(id) {
  * 查询团队提交记录
  * @returns
  */
-export function getSubmissions(id, phase) {
-  const url = `/server/competition/${id}/${phase}/submissions`;
+export function getSubmissions(id) {
+  const url = `/server/competition/${id}/submissions`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -118,25 +96,67 @@ export function getSubmissions(id, phase) {
  * 上传结果
  * @returns
  */
-export async function submit(id, phase, file) {
-  const url = `/server/competition/${id}/${phase}/submissions`;
-  let config = await getHeaderConfig();
+export function submit(id, file) {
+  const url = `/server/competition/${id}/submissions`;
+  let config = getHeaderConfig();
   config['timeout'] = 60000;
   return request.post(url, file, config).then((res) => {
     return res.data;
   });
 }
 /**
- * 用户加入团队
- * 用户加入团队----复赛无此功能
+ * 用户加入团队（仅初赛）
  * @returns
  */
-/* export function joinTeam(params) {
-  const url = `/api/competitions/join_group/${params.id}`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
+export function joinTeam(competitionId, params) {
+  const url = `/server/competition/${competitionId}/team`;
+  return request
+    .put(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
+}
+/**
+ * 修改团队名（仅初赛）
+ * @returns
+ */
+export function changTeamName(competitionId, params) {
+  const url = `/server/competition/${competitionId}/team/action/change_name`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
-} */
+}
+/**
+ * 移除团队成员（仅初赛）
+ * @returns
+ */
+export function removeMember(competitionId, params) {
+  const url = `/server/competition/${competitionId}/team/action/delete_member`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 退出团队（仅初赛）
+ * @returns
+ */
+export function quitTeam(competitionId) {
+  const url = `/server/competition/${competitionId}/team/action/quit`;
+  return request.put(url, null, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 移交队长（仅初赛）
+ * @returns
+ */
+export function transferCaptain(competitionId, params) {
+  const url = `/server/competition/${competitionId}/team/action/transfer_leader`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
 /**
  * 删除团队----复赛无此功能
  * @returns
@@ -147,36 +167,7 @@ export async function submit(id, phase, file) {
     return res.data;
   });
 } */
-/**
- * 退出团队----复赛无此功能
- * @returns
- */
-/* export function quitTeam(params) {
-  const url = `/api/competitions/leave_group/${params.id}`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
-/**
- * 移除团队成员----复赛无此功能
- * @returns
- */
-/* export function removeMember(params, id) {
-  const url = `/api/competitions/groups/${id}`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
-/**
- * 移交队长----复赛无此功能
- * @returns
- */
-/* export function transferCaptain(params) {
-  const url = `/api/competitions/groups/${params.id}`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
+
 /**
  * 获取城市数据
  * @returns
@@ -190,8 +181,8 @@ export function getAreaData() {
  * 添加项目（查询数据集信息）
  * @returns
  */
-export function addProject(params, id, phase) {
-  const url = `/server/competition/${id}/${phase}/realted_project`;
+export function addProject(params, id) {
+  const url = `/server/competition/${id}/realted_project`;
   return request
     .put(url, params, { $doException: true, ...getHeaderConfig() })
     .then((res) => {

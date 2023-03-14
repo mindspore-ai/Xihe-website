@@ -10,9 +10,6 @@ import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
 
 const userComData = useCompetitionData().competitionData;
-/* const teamId = computed(() => {
-  return useCompetitionData().teamId;
-}); */
 
 const mkit = handleMarkdown();
 const codeString = ref('');

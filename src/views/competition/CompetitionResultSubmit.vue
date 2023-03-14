@@ -1,22 +1,18 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import IconProject from '~icons/app/project-tree';
-
-import OButton from '@/components/OButton.vue';
-import ODialog from '@/components/ODialog.vue';
-
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
 import { ElDialog } from 'element-plus';
 
+import OButton from '@/components/OButton.vue';
+
 import { useCompetitionData } from '@/stores';
 import { getSubmissions, submit, addProject } from '@/api/api-competition';
 
-const detailData1 = computed(() => {
-  return useCompetitionData().competitionData;
-});
+const detailData1 = useCompetitionData().competitionData;
 
 const router = useRouter();
 const tableData = ref();
@@ -28,14 +24,12 @@ const date = new Date();
 const year = date.getFullYear();
 let month = date.getMonth() + 1;
 let day = date.getDate();
-// const hour = date.getHours();
-// const minute = date.getMinutes();
-// const second = date.getSeconds();
+
 if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
 const beforeUpload = (rawFile) => {
   if (
-    detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
+    detailData1.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
     !(
       rawFile.type === 'application/x-zip-compressed' ||
       rawFile.type === 'application/zip'
@@ -44,7 +38,7 @@ const beforeUpload = (rawFile) => {
     ElMessage.error('请上传.zip文件');
     return false;
   } else if (
-    detailData1.value.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
+    detailData1.name !== '昇思AI挑战赛-艺术家画作风格迁移' &&
     rawFile.type !== 'text/plain'
   ) {
     ElMessage.error('请上传.txt文件');
@@ -69,16 +63,14 @@ const Progress = ref(0);
 // }
 async function upLoad(param) {
   togglePhoneDlg(false);
-  submit(detailData1.value.id, detailData1.value.phase, param)
+  submit(detailData1.id, param)
     .then(() => {
-      getSubmissions(detailData1.value.id, detailData1.value.phase).then(
-        (res) => {
-          tableData.value = res.data.details;
-          if (tableData.value.length > 3) {
-            tableData.value = tableData.value.slice(0, 3);
-          }
+      getSubmissions(detailData1.id).then((res) => {
+        tableData.value = res.data.details;
+        if (tableData.value.length > 3) {
+          tableData.value = tableData.value.slice(0, 3);
         }
-      );
+      });
     })
     .catch((err) => {
       if (err.response.data?.msg === 'no permission to submit') {
@@ -93,63 +85,6 @@ async function upLoad(param) {
         });
       }
     });
-  // let path = `xihe-obj/competitions/${detailData1.value.name}/submit_result/${
-  //   detailData.value.name
-  // }_${detailData.value.is_individual ? 1 : 0}/${param.name}`;
-  // 上传函数接收三个参数
-  // 1.文件相关信息，编辑完成不需要验证文件名重复isEdit传true，其余传false。
-  // 2.进度条回调函数
-  // 3.上传成功的回调
-  // TODO:是否统一封装失败情况
-  // await handleUpload(
-  //   {
-  //     file: param,
-  //     path,
-  //     isEdit: true,
-  //   },
-  //   callback,
-  //   function () {
-  //     // handleClick(route.params.contents.length);
-  //     togglePhoneDlg(false);
-  //     Progress.value = '';
-  //     fileList.value = [];
-  //     handleSubmit(
-  //       {
-  //         file_name: param.name,
-  //         competition_id: route.path.split('/')[2],
-  //         period: 2,
-  //       },
-  //       route.path.split('/')[2]
-  //     ).then((res) => {
-  //       if (res.status === 200) {
-  //         // ElMessage({
-  //         //   type: 'success',
-  //         //   message: '上传成功,正在自动评分中！',
-  //         // });
-  //         handleScoring({ file_name: param.name }, teamId.value).then((res) => {
-  //           if (res.status === 200) {
-  //             ElMessage({
-  //               type: 'success',
-  //               message: '上传成功,正在自动评分中！',
-  //             });
-  //             getIndividual(teamId.value);
-  //           } else {
-  //             ElMessage({
-  //               type: 'error',
-  //               message: res.msg,
-  //             });
-  //             getIndividual(teamId.value);
-  //           }
-  //         });
-  //       } else {
-  //         ElMessage({
-  //           type: 'error',
-  //           message: res.msg,
-  //         });
-  //       }
-  //     });
-  //   }
-  // );
 }
 const fileList = ref([]);
 function onChange() {
@@ -173,7 +108,7 @@ function confirmAdd() {
   let paramsArr = relatedPro.value.split('/');
   params.owner = paramsArr[0];
   params.project_name = paramsArr[1];
-  addProject(params, detailData1.value.id, detailData1.value.phase)
+  addProject(params, detailData1.id)
     .then(() => {
       ElMessage({
         type: 'success',
@@ -189,7 +124,7 @@ function confirmAdd() {
     });
 }
 
-getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
+getSubmissions(detailData1.id).then((res) => {
   detailData.value = res.data;
   tableData.value = res.data.details;
   if (tableData.value && tableData.value.length > 3) {
@@ -200,8 +135,8 @@ getSubmissions(detailData1.value.id, detailData1.value.phase).then((res) => {
 const detailData = ref();
 function goProjectClick() {
   if (
-    (detailData1.value.is_competitor && detailData1.value.team_id === '') ||
-    detailData1.value.team_role === 'leader'
+    (detailData1.is_competitor && detailData1.team_id === '') ||
+    detailData1.team_role === 'leader'
   ) {
     // router.push(`/projects/${val.owner}/${val.name}`);
     router.push(
@@ -227,21 +162,19 @@ function handelSubmit() {
       type: 'error',
       message: '您今天已经提交过了哦~',
     });
-  } else if (detailData1.value.status === 'done') {
+  } else if (detailData1.status === 'over') {
     ElMessage({
       type: 'error',
       message: '该比赛已结束！',
     });
-    // } else {
-    // if (detailData1.value.name === '昇思AI挑战赛-艺术家画作风格迁移') {
-    //   ElMessage({
-    //     type: 'error',
-    //     message: '提交结果通道火速开通中，请您耐心等待哦~',
-    //   });
+  } else if (detailData1.team_id && !detailData1.team_role) {
+    ElMessage({
+      type: 'warning',
+      message: '仅队长可提交结果！',
+    });
   } else {
     togglePhoneDlg(true);
   }
-  // }
 }
 function handelCancel() {
   togglePhoneDlg(false);
@@ -270,9 +203,15 @@ function handelCancel() {
         ></el-input>
         <div class="submit">
           <div></div>
-          <OButton type="primary" size="small" @click="confirmAdd"
-            >确定</OButton
+          <OButton
+            v-if="relatedPro"
+            type="primary"
+            size="small"
+            @click="confirmAdd"
           >
+            确定
+          </OButton>
+          <OButton v-else disabled type="primary" size="small"> 确定 </OButton>
         </div>
       </div>
       <div v-else-if="detailData && detailData.project">
@@ -291,8 +230,8 @@ function handelCancel() {
           @jump="goProjectClick"
         ></project-relate-card> -->
         <div class="project" @click="goProjectClick">
-          <o-icon><icon-project></icon-project></o-icon
-          >{{ detailData.project.split('/')[1] }}
+          <o-icon><icon-project></icon-project></o-icon>
+          {{ detailData.project.split('/')[1] }}
         </div>
       </div>
       <div v-else class="empty">
@@ -312,17 +251,18 @@ function handelCancel() {
             type="primary"
             size="small"
             @click="handelSubmit"
-            >提交结果</OButton
           >
+            提交结果
+          </OButton>
         </div>
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="project" width="295">
+          <el-table-column prop="file_name" width="295">
             <template #header>
               <div class="align">
-                <o-icon><icon-upload></icon-upload> </o-icon
-                >提交的最新结果（显示最近3条）
+                <o-icon><icon-upload></icon-upload> </o-icon>
+                <span> 提交的最新结果（显示最近3条） </span>
               </div>
             </template>
           </el-table-column>
@@ -427,6 +367,8 @@ function handelCancel() {
             font-size: 24px;
             line-height: 24px;
             margin-right: 6px;
+            position: relative;
+            top: 4px;
           }
         }
       }

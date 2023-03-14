@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
@@ -12,7 +12,6 @@ import IconMedicine from '~icons/app/medicine';
 import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
-const route = useRoute();
 
 const sections = [
   {

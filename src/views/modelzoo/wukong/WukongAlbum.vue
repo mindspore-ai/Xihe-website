@@ -20,7 +20,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import IconLikes from '~icons/app/likes.svg';
 import IconLikes1 from '~icons/app/likes1.svg';
 import IconLiked from '~icons/app/liked.svg';
-import IconLiked1 from '~icons/app/liked1.svg';
+// import IconLiked1 from '~icons/app/liked1.svg';
 import IconLeft from '~icons/app/left.svg';
 import IconRight from '~icons/app/right.svg';
 import IconDownload from '~icons/app/wukong-download';
@@ -30,7 +30,7 @@ import IconHeart from '~icons/app/collected';
 import IconCopy from '~icons/app/copy-nickname';
 
 const router = useRouter();
-const route = useRoute();
+// const route = useRoute();
 const userInfo = useUserInfoStore();
 const isLogined = useLoginStore().isLogined;
 const imgs = ref([]);
@@ -424,8 +424,8 @@ function toNextPic() {
                 }}</span>
               </div>
               <div class="like" @click.stop="toggleDigg(index)">
-                <o-icon v-if="items?.is_digg"> <icon-liked1 /></o-icon>
-                <o-icon v-else> <icon-likes1 /></o-icon>
+                <o-icon v-if="items?.is_digg"> <icon-liked /></o-icon>
+                <o-icon v-else class="likes1"> <icon-likes1 /></o-icon>
                 <span>{{ items?.digg_count }}</span>
               </div>
             </div>
@@ -1132,6 +1132,9 @@ function toNextPic() {
           align-items: center;
           .o-icon {
             margin-right: 8px;
+          }
+          .likes1 {
+            color: #fff;
           }
         }
       }

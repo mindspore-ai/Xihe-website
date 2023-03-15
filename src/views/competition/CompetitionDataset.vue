@@ -34,6 +34,7 @@ function downloadDataset() {
     <div class="header">
       <o-button
         v-if="userComData.is_competitor"
+        :disabled="userComData.id === 'ai_painter'"
         size="small"
         @click="downloadDataset()"
         >下载数据集

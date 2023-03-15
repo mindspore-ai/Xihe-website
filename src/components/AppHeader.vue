@@ -196,7 +196,6 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(item) {
-  // console.log('item,: ', item);
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {

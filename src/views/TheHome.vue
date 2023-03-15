@@ -65,7 +65,6 @@ const toggleGallery = (val, num) => {
 // watch(
 //   () => mySwiper.value,
 //   () => {
-//     console.log(currPage.value);
 //     mySwiper.value.slideTo(currPage.value);
 //   }
 // );

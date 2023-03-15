@@ -1,14 +1,14 @@
 <script setup>
-import Card from './Card.vue';
+import ModelzooCard from './ModelzooCard.vue';
 import AppContent from '@/components/AppContent.vue';
 
-import taichu from '@/assets/imgs/modelzoo/taichu.png';
-import luojia from '@/assets/imgs/modelzoo/Luojia.png';
+import taichu from '@/assets/imgs/modelzoo/taichu.jpg';
+import luojia from '@/assets/imgs/modelzoo/Luojia.jpg';
 // import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
-import pangu from '@/assets/imgs/modelzoo/pangu.png';
-import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
-import wukong from '@/assets/imgs/wukong/wukong-banner1.png';
+import pangu from '@/assets/imgs/modelzoo/pangu.jpg';
+import shenlong from '@/assets/imgs/modelzoo/shenlong.jpg';
+import dasheng from '@/assets/imgs/modelzoo/dasheng.jpg';
+import wukong from '@/assets/imgs/wukong/wukong-banner1.jpg';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -97,7 +97,7 @@ function goModelzoo() {
     <AppContent :mobile-top="24">
       <div class="card-lists">
         <div v-for="item in i18n.cardLists" :key="item">
-          <Card
+          <ModelzooCard
             :title="item.title"
             :introduce="item.introduce"
             :url="item.url"

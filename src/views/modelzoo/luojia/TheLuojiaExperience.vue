@@ -323,7 +323,7 @@ const analysis = ref('');
 const imageUrl = ref('');
 const getImage = (name) => {
   return new URL(
-    `../../../assets/imgs/luojia/luojia-test/${name}.jpg`,
+    `../../../assets/imgs/luojia/luojia-example/${name}.jpg`,
     import.meta.url
   ).href;
 };

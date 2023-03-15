@@ -217,4 +217,11 @@ export default [
       // },
     ],
   },
+  {
+    path: '/modelzoo/wukong/album',
+    name: 'AIAlbum',
+    component: () => {
+      return import('@/views/modelzoo/wukong/WukongAlbum.vue');
+    },
+  },
 ];

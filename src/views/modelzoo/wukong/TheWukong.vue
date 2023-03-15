@@ -3,7 +3,6 @@ import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import ONav from '@/components/ONav.vue';
-import WukongAlbum from '@/views/modelzoo/wukong/WukongAlbum.vue';
 
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
 import wukongBanner2 from '@/assets/imgs/wukong/wukong-banner2.png';
@@ -55,6 +54,7 @@ const showAlbum = ref(false);
 // AI画集
 function toggleAlbum() {
   showAlbum.value = true;
+  router.push('/modelzoo/wukong/album');
 }
 
 function learnWukongMore() {
@@ -154,18 +154,6 @@ watch(
         <p class="nav-item-text">画作管理</p>
       </div>
     </div>
-
-    <!-- AI画集 -->
-    <el-dialog
-      v-model="showAlbum"
-      title="AI 画集"
-      :destroy-on-close="true"
-      :fullscreen="true"
-      lock-scroll
-      center
-    >
-      <WukongAlbum></WukongAlbum>
-    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>

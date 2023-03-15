@@ -225,9 +225,53 @@ export function wuKongInfer(params) {
  * @returns
  */
 export function getWuKongPic(params) {
-  const url = '/server/bigmodel/wukong/pictures';
+  const url = '/server/bigmodel/wukong/publics';
   return request
-    .get(url, { params, ...getHeaderConfig() })
+    .get(url, { params, $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
+}
+/**
+/**
+ * 悟空-点赞
+ * @returns
+ */
+export function toDigg(params) {
+  const url = '/server/bigmodel/wukong/digg';
+  return request
+    .post(url, params, getHeaderConfig())
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+/**
+ * 悟空-取消点赞
+ * @returns
+ */
+export function cancelDigg(params) {
+  const url = '/server/bigmodel/wukong/digg';
+  return request
+    .delete(url, { data: params, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((e) => {
+      return e;
+    });
+}
+/**
+ * 悟空-收藏公开
+ * @returns
+ */
+export function addLikePicture2(params) {
+  const url = '/server/bigmodel/wukong/like';
+  return request
+    .post(url, params, getHeaderConfig())
     .then((res) => {
       return res.data;
     })

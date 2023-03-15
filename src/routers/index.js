@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo } from '@/api/api-user';
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
 import whiteList from '@/whitelist/whitelist-router';
 import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
 
@@ -100,7 +100,7 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
-  // 课程
+  // 微调
   ...course,
   // 404页面
   {

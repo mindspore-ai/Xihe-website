@@ -103,10 +103,14 @@ function closeShennongVideo() {
   min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
   padding-top: 80px;
+  @media screen and (max-width: 820px) {
+    padding-top: 22px;
+  }
   .shennong-wrap {
     padding: 42px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
+    padding-bottom: 40px;
     .shennong-bread {
       margin-bottom: 40px;
       .el-breadcrumb {
@@ -128,16 +132,30 @@ function closeShennongVideo() {
           color: #000;
         }
       }
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
     .shennong-content {
       .shennong-banner {
         padding: 80px;
         background-color: #fff;
         display: flex;
+        @media screen and (max-width: 820px) {
+          margin-top: 0;
+          padding: 16px;
+        }
+        @media screen and (max-width: 768px) {
+          margin-top: 0;
+          padding: 16px;
+        }
         .banner-left {
           margin-right: 40px;
           img {
             width: 416px;
+          }
+          @media screen and (max-width: 820px) {
+            display: none;
           }
         }
         .banner-right {
@@ -147,6 +165,12 @@ function closeShennongVideo() {
             font-size: 36px;
             color: #000000;
             margin-bottom: 16px;
+            @media screen and (max-width: 820px) {
+              margin: 0 0 8px;
+              font-size: 14px;
+              line-height: 22px;
+              height: 22px;
+            }
           }
           &-content {
             // height: 44px;
@@ -154,6 +178,19 @@ function closeShennongVideo() {
             color: #555555;
             line-height: 22px;
             margin-bottom: 54px;
+            @media screen and (max-width: 820px) {
+              margin: 8px 0 16px;
+              font-size: 12px;
+              line-height: 18px;
+              height: auto;
+            }
+          }
+          @media screen and (max-width: 820px) {
+            .o-button {
+              line-height: 22px;
+              padding: 2px !important;
+              font-size: 14px;
+            }
           }
         }
       }
@@ -161,6 +198,10 @@ function closeShennongVideo() {
         margin-top: 24px;
         padding: 40px 80px;
         background-color: #fff;
+        @media screen and (max-width: 820px) {
+          padding: 16px;
+          margin-top: 16px;
+        }
         &-desc {
           .title {
             height: 32px;
@@ -169,6 +210,12 @@ function closeShennongVideo() {
             font-weight: 500;
             color: #000000;
             margin-bottom: 24px;
+            @media screen and (max-width: 820px) {
+              margin: 0 0 8px;
+              font-size: 14px;
+              line-height: 22px;
+              height: 22px;
+            }
           }
           .info {
             // height: 308px;
@@ -176,6 +223,12 @@ function closeShennongVideo() {
             font-size: 14px;
             color: #555555;
             margin-bottom: 16px;
+            @media screen and (max-width: 820px) {
+              margin: 8px 0;
+              font-size: 12px;
+              line-height: 18px;
+              height: auto;
+            }
           }
           .info-img {
             width: 100%;
@@ -190,6 +243,12 @@ function closeShennongVideo() {
               font-size: 20px;
               color: #000000;
               margin: 64px 0 16px;
+              @media screen and (max-width: 820px) {
+                margin: 24px 0 8px;
+                font-size: 14px;
+                line-height: 22px;
+                height: 22px;
+              }
             }
             &-content {
               position: relative;

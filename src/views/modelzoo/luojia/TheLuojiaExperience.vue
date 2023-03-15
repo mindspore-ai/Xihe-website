@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
+import { request } from '@/shared/axios';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
@@ -11,6 +12,8 @@ import IconSelect from '~icons/app/luojia-select';
 import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
+import IconUpload from '~icons/app/modelzoo-upload';
+// import IconLeft from '~icons/app/left.svg';
 
 import gif from '@/assets/gifs/loading.gif';
 
@@ -92,7 +95,7 @@ async function handleDrawClick() {
 }
 // 1. 未选区域，点击识别提示，不发请求
 // 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
-function handleInferClick() {
+function handleInferClick(mobile) {
   if (loadingText.value === '获取图片中') {
     ElMessage({
       type: 'warning',
@@ -100,23 +103,72 @@ function handleInferClick() {
     });
     return;
   }
-
+  if (mobile === 'mobile') {
+    activeIndex1.value = -1;
+    if (!isLogined.value) {
+      goAuthorize();
+    } else {
+      if (fileList.value[0]) {
+        isInfer.value = true;
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: '请先选择图片',
+        });
+        return;
+      }
+    }
+  }
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = '上传图片中，请耐心等待';
-    formData = new FormData();
-    formData.append('picture', tblob.value);
+    if (mobile !== 'mobile') {
+      formData = new FormData();
+      formData.append('picture', tblob.value);
+    } else {
+      formData.append('picture', fileList.value[0].raw);
+    }
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
       if (res.data.data) {
         loadingText.value = '推理中，请耐心等待';
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          if (res.data.data) {
-            const aurl = res.data.data.answer;
-            const tempimg = document.createElement('img');
-            tempimg.src = aurl;
-            viewer.value.setImageAsLayer(tempimg);
+          if (res.data?.data) {
+            if (mobile === 'mobile') {
+              activeIndex.value = -1;
+              analysis.value = '';
+              formData.delete('file');
+              formData = new FormData();
+              imageUrl.value = res.data.data.answer;
+              request
+                .get(res.data.data.answer, {
+                  responseType: 'blob',
+                })
+                .then((res) => {
+                  let file = new File([res.data], 'img', {
+                    type: 'image/png',
+                    lastModified: Date.now(),
+                  });
+                  fileList.value = [];
+                  fileList.value[0] = { raw: file }; // formData.append('blob', file);
+                });
+
+              handleLuoJiaHistory().then((res) => {
+                if (res.data) {
+                  gridData.value = [];
+                  historyInfo.value.create_at = res.data[0].created_at;
+                  gridData.value.push(historyInfo.value);
+                } else {
+                  gridData.value = [];
+                }
+              });
+            } else {
+              const aurl = res.data.data.answer;
+              const tempimg = document.createElement('img');
+              tempimg.src = aurl;
+              viewer.value.setImageAsLayer(tempimg);
+            }
           }
         });
       } else {
@@ -127,12 +179,12 @@ function handleInferClick() {
         });
       }
     });
-  } else if (!isInfer.value) {
+  } else if (!isInfer.value && mobile !== 'mobile') {
     ElMessage({
       type: 'warning',
       message: '请先框选，再开始识别',
     });
-  } else if (isSelected.value && !isInfer.value) {
+  } else if (isSelected.value && !isInfer.value && mobile !== 'mobile') {
     ElMessage({
       type: 'warning',
       message: '请先结束框选，再开始识别',
@@ -181,7 +233,17 @@ function handleHistoryClick() {
     }
   });
 }
-
+if (isLogined.value) {
+  handleLuoJiaHistory().then((res) => {
+    if (res.data) {
+      gridData.value = [];
+      historyInfo.value.create_at = res.data[0].created_at;
+      gridData.value.push(historyInfo.value);
+    } else {
+      gridData.value = [];
+    }
+  });
+}
 function handleDetailClick() {
   dialogTableVisible.value = false;
   dialogTableVisibleDetail.value = true;
@@ -190,6 +252,87 @@ function handleDetailClick() {
 onMounted(() => {
   viewer.value = new ExampleCesium(cesiumContainer.value);
 });
+// 移动端
+const imgLists = [
+  {
+    id: 0,
+    url: 'luojia-example-00',
+  },
+  {
+    id: 1,
+    url: 'luojia-example-01',
+  },
+  {
+    id: 2,
+    url: 'luojia-example-02',
+  },
+  {
+    id: 3,
+    url: 'luojia-example-03',
+  },
+  {
+    id: 4,
+    url: 'luojia-example-04',
+  },
+];
+const fileList = ref([]);
+function handleChange(val) {
+  activeIndex1.value = 5;
+  // if (val.size > 204800) {
+  //   fileList.value.pop();
+  //   return ElMessage({
+  //     type: 'warning',
+  //     message: '图片大小不应超过200K',
+  //   });
+  // } else {
+  analysis.value = '';
+  formData.delete('file');
+  formData = new FormData();
+  fileList.value[0] = val;
+  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+  activeIndex.value = -1;
+  imageUrl.value = URL.createObjectURL(val.raw);
+  // }
+}
+function selectImage(item, index) {
+  activeIndex.value = index;
+  activeIndex1.value = index;
+  if (imageUrl.value !== getImage(item)) {
+    analysis.value = '';
+    formData.delete('file');
+    formData = new FormData();
+    imageUrl.value = getImage(item);
+    request
+      .get(getImage(item), {
+        responseType: 'blob',
+      })
+      .then((res) => {
+        let file = new File([res.data], 'img', {
+          type: 'image/png',
+          lastModified: Date.now(),
+        });
+        fileList.value = [];
+        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+      });
+  }
+}
+
+const activeIndex = ref(-1);
+const activeIndex1 = ref(-1);
+const analysis = ref('');
+const imageUrl = ref('');
+const getImage = (name) => {
+  return new URL(
+    `../../../assets/imgs/luojia/luojia-test/${name}.jpg`,
+    import.meta.url
+  ).href;
+};
+const showPic = ref(false);
+const dialogImg = ref('');
+function enlarge(url) {
+  showPic.value = true;
+  dialogImg.value = url;
+}
 </script>
 <template>
   <div class="luojia">
@@ -260,7 +403,7 @@ onMounted(() => {
       </el-table>
     </el-dialog>
     <!-- 详情 -->
-    <el-dialog v-model="dialogTableVisibleDetail" title="详情" width="750px">
+    <el-dialog v-model="dialogTableVisibleDetail" title="详情">
       <div class="compare-box">
         <div class="original">
           <img :src="inputImg + '?' + Math.random()" alt="" />
@@ -285,6 +428,115 @@ onMounted(() => {
         </div>
       </div>
     </el-dialog>
+    <div class="luojia-mobile">
+      <div class="image-upload">
+        <el-upload
+          drag
+          action=""
+          :multiple="false"
+          accept=".png,.jpeg,.jpg"
+          list-type="picture"
+          :file-list="fileList"
+          :auto-upload="false"
+          :show-file-list="false"
+          :on-change="handleChange"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <div v-else class="empty-status">
+            <o-icon><icon-upload></icon-upload></o-icon>
+            <p class="upload-tip">
+              点击上传图片(jpg/jepg/png)或选择下方案例图片
+            </p>
+          </div>
+        </el-upload>
+      </div>
+      <div class="img-list">
+        <div
+          v-for="(item, index) in imgLists"
+          :key="item"
+          class="img-list-item"
+          :class="item.id === activeIndex ? 'active' : ''"
+          @click="selectImage(item.url, index)"
+        >
+          <div class="img">
+            <img draggable="false" :src="getImage(item.url)" />
+          </div>
+          <div class="modal"></div>
+        </div>
+        <!-- <o-icon
+          @click="selectImage(imgLists[activeIndex - 1].url, activeIndex - 1)"
+          ><icon-left></icon-left
+        ></o-icon>
+        <o-icon
+          @click="selectImage(imgLists[activeIndex + 1].url, activeIndex + 1)"
+          ><icon-left></icon-left
+        ></o-icon> -->
+      </div>
+      <o-button
+        :disabled="activeIndex1 === -1"
+        type="primary"
+        size="mini"
+        @click="handleInferClick('mobile')"
+        >开始识别</o-button
+      >
+      <div class="history">
+        <span>历史记录</span>
+        <span>仅展示最近一条记录</span>
+      </div>
+      <div class="table">
+        <el-table :data="gridData">
+          <el-table-column property="name" label="任务类型" />
+          <el-table-column property="origin" label="地图源" />
+          <el-table-column property="status" label="状态" />
+          <el-table-column property="create_at" label="创建时间" width="120" />
+          <!-- <el-table-column label="操作">
+            <span class="detail" @click="handleDetailClick">查看详情</span>
+          </el-table-column> -->
+        </el-table>
+      </div>
+      <div v-if="gridData.length">
+        <div class="img-detail">图片详情</div>
+        <div class="compare-box">
+          <div class="original">
+            <img
+              :src="inputImg + '?' + Math.random()"
+              alt=""
+              @click="enlarge(inputImg + '?' + Math.random())"
+            />
+            <div class="botoom">
+              <p>原图</p>
+              <!-- <div class="download" @click="handleOriImgDownload">
+                <o-icon><icon-download></icon-download></o-icon>
+                <span>下载</span>
+              </div> -->
+            </div>
+          </div>
+          <div class="result">
+            <img
+              :src="outputImg + '?' + Math.random()"
+              alt=""
+              @click="enlarge(outputImg + '?' + Math.random())"
+            />
+            <div class="botoom">
+              <p>结果图</p>
+              <!-- <div class="download" @click="handleResImgDownload">
+                <o-icon><icon-download></icon-download></o-icon>
+                <span>下载</span>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-dialog
+        v-model="showPic"
+        :destroy-on-close="true"
+        :fullscreen="true"
+        lock-scroll
+        center
+      >
+        <img :src="dialogImg" alt=""
+      /></el-dialog>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -329,6 +581,11 @@ onMounted(() => {
   --el-table-border: none;
   .el-table__empty-block {
     background-color: #fff;
+    @media screen and (max-width: 768px) {
+      .el-table__empty-text {
+        line-height: 52px;
+      }
+    }
   }
   thead {
     font-size: 14px;
@@ -586,6 +843,12 @@ onMounted(() => {
       span {
         margin-left: 4px;
       }
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
     .type {
       font-size: 20px;
@@ -593,6 +856,13 @@ onMounted(() => {
       color: #000000;
       line-height: 28px;
       margin-top: 40px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        height: 22px;
+        line-height: 22px;
+        margin: 0 0 8px;
+        text-align: center;
+      }
     }
     .desc {
       font-size: 14px;
@@ -600,16 +870,233 @@ onMounted(() => {
       color: #555555;
       line-height: 22px;
       margin-top: 10px;
+      @media screen and (max-width: 768px) {
+        height: auto;
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 8px;
+      }
     }
   }
   &-bottom {
     margin-top: 24px;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
     .tip {
       font-size: 14px;
       font-weight: 400;
       color: #555555;
       line-height: 22px;
       margin-top: 16px;
+    }
+  }
+}
+
+.luojia-mobile {
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+  @media screen and (max-width: 820px) {
+    display: block;
+  }
+  :deep(.el-dialog) {
+    --el-dialog-margin-top: 0;
+    @media screen and (max-width: 820px) {
+      overflow: scroll;
+    }
+    @media screen and (max-width: 767px) {
+      overflow: hidden;
+    }
+    .el-dialog__body {
+      img {
+        width: 100%;
+      }
+      // padding: 60px 16px 40px !important;
+      margin-top: 0;
+      @media screen and (max-width: 820px) {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+  :deep(.el-upload) {
+    width: 100%;
+    .el-upload-dragger {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      // padding: 24px 40px 24px 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #acacac;
+      @media screen and (max-width: 820px) {
+        height: 346px;
+        margin: 16px 0;
+      }
+      @media screen and (max-width: 767px) {
+        height: 196px;
+        margin: 0;
+      }
+      border: 1px solid #acacac;
+      background-color: #f5f6f8;
+      img {
+        border: 1px solid #a0d2ff;
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: fill;
+      }
+    }
+  }
+  .empty-status {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 40px;
+    .o-icon {
+      color: #ccc;
+      font-size: 48px;
+      @media screen and (max-width: 820px) {
+        font-size: 32px;
+      }
+    }
+    .upload-tip {
+      font-size: 14px;
+      color: #ccc;
+      line-height: 22px;
+      margin-top: 8px;
+      span {
+        color: #0d8dff;
+        white-space: nowrap;
+      }
+    }
+  }
+  .img-list {
+    display: flex;
+    background-color: #f5f6f8;
+    // justify-content: space-around;
+    align-items: center;
+    margin: 16px 0 0;
+    position: relative;
+    .o-icon {
+      color: #b2b2b2;
+      position: absolute;
+      left: -16px;
+      &:last-child {
+        left: unset;
+        right: -16px;
+        rotate: 180deg;
+      }
+    }
+    // width: 100%;
+    .img-list-item {
+      position: relative;
+      cursor: pointer;
+      width: 100%;
+      // height: 0;
+      // padding-bottom: 100%;
+      border: 1px solid transparent;
+      .img {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        overflow: hidden;
+        img {
+          width: 180%;
+        }
+      }
+      .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        background: rgba(165, 213, 255, 0.5);
+      }
+    }
+    .img-list-item + .img-list-item {
+      @media screen and (max-width: 820px) {
+        margin-left: 8px;
+      }
+      @media screen and (max-width: 767px) {
+        margin-left: 4px;
+      }
+    }
+    .active {
+      border: 1px solid #a0d2ff;
+      .modal {
+        display: block;
+      }
+    }
+  }
+  .o-button {
+    display: block;
+    margin: 16px auto 0;
+  }
+  .history {
+    font-size: 14px;
+    height: 22px;
+    line-height: 22px;
+    margin: 24px 0 16px;
+    display: flex;
+    justify-content: space-between;
+    span:last-child {
+      color: #b2b2b3;
+    }
+  }
+  .table {
+    overflow: auto;
+    :deep(.el-table__cell) {
+      padding: 8px 0;
+      font-size: 12px;
+      color: #555555;
+      line-height: 18px;
+      .cell {
+        white-space: nowrap;
+      }
+    }
+    :deep(.el-table__empty-block) {
+      min-height: 52px;
+      width: 100% !important;
+    }
+  }
+  .img-detail {
+    font-size: 14px;
+    height: 22px;
+    line-height: 22px;
+    margin: 24px 0 16px;
+  }
+  .compare-box {
+    img {
+      @media screen and (max-width: 820px) {
+        width: 300px;
+        height: 300px;
+      }
+      @media screen and (max-width: 767px) {
+        width: 160px;
+        height: 160px;
+      }
+    }
+  }
+  .el-overlay {
+    @media screen and (max-width: 820px) {
+      display: none;
+      .el-overlay-dialog {
+        display: none;
+      }
+      .el-dialog {
+        display: none;
+      }
     }
   }
 }

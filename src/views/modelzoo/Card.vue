@@ -49,7 +49,6 @@ function jumpDetail() {
 </template>
 <style lang="scss" scoped>
 .card {
-  max-width: 464px;
   height: 100%;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: pointer;
@@ -61,6 +60,9 @@ function jumpDetail() {
     width: 100%;
     height: 270px;
     overflow: hidden;
+    @media screen and (max-width: 600px) {
+      height: 190px;
+    }
     .cover {
       width: 100%;
       height: 100%;
@@ -72,6 +74,9 @@ function jumpDetail() {
     width: 100%;
     padding: 0 40px;
     background-color: rgba(255, 255, 255, 0.95);
+    @media screen and (max-width: 768px) {
+      padding: 0 16px;
+    }
     .card-bottom-title {
       font-size: 24px;
       font-weight: normal;
@@ -82,6 +87,15 @@ function jumpDetail() {
       align-items: center;
       padding: 24px 0;
       border-bottom: 1px solid #ccc;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 22px;
+        padding: 16px 0;
+        .o-icon {
+          font-size: 16px;
+        }
+      }
       .closed {
         font-size: 16px;
         color: #999999;
@@ -93,9 +107,12 @@ function jumpDetail() {
       font-size: 16px;
       color: #555555;
       line-height: 24px;
-      // overflow: hidden;
-      // text-overflow: ellipsis;
-      // white-space: nowrap;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 400;
+        padding: 8px 0 16px;
+      }
     }
   }
   &:hover {
@@ -111,7 +128,7 @@ function jumpDetail() {
   }
 }
 .card-closed {
-  max-width: 464px;
+  height: 100%;
   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: auto;
   .o-icon {
@@ -122,6 +139,9 @@ function jumpDetail() {
     width: 100%;
     height: 270px;
     overflow: hidden;
+    @media screen and (max-width: 600px) {
+      height: 190px;
+    }
     .cover {
       width: 100%;
       height: 100%;
@@ -131,9 +151,11 @@ function jumpDetail() {
   }
   .card-bottom {
     width: 100%;
-    height: 156px;
     padding: 0 40px;
     background-color: rgba(255, 255, 255, 0.95);
+    @media screen and (max-width: 768px) {
+      padding: 0 16px;
+    }
     .card-bottom-title {
       font-size: 24px;
       font-weight: normal;
@@ -144,10 +166,20 @@ function jumpDetail() {
       align-items: center;
       padding: 24px 0;
       border-bottom: 1px solid #ccc;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+        padding: 16px 0;
+      }
       .closed {
         font-size: 16px;
         color: #999999;
         line-height: 24px;
+        @media screen and (max-width: 768px) {
+          font-size: 14px;
+          line-height: 22px;
+        }
       }
     }
     .card-bottom-text {
@@ -158,6 +190,12 @@ function jumpDetail() {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 400;
+        padding: 8px 0 16px;
+      }
     }
   }
 }

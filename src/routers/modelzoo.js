@@ -16,7 +16,6 @@ export default [
     component: () => {
       return import('@/views/modelzoo/taichu/ModelzooTaichu.vue');
     },
-
     children: [
       {
         path: 'vision',
@@ -25,13 +24,6 @@ export default [
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-      /* {
-        path: 'experience',
-        name: 'taichuExperience',
-        component: () => {
-          return import('@/views/modelzoo/taichu/ModelzooTaichuExperience.vue');
-        },
-      }, */
       {
         path: 'introduce',
         name: 'taichuIntroduction',
@@ -208,13 +200,13 @@ export default [
           return import('@/views/modelzoo/wukong/TheCollection.vue');
         },
       },
-      // {
-      //   path: 'public',
-      //   name: 'wukongPublic',
-      //   component: () => {
-      //     return import('@/views/modelzoo/wukong/ThePublic.vue');
-      //   },
-      // },
+      {
+        path: 'public',
+        name: 'wukongPublic',
+        component: () => {
+          return import('@/views/modelzoo/wukong/ThePublic.vue');
+        },
+      },
     ],
   },
   {

@@ -351,7 +351,7 @@ function closeInstanceVideo() {
   margin: 0 auto;
   max-width: 1440px;
   padding-bottom: 64px;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 820px) {
     padding: 16px 16px 40px;
     background: #f5f6f8;
   }
@@ -359,11 +359,12 @@ function closeInstanceVideo() {
 .taichu-detail {
   padding: 40px 80px;
   background-color: #fff;
-  @media screen and (max-width: 768px) {
-    padding: 16px 16px 40px;
+  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  @media screen and (max-width: 820px) {
+    padding: 16px 16px 24px;
   }
-  &-intro {
-    @media screen and (max-width: 768px) {
+  .taichu-detail-intro {
+    @media screen and (max-width: 767px) {
       margin-bottom: 24px;
     }
     .intro-title {
@@ -373,7 +374,7 @@ function closeInstanceVideo() {
       color: #000000;
       line-height: 32px;
       margin-bottom: 24px;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         font-size: 14px;
         color: #000000;
         line-height: 22px;
@@ -386,7 +387,7 @@ function closeInstanceVideo() {
       font-weight: normal;
       color: #555555;
       line-height: 22px;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         font-size: 12px;
         font-weight: 400;
         color: #555555;
@@ -401,8 +402,9 @@ function closeInstanceVideo() {
       margin-top: 40px;
       margin-bottom: 24px;
       background-color: #f5f9f8;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         padding: 0;
+        margin-top: 16px;
       }
       &-title {
         // height: 28px;
@@ -411,7 +413,7 @@ function closeInstanceVideo() {
         color: #000000;
         margin-bottom: 24px;
         text-align: center;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           // display: none;
           font-size: 14px;
           color: #000000;
@@ -423,14 +425,18 @@ function closeInstanceVideo() {
       &-diagram {
         display: flex;
         justify-content: space-between;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 820px) {
+          flex-direction: column;
+          align-items: center;
+        }
+        @media screen and (max-width: 767px) {
           flex-direction: column;
           margin-bottom: 34px;
         }
         .diagram-left {
           max-width: 213px;
           // margin-right: 166px;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 767px) {
             height: 234px;
             // margin: 16px 42px;
             margin: 0 auto 16px;
@@ -438,15 +444,19 @@ function closeInstanceVideo() {
         }
         .diagram-right {
           display: flex;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 820px) {
+            margin-top: 24px;
+          }
+          @media screen and (max-width: 767px) {
             flex-direction: column;
+            margin-top: 16px;
           }
           .text {
             img {
               display: block;
               width: 177px;
               margin-bottom: 24px;
-              @media screen and (max-width: 768px) {
+              @media screen and (max-width: 767px) {
                 margin-bottom: 16px;
                 width: 100%;
                 height: 82px;
@@ -458,7 +468,7 @@ function closeInstanceVideo() {
               font-size: 12px;
               color: #000000;
               text-align: center;
-              @media screen and (max-width: 768px) {
+              @media screen and (max-width: 767px) {
                 height: 14px;
                 font-size: 12px;
                 color: #000000;
@@ -471,7 +481,7 @@ function closeInstanceVideo() {
             width: 198px;
             height: 90px;
             margin-left: 24px;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 767px) {
               height: 100%;
               width: 100%;
               margin: 0;
@@ -481,7 +491,7 @@ function closeInstanceVideo() {
               margin-bottom: 24px;
               position: relative;
               cursor: pointer;
-              @media screen and (max-width: 768px) {
+              @media screen and (max-width: 767px) {
                 margin-bottom: 16px;
                 &:nth-child(2) {
                   margin-bottom: 8px;
@@ -492,7 +502,7 @@ function closeInstanceVideo() {
                 width: 100%;
               }
               .video-img1 {
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 767px) {
                   height: 127px;
                 }
               }
@@ -514,7 +524,7 @@ function closeInstanceVideo() {
               font-size: 12px;
               color: #000000;
               text-align: center;
-              @media screen and (max-width: 768px) {
+              @media screen and (max-width: 767px) {
                 height: 14px;
                 font-size: 12px;
                 color: #000000;
@@ -527,7 +537,7 @@ function closeInstanceVideo() {
       }
     }
     .intro-img {
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         display: none;
       }
       img {
@@ -540,19 +550,19 @@ function closeInstanceVideo() {
       img {
         width: 100%;
       }
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         display: block;
       }
     }
   }
-  &-reference {
+  .taichu-detail-reference {
     .reference-title {
       height: 28px;
       line-height: 28px;
       font-size: 20px;
       color: #000000;
       margin-top: 40px;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         margin: 0 0 8px;
         font-size: 14px;
         font-weight: 400;
@@ -562,28 +572,34 @@ function closeInstanceVideo() {
       }
     }
     .reference-info {
-      height: 66px;
       line-height: 22px;
       font-size: 14px;
       font-weight: 400;
       color: #555555;
-      margin: 10px 0 24px;
-      @media screen and (max-width: 768px) {
+      margin: 16px 0 24px;
+      @media screen and (max-width: 767px) {
         height: 100%;
         font-size: 12px;
         font-weight: 400;
         color: #555555;
         line-height: 18px;
-        margin-bottom: 16px;
+        margin: 0 0 16px;
       }
     }
     .reference-video {
       width: 100%;
       height: 707px;
       position: relative;
-      @media screen and (max-width: 768px) {
-        height: 167px;
+      margin-top: 16px;
+      @media screen and (max-width: 1080px) {
+        height: 100%;
         margin-bottom: 24px;
+        margin-top: 16px;
+      }
+      @media screen and (max-width: 767px) {
+        height: 167px;
+        // margin-bottom: 24px;
+        // margin-top: 16px;
       }
       .video-img1 {
         width: 100%;
@@ -599,7 +615,7 @@ function closeInstanceVideo() {
         z-index: 9;
         cursor: pointer;
         img {
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 767px) {
             height: 56px;
             width: 56px;
           }
@@ -611,7 +627,7 @@ function closeInstanceVideo() {
           line-height: 28px;
           margin-top: 16px;
           margin-bottom: 6px;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 767px) {
             height: 22px;
             font-size: 14px;
             color: #ffffff;
@@ -623,7 +639,7 @@ function closeInstanceVideo() {
           font-size: 14px;
           color: #ffffff;
           line-height: 22px;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 767px) {
             height: 20px;
             font-size: 12px;
             font-family: FZLTHJW--GB1-0, FZLTHJW--GB1;
@@ -659,15 +675,15 @@ function closeInstanceVideo() {
       }
     }
   }
-  &-instance {
+  .taichu-detail-instance {
     .instance-title {
       height: 28px;
       line-height: 28px;
       font-size: 20px;
       font-weight: 400;
       color: #000000;
-      margin: 40px 0 24px;
-      @media screen and (max-width: 768px) {
+      margin: 40px 0 16px;
+      @media screen and (max-width: 767px) {
         margin: 0 0 8px;
         height: 22px;
         font-size: 14px;
@@ -681,7 +697,7 @@ function closeInstanceVideo() {
       font-size: 14px;
       font-weight: 400;
       color: #555555;
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 767px) {
         font-size: 12px;
         font-weight: 400;
         color: #555555;
@@ -698,7 +714,7 @@ function closeInstanceVideo() {
         color: #000000;
         text-align: center;
         margin: 40px 0 6px;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           height: 22px;
           font-size: 14px;
           font-family: FZLTZHJW--GB1-0, FZLTZHJW--GB1;
@@ -716,7 +732,7 @@ function closeInstanceVideo() {
         color: #555555;
         text-align: center;
         margin-bottom: 26px;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           height: 18px;
           font-size: 12px;
           font-weight: 400;
@@ -734,16 +750,16 @@ function closeInstanceVideo() {
             margin-bottom: 26px;
           }
         }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           display: block;
         }
       }
       .challenges {
         display: flex;
         justify-content: center;
-        @media screen and (max-width: 768px) {
-          // flex-direction: column;
-          // margin-bottom: 26px;
+        @media screen and (max-width: 820px) {
+          flex-direction: column;
+          margin-bottom: 26px;
           display: none;
         }
         &-item {
@@ -754,9 +770,13 @@ function closeInstanceVideo() {
           background: #f5f9fb;
           margin-right: 16px;
           display: flex;
-          // @media screen and (max-width: 768px) {
-          //   margin-bottom: 16px;
-          // }
+          @media screen and (max-width: 820px) {
+            margin-right: 0;
+            margin-bottom: 16px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
           // 最后一个子元素
           &:last-child {
             margin-right: 0;
@@ -868,8 +888,8 @@ function closeInstanceVideo() {
         font-weight: 600;
         color: #000000;
         text-align: center;
-        margin: 84px 0 6px;
-        @media screen and (max-width: 768px) {
+        margin: 40px 0 6px;
+        @media screen and (max-width: 767px) {
           margin: 0 0 8px;
           height: 22px;
           font-weight: normal;
@@ -886,7 +906,7 @@ function closeInstanceVideo() {
         color: #555555;
         margin-bottom: 26px;
         text-align: center;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           height: 18px;
           font-size: 12px;
           font-weight: 400;
@@ -900,7 +920,7 @@ function closeInstanceVideo() {
         justify-content: center;
         align-items: center;
         margin-bottom: 18px;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           display: none;
         }
         li {
@@ -925,7 +945,7 @@ function closeInstanceVideo() {
           padding-bottom: 26px;
           border-bottom: 1px solid #eee;
         }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           display: none;
         }
       }
@@ -933,13 +953,13 @@ function closeInstanceVideo() {
         display: block;
         width: 421px;
         margin: 52px auto 64px;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           display: none;
         }
       }
       &-fixImage {
         display: none;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 767px) {
           display: block;
           width: 100%;
           margin-bottom: 23px;
@@ -950,7 +970,10 @@ function closeInstanceVideo() {
         height: 707px;
         background-color: #bfa;
         position: relative;
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 820px) {
+          height: 100%;
+        }
+        @media screen and (max-width: 767px) {
           width: 100%;
           max-height: 30vh;
         }
@@ -967,7 +990,7 @@ function closeInstanceVideo() {
           transform: translate(-50%, -50%);
           z-index: 9;
           cursor: pointer;
-          @media screen and (max-width: 768px) {
+          @media screen and (max-width: 767px) {
             img {
               width: 56px;
               height: 56px;
@@ -1010,7 +1033,7 @@ function closeInstanceVideo() {
   video {
     width: 100%;
     // height: 500px;
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 767px) {
       width: 100%;
       height: 40vh;
     }

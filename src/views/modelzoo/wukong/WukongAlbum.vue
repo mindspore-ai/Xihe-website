@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
 <script setup>
 import { ref, onMounted, nextTick, onUnmounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { throttle } from 'lodash/function';
 import html2canvas from 'html2canvas';
@@ -28,6 +28,9 @@ import IconShare from '~icons/app/share';
 import IconLike from '~icons/app/wukong-like';
 import IconHeart from '~icons/app/collected';
 import IconCopy from '~icons/app/copy-nickname';
+
+import useClipboard from 'vue-clipboard3';
+const { toClipboard } = useClipboard();
 
 const router = useRouter();
 // const route = useRoute();
@@ -176,16 +179,13 @@ function savePic() {
     goAuthorize();
   }
 }
-const inputDom = ref();
-function copyText(textValue) {
-  inputDom.value.value = textValue;
-  inputDom.value.select();
-  if (document.execCommand('Copy'))
-    ElMessage({
-      type: 'success',
-      message: '复制成功',
-      center: true,
-    });
+async function copyText(textValue) {
+  await toClipboard(textValue);
+  ElMessage({
+    type: 'success',
+    message: '复制成功',
+    center: true,
+  });
 }
 
 const screenWidth = useWindowResize();
@@ -389,13 +389,17 @@ function toNextPic() {
 
                 <o-icon
                   class="pc-copy"
-                  @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+                  @click.stop="
+                    copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)
+                  "
                   ><icon-copy></icon-copy
                 ></o-icon>
 
                 <o-icon
                   class="mobile-copy"
-                  @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+                  @click.stop="
+                    copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)
+                  "
                   ><icon-copy></icon-copy
                 ></o-icon>
               </div>
@@ -405,7 +409,6 @@ function toNextPic() {
           </div>
         </el-dialog>
       </el-dialog>
-      <textarea ref="inputDom" class="input-dom"></textarea>
       <!-- 画集图片 -->
       <div class="album-item1">
         <div v-for="(items, index) in imgs" :key="items.id" class="img-box">
@@ -576,6 +579,17 @@ function toNextPic() {
         text-overflow: ellipsis;
         display: inline-block;
         max-width: calc(100vh - 380px);
+      }
+      @media screen and (max-width: 820px) {
+        .el-dialog__body {
+          width: 640px;
+          margin: 0 auto;
+        }
+      }
+      @media screen and (max-width: 767px) {
+        .el-dialog__body {
+          width: 100%;
+        }
       }
       .share-pic {
         position: absolute;

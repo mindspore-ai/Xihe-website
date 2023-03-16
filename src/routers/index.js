@@ -97,7 +97,7 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
-  // 课程
+  // 微调
   ...course,
   // 404页面
   {

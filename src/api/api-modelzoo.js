@@ -23,7 +23,12 @@ export function uploadModelzooPic(params) {
   getHeaderConfig().headers['Content-Type:multipart/form-data'];
 
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      $noLoading: true,
+      headers: {
+        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+      },
+    })
     .then((res) => {
       return res.data;
     })
@@ -218,9 +223,6 @@ export function wuKongInfer(params) {
     })
     .then((res) => {
       return res;
-    })
-    .catch((e) => {
-      return e;
     });
 }
 /**
@@ -267,6 +269,7 @@ export function cancelDigg(params) {
       return e;
     });
 }
+/**
 /**
  * 悟空-收藏公开
  * @returns
@@ -362,14 +365,9 @@ export function temporaryLink(params) {
  */
 export function publicPictures() {
   const url = '/server/bigmodel/wukong/public';
-  return request
-    .get(url, getHeaderConfig())
-    .then((res) => {
-      return res;
-    })
-    .catch((e) => {
-      return e;
-    });
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res;
+  });
 }
 
 /**
@@ -411,11 +409,12 @@ export function cancelPublic(id) {
 export function publicCollectedPicture(params) {
   const url = '/server/bigmodel/wukong/public';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      $doException: true,
+      // $noLoading: true,
+      ...getHeaderConfig(),
+    })
     .then((res) => {
       return res;
-    })
-    .catch((e) => {
-      return e;
     });
 }

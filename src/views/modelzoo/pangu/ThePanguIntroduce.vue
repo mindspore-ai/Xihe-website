@@ -7,7 +7,9 @@ import model from '@/assets/imgs/pangu/model.png';
 import dataset from '@/assets/imgs/pangu/dataset.png';
 import mindspore from '@/assets/imgs/pangu/mindspore.png';
 import config from '@/assets/imgs/pangu/config.png';
+import config1 from '@/assets/imgs/pangu/config1.png';
 import require from '@/assets/imgs/pangu/require.png';
+import require1 from '@/assets/imgs/pangu/require1.png';
 </script>
 
 <template>
@@ -70,11 +72,17 @@ import require from '@/assets/imgs/pangu/require.png';
           <div class="config-img">
             <img :src="config" alt="" />
           </div>
+          <div class="config-img1">
+            <img :src="config1" alt="" />
+          </div>
         </div>
         <div class="pangu-detail-require">
           <div class="require-title">环境要求</div>
           <div class="require-img">
             <img :src="require" alt="" />
+          </div>
+          <div class="require-img1">
+            <img :src="require1" alt="" />
           </div>
           <div class="require-subtitle">环境配置</div>
           <div class="require-lines">
@@ -143,6 +151,12 @@ import require from '@/assets/imgs/pangu/require.png';
 .pangu-content {
   .pangu-detail {
     padding: 40px 80px;
+    @media screen and (max-width: 820px) {
+      padding: 16px;
+      img {
+        width: 100%;
+      }
+    }
     background-color: #fff;
     &-desc {
       .title {
@@ -152,6 +166,10 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin-bottom: 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
       }
       .info {
         line-height: 22px;
@@ -160,6 +178,11 @@ import require from '@/assets/imgs/pangu/require.png';
         margin-bottom: 16px;
         &:last-child {
           margin-bottom: 0;
+        }
+        @media screen and (max-width: 820px) {
+          font-size: 12px;
+          line-height: 18px;
+          margin-bottom: 8px;
         }
       }
     }
@@ -172,6 +195,11 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          margin: 24px 0 8px;
+          font-size: 14px;
+          line-height: 22px;
+        }
       }
       .model-desc {
         height: 44px;
@@ -179,6 +207,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 14px;
         color: #555555;
         margin-top: 17px;
+        @media screen and (max-width: 820px) {
+          margin-top: 8px;
+          font-size: 12px;
+          line-height: 18px;
+          height: auto;
+        }
       }
     }
     &-dataset {
@@ -191,6 +225,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .dataset-subtitle {
         height: 22px;
@@ -198,6 +238,12 @@ import require from '@/assets/imgs/pangu/require.png';
         color: #555555;
         line-height: 22px;
         margin-bottom: 24px;
+        @media screen and (max-width: 820px) {
+          height: auto;
+          font-size: 12px;
+          line-height: 22px;
+          margin-bottom: 8px;
+        }
       }
       /* .dataset-img {
           } */
@@ -207,6 +253,11 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 14px;
         color: #555555;
         margin-top: 17px;
+        @media screen and (max-width: 820px) {
+          height: auto;
+          font-size: 12px;
+          line-height: 22px;
+        }
       }
     }
     &-mindspore {
@@ -218,6 +269,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .mindspore-subtitle {
         height: 22px;
@@ -225,6 +282,12 @@ import require from '@/assets/imgs/pangu/require.png';
         color: #555555;
         line-height: 22px;
         margin-bottom: 24px;
+        @media screen and (max-width: 820px) {
+          height: auto;
+          font-size: 12px;
+          line-height: 22px;
+          margin-bottom: 8px;
+        }
       }
       /* .mindspore-img {
           } */
@@ -234,6 +297,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 14px;
         color: #555555;
         margin-top: 17px;
+        @media screen and (max-width: 820px) {
+          height: auto;
+          font-size: 12px;
+          line-height: 22px;
+          margin-top: 8px;
+        }
       }
     }
     &-config {
@@ -245,10 +314,30 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .config-img {
         img {
           width: 100%;
+        }
+      }
+      .config-img1 {
+        display: none;
+      }
+      @media screen and (max-width: 767px) {
+        .config-img {
+          display: none;
+        }
+        .config-img1 {
+          display: block;
+          img {
+            width: 100%;
+          }
         }
       }
     }
@@ -261,10 +350,30 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .require-img {
         img {
           width: 100%;
+        }
+      }
+      .require-img1 {
+        display: none;
+      }
+      @media screen and (max-width: 767px) {
+        .require-img {
+          display: none;
+        }
+        .require-img1 {
+          display: block;
+          img {
+            width: 100%;
+          }
         }
       }
       .require-subtitle {
@@ -273,6 +382,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 16px;
         color: #000000;
         margin: 24px 0 16px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .require-lines {
         background: #f5f6f8;
@@ -282,11 +397,24 @@ import require from '@/assets/imgs/pangu/require.png';
           font-size: 24px;
           margin-right: 16px;
         }
+        @media screen and (max-width: 820px) {
+          padding: 12px;
+          display: block;
+          .o-icon {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 8px;
+          }
+        }
         ul {
           li {
             font-size: 14px;
             line-height: 22px;
             color: #000000;
+            @media screen and (max-width: 820px) {
+              font-size: 12px;
+              line-height: 18px;
+            }
           }
         }
       }
@@ -300,6 +428,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 0;
+        }
       }
       .train-subtitle {
         height: 22px;
@@ -307,6 +441,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 14px;
         color: #555555;
         margin: 24px 0 16px;
+        @media screen and (max-width: 820px) {
+          height: auto;
+          font-size: 12px;
+          line-height: 22px;
+          margin: 8px auto;
+        }
       }
       .train-lines {
         background: #f5f6f8;
@@ -316,11 +456,24 @@ import require from '@/assets/imgs/pangu/require.png';
           font-size: 24px;
           margin-right: 16px;
         }
+        @media screen and (max-width: 820px) {
+          padding: 12px;
+          display: block;
+          .o-icon {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 8px;
+          }
+        }
         ul {
           li {
             font-size: 14px;
             line-height: 22px;
             color: #000000;
+            @media screen and (max-width: 820px) {
+              font-size: 12px;
+              line-height: 18px;
+            }
           }
         }
       }
@@ -334,6 +487,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-weight: 500;
         color: #000000;
         margin: 40px 0 24px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .inference-info {
         div {
@@ -342,6 +501,11 @@ import require from '@/assets/imgs/pangu/require.png';
           font-size: 14px;
           color: #555555;
           margin-bottom: 8px;
+          @media screen and (max-width: 820px) {
+            height: auto;
+            font-size: 12px;
+            line-height: 22px;
+          }
         }
         ul {
           li {
@@ -349,6 +513,12 @@ import require from '@/assets/imgs/pangu/require.png';
             font-size: 14px;
             color: #555555;
             margin-bottom: 16px;
+            @media screen and (max-width: 820px) {
+              height: auto;
+              font-size: 12px;
+              line-height: 22px;
+              margin-bottom: 8px;
+            }
             &:last-child {
               margin-bottom: 0;
             }
@@ -361,6 +531,12 @@ import require from '@/assets/imgs/pangu/require.png';
         font-size: 16px;
         color: #000000;
         margin: 24px 0 16px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          height: 22px;
+          line-height: 22px;
+          margin: 24px 0 8px;
+        }
       }
       .inference-lines {
         background: #f5f6f8;
@@ -370,15 +546,33 @@ import require from '@/assets/imgs/pangu/require.png';
           font-size: 24px;
           margin-right: 16px;
         }
+        @media screen and (max-width: 820px) {
+          padding: 12px;
+          display: block;
+          .o-icon {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 8px;
+          }
+        }
         ul {
           li {
             font-size: 14px;
             line-height: 22px;
             color: #000000;
+            @media screen and (max-width: 820px) {
+              font-size: 12px;
+              line-height: 18px;
+            }
           }
         }
       }
     }
+  }
+}
+@media screen and (max-width: 820px) {
+  .pangu-wrap {
+    padding-bottom: 40px !important;
   }
 }
 </style>

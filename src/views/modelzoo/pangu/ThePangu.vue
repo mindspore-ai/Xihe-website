@@ -9,6 +9,10 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import panguBanner from '@/assets/imgs/pangu/pangu-banner.png';
 
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
+const screenWidth = useWindowResize();
+
 const router = useRouter();
 const route = useRoute();
 
@@ -75,7 +79,7 @@ watch(
               <OButton
                 type="primary"
                 animation
-                class="home-btn"
+                :size="screenWidth < 820 ? 'mini' : 'medium'"
                 @click="goPanguMore"
               >
                 了解更多
@@ -108,10 +112,15 @@ watch(
 .pangu {
   background-color: #f5f6f8;
   padding-top: 80px;
-  // margin-top: 80px;
+  @media screen and (max-width: 820px) {
+    padding-top: 48px;
+  }
   .pangu-wrap {
     padding: 0px 16px;
     margin: 40px auto 0;
+    @media screen and (max-width: 820px) {
+      margin: 16px auto 0;
+    }
     max-width: 1472px;
     .pangu-bread {
       margin-bottom: 40px;
@@ -134,10 +143,21 @@ watch(
           color: #000;
         }
       }
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
     .pangu-content {
       .pangu-banner {
         padding: 80px;
+        @media screen and (max-width: 820px) {
+          margin-top: 0;
+          padding: 16px;
+        }
+        @media screen and (max-width: 768px) {
+          margin-top: 0;
+          padding: 16px;
+        }
         background-color: #fff;
         display: flex;
         .banner-left {
@@ -145,6 +165,9 @@ watch(
           img {
             width: 416px;
             height: 100%;
+          }
+          @media screen and (max-width: 820px) {
+            display: none;
           }
         }
         .banner-right {
@@ -154,13 +177,30 @@ watch(
             font-size: 36px;
             color: #000000;
             margin-bottom: 16px;
+            @media screen and (max-width: 820px) {
+              font-size: 16px;
+              line-height: 24px;
+              height: 24px;
+              margin-bottom: 8px;
+            }
           }
           &-content {
-            // height: 44px;
             font-size: 14px;
             color: #555555;
             line-height: 22px;
             margin-bottom: 24px;
+            @media screen and (max-width: 820px) {
+              font-size: 12px;
+              line-height: 18px;
+              margin-bottom: 16px;
+            }
+          }
+          .o-button {
+            @media screen and (max-width: 820px) {
+              line-height: 22px;
+              padding: 6px !important;
+              font-size: 14px;
+            }
           }
         }
       }
@@ -168,9 +208,9 @@ watch(
   }
   .taichu-content-desc {
     margin-top: 24px;
-    // @media screen and (max-width: 768px) {
-    //   margin-top: 16px;
-    // }
+    @media screen and (max-width: 820px) {
+      margin-top: 16px;
+    }
     .o-nav {
       background: #fff;
     }
@@ -179,6 +219,9 @@ watch(
       margin: 0 auto;
       height: 48px;
       background-color: #fbfbfb;
+      @media screen and (max-width: 820px) {
+        height: 34px;
+      }
       :deep(.o-nav) {
         width: 100%;
         display: flex;
@@ -186,16 +229,17 @@ watch(
         margin: 0 auto;
         .nav-item {
           color: #555;
-          // @media screen and (max-width: 1080px) {
-          //   font-size: 14px;
-          //   font-weight: 400;
-          //   color: #000000;
-          //   line-height: 22px;
-          // }
+          @media screen and (max-width: 820px) {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
+          }
         }
       }
       .taichu-info {
         background-color: #f5f6f8;
+        // min-height: calc(100vh - 100px);
       }
     }
   }

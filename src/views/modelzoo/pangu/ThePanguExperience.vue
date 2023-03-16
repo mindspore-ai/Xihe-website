@@ -264,7 +264,7 @@ onUnmounted(() => {
   width: 160px;
   height: 160px;
   border-radius: 16px;
-  @media screen and (max-width: 1080px) {
+  @media screen and (max-width: 820px) {
     width: 104px;
     height: 108px;
     .el-image-viewer__canvas {
@@ -292,7 +292,7 @@ onUnmounted(() => {
 
 :deep(.el-input) {
   height: 48px;
-  @media screen and (max-width: 1080px) {
+  @media screen and (max-width: 820px) {
     height: 29px;
   }
   .el-input__wrapper {
@@ -303,7 +303,7 @@ onUnmounted(() => {
     &:hover {
       box-shadow: none;
     }
-    @media screen and (max-width: 1080px) {
+    @media screen and (max-width: 820px) {
       padding: 6px 16px;
       height: 29px;
       .el-input__inner {
@@ -321,20 +321,21 @@ onUnmounted(() => {
   background-size: 100%;
   width: 100%;
   padding: 40px 64px 64px;
-  // @media screen and (max-width: 1080px) {
-  //   padding: 16px 16px 40px;
-  //   background-image: none;
-  // }
+  @media screen and (max-width: 820px) {
+    padding: 16px 16px 40px;
+    background-image: none;
+    min-height: calc(100vh - 480px);
+  }
   &-box {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     padding: 40px;
-    // @media screen and (max-width: 1080px) {
-    //   padding: 16px 16px 24px;
-    //   width: 100%;
-    // }
+    @media screen and (max-width: 820px) {
+      padding: 16px 16px 24px;
+      width: 100%;
+    }
     .title {
       font-size: 36px;
       font-weight: 300;
@@ -343,11 +344,11 @@ onUnmounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      // @media screen and (max-width: 1080px) {
-      //   font-size: 14px;
-      //   color: #000000;
-      //   line-height: 28px;
-      // }
+      @media screen and (max-width: 820px) {
+        font-size: 14px;
+        color: #000000;
+        line-height: 28px;
+      }
     }
 
     .description {
@@ -357,13 +358,14 @@ onUnmounted(() => {
       line-height: 24px;
       margin-top: 16px;
       text-align: center;
-      // @media screen and (max-width: 1080px) {
-      //   font-size: 12px;
-      //   font-weight: 400;
-      //   color: #555555;
-      //   line-height: 18px;
-      //   margin-top: 8px;
-      // }
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+        font-weight: 400;
+        color: #555555;
+        line-height: 18px;
+        margin-top: 8px;
+        text-align: left;
+      }
     }
 
     .chat-box {
@@ -373,10 +375,10 @@ onUnmounted(() => {
       margin-top: 40px;
       overflow: auto;
       padding-top: 24px;
-      // @media screen and (max-width: 1080px) {
-      //   margin-top: 16px;
-      //   height: 400px;
-      // }
+      @media screen and (max-width: 820px) {
+        margin-top: 16px;
+        height: 400px;
+      }
       &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -399,10 +401,10 @@ onUnmounted(() => {
         flex-direction: row-reverse;
         margin-bottom: 24px;
         padding-right: 26px;
-        // @media screen and (max-width: 1080px) {
-        //   margin-bottom: 16px;
-        //   padding-right: 16px;
-        // }
+        @media screen and (max-width: 820px) {
+          margin-bottom: 16px;
+          padding-right: 16px;
+        }
 
         .message {
           padding: 16px 24px;
@@ -414,34 +416,34 @@ onUnmounted(() => {
           color: #000000;
           line-height: 22px;
           position: relative;
-          // @media screen and (max-width: 1080px) {
-          //   padding: 8px;
-          //   margin-left: 28px;
-          //   font-size: 12px;
-          //   font-weight: 400;
-          //   color: #000000;
-          //   line-height: 17px;
-          //   border-radius: 8px 0px 8px 8px;
-          // }
+          @media screen and (max-width: 820px) {
+            padding: 8px;
+            margin-left: 28px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 17px;
+            border-radius: 8px 0px 8px 8px;
+          }
           .msg-loading {
             position: absolute;
             left: -30px;
             width: 20px;
             height: 20px;
-            // @media screen and (max-width: 1080px) {
-            //   width: 12px;
-            //   height: 12px;
-            //   left: -20px;
-            // }
+            @media screen and (max-width: 820px) {
+              width: 12px;
+              height: 12px;
+              left: -20px;
+            }
           }
         }
 
         .message-img {
           padding: 8px;
           line-height: 0px;
-          // @media screen and (max-width: 1080px) {
-          //   padding: 4px;
-          // }
+          @media screen and (max-width: 820px) {
+            padding: 4px;
+          }
         }
 
         .avatar {
@@ -449,27 +451,27 @@ onUnmounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-left: 8px;
-          // @media screen and (max-width: 1080px) {
-          //   min-width: 24px;
-          //   min-height: 24px;
-          // }
+          @media screen and (max-width: 820px) {
+            min-width: 24px;
+            min-height: 24px;
+          }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            // @media screen and (max-width: 1080px) {
-            //   width: 24px;
-            //   height: 24px;
-            // }
+            @media screen and (max-width: 820px) {
+              width: 24px;
+              height: 24px;
+            }
           }
         }
       }
       .message-box-vqa {
         display: flex;
         margin-bottom: 24px;
-        // @media screen and (max-width: 1080px) {
-        //   margin-bottom: 16px;
-        // }
+        @media screen and (max-width: 820px) {
+          margin-bottom: 16px;
+        }
         .message {
           white-space: pre-wrap;
           padding: 16px 24px;
@@ -480,15 +482,15 @@ onUnmounted(() => {
           font-weight: 400;
           color: #000000;
           line-height: 22px;
-          // @media screen and (max-width: 1080px) {
-          //   padding: 8px;
-          //   margin-right: 28px;
-          //   font-size: 12px;
-          //   font-weight: 400;
-          //   color: #000000;
-          //   line-height: 17px;
-          //   border-radius: 0px 8px 8px 8px;
-          // }
+          @media screen and (max-width: 820px) {
+            padding: 8px;
+            margin-right: 28px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 17px;
+            border-radius: 0px 8px 8px 8px;
+          }
         }
 
         .avatar {
@@ -496,18 +498,18 @@ onUnmounted(() => {
           min-height: 48px;
           border-radius: 50%;
           margin-right: 8px;
-          // @media screen and (max-width: 1080px) {
-          //   min-width: 24px;
-          //   min-height: 24px;
-          // }
+          @media screen and (max-width: 820px) {
+            min-width: 24px;
+            min-height: 24px;
+          }
           img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            // @media screen and (max-width: 1080px) {
-            //   width: 24px;
-            //   height: 24px;
-            // }
+            @media screen and (max-width: 820px) {
+              width: 24px;
+              height: 24px;
+            }
           }
         }
       }
@@ -518,10 +520,10 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // @media screen and (max-width: 1080px) {
-      //   padding-right: 0px;
-      //   margin-top: 16px;
-      // }
+      @media screen and (max-width: 820px) {
+        padding-right: 0px;
+        margin-top: 16px;
+      }
       .input-box {
         flex: 1;
       }
@@ -530,15 +532,15 @@ onUnmounted(() => {
         margin-left: 24px;
         width: 48px;
         cursor: pointer;
-        // @media screen and (max-width: 1080px) {
-        //   width: 24px;
-        //   margin-left: 16px;
-        // }
+        @media screen and (max-width: 820px) {
+          width: 24px;
+          margin-left: 16px;
+        }
         .o-icon {
           font-size: 48px;
-          // @media screen and (max-width: 1080px) {
-          //   font-size: 24px;
-          // }
+          @media screen and (max-width: 820px) {
+            font-size: 24px;
+          }
         }
       }
     }
@@ -546,6 +548,9 @@ onUnmounted(() => {
     .examplse-box {
       display: flex;
       justify-content: space-between;
+      @media screen and (max-width: 820px) {
+        display: block;
+      }
       .examples {
         margin-top: 8px;
         flex: 1;
@@ -563,6 +568,13 @@ onUnmounted(() => {
           // box-sizing: border-box;
           background-color: #f3f9ff;
           cursor: pointer;
+          @media screen and (max-width: 820px) {
+            font-size: 12px;
+            line-height: 8px;
+            padding: 4px 7px;
+            margin-top: 8px;
+            margin-right: 8px;
+          }
         }
         .active {
           border: 1px solid #a0d2ff;
@@ -585,6 +597,11 @@ onUnmounted(() => {
         .o-icon {
           font-size: 12px;
           margin-right: 2px;
+        }
+        @media screen and (max-width: 820px) {
+          padding-top: 8px;
+          width: 100%;
+          justify-content: right;
         }
       }
     }

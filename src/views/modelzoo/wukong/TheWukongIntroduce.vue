@@ -151,29 +151,52 @@ const effectImg = reactive([
 .wukong-intro {
   .intro {
     margin-bottom: 40px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 24px;
+    }
     .intro-title {
       line-height: 32px;
       font-size: 24px;
       color: #000000;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
     }
     .intro-detail {
       line-height: 22px;
       font-size: 14px;
       color: #555555;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+      }
     }
   }
   .model {
     margin-bottom: 40px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 24px;
+    }
     .model-title {
       line-height: 32px;
       font-size: 20px;
       color: #000000;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
     }
     .model-img {
       text-align: center;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        margin-bottom: 8px;
+      }
       img {
         width: 100%;
       }
@@ -182,6 +205,10 @@ const effectImg = reactive([
       line-height: 22px;
       font-size: 14px;
       color: #555555;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+      }
       .train-method {
         text-indent: 10px;
       }
@@ -189,15 +216,26 @@ const effectImg = reactive([
   }
   .dataset {
     margin-bottom: 40px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 24px;
+    }
     .dataset-title {
       line-height: 32px;
       font-size: 20px;
       color: #000000;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
     }
     .dataset-img {
       text-align: center;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        margin-bottom: 8px;
+      }
       img {
         width: 100%;
       }
@@ -206,11 +244,21 @@ const effectImg = reactive([
       line-height: 22px;
       font-size: 14px;
       color: #555555;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+      }
       .first-step {
         margin-bottom: 16px;
+        @media screen and (max-width: 768px) {
+          margin-bottom: 0px;
+        }
       }
       .second-step {
         margin-bottom: 16px;
+        @media screen and (max-width: 768px) {
+          margin-bottom: 0px;
+        }
         ul {
           li {
             text-indent: 10px;
@@ -224,6 +272,9 @@ const effectImg = reactive([
         }
         .result {
           margin-bottom: 24px;
+          @media screen and (max-width: 768px) {
+            margin-bottom: 8px;
+          }
         }
       }
       .final-sample {
@@ -251,6 +302,11 @@ const effectImg = reactive([
       font-size: 20px;
       color: #000000;
       margin-bottom: 24px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
     }
     .effect-list {
       display: flex;
@@ -259,11 +315,18 @@ const effectImg = reactive([
       .effect-item {
         width: 32%;
         margin-bottom: 24px;
+        @media screen and (max-width: 768px) {
+          margin-bottom: 8px;
+        }
         .text {
           line-height: 22px;
           font-size: 14px;
           color: #555555;
           text-align: center;
+          @media screen and (max-width: 768px) {
+            line-height: 20px;
+            font-size: 12px;
+          }
         }
         .effect-img {
           margin-bottom: 10px;

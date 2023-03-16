@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo } from '@/api/api-user';
 import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
+import whiteList from '@/whitelist/whitelist-router';
+import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
 
 import user from './user';
 import model from './model';
@@ -21,7 +23,7 @@ export const routes = [
     alias: '/home',
     name: 'home',
     component: () => {
-      return import('@/views/TheHome.vue');
+      return import('@/views/TheHome1.vue');
     },
   },
   // 隐私政策
@@ -121,13 +123,6 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const mobileFitWhiteList = [
-    'taichu',
-    'taichuIntroduction',
-    'textToImage',
-    'taichuVision',
-    'imageCaption',
-  ];
   if (mobileFitWhiteList.indexOf(to.name) !== -1) {
     document.body.classList.add('mobile-fit');
   } else {
@@ -178,15 +173,6 @@ router.beforeEach(async (to, from) => {
   }
 
   // 白名单中路由可直接进入
-  const whiteList = [
-    'models',
-    'datasets',
-    'projects',
-    'modelzoo',
-    'privacy',
-    'legal',
-    '404',
-  ];
   if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {
     doLogin();
     return true;

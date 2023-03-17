@@ -6,8 +6,14 @@ import { ArrowRightBold } from '@element-plus/icons-vue';
 import taskcard from '@/views/course/CourseTaskCard.vue';
 import OButton from '@/components/OButton.vue';
 
+import { getTaskList } from '@/api/api-course';
+import { useCourseData } from '@/stores';
+
 const taskInput = ref('');
 const activeName = ref('all');
+
+const userCourseData = useCourseData();
+console.log('userCourseData: ', userCourseData.courseData);
 
 const taskList = reactive([
   {
@@ -31,6 +37,13 @@ const taskList = reactive([
     cover_id: '2',
   },
 ]);
+
+function getTask() {
+  getTaskList(userCourseData.courseData.id).then((res) => {
+    console.log('res: ', res);
+  });
+}
+getTask();
 function handleClick(val) {
   console.log(val);
 }
@@ -212,8 +225,6 @@ function handleClick(val) {
   }
   .el-tabs__content {
     position: static;
-    .el-tab-pane {
-    }
   }
 }
 .task-list-tabs {

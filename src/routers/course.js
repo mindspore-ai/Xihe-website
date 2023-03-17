@@ -36,13 +36,13 @@ export default [
         },
       },
       // 作业
-      /* {
+      {
         path: 'task',
         name: 'courseTask',
         component: () => {
           return import('@/views/course/CourseTask.vue');
         },
-      }, */
+      },
       // 教师介绍
       {
         path: 'teacher',

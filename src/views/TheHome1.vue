@@ -281,7 +281,6 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        
       </div>
     </div>
     <div class="home-modelzoo">
@@ -996,6 +995,17 @@ p {
       .card-introduce {
         font-size: 14px;
         margin: 24px 12px;
+        line-height: 22px;
+        height: 44px;
+        overflow: hidden;
+        @media screen and (max-width: 820px) {
+          font-size: 12px;
+          line-height: 18px;
+          height: 36px;
+          margin: 16px 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
       img {
         width: 100%;
@@ -1013,6 +1023,11 @@ p {
           border: 1px solid #0d8dff;
           border-radius: 16px;
           cursor: pointer;
+          @media screen and (max-width: 820px) {
+            font-size: 12px;
+            line-height: 18px;
+            padding: 3px 12px;
+          }
         }
       }
       .o-icon {
@@ -1035,8 +1050,13 @@ p {
   max-width: 1472px;
   margin: 0 auto;
   padding: 0 16px 64px;
+  @media screen and (max-width: 820px) {
+    padding: 40px 16px;
+  }
   .introduce1 {
     margin-bottom: 40px;
+    @media screen and (max-width: 820px) {
+    }
   }
   .item-box {
     display: grid;
@@ -1052,6 +1072,9 @@ p {
       background-color: #fff;
       border-radius: 16px;
       background-size: cover;
+      @media screen and (max-width: 820px) {
+        padding: 16px;
+      }
       &:first-child {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         &:hover {
@@ -1079,6 +1102,10 @@ p {
       margin-bottom: 8px;
       line-height: 48px;
       position: relative;
+      @media screen and (max-width: 820px) {
+        font-size: 14px;
+        line-height: 22px;
+      }
       span {
         position: absolute;
         right: 0;
@@ -1090,11 +1117,19 @@ p {
       width: 48px;
       height: 48px;
       margin-right: 16px;
+      @media screen and (max-width: 820px) {
+        width: 24px;
+        height: 24px;
+      }
     }
     .intro {
       line-height: 24px;
       color: #555555;
       margin-left: 64px;
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+        margin-left: 32px;
+      }
     }
   }
 }

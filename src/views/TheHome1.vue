@@ -337,6 +337,7 @@ onMounted(() => {
         slides-per-view="auto"
         :modules="galleryModules"
         :autoplay="{
+          delay: 1000,
           disableOnInteraction: false,
           autoplay: true,
           pauseOnMouseEnter: true,

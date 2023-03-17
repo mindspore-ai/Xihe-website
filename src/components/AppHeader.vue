@@ -98,6 +98,11 @@ const navItems = reactive([
     href: '/course',
   },
   {
+    id: 'estate',
+    label: '产业',
+    href: '/estate/industrial-zone',
+  },
+  {
     id: 'competition',
     label: '比赛',
     href: '/competition',
@@ -113,16 +118,6 @@ const navItems = reactive([
     href: '/docs',
     windowOpen: true,
   },
-  /*  {
-    id: 'leaderboards',
-    label: '排行榜',
-    href: '/leaderboard',
-  }, */
-  // {
-  //   id: 'teams',
-  //   label: '团队',
-  //   href: '/teams',
-  // },
 ]);
 const loginedDropdownItems = [
   {
@@ -153,13 +148,6 @@ const loginedDropdownItems = [
       router.push('/new/datasets');
     },
   },
-  // {
-  //   id: 'teams',
-  //   label: '新建团队',
-  //   action: () => {
-  //     router.push('/new/teams');
-  //   },
-  // },
   {
     id: 'settings',
     label: '设置',
@@ -182,7 +170,9 @@ watch(
   },
   (val) => {
     if (
-      /^models|datasets|projects|modelzoo|competition|activity|teams/g.test(val)
+      /^models|datasets|projects|estate|modelzoo|competition|activity|teams/g.test(
+        val
+      )
     ) {
       activeNavItem.value = val;
     } else {
@@ -210,7 +200,6 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(item) {
-  // console.log('item,: ', item);
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
@@ -505,12 +494,6 @@ const handleCommand = (command) => {
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <!-- <o-nav
-        v-if="show"
-        :nav-items="navItems"
-        :active-item="activeNavItem"
-        @nav-click="handleNavClick"
-      ></o-nav> -->
       <el-menu
         v-if="show"
         class="modelzoo-menu"

@@ -328,8 +328,10 @@ function setTransition(swiper, transition) {
 }
 const swiperGally = ref();
 onMounted(() => {
+  // if (screenWidth.value > 1440) {
   let a = (screenWidth.value - 32) / 1440;
   swiperGally.value.children[2].style.zoom = a;
+  // }
 });
 </script>
 <template>
@@ -350,6 +352,9 @@ onMounted(() => {
       <div class="project-wrapper">
         <p class="title">{{ i18n.project.title }}</p>
         <p class="introduce">{{ i18n.project.introduce }}</p>
+        <div class="center-img">
+          <img :src="project" alt="" />
+        </div>
         <div class="top-img">
           <div
             class="project-card"
@@ -476,9 +481,6 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="center-img">
-          <img :src="project" alt="" />
-        </div>
       </div>
     </div>
     <div class="home-modelzoo">
@@ -593,9 +595,6 @@ onMounted(() => {
   </footer>
 </template>
 <style lang="scss" scoped>
-:deep(body) {
-  overflow-x: hidden;
-}
 .wrapper {
   background-color: #f5f7fc;
 }
@@ -606,9 +605,15 @@ onMounted(() => {
       background: url(@/assets/imgs/home1/home-banner1.jpg);
       background-size: cover;
       background-position: 50%;
+      @media screen and (max-width: 820px) {
+        height: 300px;
+      }
     }
     .swiper-pagination {
       bottom: 50px;
+      @media screen and (max-width: 820px) {
+        bottom: 8px;
+      }
     }
     .swiper-pagination-bullet {
       width: 160px;
@@ -620,6 +625,12 @@ onMounted(() => {
       margin: 0 8px;
       font-size: 18px;
       opacity: 1;
+      @media screen and (max-width: 820px) {
+        width: 24px;
+        height: 2px;
+        overflow: hidden;
+        margin: 0 4px;
+      }
     }
     .swiper-pagination-bullet-active {
       background: rgba(13, 141, 255, 0.7);
@@ -633,12 +644,23 @@ p {
 .title {
   font-size: 54px;
   line-height: 76px;
+  @media screen and (max-width: 820px) {
+    font-size: 14px;
+    line-height: 22px;
+  }
 }
 .introduce {
   font-size: 18px;
   line-height: 24px;
   color: #555555;
   margin: 24px auto 40px;
+  @media screen and (max-width: 820px) {
+    width: auto !important;
+    font-size: 12px;
+    line-height: 18px;
+    color: #000;
+    margin: 4px auto 16px;
+  }
 }
 .home-project {
   background-color: #f8f9fd;
@@ -649,6 +671,9 @@ p {
   margin: 0 auto;
   padding: 41px 16px 86px;
   position: relative;
+  @media screen and (max-width: 820px) {
+    padding-bottom: 40px;
+  }
   .project-card {
     background-color: #fff;
     display: flex;
@@ -660,6 +685,9 @@ p {
     &:hover {
       box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
     }
+    @media screen and (max-width: 820px) {
+      flex-direction: column;
+    }
   }
   .img-box {
     padding: 24px;
@@ -668,14 +696,26 @@ p {
     img {
       width: 124px;
     }
+    @media screen and (max-width: 820px) {
+      padding: 18px;
+      img {
+        width: 100%;
+      }
+    }
   }
   .card-right {
     margin-left: 16px;
+    @media screen and (max-width: 820px) {
+      margin-left: 4px;
+    }
     p {
       margin-top: 12px;
       font-size: 20px;
       line-height: 28px;
       text-align: left;
+      @media screen and (max-width: 820px) {
+        font-size: 14px;
+      }
     }
     span {
       display: inline-block;
@@ -688,11 +728,16 @@ p {
     .frame {
       background-color: #e9edfb;
       width: 80px;
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
   }
-
   .introduce {
     margin-bottom: 94px;
+    @media screen and (max-width: 820px) {
+      margin-bottom: 16px;
+    }
   }
   .top-img,
   .middle-img,
@@ -700,14 +745,24 @@ p {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    @media screen and (max-width: 820px) {
+      gap: 8px;
+    }
   }
   .top-img,
   .bottom-img {
     width: 1415px;
+    @media screen and (max-width: 820px) {
+      width: auto;
+    }
   }
   .middle-img {
     width: 1255px;
     padding: 40px 0;
+    @media screen and (max-width: 820px) {
+      width: auto;
+      padding: 8px 0;
+    }
     .project-card:last-child {
       span {
         color: #8071de;
@@ -730,6 +785,10 @@ p {
     img {
       width: 332px;
     }
+    @media screen and (max-width: 820px) {
+      position: unset;
+      transform: none;
+    }
   }
 }
 .home-modelzoo {
@@ -740,6 +799,12 @@ p {
   // background-attachment: fixed;
   // background-size: cover;
   // background-position: center center;
+  @media screen and (max-width: 820px) {
+    background: url(@/assets/imgs/home1/mobile-modelzoo.png);
+    background-size: cover;
+    background-position: 50%;
+    padding: 40px 16px;
+  }
   .introduce {
     width: 909px;
   }
@@ -747,8 +812,16 @@ p {
     display: flex;
     max-width: 1440px;
     margin: 0 auto;
+    @media screen and (max-width: 820px) {
+      // flex-direction: column;
+      flex-wrap: wrap;
+    }
     .item + .item {
       margin-left: 24px;
+      @media screen and (max-width: 820px) {
+        margin-left: 0;
+        margin-top: 16px;
+      }
     }
     .item {
       width: 100%;
@@ -759,6 +832,10 @@ p {
       position: relative;
       border-radius: 20px;
       cursor: pointer;
+      @media screen and (max-width: 820px) {
+        padding: 6px;
+        border-radius: 16px;
+      }
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
       &:hover {
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
@@ -773,16 +850,33 @@ p {
         font-size: 20px;
         line-height: 28px;
         margin: 24px 0 12px 12px;
+        @media screen and (max-width: 820px) {
+          font-size: 14px;
+          line-height: 22px;
+          margin: 16px 10px 8px;
+        }
       }
       .modelzoo-introduce {
         font-size: 14px;
         margin-left: 12px;
         margin-bottom: 12px;
+        @media screen and (max-width: 820px) {
+          font-size: 12px;
+          color: #555555;
+          margin-left: 10px;
+          margin-bottom: 3px;
+        }
       }
     }
     img {
       width: 100%;
       border-radius: 20px;
+      @media screen and (max-width: 820px) {
+        border-radius: 16px;
+      }
+      @media screen and (max-width: 767px) {
+        border-radius: 16px;
+      }
     }
   }
 }
@@ -790,16 +884,31 @@ p {
   max-width: 1472px;
   margin: 0 auto;
   padding: 64px 16px 0;
+  @media screen and (max-width: 820px) {
+    padding-top: 40px;
+  }
   .introduce {
     width: 909px;
     margin-bottom: 80px;
+    @media screen and (max-width: 820px) {
+      margin-bottom: 16px;
+    }
   }
   .model-contant {
     display: flex;
     margin-bottom: 64px;
+    @media screen and (max-width: 820px) {
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
     .item + .item {
       margin-left: 24px;
       transform: translateY(-40px);
+      @media screen and (max-width: 820px) {
+        margin-left: 0;
+        margin-top: 16px;
+        transform: none;
+      }
     }
     .item {
       width: 100%;
@@ -809,6 +918,9 @@ p {
       padding: 40px;
       position: relative;
       border-radius: 20px;
+      @media screen and (max-width: 820px) {
+        padding: 16px;
+      }
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
       cursor: pointer;
       &:hover {
@@ -830,10 +942,20 @@ p {
       font-size: 20px;
       line-height: 28px;
       margin: 16px 0 24px;
+      @media screen and (max-width: 820px) {
+        font-size: 14px;
+        line-height: 22px;
+        margin: 16px 0 8px;
+      }
     }
     .models-name {
       color: #555555;
       margin-bottom: 52px;
+      @media screen and (max-width: 820px) {
+        margin-bottom: 36px;
+        font-size: 12px;
+        line-height: 18px;
+      }
     }
     .models-tag {
       display: inline-block;
@@ -846,6 +968,9 @@ p {
       border-radius: 10px;
       position: absolute;
       bottom: 40px;
+      @media screen and (max-width: 820px) {
+        bottom: 16px;
+      }
     }
   }
 }
@@ -854,11 +979,19 @@ p {
   background: url(@/assets/imgs/home1/gallery-bg.png);
   background-size: cover;
   background-position: 50%;
+  @media screen and (max-width: 820px) {
+    padding: 40px 0;
+  }
   .o-button {
     display: block;
     margin: 0 auto;
     margin-top: -20px;
     border-radius: 24px;
+    @media screen and (max-width: 820px) {
+      margin-top: 16px;
+      font-size: 12px;
+      padding: 3px;
+    }
   }
   .introduce1 {
     margin-bottom: 0;
@@ -866,14 +999,17 @@ p {
   :deep(.swiper-gallery) {
     perspective: 1200px;
     max-width: 1440px;
-    // position: relative;
-    // z-index: 1000;
-    // zoom: 1.75;
+    @media screen and (max-width: 820px) {
+      width: 100%;
+    }
     .swiper-wrapper {
       transform-style: preserve-3d;
     }
     .swiper-slide {
       width: 365px;
+      // @media screen and (max-width: 820px) {
+      //   width: 280px;
+      // }
       img {
         width: 100%;
       }
@@ -881,20 +1017,33 @@ p {
   }
   .title1 {
     padding-top: 64px;
+    @media screen and (max-width: 820px) {
+      padding-top: 40px;
+    }
   }
   .introduce2 {
     margin-bottom: 64px;
+    @media screen and (max-width: 820px) {
+      margin-bottom: 0;
+    }
   }
 }
 .more {
   max-width: 1472px;
   margin: 0 auto;
   padding: 0 16px;
+  position: relative;
   :deep(.el-tabs) {
     .el-tabs__header {
       margin: 0px;
-      position: relative;
-      top: -64px;
+      position: absolute;
+      max-width: 1440px;
+      width: 100%;
+      top: -50px;
+      @media screen and (max-width: 820px) {
+        width: calc(100% - 32px);
+        top: -20px;
+      }
       .el-tabs__nav-wrap {
         border-radius: 16px;
         backdrop-filter: blur(10px);
@@ -914,18 +1063,30 @@ p {
             display: flex;
             justify-content: center;
             align-items: center;
+            @media screen and (max-width: 820px) {
+              height: 40px;
+              font-size: 14px;
+              line-height: 22px;
+              padding: 0;
+            }
             .tabs-title {
               display: flex;
               align-items: center;
               height: 48px;
               img {
                 width: 48px;
+                @media screen and (max-width: 820px) {
+                  width: 24px;
+                }
               }
               .o-icon {
                 font-size: 48px;
               }
               .tab {
                 margin-left: 24px;
+                @media screen and (max-width: 820px) {
+                  margin-left: 8px;
+                }
               }
             }
           }
@@ -941,9 +1102,18 @@ p {
     }
     .el-tab-pane {
       display: flex;
+      margin-top: 64px;
+      @media screen and (max-width: 820px) {
+        flex-direction: column;
+        margin-top: 36px;
+      }
     }
     .tabs-card + .tabs-card {
       margin-left: 24px;
+      @media screen and (max-width: 820px) {
+        margin-left: 0;
+        margin-top: 16px;
+      }
     }
     .tabs-card {
       width: 100%;
@@ -958,14 +1128,22 @@ p {
       &:hover {
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
       }
+      @media screen and (max-width: 820px) {
+        margin-bottom: 0;
+        padding: 6px;
+      }
       .card-name {
         font-size: 24px;
         line-height: 28px;
         margin: 12px 12px;
         position: absolute;
         top: 51px;
-
         display: flex;
+        @media screen and (max-width: 820px) {
+          font-size: 18px;
+          line-height: 26px;
+          height: 26px;
+        }
         .tag {
           font-size: 12px;
           line-height: 22px;
@@ -975,6 +1153,9 @@ p {
           background-color: #ffffff;
           border-radius: 12px;
           margin: 3px 16px;
+          @media screen and (max-width: 820px) {
+            border-radius: 6px;
+          }
         }
       }
       .card-introduce {
@@ -1027,6 +1208,9 @@ p {
     grid-template-columns: 1fr 1fr;
     column-gap: 24px;
     row-gap: 24px;
+    @media screen and (max-width: 820px) {
+      grid-template-columns: 1fr;
+    }
     .item {
       padding: 34px 40px 40px;
       background: url(@/assets/imgs/home1/industry-card-bg.png);

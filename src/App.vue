@@ -81,6 +81,11 @@ const routeLists = {
     child: ['AIAlbum'],
     back: '/modelzoo/wukong',
   },
+  home: {
+    name: '首页',
+    child: ['home'],
+    back: '',
+  },
 };
 
 const isMobileFit = ref(false);
@@ -135,6 +140,18 @@ function goBack() {
 
   router.push(backUrl.value);
 }
+const noHeader = ref(false);
+function Scroll(e) {
+  e = e || window.event;
+  if (e.wheelDelta) {
+    if (e.wheelDelta > 0) {
+      noHeader.value = false;
+    } else if (route.name === 'home') {
+      noHeader.value = true;
+    }
+  }
+}
+window.onmousewheel = document.onmousewheel = Scroll;
 </script>
 
 <template>
@@ -142,7 +159,10 @@ function goBack() {
     v-if="isMobileFit && screenWidth <= 820"
     ref="header"
     class="mobile-header"
-    :class="route.name === 'wukongExperience' ? 'wukong-header-bg' : ''"
+    :class="
+      (route.name === 'wukongExperience' ? 'wukong-header-bg' : '',
+      noHeader === true ? 'no-header' : '')
+    "
   >
     <div class="back" @click="goBack">
       <OIcon><icon-back></icon-back></OIcon>
@@ -154,7 +174,7 @@ function goBack() {
     v-else
     ref="header"
     class="app-header"
-    :class="{ opaque: isHeaderTransparent }"
+    :class="{ opaque: isHeaderTransparent, noHeader: noHeader }"
   >
     <app-header></app-header>
   </header>
@@ -256,6 +276,7 @@ function goBack() {
           margin-top: 8px;
           font-size: 9px;
           color: #ffffff;
+          color: #000;
           line-height: 12px;
         }
       }
@@ -280,7 +301,6 @@ body.el-popup-parent--hidden {
 #app {
   min-width: 1280px;
 }
-
 .app-header {
   position: fixed;
   z-index: 1000;
@@ -288,16 +308,23 @@ body.el-popup-parent--hidden {
   left: 0;
   top: 0;
   right: 0;
-  background-color: rgba(6, 11, 41, 0.85);
+  // background-color: rgba(6, 11, 41, 0.85);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   min-width: 1280px;
+  transition: all 0.5s;
+}
+.noHeader {
+  top: -80px;
 }
 
 .opaque {
   z-index: 100;
-  background-color: rgba(6, 11, 41, 1);
+  // background-color: rgba(6, 11, 41, 1);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .app-body {
@@ -308,8 +335,9 @@ body.el-popup-parent--hidden {
 
 .app-footer {
   min-width: 1280px;
-  background-color: #18191d;
-  background-image: url(@/assets/imgs/footer-bg.png);
+  // background-color: #18191d;
+  background-color: #f5f7fc;
+  background-image: url(@/assets/imgs/footer-bg1.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }

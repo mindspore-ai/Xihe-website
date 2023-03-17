@@ -874,6 +874,7 @@ p {
       max-width: 1440px;
       width: 100%;
       top: -50px;
+      z-index: 100;
       @media screen and (max-width: 820px) {
         width: calc(100% - 32px);
         top: -20px;

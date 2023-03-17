@@ -98,6 +98,11 @@ const navItems = reactive([
     href: '/course',
   },
   {
+    id: 'estate',
+    label: '产业',
+    href: '/estate',
+  },
+  {
     id: 'competition',
     label: '比赛',
     href: '/competition',
@@ -182,7 +187,9 @@ watch(
   },
   (val) => {
     if (
-      /^models|datasets|projects|modelzoo|competition|activity|teams/g.test(val)
+      /^models|datasets|projects|estate|modelzoo|competition|activity|teams/g.test(
+        val
+      )
     ) {
       activeNavItem.value = val;
     } else {
@@ -210,10 +217,10 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(item) {
-  // console.log('item,: ', item);
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
+    console.log('{ path: item }: ', { path: item });
     router.push({ path: item });
   }
 }

@@ -17,6 +17,7 @@ import finetune from './finetune';
 import course from './course';
 
 import i18n from '../i18n';
+import industry from './estate';
 
 export const routes = [
   // 主页
@@ -100,8 +101,10 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
-  // 微调
+  // 课程
   ...course,
+  // 产业
+  ...industry,
   // 404页面
   {
     path: '/404',

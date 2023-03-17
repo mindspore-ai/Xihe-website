@@ -24,12 +24,12 @@ const navItems = reactive([
     href: 'chapter',
     isIndividual: false,
   },
-  /* {
+  {
     id: 'courseTask',
     label: '作业',
     href: 'task',
     isIndividual: true,
-  }, */
+  },
   /* {
     id: 'discussion',
     label: '讨论',
@@ -57,7 +57,6 @@ const renderNav = ref();
 watch(
   () => courseInfo.is_apply,
   (newValue) => {
-    // console.log('newValue: ', newValue.courseData);
     // 如果已经报名
     if (newValue) {
       renderNav.value = navItems;

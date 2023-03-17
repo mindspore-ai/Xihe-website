@@ -337,6 +337,7 @@ onMounted(() => {
         slides-per-view="auto"
         :modules="galleryModules"
         :autoplay="{
+          delay: 1000,
           disableOnInteraction: false,
           autoplay: true,
           pauseOnMouseEnter: true,
@@ -874,6 +875,7 @@ p {
       max-width: 1440px;
       width: 100%;
       top: -50px;
+      z-index: 100;
       @media screen and (max-width: 820px) {
         width: calc(100% - 32px);
         top: -20px;

@@ -6,7 +6,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconBack from '~icons/app/left.svg';
-import IconMenu from '~icons/app/menu.svg';
+import IconMenu from '~icons/app/meau-header.svg';
 import logoImg from '@/assets/imgs/logo1.png';
 
 const route = useRoute();
@@ -157,18 +157,21 @@ window.onmousewheel = document.onmousewheel = Scroll;
 
 const mobilNav = [
   { name: '首页', isactive: true },
+  { name: 'AI实验室', isactive: false, path: '/project' },
+  { name: '模型库', isactive: false, path: '/model' },
   { name: '大模型体验', isactive: false, path: '/modelzoo' },
+  { name: '数据集', isactive: false, path: '/dataset' },
+  { name: '比赛', isactive: false, path: '/competition' },
+  { name: '活动', isactive: false, path: '/activity' },
+  { name: '文档', isactive: false, path: '/modelzoo' },
 ];
 const meauActive = ref(false);
 function toggleMenu(meau) {
-  if (meau === true) {
-    meauActive.value = meau;
-  } else if (!meau) {
-    meauActive.value = false;
-  } else {
-    meauActive.value = false;
-    router.push(meau);
-  }
+  meauActive.value = meau;
+}
+function toPage(path) {
+  meauActive.value = false;
+  router.push(path);
 }
 </script>
 
@@ -193,7 +196,12 @@ function toggleMenu(meau) {
       <OIcon><icon-back></icon-back></OIcon>
     </div>
 
-    <img v-if="currentPage === '首页'" :src="logoImg" alt="" />
+    <img
+      v-if="currentPage === '首页'"
+      :src="logoImg"
+      alt=""
+      @click="toPage('/')"
+    />
     <span v-else>{{ currentPage }}</span>
   </header>
 
@@ -221,7 +229,7 @@ function toggleMenu(meau) {
           class="link"
           :class="{ active: item.isactive }"
         >
-          <span @click="toggleMenu(item.path)">{{ item.name }}</span>
+          <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
     </div>

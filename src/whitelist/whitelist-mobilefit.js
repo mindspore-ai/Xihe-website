@@ -18,4 +18,5 @@ export default [
   'luojia',
   'luojiaExperience',
   'luojiaIntroduce',
+  'home',
 ];

@@ -47,6 +47,48 @@ function renderBullet(index, className) {
 
 const screenWidth = useWindowResize();
 
+const galleryPic = [
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png',
+    desc: '上海陆家嘴 未来城市 科幻风格',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/华为 大厦 晴朗 写实-00.png',
+    desc: '华为 大厦 晴朗 写实',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/西湖 美景-00.jpg',
+    desc: '西湖 美景',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/星河欲坠时-00.jpg',
+    desc: '星河欲坠时',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/水彩 山水-00.jpg',
+    desc: '水彩 山水',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/莫奈 撑阳伞的女人 月亮 梦幻-00.png',
+    desc: '莫奈 撑阳伞的女人 月亮 梦幻',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/极地 极光-00.jpg',
+    desc: '极地 极光',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/来自深渊 风景 绘画 写实风格-01.png',
+    desc: '来自深渊 风景 绘画 写实风格',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/孤舟 江景-00.jpg',
+    desc: '孤舟 江景',
+  },
+  {
+    img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/街道 新海诚-00.png',
+    desc: '街道 新海诚',
+  },
+];
 let slideW = 300;
 let radius = (slideW * 0.5) / Math.sin(Math.PI / 20);
 function progress(swiper) {
@@ -110,6 +152,9 @@ onMounted(() => {
       <div class="project-wrapper">
         <p class="title">{{ t('home.AI_LAB.TITLE') }}</p>
         <p class="introduce">{{ t('home.AI_LAB.INTRODUCE') }}</p>
+        <div class="center-img">
+          <img :src="project" alt="" />
+        </div>
         <div class="top-img">
           <div
             class="project-card"
@@ -236,9 +281,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="center-img">
-          <img :src="project" alt="" />
-        </div>
+        
       </div>
     </div>
     <div class="home-modelzoo">
@@ -305,11 +348,8 @@ onMounted(() => {
         @progress="progress"
         @set-transition="setTransition"
       >
-        <swiper-slide v-for="item in 9" :key="item">
-          <img
-            src="https://xihe2.test.osinfra.cn/obs-big-model/wukong-huahua/AI-gallery/gallery/MindSpore/1677053755/%E5%86%99%E5%AE%9E/%E6%B7%B1%E6%B8%8A%20%E9%A3%8E%E6%99%AF%20%E7%BB%98%E7%94%BB%20%E5%86%99%E5%AE%9E-00.png"
-            alt=""
-          />
+        <swiper-slide v-for="item in galleryPic" :key="item">
+          <img :src="item.img" />
         </swiper-slide>
       </swiper>
       <OButton animation type="primary" class="gallery-entry">

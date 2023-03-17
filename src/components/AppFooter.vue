@@ -1,5 +1,5 @@
 <script setup>
-import logoImg from '@/assets/imgs/footer-logo.png';
+import logoImg from '@/assets/imgs/logo1.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
 </script>
 
@@ -36,9 +36,8 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
   max-width: 1472px;
   margin: 0 auto;
   height: 200px;
-  padding: 16px 16px;
-  color: rgba(255, 255, 255, 1);
-
+  padding: 141px 16px 87px;
+  // color: rgba(255, 255, 255, 1);
   &-logo {
     display: flex;
     align-items: center;
@@ -61,7 +60,8 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
       font-size: 14px;
       margin: 0 auto;
       .text {
-        color: rgba(255, 255, 255, 1);
+        // color: rgba(255, 255, 255, 1);
+        color: #000000;
         height: 26px;
         line-height: 26px;
         cursor: pointer;
@@ -70,7 +70,8 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
       .division {
         width: 1px;
         height: 20px;
-        background-color: rgba(255, 255, 255, 1);
+        // background-color: rgba(255, 255, 255, 1);
+        background-color: #000000;
         margin-top: 2px;
       }
     }
@@ -94,7 +95,7 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
     p {
       margin-top: 8px;
       font-size: 12px;
-      color: #ffffff;
+      // color: #ffffff;
       opacity: 0.8;
       line-height: 12px;
     }

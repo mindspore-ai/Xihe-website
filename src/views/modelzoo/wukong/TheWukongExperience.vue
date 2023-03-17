@@ -351,7 +351,7 @@ function reEnterDesc() {
 }
 // 初始化推理数据
 function initData() {
-  inputText.value = '';
+  // inputText.value = '';
   sortTag.value = '';
 
   styleBackground.value = [];
@@ -395,16 +395,12 @@ async function handleInfer() {
           desc: inputText.value,
           style: sortTag.value,
         });
-
         isInferred.value = true;
-
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
-        console.log(err.code);
-
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
-        } else if (err.code === 'bigmodel_sensitive_info') {
+        } else if (err.code === 'bigmodel_resource_busy') {
           errorMsg.value = '前方道路拥挤，请稍后再试';
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';

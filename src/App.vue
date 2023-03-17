@@ -6,6 +6,8 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
 import IconBack from '~icons/app/left.svg';
+import IconMenu from '~icons/app/menu.svg';
+import logoImg from '@/assets/imgs/logo1.png';
 
 const route = useRoute();
 const router = useRouter();
@@ -152,6 +154,22 @@ function Scroll(e) {
   }
 }
 window.onmousewheel = document.onmousewheel = Scroll;
+
+const mobilNav = [
+  { name: '首页', isactive: true },
+  { name: '大模型体验', isactive: false, path: '/modelzoo' },
+];
+const meauActive = ref(false);
+function toggleMenu(meau) {
+  if (meau === true) {
+    meauActive.value = meau;
+  } else if (!meau) {
+    meauActive.value = false;
+  } else {
+    meauActive.value = false;
+    router.push(meau);
+  }
+}
 </script>
 
 <template>
@@ -164,10 +182,19 @@ window.onmousewheel = document.onmousewheel = Scroll;
       noHeader === true ? 'no-header' : '')
     "
   >
-    <div class="back" @click="goBack">
+    <div
+      v-if="currentPage === '首页'"
+      class="back"
+      @click="toggleMenu(!meauActive)"
+    >
+      <OIcon><icon-menu></icon-menu></OIcon>
+    </div>
+    <div v-else class="back" @click="goBack">
       <OIcon><icon-back></icon-back></OIcon>
     </div>
-    <span>{{ currentPage }}</span>
+
+    <img v-if="currentPage === '首页'" :src="logoImg" alt="" />
+    <span v-else>{{ currentPage }}</span>
   </header>
 
   <header
@@ -185,6 +212,20 @@ window.onmousewheel = document.onmousewheel = Scroll;
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
+  <div class="mobile-menu" :class="{ meauActive: meauActive }">
+    <div class="meau-side" :class="{ meauActive: meauActive }">
+      <div class="nav">
+        <div
+          v-for="item in mobilNav"
+          :key="item"
+          class="link"
+          :class="{ active: item.isactive }"
+        >
+          <span @click="toggleMenu(item.path)">{{ item.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -231,6 +272,9 @@ window.onmousewheel = document.onmousewheel = Scroll;
       padding: 0 8px 0 16px;
       font-size: 24px;
       color: #000;
+    }
+    img {
+      width: 74px;
     }
   }
   .wukong-header-bg {
@@ -409,5 +453,48 @@ body.el-popup-parent--hidden {
   span {
     font-weight: 600;
   }
+}
+.mobile-menu {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 48px;
+  height: calc(100% - 48px);
+  z-index: 100;
+  visibility: hidden;
+  .meau-side {
+    height: 100%;
+    transition: all 0.3s linear;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s linear;
+    transition: transform;
+    overflow-y: auto;
+    width: 164px;
+    .nav {
+    }
+    .link {
+      font-size: 12px;
+      line-height: 18px;
+      padding-left: 16px;
+      min-width: 164px;
+    }
+    span {
+      display: inline-block;
+      padding: 15px 16px;
+      padding-left: 0;
+    }
+    .active {
+      background-color: #ffffff;
+      span {
+        border-bottom: 2px solid #40adff;
+      }
+    }
+  }
+}
+.meauActive {
+  visibility: visible;
+  width: 0;
 }
 </style>

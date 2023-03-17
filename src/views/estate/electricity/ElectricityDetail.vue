@@ -73,7 +73,7 @@ function handleNavClick(item) {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">工业零件划痕自动识别</div>
+              <div class="banner-title">金属零部件缺陷检测</div>
               <div class="banner-desc">
                 通过训练物体检测定制化AI模型，实现对于“工业零件划痕”的智能识别，广泛应用于工业质检、智能制造等领域。
               </div>

@@ -5,14 +5,14 @@ export default [
     component: () => {
       return import('@/views/estate/TheEstate.vue');
     },
-    redirect: '/estate/electric',
+    redirect: '/estate/industrial-zone',
     // 四个专区
     children: [
       {
         path: 'electric',
         name: 'electricPower',
         component: () => {
-          return import('@/views/estate/electricity/TheEletricity.vue');
+          return import('@/views/estate/industry/TheIndustry.vue');
         },
       },
       {
@@ -26,14 +26,15 @@ export default [
         path: 'medical',
         name: 'medicalTreatment',
         component: () => {
-          return import('@/views/estate/industry/TheIndustry.vue');
+          return import('@/views/estate/medicine/TheMedicalTreatment.vue');
         },
       },
       {
         path: 'industrial-zone',
         name: 'industrialZone',
         component: () => {
-          return import('@/views/estate/medicine/TheMedicalTreatment.vue');
+          // return import('@/views/estate/medicine/TheMedicalTreatment.vue');
+          return import('@/views/estate/electricity/TheEletricity.vue');
         },
       },
     ],

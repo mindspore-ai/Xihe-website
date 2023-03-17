@@ -6,14 +6,14 @@ import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
 
 const cases = [
   {
-    type: '工业零件划痕自动识别',
-    name: 'SSIM-AE无监督缺陷检测',
+    type: '金属零部件缺陷检测',
+    // name: 'SSIM-AE无监督缺陷检测',
     image: defectDetecting,
     url: '/estate/electric/case-1',
   },
   {
-    type: '工业零件划痕自动识别',
-    name: 'PatchCore异常检测',
+    type: '金属零部件缺陷检测',
+    // name: 'PatchCore异常检测',
     image: anomalyDetection,
     url: '/estate/electric/case-1',
   },

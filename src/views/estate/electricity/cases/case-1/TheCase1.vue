@@ -59,10 +59,10 @@ function handleNavClick(item) {
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/estate' }">
-            电力专区
+            工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            工业零件划痕自动识别
+            金属零部件缺陷检测
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -73,9 +73,9 @@ function handleNavClick(item) {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">工业零件划痕自动识别</div>
+              <div class="banner-title">金属零部件缺陷检测</div>
               <div class="banner-desc">
-                通过训练物体检测定制化AI模型，实现对于“工业零件划痕”的智能识别，广泛应用于工业质检、智能制造等领域。
+                金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。
               </div>
             </div>
             <div class="banner-btn">

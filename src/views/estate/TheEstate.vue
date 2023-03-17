@@ -18,16 +18,16 @@ const sections = [
   {
     id: 0,
     name: '工业专区',
-    // path: '/estate/industrial-zone',
-    path: '/estate/electric',
+    path: '/estate/industrial-zone',
+    // path: '/estate/electric',
     routeName: 'industrialZone',
     icon: IconIndustry,
   },
   {
     id: 1,
     name: '电力专区',
-    // path: '/estate/electric',
-    path: '/estate/industrial-zone',
+    path: '/estate/electric',
+    // path: '/estate/industrial-zone',
     routeName: 'electricPower',
     icon: IconElectricity,
   },
@@ -47,8 +47,6 @@ const sections = [
   },
 ];
 const handleClick = (tab) => {
-  console.log('tab.index: ', tab);
-  console.log('sections[tab.index].path: ', sections[tab.index].path);
   router.push(sections[tab.index].path);
 };
 </script>

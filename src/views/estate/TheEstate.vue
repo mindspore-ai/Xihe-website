@@ -17,34 +17,38 @@ const route = useRoute();
 const sections = [
   {
     id: 0,
-    name: '电力专区',
+    name: '工业专区',
+    // path: '/estate/industrial-zone',
     path: '/estate/electric',
+    routeName: 'industrialZone',
+    icon: IconIndustry,
+  },
+  {
+    id: 1,
+    name: '电力专区',
+    // path: '/estate/electric',
+    path: '/estate/industrial-zone',
     routeName: 'electricPower',
     icon: IconElectricity,
   },
   {
-    id: 1,
+    id: 2,
     name: '金融专区',
     path: '/estate/finance',
     routeName: 'finance',
     icon: IconFinance,
   },
   {
-    id: 2,
+    id: 3,
     name: '医疗专区',
     path: '/estate/medical',
     routeName: 'medicalTreatment',
     icon: IconMedicine,
   },
-  {
-    id: 3,
-    name: '工业专区',
-    path: '/estate/industrial-zone',
-    routeName: 'industrialZone',
-    icon: IconIndustry,
-  },
 ];
 const handleClick = (tab) => {
+  console.log('tab.index: ', tab);
+  console.log('sections[tab.index].path: ', sections[tab.index].path);
   router.push(sections[tab.index].path);
 };
 </script>

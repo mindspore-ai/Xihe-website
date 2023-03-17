@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { debounce } from 'lodash/function';
 
-import logoImg from '@/assets/imgs/logo.png';
+import logoImg from '@/assets/imgs/logo1.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
@@ -809,6 +809,7 @@ const handleCommand = (command) => {
         // margin-left: 32px;
         border-bottom: none;
         padding: 0 16px;
+        color: #000000;
         &:first-child {
           padding-left: 0px;
         }
@@ -851,6 +852,7 @@ const handleCommand = (command) => {
           font-size: 18px;
           padding: 0 16px;
           border: none;
+          color: #000000 !important;
         }
 
         .el-icon {

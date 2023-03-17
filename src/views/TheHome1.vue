@@ -1,16 +1,9 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import models1 from '@/assets/imgs/home1/models1.png';
-import models2 from '@/assets/imgs/home1/models2.png';
-import models3 from '@/assets/imgs/home1/models3.png';
-import models4 from '@/assets/imgs/home1/models4.png';
-import modelzoo1 from '@/assets/imgs/home1/modelzoo1.jpg';
-import modelzoo2 from '@/assets/imgs/home1/modelzoo2.jpg';
-import modelzoo3 from '@/assets/imgs/home1/modelzoo3.jpg';
-import modelzoo_pangu from '@/assets/imgs/home1/modelzoo_pangu.jpg';
-// import modelzoo_bg from '@/assets/imgs/home/modelzoo-bg.png';
 import project from '@/assets/imgs/home1/project.png';
 import project1 from '@/assets/imgs/home1/project1.png';
 import project2 from '@/assets/imgs/home1/project2.png';
@@ -18,22 +11,6 @@ import project3 from '@/assets/imgs/home1/project3.png';
 import project4 from '@/assets/imgs/home1/project4.png';
 import project5 from '@/assets/imgs/home1/project5.png';
 import project6 from '@/assets/imgs/home1/project6.png';
-import card1 from '@/assets/imgs/home1/more/more_card1.png';
-import card2 from '@/assets/imgs/home1/more/more_card2.png';
-import card3 from '@/assets/imgs/home1/more/more_card3.png';
-import competition1 from '@/assets/imgs/home1/more/competition1.png';
-import competition2 from '@/assets/imgs/home1/more/competition2.png';
-import competition3 from '@/assets/imgs/home1/more/competition3.png';
-import activity1 from '@/assets/imgs/home1/more/activity1.png';
-import activity2 from '@/assets/imgs/home1/more/activity2.png';
-import activity3 from '@/assets/imgs/home1/more/activity3.png';
-import industy1 from '@/assets/imgs/home1/industy/industy1.png';
-import industy2 from '@/assets/imgs/home1/industy/industy2.png';
-import industy3 from '@/assets/imgs/home1/industy/industy3.png';
-import industy4 from '@/assets/imgs/home1/industy/industy4.png';
-import open1 from '@/assets/imgs/home1/open/open1.png';
-import open2 from '@/assets/imgs/home1/open/open2.png';
-import open3 from '@/assets/imgs/home1/open/open3.png';
 
 import IconUser from '~icons/app/user';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -46,7 +23,10 @@ import { Pagination, Autoplay, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { ref, onMounted } from 'vue';
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 AOS.init();
 
@@ -56,10 +36,10 @@ function renderBullet(index, className) {
   let text = '';
   switch (index) {
     case 0:
-      text = '昇思大模型平台';
+      text = t('home.BANNER_BUTTON_1');
       break;
     case 1:
-      text = 'AI挑战赛';
+      text = t('home.BANNER_BUTTON_2');
       break;
   }
   return '<span class="' + className + '">' + text + '</span>';
@@ -67,229 +47,6 @@ function renderBullet(index, className) {
 
 const screenWidth = useWindowResize();
 
-const i18n = {
-  project: {
-    title: 'AI实验室',
-    introduce:
-      '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，感受用户的创新创意实践',
-    item: [
-      { name: '多类别图像分类', type: 'CV' },
-      { name: '图像识别', type: 'CV', img: project1 },
-      { name: '风格迁移', type: 'CV' },
-      { name: '文本分类', type: 'CV' },
-      { name: '序列标注', type: 'NLP' },
-      { name: '文本翻译', type: 'NLP' },
-    ],
-  },
-  modelzoo: {
-    title: '大模型体验',
-    introduce:
-      '覆盖NLP和CV等场景。面向语言理解、语言生成，具有超强语言理解能力以及对话生成；可实现跨模态检索、图文生成、图片文档的信息提取等应用；可实现对遥感数据的目标检测等。',
-    quickStartLabel: '立即体验',
-    ex: [
-      {
-        modelzoo: '紫东.太初',
-        introduce: '全球首个三模态千亿参数大模型',
-        img: modelzoo1,
-        // href: `https://${DOMAIN}/modelzoo/taichu`,
-      },
-      {
-        modelzoo: '悟空画画',
-        introduce: '业界首个基于扩散模型的中文文生图大模型',
-        img: modelzoo2,
-      },
-      {
-        modelzoo: '武大.Luojia',
-        introduce: '全球首个遥感专用框架及最大遥感样本库',
-        img: modelzoo3,
-        // href: `https://${DOMAIN}/modelzoo/luojia`,
-      },
-      // {
-      //   modelzoo: 'CodeGeeX',
-      //   introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
-      // },
-      {
-        modelzoo: '鹏程.盘古',
-        introduce: '业界首个千亿级参数中文自然语言处理大模型',
-        img: modelzoo_pangu,
-        // href: `https://${DOMAIN}/modelzoo/pangu`,
-      },
-    ],
-  },
-  model: {
-    title: '模型库',
-    introduce:
-      '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，同时平台提供GITLAB一站式代码托管，支持文件批量上传，支持LFS大文件管理',
-    more: '探索更多模型',
-    ex: [
-      {
-        models: '图像分类',
-        img: models1,
-        name: 'VGG16｜ResNet-101｜InceptionV4 …',
-        type: 'CV',
-        herf: 'https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10',
-      },
-      {
-        models: '目标检测',
-        img: models2,
-        name: 'YOLOv5｜SSD ｜MobileNet …',
-        type: 'CV',
-        herf: 'https://xihe.mindspore.cn/models/MindSpore/yolov5shape640',
-      },
-      {
-        models: '自然语言处理',
-        img: models3,
-        name: 'BERT｜GRU｜Transformer …',
-        type: 'NLP',
-        herf: 'https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128',
-      },
-      {
-        models: '推荐',
-        img: models4,
-        name: 'DeepFM｜Wide&Deep｜NCF …',
-        type: 'Recommendation',
-        herf: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
-      },
-    ],
-  },
-  gallery: {
-    title: '精选画廊',
-    introduce:
-      '进入精选画廊体验中文文图生成模型-悟空画画模型进行创作；您就可以通过文字生成多样风格的图片，带你寻找生活中的灵感。',
-    quickStartLabel: '开始画画',
-  },
-  more: {
-    title: '开启昇思之旅',
-    introduce: '从入门到高阶，从理论到实践，助力开发者快',
-    tabs: [
-      {
-        tab: '课程',
-        img: open1,
-        card: [
-          {
-            name: '大模型课程',
-            intro:
-              '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型，…',
-            img: card1,
-            tag: '免费',
-            detail: '了解详情',
-          },
-          {
-            name: '视觉课程',
-            intro:
-              '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思…',
-            img: card2,
-            tag: '免费',
-            detail: '了解详情',
-          },
-          {
-            name: '昇思入门课',
-            intro:
-              '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
-            img: card3,
-            tag: '免费',
-            detail: '了解详情',
-          },
-        ],
-      },
-      {
-        tab: '比赛',
-        img: open2,
-        card: [
-          {
-            name: '',
-            intro:
-              '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，…',
-            img: competition1,
-            tag: '',
-            detail: '了解详情',
-          },
-          {
-            name: '',
-            intro:
-              '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
-            img: competition2,
-            tag: '',
-            detail: '了解详情',
-          },
-          {
-            name: '',
-            intro:
-              '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
-            img: competition3,
-            tag: '',
-            detail: '了解详情',
-          },
-        ],
-      },
-      {
-        tab: '活动',
-        img: open3,
-        card: [
-          {
-            name: '',
-            intro:
-              'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极…',
-            img: activity1,
-            tag: '',
-            detail: '了解详情',
-          },
-          {
-            name: '',
-            intro:
-              '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
-            img: activity2,
-            tag: '',
-            detail: '了解详情',
-          },
-          {
-            name: '',
-            intro:
-              '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
-            img: activity3,
-            tag: '',
-            detail: '了解详情',
-          },
-        ],
-      },
-    ],
-  },
-  industry: {
-    title: '产业',
-    introduce:
-      '涵盖了多领域落地的相关应用；包括对相关应用的问题定位、方案设计、数据处理、模型训练部署及思路的优化；提供了全流程零门槛入门的指导',
-    item: [
-      {
-        name: '电力',
-        intro:
-          '通过训练电力数据构集构建AI模型，实现对电力数据的预测，可以预测电力波动，辅助企业能源管理、能源调度等',
-        img: industy2,
-        status: '',
-      },
-      {
-        name: '工业',
-        intro:
-          '通过训练物体检测构建AI模型，实现对工业物体的智能识别，广泛应用于工业检测、智能制造等',
-        img: industy1,
-        status: '敬请期待',
-      },
-      {
-        name: '医疗',
-        intro:
-          '通过对医疗数据的探索构建AI模型，实现对医疗大数据的分析，广泛应用于临床决策、医学研究等',
-        img: industy3,
-        status: '敬请期待',
-      },
-      {
-        name: '金融',
-        intro:
-          '通过训练股票数据构建AI模型，广泛应用于股票、证券等公司，可以帮助企业合理降低成本、提高利润',
-        img: industy4,
-        status: '敬请期待',
-      },
-    ],
-  },
-};
 let slideW = 300;
 let radius = (slideW * 0.5) / Math.sin(Math.PI / 20);
 function progress(swiper) {
@@ -348,13 +105,11 @@ onMounted(() => {
         <swiper-slide> </swiper-slide>
       </swiper>
     </div>
+
     <div class="home-project">
       <div class="project-wrapper">
-        <p class="title">{{ i18n.project.title }}</p>
-        <p class="introduce">{{ i18n.project.introduce }}</p>
-        <div class="center-img">
-          <img :src="project" alt="" />
-        </div>
+        <p class="title">{{ t('home.AI_LAB.TITLE') }}</p>
+        <p class="introduce">{{ t('home.AI_LAB.INTRODUCE') }}</p>
         <div class="top-img">
           <div
             class="project-card"
@@ -366,7 +121,7 @@ onMounted(() => {
               <img :src="project1" alt="" />
             </div>
             <div class="card-right">
-              <p>多类别图像分类</p>
+              <p>{{ t('home.AI_LAB.CARDS[0].NAME') }}</p>
               <span>CV</span>
               <div>
                 <span class="frame"></span>
@@ -386,7 +141,7 @@ onMounted(() => {
               <img :src="project2" alt="" />
             </div>
             <div class="card-right">
-              <p>图像识别</p>
+              <p>{{ t('home.AI_LAB.CARDS[1].NAME') }}</p>
               <span>CV</span>
               <div>
                 <span class="frame"></span>
@@ -408,7 +163,7 @@ onMounted(() => {
               <img :src="project3" alt="" />
             </div>
             <div class="card-right">
-              <p>风格迁移</p>
+              <p>{{ t('home.AI_LAB.CARDS[2].NAME') }}</p>
               <span>CV</span>
               <div>
                 <span class="frame"></span>
@@ -428,7 +183,7 @@ onMounted(() => {
               <img :src="project4" alt="" />
             </div>
             <div class="card-right">
-              <p>文本分类</p>
+              <p>{{ t('home.AI_LAB.CARDS[3].NAME') }}</p>
               <span>NLP</span>
               <div>
                 <span class="frame"></span>
@@ -450,7 +205,7 @@ onMounted(() => {
               <img :src="project5" alt="" />
             </div>
             <div class="card-right">
-              <p>序列标注</p>
+              <p>{{ t('home.AI_LAB.CARDS[4].NAME') }}</p>
               <span>NLP</span>
               <div>
                 <span class="frame"></span>
@@ -470,7 +225,7 @@ onMounted(() => {
               <img :src="project6" alt="" />
             </div>
             <div class="card-right">
-              <p>文本翻译</p>
+              <p>{{ t('home.AI_LAB.CARDS[5].NAME') }}</p>
               <span>NLP</span>
               <div>
                 <span class="frame"></span>
@@ -481,15 +236,18 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        <div class="center-img">
+          <img :src="project" alt="" />
+        </div>
       </div>
     </div>
     <div class="home-modelzoo">
       <div class="modelzoo-wrapper">
-        <p class="title">{{ i18n.modelzoo.title }}</p>
-        <p class="introduce">{{ i18n.modelzoo.introduce }}</p>
+        <p class="title">{{ t('home.MODELZOO.TITLE') }}</p>
+        <p class="introduce">{{ t('home.MODELZOO.INTRODUCE') }}</p>
         <div class="modelzoo-contant">
           <div
-            v-for="(item, index) in i18n.modelzoo.ex"
+            v-for="(item, index) in 4"
             :key="item"
             class="item"
             data-aos="slide-up"
@@ -498,30 +256,40 @@ onMounted(() => {
             "
             data-aos-offset="200"
           >
-            <img :src="item.img" alt="" />
+            <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
             <div class="modelzoo-name">
-              {{ item.modelzoo }}
+              {{ t(`home.MODELZOO.CARDS[${index}].MODELZOO_NAME`) }}
             </div>
-            <div class="modelzoo-introduce">{{ item.introduce }}</div>
+            <div class="modelzoo-introduce">
+              {{ t(`home.MODELZOO.CARDS[${index}].MODELZOO_DESC`) }}
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="home-model">
-      <p class="title">{{ i18n.model.title }}</p>
-      <p class="introduce">{{ i18n.model.introduce }}</p>
+      <p class="title">
+        {{ t(`home.MODEL.TITLE`) }}
+      </p>
+      <p class="introduce">{{ t(`home.MODEL.INTRODUCE`) }}</p>
       <div class="model-contant">
-        <div v-for="item in i18n.model.ex" :key="item" class="item">
-          <img :src="item.img" alt="" />
-          <div class="models-type">{{ item.models }}</div>
-          <div class="models-name">{{ item.name }}</div>
-          <div class="models-tag">{{ item.type }}</div>
+        <div v-for="(item, index) in 4" :key="item" class="item">
+          <img :src="t(`home.MODEL.CARDS[${index}].IMAGE`)" alt="" />
+          <div class="models-type">
+            {{ t(`home.MODEL.CARDS[${index}].MODEL_NAME`) }}
+          </div>
+          <div class="models-name">
+            {{ t(`home.MODEL.CARDS[${index}].CATAGORIES`) }}
+          </div>
+          <div class="models-tag">
+            {{ t(`home.MODEL.CARDS[${index}].TYPE`) }}
+          </div>
         </div>
       </div>
     </div>
     <div ref="swiperGally" class="gallery">
-      <p class="title">{{ i18n.gallery.title }}</p>
-      <p class="introduce introduce1">{{ i18n.gallery.introduce }}</p>
+      <p class="title">{{ t(`home.GALLARY.TITLE`) }}</p>
+      <p class="introduce introduce1">{{ t(`home.GALLARY.INTRODUCE`) }}</p>
       <swiper
         watch-slides-progress
         slides-per-view="auto"
@@ -545,47 +313,74 @@ onMounted(() => {
         </swiper-slide>
       </swiper>
       <OButton animation type="primary" class="gallery-entry">
-        {{ i18n.gallery.quickStartLabel }}
+        {{ t(`home.GALLARY.GALLARY_BUTTON`) }}
         <template #suffix>
           <OIcon><IconArrowRight /></OIcon>
         </template>
       </OButton>
-      <p class="title title1">{{ i18n.more.title }}</p>
-      <p class="introduce introduce2">{{ i18n.more.introduce }}</p>
+      <p class="title title1">{{ t(`home.SHENGSI_JOURNEY.TITLE`) }}</p>
+      <p class="introduce introduce2">
+        {{ t(`home.SHENGSI_JOURNEY.INTRODUCE`) }}
+      </p>
     </div>
+
     <div class="more">
       <el-tabs class="more-tabs">
-        <el-tab-pane v-for="item in i18n.more.tabs" :key="item">
+        <el-tab-pane v-for="(item, index) in 3" :key="item">
           <template #label>
             <span class="tabs-title">
-              <img :src="item.img" alt="" />
-              <span class="tab">{{ item.tab }}</span>
+              <img
+                :src="t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].IMAGE`)"
+                alt=""
+              />
+              <span class="tab">{{
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].TAB_TITLE`)
+              }}</span>
             </span>
           </template>
-          <div v-for="card in item.card" :key="card" class="tabs-card">
-            <img :src="card.img" alt="" />
+          <!-- t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS`) -->
+          <div v-for="(card, i) in 3" :key="card" class="tabs-card">
+            <img
+              :src="
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].IMAGE`)
+              "
+              alt=""
+            />
             <div class="card-name">
-              {{ card.name }} <span class="tag">{{ card.tag }}</span>
+              {{
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].NAME`)
+              }}
+              <span class="tag">{{
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].TYPE`)
+              }}</span>
             </div>
-            <div class="card-introduce">{{ card.intro }}</div>
+            <div class="card-introduce">
+              {{
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DESC`)
+              }}
+            </div>
             <div class="detail">
               <o-icon><icon-user></icon-user></o-icon>
-              <span class="details">{{ card.detail }}</span>
+              <span class="details">{{
+                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DETAIL`)
+              }}</span>
             </div>
           </div>
         </el-tab-pane>
       </el-tabs>
     </div>
     <div class="industy">
-      <p class="title">{{ i18n.industry.title }}</p>
-      <p class="introduce introduce1">{{ i18n.industry.introduce }}</p>
+      <p class="title">{{ t(`home.INDUSTRY.TITLE`) }}</p>
+      <p class="introduce introduce1">{{ t(`home.INDUSTRY.INTRODUCE`) }}</p>
       <div class="item-box">
-        <div v-for="item in i18n.industry.item" :key="item" class="item">
+        <div v-for="(item, index) in 4" :key="item" class="item">
           <div class="name">
-            <img :src="item.img" alt="" />{{ item.name }}
+            <img :src="t(`home.INDUSTRY.CARDS[${index}].IMAGE`)" alt="" />{{
+              t(`home.INDUSTRY.CARDS[${index}].NAME`)
+            }}
             <span>{{ item.status }}</span>
           </div>
-          <div class="intro">{{ item.intro }}</div>
+          <div class="intro">{{ t(`home.INDUSTRY.CARDS[${index}].DESC`) }}</div>
         </div>
       </div>
     </div>

@@ -14,13 +14,22 @@ import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
 // import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
+import IconDown from '~icons/app/down.svg';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore, useLangStore } from '@/stores';
 import IconSearch from '~icons/app/search';
 import IconUser from '~icons/app/user.svg';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { Close } from '@element-plus/icons-vue';
 import { getSearchData } from '@/api/api-search';
+
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
+
+const lang = computed(() => {
+  return useLangStore().lang;
+});
 
 const router = useRouter();
 const route = useRoute();
@@ -467,6 +476,27 @@ function handleBlur() {
     emptyValue();
   }
 }
+
+// 选择语言;
+const options = ref([
+  { value: 'zh', label: '中文' },
+  { value: 'en', label: 'English' },
+]);
+// 选择语言
+const handleCommand = (command) => {
+  locale.value = command.value;
+
+  const { pathname } = window.location;
+
+  console.log(pathname);
+  console.log(command.value);
+
+  if (command.value === 'zh') {
+    window.location.href = pathname.replace('en', '');
+  } else {
+    window.location.href = '/en';
+  }
+};
 </script>
 
 <template>
@@ -669,6 +699,29 @@ function handleBlur() {
             @click="showInput"
           />
         </div>
+
+        <!-- language -->
+        <div class="language">
+          <el-dropdown popper-class="language-change" @command="handleCommand">
+            <span class="el-dropdown-link">
+              {{ t('home.LANG') }}
+              <OIcon><IconDown></IconDown></OIcon>
+            </span>
+
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                  v-for="(item, key) in options"
+                  :key="key"
+                  :class="{ active: lang === item.value }"
+                  :command="item"
+                  >{{ item.label }}</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+
         <div class="header-tool">
           <loading-arc
             v-if="loginStore.isLoggingIn"
@@ -954,7 +1007,7 @@ function handleBlur() {
 
       .header-search {
         position: relative;
-        margin-right: 30px;
+        margin-right: 16px;
         .search-icon {
           width: 24px;
           height: 24px;
@@ -978,6 +1031,29 @@ function handleBlur() {
         line-height: 24px;
         color: #ffffff;
       }
+
+      .language {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 16px;
+        width: 72px;
+        text-align: right;
+        .el-dropdown {
+          color: #fff;
+          cursor: pointer;
+          &-link {
+            display: flex;
+            line-height: 24px;
+            font-size: 12px;
+          }
+
+          .o-icon {
+            margin-left: 5px;
+            font-size: 24px;
+          }
+        }
+      }
+
       .header-tool {
         height: 100%;
         display: flex;

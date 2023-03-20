@@ -393,19 +393,30 @@ const galleryPic = [
       </div>
     </div> -->
     <!-- 轮播图 -->
-    <!-- <swiper
+    <swiper
       :modules="modules"
       :pagination="{ clickable: true }"
       :autoplay="{ disableOnInteraction: false, autoplay: true }"
       loop
-    > -->
-    <div class="my-swiper">
+      class="my-swiper"
+    >
+      <!-- <div class="my-swiper">
       <div class="photo8 cursor" @click="router.push('/modelzoo/wukong')"></div>
-    </div>
-    <!-- <swiper-slide>
-        <div class="photo6 cursor" @click="goCode()"></div>
-      </swiper-slide> -->
-    <!-- </swiper> -->
+    </div> -->
+      <swiper-slide>
+        <div
+          class="photo9 cursor"
+          @click="router.push('/competition/ai_painter/0/introduction')"
+        ></div>
+      </swiper-slide>
+      <swiper-slide>
+        <!-- <div class="photo6 cursor" @click="goCode()"></div> -->
+        <div
+          class="photo8 cursor"
+          @click="router.push('/modelzoo/wukong')"
+        ></div>
+      </swiper-slide>
+    </swiper>
 
     <div class="home-content">
       <div class="wrapper">
@@ -861,7 +872,17 @@ const galleryPic = [
     .photo8 {
       background: url(@/assets/imgs/home/home-banner_wukong.jpg);
       width: 100%;
-      height: 480px;
+      height: 400px;
+      background-size: cover;
+      background-position: 50%;
+      @media screen and (max-width: 1440px) {
+        height: 400px;
+      }
+    }
+    .photo9 {
+      background: url(@/assets/imgs/home/home-banner9.jpg);
+      width: 100%;
+      height: 400px;
       background-size: cover;
       background-position: 50%;
       @media screen and (max-width: 1440px) {

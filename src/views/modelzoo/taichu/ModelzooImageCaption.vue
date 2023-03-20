@@ -68,7 +68,7 @@ function submitUpload() {
       analysis.value = '';
       loading.value = true;
 
-      formData.delete('file');
+      formData.delete('picture');
       formData = new FormData();
 
       formData.append('picture', fileList.value[fileList.value.length - 1].raw);
@@ -90,17 +90,20 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  if (val.size > 204800) {
+  if (val.size > 2097152) {
     fileList.value.pop();
     return ElMessage({
       type: 'warning',
-      message: '图片大小不应超过200K',
+      message: '图片大小不应超过2M',
     });
   } else {
     analysis.value = '';
-    formData.delete('file');
+    formData.delete('picture');
     formData = new FormData();
-    fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+    // fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+    fileList.value = [];
+    fileList.value[0] = { raw: val.raw };
+
     activeIndex.value = -1;
     imageUrl.value = URL.createObjectURL(val.raw);
   }
@@ -171,11 +174,7 @@ function customUpload() {
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <div v-else class="empty-status">
                   <o-icon><icon-upload></icon-upload></o-icon>
-                  <p class="upload-tip">
-                    拖拽图片(jpg/jepg/png)到此处上传,且<span
-                      >大小不超过200KB</span
-                    >
-                  </p>
+                  <p class="upload-tip">拖拽图片(jpg/jepg/png)到此处上传</p>
                 </div>
               </el-upload>
             </div>
@@ -230,11 +229,9 @@ function customUpload() {
             <div v-else class="empty-status">
               <o-icon><icon-upload></icon-upload></o-icon>
               <p v-if="screenWidth > 820" class="upload-tip">
-                拖拽图片(jpg/jepg/png)到此处上传,且<span>大小不超过200KB</span>
+                拖拽图片(jpg/jepg/png)到此处上传
               </p>
-              <p v-else class="upload-tip">
-                选择图片(jpg/jepg/png)到此处上传,且<span>大小不超过200KB</span>
-              </p>
+              <p v-else class="upload-tip">选择图片(jpg/jepg/png)到此处上传</p>
             </div>
           </el-upload>
         </div>
@@ -297,9 +294,6 @@ function customUpload() {
     color: #ccc;
     line-height: 22px;
     margin-top: 8px;
-    span {
-      color: #0d8dff;
-    }
   }
 }
 :deep(.el-upload) {

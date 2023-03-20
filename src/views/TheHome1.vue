@@ -1,8 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+
+// import mobile from '@/assets/imgs/home1/mobile-banner1.png';
 
 import project from '@/assets/imgs/home1/project.png';
 import project1 from '@/assets/imgs/home1/project1.png';
@@ -23,6 +25,7 @@ import { Pagination, Autoplay, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { useRoute, useRouter } from 'vue-router';
 
 import { useI18n } from 'vue-i18n';
 
@@ -132,6 +135,16 @@ onMounted(() => {
   swiperGally.value.children[2].style.zoom = a;
   // }
 });
+watch(
+  () => screenWidth.value,
+  () => {
+    let a = (screenWidth.value - 32) / 1440;
+    swiperGally.value.children[2].style.zoom = a;
+  }
+);
+
+const route = useRoute();
+const router = useRouter();
 </script>
 <template>
   <div class="wrapper">
@@ -143,8 +156,11 @@ onMounted(() => {
         loop
         class="swiper-portal"
       >
-        <swiper-slide> </swiper-slide>
-        <swiper-slide> </swiper-slide>
+        <swiper-slide class="slide1">
+          <P class="title">{{ t('home.SWIPER[0].TITLE') }}</P>
+          <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
+        </swiper-slide>
+        <swiper-slide class="slide2"> </swiper-slide>
       </swiper>
     </div>
 
@@ -153,7 +169,19 @@ onMounted(() => {
         <p class="title">{{ t('home.AI_LAB.TITLE') }}</p>
         <p class="introduce">{{ t('home.AI_LAB.INTRODUCE') }}</p>
         <div class="center-img">
-          <img :src="project" alt="" />
+          <!-- <img :src="project" alt="" /> -->
+          <div class="video">
+            <video
+              src="@/assets/videos/project.mp4"
+              autoplay
+              loop
+              muted
+              controlslist="nodownload nofullscreen"
+              x5-playsinline="true"
+              playsinline="true"
+              webkit-playsinline="true"
+            ></video>
+          </div>
         </div>
         <div class="top-img">
           <div
@@ -161,6 +189,7 @@ onMounted(() => {
             data-aos="slide-right"
             :data-aos-duration="500"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[0].PATH'))"
           >
             <div class="img-box">
               <img :src="project1" alt="" />
@@ -181,6 +210,7 @@ onMounted(() => {
             data-aos="slide-left"
             :data-aos-duration="500"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[1].PATH'))"
           >
             <div class="img-box">
               <img :src="project2" alt="" />
@@ -203,6 +233,7 @@ onMounted(() => {
             data-aos="slide-right"
             :data-aos-duration="550"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[2].PATH'))"
           >
             <div class="img-box">
               <img :src="project3" alt="" />
@@ -223,6 +254,7 @@ onMounted(() => {
             data-aos="slide-left"
             :data-aos-duration="550"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[3].PATH'))"
           >
             <div class="img-box">
               <img :src="project4" alt="" />
@@ -245,6 +277,7 @@ onMounted(() => {
             data-aos="slide-right"
             :data-aos-duration="600"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[4].PATH'))"
           >
             <div class="img-box">
               <img :src="project5" alt="" />
@@ -265,6 +298,7 @@ onMounted(() => {
             data-aos="slide-left"
             :data-aos-duration="600"
             data-aos-offset="200"
+            @click="router.push(t('home.AI_LAB.CARDS[5].PATH'))"
           >
             <div class="img-box">
               <img :src="project6" alt="" />
@@ -297,6 +331,7 @@ onMounted(() => {
               200 + (index === 1 || index === 2 ? 0 : 2) * 100
             "
             data-aos-offset="200"
+            @click="router.push(t(`home.MODELZOO.CARDS[${index}].PATH`))"
           >
             <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
             <div class="modelzoo-name">
@@ -315,7 +350,12 @@ onMounted(() => {
       </p>
       <p class="introduce">{{ t(`home.MODEL.INTRODUCE`) }}</p>
       <div class="model-contant">
-        <div v-for="(item, index) in 4" :key="item" class="item">
+        <div
+          v-for="(item, index) in 4"
+          :key="item"
+          class="item"
+          @click="router.push(t(`home.MODEL.CARDS[${index}].PATH`))"
+        >
           <img :src="t(`home.MODEL.CARDS[${index}].IMAGE`)" alt="" />
           <div class="models-type">
             {{ t(`home.MODEL.CARDS[${index}].MODEL_NAME`) }}
@@ -352,7 +392,12 @@ onMounted(() => {
           <img :src="item.img" />
         </swiper-slide>
       </swiper>
-      <OButton animation type="primary" class="gallery-entry">
+      <OButton
+        animation
+        type="primary"
+        class="gallery-entry"
+        @click="router.push(t(`home.GALLARY.PATH`))"
+      >
         {{ t(`home.GALLARY.GALLARY_BUTTON`) }}
         <template #suffix>
           <OIcon><IconArrowRight /></OIcon>
@@ -401,9 +446,21 @@ onMounted(() => {
             </div>
             <div class="detail">
               <o-icon><icon-user></icon-user></o-icon>
-              <span class="details">{{
-                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DETAIL`)
-              }}</span>
+              <span
+                class="details"
+                @click="
+                  router.push(
+                    t(
+                      `home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].PATH`
+                    )
+                  )
+                "
+                >{{
+                  t(
+                    `home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DETAIL`
+                  )
+                }}</span
+              >
             </div>
           </div>
         </el-tab-pane>
@@ -418,30 +475,73 @@ onMounted(() => {
             <img :src="t(`home.INDUSTRY.CARDS[${index}].IMAGE`)" alt="" />{{
               t(`home.INDUSTRY.CARDS[${index}].NAME`)
             }}
-            <span>{{ item.status }}</span>
+            <span v-if="index > 0">{{
+              t(`home.INDUSTRY.CARDS[${index}].STATUS`)
+            }}</span>
           </div>
           <div class="intro">{{ t(`home.INDUSTRY.CARDS[${index}].DESC`) }}</div>
         </div>
       </div>
     </div>
   </div>
-  <footer class="app-footer">
+  <footer v-if="route.path === '/'" class="app-footer">
     <app-footer></app-footer>
   </footer>
 </template>
 <style lang="scss" scoped>
 .wrapper {
-  background-color: #f5f7fc;
+  background-color: #f5f7fb;
 }
 .home-portal {
   :deep(.swiper-portal) {
     .swiper-slide {
       height: 100vh;
+      .title {
+        margin-top: 250px;
+        font-size: 74px;
+        line-height: 76px;
+        text-align: left;
+        margin-left: 150px;
+        @media screen and (max-width: 820px) {
+          margin-top: 72px;
+          font-size: 20px;
+          line-height: 28px;
+          margin-left: 0;
+          text-align: center;
+        }
+      }
+      .introduce {
+        margin-top: 40px;
+        text-align: left;
+        margin-left: 150px;
+        width: 720px;
+        color: #001848;
+        @media screen and (max-width: 820px) {
+          margin: 6px 24px;
+          text-align: center;
+        }
+      }
+      @media screen and (max-width: 820px) {
+        height: 300px;
+        margin-top: 48px;
+      }
       background: url(@/assets/imgs/home1/home-banner1.jpg);
       background-size: cover;
       background-position: 50%;
       @media screen and (max-width: 820px) {
-        height: 300px;
+        background: url(@/assets/imgs/home1/mobile-banner1.png);
+        background-size: cover;
+        background-position: 50%;
+      }
+    }
+    .slide2 {
+      background: url(@/assets/imgs/home1/home-banner2.jpg);
+      background-size: cover;
+      background-position: 50%;
+      @media screen and (max-width: 820px) {
+        background: url(@/assets/imgs/home1/mobile-banner2.jpg);
+        background-size: cover;
+        background-position: 50%;
       }
     }
     .swiper-pagination {
@@ -460,6 +560,8 @@ onMounted(() => {
       margin: 0 8px;
       font-size: 18px;
       opacity: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
       @media screen and (max-width: 820px) {
         width: 24px;
         height: 2px;
@@ -479,6 +581,8 @@ p {
 .title {
   font-size: 54px;
   line-height: 76px;
+  position: relative;
+  z-index: 200;
   @media screen and (max-width: 820px) {
     font-size: 14px;
     line-height: 22px;
@@ -489,6 +593,8 @@ p {
   line-height: 24px;
   color: #555555;
   margin: 24px auto 40px;
+  position: relative;
+  z-index: 200;
   @media screen and (max-width: 820px) {
     width: auto !important;
     font-size: 12px;
@@ -500,6 +606,7 @@ p {
 .home-project {
   background-color: #f8f9fd;
   overflow: hidden;
+  opacity: 1;
 }
 .project-wrapper {
   max-width: 1472px;
@@ -559,6 +666,10 @@ p {
       color: #0d8dff;
       background-color: #e5f3ff;
       border-radius: 10px;
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+        line-height: 14px;
+      }
     }
     .frame {
       background-color: #e9edfb;
@@ -591,6 +702,54 @@ p {
       width: auto;
     }
   }
+  .top-img {
+    .project-card:first-child {
+      .frame:first-child {
+        width: 68px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 48px;
+      }
+    }
+    .project-card:last-child {
+      .frame:first-child {
+        width: 68px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 86px;
+      }
+    }
+  }
+  .bottom-img {
+    .project-card:first-child {
+      .frame:first-child {
+        width: 43px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 48px;
+      }
+    }
+    .project-card:last-child {
+      .frame:first-child {
+        width: 68px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 46px;
+      }
+    }
+  }
   .middle-img {
     width: 1255px;
     padding: 40px 0;
@@ -604,6 +763,31 @@ p {
         background-color: #edefff;
       }
     }
+    .project-card:first-child {
+      .frame:first-child {
+        width: 114px;
+      }
+      .frame:nth-child(2) {
+        width: 49px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 48px;
+      }
+    }
+    .project-card:last-child {
+      .frame:first-child {
+        width: 96px;
+      }
+      .frame:nth-child(3) {
+        width: 96px;
+      }
+      .frame:last-child {
+        width: 46px;
+      }
+    }
   }
   .bottom-img {
     span {
@@ -614,16 +798,28 @@ p {
   .center-img {
     text-align: center;
     position: absolute;
-    transform: translate(-50%, -10%);
-    left: 50%;
-    top: 50%;
+    // transform: translate(-50%, -10%);
+    // left: 50%;
+    // top: 50%;
+    top: 0;
+    // right: 0;
+    // left: 0;
+    .video {
+      width: 100%;
+      padding-bottom: 30%;
+      margin-top: 80px;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+    }
     img {
       width: 332px;
     }
-    @media screen and (max-width: 820px) {
-      position: unset;
-      transform: none;
-    }
+    // @media screen and (max-width: 820px) {
+    //   position: unset;
+    //   transform: none;
+    // }
   }
 }
 .home-modelzoo {
@@ -760,6 +956,12 @@ p {
       cursor: pointer;
       &:hover {
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+      }
+      &:nth-child(3) {
+        .models-tag {
+          color: #8071de;
+          background-color: #edefff;
+        }
       }
       &:last-child {
         transform: none;

@@ -29,6 +29,21 @@ import activity1 from '@/assets/imgs/home1/more/activity1.png';
 import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
 export default {
+  APP_HEADER: {
+    PROJECT: 'AI实验室',
+    MODEL: '模型库',
+    MODELZOO: '大模型',
+    DATASET: '数据集',
+    COURSE: '课程',
+    COMPETITION: '比赛',
+    ACTIVITY: '活动',
+    DOCUMENT: '文档',
+    INDUSTRY: '产业',
+  },
+  PRIVACY_POLICY: '隐私政策',
+  LEGAL_NOTICE: '法律声明',
+  COPYRIGHT: '版权所有',
+  OWNERSHIP: '保留一切权力',
   LANG: '中文',
   BANNER_BUTTON_1: '昇思大模型平台',
   BANNER_BUTTON_2: 'AI挑战赛',

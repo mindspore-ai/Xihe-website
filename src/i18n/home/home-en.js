@@ -29,6 +29,22 @@ import activity1 from '@/assets/imgs/home1/more/activity1.png';
 import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
 export default {
+  APP_HEADER: {
+    PROJECT: 'AI Lab',
+    MODEL: 'Model Library',
+    MODELZOO: 'Foundation Models',
+    DATASET: 'Datasets',
+    COURSE: 'Courses',
+    COMPETITION: 'Competitions',
+    ACTIVITY: 'Activities',
+    DOCUMENT: 'Documents',
+    INDUSTRY: 'Industry',
+  },
+  SCANNING_CODE: 'Public Account',
+  PRIVACY_POLICY: 'Privacy Policy',
+  LEGAL_NOTICE: 'Terms of Use',
+  COPYRIGHT: 'Copyright',
+  OWNERSHIP: 'All Rights Reserved',
   LANG: 'English',
   BANNER_BUTTON_1: 'The MindSpore foundation model platform',
   BANNER_BUTTON_2: 'AI Challenges',

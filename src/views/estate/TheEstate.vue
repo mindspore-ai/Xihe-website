@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import estateBanner from '@/assets/imgs/estate/estate-banner.png';
-import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
-import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
+// import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
+// import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
 
 import IconElectricity from '~icons/app/electricity';
 import IconFinance from '~icons/app/finance';
@@ -12,22 +12,39 @@ import IconMedicine from '~icons/app/medicine';
 import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
+const route = useRoute();
+
+const activeName = ref('工业专区');
+watch(
+  () => route.name,
+  (nweVal) => {
+    if (nweVal === 'industry') {
+      activeName.value = '工业专区';
+    } else if (nweVal === 'electricity') {
+      activeName.value = '电力专区';
+    } else if (nweVal === 'finance') {
+      activeName.value = '金融专区';
+    } else if (nweVal === 'medicine') {
+      activeName.value = '医疗专区';
+    }
+  },
+  { immediate: true }
+);
 
 const sections = [
   {
     id: 0,
     name: '工业专区',
-    path: '/estate/industrial-zone',
-    // path: '/estate/electric',
-    routeName: 'industrialZone',
+    path: '/estate/industry',
+    routeName: 'industry',
     icon: IconIndustry,
   },
   {
     id: 1,
     name: '电力专区',
-    path: '/estate/electric',
+    path: '/estate/electricity',
     // path: '/estate/industrial-zone',
-    routeName: 'electricPower',
+    routeName: 'electricity',
     icon: IconElectricity,
   },
   {
@@ -40,8 +57,8 @@ const sections = [
   {
     id: 3,
     name: '医疗专区',
-    path: '/estate/medical',
-    routeName: 'medicalTreatment',
+    path: '/estate/medicine',
+    routeName: 'medicine',
     icon: IconMedicine,
   },
 ];
@@ -56,15 +73,19 @@ const handleClick = (tab) => {
       <div class="estate-banner"></div>
     </div>
     <div class="estate-wrap">
-      <el-tabs class="estate-tabs" @tab-click="handleClick">
-        <el-tab-pane v-for="item in sections" :key="item.id">
+      <el-tabs
+        v-model="activeName"
+        class="estate-tabs"
+        @tab-click="handleClick"
+      >
+        <el-tab-pane v-for="item in sections" :key="item.id" :name="item.name">
           <template #label>
             <span class="estate-tabs-title">
               <o-icon><component :is="item.icon"></component></o-icon>
-              <span class="electricity">{{ item.name }}</span>
+              <span class="region-name">{{ item.name }}</span>
             </span>
           </template>
-          <div class="electricity-wrap">
+          <div class="region-content">
             <router-view></router-view>
           </div>
         </el-tab-pane>
@@ -91,8 +112,7 @@ $theme: #0d8dff;
     margin: 0 auto;
     padding: 0px 16px 0px 16px;
     max-width: 1472px;
-    .electricity-wrap {
-      // margin-top: -25px;
+    .region-content {
       .application-case {
         .case-title {
           height: 48px;
@@ -117,14 +137,14 @@ $theme: #0d8dff;
         }
       }
     }
-    .finance-wrap,
+    /* .finance-wrap,
     .medicine-wrap,
     .industry-wrap {
       text-align: center;
       line-height: 48px;
       font-size: 36px;
       color: #000000;
-    }
+    } */
   }
 }
 :deep(.el-tabs) {
@@ -133,8 +153,6 @@ $theme: #0d8dff;
   top: -64px;
   .el-tabs__header {
     margin: 0px;
-    // position: relative;
-    // top: -64px;
     .el-tabs__nav-wrap {
       border-radius: 16px;
       backdrop-filter: blur(10px);
@@ -162,10 +180,7 @@ $theme: #0d8dff;
             .o-icon {
               font-size: 48px;
             }
-            .electricity,
-            .finance,
-            .medicine,
-            .industry {
+            .region-name {
               margin-left: 24px;
             }
           }

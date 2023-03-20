@@ -1,16 +1,20 @@
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import electricityBanner from '@/assets/imgs/estate/electricity-banner.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import estateData from '../../../../config/estate';
+// console.log('estateData: ', estateData);
+
 const route = useRoute();
 const router = useRouter();
 
 const activeNavItem = ref('');
 
+// TODO:
 const navItems = reactive([
   {
     id: 'projectExplain',
@@ -48,34 +52,47 @@ watch(
 
 // 点击导航
 function handleNavClick(item) {
-  console.log(`/estate/electric/case-1/${item.href}`);
   router.push(`/estate/electric/case-1/${item.href}`);
 }
+
+const estateName = computed(() => {
+  return route.fullPath.split('/')[2];
+});
+const industryData = computed(() => {
+  return estateData.find((item) => {
+    return item.regionId === estateName.value;
+  });
+});
+const industryDetail = computed(() => {
+  return industryData.value.detail.find((val) => {
+    return val.id === route.params.id;
+  });
+});
 </script>
 
 <template>
-  <div class="electricity-detail">
-    <div class="electricity-wrap">
+  <div class="industry-detail">
+    <div class="industry-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/estate' }">
             工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            金属零部件缺陷检测
+            {{ industryDetail.title }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="electricity-content">
-        <div class="electricity-content-banner">
+      <div class="industry-content">
+        <div class="industry-content-banner">
           <div class="banner-left">
             <img draggable="false" :src="electricityBanner" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">金属零部件缺陷检测</div>
+              <div class="banner-title">{{ industryDetail.title }}</div>
               <div class="banner-desc">
-                金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。
+                {{ industryDetail.desc }}
               </div>
             </div>
             <div class="banner-btn">
@@ -88,16 +105,17 @@ function handleNavClick(item) {
             </div>
           </div>
         </div>
-        <div class="electricity-content-desc">
-          <div class="electricity-tab">
+        <div class="industry-content-desc">
+          <!-- TODO: -->
+          <!-- <div class="industry-tab">
             <o-nav
               :nav-items="navItems"
               :active-item="activeNavItem"
               @nav-click="handleNavClick"
             ></o-nav>
-          </div>
-          <div class="electricity-info">
-            <router-view />
+          </div> -->
+          <div class="industry-info">
+            <router-view :industry-detail="industryDetail" />
           </div>
         </div>
       </div>
@@ -106,12 +124,12 @@ function handleNavClick(item) {
 </template>
 
 <style lang="scss" scoped>
-.electricity-detail {
+.industry-detail {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
 
-  .electricity-wrap {
+  .industry-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
@@ -145,8 +163,8 @@ function handleNavClick(item) {
         // }
       }
     }
-    .electricity-content {
-      .electricity-content-banner {
+    .industry-content {
+      .industry-content-banner {
         padding: 40px;
         background-color: #fff;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
@@ -158,6 +176,7 @@ function handleNavClick(item) {
           margin-right: 40px;
           img {
             width: 100%;
+            height: 100%;
           }
         }
         .banner-right {
@@ -185,7 +204,7 @@ function handleNavClick(item) {
           }
         }
       }
-      .electricity-content-desc {
+      .industry-content-desc {
         background: #fff;
         border-radius: 16px;
         box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
@@ -193,11 +212,11 @@ function handleNavClick(item) {
         //   border-radius: 15px;
         // }
       }
-      .electricity-content-desc {
+      .industry-content-desc {
         // .o-nav {
         //   background: #fff;
         // }
-        .electricity-tab {
+        .industry-tab {
           max-width: 1440px;
           margin: 0 auto;
           height: 48px;
@@ -215,9 +234,9 @@ function handleNavClick(item) {
             }
           }
         }
-        .electricity-info {
+        .industry-info {
           // background-color: #f5f6f8;
-          padding: 40px;
+          padding: 40px 80px;
         }
       }
     }

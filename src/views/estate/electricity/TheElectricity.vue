@@ -27,7 +27,8 @@ function goCasePath(link) {
 </script>
 <template>
   <div class="electric">
-    <p class="application-cases">应用案例</p>
+    电力专区
+    <!-- <p class="application-cases">应用案例</p>
 
     <div class="case-cards">
       <div
@@ -43,7 +44,7 @@ function goCasePath(link) {
           <p class="case-name">{{ item.name }}</p>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>

@@ -86,7 +86,7 @@ const navItems = reactive([
   {
     id: 'estate',
     label: '产业',
-    href: '/estate',
+    href: '/estate/industry',
   },
   {
     id: 'competition',
@@ -104,16 +104,6 @@ const navItems = reactive([
     href: '/docs',
     windowOpen: true,
   },
-  /*  {
-    id: 'leaderboards',
-    label: '排行榜',
-    href: '/leaderboard',
-  }, */
-  // {
-  //   id: 'teams',
-  //   label: '团队',
-  //   href: '/teams',
-  // },
 ]);
 const loginedDropdownItems = [
   {
@@ -144,13 +134,6 @@ const loginedDropdownItems = [
       router.push('/new/datasets');
     },
   },
-  // {
-  //   id: 'teams',
-  //   label: '新建团队',
-  //   action: () => {
-  //     router.push('/new/teams');
-  //   },
-  // },
   {
     id: 'settings',
     label: '设置',
@@ -206,7 +189,6 @@ function handleSelect(item) {
   if (item === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else {
-    console.log('{ path: item }: ', { path: item });
     router.push({ path: item });
   }
 }
@@ -477,12 +459,6 @@ function handleBlur() {
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <!-- <o-nav
-        v-if="show"
-        :nav-items="navItems"
-        :active-item="activeNavItem"
-        @nav-click="handleNavClick"
-      ></o-nav> -->
       <el-menu
         v-if="show"
         class="modelzoo-menu"

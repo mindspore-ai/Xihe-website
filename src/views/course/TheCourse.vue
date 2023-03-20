@@ -18,9 +18,9 @@ const activeName = ref('allStatus');
 const allCourse = ref([]); //当前所有课程
 const currentCourse = ref([]); // 当前页显示的课程
 
-let coursePager = reactive({
+const coursePager = reactive({
   page: 1,
-  size: 4,
+  size: 3,
 });
 
 let i18n = {
@@ -78,7 +78,7 @@ function handleClick(query, tab) {
 
 const layout = ref('prev, pager, next');
 // 课程分页器
-function handleDoneCurrentPage(val) {
+function handleCurrentPage(val) {
   coursePager.page = val;
   currentCourse.value = allCourse.value.slice(
     coursePager.page * coursePager.size - coursePager.size,
@@ -247,7 +247,7 @@ function goCourseDetail(id) {
             :page-size="coursePager.size"
             :total="allCourse.length"
             :layout="layout"
-            @current-change="handleDoneCurrentPage"
+            @current-change="handleCurrentPage"
           ></el-pagination>
         </div>
       </div>

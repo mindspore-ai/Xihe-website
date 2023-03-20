@@ -74,8 +74,18 @@ export function applyCourse(id, params) {
  * @returns
  */
 export function getTaskList(id, status) {
-  console.log('id, status: ', id, status);
   const url = `/server/course/${id}/asg${status ? `?status=${status}` : ''}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
+/**
+ * 获取关联项目列表
+ * @returns
+ */
+export function getProjectList(id) {
+  const url = `/server/course/${id}/asg`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

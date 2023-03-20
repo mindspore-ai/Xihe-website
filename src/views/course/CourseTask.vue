@@ -5,15 +5,22 @@ import { ArrowRightBold } from '@element-plus/icons-vue';
 
 import taskcard from '@/views/course/CourseTaskCard.vue';
 import OButton from '@/components/OButton.vue';
+import emptyImg from '@/assets/imgs/model-empty.png';
 
 import { getTaskList } from '@/api/api-course';
 import { useCourseData } from '@/stores';
 
 const taskInput = ref('');
-const activeName = ref('all');
+const activeName = ref('');
+const taskData = ref([]);
+const currentTaskData = ref([]); // 当前页显示的课程
 
 const userCourseData = useCourseData();
-console.log('userCourseData: ', userCourseData.courseData);
+
+const taskPager = reactive({
+  page: 1,
+  size: 1,
+});
 
 const taskList = reactive([
   {
@@ -38,14 +45,33 @@ const taskList = reactive([
   },
 ]);
 
-function getTask() {
-  getTaskList(userCourseData.courseData.id).then((res) => {
-    console.log('res: ', res);
+function getTask(id, status) {
+  getTaskList(id, status).then((res) => {
+    if (res.data) {
+      taskData.value = res.data;
+    } else {
+      taskData.value = [];
+    }
+    currentTaskData.value = res.data.slice(0, taskPager.size);
   });
 }
-getTask();
+getTask(userCourseData.courseData.id, '');
 function handleClick(val) {
-  console.log(val);
+  getTask(userCourseData.courseData.id, val.props.name);
+}
+
+const layout = ref('prev, pager, next');
+// 课程分页器
+function handleCurrentPage(val) {
+  taskPager.page = val;
+  currentTaskData.value = taskData.value.slice(
+    taskPager.page * taskPager.size - taskPager.size,
+    taskPager.page * taskPager.size
+  );
+  toTop();
+}
+function toTop() {
+  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>
@@ -54,28 +80,60 @@ function handleClick(val) {
       <el-tab-pane label="作业列表" class="task-list">
         <div class="task-list-tabs">
           <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-            <el-tab-pane label="竞赛状态" name="" disabled> </el-tab-pane>
-            <el-tab-pane label="全部" name="all">
-              <div class="task-info">
-                <div class="task-title">
-                  <div class="title">
-                    <span class="task-done">已完成</span>
-                    <span class="task-doning">未完成</span>
-                    <span class="task-name"> 作业名称 </span>
-                  </div>
-                  <div class="arrows">
-                    <el-icon><ArrowRightBold /></el-icon>
-                  </div>
+            <el-tab-pane label="竞赛状态" name="status" disabled> </el-tab-pane>
+            <el-tab-pane label="全部" name=""></el-tab-pane>
+            <el-tab-pane label="未完成" name="not-finish"></el-tab-pane>
+            <el-tab-pane label="已完成" name="finish"></el-tab-pane>
+          </el-tabs>
+          <!-- 作业列表 -->
+          <div v-if="taskData.length" class="task-info">
+            <div
+              v-for="item in currentTaskData"
+              :key="item.id"
+              class="task-box"
+            >
+              <div class="task-title">
+                <div class="title">
+                  <span v-if="item.status === 'finish'" class="task-done"
+                    >已完成</span
+                  >
+                  <span v-else class="task-doning">未完成</span>
+                  <span class="task-name"> {{ item.name }} </span>
                 </div>
-                <div class="task-result">
-                  <span class="grade">分数：99</span>
-                  <span>提交截止时间：2023年2月4日</span>
+                <div class="arrows">
+                  <el-icon><ArrowRightBold /></el-icon>
                 </div>
               </div>
-            </el-tab-pane>
-            <el-tab-pane label="未完成" name="doing">aaa </el-tab-pane>
-            <el-tab-pane label="已完成" name="done">ddd </el-tab-pane>
-          </el-tabs>
+              <div class="task-result">
+                <span class="grade">分数：{{ item.score }}</span>
+                <span>提交截止时间：{{ item.deadline }}</span>
+              </div>
+            </div>
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="taskPager.page"
+                :page-size="taskPager.size"
+                :total="taskData.length"
+                :layout="layout"
+                @current-change="handleCurrentPage"
+              ></el-pagination>
+            </div>
+          </div>
+          <div
+            v-if="(activeName === 'not-finish') & !taskData.length"
+            class="empty"
+          >
+            <img :src="emptyImg" alt="" />
+            <p>暂无未完成作业</p>
+          </div>
+          <div
+            v-if="(activeName === 'finish') & !taskData.length"
+            class="empty"
+          >
+            <img :src="emptyImg" alt="" />
+            <p>暂无已完成作业</p>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="作业提交" class="task-submission">
@@ -119,43 +177,67 @@ function handleClick(val) {
   .task-list {
     .task-info {
       margin-top: 24px;
-      padding: 24px 0px;
-      border-top: 1px solid #d8d8d8;
-      border-bottom: 1px solid #d8d8d8;
-      .task-title {
-        line-height: 18px;
-        margin-bottom: 28px;
-        display: flex;
-        justify-content: space-between;
-        .title {
-          .task-done,
-          .task-doning {
-            font-size: 12px;
-            color: #999;
-            padding: 6px 8px;
-            background-color: #f7f8fa;
-            border-radius: 8px;
-            border: 1px solid #e5e5e5;
+      .task-box {
+        padding: 24px 0px;
+        border-top: 1px solid #d8d8d8;
+        cursor: pointer;
+        .task-title {
+          line-height: 18px;
+          margin-bottom: 28px;
+          display: flex;
+          justify-content: space-between;
+          .title {
+            .task-done,
+            .task-doning {
+              font-size: 12px;
+              color: #999;
+              padding: 6px 8px;
+              background-color: #f7f8fa;
+              border-radius: 8px;
+              border: 1px solid #e5e5e5;
+            }
+            .task-doning {
+              color: #0d8dff;
+              border: 1px solid #dbedff;
+            }
+            .task-name {
+              font-size: 16px;
+              color: #000000;
+              font-weight: 550;
+              margin-left: 8px;
+            }
           }
-          .task-doning {
-            color: #0d8dff;
-            border: 1px solid #dbedff;
-          }
-          .task-name {
-            font-size: 16px;
-            color: #000000;
-            font-weight: 550;
-            margin-left: 8px;
+        }
+        .task-result {
+          line-height: 17px;
+          font-size: 14px;
+          color: #555555;
+          .grade {
+            margin-right: 64px;
           }
         }
       }
-      .task-result {
-        line-height: 17px;
-        font-size: 14px;
-        color: #555555;
-        .grade {
-          margin-right: 64px;
+      .pagination {
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+        .el-pagination {
+          background-color: red !important;
         }
+      }
+    }
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 56px 0;
+      img {
+        width: 280px;
+      }
+      p {
+        color: #555555;
+        margin-top: 24px;
+        font-size: 18px;
       }
     }
   }
@@ -253,7 +335,7 @@ function handleClick(val) {
           font-weight: 550;
           margin-left: 0px;
           padding-left: 0px;
-          margin-right: 34px;
+          margin-right: 28px;
         }
       }
       .is-active {

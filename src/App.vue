@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppHeader from '@/components/AppHeader.vue';
@@ -8,6 +8,10 @@ import AppFooter from '@/components/AppFooter.vue';
 import IconBack from '~icons/app/left.svg';
 import IconMenu from '~icons/app/meau-header.svg';
 import logoImg from '@/assets/imgs/logo1.png';
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const router = useRouter();
@@ -104,6 +108,8 @@ watch(
     });
 
     isMobileFit.value = currentPage.value ? true : false;
+
+    noHeader.value = false;
   },
   { deep: true },
   { immediate: true }
@@ -148,31 +154,48 @@ function Scroll(e) {
   if (e.wheelDelta) {
     if (e.wheelDelta > 0) {
       noHeader.value = false;
-    } else if (route.name === 'home') {
+    } else {
       noHeader.value = true;
     }
   }
 }
 window.onmousewheel = document.onmousewheel = Scroll;
 
-const mobilNav = [
-  { name: '首页', isactive: true },
-  { name: 'AI实验室', isactive: false, path: '/project' },
-  { name: '模型库', isactive: false, path: '/model' },
-  { name: '大模型体验', isactive: false, path: '/modelzoo' },
-  { name: '数据集', isactive: false, path: '/dataset' },
-  { name: '比赛', isactive: false, path: '/competition' },
-  { name: '活动', isactive: false, path: '/activity' },
-  { name: '文档', isactive: false, path: '/modelzoo' },
-];
+const mobilNav = computed(() => {
+  return [
+    { name: '首页', isactive: true },
+    { name: t('home.APP_HEADER.PROJECT'), isactive: false, path: '/project' },
+    { name: t('home.APP_HEADER.MODEL'), isactive: false, path: '/model' },
+    { name: '大模型体验', isactive: false, path: '/modelzoo' },
+    { name: '大模型微调', isactive: false, path: '/finetune' },
+    { name: t('home.APP_HEADER.DATASET'), isactive: false, path: '/dataset' },
+    { name: t('home.APP_HEADER.COURSE'), isactive: false, path: '/course' },
+    {
+      name: t('home.APP_HEADER.COMPETITION'),
+      isactive: false,
+      path: '/competition',
+    },
+    { name: t('home.APP_HEADER.ACTIVITY'), isactive: false, path: '/activity' },
+    { name: t('home.APP_HEADER.DOCUMENT'), isactive: false, path: '/docs' },
+  ];
+});
 const meauActive = ref(false);
-function toggleMenu(meau) {
-  meauActive.value = meau;
+function toggleMenu(menu) {
+  meauActive.value = menu;
 }
 function toPage(path) {
   meauActive.value = false;
   router.push(path);
 }
+const handleCommand = () => {
+  const { pathname } = window.location;
+
+  if (pathname === '/en') {
+    window.location.href = pathname.replace('en', '');
+  } else {
+    window.location.href = '/en';
+  }
+};
 </script>
 
 <template>
@@ -186,7 +209,7 @@ function toPage(path) {
     "
   >
     <div
-      v-if="currentPage === '首页'"
+      v-if="currentPage === '首页' && screenWidth <= 820"
       class="back"
       @click="toggleMenu(!meauActive)"
     >
@@ -220,8 +243,8 @@ function toPage(path) {
   <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
-  <div class="mobile-menu" :class="{ meauActive: meauActive }">
-    <div class="meau-side" :class="{ meauActive: meauActive }">
+  <div class="mobile-menu" :class="{ 'menu-active': meauActive }">
+    <div class="menu-side" :class="{ 'menu-active': meauActive }">
       <div class="nav">
         <div
           v-for="item in mobilNav"
@@ -232,6 +255,7 @@ function toPage(path) {
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
+      <div class="language" @click="handleCommand">中文 ｜ EN</div>
     </div>
   </div>
 </template>
@@ -255,6 +279,10 @@ function toPage(path) {
   }
 
   .mobile-header {
+    display: none;
+    @media screen and (max-width: 820px) {
+      display: flex;
+    }
     position: fixed;
     // z-index: 2014;
     z-index: 2009;
@@ -469,17 +497,17 @@ body.el-popup-parent--hidden {
   left: 0;
   top: 48px;
   height: calc(100% - 48px);
-  z-index: 100;
+  z-index: 201;
   visibility: hidden;
-  .meau-side {
+  .menu-side {
     height: 100%;
-    transition: all 0.3s linear;
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.9);
     transition: all 0.3s linear;
-    transition: transform;
     overflow-y: auto;
     width: 164px;
+    position: relative;
+    left: -100%;
     .nav {
     }
     .link {
@@ -500,9 +528,19 @@ body.el-popup-parent--hidden {
       }
     }
   }
+  .language {
+    font-size: 12px;
+    margin-left: 16px;
+    position: fixed;
+    bottom: 35px;
+    cursor: pointer;
+  }
 }
-.meauActive {
+.menu-active {
   visibility: visible;
   width: 0;
+  .menu-side {
+    left: 0;
+  }
 }
 </style>

@@ -810,7 +810,8 @@ const handleCommand = (command) => {
 
       .el-menu-item {
         background-color: inherit;
-        font-size: 18px;
+        // font-size: 18px;
+        font-size: 14px;
         padding: 0;
         // margin-left: 32px;
         border-bottom: none;
@@ -855,7 +856,8 @@ const handleCommand = (command) => {
         }
         .el-sub-menu__title {
           padding: 0;
-          font-size: 18px;
+          // font-size: 18px;
+          font-size: 14px;
           padding: 0 16px;
           border: none;
           color: #000000 !important;
@@ -1018,7 +1020,8 @@ const handleCommand = (command) => {
           width: 24px;
           height: 24px;
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000000;
           position: absolute;
           top: 6px;
           left: 16px;
@@ -1026,9 +1029,13 @@ const handleCommand = (command) => {
 
         .header-right-input {
           font-size: 14px;
-          color: #999;
-          border: 1px #999 solid !important;
+          color: #000000;
+          border: 1px #000000 solid !important;
+          border-radius: 20px;
           padding-left: 48px;
+          &::-webkit-input-placeholder {
+            color: #000;
+          }
         }
       }
       .header-doc {

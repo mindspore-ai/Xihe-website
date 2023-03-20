@@ -49,6 +49,15 @@ export default {
   BANNER_BUTTON_1: 'The MindSpore foundation model platform',
   BANNER_BUTTON_2: 'AI Challenges',
   BANNER_BUTTON_3: 'AI Learning Competition',
+  // 轮播
+  SWIPER: [
+    {
+      TITLE: 'The MindSpore foundation model platform',
+      INTRODUCE:
+        "The MindSpore foundation model platform is an AI learning and practice community that integrates model selection, ideas sharing, and online experience. The community provides the ultimate Ascend computing power you need for practice. You can experience foundation models and gain knowledge and experience through practice. The community also offers free, high-quality resources, typical and easy-to-use sample code, and successful enterprise cases and hosts AI competitions suitable for different skill levels. You're welcome to try our advanced challenges.",
+    },
+    {},
+  ],
   // AI实验室
   AI_LAB: {
     TITLE: 'AI Lab',
@@ -119,7 +128,7 @@ export default {
       },
       {
         MODEL_NAME: 'NLP',
-        TYPE: 'CV',
+        TYPE: 'NLP',
         CATAGORIES: 'BERT｜GRU｜Transformer …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128',
         IMAGE: models3,

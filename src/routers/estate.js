@@ -5,14 +5,21 @@ export default [
     component: () => {
       return import('@/views/estate/TheEstate.vue');
     },
-    redirect: '/estate/industrial-zone',
+    redirect: '/estate/industry',
     // 四个专区
     children: [
       {
-        path: 'electric',
-        name: 'electricPower',
+        path: 'industry',
+        name: 'industry',
         component: () => {
           return import('@/views/estate/industry/TheIndustry.vue');
+        },
+      },
+      {
+        path: 'electricity',
+        name: 'electricity',
+        component: () => {
+          return import('@/views/estate/electricity/TheElectricity.vue');
         },
       },
       {
@@ -23,42 +30,34 @@ export default [
         },
       },
       {
-        path: 'medical',
-        name: 'medicalTreatment',
+        path: 'medicine',
+        name: 'medicine',
         component: () => {
-          return import('@/views/estate/medicine/TheMedicalTreatment.vue');
-        },
-      },
-      {
-        path: 'industrial-zone',
-        name: 'industrialZone',
-        component: () => {
-          // return import('@/views/estate/medicine/TheMedicalTreatment.vue');
-          return import('@/views/estate/electricity/TheEletricity.vue');
+          return import('@/views/estate/medicine/TheMedicine.vue');
         },
       },
     ],
   },
-  // 电力专区--案例1
+  // 工业专区--案例1
   {
-    path: '/estate/electric/case-1',
-    name: 'estateCase',
+    path: '/estate/industry/:id',
+    name: 'industryCase',
     component: () => {
-      return import('@/views/estate/electricity/cases/case-1/TheCase1.vue');
+      return import('@/views/estate/industry/IndustryDetail.vue');
     },
-    redirect: '/estate/electric/case-1/project-explain',
+    redirect: {
+      name: 'projectExplain',
+    },
     children: [
       // 项目说明
       {
         path: 'project-explain',
         name: 'projectExplain',
         component: () => {
-          return import(
-            '@/views/estate/electricity/cases/case-1/ElectricityExplain.vue'
-          );
+          return import('@/views/estate/industry/IndustryExplain.vue');
         },
       },
-      // 数据准备
+      /*  // 数据准备
       {
         path: 'data-prepare',
         name: 'dataPrepare',
@@ -77,44 +76,7 @@ export default [
             '@/views/estate/electricity/cases/case-1/ElectricityModelTrain.vue'
           );
         },
-      },
+      }, */
     ],
   },
-
-  // {
-  //   path: '/estate/electricity/:id',
-  //   name: 'electricityDetail',
-  //   component: () => {
-  //     return import('@/views/estate/electricity/ElectricityDetail.vue');
-  //   },
-  //   redirect: { name: 'projectExplain' },
-  //   children: [
-  //     // 项目说明
-  //     {
-  //       path: 'project-explain',
-  //       name: 'projectExplain',
-  //       component: () => {
-  //         return import('@/views/estate/electricity/ElectricityExplain.vue');
-  //       },
-  //     },
-  //     // 数据准备
-  //     {
-  //       path: 'data-prepare',
-  //       name: 'dataPrepare',
-  //       component: () => {
-  //         return import(
-  //           '@/views/estate/electricity/ElectricityDataPrepare.vue'
-  //         );
-  //       },
-  //     },
-  //     // 模型训练
-  //     {
-  //       path: 'model-train',
-  //       name: 'modelTrain',
-  //       component: () => {
-  //         return import('@/views/estate/electricity/ElectricityModelTrain.vue');
-  //       },
-  //     },
-  //   ],
-  // },
 ];

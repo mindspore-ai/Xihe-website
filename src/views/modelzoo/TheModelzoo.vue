@@ -1,13 +1,14 @@
 <script setup>
-import Card from './Card.vue';
+import ModelzooCard from './ModelzooCard.vue';
+import AppContent from '@/components/AppContent.vue';
 
-import taichu from '@/assets/imgs/modelzoo/taichu.png';
-import luojia from '@/assets/imgs/modelzoo/Luojia.png';
+import taichu from '@/assets/imgs/modelzoo/taichu.jpg';
+import luojia from '@/assets/imgs/modelzoo/Luojia.jpg';
 // import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
-import pangu from '@/assets/imgs/modelzoo/pangu.png';
-import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
-import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
-import wukong from '@/assets/imgs/wukong/wukong-banner1.png';
+import pangu from '@/assets/imgs/modelzoo/pangu.jpg';
+import shenlong from '@/assets/imgs/modelzoo/shenlong.jpg';
+import dasheng from '@/assets/imgs/modelzoo/dasheng.jpg';
+import wukong from '@/assets/imgs/wukong/wukong-banner1.jpg';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -92,21 +93,25 @@ function goModelzoo() {
         </div>
       </div>
     </div>
-    <div class="card-lists">
-      <div v-for="item in i18n.cardLists" :key="item">
-        <Card
-          :title="item.title"
-          :introduce="item.introduce"
-          :url="item.url"
-          :path="item.path"
-          :openness="item.openness"
-        />
+
+    <AppContent :mobile-top="24">
+      <div class="card-lists">
+        <div v-for="item in i18n.cardLists" :key="item">
+          <ModelzooCard
+            :title="item.title"
+            :introduce="item.introduce"
+            :url="item.url"
+            :path="item.path"
+            :openness="item.openness"
+          />
+        </div>
       </div>
-    </div>
-    <div class="watch-more" @click="goModelzoo">
-      <span class="text">点击去往ModelZoo查看更多大模型</span>
-      <o-icon><icon-arrow></icon-arrow></o-icon>
-    </div>
+
+      <div class="watch-more" @click="goModelzoo">
+        <span class="text">点击去往ModelZoo查看更多大模型</span>
+        <o-icon><icon-arrow></icon-arrow></o-icon>
+      </div>
+    </AppContent>
   </div>
 </template>
 
@@ -121,6 +126,9 @@ function goModelzoo() {
     padding-top: 80px;
     background-size: cover;
     background-image: url('@/assets/imgs/banner-head.png');
+    @media screen and (max-width: 768px) {
+      padding-top: 48px;
+    }
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -129,10 +137,20 @@ function goModelzoo() {
       .title {
         padding-bottom: 8px;
         font-size: 36px;
+        @media screen and (max-width: 768px) {
+          font-size: 20px;
+          line-height: 28px;
+          font-weight: 400;
+        }
       }
       .introduce {
         padding-right: 24px;
         font-size: 18px;
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 18px;
+        }
         .reference {
           color: #4dcdff;
         }
@@ -148,9 +166,16 @@ function goModelzoo() {
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    margin-top: 64px;
     max-width: 1472px;
-    padding-bottom: 64px;
+    text-align: center;
     cursor: pointer;
+    @media screen and (max-width: 1080px) {
+      margin-top: 40px;
+    }
+    @media screen and (max-width: 820px) {
+      margin-top: 24px;
+    }
     &:hover {
       .o-icon {
         transform: translate(3px);
@@ -158,28 +183,37 @@ function goModelzoo() {
       }
     }
     .text {
-      text-align: center;
       font-size: 14px;
       font-weight: 400;
       color: #000000;
       line-height: 22px;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 22px;
+      }
     }
     .o-icon {
       font-size: 16px;
       margin-left: 8px;
       transform: translate(0px);
       transition: all 0.2s linear;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        display: inline-block;
+      }
     }
   }
   .card-lists {
-    margin: 0 auto;
-    padding: 50px 16px 136px 16px;
-    max-width: 1472px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    row-gap: 24px;
-    column-gap: 24px;
-    padding: 64px 16px 24px 16px;
+    grid-gap: 24px;
+    @media screen and (max-width: 1080px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 16px;
+    }
+    @media screen and (max-width: 767px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 }
 </style>

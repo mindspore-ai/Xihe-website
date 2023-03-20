@@ -59,71 +59,73 @@ let query = reactive({
   name: '',
 });
 
-const navItems = reactive([
-  {
-    id: 'projects',
-    label: '项目',
-    href: '/projects',
-  },
-  {
-    id: 'models',
-    label: '模型',
-    href: '/models',
-  },
-  {
-    id: 'modelzoo',
-    label: '大模型',
-    href: '/modelzoo',
-    menuList: [
-      {
-        id: 'test',
-        label: '在线体验',
-        href: '/modelzoo',
-      },
-      {
-        id: 'tune',
-        label: '模型微调',
-        href: '/finetune',
-      },
-    ],
-  },
-  {
-    id: 'datasets',
-    label: '数据集',
-    href: '/datasets',
-  },
-  {
-    id: 'course',
-    label: '课程',
-    href: '/course',
-  },
-  {
-    id: 'competition',
-    label: '比赛',
-    href: '/competition',
-  },
-  {
-    id: 'activity',
-    label: '活动',
-    href: '/activity',
-  },
-  {
-    id: 'docs',
-    label: '文档',
-    href: '/docs',
-    windowOpen: true,
-  },
-  /*  {
+const navItems = computed(() => {
+  return reactive([
+    {
+      id: 'projects',
+      label: t('home.APP_HEADER.PROJECT'),
+      href: '/projects',
+    },
+    {
+      id: 'models',
+      label: t('home.APP_HEADER.MODEL'),
+      href: '/models',
+    },
+    {
+      id: 'modelzoo',
+      label: t('home.APP_HEADER.MODELZOO'),
+      href: '/modelzoo',
+      menuList: [
+        {
+          id: 'test',
+          label: '在线体验',
+          href: '/modelzoo',
+        },
+        {
+          id: 'tune',
+          label: '模型微调',
+          href: '/finetune',
+        },
+      ],
+    },
+    {
+      id: 'datasets',
+      label: t('home.APP_HEADER.DATASET'),
+      href: '/datasets',
+    },
+    {
+      id: 'course',
+      label: t('home.APP_HEADER.COURSE'),
+      href: '/course',
+    },
+    {
+      id: 'competition',
+      label: t('home.APP_HEADER.COMPETITION'),
+      href: '/competition',
+    },
+    {
+      id: 'activity',
+      label: t('home.APP_HEADER.ACTIVITY'),
+      href: '/activity',
+    },
+    {
+      id: 'docs',
+      label: t('home.APP_HEADER.DOCUMENT'),
+      href: '/docs',
+      windowOpen: true,
+    },
+    /*  {
     id: 'leaderboards',
     label: '排行榜',
     href: '/leaderboard',
   }, */
-  // {
-  //   id: 'teams',
-  //   label: '团队',
-  //   href: '/teams',
-  // },
-]);
+    // {
+    //   id: 'teams',
+    //   label: '团队',
+    //   href: '/teams',
+    // },
+  ]);
+});
 const loginedDropdownItems = [
   {
     id: 'user',
@@ -694,7 +696,11 @@ const handleCommand = (command) => {
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
           <o-input
             style="border: none"
-            placeholder="查询项目、模型、数据集和用户"
+            :placeholder="
+              locale === 'zh'
+                ? '查询项目、模型、数据集和用户'
+                : 'Query AI Lab、Model Library、Datasets'
+            "
             class="header-right-input"
             @click="showInput"
           />
@@ -1039,7 +1045,7 @@ const handleCommand = (command) => {
         width: 72px;
         text-align: right;
         .el-dropdown {
-          color: #fff;
+          color: #000;
           cursor: pointer;
           &-link {
             display: flex;
@@ -1076,7 +1082,7 @@ const handleCommand = (command) => {
             cursor: pointer;
 
             &-icon {
-              color: #ffffff;
+              color: #000;
               width: 24px;
               height: 24px;
             }

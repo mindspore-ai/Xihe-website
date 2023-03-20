@@ -1,6 +1,10 @@
 <script setup>
 import logoImg from '@/assets/imgs/logo1.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -10,19 +14,23 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
     </div>
     <div class="footer-content">
       <div class="above">
-        <router-link class="text" to="/privacy">隐私政策</router-link>
+        <router-link class="text" to="/privacy">{{
+          t('home.PRIVACY_POLICY')
+        }}</router-link>
         <div class="division"></div>
-        <router-link class="text" to="/legal">法律声明</router-link>
+        <router-link class="text" to="/legal">{{
+          t('home.LEGAL_NOTICE')
+        }}</router-link>
       </div>
       <div class="below">
-        <span>版权所有</span>
+        <span>{{ t('home.COPYRIGHT') }}</span>
         <span>©&nbsp;2022&nbsp;MindSpore</span>
-        <span>&nbsp;保留一切权利</span>
+        <span>&nbsp;{{ t('home.OWNERSHIP') }}</span>
       </div>
     </div>
     <div class="footer-code">
       <img :src="qrCodeImg" />
-      <p>扫码关注公众号</p>
+      <p>{{ t('home.SCANNING_CODE') }}</p>
     </div>
   </footer>
 </template>

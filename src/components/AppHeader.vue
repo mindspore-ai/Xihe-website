@@ -23,6 +23,8 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import { Close } from '@element-plus/icons-vue';
 import { getSearchData } from '@/api/api-search';
 
+import translateWhitelist from '@/whitelist/whitelist-translate';
+
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
@@ -33,6 +35,9 @@ const lang = computed(() => {
 
 const router = useRouter();
 const route = useRoute();
+
+console.log(translateWhitelist);
+console.log(route.name);
 
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
@@ -707,7 +712,7 @@ const handleCommand = (command) => {
         </div>
 
         <!-- language -->
-        <div class="language">
+        <div v-if="translateWhitelist.includes(route.name)" class="language">
           <el-dropdown popper-class="language-change" @command="handleCommand">
             <span class="el-dropdown-link">
               {{ t('home.LANG') }}

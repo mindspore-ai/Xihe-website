@@ -10,7 +10,7 @@ const props = defineProps({
     },
   },
 });
-console.log('cardData: ', props.cardData);
+// console.log('cardData: ', props.cardData);
 const i18n = {
   downloadTitle: '下载量',
   uploadTime: '上传时间',

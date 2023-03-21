@@ -13,6 +13,7 @@ import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
 const route = useRoute();
+console.log('route: ', route);
 
 const activeName = ref('工业专区');
 watch(

@@ -448,7 +448,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="more">
+    <div class="more" :class="{ open: open }">
       <el-tabs class="more-tabs">
         <el-tab-pane v-for="(item, index) in 3" :key="item">
           <template #label>
@@ -541,11 +541,17 @@ onMounted(() => {
       height: 100vh;
       display: flex;
       align-items: center;
+      .info {
+        max-width: 1440px;
+        padding: 0 16px;
+        margin: 0 auto;
+        width: 100%;
+      }
       .title {
         font-size: 74px;
         line-height: 76px;
         text-align: left;
-        margin-left: 150px;
+        // margin-left: 150px;
         width: 900px;
         @media screen and (max-width: 820px) {
           font-size: 20px;
@@ -556,10 +562,11 @@ onMounted(() => {
         }
       }
       .introduce {
-        margin-top: 40px;
+        margin: 40px 0;
         text-align: left;
-        margin-left: 150px;
+        // margin-left: 150px;
         width: 720px;
+
         color: #001848;
         @media screen and (max-width: 820px) {
           margin: 6px 24px;
@@ -1130,18 +1137,21 @@ p {
   }
   .unopen {
     position: relative;
-    transition: all 0.3s linear;
-    bottom: -200px;
+    transition: all 0.5s linear;
+    bottom: -100px;
   }
   .open {
     bottom: 0;
   }
 }
+
 .more {
   max-width: 1472px;
   margin: 0 auto;
   padding: 0 16px;
   position: relative;
+  bottom: -100px;
+  transition: all 0.5s linear;
   :deep(.el-tabs) {
     .el-tabs__header {
       margin: 0px;
@@ -1326,6 +1336,9 @@ p {
       }
     }
   }
+}
+.open {
+  bottom: 0;
 }
 .industy {
   max-width: 1472px;

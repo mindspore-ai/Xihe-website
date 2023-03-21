@@ -325,6 +325,7 @@ const handleCommand = () => {
       .footer {
         flex-direction: column-reverse;
         height: 170px;
+        justify-content: space-evenly;
       }
       .footer-code {
         img {

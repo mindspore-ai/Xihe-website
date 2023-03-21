@@ -40,6 +40,7 @@ export default {
     DOCUMENT: '文档',
     INDUSTRY: '产业',
   },
+  SCANNING_CODE: '扫码关注公众号',
   PRIVACY_POLICY: '隐私政策',
   LEGAL_NOTICE: '法律声明',
   COPYRIGHT: '版权所有',
@@ -76,7 +77,7 @@ export default {
       {
         NAME: '风格迁移',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/CycleGAN',
+        PATH: '/projects/MindSpore/text_classification',
       },
       {
         NAME: '文本分类',

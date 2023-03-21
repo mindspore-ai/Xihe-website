@@ -64,12 +64,36 @@ export default {
     INTRODUCE:
       'Perform full-process development in multiple domains, experience inference visualization, and get trained online.',
     CARDS: [
-      { NAME: 'Multi-class Image Classification', TYPE: 'CV' },
-      { NAME: 'Image Recognition', TYPE: 'CV' },
-      { NAME: 'Style Migration', TYPE: 'CV' },
-      { NAME: 'Text Classification', TYPE: 'NLP' },
-      { NAME: 'Sequence Labeling', TYPE: 'NLP' },
-      { NAME: 'Text Translation', TYPE: 'NLP' },
+      {
+        NAME: 'Multi-class Image Classification',
+        TYPE: 'CV',
+        PATH: '/projects/MindSpore/zero_shot_image_classification',
+      },
+      {
+        NAME: 'Image Recognition',
+        TYPE: 'CV',
+        PATH: '/projects/MindSpore/text_classification',
+      },
+      {
+        NAME: 'Style Migration',
+        TYPE: 'CV',
+        PATH: '/projects/MindSpore/text_classification',
+      },
+      {
+        NAME: 'Text Classification',
+        TYPE: 'NLP',
+        PATH: '/projects/MindSpore/text_classification',
+      },
+      {
+        NAME: 'Sequence Labeling',
+        TYPE: 'NLP',
+        PATH: '/projects/MindSpore/token_classification',
+      },
+      {
+        NAME: 'Text Translation',
+        TYPE: 'NLP',
+        PATH: '/projects/MindSpore/seq2seq_d_e',
+      },
     ],
   },
   // 大模型体验
@@ -84,24 +108,28 @@ export default {
         MODELZOO_DESC:
           "The world's first three-modal 100-billion-parameter model",
         IMAGE: modelzoo_taichu,
+        PATH: '/modelzoo/taichu',
       },
       {
         MODELZOO_NAME: 'Wukong-Huahua',
         MODELZOO_DESC:
           "Industry's first Chinese text-to-image foundation model based on the diffusion model",
         IMAGE: modelzoo_wukong,
+        PATH: '/modelzoo/wukong',
       },
       {
         MODELZOO_NAME: 'LuoJiaNET',
         MODELZOO_DESC:
           "The world's first dedicated remote sensing framework and the largest remote sensing sample library",
         IMAGE: modelzoo_luojia,
+        PATH: '/modelzoo/luojia',
       },
       {
         MODELZOO_NAME: 'PCL-L',
         MODELZOO_DESC:
           " Industry's first 100-billion-parameter Chinese NLP model",
         IMAGE: modelzoo_pangu,
+        PATH: '/modelzoo/pangu',
       },
     ],
   },
@@ -118,6 +146,7 @@ export default {
         CATAGORIES: 'VGG16｜ResNet-101｜InceptionV4 …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/vgg16_cifar10',
         IMAGE: models1,
+        PATH: '/models/MindSpore/vgg16_imagenet2012',
       },
       {
         MODEL_NAME: 'Object Detection',
@@ -125,6 +154,7 @@ export default {
         CATAGORIES: 'YOLOv5｜SSD ｜MobileNet …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/yolov5shape640',
         IMAGE: models2,
+        PATH: '/models/MindSpore/yolov5shape640',
       },
       {
         MODEL_NAME: 'NLP',
@@ -132,6 +162,7 @@ export default {
         CATAGORIES: 'BERT｜GRU｜Transformer …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/bertbase_cnnews128',
         IMAGE: models3,
+        PATH: '/models/MindSpore/tokcls_bert_base_chineses_cluener',
       },
       {
         MODEL_NAME: 'Recommendation',
@@ -139,6 +170,7 @@ export default {
         CATAGORIES: 'DeepFM｜Wide&Deep｜NCF …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
         IMAGE: models4,
+        PATH: '/models/MindSpore/deepfm_criteo',
       },
     ],
   },
@@ -148,6 +180,7 @@ export default {
     INTRODUCE:
       'Experience the Chinese text-to-image generative model: Wukong-Huahua. You can generate inspiring images of various styles through text.',
     GALLARY_BUTTON: 'Start Drawing',
+    PATH: '/modelzoo/wukong',
   },
   // 开启昇思之旅
   SHENGSI_JOURNEY: {
@@ -168,6 +201,7 @@ export default {
             IMAGE: card1,
             TYPE: '免费',
             DETAIL: 'View Details',
+            PATH: '/course/c001/introduction',
           },
           {
             NAME: 'Vision',
@@ -175,6 +209,7 @@ export default {
             IMAGE: card2,
             TYPE: '免费',
             DETAIL: 'View Details',
+            PATH: '/course/c002/introduction',
           },
           {
             NAME: 'Get Started',
@@ -182,6 +217,7 @@ export default {
             IMAGE: card3,
             TYPE: '免费',
             DETAIL: 'View Details',
+            PATH: '/course/c003/introduction',
           },
         ],
       },
@@ -195,6 +231,7 @@ export default {
             IMAGE: competition1,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/ai_painter/0/introduction',
           },
           {
             NAME: '',
@@ -202,6 +239,7 @@ export default {
             IMAGE: competition2,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/3/0/introduction',
           },
           {
             NAME: '',
@@ -209,6 +247,7 @@ export default {
             IMAGE: competition3,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/2/0/introduction',
           },
         ],
       },
@@ -222,6 +261,7 @@ export default {
             IMAGE: activity1,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/xian_travel/0/introduction',
           },
           {
             NAME: '',
@@ -229,6 +269,7 @@ export default {
             IMAGE: activity2,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/text_classification/0/introduction',
           },
           {
             NAME: '',
@@ -236,6 +277,7 @@ export default {
             IMAGE: activity3,
             TYPE: '',
             DETAIL: 'View Details',
+            PATH: '/competition/mask_detection/0/introduction',
           },
         ],
       },
@@ -251,21 +293,25 @@ export default {
         NAME: 'Industry',
         DESC: 'Build AI models by training object detection data to intelligently identify industrial objects widely used in industrial detection and smart manufacturing.',
         IMAGE: industy1,
+        PATH: '/course/c003/introduction',
       },
       {
         NAME: 'Electric Power',
         DESC: 'Build AI models by training electric power data to predict electric power data and fluctuation and assist enterprises in energy management and scheduling.',
         IMAGE: industy2,
+        STATUS: '敬请期待',
       },
       {
         NAME: 'Healthcare',
         DESC: 'Build AI models by exploring medical data to analyze medical big data that is widely used in medical research and decision-making.',
         IMAGE: industy3,
+        STATUS: '敬请期待',
       },
       {
         NAME: 'Finance',
         DESC: 'Build AI models by training financial industry data widely used in financial institutions to reduce costs and increase profits.',
         IMAGE: industy4,
+        STATUS: '敬请期待',
       },
     ],
   },

@@ -130,16 +130,18 @@ function setTransition(swiper, transition) {
 }
 const swiperGally = ref();
 onMounted(() => {
-  // if (screenWidth.value > 1440) {
-  let a = (screenWidth.value - 32) / 1440;
-  swiperGally.value.children[2].style.zoom = a;
-  // }
+  if (screenWidth.value > 820) {
+    let a = (screenWidth.value - 32) / 1440;
+    swiperGally.value.children[2].style.zoom = a;
+  }
 });
 watch(
   () => screenWidth.value,
   () => {
-    let a = (screenWidth.value - 32) / 1440;
-    swiperGally.value.children[2].style.zoom = a;
+    if (screenWidth.value > 820) {
+      let a = (screenWidth.value - 32) / 1440;
+      swiperGally.value.children[2].style.zoom = a;
+    }
   }
 );
 
@@ -157,10 +159,13 @@ const router = useRouter();
         class="swiper-portal"
       >
         <swiper-slide class="slide1">
-          <P class="title">{{ t('home.SWIPER[0].TITLE') }}</P>
-          <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
+          <div class="info">
+            <P class="title">{{ t('home.SWIPER[0].TITLE') }}</P>
+            <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
+          </div>
+          <div class="mask"></div>
         </swiper-slide>
-        <swiper-slide class="slide2"> </swiper-slide>
+        <swiper-slide class="slide2"> <div class="mask"></div> </swiper-slide>
       </swiper>
     </div>
 
@@ -169,7 +174,7 @@ const router = useRouter();
         <p class="title">{{ t('home.AI_LAB.TITLE') }}</p>
         <p class="introduce">{{ t('home.AI_LAB.INTRODUCE') }}</p>
         <div class="center-img">
-          <!-- <img :src="project" alt="" /> -->
+          <img :src="project" alt="" />
           <div class="video">
             <video
               src="@/assets/videos/project.mp4"
@@ -493,21 +498,24 @@ const router = useRouter();
   background-color: #f5f7fb;
 }
 .home-portal {
+  position: relative;
   :deep(.swiper-portal) {
     .swiper-slide {
       height: 100vh;
+      display: flex;
+      align-items: center;
       .title {
-        margin-top: 250px;
         font-size: 74px;
         line-height: 76px;
         text-align: left;
         margin-left: 150px;
+        width: 900px;
         @media screen and (max-width: 820px) {
-          margin-top: 72px;
           font-size: 20px;
           line-height: 28px;
           margin-left: 0;
           text-align: center;
+          width: auto;
         }
       }
       .introduce {
@@ -532,6 +540,22 @@ const router = useRouter();
         background: url(@/assets/imgs/home1/mobile-banner1.png);
         background-size: cover;
         background-position: 50%;
+      }
+      .mask {
+        height: 180px;
+        width: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(245, 247, 251, 0) 0%,
+          #f5f7fb 56%,
+          #f5f7fb 100%
+        );
+        position: absolute;
+        bottom: 0;
+        z-index: 1;
+        @media screen and (max-width: 820px) {
+          display: none;
+        }
       }
     }
     .slide2 {
@@ -582,7 +606,7 @@ p {
   font-size: 54px;
   line-height: 76px;
   position: relative;
-  z-index: 200;
+  z-index: 20;
   @media screen and (max-width: 820px) {
     font-size: 14px;
     line-height: 22px;
@@ -594,7 +618,7 @@ p {
   color: #555555;
   margin: 24px auto 40px;
   position: relative;
-  z-index: 200;
+  z-index: 20;
   @media screen and (max-width: 820px) {
     width: auto !important;
     font-size: 12px;
@@ -798,28 +822,29 @@ p {
   .center-img {
     text-align: center;
     position: absolute;
-    // transform: translate(-50%, -10%);
-    // left: 50%;
-    // top: 50%;
     top: 0;
-    // right: 0;
-    // left: 0;
+    @media screen and (max-width: 820px) {
+      position: unset;
+    }
     .video {
       width: 100%;
       padding-bottom: 30%;
       margin-top: 80px;
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
     video {
       width: 100%;
       height: 100%;
     }
     img {
-      width: 332px;
+      width: 100%;
+      display: none;
+      @media screen and (max-width: 820px) {
+        display: block;
+      }
     }
-    // @media screen and (max-width: 820px) {
-    //   position: unset;
-    //   transform: none;
-    // }
   }
 }
 .home-modelzoo {
@@ -851,7 +876,7 @@ p {
       margin-left: 24px;
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 16px;
+        margin-top: 8px;
       }
     }
     .item {
@@ -937,7 +962,7 @@ p {
       transform: translateY(-40px);
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 16px;
+        margin-top: 8px;
         transform: none;
       }
     }
@@ -1016,6 +1041,7 @@ p {
   background: url(@/assets/imgs/home1/gallery-bg.png);
   background-size: cover;
   background-position: 50%;
+  overflow: hidden;
   @media screen and (max-width: 820px) {
     padding: 40px 0;
   }
@@ -1037,7 +1063,8 @@ p {
     perspective: 1200px;
     max-width: 1440px;
     @media screen and (max-width: 820px) {
-      width: 100%;
+      width: 980px;
+      // transform: translateX(-160px);
     }
     .swiper-wrapper {
       transform-style: preserve-3d;
@@ -1075,7 +1102,7 @@ p {
       margin: 0px;
       position: absolute;
       max-width: 1440px;
-      width: 100%;
+      width: calc(100% - 32px);
       top: -50px;
       z-index: 100;
       @media screen and (max-width: 820px) {
@@ -1150,7 +1177,7 @@ p {
       margin-left: 24px;
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 16px;
+        margin-top: 8px;
       }
     }
     .tabs-card {
@@ -1269,6 +1296,7 @@ p {
     row-gap: 24px;
     @media screen and (max-width: 820px) {
       grid-template-columns: 1fr;
+      row-gap: 8px;
     }
     .item {
       padding: 34px 40px 40px;
@@ -1281,11 +1309,23 @@ p {
       }
       &:first-child {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        .intro {
+          color: #000;
+        }
+        .name {
+          color: #000;
+        }
         &:hover {
           cursor: pointer;
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
           background: url(@/assets/imgs/home1/industy/hover-bg2.png);
           background-size: cover;
+          .name {
+            color: #ffffff;
+          }
+          .intro {
+            color: #ffffff;
+          }
         }
         // &:nth-child(2) {
         //   background: url(@/assets/imgs/home1/industy/hover-bg1.png);
@@ -1306,6 +1346,7 @@ p {
       margin-bottom: 8px;
       line-height: 48px;
       position: relative;
+      color: #555555;
       @media screen and (max-width: 820px) {
         font-size: 14px;
         line-height: 22px;
@@ -1328,7 +1369,7 @@ p {
     }
     .intro {
       line-height: 24px;
-      color: #555555;
+      color: #999999;
       margin-left: 64px;
       @media screen and (max-width: 820px) {
         font-size: 12px;

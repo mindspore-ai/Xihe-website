@@ -884,13 +884,15 @@ const handleCommand = (command) => {
         position: relative;
         .search-icon {
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000;
           position: absolute;
           top: 6px;
         }
         .empty-icon {
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000;
           position: absolute;
           top: 6px;
           right: 0;
@@ -901,7 +903,8 @@ const handleCommand = (command) => {
           color: #999;
           font-size: 14px;
           border: none;
-          border-bottom: 1px solid #999;
+          // border-bottom: 1px solid #999;
+          border-bottom: 1px solid #000;
           padding-left: 30px;
         }
       }
@@ -1027,7 +1030,8 @@ const handleCommand = (command) => {
           border-radius: 20px;
           padding-left: 48px;
           &::-webkit-input-placeholder {
-            color: #000;
+            color: #979797;
+            font-size: 12px;
           }
         }
       }

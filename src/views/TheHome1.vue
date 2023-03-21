@@ -27,6 +27,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { useRoute, useRouter } from 'vue-router';
 
+import { getHomeInfo } from '@/api/api-shared';
+
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -147,6 +149,36 @@ watch(
 
 const route = useRoute();
 const router = useRouter();
+
+const homeInfo = ref([
+  [{ count: 0 }, { count: 0 }, { count: 0 }],
+  [{ count: 0 }, { count: 0 }, { count: 0 }],
+  [{ count: 0 }, { count: 0 }, { count: 0 }],
+]);
+getHomeInfo().then((res) => {
+  homeInfo.value.forEach((item, index) => {
+    item.forEach((card, index1) => {
+      if (index === 0) {
+        card.count = res.data.course[index1].count;
+      } else if (index === 1) {
+        card.count = res.data.comp[index1].count;
+      } else {
+        card.count = res.data.comp[3 + index1].count;
+      }
+    });
+  });
+});
+
+let io = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    open.value = true;
+  }
+});
+const open = ref(false);
+onMounted(() => {
+  let more = document.querySelectorAll('.more')[0];
+  io.observe(more);
+});
 </script>
 <template>
   <div class="wrapper">
@@ -160,7 +192,7 @@ const router = useRouter();
       >
         <swiper-slide class="slide1">
           <div class="info">
-            <P class="title">{{ t('home.SWIPER[0].TITLE') }}</P>
+            <p class="title">{{ t('home.SWIPER[0].TITLE') }}</p>
             <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
           </div>
           <div class="mask"></div>
@@ -408,10 +440,12 @@ const router = useRouter();
           <OIcon><IconArrowRight /></OIcon>
         </template>
       </OButton>
-      <p class="title title1">{{ t(`home.SHENGSI_JOURNEY.TITLE`) }}</p>
-      <p class="introduce introduce2">
-        {{ t(`home.SHENGSI_JOURNEY.INTRODUCE`) }}
-      </p>
+      <div class="unopen" :class="{ open: open }">
+        <p class="title title1">{{ t(`home.SHENGSI_JOURNEY.TITLE`) }}</p>
+        <p class="introduce introduce2">
+          {{ t(`home.SHENGSI_JOURNEY.INTRODUCE`) }}
+        </p>
+      </div>
     </div>
 
     <div class="more">
@@ -450,7 +484,10 @@ const router = useRouter();
               }}
             </div>
             <div class="detail">
-              <o-icon><icon-user></icon-user></o-icon>
+              <span>
+                <o-icon><icon-user></icon-user></o-icon
+                ><span class="num">{{ homeInfo[index][i].count }}</span>
+              </span>
               <span
                 class="details"
                 @click="
@@ -1091,6 +1128,14 @@ p {
       margin-bottom: 0;
     }
   }
+  .unopen {
+    position: relative;
+    transition: all 0.3s linear;
+    bottom: -200px;
+  }
+  .open {
+    bottom: 0;
+  }
 }
 .more {
   max-width: 1472px;
@@ -1186,7 +1231,7 @@ p {
       background-size: cover;
       // background-position: 50%;
       padding: 12px;
-      border-radius: 5%;
+      border-radius: 20px;
       position: relative;
       margin-bottom: 64px;
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
@@ -1260,6 +1305,11 @@ p {
             padding: 3px 12px;
           }
         }
+        .num {
+          font-size: 14px;
+          color: #2c2c2c;
+          margin-left: 8px;
+        }
       }
       .o-icon {
         color: #2c2c2c;
@@ -1268,11 +1318,11 @@ p {
         svg {
           vertical-align: text-top;
         }
-        &::after {
-          content: '2k+';
-          margin-left: 8px;
-          font-size: 14px;
-        }
+        // &::after {
+        //   content: '2k+';
+        //   margin-left: 8px;
+        //   font-size: 14px;
+        // }
       }
     }
   }

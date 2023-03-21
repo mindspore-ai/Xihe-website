@@ -500,6 +500,10 @@ body.el-popup-parent--hidden {
   height: calc(100% - 48px);
   z-index: 201;
   visibility: hidden;
+  display: none;
+  @media screen and (max-width: 820px) {
+    display: block;
+  }
   .menu-side {
     height: 100%;
     display: inline-block;

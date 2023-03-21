@@ -44,12 +44,12 @@ const navItems = reactive([
     href: 'teacher',
     isIndividual: false,
   },
-  /* {
+  {
     id: 'courseCertificate',
     label: '结课证书',
     href: 'certificate',
     isIndividual: true,
-  }, */
+  },
 ]);
 
 const renderNav = ref();
@@ -109,7 +109,6 @@ watch(
     return props.fixed;
   },
   (newVal) => {
-    // fixed.value = newVal;
     let tab = document.querySelector('.course-desc-tab');
     let box = document.querySelector('.course-desc-info');
     if (newVal) {

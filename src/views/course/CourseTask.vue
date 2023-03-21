@@ -3,47 +3,27 @@ import { ref, reactive } from 'vue';
 
 import { ArrowRightBold } from '@element-plus/icons-vue';
 
-import taskcard from '@/views/course/CourseTaskCard.vue';
+import taskCard from '@/views/course/CourseTaskCard.vue';
 import OButton from '@/components/OButton.vue';
 import emptyImg from '@/assets/imgs/model-empty.png';
 
-import { getTaskList } from '@/api/api-course';
+import { getTaskList, getProject, increaseProject } from '@/api/api-course';
 import { useCourseData } from '@/stores';
 
 const taskInput = ref('');
 const activeName = ref('');
 const taskData = ref([]);
 const currentTaskData = ref([]); // 当前页显示的课程
+const taskResult = ref({}); //作业提交结果（关联项目）
+const showSubmission = ref(false);
 
 const userCourseData = useCourseData();
+console.log('userCourseData: ', userCourseData);
 
 const taskPager = reactive({
   page: 1,
   size: 1,
 });
-
-const taskList = reactive([
-  {
-    id: '1',
-    name: 'DCGAN_demo',
-    like_count: 1,
-    update_at: '2022-11-23',
-    owner: 'yyj',
-    avatar_id:
-      'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_avatar/catimg_07.png',
-    cover_id: '1',
-  },
-  {
-    id: '2',
-    name: 'fdssds',
-    like_count: 12222,
-    update_at: '2023-11-13',
-    owner: 'fdsfs',
-    avatar_id:
-      'https://obs-xihe-beijing4.obs.cn-north-1.myhuaweicloud.com/xihe-img/default_avatar/catimg_07.png',
-    cover_id: '2',
-  },
-]);
 
 function getTask(id, status) {
   getTaskList(id, status).then((res) => {
@@ -56,8 +36,36 @@ function getTask(id, status) {
   });
 }
 getTask(userCourseData.courseData.id, '');
-function handleClick(val) {
+function toggleTaskState(val) {
   getTask(userCourseData.courseData.id, val.props.name);
+}
+
+function handleClick(tab) {
+  if (tab.props.label === '作业提交') {
+    getProject(userCourseData.courseData.id).then((res) => {
+      taskResult.value = res.data;
+      console.log('taskResult.value: ', taskResult.value);
+      showSubmission.value = true;
+    });
+  }
+}
+
+// 关联项目
+function relateProject() {
+  let params = {};
+  let paramsArr = taskInput.value.split('/');
+  params.owner = paramsArr[0];
+  params.project_name = paramsArr[1];
+  increaseProject(params, userCourseData.courseData.id).then((res) => {
+    ElMessage({
+      type: 'success',
+      message: '关联项目成功！',
+    });
+    getProject(userCourseData.courseData.id).then((res) => {
+      taskResult.value = res.data;
+      // showSubmission.value = true;
+    });
+  });
 }
 
 const layout = ref('prev, pager, next');
@@ -76,10 +84,14 @@ function toTop() {
 </script>
 <template>
   <div class="task-content">
-    <el-tabs class="task-tabs">
+    <el-tabs class="task-tabs" @tab-click="handleClick">
       <el-tab-pane label="作业列表" class="task-list">
         <div class="task-list-tabs">
-          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tabs
+            v-model="activeName"
+            type="card"
+            @tab-click="toggleTaskState"
+          >
             <el-tab-pane label="竞赛状态" name="status" disabled> </el-tab-pane>
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="未完成" name="not-finish"></el-tab-pane>
@@ -121,50 +133,78 @@ function toTop() {
             </div>
           </div>
           <div
-            v-if="(activeName === 'not-finish') & !taskData.length"
+            v-if="activeName === 'not-finish' && !taskData.length"
             class="empty"
           >
             <img :src="emptyImg" alt="" />
             <p>暂无未完成作业</p>
           </div>
-          <div
-            v-if="(activeName === 'finish') & !taskData.length"
-            class="empty"
-          >
+          <div v-if="activeName === 'finish' && !taskData.length" class="empty">
             <img :src="emptyImg" alt="" />
             <p>暂无已完成作业</p>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="作业提交" class="task-submission">
-        <div class="title">作业提交</div>
-        <div class="task-explain">
-          <span>请先</span>
-          <router-link class="creat-project" to="/new/projects" target="_blank">
-            点击此处
-          </router-link>
-          <span>
-            创建Private项目，然后在此输入”用户名/项目名“进行关联，关联项目用于提交该课程相关作业。
-          </span>
-        </div>
-        <div v-for="item in taskList" :key="item.id" class="task-card">
-          <taskcard
-            :card-data="item"
-            class="card-list-item-content"
-            @click="goDetail(item)"
-          ></taskcard>
-        </div>
-        <div class="task-input">
-          <el-input v-model="taskInput" placeholder="请输入用户名/项目名" />
-        </div>
-        <div class="task-btn">
-          <OButton
-            size="small"
-            type="primary"
-            @click="relateProject(taskInput)"
-          >
-            关联项目
-          </OButton>
+        <div v-if="showSubmission">
+          <div class="title">作业提交</div>
+          <div class="task-explain">
+            <span>请先</span>
+            <router-link
+              class="creat-project"
+              to="/new/projects"
+              target="_blank"
+            >
+              点击此处
+            </router-link>
+            <span>
+              创建Private项目，然后在此输入”用户名/项目名“进行关联，关联项目用于提交该课程相关作业。
+            </span>
+          </div>
+          <div v-if="taskResult.owner">
+            <taskCard
+              :card-data="taskResult"
+              class="task-card"
+              @click="goDetail(item)"
+            ></taskCard>
+          </div>
+          <div class="task-input">
+            <el-input v-model="taskInput" placeholder="请输入用户名/项目名" />
+          </div>
+          <div class="task-btn">
+            <OButton
+              v-if="taskResult.owner && taskInput"
+              size="small"
+              type="primary"
+              @click="relateProject(taskInput)"
+            >
+              更新项目
+            </OButton>
+            <OButton
+              v-if="taskResult.owner && !taskInput"
+              size="small"
+              type="primary"
+              disabled
+            >
+              更新项目
+            </OButton>
+            <OButton
+              v-if="!taskResult.owner && taskInput"
+              size="small"
+              type="primary"
+              @click="relateProject(taskInput)"
+            >
+              关联项目
+            </OButton>
+            <OButton
+              v-if="!taskResult.owner && !taskInput"
+              size="small"
+              type="primary"
+              disabled
+            >
+              关联项目
+            </OButton>
+          </div>
         </div>
       </el-tab-pane>
     </el-tabs>

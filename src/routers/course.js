@@ -52,13 +52,13 @@ export default [
         },
       },
       // 结课证书
-      /* {
+      {
         path: 'certificate',
         name: 'courseCertificate',
         component: () => {
           return import('@/views/course/CourseCertificate.vue');
         },
-      }, */
+      },
     ],
   },
   // 课程视频页

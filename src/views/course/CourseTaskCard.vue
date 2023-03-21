@@ -10,7 +10,7 @@ const props = defineProps({
     },
   },
 });
-// console.log('cardData: ', props.cardData);
+console.log('cardData: ', props.cardData);
 const i18n = {
   downloadTitle: '下载量',
   uploadTime: '上传时间',
@@ -42,7 +42,7 @@ const i18n = {
         <o-icon>
           <icon-time></icon-time>
         </o-icon>
-        <span>{{ cardData.update_at }}</span>
+        <span>{{ cardData.create_at }}</span>
       </div>
     </div>
   </div>

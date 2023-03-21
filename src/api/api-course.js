@@ -74,18 +74,42 @@ export function applyCourse(id, params) {
  * @returns
  */
 export function getTaskList(id, status) {
-  const url = `/server/course/${id}/asg${status ? `?status=${status}` : ''}`;
+  const url = `/server/course/${id}/asg/list${
+    status ? `?status=${status}` : ''
+  }`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 
 /**
- * 获取关联项目列表
+ * 获取关联项目
  * @returns
  */
-export function getProjectList(id) {
-  const url = `/server/course/${id}/asg`;
+export function getProject(id) {
+  const url = `/server/course/${id}/asg/result`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
+/**
+ * 关联项目
+ * @returns
+ */
+export function increaseProject(params, id) {
+  const url = `/server/course/${id}/realted_project`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
+/**
+ * 获取课程证书
+ * @returns
+ */
+export function getCertificate(id) {
+  const url = `/server/course/${id}/cert`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

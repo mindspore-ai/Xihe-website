@@ -99,6 +99,11 @@ const navItems = computed(() => {
       href: '/datasets',
     },
     {
+      id: 'estate',
+      label: t('home.APP_HEADER.INDUSTRY'),
+      href: '/estate/industry',
+    },
+    {
       id: 'course',
       label: t('home.APP_HEADER.COURSE'),
       href: '/course',

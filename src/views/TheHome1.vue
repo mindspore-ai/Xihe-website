@@ -35,7 +35,7 @@ const { t } = useI18n();
 
 AOS.init();
 
-const modules = [Pagination];
+const modules = [Pagination, Autoplay];
 const galleryModules = [Autoplay];
 function renderBullet(index, className) {
   let text = '';
@@ -197,7 +197,12 @@ onMounted(() => {
           </div>
           <div class="mask"></div>
         </swiper-slide>
-        <swiper-slide class="slide2"> <div class="mask"></div> </swiper-slide>
+        <swiper-slide
+          class="slide2"
+          @click="router.push('/competition/ai_painter/0/introduction')"
+        >
+          <div class="mask"></div>
+        </swiper-slide>
       </swiper>
     </div>
 
@@ -521,7 +526,12 @@ onMounted(() => {
               t(`home.INDUSTRY.CARDS[${index}].STATUS`)
             }}</span>
           </div>
-          <div class="intro">{{ t(`home.INDUSTRY.CARDS[${index}].DESC`) }}</div>
+          <div
+            class="intro"
+            @click="router.push(t(`home.INDUSTRY.CARDS[${index}].PATH`))"
+          >
+            {{ t(`home.INDUSTRY.CARDS[${index}].DESC`) }}
+          </div>
         </div>
       </div>
     </div>
@@ -1339,6 +1349,7 @@ p {
 }
 .open {
   bottom: 0;
+  height: auto;
 }
 .industy {
   max-width: 1472px;
@@ -1374,12 +1385,12 @@ p {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .intro {
           color: #000;
+          cursor: pointer;
         }
         .name {
           color: #000;
         }
         &:hover {
-          cursor: pointer;
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
           background: url(@/assets/imgs/home1/industy/hover-bg2.png);
           background-size: cover;

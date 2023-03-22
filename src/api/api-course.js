@@ -99,9 +99,11 @@ export function getProject(id) {
  */
 export function increaseProject(params, id) {
   const url = `/server/course/${id}/realted_project`;
-  return request.put(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .put(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

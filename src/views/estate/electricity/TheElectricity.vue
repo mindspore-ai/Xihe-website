@@ -6,36 +6,39 @@ import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
 
 const cases = [
   {
-    type: '金属零部件缺陷检测',
-    // name: 'SSIM-AE无监督缺陷检测',
-    image: defectDetecting,
-    url: '/estate/electric/case-1',
-  },
-  {
-    type: '金属零部件缺陷检测',
+    id: 1,
+    type: '变电站AI分析主机',
     // name: 'PatchCore异常检测',
     image: anomalyDetection,
-    url: '/estate/electric/case-1',
+    url: '/estate/electricity/substation',
+  },
+  {
+    id: 2,
+    type: '敬请期待',
+    // name: 'PatchCore异常检测',
+    image: defectDetecting,
+    url: '',
   },
 ];
 
 const router = useRouter();
 
-function goCasePath(link) {
-  router.push(link);
+function goCasePath(item) {
+  if (item.type !== '敬请期待') {
+    router.push(item.url);
+  }
 }
 </script>
 <template>
   <div class="electric">
-    电力专区
-    <!-- <p class="application-cases">应用案例</p>
+    <p class="application-cases">应用案例</p>
 
     <div class="case-cards">
       <div
         v-for="item in cases"
         :key="item.name"
         class="case-item"
-        @click="goCasePath(item.url)"
+        @click="goCasePath(item)"
       >
         <img :src="item.image" alt="" />
 
@@ -44,7 +47,7 @@ function goCasePath(link) {
           <p class="case-name">{{ item.name }}</p>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -64,6 +67,9 @@ function goCasePath(link) {
     width: 100%;
     cursor: pointer;
     position: relative;
+    &:last-child {
+      cursor: not-allowed;
+    }
     .case-info {
       position: absolute;
       left: 40px;

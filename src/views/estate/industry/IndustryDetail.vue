@@ -7,7 +7,6 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import estateData from '../../../../config/estate';
-// console.log('estateData: ', estateData);
 
 const route = useRoute();
 const router = useRouter();
@@ -75,7 +74,7 @@ const industryDetail = computed(() => {
     <div class="industry-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate' }">
+          <el-breadcrumb-item :to="{ path: '/estate/industry' }">
             工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">

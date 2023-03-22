@@ -86,7 +86,7 @@ const navItems = reactive([
   {
     id: 'estate',
     label: '产业',
-    href: '/estate/industry',
+    href: '/estate/electricity',
   },
   {
     id: 'competition',

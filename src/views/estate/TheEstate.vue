@@ -13,9 +13,8 @@ import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
 const route = useRoute();
-console.log('route: ', route);
 
-const activeName = ref('工业专区');
+const activeName = ref('电力专区');
 watch(
   () => route.name,
   (nweVal) => {
@@ -35,18 +34,18 @@ watch(
 const sections = [
   {
     id: 0,
-    name: '工业专区',
-    path: '/estate/industry',
-    routeName: 'industry',
-    icon: IconIndustry,
-  },
-  {
-    id: 1,
     name: '电力专区',
     path: '/estate/electricity',
     // path: '/estate/industrial-zone',
     routeName: 'electricity',
     icon: IconElectricity,
+  },
+  {
+    id: 1,
+    name: '工业专区',
+    path: '/estate/industry',
+    routeName: 'industry',
+    icon: IconIndustry,
   },
   {
     id: 2,

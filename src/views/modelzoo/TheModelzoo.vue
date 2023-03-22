@@ -125,7 +125,7 @@ function goModelzoo() {
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-head.jpg');
     @media screen and (max-width: 768px) {
       padding-top: 48px;
     }
@@ -133,7 +133,7 @@ function goModelzoo() {
       display: flex;
       justify-content: space-between;
       padding: 42px 16px;
-      color: #fff;
+      color: #000;
       .title {
         padding-bottom: 8px;
         font-size: 36px;

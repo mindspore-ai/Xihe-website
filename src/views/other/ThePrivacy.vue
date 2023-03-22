@@ -31,12 +31,12 @@ const activeName = ref('first');
   &-header {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-head.jpg');
     .wrap {
       max-width: 1472px;
       margin: 0 auto;
       padding: 42px 16px 70px;
-      color: #fff;
+      color: #000;
       font-size: 36px;
     }
   }

@@ -100,7 +100,6 @@ watch(
   () => route,
   () => {
     currentPage.value = '';
-    console.log(route.name);
     noHeader.value = false;
     Object.keys(routeLists).forEach((key) => {
       let bool = routeLists[key].child.includes(route.name);
@@ -156,7 +155,6 @@ function Scroll(e) {
   if (e.wheelDelta) {
     if (e.wheelDelta > 0) {
       noHeader.value = false;
-      console.log(route.path);
     } else if (route.name === 'home') {
       noHeader.value = true;
     }

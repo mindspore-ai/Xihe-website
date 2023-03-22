@@ -18,13 +18,13 @@ defineProps({
     <div class="case-painspot">
       <div class="title">案例痛点</div>
       <div class="painspot-desc">
-        {{ industryDetail.background }}
+        {{ industryDetail.painspot }}
       </div>
     </div>
     <div class="solution">
       <div class="title">解决方案</div>
       <div class="solution-desc">
-        {{ industryDetail.background }}
+        {{ industryDetail.solution }}
       </div>
     </div>
   </div>

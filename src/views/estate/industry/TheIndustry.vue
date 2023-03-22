@@ -14,18 +14,20 @@ const cases = [
   },
   {
     id: 2,
-    type: '变电站AI分析主机',
+    type: '敬请期待',
     // name: 'PatchCore异常检测',
     image: anomalyDetection,
-    url: '/estate/industry/substation',
+    url: '',
   },
 ];
 
 const router = useRouter();
 
 // TODO:
-function goCasePath(link) {
-  router.push(link);
+function goCasePath(item) {
+  if (item.type !== '敬请期待') {
+    router.push(item.url);
+  }
 }
 </script>
 <template>
@@ -36,7 +38,7 @@ function goCasePath(link) {
         v-for="item in cases"
         :key="item.name"
         class="case-item"
-        @click="goCasePath(item.url)"
+        @click="goCasePath(item)"
       >
         <img :src="item.image" alt="" />
 
@@ -66,6 +68,9 @@ function goCasePath(link) {
       width: 100%;
       cursor: pointer;
       position: relative;
+      &:last-child {
+        cursor: not-allowed;
+      }
       .case-info {
         position: absolute;
         left: 40px;

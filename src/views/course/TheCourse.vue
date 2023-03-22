@@ -609,7 +609,7 @@ $theme: #0d8dff;
   .course-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.jpg');
+    background-image: url('@/assets/imgs/banner-head.png');
     .wrap {
       display: flex;
       justify-content: space-between;

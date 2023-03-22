@@ -31,7 +31,7 @@ const activeName = ref('first');
   &-header {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.jpg');
+    background-image: url('@/assets/imgs/banner-head.png');
     .wrap {
       max-width: 1472px;
       margin: 0 auto;

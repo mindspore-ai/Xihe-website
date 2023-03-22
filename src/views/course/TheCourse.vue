@@ -20,7 +20,7 @@ const currentCourse = ref([]); // 当前页显示的课程
 
 const coursePager = reactive({
   page: 1,
-  size: 3,
+  size: 5,
 });
 
 let i18n = {

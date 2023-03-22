@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUpdated } from 'vue';
+import { ref } from 'vue';
 import { useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -52,7 +52,7 @@ function hideForm(val, type) {
   }
 }
 
-onUpdated(() => {
+/* onUpdated(() => {
   let card = document.querySelector('.course-card');
   let box = document.querySelector('.course-info');
   let top1 = card.offsetTop + 30;
@@ -73,7 +73,7 @@ onUpdated(() => {
       fixed.value = false;
     }
   });
-});
+}); */
 
 onBeforeRouteLeave(() => {
   userCourseData.$reset();

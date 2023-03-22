@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { ArrowRightBold } from '@element-plus/icons-vue';
 
@@ -10,6 +11,8 @@ import emptyImg from '@/assets/imgs/model-empty.png';
 import { getTaskList, getProject, increaseProject } from '@/api/api-course';
 import { useCourseData } from '@/stores';
 
+const router = useRouter();
+
 const taskInput = ref('');
 const activeName = ref('');
 const taskData = ref([]);
@@ -18,11 +21,10 @@ const taskResult = ref({}); //作业提交结果（关联项目）
 const showSubmission = ref(false);
 
 const userCourseData = useCourseData();
-console.log('userCourseData: ', userCourseData);
 
 const taskPager = reactive({
   page: 1,
-  size: 1,
+  size: 6,
 });
 
 function getTask(id, status) {
@@ -32,7 +34,7 @@ function getTask(id, status) {
     } else {
       taskData.value = [];
     }
-    currentTaskData.value = res.data.slice(0, taskPager.size);
+    currentTaskData.value = taskData.value.slice(0, taskPager.size);
   });
 }
 getTask(userCourseData.courseData.id, '');
@@ -44,28 +46,52 @@ function handleClick(tab) {
   if (tab.props.label === '作业提交') {
     getProject(userCourseData.courseData.id).then((res) => {
       taskResult.value = res.data;
-      console.log('taskResult.value: ', taskResult.value);
       showSubmission.value = true;
     });
   }
 }
 
 // 关联项目
-function relateProject() {
-  let params = {};
-  let paramsArr = taskInput.value.split('/');
-  params.owner = paramsArr[0];
-  params.project_name = paramsArr[1];
-  increaseProject(params, userCourseData.courseData.id).then((res) => {
+async function relateProject() {
+  const [owner, project_name] = taskInput.value.split('/');
+  const params = { owner, project_name };
+  try {
+    await increaseProject(params, userCourseData.courseData.id);
     ElMessage({
       type: 'success',
       message: '关联项目成功！',
+      duration: 4000,
     });
-    getProject(userCourseData.courseData.id).then((res) => {
-      taskResult.value = res.data;
-      // showSubmission.value = true;
-    });
-  });
+    const res = await getProject(userCourseData.courseData.id);
+    taskResult.value = res.data;
+    taskInput.value = '';
+    // showSubmission.value = true;
+  } catch (err) {
+    if (err.response.data.msg === "name's length should be between 3 to 35") {
+      ElMessage({
+        type: 'warning',
+        message: '关联项目失败，格式应为：用户名/项目名。',
+        duration: 4000,
+      });
+    } else if (err.response.data.code === 'course_does_not_own_project') {
+      ElMessage({
+        type: 'warning',
+        message: '关联项目失败，请关联自己的项目。',
+        duration: 4000,
+      });
+    } else if (err.response.data.msg === "doc doesn't exist") {
+      ElMessage({
+        type: 'error',
+        message: '关联项目失败,请检查后重试~',
+        duration: 4000,
+      });
+    }
+    taskInput.value = '';
+  }
+}
+
+function goProjectDetail(item) {
+  router.push(`/projects/${item[0].owner}/${item[0].name}`);
 }
 
 const layout = ref('prev, pager, next');
@@ -132,6 +158,10 @@ function toTop() {
               ></el-pagination>
             </div>
           </div>
+          <div v-if="activeName === '' && !taskData.length" class="empty">
+            <img :src="emptyImg" alt="" />
+            <p>暂无作业</p>
+          </div>
           <div
             v-if="activeName === 'not-finish' && !taskData.length"
             class="empty"
@@ -158,14 +188,14 @@ function toTop() {
               点击此处
             </router-link>
             <span>
-              创建Private项目，然后在此输入”用户名/项目名“进行关联，关联项目用于提交该课程相关作业。
+              创建AI实验室仓库，然后在此输入”用户名/项目名“进行关联，关联项目用于提交该课程相关作业。
             </span>
           </div>
-          <div v-if="taskResult.owner">
+          <div v-if="taskResult.related_project">
             <taskCard
               :card-data="taskResult"
               class="task-card"
-              @click="goDetail(item)"
+              @click="goProjectDetail(taskResult.related_project)"
             ></taskCard>
           </div>
           <div class="task-input">
@@ -173,7 +203,7 @@ function toTop() {
           </div>
           <div class="task-btn">
             <OButton
-              v-if="taskResult.owner && taskInput"
+              v-if="taskResult.related_project && taskInput"
               size="small"
               type="primary"
               @click="relateProject(taskInput)"
@@ -181,7 +211,7 @@ function toTop() {
               更新项目
             </OButton>
             <OButton
-              v-if="taskResult.owner && !taskInput"
+              v-if="taskResult.related_project && !taskInput"
               size="small"
               type="primary"
               disabled
@@ -189,7 +219,7 @@ function toTop() {
               更新项目
             </OButton>
             <OButton
-              v-if="!taskResult.owner && taskInput"
+              v-if="!taskResult.related_project && taskInput"
               size="small"
               type="primary"
               @click="relateProject(taskInput)"
@@ -197,7 +227,7 @@ function toTop() {
               关联项目
             </OButton>
             <OButton
-              v-if="!taskResult.owner && !taskInput"
+              v-if="!taskResult.related_project && !taskInput"
               size="small"
               type="primary"
               disabled

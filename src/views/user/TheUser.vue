@@ -458,8 +458,8 @@ function handleDomChange(val) {
   width: 100%;
   padding-top: 80px;
   background-color: #0f1927;
-  color: #ffffff;
-  background-image: url('@/assets/imgs/banner-head.png');
+  color: #000;
+  background-image: url('@/assets/imgs/banner-head.jpg');
   background-size: cover;
   background-repeat: no-repeat;
 

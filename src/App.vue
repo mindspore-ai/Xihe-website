@@ -100,6 +100,8 @@ watch(
   () => route,
   () => {
     currentPage.value = '';
+    console.log(route.name);
+    noHeader.value = false;
     Object.keys(routeLists).forEach((key) => {
       let bool = routeLists[key].child.includes(route.name);
       if (bool) {
@@ -154,7 +156,8 @@ function Scroll(e) {
   if (e.wheelDelta) {
     if (e.wheelDelta > 0) {
       noHeader.value = false;
-    } else {
+      console.log(route.path);
+    } else if (route.name === 'home') {
       noHeader.value = true;
     }
   }
@@ -209,7 +212,7 @@ const handleCommand = () => {
     "
   >
     <div
-      v-if="currentPage === '首页' && screenWidth <= 820"
+      v-if="currentPage === '首页'"
       class="back"
       @click="toggleMenu(!meauActive)"
     >
@@ -232,7 +235,7 @@ const handleCommand = () => {
     v-else
     ref="header"
     class="app-header"
-    :class="{ opaque: isHeaderTransparent, noHeader: noHeader }"
+    :class="{ opaque: isHeaderTransparent, 'no-header': noHeader }"
   >
     <app-header></app-header>
   </header>
@@ -398,7 +401,7 @@ body.el-popup-parent--hidden {
   min-width: 1280px;
   transition: all 0.5s;
 }
-.noHeader {
+.no-header {
   top: -80px;
 }
 

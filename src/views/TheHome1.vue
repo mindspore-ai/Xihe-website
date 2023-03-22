@@ -172,6 +172,8 @@ getHomeInfo().then((res) => {
 let io = new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting) {
     open.value = true;
+  } else {
+    open.value = false;
   }
 });
 const open = ref(false);

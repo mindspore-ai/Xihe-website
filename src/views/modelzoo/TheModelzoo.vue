@@ -125,7 +125,7 @@ function goModelzoo() {
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.jpg');
+    background-image: url('@/assets/imgs/banner-head.png');
     @media screen and (max-width: 768px) {
       padding-top: 48px;
     }

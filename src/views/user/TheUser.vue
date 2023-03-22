@@ -459,7 +459,7 @@ function handleDomChange(val) {
   padding-top: 80px;
   background-color: #0f1927;
   color: #000;
-  background-image: url('@/assets/imgs/banner-head.jpg');
+  background-image: url('@/assets/imgs/banner-head.png');
   background-size: cover;
   background-repeat: no-repeat;
 

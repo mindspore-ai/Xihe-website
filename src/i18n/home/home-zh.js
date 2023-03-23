@@ -52,7 +52,7 @@ export default {
   // 轮播
   SWIPER: [
     {
-      TITLE: '昇思大模型体验平台',
+      TITLE: '昇思大模型平台',
       INTRODUCE:
         '昇思大模型平台是集算法选型、创意分享、模型实验和大模型在线体验为一体的AI学习与实践社区，提供超强Ascend算力、免费课程资源、经典样例代码、企业落地案例和多层级挑战赛，欢迎广大开发者注册试用。',
     },
@@ -98,7 +98,7 @@ export default {
   },
   // 大模型体验
   MODELZOO: {
-    TITLE: '大模型体验',
+    TITLE: '大模型',
     INTRODUCE:
       '覆盖NLP和CV等场景。面向语言理解、语言生成，具有超强语言理解能力以及对话生成；可实现跨模态检索、图文生成、图片文档的信息提取等应用；可实现对遥感数据的目标检测等。',
     // QUCIK_START: '立即体验',
@@ -116,7 +116,7 @@ export default {
         PATH: '/modelzoo/wukong',
       },
       {
-        MODELZOO_NAME: '武大.Luojia',
+        MODELZOO_NAME: '武大.LuoJia',
         MODELZOO_DESC: '全球首个遥感专用框架及最大遥感样本库',
         IMAGE: modelzoo_luojia,
         PATH: '/modelzoo/luojia',
@@ -293,8 +293,7 @@ export default {
         NAME: '电力',
         DESC: '通过训练电力数据构集构建AI模型，实现对电力数据的预测，可以预测电力波动，辅助企业能源管理、能源调度等',
         IMAGE: industy2,
-        STATUS: '敬请期待',
-        PATH: '/',
+        PATH: '/estate/electricity',
       },
       {
         NAME: '医疗',

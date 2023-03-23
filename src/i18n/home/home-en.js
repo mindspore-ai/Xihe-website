@@ -293,13 +293,11 @@ export default {
         NAME: 'Industry',
         DESC: 'Build AI models by training object detection data to intelligently identify industrial objects widely used in industrial detection and smart manufacturing.',
         IMAGE: industy1,
-        PATH: '/course/c003/introduction',
       },
       {
         NAME: 'Electric Power',
         DESC: 'Build AI models by training electric power data to predict electric power data and fluctuation and assist enterprises in energy management and scheduling.',
         IMAGE: industy2,
-        STATUS: '敬请期待',
       },
       {
         NAME: 'Healthcare',

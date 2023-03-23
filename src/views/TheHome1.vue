@@ -35,7 +35,7 @@ const { t } = useI18n();
 
 AOS.init();
 
-const modules = [Pagination, Autoplay];
+const modules = [Pagination];
 const galleryModules = [Autoplay];
 function renderBullet(index, className) {
   let text = '';
@@ -146,6 +146,15 @@ watch(
     }
   }
 );
+const picDialog = ref(false);
+const picSrc = ref({
+  img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/星河欲坠时-00.jpg',
+  desc: '星河欲坠时',
+});
+function taggleDialog(pic) {
+  picDialog.value = true;
+  picSrc.value = pic;
+}
 
 const route = useRoute();
 const router = useRouter();
@@ -421,7 +430,7 @@ onMounted(() => {
         slides-per-view="auto"
         :modules="galleryModules"
         :autoplay="{
-          delay: 1000,
+          delay: 1500,
           disableOnInteraction: false,
           autoplay: true,
           pauseOnMouseEnter: true,
@@ -433,7 +442,7 @@ onMounted(() => {
         @set-transition="setTransition"
       >
         <swiper-slide v-for="item in galleryPic" :key="item">
-          <img :src="item.img" />
+          <img :src="item.img" @click="taggleDialog(item)" />
         </swiper-slide>
       </swiper>
       <OButton
@@ -453,6 +462,20 @@ onMounted(() => {
           {{ t(`home.SHENGSI_JOURNEY.INTRODUCE`) }}
         </p>
       </div>
+      <!-- 图片弹窗 -->
+      <el-dialog v-model="picDialog" fullscreen>
+        <img :src="picSrc.img" alt="" />
+        <OButton
+          animation
+          class="gallery-entry"
+          @click="router.push(t(`home.GALLARY.PATH`))"
+        >
+          {{ t(`home.GALLARY.GALLARY_BUTTON`) }}
+          <template #suffix>
+            <OIcon><IconArrowRight /></OIcon>
+          </template>
+        </OButton>
+      </el-dialog>
     </div>
 
     <div class="more" :class="{ open: open }">
@@ -524,7 +547,7 @@ onMounted(() => {
             <img :src="t(`home.INDUSTRY.CARDS[${index}].IMAGE`)" alt="" />{{
               t(`home.INDUSTRY.CARDS[${index}].NAME`)
             }}
-            <span v-if="index > 0">{{
+            <span v-if="index > 1">{{
               t(`home.INDUSTRY.CARDS[${index}].STATUS`)
             }}</span>
           </div>
@@ -634,7 +657,7 @@ onMounted(() => {
       width: 160px;
       height: 48px;
       line-height: 48px;
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.7);
       border-radius: 42px;
       backdrop-filter: blur(10px);
       margin: 0 8px;
@@ -754,6 +777,7 @@ p {
     .frame {
       background-color: #e9edfb;
       width: 80px;
+      margin: 0 3px;
       @media screen and (max-width: 820px) {
         display: none;
       }
@@ -932,7 +956,7 @@ p {
       margin-left: 24px;
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 16px;
       }
     }
     .item {
@@ -972,9 +996,9 @@ p {
         font-size: 14px;
         margin-left: 12px;
         margin-bottom: 12px;
+        color: #555555;
         @media screen and (max-width: 820px) {
           font-size: 12px;
-          color: #555555;
           margin-left: 10px;
           margin-bottom: 3px;
         }
@@ -1018,7 +1042,7 @@ p {
       transform: translateY(-40px);
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 16px;
         transform: none;
       }
     }
@@ -1132,6 +1156,37 @@ p {
       // }
       img {
         width: 100%;
+        cursor: pointer;
+      }
+    }
+  }
+  :deep(.el-dialog__body) {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 80px);
+    @media screen and (max-width: 820px) {
+      height: calc(100% - 100px);
+    }
+    @media screen and (max-width: 167px) {
+      height: calc(100% - 200px);
+    }
+
+    img {
+      width: 30%;
+      @media screen and (max-width: 820px) {
+        width: 100%;
+      }
+    }
+    .o-button {
+      margin-top: 48px;
+      color: #fff;
+      border: 1px solid #fff;
+      &:hover {
+        color: #fff;
+        border: 1px solid #fff;
       }
     }
   }
@@ -1191,7 +1246,8 @@ p {
             font-size: 24px;
             line-height: 33px;
             color: #555;
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1244,7 +1300,7 @@ p {
       margin-left: 24px;
       @media screen and (max-width: 820px) {
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 16px;
       }
     }
     .tabs-card {
@@ -1295,6 +1351,7 @@ p {
         margin: 24px 12px;
         line-height: 22px;
         height: 44px;
+        color: #555;
         overflow: hidden;
         @media screen and (max-width: 820px) {
           font-size: 12px;
@@ -1362,6 +1419,7 @@ p {
   }
   .introduce1 {
     margin-bottom: 40px;
+    max-width: 900px;
     @media screen and (max-width: 820px) {
     }
   }
@@ -1372,7 +1430,7 @@ p {
     row-gap: 24px;
     @media screen and (max-width: 820px) {
       grid-template-columns: 1fr;
-      row-gap: 8px;
+      row-gap: 16px;
     }
     .item {
       padding: 34px 40px 40px;
@@ -1386,7 +1444,7 @@ p {
       &:first-child {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .intro {
-          color: #000;
+          color: #555;
           cursor: pointer;
         }
         .name {
@@ -1403,19 +1461,36 @@ p {
             color: #ffffff;
           }
         }
-        // &:nth-child(2) {
-        //   background: url(@/assets/imgs/home1/industy/hover-bg1.png);
-        //   background-size: cover;
-        // }
-        // &:nth-child(3) {
-        //   background: url(@/assets/imgs/home1/industy/hover-bg3.png);
-        //   background-size: cover;
-        // }
-        // &:last-child {
-        //   background: url(@/assets/imgs/home1/industy/hover-bg4.png);
-        //   background-size: cover;
-        // }
       }
+      &:nth-child(2) {
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        .intro {
+          color: #555;
+          cursor: pointer;
+        }
+        .name {
+          color: #000;
+        }
+        &:hover {
+          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          background: url(@/assets/imgs/home1/industy/hover-bg1.png);
+          background-size: cover;
+          .name {
+            color: #ffffff;
+          }
+          .intro {
+            color: #ffffff;
+          }
+        }
+      }
+      // &:nth-child(3) {
+      //   background: url(@/assets/imgs/home1/industy/hover-bg3.png);
+      //   background-size: cover;
+      // }
+      // &:last-child {
+      //   background: url(@/assets/imgs/home1/industy/hover-bg4.png);
+      //   background-size: cover;
+      // }
     }
     .name {
       font-size: 24px;

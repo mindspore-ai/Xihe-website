@@ -100,7 +100,6 @@ watch(
   () => route,
   () => {
     currentPage.value = '';
-    console.log(route.name);
     noHeader.value = false;
     Object.keys(routeLists).forEach((key) => {
       let bool = routeLists[key].child.includes(route.name);
@@ -156,7 +155,6 @@ function Scroll(e) {
   if (e.wheelDelta) {
     if (e.wheelDelta > 0) {
       noHeader.value = false;
-      console.log(route.path);
     } else if (route.name === 'home') {
       noHeader.value = true;
     }
@@ -166,11 +164,17 @@ window.onmousewheel = document.onmousewheel = Scroll;
 
 const mobilNav = computed(() => {
   return [
-    { name: '首页', isactive: true },
+    // { name: '首页', isactive: true },
     { name: t('home.APP_HEADER.PROJECT'), isactive: false, path: '/project' },
     { name: t('home.APP_HEADER.MODEL'), isactive: false, path: '/model' },
-    { name: '大模型体验', isactive: false, path: '/modelzoo' },
-    { name: '大模型微调', isactive: false, path: '/finetune' },
+    {
+      name: '大模型',
+      isactive: true,
+      children: [
+        { name: '模型体验', path: '/modelzoo' },
+        { name: '模型微调', path: '/finetune' },
+      ],
+    },
     { name: t('home.APP_HEADER.DATASET'), isactive: false, path: '/dataset' },
     { name: t('home.APP_HEADER.COURSE'), isactive: false, path: '/course' },
     {
@@ -187,8 +191,13 @@ function toggleMenu(menu) {
   meauActive.value = menu;
 }
 function toPage(path) {
-  meauActive.value = false;
-  router.push(path);
+  isMobileFit.value = false;
+  if (path) {
+    meauActive.value = false;
+    router.push(path);
+  } else {
+    mobilNav.value[0].isactive = false;
+  }
 }
 const handleCommand = () => {
   const { pathname } = window.location;
@@ -252,9 +261,14 @@ const handleCommand = () => {
         <div
           v-for="item in mobilNav"
           :key="item"
-          class="link"
+          class="nav-item"
           :class="{ active: item.isactive }"
         >
+          <span @click="toPage(item.path)">{{ item.name }}</span>
+        </div>
+      </div>
+      <div class="item-children" :class="{ 'children-active': meauActive }">
+        <div v-for="item in mobilNav[2].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
@@ -518,7 +532,7 @@ body.el-popup-parent--hidden {
     left: -100%;
     .nav {
     }
-    .link {
+    .nav-item {
       font-size: 12px;
       line-height: 18px;
       padding-left: 16px;
@@ -534,6 +548,18 @@ body.el-popup-parent--hidden {
       span {
         border-bottom: 2px solid #40adff;
       }
+    }
+    .item-children {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      position: fixed;
+      top: 48px;
+      left: -100%;
+      // left: 164px;
+    }
+    .children-active {
+      left: 164px;
     }
   }
   .language {

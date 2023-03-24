@@ -65,14 +65,16 @@ export function getTaskList(id, status) {
 }
 
 /**
- * 获取关联项目
+ * 获取作业详情
  * @returns
  */
 export function getTaskDetail(courseId, taskId) {
   const url = `/server/course/${courseId}/asg/${taskId}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

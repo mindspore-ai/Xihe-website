@@ -11,6 +11,7 @@ const route = useRoute();
 console.log('route: ', route.params);
 const router = useRouter();
 const taskData = ref({});
+const showDetail = ref(false);
 
 const mkit = handleMarkdown();
 const codeString = ref('');
@@ -25,14 +26,17 @@ async function getTask() {
     README = tree.data;
     codeString.value = README;
     result.value = mkit.render(codeString.value);
+    console.log('result.value: ', result.value);
+    showDetail.value = true;
   } catch (err) {
-    console.error(err);
+    // console.log(err);
+    router.push(`/course/${route.params.courseId}`);
   }
 }
 getTask();
 </script>
 <template>
-  <div class="task-detail">
+  <div v-if="showDetail" class="task-detail">
     <div class="task-detail-wrap">
       <div class="task-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -51,7 +55,7 @@ getTask();
       </div>
       <div class="task-content">
         <div class="task-name">{{ taskData.asg_name }}</div>
-        <div class="task-introduce" v-html="result"></div>
+        <div class="markdown-file" v-html="result"></div>
       </div>
     </div>
   </div>
@@ -97,7 +101,7 @@ getTask();
         color: #000000;
         margin: 40px 0;
       }
-      .task-introduce {
+      .markdown-file {
         padding: 40px;
         background: #ffffff;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);

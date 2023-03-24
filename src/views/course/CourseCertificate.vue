@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import html2canvas from 'html2canvas';
 
 import emptyImg from '@/assets/imgs/model-empty.png';
+import IconDownload from '~icons/app/wukong-download';
 
 import { getCertificate } from '@/api/api-course';
 import { useCourseData } from '@/stores';
@@ -14,6 +15,7 @@ const certificateRef = ref(null);
 const certificateData = ref({});
 const courseInfo = useCourseData().courseData;
 const show = ref(false);
+const showImg = ref(true);
 
 function gainCertificate() {
   if (courseInfo.is_apply) {
@@ -33,11 +35,12 @@ const certRef = ref(null);
 const certificateUrl = ref('');
 function generateCertificate() {
   const certificateDiv = certificateRef.value;
+  console.log('certificateDiv: ', certificateDiv);
   html2canvas(certificateDiv).then((canvas) => {
     const dataUrl = canvas.toDataURL('image/png');
     certificateUrl.value = dataUrl;
     // console.log('dataUrl: ', dataUrl);
-    certificateRef.value.style.display = 'none';
+    showImg.value = false;
   });
 }
 function loadImg() {
@@ -47,18 +50,24 @@ function loadImg() {
 </script>
 <template>
   <div v-if="show" class="course-certificate">
-    <img
+    <div
       v-if="certificateData.is_pass && certificateUrl"
-      :src="certificateUrl"
-      alt=""
-      class="certificate-loadImg"
-    />
+      class="certificate-box"
+    >
+      <img :src="certificateUrl" alt="" class="certificate-loadImg" />
+      <div class="handleHover">
+
+      </div>
+      <div class="icon-item" @click="downloadImage(item.link)">
+        <o-icon><icon-download></icon-download></o-icon>
+      </div>
+    </div>
     <div v-if="!certificateData.is_pass" class="empty">
       <img :src="emptyImg" alt="" />
       <p>暂未获得节课证书，继续努力吧～</p>
     </div>
     <div
-      v-if="certificateData.is_pass"
+      v-if="certificateData.is_pass && showImg"
       ref="certificateRef"
       class="certificate-img"
     >
@@ -76,8 +85,27 @@ function loadImg() {
 <style lang="scss" scoped>
 .course-certificate {
   overflow: hidden;
-  .certificate-loadImg {
-    width: 100%;
+  .certificate-box {
+    position: relative;
+    .certificate-loadImg {
+      width: 100%;
+    }
+    .icon-item {
+      width: 100%;
+      height: 128px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      opacity: 0;
+      .o-icon {
+        color: #fff;
+        font-size: 24px;
+      }
+    }
   }
   .certificate-img {
     position: relative;

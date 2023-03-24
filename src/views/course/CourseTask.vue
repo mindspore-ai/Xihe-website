@@ -26,7 +26,7 @@ const userCourseData = useCourseData();
 
 const taskPager = reactive({
   page: 1,
-  size: 1,
+  size: 6,
 });
 
 function getTask(id, status) {
@@ -34,7 +34,6 @@ function getTask(id, status) {
     getTaskList(id, status).then((res) => {
       if (res.data) {
         taskData.value = res.data;
-        console.log('taskData.value: ', taskData.value);
       } else {
         taskData.value = [];
       }
@@ -103,7 +102,6 @@ function goProjectDetail(item) {
 
 //作业详情页
 function goTaskDetail(item) {
-  console.log('item: ', item);
   router.push(`/course/task/${route.params.courseId}/${item.id}`);
 }
 

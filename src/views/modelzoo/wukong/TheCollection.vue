@@ -430,6 +430,7 @@ function copyText(textValue) {
         &:hover {
           .handles {
             opacity: 1;
+            background-color: #fff;
           }
         }
         .handles {

@@ -84,14 +84,14 @@ export default [
     component: () => {
       return import('@/views/course/CourseTaskDetail.vue');
     },
-    /* beforeEnter: async () => {
+    beforeEnter: async () => {
       const logingStore = useLoginStore();
       if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
         return {
           name: '404',
         };
       }
-    }, */
+    },
   },
   // 课程视频页
   {

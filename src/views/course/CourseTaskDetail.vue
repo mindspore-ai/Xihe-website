@@ -1,20 +1,35 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import { handleMarkdown } from '@/shared/markdown';
 import { getTaskDetail } from '@/api/api-course';
+import { getGuide } from '@/api/api-competition';
 
 const route = useRoute();
 console.log('route: ', route.params);
-// console.log('route: ', route.params.chapterId);
 const router = useRouter();
-function getTask() {
-  getTaskDetail(route.params.courseId, route.params.taskId).then((res) => {
-    console.log('res: ', res);
-  });
+const taskData = ref({});
+
+const mkit = handleMarkdown();
+const codeString = ref('');
+const result = ref();
+let README = '';
+async function getTask() {
+  try {
+    const res = await getTaskDetail(route.params.courseId, route.params.taskId);
+    taskData.value = res.data;
+    console.log('taskData.value: ', taskData.value);
+    const tree = await getGuide(taskData.value.desc);
+    README = tree.data;
+    codeString.value = README;
+    result.value = mkit.render(codeString.value);
+  } catch (err) {
+    console.error(err);
+  }
 }
-// getTask();
+getTask();
 </script>
 <template>
   <div class="task-detail">
@@ -24,15 +39,19 @@ function getTask() {
           <el-breadcrumb-item :to="{ path: '/course' }">
             课程
           </el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/` }">
-            AI大模型公开课
+          <el-breadcrumb-item
+            :to="{ path: `/course/${route.params.courseId}` }"
+          >
+            {{ taskData.course_name }}
           </el-breadcrumb-item>
-          <el-breadcrumb-item> chapterData.name </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            {{ taskData.asg_name }}
+          </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="task-content">
-        <div class="task-name">dfs</div>
-        <div class="task-introduce">dfds</div>
+        <div class="task-name">{{ taskData.asg_name }}</div>
+        <div class="task-introduce" v-html="result"></div>
       </div>
     </div>
   </div>
@@ -79,7 +98,6 @@ function getTask() {
         margin: 40px 0;
       }
       .task-introduce {
-        height: 865px;
         padding: 40px;
         background: #ffffff;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);

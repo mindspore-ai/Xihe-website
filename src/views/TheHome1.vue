@@ -1162,6 +1162,9 @@ p {
       }
     }
   }
+  :deep(.el-dialog__header) {
+    height: auto;
+  }
   :deep(.el-dialog__body) {
     margin-top: 0;
     display: flex;
@@ -1177,13 +1180,14 @@ p {
     }
 
     img {
-      width: 30%;
+      height: calc(100% - 80px);
       @media screen and (max-width: 820px) {
         width: 100%;
+        height: auto;
       }
     }
     .o-button {
-      margin-top: 48px;
+      margin-top: 24px;
       color: #fff;
       border: 1px solid #fff;
       &:hover {

@@ -12,24 +12,6 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-/**
- * 获取课程列表
- * @returns
- */
-/* export function getCourseList(params) {
-  if (params) {
-    const url = `/server/course?status=${params.status}`;
-    // const url = `/server/course?status=${params.status}&type=${params.type}`;
-    return request.get(url).then((res) => {
-      return res.data;
-    });
-  } else {
-    const url = `/server/course`;
-    return request.get(url).then((res) => {
-      return res.data;
-    });
-  }
-} */
 export function getCourseList({ status = undefined, type = undefined } = {}) {
   const queryParams = {};
   if (status !== undefined) {
@@ -77,6 +59,17 @@ export function getTaskList(id, status) {
   const url = `/server/course/${id}/asg/list${
     status ? `?status=${status}` : ''
   }`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
+/**
+ * 获取关联项目
+ * @returns
+ */
+export function getTaskDetail(courseId, taskId) {
+  const url = `/server/course/${courseId}/asg/${taskId}`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

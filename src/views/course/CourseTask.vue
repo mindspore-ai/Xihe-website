@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { ArrowRightBold } from '@element-plus/icons-vue';
 
@@ -11,6 +11,8 @@ import emptyImg from '@/assets/imgs/model-empty.png';
 import { getTaskList, getProject, increaseProject } from '@/api/api-course';
 import { useCourseData } from '@/stores';
 
+const route = useRoute();
+// console.log('route: ', route);
 const router = useRouter();
 
 const taskInput = ref('');
@@ -28,14 +30,18 @@ const taskPager = reactive({
 });
 
 function getTask(id, status) {
-  getTaskList(id, status).then((res) => {
-    if (res.data) {
-      taskData.value = res.data;
-    } else {
-      taskData.value = [];
-    }
-    currentTaskData.value = taskData.value.slice(0, taskPager.size);
-  });
+  if (userCourseData.courseData.is_apply) {
+    getTaskList(id, status).then((res) => {
+      if (res.data) {
+        taskData.value = res.data;
+      } else {
+        taskData.value = [];
+      }
+      currentTaskData.value = taskData.value.slice(0, taskPager.size);
+    });
+  } else {
+    router.push(`/course/${userCourseData.courseData.id}`);
+  }
 }
 getTask(userCourseData.courseData.id, '');
 function toggleTaskState(val) {
@@ -94,6 +100,11 @@ function goProjectDetail(item) {
   router.push(`/projects/${item[0].owner}/${item[0].name}`);
 }
 
+//作业详情页
+function goTaskDetail(item) {
+  router.push(`/course/task/${route.params.courseId}/${item.id}`);
+}
+
 const layout = ref('prev, pager, next');
 // 课程分页器
 function handleCurrentPage(val) {
@@ -129,6 +140,7 @@ function toTop() {
               v-for="item in currentTaskData"
               :key="item.id"
               class="task-box"
+              @click="goTaskDetail(item)"
             >
               <div class="task-title">
                 <div class="title">

@@ -111,8 +111,6 @@ function downloadPoster() {
     useCORS: true,
   }).then((canvas) => {
     let url = canvas.toDataURL('image/png');
-    console.log('url: ', url);
-
     let aLink = document.createElement('a');
     aLink.style.display = 'none';
     aLink.href = url;
@@ -432,6 +430,7 @@ function copyText(textValue) {
         &:hover {
           .handles {
             opacity: 1;
+            background-color: #fff;
           }
         }
         .handles {

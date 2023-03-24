@@ -72,7 +72,7 @@ const onSwiper = (val) => {
   mySwiper.value = val;
 };
 
-// const modules = [Pagination, Autoplay];
+const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -243,6 +243,9 @@ function handleBtnClick3() {
 // function goActivity() {
 //   router.push({ path: '/activity' });
 // }
+function goDetail() {
+  window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
+}
 const galleryPic = [
   {
     img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png',
@@ -403,6 +406,9 @@ const galleryPic = [
       <!-- <div class="my-swiper">
       <div class="photo8 cursor" @click="router.push('/modelzoo/wukong')"></div>
     </div> -->
+      <swiper-slide>
+        <div class="photo10 cursor" @click="goDetail"></div>
+      </swiper-slide>
       <swiper-slide>
         <div
           class="photo9 cursor"
@@ -881,6 +887,16 @@ const galleryPic = [
     }
     .photo9 {
       background: url(@/assets/imgs/home/home-banner9.jpg);
+      width: 100%;
+      height: 400px;
+      background-size: cover;
+      background-position: 50%;
+      @media screen and (max-width: 1440px) {
+        height: 400px;
+      }
+    }
+    .photo10 {
+      background: url(@/assets/imgs/home/home-banner10.jpg);
       width: 100%;
       height: 400px;
       background-size: cover;

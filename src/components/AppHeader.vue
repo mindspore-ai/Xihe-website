@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo1.png';
+import logoImg1 from '@/assets/imgs/logo.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
@@ -508,7 +509,13 @@ const handleCommand = (command) => {
 <template>
   <div class="header">
     <div class="header-logo" @click="handleLogoClick">
-      <img :src="logoImg" alt="" srcset="" />
+      <img
+        v-if="route.path === '/modelzoo/wukong'"
+        :src="logoImg1"
+        alt=""
+        srcset=""
+      />
+      <img v-else :src="logoImg" alt="" srcset="" />
     </div>
     <div class="header-content">
       <el-menu

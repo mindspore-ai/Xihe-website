@@ -47,7 +47,7 @@ export default {
   OWNERSHIP: '保留一切权力',
   LANG: '中文',
   BANNER_BUTTON_1: '昇思大模型平台',
-  BANNER_BUTTON_2: 'AI挑战赛',
+  BANNER_BUTTON_2: 'AI画家大赛',
   BANNER_BUTTON_3: 'AI学习赛',
   // 轮播
   SWIPER: [

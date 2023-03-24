@@ -244,7 +244,11 @@ const handleCommand = () => {
     v-else
     ref="header"
     class="app-header"
-    :class="{ opaque: isHeaderTransparent, 'no-header': noHeader }"
+    :class="{
+      opaque: isHeaderTransparent,
+      'no-header': noHeader,
+      wukong: route.path === '/modelzoo/wukong',
+    }"
   >
     <app-header></app-header>
   </header>
@@ -252,7 +256,11 @@ const handleCommand = () => {
   <main class="app-body">
     <router-view></router-view>
   </main>
-  <footer v-if="showFooter" class="app-footer">
+  <footer
+    v-if="showFooter"
+    class="app-footer"
+    :class="{ wukong: route.path === '/modelzoo/wukong' }"
+  >
     <app-footer></app-footer>
   </footer>
   <div class="mobile-menu" :class="{ 'menu-active': meauActive }">
@@ -438,6 +446,55 @@ body.el-popup-parent--hidden {
   background-image: url(@/assets/imgs/footer-bg1.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+.wukong {
+  // background: rgba(6, 11, 41, 0.85);
+  .header-content {
+    .el-menu {
+      .el-menu-item {
+        color: #fff;
+      }
+      .el-sub-menu {
+        .el-sub-menu__title {
+          color: #fff !important;
+        }
+      }
+    }
+    .header-right {
+      .header-search {
+        .header-right-input {
+          border: 1px #999 solid !important;
+        }
+        .o-icon {
+          color: #979797;
+        }
+      }
+    }
+    .header-center {
+      .header-input {
+        .search-icon {
+          color: #979797;
+        }
+        .search-input {
+          border-bottom: 1px solid #999;
+        }
+      }
+    }
+  }
+  .footer-content {
+    .above {
+      .text {
+        color: #fff;
+      }
+      .division {
+        background: #fff;
+      }
+    }
+    .below {
+      color: #fff;
+    }
+  }
+  background: #060b29;
 }
 
 .slide-enter-active,

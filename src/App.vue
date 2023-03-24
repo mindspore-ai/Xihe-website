@@ -191,8 +191,8 @@ function toggleMenu(menu) {
   meauActive.value = menu;
 }
 function toPage(path) {
-  isMobileFit.value = false;
   if (path) {
+    isMobileFit.value = false;
     meauActive.value = false;
     router.push(path);
   } else {
@@ -247,7 +247,7 @@ const handleCommand = () => {
     :class="{
       opaque: isHeaderTransparent,
       'no-header': noHeader,
-      wukong: route.path === '/modelzoo/wukong',
+      wukong1: route.path === '/modelzoo/wukong',
     }"
   >
     <app-header></app-header>
@@ -259,7 +259,7 @@ const handleCommand = () => {
   <footer
     v-if="showFooter"
     class="app-footer"
-    :class="{ wukong: route.path === '/modelzoo/wukong' }"
+    :class="{ wukong1: route.path === '/modelzoo/wukong' }"
   >
     <app-footer></app-footer>
   </footer>
@@ -447,7 +447,7 @@ body.el-popup-parent--hidden {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
-.wukong {
+.wukong1 {
   // background: rgba(6, 11, 41, 0.85);
   .header-content {
     .el-menu {

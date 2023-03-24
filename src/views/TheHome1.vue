@@ -21,10 +21,9 @@ import AppFooter from '@/components/AppFooter.vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, Navigation } from 'swiper';
+import { Pagination, Autoplay } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getHomeInfo } from '@/api/api-shared';
@@ -35,7 +34,7 @@ const { t } = useI18n();
 
 AOS.init();
 
-const modules = [Pagination];
+const modules = [Pagination, Autoplay];
 const galleryModules = [Autoplay];
 function renderBullet(index, className) {
   let text = '';
@@ -429,8 +428,10 @@ onMounted(() => {
         watch-slides-progress
         slides-per-view="auto"
         :modules="galleryModules"
+        free-mode="true"
+        :speed="5000"
         :autoplay="{
-          delay: 1500,
+          delay: 100,
           disableOnInteraction: false,
           autoplay: true,
           pauseOnMouseEnter: true,
@@ -588,6 +589,7 @@ onMounted(() => {
         text-align: left;
         // margin-left: 150px;
         width: 900px;
+        font-weight: bold;
         @media screen and (max-width: 820px) {
           font-size: 20px;
           line-height: 28px;
@@ -600,7 +602,7 @@ onMounted(() => {
         margin: 40px 0;
         text-align: left;
         // margin-left: 150px;
-        width: 720px;
+        width: 600px;
 
         color: #001848;
         @media screen and (max-width: 820px) {
@@ -1160,6 +1162,9 @@ p {
       }
     }
   }
+  :deep(.el-dialog__header) {
+    height: auto;
+  }
   :deep(.el-dialog__body) {
     margin-top: 0;
     display: flex;
@@ -1175,13 +1180,14 @@ p {
     }
 
     img {
-      width: 30%;
+      height: calc(100% - 80px);
       @media screen and (max-width: 820px) {
         width: 100%;
+        height: auto;
       }
     }
     .o-button {
-      margin-top: 48px;
+      margin-top: 24px;
       color: #fff;
       border: 1px solid #fff;
       &:hover {
@@ -1206,6 +1212,9 @@ p {
     position: relative;
     transition: all 0.5s linear;
     bottom: -100px;
+    @media screen and (max-width: 820px) {
+      bottom: 0;
+    }
   }
   .open {
     bottom: 0;
@@ -1218,6 +1227,9 @@ p {
   padding: 0 16px;
   position: relative;
   bottom: -100px;
+  @media screen and (max-width: 820px) {
+    bottom: 0;
+  }
   transition: all 0.5s linear;
   :deep(.el-tabs) {
     .el-tabs__header {

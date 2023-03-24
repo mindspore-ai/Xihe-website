@@ -1,16 +1,27 @@
 <script setup>
 import logoImg from '@/assets/imgs/logo1.png';
+import logoImg1 from '@/assets/imgs/logo.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
+
+import { useRoute } from 'vue-router';
 
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+
+const route = useRoute();
 </script>
 
 <template>
   <footer class="footer">
     <div class="footer-logo">
-      <img :src="logoImg" alt="" srcset="" />
+      <img
+        v-if="route.path === '/modelzoo/wukong'"
+        :src="logoImg1"
+        alt=""
+        srcset=""
+      />
+      <img v-else :src="logoImg" alt="" srcset="" />
     </div>
     <div class="footer-content">
       <div class="above">

@@ -198,7 +198,14 @@ onUnmounted(() => {
           :class="item.type === 0 ? 'message-box-vqa' : 'message-box'"
         >
           <div class="avatar">
-            <img :src="item.type === 0 ? avatar : avatarUrl" alt="" />
+            <img
+              :src="
+                item.type === 0
+                  ? '	https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_avatar/catimg_04.png'
+                  : avatarUrl
+              "
+              alt=""
+            />
           </div>
           <div class="message">
             <!-- loading -->

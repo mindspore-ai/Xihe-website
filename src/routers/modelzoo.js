@@ -112,34 +112,34 @@ export default [
     ],
   },
   // 鹏程.盘古
-  {
-    path: '/modelzoo/pangu',
-    name: 'pangu',
-    component: () => {
-      return import('@/views/modelzoo/pangu/ThePangu.vue');
-    },
-    children: [
-      {
-        path: '',
-        name: 'panguExperience',
-        component: () => {
-          return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
-        },
-      },
-      {
-        path: 'introduce',
-        name: 'panguIntroduce',
-        component: () => {
-          return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
-        },
-      },
-      {
-        path: 'experience',
-        // name: 'pangutest',
-        redirect: '/modelzoo/pangu',
-      },
-    ],
-  },
+  // {
+  //   path: '/modelzoo/pangu',
+  //   name: 'pangu',
+  //   component: () => {
+  //     return import('@/views/modelzoo/pangu/ThePangu.vue');
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'panguExperience',
+  //       component: () => {
+  //         return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'introduce',
+  //       name: 'panguIntroduce',
+  //       component: () => {
+  //         return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'experience',
+  //       // name: 'pangutest',
+  //       redirect: '/modelzoo/pangu',
+  //     },
+  //   ],
+  // },
   // 鹏程.神农
   {
     path: '/modelzoo/shennong',

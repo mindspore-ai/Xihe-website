@@ -143,12 +143,12 @@ const i18n = {
       //   modelzoo: 'CodeGeeX',
       //   introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
       // },
-      {
-        modelzoo: '鹏程.盘古',
-        introduce: '业界首个千亿级参数中文自然语言处理大模型',
-        img: modelzoo_pangu,
-        href: `https://${DOMAIN}/modelzoo/pangu`,
-      },
+      // {
+      //   modelzoo: '鹏程.盘古',
+      //   introduce: '业界首个千亿级参数中文自然语言处理大模型',
+      //   img: modelzoo_pangu,
+      //   href: `https://${DOMAIN}/modelzoo/pangu`,
+      // },
     ],
   },
   model: {
@@ -1321,7 +1321,7 @@ const galleryPic = [
         .modelzoo-card-list {
           margin-top: 24px;
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           column-gap: 24px;
 
           .modelzoo-card {

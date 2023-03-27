@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import electricityBanner from '@/assets/imgs/estate/electricity-banner.png';
+import industryCover from '@/assets/imgs/estate/industry-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -85,7 +85,7 @@ const industryDetail = computed(() => {
       <div class="industry-content">
         <div class="industry-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="electricityBanner" alt="" />
+            <img draggable="false" :src="industryCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">

@@ -104,10 +104,10 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
-  // 课程
-  ...course,
   // 产业
   ...industry,
+  // 课程
+  ...course,
   // 404页面
   {
     path: '/404',

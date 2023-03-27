@@ -55,13 +55,13 @@ let i18n = {
       path: '/modelzoo/luojia',
       openness: true,
     },
-    {
-      title: '鹏程.盘古',
-      introduce: '业界首个千亿级参数中文自然语言处理大模型',
-      url: pangu,
-      path: '/modelzoo/pangu',
-      openness: true,
-    },
+    // {
+    //   title: '鹏程.盘古',
+    //   introduce: '业界首个千亿级参数中文自然语言处理大模型',
+    //   url: pangu,
+    //   path: '/modelzoo/pangu',
+    //   openness: true,
+    // },
     {
       title: '鹏程.神农',
       introduce: '面向生物医学领域的人工智能平台',

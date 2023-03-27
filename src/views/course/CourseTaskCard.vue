@@ -2,7 +2,7 @@
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 
-const props = defineProps({
+defineProps({
   cardData: {
     type: Object,
     default: () => {
@@ -10,7 +10,6 @@ const props = defineProps({
     },
   },
 });
-console.log('cardData: ', props.cardData);
 const i18n = {
   downloadTitle: '下载量',
   uploadTime: '上传时间',
@@ -21,13 +20,13 @@ const i18n = {
   <div class="project-card">
     <div class="card-top">
       <img
-        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/long_proimg${cardData.cover_id}.png`"
+        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/long_proimg${cardData.related_project[0].cover_id}.png`"
         alt=""
       />
-      <p class="title">{{ cardData.name }}</p>
+      <p class="title">{{ cardData.related_project[0].name }}</p>
       <div class="dig">
         <o-icon> <icon-heart></icon-heart> </o-icon>
-        <span>{{ cardData.like_count }}</span>
+        <span>{{ cardData.related_project[0].like_count }}</span>
       </div>
     </div>
 
@@ -36,13 +35,13 @@ const i18n = {
         <div class="info-avatar">
           <img :src="cardData.avatar_id" alt="" />
         </div>
-        <div class="info-name">{{ cardData.owner }}</div>
+        <div class="info-name">{{ cardData.related_project[0].owner }}</div>
       </div>
       <div class="time" :title="i18n.uploadTime">
         <o-icon>
           <icon-time></icon-time>
         </o-icon>
-        <span>{{ cardData.update_at }}</span>
+        <span>{{ cardData.related_project[0].create_at }}</span>
       </div>
     </div>
   </div>

@@ -72,7 +72,7 @@ const onSwiper = (val) => {
   mySwiper.value = val;
 };
 
-// const modules = [Pagination, Autoplay];
+const modules = [Pagination, Autoplay];
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -143,12 +143,12 @@ const i18n = {
       //   modelzoo: 'CodeGeeX',
       //   introduce: '一个具有130亿参数的多编程语言代码生成预训练模型',
       // },
-      {
-        modelzoo: '鹏程.盘古',
-        introduce: '业界首个千亿级参数中文自然语言处理大模型',
-        img: modelzoo_pangu,
-        href: `https://${DOMAIN}/modelzoo/pangu`,
-      },
+      // {
+      //   modelzoo: '鹏程.盘古',
+      //   introduce: '业界首个千亿级参数中文自然语言处理大模型',
+      //   img: modelzoo_pangu,
+      //   href: `https://${DOMAIN}/modelzoo/pangu`,
+      // },
     ],
   },
   model: {
@@ -243,6 +243,9 @@ function handleBtnClick3() {
 // function goActivity() {
 //   router.push({ path: '/activity' });
 // }
+function goDetail() {
+  window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
+}
 const galleryPic = [
   {
     img: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/featured-gallery/上海陆家嘴 未来城市 科幻风格-00.png',
@@ -403,6 +406,9 @@ const galleryPic = [
       <!-- <div class="my-swiper">
       <div class="photo8 cursor" @click="router.push('/modelzoo/wukong')"></div>
     </div> -->
+      <swiper-slide>
+        <div class="photo10 cursor" @click="goDetail"></div>
+      </swiper-slide>
       <swiper-slide>
         <div
           class="photo9 cursor"
@@ -889,6 +895,16 @@ const galleryPic = [
         height: 400px;
       }
     }
+    .photo10 {
+      background: url(@/assets/imgs/home/home-banner10.jpg);
+      width: 100%;
+      height: 400px;
+      background-size: cover;
+      background-position: 50%;
+      @media screen and (max-width: 1440px) {
+        height: 400px;
+      }
+    }
     .cursor {
       cursor: pointer;
     }
@@ -1305,7 +1321,7 @@ const galleryPic = [
         .modelzoo-card-list {
           margin-top: 24px;
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           column-gap: 24px;
 
           .modelzoo-card {

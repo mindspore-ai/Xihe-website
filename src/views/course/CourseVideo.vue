@@ -6,7 +6,6 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import { getCourseData } from '@/api/api-course';
 
 const route = useRoute();
-// console.log('route: ', route.params.chapterId);
 const router = useRouter();
 const currentCourseData = ref(null); //当前课程信息
 const sectionData = ref([]);

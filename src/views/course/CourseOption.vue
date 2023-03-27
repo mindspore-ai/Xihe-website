@@ -57,7 +57,6 @@ const renderNav = ref();
 watch(
   () => courseInfo.is_apply,
   (newValue) => {
-    // console.log('newValue: ', newValue.courseData);
     // 如果已经报名
     if (newValue) {
       renderNav.value = navItems;
@@ -110,7 +109,6 @@ watch(
     return props.fixed;
   },
   (newVal) => {
-    // fixed.value = newVal;
     let tab = document.querySelector('.course-desc-tab');
     let box = document.querySelector('.course-desc-info');
     if (newVal) {

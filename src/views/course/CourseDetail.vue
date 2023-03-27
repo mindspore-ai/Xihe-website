@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUpdated } from 'vue';
+import { ref, provide } from 'vue';
 import { useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -12,7 +12,7 @@ import CompetitionApplication from '@/views/competition/CompetitionApplication.v
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useCourseData } from '@/stores';
-import { getCourseData } from '@/api/api-course';
+import { getCourseData, getReginfo } from '@/api/api-course';
 
 const route = useRoute();
 
@@ -24,6 +24,7 @@ const fixed = ref(false);
 const showApplication = ref(false);
 const showCourse = ref('course');
 const showDetail = ref(false);
+const reginfo = ref({}); //报名信息
 
 function getDetailData() {
   getCourseData(route.params.courseId).then((res) => {
@@ -39,8 +40,15 @@ function goApplication() {
   if (!isLogined) {
     goAuthorize();
   } else {
-    showApplication.value = true;
-    // userCourseData.courseData.is_apply = true;
+    getReginfo()
+      .then((res) => {
+        reginfo.value = res.data;
+        showApplication.value = true;
+      })
+      .catch((err) => {
+        // TODO:
+        showApplication.value = true;
+      });
   }
 }
 //隐藏报名表单
@@ -52,7 +60,7 @@ function hideForm(val, type) {
   }
 }
 
-onUpdated(() => {
+/* onUpdated(() => {
   let card = document.querySelector('.course-card');
   let box = document.querySelector('.course-info');
   let top1 = card.offsetTop + 30;
@@ -73,11 +81,12 @@ onUpdated(() => {
       fixed.value = false;
     }
   });
-});
+}); */
 
 onBeforeRouteLeave(() => {
   userCourseData.$reset();
 });
+provide('goApplication', goApplication);
 </script>
 
 <template>
@@ -246,6 +255,7 @@ onBeforeRouteLeave(() => {
       <CompetitionApplication
         :show-application="showCourse"
         :course-id="currentCourseData.id"
+        :user-reginfo="reginfo"
         @hide-form="hideForm"
       ></CompetitionApplication>
     </el-dialog>
@@ -477,9 +487,10 @@ onBeforeRouteLeave(() => {
   :deep(.el-dialog) {
     .el-dialog__header {
       display: none;
+      // height: 40px !important;
     }
     .el-dialog__body {
-      padding-bottom: 40px !important;
+      padding: 40px !important;
       .application {
         padding: 0px;
         .application-title {

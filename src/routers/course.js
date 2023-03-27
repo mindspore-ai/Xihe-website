@@ -42,6 +42,14 @@ export default [
         component: () => {
           return import('@/views/course/CourseTask.vue');
         },
+        beforeEnter: async () => {
+          const logingStore = useLoginStore();
+          if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+            return {
+              name: '404',
+            };
+          }
+        },
       }, */
       // 教师介绍
       {
@@ -58,8 +66,32 @@ export default [
         component: () => {
           return import('@/views/course/CourseCertificate.vue');
         },
+        beforeEnter: async () => {
+          const logingStore = useLoginStore();
+          if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+            return {
+              name: '404',
+            };
+          }
+        },
       }, */
     ],
+  },
+  // 课程作业详情
+  {
+    path: '/course/task/:courseId/:taskId',
+    name: 'courseTaskDetail',
+    component: () => {
+      return import('@/views/course/CourseTaskDetail.vue');
+    },
+    beforeEnter: async () => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: '404',
+        };
+      }
+    },
   },
   // 课程视频页
   {

@@ -42,7 +42,8 @@ const router = useRouter();
 const isInProgress = ref(false);
 
 const isShow = ref(false);
-const showApplication = ref(false);
+const showApplication = ref(false); //显示报名弹窗
+const showMindcon = ref('MindCon'); //区别mindcon/比赛弹窗
 const applicationData = ref(null);
 const showBtn = ref(false);
 const activityDetail = ref('');
@@ -526,7 +527,7 @@ function goRule() {
       >
         <CompetitionApplication
           ref="applicationData"
-          :show-application="showApplication"
+          :show-application="showMindcon"
           @hide-form="hideForm"
           @get-activity="getActivity"
         ></CompetitionApplication>

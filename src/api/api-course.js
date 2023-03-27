@@ -111,3 +111,15 @@ export function getCertificate(id) {
     return res.data;
   });
 }
+/**
+ * 获取报名信息
+ * @returns
+ */
+export function getReginfo() {
+  const url = `/server/course/reginfo`;
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
+}

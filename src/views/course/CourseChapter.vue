@@ -1,6 +1,6 @@
 <!-- 课节页 -->
 <script setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import IconPlay from '~icons/app/play';
 import { ArrowRightBold } from '@element-plus/icons-vue';
@@ -11,6 +11,7 @@ import { goAuthorize, LOGIN_STATUS } from '@/shared/login';
 const router = useRouter();
 const loginStore = useLoginStore();
 const userCourseData = useCourseData();
+const goApplication = inject('goApplication');
 // 课节信息
 const corseSections = computed(() => {
   return userCourseData.courseData.sections;
@@ -40,6 +41,8 @@ function handleNodeClick(node, data) {
       path: `/course/lessonvideo/${userCourseData.courseData.id}/${data.id}`,
     });
     window.open(routerData.href, '_blank');
+  } else if (!userCourseData.courseData.is_apply && !data.lessons) {
+    goApplication();
   }
 }
 </script>

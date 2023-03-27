@@ -14,6 +14,7 @@ import project from './project';
 import competition from './competition';
 import activity from './activity';
 import finetune from './finetune';
+import industry from './estate';
 import course from './course';
 
 export const routes = [
@@ -97,7 +98,9 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
-  // 微调
+  // 产业
+  ...industry,
+  // 课程
   ...course,
   // 404页面
   {

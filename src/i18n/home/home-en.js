@@ -1,7 +1,7 @@
 import modelzoo_taichu from '@/assets/imgs/home1/modelzoo1.jpg';
 import modelzoo_wukong from '@/assets/imgs/home1/modelzoo2.jpg';
 import modelzoo_luojia from '@/assets/imgs/home1/modelzoo3.jpg';
-import modelzoo_pangu from '@/assets/imgs/home1/modelzoo_pangu.jpg';
+// import modelzoo_pangu from '@/assets/imgs/home1/modelzoo_pangu.jpg';
 
 import models1 from '@/assets/imgs/home1/models1.png';
 import models2 from '@/assets/imgs/home1/models2.png';
@@ -30,7 +30,8 @@ import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
 export default {
   APP_HEADER: {
-    PROJECT: 'AI Lab',
+    HOME: 'Home',
+    PROJECT: 'Colab Environment',
     MODEL: 'Model Library',
     MODELZOO: 'Foundation Models',
     EXPERENCE: 'Experience',
@@ -48,13 +49,13 @@ export default {
   COPYRIGHT: 'Copyright',
   OWNERSHIP: 'All Rights Reserved',
   LANG: 'English',
-  BANNER_BUTTON_1: 'The MindSpore foundation model platform',
-  BANNER_BUTTON_2: 'AI Challenges',
+  BANNER_BUTTON_1: 'MindSpore LLM Platform',
+  BANNER_BUTTON_2: 'AI Painter',
   BANNER_BUTTON_3: '生日会',
   // 轮播
   SWIPER: [
     {
-      TITLE: 'The MindSpore foundation model platform',
+      TITLE: 'MindSpore LLM Platform',
       INTRODUCE:
         "The MindSpore foundation model platform is an AI learning and practice community that integrates model selection, ideas sharing, and online experience. The community provides the ultimate Ascend computing power you need for practice. You can experience foundation models and gain knowledge and experience through practice. The community also offers free, high-quality resources, typical and easy-to-use sample code, and successful enterprise cases and hosts AI competitions suitable for different skill levels. You're welcome to try our advanced challenges.",
     },
@@ -62,7 +63,7 @@ export default {
   ],
   // AI实验室
   AI_LAB: {
-    TITLE: 'AI Lab',
+    TITLE: 'Colab Environment',
     INTRODUCE:
       'Perform full-process development in multiple domains, experience inference visualization, and get trained online.',
     CARDS: [
@@ -77,7 +78,7 @@ export default {
         PATH: '/projects/MindSpore/text_classification',
       },
       {
-        NAME: 'Style Migration',
+        NAME: 'Style Transfer',
         TYPE: 'CV',
         PATH: '/projects/MindSpore/text_classification',
       },
@@ -305,13 +306,13 @@ export default {
         NAME: 'Healthcare',
         DESC: 'Build AI models by exploring medical data to analyze medical big data that is widely used in medical research and decision-making.',
         IMAGE: industy3,
-        STATUS: '敬请期待',
+        STATUS: 'Coming soon',
       },
       {
         NAME: 'Finance',
         DESC: 'Build AI models by training financial industry data widely used in financial institutions to reduce costs and increase profits.',
         IMAGE: industy4,
-        STATUS: '敬请期待',
+        STATUS: 'Coming soon',
       },
     ],
   },

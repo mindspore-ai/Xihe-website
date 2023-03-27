@@ -26,6 +26,9 @@ export const routes = [
     // alias: '/home',
     alias: '/en',
     name: 'home',
+    meta: {
+      title: 'MindSpore LLM Platform',
+    },
     component: () => {
       return import('@/views/TheHome1.vue');
     },
@@ -138,6 +141,9 @@ router.beforeEach(async (to, from) => {
   // const langStore = useLangStore();
   // langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
   i18n.global.locale.value = to.fullPath.includes('en') ? 'en' : 'zh';
+  if (to.path === '/en' && to.meta.title) {
+    document.title = to.meta.title;
+  }
 
   const loginStore = useLoginStore();
   const userInfoStore = useUserInfoStore();

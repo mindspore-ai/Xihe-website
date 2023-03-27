@@ -1,20 +1,21 @@
 <script setup>
 import logoImg from '@/assets/imgs/logo1.png';
 import logoImg1 from '@/assets/imgs/logo.png';
+import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
 
 import { useRoute } from 'vue-router';
 
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const route = useRoute();
 </script>
 
 <template>
   <footer class="footer">
-    <div class="footer-logo">
+    <div v-if="locale === 'zh'" class="footer-logo">
       <img
         v-if="route.path === '/modelzoo/wukong'"
         :src="logoImg1"
@@ -22,6 +23,9 @@ const route = useRoute();
         srcset=""
       />
       <img v-else :src="logoImg" alt="" srcset="" />
+    </div>
+    <div v-else class="footer-logo2">
+      <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="footer-content">
       <div class="above">
@@ -62,6 +66,18 @@ const route = useRoute();
     align-items: center;
     height: 64px;
     // cursor: pointer;
+    img {
+      vertical-align: top;
+      height: 100%;
+    }
+  }
+  &-logo2 {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
     img {
       vertical-align: top;
       height: 100%;

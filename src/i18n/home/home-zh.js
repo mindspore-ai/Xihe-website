@@ -1,7 +1,7 @@
 import modelzoo_taichu from '@/assets/imgs/home1/modelzoo1.jpg';
 import modelzoo_wukong from '@/assets/imgs/home1/modelzoo2.jpg';
 import modelzoo_luojia from '@/assets/imgs/home1/modelzoo3.jpg';
-import modelzoo_pangu from '@/assets/imgs/home1/modelzoo_pangu.jpg';
+// import modelzoo_pangu from '@/assets/imgs/home1/modelzoo_pangu.jpg';
 
 import models1 from '@/assets/imgs/home1/models1.png';
 import models2 from '@/assets/imgs/home1/models2.png';
@@ -30,6 +30,7 @@ import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
 export default {
   APP_HEADER: {
+    HOME: '首页',
     PROJECT: 'AI实验室',
     MODEL: '模型库',
     MODELZOO: '大模型',

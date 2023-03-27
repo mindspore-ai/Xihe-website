@@ -8,10 +8,11 @@ import AppFooter from '@/components/AppFooter.vue';
 import IconBack from '~icons/app/left.svg';
 import IconMenu from '~icons/app/meau-header.svg';
 import logoImg from '@/assets/imgs/logo1.png';
+import logoImg2 from '@/assets/imgs/logo2.png';
 
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const route = useRoute();
 const router = useRouter();
@@ -163,7 +164,13 @@ function Scroll(e) {
 window.onmousewheel = document.onmousewheel = Scroll;
 
 const mobilNav = reactive([
-  { name: '首页', isactive: true, path: '/' },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.HOME');
+    }),
+    isactive: true,
+    path: '/',
+  },
   {
     name: computed(() => {
       return t('home.APP_HEADER.PROJECT');
@@ -287,9 +294,16 @@ const handleCommand = () => {
     </div>
 
     <img
-      v-if="currentPage === '首页'"
+      v-if="currentPage === '首页' && locale === 'zh'"
       :src="logoImg"
       alt=""
+      @click="toPage('/')"
+    />
+    <img
+      v-else-if="currentPage === '首页' && locale === 'en'"
+      :src="logoImg2"
+      alt=""
+      class="en-logo"
       @click="toPage('/')"
     />
     <span v-else>{{ currentPage }}</span>
@@ -395,6 +409,10 @@ const handleCommand = () => {
     img {
       width: 74px;
     }
+    .en-logo {
+      width: auto;
+      height: 40px;
+    }
   }
   .wukong-header-bg {
     background: #060c29;
@@ -431,7 +449,7 @@ const handleCommand = () => {
           font-size: 12px;
           color: #ffffff;
           line-height: 26px;
-          width: 116px;
+          width: 180px;
           .division {
             margin: 2px 8px 0;
           }

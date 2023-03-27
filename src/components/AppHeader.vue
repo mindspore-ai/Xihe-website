@@ -6,6 +6,7 @@ import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo1.png';
 import logoImg1 from '@/assets/imgs/logo.png';
+import logoImg2 from '@/assets/imgs/logo2.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
@@ -36,9 +37,6 @@ const lang = computed(() => {
 
 const router = useRouter();
 const route = useRoute();
-
-console.log(translateWhitelist);
-console.log(route.name);
 
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
@@ -137,7 +135,6 @@ const navItems = computed(() => {
     // },
   ]);
 });
-console.log(locale);
 const loginedDropdownItems = reactive([
   {
     id: 'user',
@@ -508,9 +505,6 @@ const handleCommand = (command) => {
 
   const { pathname } = window.location;
 
-  console.log(pathname);
-  console.log(command.value);
-
   if (command.value === 'zh') {
     window.location.href = pathname.replace('en', '');
   } else {
@@ -521,7 +515,7 @@ const handleCommand = (command) => {
 
 <template>
   <div class="header">
-    <div class="header-logo" @click="handleLogoClick">
+    <div v-if="locale === 'zh'" class="header-logo" @click="handleLogoClick">
       <img
         v-if="route.path === '/modelzoo/wukong'"
         :src="logoImg1"
@@ -529,6 +523,9 @@ const handleCommand = (command) => {
         srcset=""
       />
       <img v-else :src="logoImg" alt="" srcset="" />
+    </div>
+    <div v-else class="header-logo1" @click="handleLogoClick">
+      <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="header-content">
       <el-menu
@@ -575,7 +572,9 @@ const handleCommand = (command) => {
           <o-input
             id="search-input"
             v-model="keyword"
-            :placeholder="locale === 'zh' ? '请输入关键词' : ''"
+            :placeholder="
+              locale === 'zh' ? '请输入关键词' : 'Please enter a keyword'
+            "
             class="search-input"
             @blur="handleBlur"
             @keyup.enter="goFirstResult"
@@ -765,7 +764,9 @@ const handleCommand = (command) => {
               <icon-user class="user-login-icon"></icon-user>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="goAuthorize">登录</el-dropdown-item>
+                  <el-dropdown-item @click="goAuthorize">{{
+                    locale === 'zh' ? '登录' : 'Login'
+                  }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -809,6 +810,12 @@ const handleCommand = (command) => {
     cursor: pointer;
     img {
       vertical-align: top;
+      height: 100%;
+    }
+  }
+  &-logo1 {
+    height: 50px;
+    img {
       height: 100%;
     }
   }

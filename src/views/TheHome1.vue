@@ -594,7 +594,7 @@ onMounted(() => {
         line-height: 76px;
         text-align: left;
         // margin-left: 150px;
-        width: 900px;
+        width: 600px;
         font-weight: bold;
         @media screen and (max-width: 820px) {
           font-size: 20px;
@@ -681,8 +681,12 @@ onMounted(() => {
       margin: 0 8px;
       font-size: 18px;
       opacity: 1;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      &:first-child {
+        width: 220px;
+      }
       @media screen and (max-width: 820px) {
         width: 24px;
         height: 2px;
@@ -1378,17 +1382,16 @@ p {
         font-size: 14px;
         margin: 24px 12px;
         line-height: 22px;
-        height: 44px;
         color: #555;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
         @media screen and (max-width: 820px) {
           font-size: 12px;
           line-height: 18px;
-          height: 36px;
           margin: 16px 10px;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
       img {

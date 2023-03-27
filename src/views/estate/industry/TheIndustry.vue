@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
-import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
 import metalImg from '@/assets/imgs/estate/industry-metal.png';
 
 const cases = [

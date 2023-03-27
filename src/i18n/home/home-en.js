@@ -207,7 +207,7 @@ export default {
             PATH: '/course/c001/introduction',
           },
           {
-            NAME: 'Introduction to MindSpore',
+            NAME: 'Computer Vision',
             DESC: 'Computer vision is an important AI field that enables computers to derive meaningful information from visual inputs, including images and video, and take actions based on the information. Based on MindSpore, this course combines theory and practice to help you get started quickly.',
             IMAGE: card2,
             // TYPE: '免费',
@@ -215,7 +215,7 @@ export default {
             PATH: '/course/c002/introduction',
           },
           {
-            NAME: 'Get Started',
+            NAME: 'Introduction to MindSpore',
             DESC: 'With basic programming knowledge, you can get started with deep learning and understand parameter tuning and optimization methods in a day.',
             IMAGE: card3,
             // TYPE: '免费',

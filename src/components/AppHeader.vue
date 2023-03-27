@@ -89,6 +89,11 @@ const navItems = reactive([
     href: '/estate/electricity',
   },
   {
+    id: 'course',
+    label: '课程',
+    href: '/course',
+  },
+  {
     id: 'competition',
     label: '比赛',
     href: '/competition',
@@ -490,7 +495,6 @@ function handleBlur() {
                 :key="val.id"
                 :index="val.href"
               >
-                <!-- style="width: 100px" -->
                 {{ val.label }}
               </el-menu-item>
             </div>

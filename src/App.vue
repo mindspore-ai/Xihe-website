@@ -1,11 +1,14 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
+import IconBack from '~icons/app/left.svg';
+
 const route = useRoute();
+const router = useRouter();
 
 const showFooter = computed(() => {
   return !(route.path === '/' || route.path === '/home');
@@ -29,16 +32,133 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', setHeader);
 });
+
+// header适配mobile
+const currentPage = ref('');
+const routeLists = {
+  taichu: {
+    name: '紫东太初',
+    child: [
+      'taichuIntroduction',
+      'textToImage',
+      'imageCaption',
+      'taichuVision',
+    ],
+    back: '/modelzoo',
+  },
+  wukong: {
+    name: '悟空.画画',
+    child: ['wukongExperience', 'wukongIntroduce', 'wukong', 'AIAlbum'],
+    back: '/modelzoo',
+  },
+  pangu: {
+    name: '鹏程.盘古',
+    child: ['pangu', 'panguExperience', 'panguIntroduce'],
+    back: '/modelzoo',
+  },
+  shennong: {
+    name: '鹏程.神农',
+    child: ['shennong'],
+    back: '/modelzoo',
+  },
+  modelzoo: {
+    name: '大模型',
+    child: ['modelzoo'],
+    back: '/',
+  },
+  manage: {
+    name: '画作管理',
+    child: ['wukongCollection', 'wukongPublic'],
+    back: '/modelzoo/wukong',
+  },
+  luojia: {
+    name: '武汉.LuoJia',
+    child: ['luojia', 'luojiaExperience', 'luojiaIntroduce'],
+    back: '/modelzoo',
+  },
+  album: {
+    name: 'AI画集',
+    child: ['AIAlbum'],
+    back: '/modelzoo/wukong',
+  },
+};
+
+const isMobileFit = ref(false);
+const backUrl = ref('');
+watch(
+  () => route,
+  () => {
+    currentPage.value = '';
+    Object.keys(routeLists).forEach((key) => {
+      let bool = routeLists[key].child.includes(route.name);
+      if (bool) {
+        currentPage.value = routeLists[`${key}`].name;
+      }
+    });
+
+    isMobileFit.value = currentPage.value ? true : false;
+  },
+  { deep: true },
+  { immediate: true }
+);
+
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+
+watch(
+  () => screenWidth.value,
+  (newValue) => {
+    screenWidth.value = newValue;
+  }
+);
+
+onMounted(() => {
+  window.addEventListener('resize', onResize);
+});
+
+function goBack() {
+  Object.keys(routeLists).forEach((key) => {
+    if (routeLists[key].name === currentPage.value) {
+      backUrl.value = routeLists[key].back;
+    }
+  });
+
+  router.push(backUrl.value);
+}
 </script>
 
 <template>
   <header
+    v-if="isMobileFit && screenWidth <= 820"
+    ref="header"
+    class="mobile-header"
+    :class="route.name === 'wukongExperience' ? 'wukong-header-bg' : ''"
+  >
+    <div class="back" @click="goBack">
+      <OIcon><icon-back></icon-back></OIcon>
+    </div>
+    <span>{{ currentPage }}</span>
+  </header>
+
+  <header
+    v-else
     ref="header"
     class="app-header"
     :class="{ opaque: isHeaderTransparent }"
   >
     <app-header></app-header>
   </header>
+
   <main class="app-body">
     <router-view></router-view>
   </main>
@@ -48,6 +168,106 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
+// 移动端
+.mobile-fit {
+  min-width: auto;
+  width: 100vw;
+
+  #app {
+    min-width: auto;
+    // width: 100vw;
+  }
+
+  .app-header,
+  .app-body,
+  .app-footer {
+    min-width: auto;
+    // width: 100vw;
+  }
+
+  .mobile-header {
+    position: fixed;
+    // z-index: 2014;
+    z-index: 2009;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 16px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 3px 8px #0000000d;
+    backdrop-filter: blur(5px);
+    font-size: 16px;
+    color: #000;
+    height: 48px;
+    .back {
+      position: absolute;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      left: 0px;
+      padding: 0 8px 0 16px;
+      font-size: 24px;
+      color: #000;
+    }
+  }
+  .wukong-header-bg {
+    background: #060c29;
+    color: #fff;
+    .back {
+      color: #ffffff;
+    }
+  }
+  .app-footer {
+    @media screen and (max-width: 1080px) {
+      .footer {
+        flex-direction: column-reverse;
+        height: 170px;
+      }
+      .footer-code {
+        img {
+          width: 55px;
+          height: 55px;
+        }
+        p {
+          font-size: 8px;
+          line-height: 12px;
+        }
+      }
+      .footer-logo {
+        display: none;
+      }
+      .footer-content {
+        position: static;
+        transform: none;
+        margin-top: 16px;
+        .above {
+          font-size: 12px;
+          color: #ffffff;
+          line-height: 26px;
+          width: 116px;
+          .division {
+            margin: 2px 8px 0;
+          }
+        }
+        .below {
+          margin-top: 8px;
+          font-size: 9px;
+          color: #ffffff;
+          line-height: 12px;
+        }
+      }
+    }
+  }
+  .app-body {
+    @media screen and (max-width: 1080px) {
+      min-height: calc(100vh - 170px);
+    }
+  }
+}
+
 // 处理开启弹窗页面闪动
 body {
   width: 100% !important;

@@ -1,17 +1,78 @@
-.el-dialog{
-   box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2) !important;
-   animation: o-dialog-wrap-show 0.3s ease-in-out !important;
-   .el-dialog__header{
-     padding: 40px 40px 24px;
-     font-size: 24px;
-     line-height: 32px;
-   }
-   .el-dialog__body{
-     font-size: 14px;
-     padding: 0px 40px !important;
-   }
-   .el-dialog__footer{
-     padding: 40px;
-     font-size: 16px;
-   }
+.el-dialog {
+  box-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2) !important;
+  animation: o-dialog-wrap-show 0.3s ease-in-out !important;
+
+  .el-dialog__header{
+    padding: 40px 40px 24px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .el-dialog__body{
+    font-size: 14px;
+    padding: 0px 40px !important;
+  }
+  .el-dialog__footer{
+    padding: 40px;
+    font-size: 16px;
+  }
+}
+
+/* 添加appen-to-body 的样式 */
+.el-dialog.is-fullscreen {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+
+  .el-dialog__header {
+    padding-top: 28px;
+    height: 80px;
+    background-color: #000;
+
+    @media screen and (max-width:820px) {
+      padding-top: 12px;
+      height: 48px;
+    }
+
+    .el-dialog__title {
+      font-size: 18px;
+      line-height: 24px;
+      color: #FFFFFF;
+      text-align: center;
+
+      @media screen and (max-width:820px) {
+        font-size: 14px;
+        line-height: 24px;
+      }
+    }
+
+    .el-dialog__headerbtn {
+      font-size: 48px;
+      top: 16px;
+      right: 24px;
+
+      @media screen and (max-width:820px) {
+        font-size: 24px;
+        top: 12px;
+        right: 12px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .el-dialog__close {
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  .el-dialog__body {
+    margin-top: 18vh;
+
+    @media screen and (max-width:820px) {
+      margin-top: 16vh;
+      padding: 16px;
+    }
+
+    @media screen and (max-width:767px) {
+      margin-top: 4vh;
+    }
+  }
 }

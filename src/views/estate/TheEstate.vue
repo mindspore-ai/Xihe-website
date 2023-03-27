@@ -7,8 +7,8 @@ import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 // import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
 
 import IconElectricity from '~icons/app/electricity';
-import IconFinance from '~icons/app/finance';
-import IconMedicine from '~icons/app/medicine';
+import IconFinance from '~icons/app/finance2';
+import IconMedicine from '~icons/app/medicine2';
 import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
@@ -53,6 +53,7 @@ const sections = [
     path: '/estate/finance',
     routeName: 'finance',
     icon: IconFinance,
+    disabled: true,
   },
   {
     id: 3,
@@ -60,17 +61,29 @@ const sections = [
     path: '/estate/medicine',
     routeName: 'medicine',
     icon: IconMedicine,
+    disabled: true,
   },
 ];
 const handleClick = (tab) => {
-  router.push(sections[tab.index].path);
+  console.log('tab: ', tab.index);
+  if (tab.index === '0' || tab.index === '1') {
+    console.log(1111);
+    router.push(sections[tab.index].path);
+  } else {
+    return;
+  }
 };
 </script>
 <template>
   <div class="estate">
     <div class="estate-head">
       <img :src="estateBanner" alt="" />
-      <div class="estate-banner"></div>
+      <div class="estate-banner">
+        <div class="banner-title">昇思大模型平台助力产业发展</div>
+        <div class="banner-desc">
+          昇思MindSpore广泛应用在互联网、零售、电力、工业、医疗、安防监控、物流等行业场景中
+        </div>
+      </div>
     </div>
     <div class="estate-wrap">
       <el-tabs
@@ -78,7 +91,12 @@ const handleClick = (tab) => {
         class="estate-tabs"
         @tab-click="handleClick"
       >
-        <el-tab-pane v-for="item in sections" :key="item.id" :name="item.name">
+        <el-tab-pane
+          v-for="item in sections"
+          :key="item.id"
+          :name="item.name"
+          :disabled="item.disabled"
+        >
           <template #label>
             <span class="estate-tabs-title">
               <o-icon><component :is="item.icon"></component></o-icon>
@@ -103,14 +121,35 @@ $theme: #0d8dff;
   .estate-head {
     width: 100%;
     height: 560px;
+    position: relative;
     img {
       width: 100%;
       height: 100%;
     }
+    .estate-banner {
+      max-width: 1472px;
+      margin: 0 auto;
+      padding: 0px 16px;
+      position: relative;
+      top: -55%;
+      .banner-title {
+        line-height: 48px;
+        font-size: 36px;
+        font-weight: 400;
+        color: #000000;
+        margin-bottom: 10px;
+      }
+      .banner-desc {
+        line-height: 24px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #000000;
+      }
+    }
   }
   .estate-wrap {
     margin: 0 auto;
-    padding: 0px 16px 0px 16px;
+    padding: 0px 16px;
     max-width: 1472px;
     .region-content {
       .application-case {
@@ -172,11 +211,26 @@ $theme: #0d8dff;
           display: flex;
           justify-content: center;
           align-items: center;
+          padding: 0;
           // backdrop-filter: blur(10px);
+          &:nth-last-child(2) {
+            color: #999;
+          }
+          &:last-child {
+            color: #999;
+          }
+          &:nth-child(2) {
+            .estate-tabs-title {
+              border-left: none;
+            }
+          }
           .estate-tabs-title {
+            width: 100%;
+            height: 48px;
             display: flex;
             align-items: center;
-            height: 48px;
+            justify-content: center;
+            border-left: 1px solid #e1e1e1;
             .o-icon {
               font-size: 48px;
             }
@@ -188,6 +242,9 @@ $theme: #0d8dff;
         .is-active {
           background: rgba(13, 141, 255, 0.65);
           color: #ffffff;
+          .estate-tabs-title {
+            border-left: none;
+          }
         }
       }
       &::after {

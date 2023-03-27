@@ -2,31 +2,22 @@
 import { useRouter } from 'vue-router';
 
 import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
-import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
+import substationImg from '@/assets/imgs/estate/electricity-substation.png';
 
 const cases = [
   {
     id: 1,
     type: '变电站AI分析主机',
-    // name: 'PatchCore异常检测',
-    image: anomalyDetection,
+    name: '变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。',
+    image: substationImg,
     url: '/estate/electricity/substation',
-  },
-  {
-    id: 2,
-    type: '敬请期待',
-    // name: 'PatchCore异常检测',
-    image: defectDetecting,
-    url: '',
   },
 ];
 
 const router = useRouter();
 
 function goCasePath(item) {
-  if (item.type !== '敬请期待') {
-    router.push(item.url);
-  }
+  router.push(item.url);
 }
 </script>
 <template>
@@ -59,16 +50,20 @@ function goCasePath(item) {
   text-align: center;
 }
 .case-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 24px;
+  // display: grid;
+  // grid-template-columns: repeat(2, 1fr);
+  // grid-gap: 24px;
+  height: 240px;
   margin-top: 40px;
   .case-item {
-    width: 100%;
+    height: 100%;
     cursor: pointer;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
     position: relative;
-    &:last-child {
-      cursor: not-allowed;
+    &:hover {
+      box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.2);
     }
     .case-info {
       position: absolute;
@@ -89,6 +84,7 @@ function goCasePath(item) {
     }
     img {
       width: 100%;
+      height: 100%;
     }
   }
 }

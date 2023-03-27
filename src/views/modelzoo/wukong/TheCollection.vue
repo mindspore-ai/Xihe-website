@@ -93,9 +93,6 @@ userAvatar.value = userInfoStore.avatar.replace(
 );
 // 分享海报dlg
 function shareImage(link, desc, style) {
-  console.log('link: ', link);
-  console.log('desc,  ', desc);
-  console.log(' style: ', style);
   posterInfo.value = desc + '  ' + style;
   posterLink.value = link.replace(
     'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
@@ -430,7 +427,6 @@ function copyText(textValue) {
         &:hover {
           .handles {
             opacity: 1;
-            background-color: #fff;
           }
         }
         .handles {

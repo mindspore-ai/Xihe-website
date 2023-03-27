@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { ArrowRightBold } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 import taskCard from '@/views/course/CourseTaskCard.vue';
 import OButton from '@/components/OButton.vue';
@@ -12,7 +13,6 @@ import { getTaskList, getProject, increaseProject } from '@/api/api-course';
 import { useCourseData } from '@/stores';
 
 const route = useRoute();
-// console.log('route: ', route);
 const router = useRouter();
 
 const taskInput = ref('');
@@ -61,38 +61,46 @@ function handleClick(tab) {
 async function relateProject() {
   const [owner, project_name] = taskInput.value.split('/');
   const params = { owner, project_name };
-  try {
-    await increaseProject(params, userCourseData.courseData.id);
+  if (taskData.value && taskData.value.length) {
+    try {
+      await increaseProject(params, userCourseData.courseData.id);
+      ElMessage({
+        type: 'success',
+        message: '关联项目成功！',
+        duration: 4000,
+      });
+      const res = await getProject(userCourseData.courseData.id);
+      taskResult.value = res.data;
+      taskInput.value = '';
+      // showSubmission.value = true;
+    } catch (err) {
+      if (err.response.data.msg === "name's length should be between 3 to 35") {
+        ElMessage({
+          type: 'warning',
+          message: '关联项目失败，格式应为：用户名/项目名。',
+          duration: 4000,
+        });
+      } else if (err.response.data.code === 'course_does_not_own_project') {
+        ElMessage({
+          type: 'warning',
+          message: '关联项目失败，请关联自己的项目。',
+          duration: 4000,
+        });
+      } else if (err.response.data.msg === "doc doesn't exist") {
+        ElMessage({
+          type: 'error',
+          message: '关联项目失败,请检查后重试~',
+          duration: 4000,
+        });
+      }
+      taskInput.value = '';
+    }
+  } else {
     ElMessage({
-      type: 'success',
-      message: '关联项目成功！',
+      message: '此课程暂无作业，无需提交作业！',
+      type: 'warning',
       duration: 4000,
     });
-    const res = await getProject(userCourseData.courseData.id);
-    taskResult.value = res.data;
-    taskInput.value = '';
-    // showSubmission.value = true;
-  } catch (err) {
-    if (err.response.data.msg === "name's length should be between 3 to 35") {
-      ElMessage({
-        type: 'warning',
-        message: '关联项目失败，格式应为：用户名/项目名。',
-        duration: 4000,
-      });
-    } else if (err.response.data.code === 'course_does_not_own_project') {
-      ElMessage({
-        type: 'warning',
-        message: '关联项目失败，请关联自己的项目。',
-        duration: 4000,
-      });
-    } else if (err.response.data.msg === "doc doesn't exist") {
-      ElMessage({
-        type: 'error',
-        message: '关联项目失败,请检查后重试~',
-        duration: 4000,
-      });
-    }
-    taskInput.value = '';
   }
 }
 

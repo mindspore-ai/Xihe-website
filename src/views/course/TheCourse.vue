@@ -135,10 +135,10 @@ function goCourseDetail(id) {
             </div>
           </template>
         </el-tab-pane>
-        <el-tab-pane label="新手入门" name="start">
+        <el-tab-pane label="深度学习入门" name="start">
           <template #label>
             <div class="category-tabs-label">
-              <span>新手入门</span>
+              <span>深度学习入门</span>
               <o-icon>
                 <icon-selected></icon-selected>
               </o-icon>
@@ -148,7 +148,7 @@ function goCourseDetail(id) {
         <el-tab-pane label="计算机视觉" name="cv">
           <template #label>
             <div class="category-tabs-label">
-              <span>cv</span>
+              <span>计算机视觉</span>
               <o-icon>
                 <icon-selected></icon-selected>
               </o-icon>
@@ -159,6 +159,16 @@ function goCourseDetail(id) {
           <template #label>
             <div class="category-tabs-label">
               <span>大模型</span>
+              <o-icon>
+                <icon-selected></icon-selected>
+              </o-icon>
+            </div>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="AI框架" name="framework">
+          <template #label>
+            <div class="category-tabs-label">
+              <span>AI框架</span>
               <o-icon>
                 <icon-selected></icon-selected>
               </o-icon>

@@ -24,12 +24,12 @@ const navItems = reactive([
     href: 'chapter',
     isIndividual: false,
   },
-  {
+  /* {
     id: 'courseTask',
     label: '作业',
     href: 'task',
     isIndividual: true,
-  },
+  }, */
   /* {
     id: 'discussion',
     label: '讨论',

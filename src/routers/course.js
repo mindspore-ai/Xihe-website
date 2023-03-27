@@ -36,7 +36,7 @@ export default [
         },
       },
       // 作业
-      {
+      /* {
         path: 'task',
         name: 'courseTask',
         component: () => {
@@ -50,7 +50,7 @@ export default [
             };
           }
         },
-      },
+      }, */
       // 教师介绍
       {
         path: 'teacher',

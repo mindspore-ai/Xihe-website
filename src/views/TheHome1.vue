@@ -34,7 +34,7 @@ const { t } = useI18n();
 
 AOS.init();
 
-const modules = [Pagination, Autoplay];
+const modules = [Pagination];
 const galleryModules = [Autoplay];
 function renderBullet(index, className) {
   let text = '';
@@ -211,7 +211,7 @@ onMounted(() => {
             <p class="title">{{ t('home.SWIPER[0].TITLE') }}</p>
             <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
           </div>
-          <div class="mask"></div>
+          <!-- <div class="mask"></div> -->
         </swiper-slide>
         <!-- <swiper-slide class="slide3" @click="goDetail"> </swiper-slide>
         <swiper-slide

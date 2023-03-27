@@ -26,7 +26,7 @@ const router = useRouter();
 const route = useRoute();
 let i18n = {
   head: {
-    title: '模型',
+    title: '模型库',
     introduce:
       '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，详情请点击',
     reference: '参考文档',

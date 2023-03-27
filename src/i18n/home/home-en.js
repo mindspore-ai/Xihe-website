@@ -101,7 +101,7 @@ export default {
   },
   // 大模型体验
   MODELZOO: {
-    TITLE: 'Foundation Model Experience',
+    TITLE: 'Foundation Model Inference',
     INTRODUCE:
       'Use powerful language understanding and dialog generation capabilities in NLP and CV scenarios. You can implement applications such as cross-modal retrieval, text-to-image generation, and image information extraction. You can also detect targets in remote sensing data.',
     // QUCIK_START: '立即体验',
@@ -121,7 +121,7 @@ export default {
         PATH: '/modelzoo/wukong',
       },
       {
-        MODELZOO_NAME: 'LuoJiaNET',
+        MODELZOO_NAME: 'LuoJia.NET',
         MODELZOO_DESC:
           "The world's first dedicated remote sensing framework and the largest remote sensing sample library",
         IMAGE: modelzoo_luojia,

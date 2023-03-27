@@ -8,7 +8,6 @@ import { getTaskDetail } from '@/api/api-course';
 import { getGuide } from '@/api/api-competition';
 
 const route = useRoute();
-console.log('route: ', route.params);
 const router = useRouter();
 const taskData = ref({});
 const showDetail = ref(false);
@@ -21,15 +20,12 @@ async function getTask() {
   try {
     const res = await getTaskDetail(route.params.courseId, route.params.taskId);
     taskData.value = res.data;
-    console.log('taskData.value: ', taskData.value);
     const tree = await getGuide(taskData.value.desc);
     README = tree.data;
     codeString.value = README;
     result.value = mkit.render(codeString.value);
-    console.log('result.value: ', result.value);
     showDetail.value = true;
   } catch (err) {
-    // console.log(err);
     router.push(`/course/${route.params.courseId}`);
   }
 }

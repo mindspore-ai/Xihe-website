@@ -60,7 +60,7 @@ export default [
         },
       },
       // 结课证书
-      {
+      /* {
         path: 'certificate',
         name: 'courseCertificate',
         component: () => {
@@ -74,7 +74,7 @@ export default [
             };
           }
         },
-      },
+      }, */
     ],
   },
   // 课程作业详情

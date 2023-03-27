@@ -44,12 +44,12 @@ const navItems = reactive([
     href: 'teacher',
     isIndividual: false,
   },
-  {
+  /* {
     id: 'courseCertificate',
     label: '结课证书',
     href: 'certificate',
     isIndividual: true,
-  },
+  }, */
 ]);
 
 const renderNav = ref();

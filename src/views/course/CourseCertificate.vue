@@ -35,11 +35,9 @@ const certRef = ref(null);
 const certificateUrl = ref('');
 function generateCertificate() {
   const certificateDiv = certificateRef.value;
-  console.log('certificateDiv: ', certificateDiv);
   html2canvas(certificateDiv).then((canvas) => {
     const dataUrl = canvas.toDataURL('image/png');
     certificateUrl.value = dataUrl;
-    // console.log('dataUrl: ', dataUrl);
     showImg.value = false;
   });
 }

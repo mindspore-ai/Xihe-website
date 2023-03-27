@@ -95,7 +95,7 @@ const industryDetail = computed(() => {
               </div>
             </div>
             <div class="banner-btn">
-              <OButton type="primary" animation class="home-btn">
+              <OButton disabled type="primary" animation class="home-btn">
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>

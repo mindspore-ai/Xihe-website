@@ -68,8 +68,10 @@ const query = reactive({
   loc_city: props.userReginfo.City,
   email: props.userReginfo.Email,
   phone: props.userReginfo.Phone,
-  // identity_type: props.userReginfo.Identity,
-  identity_type: 'student',
+  identity_type: props.userReginfo.Identity
+    ? props.userReginfo.Identity
+    : 'student',
+  // identity_type: 'student',
   schoolName1:
     props.userReginfo.Identity === 'student'
       ? props.userReginfo.Detail.detail1

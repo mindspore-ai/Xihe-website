@@ -505,14 +505,14 @@ onMounted(() => {
               "
               alt=""
             />
-            <!-- <div class="card-name">
+            <div class="card-name">
               {{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].NAME`)
               }}
-              <span class="tag">{{
+              <!-- <span class="tag">{{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].TYPE`)
-              }}</span>
-            </div> -->
+              }}</span> -->
+            </div>
             <div class="card-introduce">
               {{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DESC`)

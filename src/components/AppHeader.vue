@@ -497,7 +497,7 @@ function handleBlur() {
 // 选择语言;
 const options = ref([
   { value: 'zh', label: '中文' },
-  { value: 'en', label: 'English' },
+  { value: 'en', label: 'En' },
 ]);
 // 选择语言
 const handleCommand = (command) => {
@@ -826,6 +826,7 @@ const handleCommand = (command) => {
     align-items: center;
     height: 100%;
     width: 100%;
+    margin-left: 48px;
     margin-left: 96px;
     :deep(.el-menu) {
       width: 100%;

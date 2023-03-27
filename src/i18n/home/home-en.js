@@ -17,22 +17,22 @@ import open1 from '@/assets/imgs/home1/open/open1.png';
 import open2 from '@/assets/imgs/home1/open/open2.png';
 import open3 from '@/assets/imgs/home1/open/open3.png';
 
-import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
-import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
-import card3 from '@/assets/imgs/home1/more/more_card3.jpg';
+import card1 from '@/assets/imgs/home1/more/more_card1.png';
+import card2 from '@/assets/imgs/home1/more/more_card2.png';
+import card3 from '@/assets/imgs/home1/more/more_card3.png';
 
-import competition1 from '@/assets/imgs/home1/more/competition1.png';
-import competition2 from '@/assets/imgs/home1/more/competition2.png';
-import competition3 from '@/assets/imgs/home1/more/competition3.png';
+import competition1 from '@/assets/imgs/home1/more/more_card1.png';
+import competition2 from '@/assets/imgs/home1/more/more_card2.png';
+import competition3 from '@/assets/imgs/home1/more/more_card3.png';
 
-import activity1 from '@/assets/imgs/home1/more/activity1.png';
-import activity2 from '@/assets/imgs/home1/more/activity2.png';
-import activity3 from '@/assets/imgs/home1/more/activity3.png';
+import activity1 from '@/assets/imgs/home1/more/more_card1.png';
+import activity2 from '@/assets/imgs/home1/more/more_card2.png';
+import activity3 from '@/assets/imgs/home1/more/more_card3.png';
 export default {
   APP_HEADER: {
     HOME: 'Home',
     PROJECT: 'Colab Environment',
-    MODEL: 'Model Library',
+    MODEL: 'Models',
     MODELZOO: 'Foundation Models',
     EXPERENCE: 'Experience',
     FINE_TUNING: 'Fine-tuning',
@@ -40,8 +40,8 @@ export default {
     COURSE: 'Courses',
     COMPETITION: 'Competitions',
     ACTIVITY: 'Activities',
-    DOCUMENT: 'Documents',
-    INDUSTRY: 'Industry',
+    DOCUMENT: 'Docs',
+    INDUSTRY: 'Industries',
   },
   SCANNING_CODE: 'Public Account',
   PRIVACY_POLICY: 'Privacy Policy',
@@ -138,7 +138,7 @@ export default {
   },
   // 模型库
   MODEL: {
-    TITLE: 'Model Library',
+    TITLE: 'Models',
     INTRODUCE:
       "Use mainstream models in all domains and experience MindSpore foundation model inference APIs. You can download public pre-trained models or upload self-trained model files. In addition, you can take advantage of GitLab's one-stop code hosting and large file storage (LFS), and upload files in batches.",
     // MORE: '探索更多模型',
@@ -199,7 +199,7 @@ export default {
         IMAGE: open1,
         CARDS: [
           {
-            // NAME: 'Foundation Models',
+            NAME: 'Foundation Models',
             DESC: 'The MindSpore AI framework natively supports foundation model training, which is the key to developing foundation models. Multiple scientific research institutes in China have built a series of foundation models based on MindSpore. At the same time, MindSpore offers a one-stop foundation model platform that exposes foundation model capabilities to developers, allowing them to explore and learn more about foundation models.',
             IMAGE: card1,
             // TYPE: '免费',
@@ -207,7 +207,7 @@ export default {
             PATH: '/course/c001/introduction',
           },
           {
-            // NAME: 'Vision',
+            NAME: 'Vision',
             DESC: 'Computer vision is an important AI field that enables computers to derive meaningful information from visual inputs, including images and video, and take actions based on the information. Based on MindSpore, this course combines theory and practice to help you get started quickly.',
             IMAGE: card2,
             // TYPE: '免费',
@@ -215,7 +215,7 @@ export default {
             PATH: '/course/c002/introduction',
           },
           {
-            // NAME: 'Get Started',
+            NAME: 'Get Started',
             DESC: 'With basic programming knowledge, you can get started with deep learning and understand parameter tuning and optimization methods in a day.',
             IMAGE: card3,
             // TYPE: '免费',
@@ -229,7 +229,7 @@ export default {
         IMAGE: open2,
         CARDS: [
           {
-            NAME: '',
+            NAME: 'Ivory Tower: AI Painter Competition',
             DESC: 'This is an invitation to participate in an AI art creation event and win up to CNY10,000. The Ivory Tower: AI Painter Competition was officially launched in March 2023 for global AI developers. The topics are closely related to diffusion models. The competition provides developers with an opportunity to learn MindSpore and diffusion models.',
             IMAGE: competition1,
             TYPE: '',
@@ -237,7 +237,7 @@ export default {
             PATH: '/competition/ai_painter/0/introduction',
           },
           {
-            NAME: '',
+            NAME: 'MindSpore AI Challenge: Multi-Class Image Classification',
             DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. Image classification is fundamental to computer vision, and related algorithms are developing rapidly. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to preprocess and classify images.',
             IMAGE: competition2,
             TYPE: '',
@@ -245,7 +245,7 @@ export default {
             PATH: '/competition/3/0/introduction',
           },
           {
-            NAME: '',
+            NAME: 'MindSpore AI Challenge: Text Classification',
             DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. They can study various theories and methods that can realize effective communication between human beings and computers by using natural languages. Text classification plays an important role in AI. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to process and classify text based on NLP.',
             IMAGE: competition3,
             TYPE: '',
@@ -259,7 +259,7 @@ export default {
         IMAGE: open3,
         CARDS: [
           {
-            NAME: '',
+            NAME: "The 4th MindCon: Xi'an Tourism Image Classification",
             DESC: "MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify Xi'an tourism images.",
             IMAGE: activity1,
             TYPE: '',
@@ -267,7 +267,7 @@ export default {
             PATH: '/competition/xian_travel/0/introduction',
           },
           {
-            NAME: '',
+            NAME: 'The 4th MindCon: Takeout Review Text Classification',
             DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify takeout reviews.',
             IMAGE: activity2,
             TYPE: '',
@@ -275,7 +275,7 @@ export default {
             PATH: '/competition/text_classification/0/introduction',
           },
           {
-            NAME: '',
+            NAME: 'The 4th MindCon: Mask Recognition Based on Small Sample Learning',
             DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to detect masks on images.',
             IMAGE: activity3,
             TYPE: '',
@@ -288,7 +288,7 @@ export default {
   },
   // 产业
   INDUSTRY: {
-    TITLE: 'Industry',
+    TITLE: 'Industries',
     INTRODUCE:
       'Experience applications used in multiple scenarios, including problem locating, solution design, data processing, model training and deployment, and idea optimization; gain full-process guidance and accumulate industry knowledge to contribute to industry development.',
     CARDS: [

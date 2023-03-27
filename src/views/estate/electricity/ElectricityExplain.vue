@@ -2,7 +2,6 @@
 import electricity1 from '@/assets/imgs/estate/electricity/electricity1.png';
 import electricity2 from '@/assets/imgs/estate/electricity/electricity2.png';
 import electricity3 from '@/assets/imgs/estate/electricity/electricity3.png';
-import electricity4 from '@/assets/imgs/estate/electricity/electricity4.png';
 
 const props = defineProps({
   electricityDetail: {
@@ -22,7 +21,6 @@ const props = defineProps({
         </div>
         <div class="background-img">
           <img :src="electricity1" alt="" />
-          <img :src="electricity2" alt="" />
         </div>
         <div>
           {{ electricityDetail.background2 }}
@@ -36,7 +34,7 @@ const props = defineProps({
           {{ electricityDetail.introduction1 }}
         </div>
         <div class="introduction-img">
-          <img :src="electricity3" alt="" />
+          <img :src="electricity2" alt="" />
         </div>
         <div>
           {{ electricityDetail.introduction2 }}
@@ -56,7 +54,7 @@ const props = defineProps({
           {{ electricityDetail.solution1 }}
         </div>
         <div class="introduction-img">
-          <img :src="electricity4" alt="" />
+          <img :src="electricity3" alt="" />
         </div>
         <div>
           {{ electricityDetail.solution2 }}
@@ -83,12 +81,9 @@ const props = defineProps({
       line-height: 22px;
     }
     .background-img {
-      width: 80%;
-      margin: 16px auto;
-      display: flex;
-      justify-content: center;
+      margin: 24px 0;
       img {
-        width: 50%;
+        width: 100%;
         margin-right: 24px;
       }
     }
@@ -101,11 +96,10 @@ const props = defineProps({
       color: #555555;
       line-height: 22px;
       .introduction-img {
-        margin: 16px 0;
-        display: flex;
-        justify-content: center;
+        margin: 24px 0;
         img {
-          width: 50%;
+          width: 100%;
+          margin-right: 24px;
         }
       }
     }
@@ -126,12 +120,11 @@ const props = defineProps({
       color: #555555;
       line-height: 22px;
       .introduction-img {
-        // width: 80%;
-        margin: 16px 0;
+        margin: 24px 0;
         display: flex;
         justify-content: center;
         img {
-          width: 80%;
+          width: 90%;
         }
       }
     }

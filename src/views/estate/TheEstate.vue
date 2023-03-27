@@ -65,9 +65,7 @@ const sections = [
   },
 ];
 const handleClick = (tab) => {
-  console.log('tab: ', tab.index);
   if (tab.index === '0' || tab.index === '1') {
-    console.log(1111);
     router.push(sections[tab.index].path);
   } else {
     return;

@@ -1,4 +1,9 @@
 <script setup>
+import electricity1 from '@/assets/imgs/estate/electricity/electricity1.png';
+import electricity2 from '@/assets/imgs/estate/electricity/electricity2.png';
+import electricity3 from '@/assets/imgs/estate/electricity/electricity3.png';
+import electricity4 from '@/assets/imgs/estate/electricity/electricity4.png';
+
 const props = defineProps({
   electricityDetail: {
     type: Object,
@@ -10,21 +15,52 @@ const props = defineProps({
   <div class="case-explain">
     <div class="explain-title">项目说明</div>
     <div class="case-background">
-      <div class="title">案例背景</div>
+      <div class="title">案例背景：</div>
       <div class="background-desc">
-        {{ electricityDetail.background }}
+        <div>
+          {{ electricityDetail.background1 }}
+        </div>
+        <div class="background-img">
+          <img :src="electricity1" alt="" />
+          <img :src="electricity2" alt="" />
+        </div>
+        <div>
+          {{ electricityDetail.background2 }}
+        </div>
+      </div>
+    </div>
+    <div class="case-intro">
+      <div class="title">案例简介：</div>
+      <div class="introduction-desc">
+        <div>
+          {{ electricityDetail.introduction1 }}
+        </div>
+        <div class="introduction-img">
+          <img :src="electricity3" alt="" />
+        </div>
+        <div>
+          {{ electricityDetail.introduction2 }}
+        </div>
       </div>
     </div>
     <div class="case-painspot">
-      <div class="title">案例痛点</div>
+      <div class="title">案例痛点：</div>
       <div class="painspot-desc">
         {{ electricityDetail.painspot }}
       </div>
     </div>
     <div class="solution">
-      <div class="title">解决方案</div>
+      <div class="title">案例优势：</div>
       <div class="solution-desc">
-        {{ electricityDetail.solution }}
+        <div>
+          {{ electricityDetail.solution1 }}
+        </div>
+        <div class="introduction-img">
+          <img :src="electricity4" alt="" />
+        </div>
+        <div>
+          {{ electricityDetail.solution2 }}
+        </div>
       </div>
     </div>
   </div>
@@ -39,13 +75,40 @@ const props = defineProps({
     margin-bottom: 24px;
   }
   .case-background {
+    margin-bottom: 40px;
     .background-desc {
       font-size: 14px;
       font-weight: normal;
       color: #555555;
       line-height: 22px;
     }
+    .background-img {
+      width: 80%;
+      margin: 16px auto;
+      display: flex;
+      justify-content: center;
+      img {
+        width: 50%;
+        margin-right: 24px;
+      }
+    }
+  }
+  .case-intro {
     margin-bottom: 40px;
+    .introduction-desc {
+      font-size: 14px;
+      font-weight: normal;
+      color: #555555;
+      line-height: 22px;
+      .introduction-img {
+        margin: 16px 0;
+        display: flex;
+        justify-content: center;
+        img {
+          width: 50%;
+        }
+      }
+    }
   }
   .case-painspot {
     .painspot-desc {
@@ -62,6 +125,15 @@ const props = defineProps({
       font-weight: normal;
       color: #555555;
       line-height: 22px;
+      .introduction-img {
+        // width: 80%;
+        margin: 16px 0;
+        display: flex;
+        justify-content: center;
+        img {
+          width: 80%;
+        }
+      }
     }
   }
   .title {

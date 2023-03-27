@@ -69,7 +69,7 @@ const handleClick = (tab) => {
 <template>
   <div class="estate">
     <div class="estate-head">
-      <img :src="estateBanner" alt="" />
+      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="estate-banner"></div>
     </div>
     <div class="estate-wrap">
@@ -101,11 +101,17 @@ $theme: #0d8dff;
   min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
   .estate-head {
-    width: 100%;
+    // width: 100%;
     height: 560px;
-    img {
-      width: 100%;
+    // img {
+    //   width: 100%;
+    //   height: 100%;
+    // }
+    .estate-banner {
+      // width: 100%;
       height: 100%;
+      background-size: cover;
+      background-image: url('@/assets/imgs/estate/estate-banner.png');
     }
   }
   .estate-wrap {
@@ -172,11 +178,15 @@ $theme: #0d8dff;
           display: flex;
           justify-content: center;
           align-items: center;
+          padding: 0;
           // backdrop-filter: blur(10px);
           .estate-tabs-title {
+            width: 100%;
+            height: 48px;
             display: flex;
             align-items: center;
-            height: 48px;
+            justify-content: center;
+            border-left: 1px solid #e1e1e1;
             .o-icon {
               font-size: 48px;
             }
@@ -188,6 +198,9 @@ $theme: #0d8dff;
         .is-active {
           background: rgba(13, 141, 255, 0.65);
           color: #ffffff;
+          .estate-tabs-title {
+            border-left: none;
+          }
         }
       }
       &::after {

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import electricityBanner from '@/assets/imgs/estate/electricity-banner.png';
+import electricityBanner from '@/assets/imgs/estate/electricity-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';

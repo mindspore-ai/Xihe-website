@@ -2,22 +2,15 @@
 import { useRouter } from 'vue-router';
 
 import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
-import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
+import metalImg from '@/assets/imgs/estate/industry-metal.png';
 
 const cases = [
   {
     id: 1,
     type: '金属零部件缺陷检测',
-    // name: 'SSIM-AE无监督缺陷检测',
-    image: defectDetecting,
+    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售',
+    image: metalImg,
     url: '/estate/industry/metal-part',
-  },
-  {
-    id: 2,
-    type: '敬请期待',
-    // name: 'PatchCore异常检测',
-    image: anomalyDetection,
-    url: '',
   },
 ];
 
@@ -25,9 +18,7 @@ const router = useRouter();
 
 // TODO:
 function goCasePath(item) {
-  if (item.type !== '敬请期待') {
-    router.push(item.url);
-  }
+  router.push(item.url);
 }
 </script>
 <template>
@@ -60,16 +51,19 @@ function goCasePath(item) {
     text-align: center;
   }
   .case-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 24px;
+    // display: grid;
+    // grid-template-columns: repeat(2, 1fr);
+    // grid-gap: 24px;
+    height: 240px;
     margin-top: 40px;
     .case-item {
-      width: 100%;
+      height: 100%;
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
       position: relative;
-      &:last-child {
-        cursor: not-allowed;
+      &:hover {
+        box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.2);
       }
       .case-info {
         position: absolute;
@@ -90,6 +84,7 @@ function goCasePath(item) {
       }
       img {
         width: 100%;
+        height: 100%;
       }
     }
   }

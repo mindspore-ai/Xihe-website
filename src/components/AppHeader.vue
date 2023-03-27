@@ -721,7 +721,7 @@ const handleCommand = (command) => {
             :placeholder="
               locale === 'zh'
                 ? '查询项目、模型、数据集和用户'
-                : 'Query AI Lab、Model Library、Datasets'
+                : 'Query Colab Environment、Model Library、Datasets'
             "
             class="header-right-input"
             @click="showInput"

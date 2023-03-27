@@ -457,7 +457,7 @@ function handleDomChange(val) {
 .user-banner {
   width: 100%;
   padding-top: 80px;
-  background-color: #0f1927;
+  background-color: #f5f6f8;
   color: #000;
   background-image: url('@/assets/imgs/banner-head.png');
   background-size: cover;

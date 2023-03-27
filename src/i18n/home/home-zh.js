@@ -193,7 +193,7 @@ export default {
         IMAGE: open1,
         CARDS: [
           {
-            NAME: '大模型课程',
+            NAME: 'AI大模型公开课',
             DESC: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型。同时，昇思MindSpore推出一站式大模型平台，将大模型能力开放给开发者，让你我皆可触碰大模型的魅力。',
             IMAGE: card1,
             // TYPE: '免费',
@@ -201,7 +201,7 @@ export default {
             PATH: '/course/c001/introduction',
           },
           {
-            NAME: '视觉课程',
+            NAME: '计算机视觉',
             DESC: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思MindSpore，采用理论与实践相结合的方法带你轻松入门。',
             IMAGE: card2,
             // TYPE: '免费',

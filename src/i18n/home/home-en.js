@@ -199,7 +199,7 @@ export default {
         IMAGE: open1,
         CARDS: [
           {
-            NAME: 'Foundation Models',
+            NAME: 'Open Course on AI Foundation Models',
             DESC: 'The MindSpore AI framework natively supports foundation model training, which is the key to developing foundation models. Multiple scientific research institutes in China have built a series of foundation models based on MindSpore. At the same time, MindSpore offers a one-stop foundation model platform that exposes foundation model capabilities to developers, allowing them to explore and learn more about foundation models.',
             IMAGE: card1,
             // TYPE: '免费',
@@ -207,7 +207,7 @@ export default {
             PATH: '/course/c001/introduction',
           },
           {
-            NAME: 'Vision',
+            NAME: 'Introduction to MindSpore',
             DESC: 'Computer vision is an important AI field that enables computers to derive meaningful information from visual inputs, including images and video, and take actions based on the information. Based on MindSpore, this course combines theory and practice to help you get started quickly.',
             IMAGE: card2,
             // TYPE: '免费',

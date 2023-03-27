@@ -84,12 +84,12 @@ const navItems = computed(() => {
       menuList: [
         {
           id: 'test',
-          label: '在线体验',
+          label: t('home.APP_HEADER.EXPERENCE'),
           href: '/modelzoo',
         },
         {
           id: 'tune',
-          label: '模型微调',
+          label: t('home.APP_HEADER.FINE_TUNING'),
           href: '/finetune',
         },
       ],
@@ -137,50 +137,63 @@ const navItems = computed(() => {
     // },
   ]);
 });
-const loginedDropdownItems = [
+console.log(locale);
+const loginedDropdownItems = reactive([
   {
     id: 'user',
-    label: '个人主页',
+    label: computed(() => {
+      return locale.value === 'zh' ? '个人主页' : 'My Page';
+    }),
     action: () => {
       router.push(`/${userInfoStore.userName}`);
     },
   },
   {
     id: 'projects',
-    label: '新建项目',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建项目' : 'New Project';
+    }),
     action: () => {
       router.push('/new/projects');
     },
   },
   {
     id: 'models',
-    label: '新建模型',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建模型' : 'New Model';
+    }),
     action: () => {
       router.push('/new/models');
     },
   },
   {
     id: 'datasets',
-    label: '新建数据集',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建数据集' : 'New Dataset';
+    }),
     action: () => {
       router.push('/new/datasets');
     },
   },
   {
     id: 'settings',
-    label: '设置',
+    label: computed(() => {
+      return locale.value === 'zh' ? '设置' : 'Settings';
+    }),
     action: () => {
       router.push('/settings');
     },
   },
   {
     id: 'logout',
-    label: '退出',
+    label: computed(() => {
+      return locale.value === 'zh' ? '退出' : 'Logout';
+    }),
     action: () => {
       logout();
     },
   },
-];
+]);
 const activeNavItem = ref('');
 watch(
   () => {
@@ -562,7 +575,7 @@ const handleCommand = (command) => {
           <o-input
             id="search-input"
             v-model="keyword"
-            placeholder="请输入关键词"
+            :placeholder="locale === 'zh' ? '请输入关键词' : ''"
             class="search-input"
             @blur="handleBlur"
             @keyup.enter="goFirstResult"
@@ -581,11 +594,13 @@ const handleCommand = (command) => {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="projectImg" alt="" />
-                  <span>项目</span>
+                  <span>{{ locale === 'zh' ? '项目' : 'projects' }}</span>
                 </div>
                 <div class="search-result-num" @click="getProject(keyword)">
                   <span class="related-result"
-                    >查看{{ projectCount }}个相关项目</span
+                    >{{ locale === 'zh' ? '查看' : 'View' }}
+                    {{ projectCount }}
+                    {{ locale === 'zh' ? '个相关项目' : 'projects' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /></o-icon>
                 </div>
@@ -607,11 +622,12 @@ const handleCommand = (command) => {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="modelImg" alt="" />
-                  <span>模型</span>
+                  <span>{{ locale === 'zh' ? '模型' : 'models' }}</span>
                 </div>
                 <div class="search-result-num" @click="getModel(keyword)">
                   <span class="related-result"
-                    >查看{{ modelCount }}个相关模型</span
+                    >{{ locale === 'zh' ? '查看' : 'View ' }} {{ modelCount }}
+                    {{ locale === 'zh' ? '个相关模型' : 'models' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /> </o-icon>
                 </div>
@@ -633,11 +649,13 @@ const handleCommand = (command) => {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="datasetImg" alt="" />
-                  <span>数据集</span>
+                  <span>{{ locale === 'zh' ? '数据集' : 'datasets' }}</span>
                 </div>
                 <div class="search-result-num" @click="getDataset(keyword)">
                   <span class="related-result"
-                    >查看{{ datasetCount }}个相关数据集</span
+                    >{{ locale === 'zh' ? '查看' : 'View ' }}
+                    {{ datasetCount }}
+                    {{ locale === 'zh' ? '个相关数据集' : 'datasets' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /></o-icon>
                 </div>
@@ -659,7 +677,7 @@ const handleCommand = (command) => {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="userImg" alt="" />
-                  <span>用户</span>
+                  <span>{{ locale === 'zh' ? '用户' : 'users' }}</span>
                 </div>
                 <!-- <div class="search-result-num" @click="getuser(keyword)">
                   <span class="related-result"
@@ -858,6 +876,7 @@ const handleCommand = (command) => {
         &:hover .el-sub-menu__title {
           background-color: inherit;
           color: #0d8dff !important;
+          justify-content: center;
         }
         .el-sub-menu__title {
           padding: 0;
@@ -1123,12 +1142,14 @@ const handleCommand = (command) => {
 <style lang="scss">
 .el-popper.modelzooItem {
   .el-menu--popup {
-    width: 86px;
-    min-width: 86px;
+    width: 90px;
+    min-width: 90px;
     padding-left: 6px;
     padding-right: 6px;
     .sub-menu {
+      width: auto;
       .el-menu-item {
+        justify-content: center;
         color: #000;
         &:first-child {
           border-bottom: 1px solid #ddd;

@@ -43,10 +43,16 @@ function renderBullet(index, className) {
       text = t('home.BANNER_BUTTON_1');
       break;
     case 1:
+      text = '生日会';
+      break;
+    case 2:
       text = t('home.BANNER_BUTTON_2');
       break;
   }
   return '<span class="' + className + '">' + text + '</span>';
+}
+function goDetail() {
+  window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
 }
 
 const screenWidth = useWindowResize();
@@ -206,6 +212,9 @@ onMounted(() => {
             <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
           </div>
           <div class="mask"></div>
+        </swiper-slide>
+        <swiper-slide class="slide3" @click="goDetail">
+          <!-- <div class="mask"></div> -->
         </swiper-slide>
         <swiper-slide
           class="slide2"
@@ -375,13 +384,11 @@ onMounted(() => {
         <p class="introduce">{{ t('home.MODELZOO.INTRODUCE') }}</p>
         <div class="modelzoo-contant">
           <div
-            v-for="(item, index) in 4"
+            v-for="(item, index) in 3"
             :key="item"
             class="item"
             data-aos="slide-up"
-            :data-aos-duration="
-              200 + (index === 1 || index === 2 ? 0 : 2) * 100
-            "
+            :data-aos-duration="200 + (index === 1 ? 0 : 2) * 100"
             data-aos-offset="200"
             @click="router.push(t(`home.MODELZOO.CARDS[${index}].PATH`))"
           >
@@ -428,7 +435,6 @@ onMounted(() => {
         watch-slides-progress
         slides-per-view="auto"
         :modules="galleryModules"
-        free-mode="true"
         :speed="5000"
         :autoplay="{
           delay: 100,
@@ -501,14 +507,14 @@ onMounted(() => {
               "
               alt=""
             />
-            <div class="card-name">
+            <!-- <div class="card-name">
               {{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].NAME`)
               }}
               <span class="tag">{{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].TYPE`)
               }}</span>
-            </div>
+            </div> -->
             <div class="card-introduce">
               {{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].DESC`)
@@ -645,6 +651,16 @@ onMounted(() => {
       background-position: 50%;
       @media screen and (max-width: 820px) {
         background: url(@/assets/imgs/home1/mobile-banner2.jpg);
+        background-size: cover;
+        background-position: 50%;
+      }
+    }
+    .slide3 {
+      background: url(@/assets/imgs/home1/home-banner3.jpg);
+      background-size: cover;
+      background-position: 50%;
+      @media screen and (max-width: 820px) {
+        background: url(@/assets/imgs/home1/mobile-banner3.jpg);
         background-size: cover;
         background-position: 50%;
       }
@@ -1365,6 +1381,7 @@ p {
         height: 44px;
         color: #555;
         overflow: hidden;
+        text-overflow: ellipsis;
         @media screen and (max-width: 820px) {
           font-size: 12px;
           line-height: 18px;
@@ -1376,6 +1393,7 @@ p {
       }
       img {
         width: 100%;
+        border-radius: 16px;
       }
       .detail {
         margin: 0 12px 12px;
@@ -1464,7 +1482,7 @@ p {
         }
         &:hover {
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-          background: url(@/assets/imgs/home1/industy/hover-bg2.png);
+          background: url(@/assets/imgs/home1/industy/hover-bg1.png);
           background-size: cover;
           .name {
             color: #ffffff;
@@ -1485,7 +1503,7 @@ p {
         }
         &:hover {
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-          background: url(@/assets/imgs/home1/industy/hover-bg1.png);
+          background: url(@/assets/imgs/home1/industy/hover-bg2.png);
           background-size: cover;
           .name {
             color: #ffffff;

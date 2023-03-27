@@ -17,9 +17,9 @@ import open1 from '@/assets/imgs/home1/open/open1.png';
 import open2 from '@/assets/imgs/home1/open/open2.png';
 import open3 from '@/assets/imgs/home1/open/open3.png';
 
-import card1 from '@/assets/imgs/home1/more/more_card1.png';
-import card2 from '@/assets/imgs/home1/more/more_card2.png';
-import card3 from '@/assets/imgs/home1/more/more_card3.png';
+import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
+import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
+import card3 from '@/assets/imgs/home1/more/more_card3.jpg';
 
 import competition1 from '@/assets/imgs/home1/more/competition1.png';
 import competition2 from '@/assets/imgs/home1/more/competition2.png';
@@ -33,6 +33,8 @@ export default {
     PROJECT: 'AI Lab',
     MODEL: 'Model Library',
     MODELZOO: 'Foundation Models',
+    EXPERENCE: 'Experience',
+    FINE_TUNING: 'Fine-tuning',
     DATASET: 'Datasets',
     COURSE: 'Courses',
     COMPETITION: 'Competitions',
@@ -48,7 +50,7 @@ export default {
   LANG: 'English',
   BANNER_BUTTON_1: 'The MindSpore foundation model platform',
   BANNER_BUTTON_2: 'AI Challenges',
-  BANNER_BUTTON_3: 'AI Learning Competition',
+  BANNER_BUTTON_3: '生日会',
   // 轮播
   SWIPER: [
     {
@@ -124,13 +126,13 @@ export default {
         IMAGE: modelzoo_luojia,
         PATH: '/modelzoo/luojia',
       },
-      {
-        MODELZOO_NAME: 'PCL-L',
-        MODELZOO_DESC:
-          " Industry's first 100-billion-parameter Chinese NLP model",
-        IMAGE: modelzoo_pangu,
-        PATH: '/modelzoo/pangu',
-      },
+      // {
+      //   MODELZOO_NAME: 'PCL-L',
+      //   MODELZOO_DESC:
+      //     " Industry's first 100-billion-parameter Chinese NLP model",
+      //   IMAGE: modelzoo_pangu,
+      //   PATH: '/modelzoo/pangu',
+      // },
     ],
   },
   // 模型库
@@ -196,26 +198,26 @@ export default {
         IMAGE: open1,
         CARDS: [
           {
-            NAME: 'Foundation Models',
-            DESC: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型，…',
+            // NAME: 'Foundation Models',
+            DESC: 'The MindSpore AI framework natively supports foundation model training, which is the key to developing foundation models. Multiple scientific research institutes in China have built a series of foundation models based on MindSpore. At the same time, MindSpore offers a one-stop foundation model platform that exposes foundation model capabilities to developers, allowing them to explore and learn more about foundation models.',
             IMAGE: card1,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: 'View Details',
             PATH: '/course/c001/introduction',
           },
           {
-            NAME: 'Vision',
-            DESC: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思…',
+            // NAME: 'Vision',
+            DESC: 'Computer vision is an important AI field that enables computers to derive meaningful information from visual inputs, including images and video, and take actions based on the information. Based on MindSpore, this course combines theory and practice to help you get started quickly.',
             IMAGE: card2,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: 'View Details',
             PATH: '/course/c002/introduction',
           },
           {
-            NAME: 'Get Started',
-            DESC: '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
+            // NAME: 'Get Started',
+            DESC: 'With basic programming knowledge, you can get started with deep learning and understand parameter tuning and optimization methods in a day.',
             IMAGE: card3,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: 'View Details',
             PATH: '/course/c003/introduction',
           },
@@ -227,7 +229,7 @@ export default {
         CARDS: [
           {
             NAME: '',
-            DESC: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，…',
+            DESC: 'This is an invitation to participate in an AI art creation event and win up to CNY10,000. The Ivory Tower: AI Painter Competition was officially launched in March 2023 for global AI developers. The topics are closely related to diffusion models. The competition provides developers with an opportunity to learn MindSpore and diffusion models.',
             IMAGE: competition1,
             TYPE: '',
             DETAIL: 'View Details',
@@ -235,7 +237,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. Image classification is fundamental to computer vision, and related algorithms are developing rapidly. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to preprocess and classify images.',
             IMAGE: competition2,
             TYPE: '',
             DETAIL: 'View Details',
@@ -243,7 +245,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. They can study various theories and methods that can realize effective communication between human beings and computers by using natural languages. Text classification plays an important role in AI. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to process and classify text based on NLP.',
             IMAGE: competition3,
             TYPE: '',
             DETAIL: 'View Details',
@@ -257,7 +259,7 @@ export default {
         CARDS: [
           {
             NAME: '',
-            DESC: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极…',
+            DESC: "MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify Xi'an tourism images.",
             IMAGE: activity1,
             TYPE: '',
             DETAIL: 'View Details',
@@ -265,7 +267,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify takeout reviews.',
             IMAGE: activity2,
             TYPE: '',
             DETAIL: 'View Details',
@@ -273,7 +275,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to detect masks on images.',
             IMAGE: activity3,
             TYPE: '',
             DETAIL: 'View Details',
@@ -290,14 +292,14 @@ export default {
       'Experience applications used in multiple scenarios, including problem locating, solution design, data processing, model training and deployment, and idea optimization; gain full-process guidance and accumulate industry knowledge to contribute to industry development.',
     CARDS: [
       {
-        NAME: 'Industry',
-        DESC: 'Build AI models by training object detection data to intelligently identify industrial objects widely used in industrial detection and smart manufacturing.',
-        IMAGE: industy1,
-      },
-      {
         NAME: 'Electric Power',
         DESC: 'Build AI models by training electric power data to predict electric power data and fluctuation and assist enterprises in energy management and scheduling.',
         IMAGE: industy2,
+      },
+      {
+        NAME: 'Industry',
+        DESC: 'Build AI models by training object detection data to intelligently identify industrial objects widely used in industrial detection and smart manufacturing.',
+        IMAGE: industy1,
       },
       {
         NAME: 'Healthcare',

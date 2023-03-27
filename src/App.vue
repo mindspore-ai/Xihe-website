@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppHeader from '@/components/AppHeader.vue';
@@ -162,41 +162,96 @@ function Scroll(e) {
 }
 window.onmousewheel = document.onmousewheel = Scroll;
 
-const mobilNav = computed(() => {
-  return [
-    // { name: '首页', isactive: true },
-    { name: t('home.APP_HEADER.PROJECT'), isactive: false, path: '/project' },
-    { name: t('home.APP_HEADER.MODEL'), isactive: false, path: '/model' },
-    {
-      name: '大模型',
-      isactive: true,
-      children: [
-        { name: '模型体验', path: '/modelzoo' },
-        { name: '模型微调', path: '/finetune' },
-      ],
-    },
-    { name: t('home.APP_HEADER.DATASET'), isactive: false, path: '/dataset' },
-    { name: t('home.APP_HEADER.COURSE'), isactive: false, path: '/course' },
-    {
-      name: t('home.APP_HEADER.COMPETITION'),
-      isactive: false,
-      path: '/competition',
-    },
-    { name: t('home.APP_HEADER.ACTIVITY'), isactive: false, path: '/activity' },
-    { name: t('home.APP_HEADER.DOCUMENT'), isactive: false, path: '/docs' },
-  ];
-});
+const mobilNav = reactive([
+  { name: '首页', isactive: true, path: '/' },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.PROJECT');
+    }),
+    isactive: false,
+    path: '/project',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.MODEL');
+    }),
+    isactive: false,
+    path: '/model',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.MODELZOO');
+    }),
+    isactive: false,
+    children: [
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.EXPERENCE');
+        }),
+        path: '/modelzoo',
+      },
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.FINE_TUNING');
+        }),
+        path: '/finetune',
+      },
+    ],
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.DATASET');
+    }),
+    isactive: false,
+    path: '/dataset',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.COURSE');
+    }),
+    isactive: false,
+    path: '/course',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.COMPETITION');
+    }),
+    isactive: false,
+    path: '/competition',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.ACTIVITY');
+    }),
+    isactive: false,
+    path: '/activity',
+  },
+  {
+    name: computed(() => {
+      return t('home.APP_HEADER.DOCUMENT');
+    }),
+    isactive: false,
+    path: '/docs',
+  },
+]);
+
 const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
+  mobilNav[3].isactive = false;
 }
 function toPage(path) {
-  if (path) {
+  if (path === '/') {
+    mobilNav[0].isactive = true;
+    mobilNav[3].isactive = false;
+  } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
+    mobilNav[3].isactive = false;
     router.push(path);
   } else {
-    mobilNav.value[0].isactive = false;
+    mobilNav[0].isactive = false;
+    mobilNav[3].isactive = true;
   }
 }
 const handleCommand = () => {
@@ -275,8 +330,11 @@ const handleCommand = () => {
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
-      <div class="item-children" :class="{ 'children-active': meauActive }">
-        <div v-for="item in mobilNav[2].children" :key="item" class="nav-item">
+      <div
+        class="item-children"
+        :class="{ 'children-active': mobilNav[3].isactive }"
+      >
+        <div v-for="item in mobilNav[3].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
@@ -594,6 +652,9 @@ body.el-popup-parent--hidden {
       line-height: 18px;
       padding-left: 16px;
       min-width: 164px;
+      span {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.9);
+      }
     }
     span {
       display: inline-block;

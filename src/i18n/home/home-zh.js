@@ -17,9 +17,9 @@ import open1 from '@/assets/imgs/home1/open/open1.png';
 import open2 from '@/assets/imgs/home1/open/open2.png';
 import open3 from '@/assets/imgs/home1/open/open3.png';
 
-import card1 from '@/assets/imgs/home1/more/more_card1.png';
-import card2 from '@/assets/imgs/home1/more/more_card2.png';
-import card3 from '@/assets/imgs/home1/more/more_card3.png';
+import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
+import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
+import card3 from '@/assets/imgs/home1/more/more_card3.jpg';
 
 import competition1 from '@/assets/imgs/home1/more/competition1.png';
 import competition2 from '@/assets/imgs/home1/more/competition2.png';
@@ -33,6 +33,8 @@ export default {
     PROJECT: 'AI实验室',
     MODEL: '模型库',
     MODELZOO: '大模型',
+    EXPERENCE: '在线体验',
+    FINE_TUNING: '模型微调',
     DATASET: '数据集',
     COURSE: '课程',
     COMPETITION: '比赛',
@@ -48,7 +50,7 @@ export default {
   LANG: '中文',
   BANNER_BUTTON_1: '昇思大模型平台',
   BANNER_BUTTON_2: 'AI画家大赛',
-  BANNER_BUTTON_3: 'AI学习赛',
+  BANNER_BUTTON_3: '生日会',
   // 轮播
   SWIPER: [
     {
@@ -121,12 +123,12 @@ export default {
         IMAGE: modelzoo_luojia,
         PATH: '/modelzoo/luojia',
       },
-      {
-        MODELZOO_NAME: '鹏程.盘古',
-        MODELZOO_DESC: '业界首个千亿级参数中文自然语言处理大模型',
-        IMAGE: modelzoo_pangu,
-        PATH: '/modelzoo/pangu',
-      },
+      // {
+      //   MODELZOO_NAME: '鹏程.盘古',
+      //   MODELZOO_DESC: '业界首个千亿级参数中文自然语言处理大模型',
+      //   IMAGE: modelzoo_pangu,
+      //   PATH: '/modelzoo/pangu',
+      // },
     ],
   },
   // 模型库
@@ -190,26 +192,26 @@ export default {
         IMAGE: open1,
         CARDS: [
           {
-            NAME: '大模型课程',
-            DESC: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型，…',
+            // NAME: '大模型课程',
+            DESC: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型。同时，昇思MindSpore推出一站式大模型平台，将大模型能力开放给开发者，让你我皆可触碰大模型的魅力。',
             IMAGE: card1,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: '了解详情',
             PATH: '/course/c001/introduction',
           },
           {
-            NAME: '视觉课程',
-            DESC: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思…',
+            // NAME: '视觉课程',
+            DESC: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思MindSpore，采用理论与实践相结合的方法带你轻松入门。',
             IMAGE: card2,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: '了解详情',
             PATH: '/course/c002/introduction',
           },
           {
-            NAME: '昇思入门课',
+            // NAME: '昇思入门课',
             DESC: '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
             IMAGE: card3,
-            TYPE: '免费',
+            // TYPE: '免费',
             DETAIL: '了解详情',
             PATH: '/course/c003/introduction',
           },
@@ -221,7 +223,7 @@ export default {
         CARDS: [
           {
             NAME: '',
-            DESC: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，…',
+            DESC: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，赛题与扩散模型（Diffusion Model）紧密结合。大赛旨在为开发者提供一个学习昇思MindSpore和Diffusion Models的机会。',
             IMAGE: competition1,
             TYPE: '',
             DETAIL: '了解详情',
@@ -229,7 +231,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 图像分类是计算机视觉中最基础的任务,目前图像分类的算法仍然在飞速发展。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像分类预处理、图像分类的能力。',
             IMAGE: competition2,
             TYPE: '',
             DETAIL: '了解详情',
@@ -237,7 +239,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 它研究能实现人与计算机之间用自然语言进行有效通信的各种理论和方法。文本分类在AI领域承担了重要角色。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行NLP的文本处理、文本分类的能力。',
             IMAGE: competition3,
             TYPE: '',
             DETAIL: '了解详情',
@@ -251,7 +253,7 @@ export default {
         CARDS: [
           {
             NAME: '',
-            DESC: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极…',
+            DESC: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行西安旅游主题图像分类的能力。',
             IMAGE: activity1,
             TYPE: '',
             DETAIL: '了解详情',
@@ -259,7 +261,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行外卖文本分类的能力。',
             IMAGE: activity2,
             TYPE: '',
             DETAIL: '了解详情',
@@ -267,7 +269,7 @@ export default {
           },
           {
             NAME: '',
-            DESC: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正…',
+            DESC: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像口罩检测的能力。',
             IMAGE: activity3,
             TYPE: '',
             DETAIL: '了解详情',
@@ -284,17 +286,18 @@ export default {
       '涵盖了多领域落地的相关应用；包括对相关应用的问题定位、方案设计、数据处理、模型训练部署及思路的优化；提供了全流程零门槛入门的指导，沉淀了丰富的行业领域知识助力行业快速发展。',
     CARDS: [
       {
-        NAME: '工业',
-        DESC: '通过训练物体检测构建AI模型，实现对工业物体的智能识别，广泛应用于工业检测、智能制造等',
-        IMAGE: industy1,
-        PATH: '/estate/industry',
-      },
-      {
         NAME: '电力',
         DESC: '通过训练电力数据构集构建AI模型，实现对电力数据的预测，可以预测电力波动，辅助企业能源管理、能源调度等',
         IMAGE: industy2,
         PATH: '/estate/electricity',
       },
+      {
+        NAME: '工业',
+        DESC: '通过训练物体检测构建AI模型，实现对工业物体的智能识别，广泛应用于工业检测、智能制造等',
+        IMAGE: industy1,
+        PATH: '/estate/industry',
+      },
+
       {
         NAME: '医疗',
         DESC: '通过对医疗数据的探索构建AI模型，实现对医疗大数据的分析，广泛应用于临床决策、医学研究等',

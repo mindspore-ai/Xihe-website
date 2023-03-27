@@ -213,15 +213,13 @@ onMounted(() => {
           </div>
           <div class="mask"></div>
         </swiper-slide>
-        <swiper-slide class="slide3" @click="goDetail">
-          <!-- <div class="mask"></div> -->
-        </swiper-slide>
+        <!-- <swiper-slide class="slide3" @click="goDetail"> </swiper-slide>
         <swiper-slide
           class="slide2"
           @click="router.push('/competition/ai_painter/0/introduction')"
         >
           <div class="mask"></div>
-        </swiper-slide>
+        </swiper-slide> -->
       </swiper>
     </div>
 

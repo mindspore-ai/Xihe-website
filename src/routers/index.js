@@ -143,6 +143,8 @@ router.beforeEach(async (to, from) => {
   i18n.global.locale.value = to.fullPath.includes('en') ? 'en' : 'zh';
   if (to.path === '/en' && to.meta.title) {
     document.title = to.meta.title;
+  } else {
+    document.title = '昇思大模型平台';
   }
 
   const loginStore = useLoginStore();

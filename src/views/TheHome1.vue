@@ -1510,13 +1510,13 @@ p {
       background-color: #fff;
       border-radius: 16px;
       background-size: cover;
-      cursor: pointer;
       transition: all 0.3s ease;
       transition-property: box-shadow;
       @media screen and (max-width: 820px) {
         padding: 16px;
       }
       &:first-child {
+        cursor: pointer;
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .intro {
           color: #555;
@@ -1539,9 +1539,9 @@ p {
       }
       &:nth-child(2) {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        cursor: pointer;
         .intro {
           color: #555;
-          cursor: pointer;
         }
         .name {
           color: #000;

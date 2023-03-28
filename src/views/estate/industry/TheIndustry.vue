@@ -50,19 +50,19 @@ function goCasePath(item) {
     text-align: center;
   }
   .case-cards {
-    // display: grid;
-    // grid-template-columns: repeat(2, 1fr);
-    // grid-gap: 24px;
     height: 240px;
-    margin-top: 40px;
+    margin: 40px 0 64px;
+    padding: 0px 16px;
     .case-item {
+      width: 100%;
       height: 100%;
       cursor: pointer;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
       position: relative;
       &:hover {
-        box-shadow: 0px 8px 32px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 18px #0d8dff24;
+        border-radius: 16px;
       }
       .case-info {
         position: absolute;

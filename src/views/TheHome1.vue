@@ -390,7 +390,9 @@ onMounted(() => {
             data-aos-offset="200"
             @click="router.push(t(`home.MODELZOO.CARDS[${index}].PATH`))"
           >
-            <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
+            <div class="img">
+              <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
+            </div>
             <div class="modelzoo-name">
               {{ t(`home.MODELZOO.CARDS[${index}].MODELZOO_NAME`) }}
             </div>
@@ -539,6 +541,7 @@ onMounted(() => {
                 }}</span
               >
             </div>
+            <div class="img-mask"></div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -547,7 +550,12 @@ onMounted(() => {
       <p class="title">{{ t(`home.INDUSTRY.TITLE`) }}</p>
       <p class="introduce introduce1">{{ t(`home.INDUSTRY.INTRODUCE`) }}</p>
       <div class="item-box">
-        <div v-for="(item, index) in 4" :key="item" class="item">
+        <div
+          v-for="(item, index) in 4"
+          :key="item"
+          class="item"
+          @click="router.push(t(`home.INDUSTRY.CARDS[${index}].PATH`))"
+        >
           <div class="name">
             <img :src="t(`home.INDUSTRY.CARDS[${index}].IMAGE`)" alt="" />{{
               t(`home.INDUSTRY.CARDS[${index}].NAME`)
@@ -556,10 +564,7 @@ onMounted(() => {
               t(`home.INDUSTRY.CARDS[${index}].STATUS`)
             }}</span>
           </div>
-          <div
-            class="intro"
-            @click="router.push(t(`home.INDUSTRY.CARDS[${index}].PATH`))"
-          >
+          <div class="intro">
             {{ t(`home.INDUSTRY.CARDS[${index}].DESC`) }}
           </div>
         </div>
@@ -997,6 +1002,10 @@ p {
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
       &:hover {
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        img {
+          transform: scale(1.1);
+          transition: all 0.3s ease;
+        }
       }
       &:last-child {
         .models-tag {
@@ -1026,14 +1035,19 @@ p {
         }
       }
     }
-    img {
+    .img {
       width: 100%;
       border-radius: 20px;
-      @media screen and (max-width: 820px) {
-        border-radius: 16px;
-      }
-      @media screen and (max-width: 767px) {
-        border-radius: 16px;
+      overflow: hidden;
+      img {
+        width: 100%;
+        border-radius: 20px;
+        @media screen and (max-width: 820px) {
+          border-radius: 16px;
+        }
+        @media screen and (max-width: 767px) {
+          border-radius: 16px;
+        }
       }
     }
   }
@@ -1359,6 +1373,7 @@ p {
         line-height: 28px;
         margin: 12px 12px;
         position: absolute;
+        z-index: 2;
         top: 51px;
         display: flex;
         @media screen and (max-width: 820px) {
@@ -1398,7 +1413,11 @@ p {
       }
       img {
         width: 100%;
+        height: 149px;
         border-radius: 16px;
+        @media screen and (max-width: 820px) {
+          height: 109px;
+        }
       }
       .detail {
         margin: 0 12px 12px;
@@ -1438,6 +1457,23 @@ p {
         //   font-size: 14px;
         // }
       }
+      .img-mask {
+        width: calc(100% - 24px);
+        height: 149px;
+        border-radius: 16px;
+        background: linear-gradient(
+          175deg,
+          rgba(143, 244, 255, 0) 0%,
+          #61adff 100%
+        );
+        position: absolute;
+        top: 12px;
+        @media screen and (max-width: 820px) {
+          width: calc(100% - 12px);
+          height: 109px;
+          top: 6px;
+        }
+      }
     }
   }
 }
@@ -1474,6 +1510,7 @@ p {
       background-color: #fff;
       border-radius: 16px;
       background-size: cover;
+      cursor: pointer;
       transition: all 0.3s ease;
       @media screen and (max-width: 820px) {
         padding: 16px;
@@ -1482,7 +1519,6 @@ p {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .intro {
           color: #555;
-          cursor: pointer;
         }
         .name {
           color: #000;

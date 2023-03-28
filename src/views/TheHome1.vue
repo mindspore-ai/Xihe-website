@@ -747,6 +747,7 @@ p {
     max-width: 412px;
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
     cursor: pointer;
+    transition: all 0.3s ease;
     &:hover {
       box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
     }
@@ -987,6 +988,7 @@ p {
       padding: 12px;
       position: relative;
       border-radius: 20px;
+      transition: all 0.3s ease;
       cursor: pointer;
       @media screen and (max-width: 820px) {
         padding: 6px;
@@ -1074,6 +1076,7 @@ p {
       padding: 40px;
       position: relative;
       border-radius: 20px;
+      transition: all 0.3s ease;
       @media screen and (max-width: 820px) {
         padding: 16px;
       }
@@ -1342,6 +1345,7 @@ p {
       border-radius: 20px;
       position: relative;
       margin-bottom: 64px;
+      transition: all 0.3s ease;
       box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
       &:hover {
         box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
@@ -1466,9 +1470,11 @@ p {
     .item {
       padding: 34px 40px 40px;
       background: url(@/assets/imgs/home1/industry-card-bg.png);
+      // background-position: 50%;
       background-color: #fff;
       border-radius: 16px;
       background-size: cover;
+      transition: all 0.3s ease;
       @media screen and (max-width: 820px) {
         padding: 16px;
       }
@@ -1485,6 +1491,7 @@ p {
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
           background: url(@/assets/imgs/home1/industy/hover-bg1.png);
           background-size: cover;
+          background-position: 50%;
           .name {
             color: #ffffff;
           }
@@ -1506,6 +1513,7 @@ p {
           box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
           background: url(@/assets/imgs/home1/industy/hover-bg2.png);
           background-size: cover;
+          background-position: 50%;
           .name {
             color: #ffffff;
           }

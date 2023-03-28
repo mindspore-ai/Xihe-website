@@ -709,7 +709,13 @@ const handleCommand = (command) => {
               keyword
             "
           >
-            <div class="no-result">找不到该关键词，请重新输入</div>
+            <div class="no-result">
+              {{
+                locale === 'zh'
+                  ? '找不到该关键词，请重新输入'
+                  : 'The keyword cannot be found, please re-enter'
+              }}
+            </div>
           </div>
         </div>
       </div>

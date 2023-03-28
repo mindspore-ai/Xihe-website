@@ -166,10 +166,9 @@ const electricityDetail = computed(() => {
       .industry-content-banner {
         padding: 40px;
         background-color: #fff;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
         border-radius: 16px;
-        margin-bottom: 37px;
+        margin-bottom: 40px;
         .banner-left {
           width: 416px;
           margin-right: 40px;
@@ -207,15 +206,6 @@ const electricityDetail = computed(() => {
       .industry-content-desc {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
-        // .o-nav {
-        //   border-radius: 15px;
-        // }
-      }
-      .industry-content-desc {
-        // .o-nav {
-        //   background: #fff;
-        // }
         .industry-tab {
           max-width: 1440px;
           margin: 0 auto;

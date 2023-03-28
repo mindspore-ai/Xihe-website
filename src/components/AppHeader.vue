@@ -608,7 +608,7 @@ const handleCommand = (command) => {
           </el-sub-menu>
         </template>
       </el-menu> -->
-      <div class="header-menu">
+      <div v-if="show" class="header-menu">
         <div
           v-for="(item, index) in navItems"
           :key="item"
@@ -629,7 +629,7 @@ const handleCommand = (command) => {
           </div>
         </div>
       </div>
-      <div v-if="!show" class="header-center">
+      <div v-else class="header-center">
         <div class="header-input">
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
           <el-icon class="empty-icon" @click="emptyValue"><Close /></el-icon>

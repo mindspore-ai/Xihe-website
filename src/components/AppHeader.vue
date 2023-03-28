@@ -572,9 +572,7 @@ const handleCommand = (command) => {
           <o-input
             id="search-input"
             v-model="keyword"
-            :placeholder="
-              locale === 'zh' ? '请输入关键词' : 'Please enter a keyword'
-            "
+            :placeholder="locale === 'zh' ? '请输入关键词' : 'Enter a keyword'"
             class="search-input"
             @blur="handleBlur"
             @keyup.enter="goFirstResult"
@@ -713,7 +711,7 @@ const handleCommand = (command) => {
               {{
                 locale === 'zh'
                   ? '找不到该关键词，请重新输入'
-                  : 'The keyword cannot be found, please re-enter'
+                  : 'No results match the keyword you entered.Try another keyword'
               }}
             </div>
           </div>
@@ -896,7 +894,8 @@ const handleCommand = (command) => {
           padding: 0;
           // font-size: 18px;
           font-size: 14px;
-          padding: 0 16px;
+          padding: 0 8px;
+          margin: 0 8px;
           border: none;
           color: #000000 !important;
         }
@@ -1156,8 +1155,8 @@ const handleCommand = (command) => {
 <style lang="scss">
 .el-popper.modelzooItem {
   .el-menu--popup {
-    width: 90px;
-    min-width: 90px;
+    width: 86px;
+    min-width: 86px;
     padding-left: 6px;
     padding-right: 6px;
     .sub-menu {

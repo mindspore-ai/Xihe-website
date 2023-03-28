@@ -1512,6 +1512,7 @@ p {
       background-size: cover;
       cursor: pointer;
       transition: all 0.3s ease;
+      transition-property: box-shadow;
       @media screen and (max-width: 820px) {
         padding: 16px;
       }

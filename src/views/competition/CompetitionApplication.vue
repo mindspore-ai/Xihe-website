@@ -16,7 +16,7 @@ const userInfoStore = useUserInfoStore();
 const userComData = useCompetitionData();
 
 const queryRef = ref(null);
-const role = ref('student');
+// const role = ref('student');
 const areaData = ref([]);
 const agree = ref(false);
 let province = ref([]);
@@ -99,6 +99,7 @@ const query = reactive({
   description:
     props.userReginfo.Identity === '' ? props.userReginfo.Detail.detail1 : '',
 });
+const role = ref(query.identity_type);
 
 defineExpose({ query });
 

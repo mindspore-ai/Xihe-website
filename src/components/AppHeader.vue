@@ -63,78 +63,107 @@ let query = reactive({
   name: '',
 });
 
-const navItems = computed(() => {
-  return reactive([
-    {
-      id: 'projects',
-      label: t('home.APP_HEADER.PROJECT'),
-      href: '/projects',
-    },
-    {
-      id: 'models',
-      label: t('home.APP_HEADER.MODEL'),
-      href: '/models',
-    },
-    {
-      id: 'modelzoo',
-      label: t('home.APP_HEADER.MODELZOO'),
-      href: '/modelzoo',
-      menuList: [
-        {
-          id: 'test',
-          label: t('home.APP_HEADER.EXPERENCE'),
-          href: '/modelzoo',
-        },
-        {
-          id: 'tune',
-          label: t('home.APP_HEADER.FINE_TUNING'),
-          href: '/finetune',
-        },
-      ],
-    },
-    {
-      id: 'datasets',
-      label: t('home.APP_HEADER.DATASET'),
-      href: '/datasets',
-    },
-    {
-      id: 'estate',
-      label: t('home.APP_HEADER.INDUSTRY'),
-      href: '/estate/industry',
-    },
-    {
-      id: 'course',
-      label: t('home.APP_HEADER.COURSE'),
-      href: '/course',
-    },
-    {
-      id: 'competition',
-      label: t('home.APP_HEADER.COMPETITION'),
-      href: '/competition',
-    },
-    {
-      id: 'activity',
-      label: t('home.APP_HEADER.ACTIVITY'),
-      href: '/activity',
-    },
-    {
-      id: 'docs',
-      label: t('home.APP_HEADER.DOCUMENT'),
-      href: '/docs',
-      windowOpen: true,
-    },
-    /*  {
+const navItems = reactive([
+  {
+    id: 'projects',
+    label: computed(() => {
+      return t('home.APP_HEADER.PROJECT');
+    }),
+    href: '/projects',
+    isActive: false,
+  },
+  {
+    id: 'models',
+    label: computed(() => {
+      return t('home.APP_HEADER.MODEL');
+    }),
+    href: '/models',
+    isActive: false,
+  },
+  {
+    id: 'modelzoo',
+    label: computed(() => {
+      return t('home.APP_HEADER.MODELZOO');
+    }),
+    href: '',
+    isActive: false,
+    menuList: [
+      {
+        id: 'test',
+        label: computed(() => {
+          return t('home.APP_HEADER.EXPERENCE');
+        }),
+        href: '/modelzoo',
+      },
+      {
+        id: 'tune',
+        label: computed(() => {
+          return t('home.APP_HEADER.FINE_TUNING');
+        }),
+        href: '/finetune',
+      },
+    ],
+  },
+  {
+    id: 'datasets',
+    label: computed(() => {
+      return t('home.APP_HEADER.DATASET');
+    }),
+    href: '/datasets',
+    isActive: false,
+  },
+  {
+    id: 'estate',
+    label: computed(() => {
+      return t('home.APP_HEADER.INDUSTRY');
+    }),
+    href: '/estate/electricity',
+    isActive: false,
+  },
+  {
+    id: 'course',
+    label: computed(() => {
+      return t('home.APP_HEADER.COURSE');
+    }),
+    href: '/course',
+    isActive: false,
+  },
+  {
+    id: 'competition',
+    label: computed(() => {
+      return t('home.APP_HEADER.COMPETITION');
+    }),
+    href: '/competition',
+    isActive: false,
+  },
+  {
+    id: 'activity',
+    label: computed(() => {
+      return t('home.APP_HEADER.ACTIVITY');
+    }),
+    href: '/activity',
+    isActive: false,
+  },
+  {
+    id: 'docs',
+    label: computed(() => {
+      return t('home.APP_HEADER.DOCUMENT');
+    }),
+    href: '/docs',
+    isActive: false,
+    windowOpen: true,
+  },
+  /*  {
     id: 'leaderboards',
     label: '排行榜',
     href: '/leaderboard',
   }, */
-    // {
-    //   id: 'teams',
-    //   label: '团队',
-    //   href: '/teams',
-    // },
-  ]);
-});
+  // {
+  //   id: 'teams',
+  //   label: '团队',
+  //   href: '/teams',
+  // },
+]);
 const loginedDropdownItems = reactive([
   {
     id: 'user',
@@ -227,13 +256,27 @@ function handleLogoClick() {
 } */
 
 // 点击导航
-function handleSelect(item) {
-  if (item === '/docs') {
+function handleSelect(path) {
+  if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
+  } else if (!path) {
+    return;
   } else {
-    router.push({ path: item });
+    router.push({ path: path });
   }
 }
+watch(route, (val) => {
+  navItems.forEach((item) => {
+    if (val.path === item.href) {
+      item.isActive = true;
+    } else {
+      item.isActive = false;
+    }
+  });
+  if (val.path === '/modelzoo' || val.path === '/finetune') {
+    navItems[2].isActive = true;
+  }
+});
 
 // 输入框自动获得焦点
 function showInput() {
@@ -528,7 +571,7 @@ const handleCommand = (command) => {
       <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <el-menu
+      <!-- <el-menu
         v-if="show"
         class="modelzoo-menu"
         :default-active="route.path"
@@ -564,8 +607,29 @@ const handleCommand = (command) => {
             </div>
           </el-sub-menu>
         </template>
-      </el-menu>
-      <div v-else class="header-center">
+      </el-menu> -->
+      <div class="header-menu">
+        <div
+          v-for="(item, index) in navItems"
+          :key="item"
+          class="menu-item"
+          :class="{ 'is-active': item.isActive }"
+          @click="handleSelect(item.href, index)"
+        >
+          {{ item.label }}
+          <div class="children-box" :class="{ 'en-children': locale === 'en' }">
+            <div
+              v-for="child in item.menuList"
+              :key="child"
+              class="item-children"
+              @click="handleSelect(child.href)"
+            >
+              {{ child.label }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="!show" class="header-center">
         <div class="header-input">
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
           <el-icon class="empty-icon" @click="emptyValue"><Close /></el-icon>
@@ -832,6 +896,62 @@ const handleCommand = (command) => {
     width: 100%;
     margin-left: 48px;
     margin-left: 96px;
+    .header-menu {
+      display: flex;
+      align-items: center;
+      .menu-item {
+        padding: 31px 0;
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 2px solid rgba(0, 0, 0, 0);
+        position: relative;
+
+        &:hover {
+          color: #0d8dff;
+        }
+      }
+      .is-active {
+        color: #0d8dff;
+        border-bottom: 2px solid #0d8dff;
+      }
+      .menu-item + .menu-item {
+        margin-left: 32px;
+      }
+      .children-box {
+        position: absolute;
+        z-index: -1;
+        color: #000;
+        text-align: center;
+        top: 80px;
+        left: -22px;
+        width: 86px;
+        background: #ffffff;
+        transform-origin: top;
+        transform: scaleY(0);
+        transition: all 0.3s ease-in-out;
+        .item-children {
+          height: 36px;
+          line-height: 36px;
+          margin: 0 6px;
+          &:hover {
+            color: #0d8dff;
+          }
+        }
+        .item-children + .item-children {
+          border-top: 1px solid #999;
+        }
+      }
+      .menu-item:nth-child(3) {
+        &:hover {
+          .children-box {
+            transform: scaleY(1);
+          }
+        }
+      }
+      .en-children {
+        left: 18px;
+      }
+    }
     :deep(.el-menu) {
       width: 100%;
       height: 100%;

@@ -101,7 +101,9 @@ function startRatiocnate() {
       inferUrlList.value = [];
       if (res.data) {
         inferUrlList.value.push(res.data.picture + '?' + new Date());
+        loading1.value = false;
       } else {
+        loading1.value = false;
         ElMessage({
           type: 'error',
           message: res.msg,
@@ -228,11 +230,6 @@ function handleTextChange() {
   });
 }
 
-const activeNames = ref(['1']);
-const handleNameChange = (val) => {
-  return val;
-};
-
 function refreshTags() {
   exampleList.value = getRandom(lists, 6);
 }
@@ -244,7 +241,7 @@ onUnmounted(() => {
 <template>
   <div class="model-page">
     <div class="model-wrap">
-      <!-- 以文生图() -->
+      <!-- 以文生图 -->
       <div class="text-to-img">
         <div class="title">
           <span> 以文生图（Text-To-Image）</span>
@@ -331,119 +328,247 @@ onUnmounted(() => {
       </div>
 
       <div class="mobile">
-        <el-collapse v-model="activeNames" @change="handleNameChange">
-          <el-collapse-item title="以文生图（Text-To-Image）" name="1">
-            <div class="description">
-              以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+        <p class="model-name">以文生图（Text-To-Image）</p>
+        <div class="model-desc">
+          以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+        </div>
+        <p class="input-desc">描述</p>
+        <el-input
+          ref="inputValue"
+          v-model="inferenceText"
+          class="mobile-input"
+          type="textarea"
+          maxlength="30"
+          :show-word-limit="true"
+          placeholder="请输入简体中文或选择下方样例"
+          @input="handleTextChange"
+        >
+        </el-input>
+        <div class="example">
+          <div class="example-top">
+            <p class="title">选择样例</p>
+            <div class="refresh-btn" @click="refreshTags">
+              <OIcon><icon-refresh></icon-refresh></OIcon>
+              <p>换一批</p>
             </div>
-            <el-divider />
-            <p class="experience-title">描述</p>
-
-            <el-input
-              ref="inputValue"
-              v-model="inferenceText"
-              type="textarea"
-              maxlength="30"
-              :show-word-limit="true"
-              placeholder="请输入简体中文或选择下方样例"
-              class="mobile-input"
-              @input="handleTextChange"
+          </div>
+          <div class="tags-box">
+            <p
+              v-for="item in exampleList"
+              :key="item.name"
+              :class="item.isSelected ? 'active' : ''"
+              @click="selectTag(item)"
             >
-            </el-input>
+              {{ item.name }}
+            </p>
+          </div>
+        </div>
+        <p class="result">图片结果</p>
+        <div v-if="inferUrlList.length > 1" class="result-image">
+          <el-image
+            class="image-modal"
+            :src="inferUrlList[0]"
+            :preview-src-list="inferUrlList"
+            :initial-index="0"
+            fit="cover"
+            :hide-on-click-modal="true"
+          />
+          <el-image
+            class="image-modal"
+            :src="inferUrlList[1]"
+            :preview-src-list="inferUrlList"
+            :initial-index="1"
+            fit="cover"
+            :hide-on-click-modal="true"
+          />
+          <el-image
+            class="image-modal"
+            :src="inferUrlList[2]"
+            :preview-src-list="inferUrlList"
+            :initial-index="2"
+            fit="cover"
+            :hide-on-click-modal="true"
+          />
+        </div>
+        <div
+          v-if="inferUrlList.length === 1 || inferUrlList.length === 0"
+          class="result-image"
+        >
+          <img
+            v-for="item in inferUrlList"
+            :key="item"
+            class="result-img-single"
+            :src="item"
+          />
+        </div>
 
-            <div class="example">
-              <div class="example-top">
-                <p class="title">选择样例</p>
-                <div class="refresh-btn" @click="refreshTags">
-                  <!-- <o-icon><icon-refresh></icon-refresh></o-icon> -->
-                  <p>换一批</p>
-                </div>
-              </div>
-              <div class="tags-box">
-                <p
-                  v-for="item in exampleList"
-                  :key="item.name"
-                  :class="item.isSelected ? 'active' : ''"
-                  @click="selectTag(item)"
-                >
-                  {{ item.name }}
-                </p>
-              </div>
-            </div>
-
-            <p class="experience-title">图片结果</p>
-
-            <div v-if="inferUrlList.length > 1" class="result">
-              <el-image
-                class="image-modal"
-                style="width: 100px; height: 100px"
-                :src="inferUrlList[0]"
-                :preview-src-list="inferUrlList"
-                :initial-index="0"
-                fit="cover"
-                :hide-on-click-modal="true"
-              />
-              <el-image
-                class="image-modal"
-                style="width: 100px; height: 100px"
-                :src="inferUrlList[1]"
-                :preview-src-list="inferUrlList"
-                :initial-index="1"
-                fit="cover"
-                :hide-on-click-modal="true"
-              />
-              <el-image
-                class="image-modal"
-                style="width: 100px; height: 100px"
-                :src="inferUrlList[2]"
-                :preview-src-list="inferUrlList"
-                :initial-index="2"
-                fit="cover"
-                :hide-on-click-modal="true"
-              />
-            </div>
-
-            <div
-              v-if="inferUrlList.length === 1 || inferUrlList.length === 0"
-              class="result"
-            >
-              <img
-                v-for="item in inferUrlList"
-                :key="item"
-                class="result-img-single"
-                :src="item"
-              />
-            </div>
-
-            <div class="btn-box-mobile">
-              <o-button size="small" @click="startRatiocnateMo"
-                >生成三张</o-button
-              >
-              <o-button
-                size="small"
-                type="primary"
-                class="infer-button-mobile"
-                :disabled="loading1"
-                @click="startRatiocnate"
-                >生成一张</o-button
-              >
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+        <div class="mobile-button">
+          <o-button size="mini" @click="startRatiocnateMo">生成三张</o-button>
+          <o-button
+            size="mini"
+            type="primary"
+            :disabled="loading1"
+            @click="startRatiocnate"
+            >生成一张</o-button
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.mobile-input {
-  margin-bottom: 12px;
-
-  :deep(.el-textarea__inner) {
-    height: 96px !important;
-    width: calc(100vw - 64px);
+:deep(.el-textarea) {
+  width: 100% !important;
+}
+.mobile {
+  margin: 16px 16px 0px;
+  background-color: #fff;
+  padding: 16px 16px 24px;
+  display: none;
+  @media screen and (max-width: 820px) {
+    display: block;
+  }
+  .model-name {
+    font-size: 14px;
+    line-height: 28px;
+    color: #000000;
+  }
+  .model-desc {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #555555;
+    padding: 16px 0;
+    @media screen and (max-width: 820px) {
+      border-bottom: 1px solid #dbdbdb;
+      padding: 8px 0 16px;
+    }
+  }
+  .input-desc {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #000000;
+    margin-top: 16px;
+  }
+  .mobile-input {
+    margin-top: 8px;
+    :deep(.el-textarea__inner) {
+      height: 96px !important;
+      width: calc(100vw - 64px);
+      font-size: 12px;
+      line-height: 22px;
+      color: #999999;
+    }
+  }
+  .example {
+    margin-top: 12px;
+    .example-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 400;
+      color: #555555;
+      .refresh-btn {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 400;
+        color: #0d8dff;
+        line-height: 14px;
+        .o-icon {
+          font-size: 10px;
+          margin-right: 2px;
+          margin-top: 2px;
+        }
+      }
+    }
+    .tags-box {
+      display: flex;
+      flex-wrap: wrap;
+      p {
+        padding: 0px 7px;
+        border-radius: 6px;
+        border: 1px solid #dbedff;
+        box-sizing: border-box;
+        background-color: #f3f9ff;
+        margin-top: 8px;
+        margin-right: 8px;
+        color: #555;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 8px;
+        height: 26px;
+        line-height: 26px;
+        &:hover {
+          color: #0d8dff;
+        }
+      }
+      .active {
+        color: #0d8dff;
+      }
+    }
+  }
+  .result {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #000000;
+    margin-top: 24px;
+  }
+  .result-image {
+    margin-top: 10px;
+    padding: 16px;
+    border: 1px solid #a0d2ff;
+    height: 254px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .image-modal {
+      width: 83px;
+      height: 83px;
+      &:nth-child(2) {
+        margin: 0 8px;
+      }
+    }
+    :deep(.el-image) {
+      .el-image-viewer__prev {
+        left: 6px;
+        background-color: transparent;
+      }
+      .el-image-viewer__next {
+        right: 6px;
+        background-color: transparent;
+      }
+      .el-image-viewer__wrapper {
+        z-index: 9999 !important;
+      }
+      .el-image-viewer__close {
+        display: none;
+      }
+      .el-image-viewer__actions {
+        display: none;
+      }
+    }
+    .result-img-single {
+      height: 100%;
+    }
+  }
+  .mobile-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    .o-button:first-child {
+      margin-right: 8px;
+    }
   }
 }
+
 .analyse-result {
   width: 100%;
   height: 120px;
@@ -572,184 +697,11 @@ onUnmounted(() => {
     }
   }
 }
-.divider {
-  :deep(.el-divider) {
-    border: 1px solid #dbdbdb;
-  }
-  // @media screen and (max-width: 768px) {
-  //   display: none;
-  // }
-}
-
-:deep(.el-collapse) {
-  .el-collapse-item__header {
-    padding: 16px 16px 8px;
-  }
-  .el-collapse-item .el-collapse-item__content {
-    padding: 0 16px 16px;
-    .el-divider--horizontal {
-      margin: 16px 0;
-    }
-    .description {
-      font-size: 12px;
-      font-weight: 400;
-      color: #555555;
-      line-height: 18px;
-    }
-    .experience-title {
-      font-size: 14px;
-      font-weight: 400;
-      color: #000000;
-      line-height: 20px;
-      margin-bottom: 8px;
-    }
-    .example {
-      flex: 1;
-      margin-bottom: 24px;
-      &-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .refresh-btn {
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-          p {
-            font-size: 10px;
-            font-weight: 400;
-            color: #0d8dff;
-            line-height: 14px;
-          }
-          .o-icon {
-            font-size: 10px;
-            margin-right: 2px;
-          }
-        }
-      }
-      .title {
-        margin-bottom: 0;
-        font-size: 12px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 17px;
-      }
-      .tags-box {
-        display: flex;
-        flex-wrap: wrap;
-        p {
-          padding: 0px 7px;
-          border-radius: 6px;
-          border: 1px solid #dbedff;
-          box-sizing: border-box;
-          background-color: #f3f9ff;
-          margin-top: 8px;
-          margin-right: 8px;
-          color: #555;
-          cursor: pointer;
-          font-size: 12px;
-          line-height: 8px;
-          height: 26px;
-          line-height: 26px;
-          &:hover {
-            color: #0d8dff;
-          }
-        }
-        .active {
-          color: #0d8dff;
-        }
-      }
-    }
-    .result {
-      flex: 1;
-      border: 1px solid #a0d2ff;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      height: 254px;
-      margin-bottom: 16px;
-      &-img {
-        height: 85px;
-        height: 85px;
-        &:nth-child(2) {
-          margin: 0 8px;
-        }
-      }
-      &-img-single {
-        height: 100%;
-      }
-    }
-
-    .btn-box-mobile {
-      display: none;
-
-      // @media screen and (max-width: 768px) {
-      //   display: block;
-      //   display: flex;
-      //   justify-content: center;
-      //   .infer-button-mobile {
-      //     margin-left: 8px;
-      //   }
-      // }
-    }
-
-    :deep(.el-upload) {
-      .el-upload-dragger {
-        width: 100%;
-        height: 196px;
-      }
-    }
-  }
-}
-.mobile {
-  // padding: 16px 16px 0;
-  display: none;
-  :deep(.el-image) {
-    .el-image__preview {
-      width: calc((100vw - 108px) / 3);
-      height: calc((100vw - 108px) / 3);
-    }
-  }
-  .image-modal {
-    display: block;
-    &:nth-child(2) {
-      margin: 0 8px;
-    }
-    :deep(.el-image-viewer__wrapper) {
-      margin-top: 48px;
-
-      .el-image-viewer__canvas {
-        img {
-          width: 76% !important;
-          height: 76vw;
-        }
-      }
-      .el-image-viewer__close {
-        display: none;
-      }
-      .el-image-viewer__prev {
-        left: 4px;
-        background: none;
-      }
-      .el-image-viewer__next {
-        background: none;
-        right: 4px;
-      }
-      .el-image-viewer__actions {
-        display: none;
-      }
-    }
-  }
-  // @media screen and (max-width: 768px) {
-  //   display: block;
-  // }
-}
 .text-to-img {
   padding-top: 40px;
-  // @media screen and (max-width: 768px) {
-  //   display: none;
-  // }
+  @media screen and (max-width: 820px) {
+    display: none;
+  }
   .title {
     font-weight: 300;
     color: #000000;
@@ -931,12 +883,11 @@ onUnmounted(() => {
   line-height: 22px;
 }
 .model-page {
-  // background-color: #f5f6f8;
   width: 100%;
   padding-bottom: 64px;
-  // @media screen and (max-width: 768px) {
-  //   padding: 16px 16px 40px;
-  // }
+  @media screen and (max-width: 820px) {
+    padding-bottom: 40px;
+  }
   .model-wrap {
     margin: 0 auto;
     max-width: 1440px;

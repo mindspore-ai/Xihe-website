@@ -140,7 +140,7 @@ onUpdated(() => {
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status === 'done'"
+                  v-if="competitionData.status === 'over'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -175,7 +175,7 @@ onUpdated(() => {
                   <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status === 'done'">
+                  <div v-if="competitionData.status === 'over'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <div class="number">
@@ -210,7 +210,7 @@ onUpdated(() => {
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status === 'done'"
+                  v-if="competitionData.status === 'over'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -242,7 +242,7 @@ onUpdated(() => {
                   <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status === 'done'">
+                  <div v-if="competitionData.status === 'over'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <!-- <div class="number">

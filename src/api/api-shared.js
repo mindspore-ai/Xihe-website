@@ -41,3 +41,13 @@ export function getFiles(id) {
     return res.data;
   });
 }
+/**
+ * 获取首页比赛课程信息
+ * @returns
+ */
+export function getHomeInfo() {
+  const url = `/server/homepage`;
+  return request.get(url).then((res) => {
+    return res.data;
+  });
+}

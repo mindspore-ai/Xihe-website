@@ -4,7 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { debounce } from 'lodash/function';
 
-import logoImg from '@/assets/imgs/logo.png';
+import logoImg from '@/assets/imgs/logo1.png';
+import logoImg1 from '@/assets/imgs/logo.png';
+import logoImg2 from '@/assets/imgs/logo2.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
 import datasetImg from '@/assets/icons/dataset.png';
@@ -14,13 +16,24 @@ import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
 // import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
+import IconDown from '~icons/app/down.svg';
 
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore, useLangStore } from '@/stores';
 import IconSearch from '~icons/app/search';
 import IconUser from '~icons/app/user.svg';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { Close } from '@element-plus/icons-vue';
 import { getSearchData } from '@/api/api-search';
+
+import translateWhitelist from '@/whitelist/whitelist-translate';
+
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
+
+const lang = computed(() => {
+  return useLangStore().lang;
+});
 
 const router = useRouter();
 const route = useRoute();
@@ -50,110 +63,134 @@ let query = reactive({
   name: '',
 });
 
-const navItems = reactive([
-  {
-    id: 'projects',
-    label: '项目',
-    href: '/projects',
-  },
-  {
-    id: 'models',
-    label: '模型',
-    href: '/models',
-  },
-  {
-    id: 'modelzoo',
-    label: '大模型',
-    href: '/modelzoo',
-    menuList: [
-      {
-        id: 'test',
-        label: '在线体验',
-        href: '/modelzoo',
-      },
-      {
-        id: 'tune',
-        label: '模型微调',
-        href: '/finetune',
-      },
-    ],
-  },
-  {
-    id: 'datasets',
-    label: '数据集',
-    href: '/datasets',
-  },
-  {
-    id: 'estate',
-    label: '产业',
-    href: '/estate/electricity',
-  },
-  {
-    id: 'course',
-    label: '课程',
-    href: '/course',
-  },
-  {
-    id: 'competition',
-    label: '比赛',
-    href: '/competition',
-  },
-  {
-    id: 'activity',
-    label: '活动',
-    href: '/activity',
-  },
-  {
-    id: 'docs',
-    label: '文档',
-    href: '/docs',
-    windowOpen: true,
-  },
-]);
-const loginedDropdownItems = [
+const navItems = computed(() => {
+  return reactive([
+    {
+      id: 'projects',
+      label: t('home.APP_HEADER.PROJECT'),
+      href: '/projects',
+    },
+    {
+      id: 'models',
+      label: t('home.APP_HEADER.MODEL'),
+      href: '/models',
+    },
+    {
+      id: 'modelzoo',
+      label: t('home.APP_HEADER.MODELZOO'),
+      href: '/modelzoo',
+      menuList: [
+        {
+          id: 'test',
+          label: t('home.APP_HEADER.EXPERENCE'),
+          href: '/modelzoo',
+        },
+        {
+          id: 'tune',
+          label: t('home.APP_HEADER.FINE_TUNING'),
+          href: '/finetune',
+        },
+      ],
+    },
+    {
+      id: 'datasets',
+      label: t('home.APP_HEADER.DATASET'),
+      href: '/datasets',
+    },
+    {
+      id: 'estate',
+      label: t('home.APP_HEADER.INDUSTRY'),
+      href: '/estate/industry',
+    },
+    {
+      id: 'course',
+      label: t('home.APP_HEADER.COURSE'),
+      href: '/course',
+    },
+    {
+      id: 'competition',
+      label: t('home.APP_HEADER.COMPETITION'),
+      href: '/competition',
+    },
+    {
+      id: 'activity',
+      label: t('home.APP_HEADER.ACTIVITY'),
+      href: '/activity',
+    },
+    {
+      id: 'docs',
+      label: t('home.APP_HEADER.DOCUMENT'),
+      href: '/docs',
+      windowOpen: true,
+    },
+    /*  {
+    id: 'leaderboards',
+    label: '排行榜',
+    href: '/leaderboard',
+  }, */
+    // {
+    //   id: 'teams',
+    //   label: '团队',
+    //   href: '/teams',
+    // },
+  ]);
+});
+const loginedDropdownItems = reactive([
   {
     id: 'user',
-    label: '个人主页',
+    label: computed(() => {
+      return locale.value === 'zh' ? '个人主页' : 'My Page';
+    }),
     action: () => {
       router.push(`/${userInfoStore.userName}`);
     },
   },
   {
     id: 'projects',
-    label: '新建项目',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建项目' : 'New Project';
+    }),
     action: () => {
       router.push('/new/projects');
     },
   },
   {
     id: 'models',
-    label: '新建模型',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建模型' : 'New Model';
+    }),
     action: () => {
       router.push('/new/models');
     },
   },
   {
     id: 'datasets',
-    label: '新建数据集',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建数据集' : 'New Dataset';
+    }),
     action: () => {
       router.push('/new/datasets');
     },
   },
   {
     id: 'settings',
-    label: '设置',
+    label: computed(() => {
+      return locale.value === 'zh' ? '设置' : 'Settings';
+    }),
     action: () => {
       router.push('/settings');
     },
   },
   {
     id: 'logout',
-    label: '退出',
+    label: computed(() => {
+      return locale.value === 'zh' ? '退出' : 'Logout';
+    }),
     action: () => {
       logout();
     },
   },
-];
+]);
 const activeNavItem = ref('');
 watch(
   () => {
@@ -456,12 +493,39 @@ function handleBlur() {
     emptyValue();
   }
 }
+
+// 选择语言;
+const options = ref([
+  { value: 'zh', label: '中文' },
+  { value: 'en', label: 'En' },
+]);
+// 选择语言
+const handleCommand = (command) => {
+  locale.value = command.value;
+
+  const { pathname } = window.location;
+
+  if (command.value === 'zh') {
+    window.location.href = pathname.replace('en', '');
+  } else {
+    window.location.href = '/en';
+  }
+};
 </script>
 
 <template>
   <div class="header">
-    <div class="header-logo" @click="handleLogoClick">
-      <img :src="logoImg" alt="" srcset="" />
+    <div v-if="locale === 'zh'" class="header-logo" @click="handleLogoClick">
+      <img
+        v-if="route.path === '/modelzoo/wukong'"
+        :src="logoImg1"
+        alt=""
+        srcset=""
+      />
+      <img v-else :src="logoImg" alt="" srcset="" />
+    </div>
+    <div v-else class="header-logo1" @click="handleLogoClick">
+      <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="header-content">
       <el-menu
@@ -508,7 +572,7 @@ function handleBlur() {
           <o-input
             id="search-input"
             v-model="keyword"
-            placeholder="请输入关键词"
+            :placeholder="locale === 'zh' ? '请输入关键词' : 'Enter a keyword'"
             class="search-input"
             @blur="handleBlur"
             @keyup.enter="goFirstResult"
@@ -527,11 +591,13 @@ function handleBlur() {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="projectImg" alt="" />
-                  <span>项目</span>
+                  <span>{{ locale === 'zh' ? '项目' : 'projects' }}</span>
                 </div>
                 <div class="search-result-num" @click="getProject(keyword)">
                   <span class="related-result"
-                    >查看{{ projectCount }}个相关项目</span
+                    >{{ locale === 'zh' ? '查看' : 'View' }}
+                    {{ projectCount }}
+                    {{ locale === 'zh' ? '个相关项目' : 'projects' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /></o-icon>
                 </div>
@@ -553,11 +619,12 @@ function handleBlur() {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="modelImg" alt="" />
-                  <span>模型</span>
+                  <span>{{ locale === 'zh' ? '模型' : 'models' }}</span>
                 </div>
                 <div class="search-result-num" @click="getModel(keyword)">
                   <span class="related-result"
-                    >查看{{ modelCount }}个相关模型</span
+                    >{{ locale === 'zh' ? '查看' : 'View ' }} {{ modelCount }}
+                    {{ locale === 'zh' ? '个相关模型' : 'models' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /> </o-icon>
                 </div>
@@ -579,11 +646,13 @@ function handleBlur() {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="datasetImg" alt="" />
-                  <span>数据集</span>
+                  <span>{{ locale === 'zh' ? '数据集' : 'datasets' }}</span>
                 </div>
                 <div class="search-result-num" @click="getDataset(keyword)">
                   <span class="related-result"
-                    >查看{{ datasetCount }}个相关数据集</span
+                    >{{ locale === 'zh' ? '查看' : 'View ' }}
+                    {{ datasetCount }}
+                    {{ locale === 'zh' ? '个相关数据集' : 'datasets' }}</span
                   >
                   <o-icon class="right-icon"><icon-arrow-right /></o-icon>
                 </div>
@@ -605,7 +674,7 @@ function handleBlur() {
               <div class="result-items-title">
                 <div class="items-title-name">
                   <img :src="userImg" alt="" />
-                  <span>用户</span>
+                  <span>{{ locale === 'zh' ? '用户' : 'users' }}</span>
                 </div>
                 <!-- <div class="search-result-num" @click="getuser(keyword)">
                   <span class="related-result"
@@ -638,7 +707,13 @@ function handleBlur() {
               keyword
             "
           >
-            <div class="no-result">找不到该关键词，请重新输入</div>
+            <div class="no-result">
+              {{
+                locale === 'zh'
+                  ? '找不到该关键词，请重新输入'
+                  : 'No results match the keyword you entered.Try another keyword'
+              }}
+            </div>
           </div>
         </div>
       </div>
@@ -647,11 +722,38 @@ function handleBlur() {
           <o-icon class="search-icon"><icon-search></icon-search></o-icon>
           <o-input
             style="border: none"
-            placeholder="查询项目、模型、数据集和用户"
+            :placeholder="
+              locale === 'zh'
+                ? '查询项目、模型、数据集和用户'
+                : 'Query Colab Environment、Model Library、Datasets'
+            "
             class="header-right-input"
             @click="showInput"
           />
         </div>
+
+        <!-- language -->
+        <div v-if="translateWhitelist.includes(route.name)" class="language">
+          <el-dropdown popper-class="language-change" @command="handleCommand">
+            <span class="el-dropdown-link">
+              {{ t('home.LANG') }}
+              <OIcon><IconDown></IconDown></OIcon>
+            </span>
+
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                  v-for="(item, key) in options"
+                  :key="key"
+                  :class="{ active: lang === item.value }"
+                  :command="item"
+                  >{{ item.label }}</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+
         <div class="header-tool">
           <loading-arc
             v-if="loginStore.isLoggingIn"
@@ -666,7 +768,9 @@ function handleBlur() {
               <icon-user class="user-login-icon"></icon-user>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="goAuthorize">登录</el-dropdown-item>
+                  <el-dropdown-item @click="goAuthorize">{{
+                    locale === 'zh' ? '登录' : 'Login'
+                  }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -713,6 +817,12 @@ function handleBlur() {
       height: 100%;
     }
   }
+  &-logo1 {
+    height: 50px;
+    img {
+      height: 100%;
+    }
+  }
 
   &-content {
     display: flex;
@@ -720,6 +830,7 @@ function handleBlur() {
     align-items: center;
     height: 100%;
     width: 100%;
+    margin-left: 48px;
     margin-left: 96px;
     :deep(.el-menu) {
       width: 100%;
@@ -734,11 +845,13 @@ function handleBlur() {
 
       .el-menu-item {
         background-color: inherit;
-        font-size: 18px;
+        // font-size: 18px;
+        font-size: 14px;
         padding: 0;
         // margin-left: 32px;
         border-bottom: none;
         padding: 0 16px;
+        color: #000000;
         &:first-child {
           padding-left: 0px;
         }
@@ -775,12 +888,16 @@ function handleBlur() {
         &:hover .el-sub-menu__title {
           background-color: inherit;
           color: #0d8dff !important;
+          justify-content: center;
         }
         .el-sub-menu__title {
           padding: 0;
-          font-size: 18px;
-          padding: 0 16px;
+          // font-size: 18px;
+          font-size: 14px;
+          padding: 0 8px;
+          margin: 0 8px;
           border: none;
+          color: #000000 !important;
         }
 
         .el-icon {
@@ -811,13 +928,15 @@ function handleBlur() {
         position: relative;
         .search-icon {
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000;
           position: absolute;
           top: 6px;
         }
         .empty-icon {
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000;
           position: absolute;
           top: 6px;
           right: 0;
@@ -828,7 +947,8 @@ function handleBlur() {
           color: #999;
           font-size: 14px;
           border: none;
-          border-bottom: 1px solid #999;
+          // border-bottom: 1px solid #999;
+          border-bottom: 1px solid #000;
           padding-left: 30px;
         }
       }
@@ -935,12 +1055,13 @@ function handleBlur() {
 
       .header-search {
         position: relative;
-        margin-right: 30px;
+        margin-right: 16px;
         .search-icon {
           width: 24px;
           height: 24px;
           font-size: 24px;
-          color: #979797;
+          // color: #979797;
+          color: #000000;
           position: absolute;
           top: 6px;
           left: 16px;
@@ -948,9 +1069,14 @@ function handleBlur() {
 
         .header-right-input {
           font-size: 14px;
-          color: #999;
-          border: 1px #999 solid !important;
+          color: #000000;
+          border: 1px #000000 solid !important;
+          border-radius: 20px;
           padding-left: 48px;
+          &::-webkit-input-placeholder {
+            color: #979797;
+            font-size: 12px;
+          }
         }
       }
       .header-doc {
@@ -959,6 +1085,29 @@ function handleBlur() {
         line-height: 24px;
         color: #ffffff;
       }
+
+      .language {
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 16px;
+        width: 72px;
+        text-align: right;
+        .el-dropdown {
+          color: #000;
+          cursor: pointer;
+          &-link {
+            display: flex;
+            line-height: 24px;
+            font-size: 12px;
+          }
+
+          .o-icon {
+            margin-left: 5px;
+            font-size: 24px;
+          }
+        }
+      }
+
       .header-tool {
         height: 100%;
         display: flex;
@@ -981,7 +1130,7 @@ function handleBlur() {
             cursor: pointer;
 
             &-icon {
-              color: #ffffff;
+              color: #000;
               width: 24px;
               height: 24px;
             }
@@ -1011,7 +1160,9 @@ function handleBlur() {
     padding-left: 6px;
     padding-right: 6px;
     .sub-menu {
+      width: auto;
       .el-menu-item {
+        justify-content: center;
         color: #000;
         &:first-child {
           border-bottom: 1px solid #ddd;

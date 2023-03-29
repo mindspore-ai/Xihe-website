@@ -68,34 +68,34 @@ export default {
       'Perform full-process development in multiple domains, experience inference visualization, and get trained online.',
     CARDS: [
       {
-        NAME: 'Multi-class Image Classification',
+        NAME: '手写数字体识别',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/zero_shot_image_classification',
+        PATH: '/projects/MindSpore/lenet5/train',
       },
       {
-        NAME: 'Image Recognition',
+        NAME: '艺术家画作风格迁移',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/CycleGAN//train',
       },
       {
-        NAME: 'Style Transfer',
+        NAME: '图像分类',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/vit_image_classification/train',
       },
       {
-        NAME: 'Text Classification',
+        NAME: '情感分析',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/LSTM/train',
       },
       {
         NAME: 'Sequence Labeling',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/token_classification',
+        PATH: '/projects/MindSpore/token_classification/train',
       },
       {
-        NAME: 'Text Translation',
+        NAME: 'Text Classification',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/seq2seq_d_e',
+        PATH: '/projects/MindSpore/text_classification/train',
       },
     ],
   },
@@ -107,18 +107,18 @@ export default {
     // QUCIK_START: '立即体验',
     CARDS: [
       {
-        MODELZOO_NAME: 'Zidong.Taichu',
-        MODELZOO_DESC:
-          "The world's first three-modal 100-billion-parameter model",
-        IMAGE: modelzoo_taichu,
-        PATH: '/modelzoo/taichu',
-      },
-      {
         MODELZOO_NAME: 'Wukong-Huahua',
         MODELZOO_DESC:
           "Industry's first Chinese text-to-image foundation model based on the diffusion model",
         IMAGE: modelzoo_wukong,
         PATH: '/modelzoo/wukong',
+      },
+      {
+        MODELZOO_NAME: 'Zidong.Taichu',
+        MODELZOO_DESC:
+          "The world's first three-modal 100-billion-parameter model",
+        IMAGE: modelzoo_taichu,
+        PATH: '/modelzoo/taichu',
       },
       {
         MODELZOO_NAME: 'LuoJia.NET',
@@ -168,9 +168,9 @@ export default {
         PATH: '/models/MindSpore/tokcls_bert_base_chineses_cluener',
       },
       {
-        MODEL_NAME: 'Recommendation',
-        TYPE: 'Recommendation',
-        CATAGORIES: 'DeepFM｜Wide&Deep｜NCF …',
+        MODEL_NAME: 'Audio',
+        TYPE: 'Audio',
+        CATAGORIES: 'ecapa_tdnn｜lpcnet｜melgan｜tacotron2 …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
         IMAGE: models4,
         PATH: '/models/MindSpore/deepfm_criteo',
@@ -183,7 +183,9 @@ export default {
     INTRODUCE:
       'Experience the Chinese text-to-image generative model: Wukong-Huahua. You can generate inspiring images of various styles through text.',
     GALLARY_BUTTON: 'Start Drawing',
+    PAINTINGS_BUTTON: '全部画集',
     PATH: '/modelzoo/wukong',
+    PATH1: '/modelzoo/wukong/album',
   },
   // 开启昇思之旅
   SHENGSI_JOURNEY: {

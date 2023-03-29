@@ -19,7 +19,7 @@ const cases = [
     type: 'TrueSight人工智能临床外科手术决…',
     name: '本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医…',
     image: surgeryImg,
-    url: '', //TODO
+    url: '/estate/medicine/truesight', //TODO
   },
 ];
 

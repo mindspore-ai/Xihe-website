@@ -142,4 +142,12 @@ export default [
       },
     ],
   },
+  // 医疗--子宫内膜癌
+  {
+    path: '/estate/medicine/truesight',
+    name: 'truesight',
+    component: () => {
+      return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
+    },
+  },
 ];

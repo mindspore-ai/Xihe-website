@@ -24,12 +24,12 @@ const navItems = reactive([
     href: 'chapter',
     isIndividual: false,
   },
-  /* {
+  {
     id: 'courseTask',
     label: '作业',
     href: 'task',
     isIndividual: true,
-  }, */
+  },
   /* {
     id: 'discussion',
     label: '讨论',
@@ -44,12 +44,12 @@ const navItems = reactive([
     href: 'teacher',
     isIndividual: false,
   },
-  /* {
+  {
     id: 'courseCertificate',
     label: '结课证书',
     href: 'certificate',
     isIndividual: true,
-  }, */
+  },
 ]);
 
 const renderNav = ref();

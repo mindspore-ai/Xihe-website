@@ -69,7 +69,7 @@ const bannerLabel = computed(() => {
     display: flex;
     justify-content: space-between;
     padding: 42px 16px;
-    color: #fff;
+    color: #000;
     margin: 0 auto;
 
     .title {

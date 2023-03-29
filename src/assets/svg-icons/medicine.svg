@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="产业/产业首页" transform="translate(-1053.000000, -536.000000)">
+            <g id="编组" transform="translate(252.000000, 496.000000)">
+                <g id="编组-40" transform="translate(801.000000, 40.000000)">
+                    <rect id="矩形" fill="#96CDFF" x="0" y="0" width="48" height="48" rx="8"></rect>
+                    <g id="编组" transform="translate(8.000000, 8.000000)">
+                        <rect id="矩形备份-5" x="0" y="0" width="32" height="32"></rect>
+                        <path d="M11.5436163,6 L11.5436163,9.77110989 L3.94961808,26.0932116 C3.49778961,27.0643456 3.91876995,28.2178847 4.88990399,28.6697131 C5.14615992,28.7889384 5.42537817,28.8507134 5.70801179,28.8507134 L26.2844493,28.8507134 C27.355547,28.8507134 28.2238432,27.9824171 28.2238432,26.9113194 C28.2238432,26.627218 28.1614251,26.3465859 28.0410031,26.0892687 L20.4042578,9.77110989 L20.4042578,9.77110989 L20.4042578,6" id="路径-2" stroke="#17191C" stroke-width="1.74545455" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <line x1="9.66666667" y1="3.33333333" x2="22.3333333" y2="3.33333333" id="路径-21" stroke="#17191C" stroke-width="1.74545455" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="9.33333333" y1="15" x2="22.3333333" y2="15" id="路径-2" stroke="#17191C" stroke-width="1.74545455" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <circle id="椭圆形备份-5" stroke="#17191C" stroke-width="1.74545455" stroke-linecap="round" stroke-linejoin="round" cx="12.8129489" cy="20.6420809" r="2.33333333"></circle>
+                        <circle id="椭圆形备份-4" stroke="#17191C" stroke-width="1.74545455" stroke-linecap="round" stroke-linejoin="round" cx="20.67852" cy="22.8069929" r="1.66666667"></circle>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

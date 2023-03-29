@@ -247,7 +247,10 @@ function handelCancel() {
         <div class="header-button">
           <span>每日限提交1次</span>
           <OButton
-            :disabled="detailData1.id === 'mask_detection'"
+            :disabled="
+              detailData1.id === 'mask_detection' ||
+              detailData1.id === 'ai_painter'
+            "
             type="primary"
             size="small"
             @click="handelSubmit"

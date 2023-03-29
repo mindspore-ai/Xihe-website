@@ -77,8 +77,12 @@ export const useLangStore = defineStore('lang', {
       lang: '',
     };
   },
+  actions: {
+    setLangStore(val) {
+      this.lang = val;
+    },
+  },
 });
-
 // 文件仓库信息
 export const useFileData = defineStore('file', {
   state: () => {
@@ -174,6 +178,20 @@ export const useFinetuneData = defineStore('finetuneInfo', {
     },
     setFinetuneWhiteList(val) {
       this.isAllowed = val;
+    },
+  },
+});
+
+// 课程信息
+export const useCourseData = defineStore('courseInfo', {
+  state: () => {
+    return {
+      courseData: null,
+    };
+  },
+  actions: {
+    setCourseData(data) {
+      this.courseData = data;
     },
   },
 });

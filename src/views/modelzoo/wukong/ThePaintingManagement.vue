@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-// import IconArrow from '~icons/app/arrow-top';
+import IconArrow from '~icons/app/arrow-top';
 import IconLike from '~icons/app/like';
 
 import { useUserInfoStore } from '@/stores';
@@ -18,12 +18,12 @@ const navItems = [
     tag: '我的收藏',
     path: '/modelzoo/wukong/admin/collection',
   },
-  // {
-  //   id: 2,
-  //   icon: IconArrow,
-  //   tag: '我的公开',
-  //   path: '/modelzoo/wukong/admin/public',
-  // },
+  {
+    id: 2,
+    icon: IconArrow,
+    tag: '我的公开',
+    path: '/modelzoo/wukong/admin/public',
+  },
 ];
 const currentNav = ref(1);
 currentNav.value = route.path === '/modelzoo/wukong/admin/collection' ? 1 : 2;
@@ -39,10 +39,34 @@ function goToBigmodel() {
 function goToWukong() {
   router.push('/modelzoo/wukong');
 }
+
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+
+watch(
+  () => screenWidth.value,
+  (newValue) => {
+    screenWidth.value = newValue;
+  }
+);
+
+onMounted(() => {
+  window.addEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="wrapper">
-    <div class="painting-management">
+    <div v-if="screenWidth > 820" class="painting-management">
       <div class="painting-management-bread">
         <p @click="goToBigmodel">大模型</p>
         <span>></span>
@@ -66,20 +90,36 @@ function goToWukong() {
               :class="currentNav === item.id ? 'active' : ''"
               @click="handleNavClick(item)"
             >
-              <!-- <o-icon v-if="item.icon === '1'">
-                <icon-like></icon-like>
-              </o-icon>
-              <o-icon v-else>
-                <icon-arrow></icon-arrow>
-              </o-icon> -->
               <OIcon><component :is="item.icon"></component></OIcon>
               <p>{{ item.tag }}</p>
             </div>
           </div>
         </div>
-        <div class="content">
-          <router-view></router-view>
+        <div class="content"><router-view></router-view></div>
+      </div>
+    </div>
+
+    <div v-else class="mobile-management">
+      <div class="user-info">
+        <div class="avatar">
+          <img :src="userInfoStore.avatar" alt="" />
         </div>
+        <div class="user-name">{{ userInfoStore.userName }}</div>
+      </div>
+
+      <div class="manage-tabs">
+        <div
+          v-for="item in navItems"
+          :key="item.id"
+          class="tab-item"
+          :class="currentNav === item.id ? 'active-mo' : ''"
+          @click="handleNavClick(item)"
+        >
+          {{ item.tag }}
+        </div>
+      </div>
+      <div class="mobile-content">
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -92,7 +132,6 @@ function goToWukong() {
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
-  height: 100%;
   .painting-management-bread {
     display: flex;
     height: 18px;
@@ -167,6 +206,62 @@ function goToWukong() {
         height: 100%;
       }
     }
+  }
+}
+
+.mobile-management {
+  padding-top: 48px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .user-info {
+    margin: 16px 16px 0;
+    padding: 16px 12px;
+    background-color: #fff;
+    box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+    display: flex;
+    align-items: center;
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid #b7ddff;
+      margin-right: 20px;
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .user-info {
+      font-size: 16px;
+      font-weight: 300;
+      color: #000000;
+      line-height: 24px;
+    }
+  }
+  .manage-tabs {
+    margin-top: 16px;
+    height: 34px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    .tab-item {
+      font-size: 14px;
+      line-height: 34px;
+      font-weight: 400;
+      color: #000000;
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+    .active-mo {
+      color: #0d8dff;
+      border-bottom: 2px solid #0d8dff;
+    }
+  }
+  .mobile-content {
+    min-height: calc(100vh - 372px);
   }
 }
 </style>

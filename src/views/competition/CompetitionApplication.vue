@@ -3,9 +3,8 @@ import { ref, reactive, defineExpose, computed } from 'vue';
 
 import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
-// import { createTeam } from '@/api/api-competition';
 import { applyActivity } from '@/api/api-activity';
-// import { applyCourse } from '@/api/api-course';
+import { applyCourse } from '@/api/api-course';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconTips from '~icons/app/tips.svg';
@@ -17,13 +16,13 @@ const userInfoStore = useUserInfoStore();
 const userComData = useCompetitionData();
 
 const queryRef = ref(null);
-const role = ref(1);
+// const role = ref('student');
 const areaData = ref([]);
 const agree = ref(false);
 let province = ref([]);
 let citys = ref([]);
 
-const prop = defineProps({
+const props = defineProps({
   showApplication: {
     type: String,
     default: '',
@@ -31,6 +30,12 @@ const prop = defineProps({
   courseId: {
     type: String,
     default: '',
+  },
+  userReginfo: {
+    type: Object,
+    default: () => {
+      return {};
+    },
   },
 });
 
@@ -57,21 +62,44 @@ const i18n = {
   statement: '《昇思大模型平台隐私政策声明》',
 };
 const query = reactive({
-  name: '',
+  name: props.userReginfo.Name,
   userName: userInfoStore.userName,
-  loc_province: '',
-  loc_city: '',
-  email: '',
-  phone: '',
-  identity_type: 1,
-  schoolName1: '',
-  major1: '',
-  schoolName2: '',
-  major2: '',
-  industry: '',
-  company: '',
-  description: '',
+  loc_province: props.userReginfo.Province,
+  loc_city: props.userReginfo.City,
+  email: props.userReginfo.Email,
+  phone: props.userReginfo.Phone,
+  identity_type: props.userReginfo.Identity
+    ? props.userReginfo.Identity
+    : 'student',
+  // identity_type: 'student',
+  schoolName1:
+    props.userReginfo.Identity === 'student'
+      ? props.userReginfo.Detail.detail1
+      : '',
+  major1:
+    props.userReginfo.Identity === 'student'
+      ? props.userReginfo.Detail.detail2
+      : '',
+  schoolName2:
+    props.userReginfo.Identity === 'teacher'
+      ? props.userReginfo.Detail.detail1
+      : '',
+  major2:
+    props.userReginfo.Identity === 'teacher'
+      ? props.userReginfo.Detail.detail2
+      : '',
+  industry:
+    props.userReginfo.Identity === 'developer'
+      ? props.userReginfo.Detail.detail1
+      : '',
+  company:
+    props.userReginfo.Identity === 'developer'
+      ? props.userReginfo.Detail.detail2
+      : '',
+  description:
+    props.userReginfo.Identity === '' ? props.userReginfo.Detail.detail1 : '',
 });
+const role = ref(query.identity_type);
 
 defineExpose({ query });
 
@@ -165,6 +193,13 @@ function handleProvince(num) {
 function changeRole(item) {
   role.value = item;
   query.identity_type = item;
+  query.schoolName1 = '';
+  query.major1 = '';
+  query.schoolName2 = '';
+  query.major2 = '';
+  query.industry = '';
+  query.company = '';
+  query.description = '';
 }
 
 const emit = defineEmits(['go-next-step', 'hide-form', 'get-activity']);
@@ -179,16 +214,6 @@ function saveInfo(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       // 提交报名表
-      // 表单的数据
-      if (query.identity_type === 1) {
-        query.identity_type = 'student';
-      } else if (query.identity_type === 2) {
-        query.identity_type = 'teacher';
-      } else if (query.identity_type === 3) {
-        query.identity_type = 'developer';
-      } else if (query.identity_type === 4) {
-        query.identity_type = '';
-      }
       let params = {
         city: query.loc_city,
         detail: {
@@ -206,7 +231,7 @@ function saveInfo(formEl) {
         province: query.loc_province,
       };
       // 报名MindCon
-      if (prop.showApplication === 'MindCon') {
+      if (props.showApplication === 'MindCon') {
         applyActivity(params).then(() => {
           ElMessage({
             message: '报名成功',
@@ -216,9 +241,9 @@ function saveInfo(formEl) {
           emit('get-activity');
           emit('hide-form', false);
         });
-      } else if (prop.showApplication === 'course') {
+      } else if (props.showApplication === 'course') {
         // 报名课程
-        applyCourse(prop.courseId, params).then(() => {
+        applyCourse(props.courseId, params).then(() => {
           emit('hide-form', false);
           ElMessage({
             message: '报名成功',
@@ -329,21 +354,21 @@ function saveInfo(formEl) {
           </div>
           <div class="identity-option">
             <el-radio-group v-model="query.identity_type" class="ml-4">
-              <el-radio :label="1" @click="changeRole(1)">{{
+              <el-radio :label="'student'" @click="changeRole('student')">{{
                 i18n.student
               }}</el-radio>
-              <el-radio :label="2" @click="changeRole(2)">{{
+              <el-radio :label="'teacher'" @click="changeRole('teacher')">{{
                 i18n.teacher
               }}</el-radio>
-              <el-radio :label="3" @click="changeRole(3)">{{
+              <el-radio :label="'developer'" @click="changeRole('developer')">{{
                 i18n.developer
               }}</el-radio>
-              <el-radio :label="4" @click="changeRole(4)">{{
+              <el-radio :label="''" @click="changeRole('')">{{
                 i18n.other
               }}</el-radio>
             </el-radio-group>
             <!-- 学生 -->
-            <div v-show="role === 1" class="student">
+            <div v-show="role === 'student'" class="student">
               <el-form-item prop="schoolName1">
                 <div class="organization">
                   <span class="requirement">
@@ -370,7 +395,7 @@ function saveInfo(formEl) {
               </el-form-item>
             </div>
             <!-- 教师 -->
-            <div v-show="role === 2" class="teacher">
+            <div v-show="role === 'teacher'" class="teacher">
               <el-form-item prop="schoolName2">
                 <div class="organization">
                   <span class="requirement">
@@ -397,7 +422,7 @@ function saveInfo(formEl) {
               </el-form-item>
             </div>
             <!-- 开发者 -->
-            <div v-show="role === 3" class="developer">
+            <div v-show="role === 'developer'" class="developer">
               <el-form-item prop="industry">
                 <div class="organization">
                   <span class="requirement">
@@ -424,7 +449,7 @@ function saveInfo(formEl) {
               </el-form-item>
             </div>
             <!-- 其他 -->
-            <div v-show="role === 4" class="other">
+            <div v-show="role === ''" class="other">
               <el-form-item prop="description">
                 <div class="desc">
                   <span class="requirement">

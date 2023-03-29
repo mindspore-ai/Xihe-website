@@ -577,7 +577,7 @@ $theme: #0d8dff;
       display: flex;
       justify-content: space-between;
       padding: 42px 16px;
-      color: #fff;
+      color: #000;
       .title {
         padding-bottom: 8px;
         font-size: 36px;

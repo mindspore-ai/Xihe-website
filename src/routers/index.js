@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo } from '@/api/api-user';
-import { useLangStore, useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+import whiteList from '@/whitelist/whitelist-router';
+import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
 
 import user from './user';
 import model from './model';
@@ -12,15 +14,23 @@ import project from './project';
 import competition from './competition';
 import activity from './activity';
 import finetune from './finetune';
+import course from './course';
+
+import i18n from '../i18n';
+import industry from './estate';
 
 export const routes = [
   // 主页
   {
     path: '/',
-    alias: '/home',
+    // alias: '/home',
+    alias: '/en',
     name: 'home',
+    meta: {
+      title: 'MindSpore LLM Platform',
+    },
     component: () => {
-      return import('@/views/TheHome.vue');
+      return import('@/views/TheHome1.vue');
     },
   },
   // 隐私政策
@@ -94,6 +104,10 @@ export const routes = [
   ...activity,
   // 微调
   ...finetune,
+  // 产业
+  ...industry,
+  // 课程
+  ...course,
   // 404页面
   {
     path: '/404',
@@ -118,21 +132,20 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const mobileFitWhiteList = [
-    'taichu',
-    'taichuIntroduction',
-    'textToImage',
-    'taichuVision',
-    'imageCaption',
-  ];
   if (mobileFitWhiteList.indexOf(to.name) !== -1) {
     document.body.classList.add('mobile-fit');
   } else {
     document.body.classList.remove('mobile-fit');
   }
   // 设置语言
-  const langStore = useLangStore();
-  langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
+  // const langStore = useLangStore();
+  // langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
+  i18n.global.locale.value = to.fullPath.includes('/en') ? 'en' : 'zh';
+  if (to.path === '/en' && to.meta.title) {
+    document.title = to.meta.title;
+  } else {
+    document.title = '昇思大模型平台';
+  }
 
   const loginStore = useLoginStore();
   const userInfoStore = useUserInfoStore();
@@ -175,15 +188,6 @@ router.beforeEach(async (to, from) => {
   }
 
   // 白名单中路由可直接进入
-  const whiteList = [
-    'models',
-    'datasets',
-    'projects',
-    'modelzoo',
-    'privacy',
-    'legal',
-    '404',
-  ];
   if (to.path === '/' || whiteList.indexOf(to.name) !== -1) {
     doLogin();
     return true;

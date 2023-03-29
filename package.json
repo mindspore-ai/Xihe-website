@@ -32,6 +32,7 @@
     "swiper": "^8.4.4",
     "vue": "^3.2.25",
     "vue-clipboard3": "^2.0.0",
+    "vue-i18n": "^9.2.2",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {

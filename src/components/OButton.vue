@@ -191,6 +191,9 @@ const classNames = computed(() => {
   }
 
   &.o-button-size-mini {
+    padding: 3px 12px;
+    font-size: 14px;
+    line-height: 22px;
   }
 
   .wrap {

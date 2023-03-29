@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue';
 import OButton from '@/components/OButton.vue';
 import { useRoute, useRouter } from 'vue-router';
 // import { useCompetitionData } from '@/stores';
@@ -6,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 // const userComData = useCompetitionData();
+const getDetailData = inject('getDetailData');
 
 const i18n = {
   success: '报名成功，祝贺您取得好成绩！',
@@ -23,6 +25,7 @@ function goCompetitionIntro() {
       id: route.params.id, //比赛id
     },
   });
+  getDetailData();
 }
 // 团队tab页
 function goTeam() {
@@ -32,6 +35,7 @@ function goTeam() {
       id: route.params.id,
     },
   });
+  getDetailData();
 }
 </script>
 <template>

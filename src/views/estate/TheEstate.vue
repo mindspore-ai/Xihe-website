@@ -3,12 +3,10 @@ import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import estateBanner from '@/assets/imgs/estate/estate-banner.png';
-// import defectDetecting from '@/assets/imgs/estate/defect-detecting.png';
-// import anomalyDetection from '@/assets/imgs/estate/anomaly-detection.png';
 
 import IconElectricity from '~icons/app/electricity';
-import IconFinance from '~icons/app/finance2';
-import IconMedicine from '~icons/app/medicine2';
+import IconCulture from '~icons/app/culture2';
+import IconMedicine from '~icons/app/medicine';
 import IconIndustry from '~icons/app/industry';
 
 const router = useRouter();
@@ -22,8 +20,8 @@ watch(
       activeName.value = '工业专区';
     } else if (nweVal === 'electricity') {
       activeName.value = '电力专区';
-    } else if (nweVal === 'finance') {
-      activeName.value = '金融专区';
+    } else if (nweVal === 'humanity') {
+      activeName.value = '人文专区';
     } else if (nweVal === 'medicine') {
       activeName.value = '医疗专区';
     }
@@ -42,30 +40,29 @@ const sections = [
   },
   {
     id: 1,
+    name: '医疗专区',
+    path: '/estate/medicine',
+    routeName: 'medicine',
+    icon: IconMedicine,
+  },
+  {
+    id: 2,
     name: '工业专区',
     path: '/estate/industry',
     routeName: 'industry',
     icon: IconIndustry,
   },
   {
-    id: 2,
-    name: '金融专区',
-    path: '/estate/finance',
-    routeName: 'finance',
-    icon: IconFinance,
-    disabled: true,
-  },
-  {
     id: 3,
-    name: '医疗专区',
-    path: '/estate/medicine',
-    routeName: 'medicine',
-    icon: IconMedicine,
+    name: '人文专区',
+    path: '/estate/humanity',
+    routeName: 'humanity',
+    icon: IconCulture,
     disabled: true,
   },
 ];
 const handleClick = (tab) => {
-  if (tab.index === '0' || tab.index === '1') {
+  if (tab.index !== '3') {
     router.push(sections[tab.index].path);
   } else {
     return;
@@ -204,9 +201,6 @@ $theme: #0d8dff;
           align-items: center;
           padding: 0;
           // backdrop-filter: blur(10px);
-          &:nth-last-child(2) {
-            color: #999;
-          }
           &:last-child {
             color: #999;
           }

@@ -208,6 +208,13 @@ export default [
       //     return import('@/views/setting/SettingInvitation.vue');
       //   },
       // },
+      {
+        path: 'clouddev',
+        name: 'developEnvironment',
+        component: () => {
+          return import('@/views/setting/MyDevelopEnvironment.vue');
+        },
+      },
     ],
   },
 ];

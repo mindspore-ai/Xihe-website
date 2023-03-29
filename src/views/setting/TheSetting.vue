@@ -7,6 +7,7 @@ import IconLock from '~icons/app/lock';
 // import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
 // import IconInvitation from '~icons/app/invitation';
+import IconCloud from '~icons/app/cloud';
 
 import ringImg from '@/assets/icons/ring.png';
 
@@ -42,6 +43,11 @@ const settingItems = [
   //   label: '我的邀请',
   //   icon: IconInvitation,
   // },
+  {
+    id: 'clouddev',
+    label: '我的开发环境',
+    icon: IconCloud,
+  },
 ];
 
 const activeId = ref(route.path.split('/')[2] || 'profile');

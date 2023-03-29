@@ -418,8 +418,8 @@ function getModel() {
   });
 }
 
-function getModelTag() {
-  getTags('global_model').then((res) => {
+async function getModelTag() {
+  await getTags('global_model').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
       return {
         title: {
@@ -455,7 +455,7 @@ function getModelTag() {
     });
   });
 }
-getModelTag();
+// getModelTag();
 
 const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
@@ -504,6 +504,29 @@ watch(
   queryData,
   () => {
     debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
+watch(
+  () => route.params.modelType,
+  () => {
+    getModelTag().then(() => {
+      if (route.params.modelType === '1') {
+        // checkAllClick(renderCondition.value[0], 0);
+        // sortTagClick(0, 3);
+        conditionClick(0, 0, renderCondition.value[0].condition[0]);
+      } else if (route.params.modelType === '2') {
+        // checkAllClick(renderCondition.value[0], 0);
+        // sortTagClick(0, 4);
+        conditionClick(0, 0, renderCondition.value[0].condition[0]);
+      } else if (route.params.modelType === '3') {
+        conditionClick(0, 1, renderCondition.value[0].condition[1]);
+      } else if (route.params.modelType === '4') {
+        conditionClick(0, 3, renderCondition.value[0].condition[3]);
+      }
+    });
   },
   {
     immediate: true,

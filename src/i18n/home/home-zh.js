@@ -51,7 +51,7 @@ export default {
   LANG: '中文',
   BANNER_BUTTON_1: '昇思大模型平台',
   BANNER_BUTTON_2: 'AI画家大赛',
-  BANNER_BUTTON_3: '生日会',
+  BANNER_BUTTON_3: '昇思3周年',
   // 轮播
   SWIPER: [
     {
@@ -68,34 +68,34 @@ export default {
       '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，感受用户的创新创意实践',
     CARDS: [
       {
-        NAME: '多类别图像分类',
+        NAME: '手写数字体识别',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/zero_shot_image_classification',
+        PATH: '/projects/MindSpore/lenet5/train',
       },
       {
-        NAME: '图像识别',
+        NAME: '艺术家画作风格迁移',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/CycleGAN/train',
       },
       {
-        NAME: '风格迁移',
+        NAME: '图像分类',
         TYPE: 'CV',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/vit_image_classification/train',
       },
       {
-        NAME: '文本分类',
+        NAME: '情感分析',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/text_classification',
+        PATH: '/projects/MindSpore/LSTM/train',
       },
       {
         NAME: '序列标注',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/token_classification',
+        PATH: '/projects/MindSpore/token_classification/train',
       },
       {
-        NAME: '文本翻译',
+        NAME: '文本分类',
         TYPE: 'NLP',
-        PATH: '/projects/MindSpore/seq2seq_d_e',
+        PATH: '/projects/MindSpore/text_classification/train',
       },
     ],
   },
@@ -103,20 +103,20 @@ export default {
   MODELZOO: {
     TITLE: '大模型',
     INTRODUCE:
-      '覆盖NLP和CV等场景。面向语言理解、语言生成，具有超强语言理解能力以及对话生成；可实现跨模态检索、图文生成、图片文档的信息提取等应用；可实现对遥感数据的目标检测等。',
+      '覆盖NLP和CV等场景。面向语言理解、语言生成，具有超强语言理解能力以及对话生成；可实现跨模态检索、图文生成、图片文档的信息提取等应用；可实现对遥感数据的目标检测等',
     // QUCIK_START: '立即体验',
     CARDS: [
-      {
-        MODELZOO_NAME: '紫东.太初',
-        MODELZOO_DESC: '全球首个三模态千亿参数大模型',
-        IMAGE: modelzoo_taichu,
-        PATH: '/modelzoo/taichu',
-      },
       {
         MODELZOO_NAME: '悟空.画画',
         MODELZOO_DESC: '业界首个基于扩散模型的中文文生图大模型',
         IMAGE: modelzoo_wukong,
         PATH: '/modelzoo/wukong',
+      },
+      {
+        MODELZOO_NAME: '紫东.太初',
+        MODELZOO_DESC: '全球首个三模态千亿参数大模型',
+        IMAGE: modelzoo_taichu,
+        PATH: '/modelzoo/taichu',
       },
       {
         MODELZOO_NAME: '武大.LuoJia',
@@ -164,9 +164,9 @@ export default {
         PATH: '/models/MindSpore/tokcls_bert_base_chineses_cluener',
       },
       {
-        MODEL_NAME: '推荐',
-        TYPE: 'Recommendation',
-        CATAGORIES: 'DeepFM｜Wide&Deep｜NCF …',
+        MODEL_NAME: '语音',
+        TYPE: 'Audio',
+        CATAGORIES: 'ECAPA-TDNN｜LPCNet｜MelGan …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
         IMAGE: models4,
         PATH: '/models/MindSpore/deepfm_criteo',
@@ -177,9 +177,11 @@ export default {
   GALLARY: {
     TITLE: '精选画廊',
     INTRODUCE:
-      '进入精选画廊体验中文文图生成模型-悟空画画模型进行创作；您就可以通过文字生成多样风格的图片，带你寻找生活中的灵感。',
+      '进入精选画廊体验中文文图生成模型-悟空画画模型进行创作；您就可以通过文字生成多样风格的图片，带你寻找生活中的灵感',
     GALLARY_BUTTON: '开始画画',
+    PAINTINGS_BUTTON: '全部画集',
     PATH: '/modelzoo/wukong',
+    PATH1: '/modelzoo/wukong/album',
   },
   // 开启昇思之旅
   SHENGSI_JOURNEY: {
@@ -284,11 +286,11 @@ export default {
   INDUSTRY: {
     TITLE: '产业',
     INTRODUCE:
-      '涵盖了多领域落地的相关应用；包括对相关应用的问题定位、方案设计、数据处理、模型训练部署及思路的优化；提供了全流程零门槛入门的指导，沉淀了丰富的行业领域知识助力行业快速发展。',
+      '涵盖了多领域落地的相关应用；包括对相关应用的问题定位、方案设计、数据处理、模型训练部署及思路的优化；提供了全流程零门槛入门的指导，沉淀了丰富的行业领域知识助力行业快速发展',
     CARDS: [
       {
         NAME: '电力',
-        DESC: '通过训练电力数据构集构建AI模型，实现对电力数据的预测，可以预测电力波动，辅助企业能源管理、能源调度等',
+        DESC: '通过训练电力数据集构建AI模型，实现对电力数据的预测，可以预测电力波动，辅助企业能源管理、能源调度等',
         IMAGE: industy2,
         PATH: '/estate/electricity',
       },

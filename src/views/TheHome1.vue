@@ -21,21 +21,23 @@ import AppFooter from '@/components/AppFooter.vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay } from 'swiper';
+import { Pagination, Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getHomeInfo } from '@/api/api-shared';
 
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 AOS.init();
 
-const modules = [Pagination];
-const galleryModules = [Autoplay];
+const modules = [Pagination, Autoplay];
+const galleryModules = [Autoplay, FreeMode];
+// const logoModules = [Autoplay, FreeMode];
 function renderBullet(index, className) {
   let text = '';
   switch (index) {
@@ -43,7 +45,7 @@ function renderBullet(index, className) {
       text = t('home.BANNER_BUTTON_1');
       break;
     case 1:
-      text = '生日会';
+      text = t('home.BANNER_BUTTON_3');
       break;
     case 2:
       text = t('home.BANNER_BUTTON_2');
@@ -160,6 +162,13 @@ function taggleDialog(pic) {
   picDialog.value = true;
   picSrc.value = pic;
 }
+function toIndusty(path) {
+  if (path === '/') {
+    return;
+  } else {
+    router.push(path);
+  }
+}
 
 const route = useRoute();
 const router = useRouter();
@@ -203,7 +212,6 @@ onMounted(() => {
         :modules="modules"
         :pagination="{ clickable: true, renderBullet: renderBullet }"
         :autoplay="{ disableOnInteraction: false, autoplay: true }"
-        loop
         class="swiper-portal"
       >
         <swiper-slide class="slide1">
@@ -211,15 +219,21 @@ onMounted(() => {
             <p class="title">{{ t('home.SWIPER[0].TITLE') }}</p>
             <p class="introduce">{{ t('home.SWIPER[0].INTRODUCE') }}</p>
           </div>
-          <!-- <div class="mask"></div> -->
+          <div class="mask" :class="{ hidden: locale === 'en' }"></div>
         </swiper-slide>
-        <!-- <swiper-slide class="slide3" @click="goDetail"> </swiper-slide>
+        <swiper-slide
+          class="slide3"
+          :class="{ hidden: locale === 'en' }"
+          @click="goDetail"
+        >
+        </swiper-slide>
         <swiper-slide
           class="slide2"
+          :class="{ hidden: locale === 'en' }"
           @click="router.push('/competition/ai_painter/0/introduction')"
         >
           <div class="mask"></div>
-        </swiper-slide> -->
+        </swiper-slide>
       </swiper>
     </div>
 
@@ -403,28 +417,26 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <!-- 模型 -->
     <div class="home-model">
       <p class="title">
         {{ t(`home.MODEL.TITLE`) }}
       </p>
       <p class="introduce">{{ t(`home.MODEL.INTRODUCE`) }}</p>
       <div class="model-contant">
-        <div
-          v-for="(item, index) in 4"
-          :key="item"
-          class="item"
-          @click="router.push(t(`home.MODEL.CARDS[${index}].PATH`))"
-        >
-          <img :src="t(`home.MODEL.CARDS[${index}].IMAGE`)" alt="" />
-          <div class="models-type">
-            {{ t(`home.MODEL.CARDS[${index}].MODEL_NAME`) }}
-          </div>
-          <div class="models-name">
-            {{ t(`home.MODEL.CARDS[${index}].CATAGORIES`) }}
-          </div>
-          <div class="models-tag">
-            {{ t(`home.MODEL.CARDS[${index}].TYPE`) }}
-          </div>
+        <div v-for="(item, index) in 4" :key="item" class="item">
+          <router-link :to="{ name: 'models', params: { modelType: item } }">
+            <img :src="t(`home.MODEL.CARDS[${index}].IMAGE`)" alt="" />
+            <div class="models-type">
+              {{ t(`home.MODEL.CARDS[${index}].MODEL_NAME`) }}
+            </div>
+            <div class="models-name">
+              {{ t(`home.MODEL.CARDS[${index}].CATAGORIES`) }}
+            </div>
+            <div class="models-tag">
+              {{ t(`home.MODEL.CARDS[${index}].TYPE`) }}
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -434,13 +446,15 @@ onMounted(() => {
       <swiper
         watch-slides-progress
         slides-per-view="auto"
+        :free-mode="true"
         :modules="galleryModules"
         :speed="5000"
         :autoplay="{
-          delay: 100,
+          delay: 0,
           disableOnInteraction: false,
           autoplay: true,
           pauseOnMouseEnter: true,
+          stopOnLastSlide: false,
         }"
         loop
         :looped-slides="5"
@@ -452,17 +466,29 @@ onMounted(() => {
           <img :src="item.img" @click="taggleDialog(item)" />
         </swiper-slide>
       </swiper>
-      <OButton
-        animation
-        type="primary"
-        class="gallery-entry"
-        @click="router.push(t(`home.GALLARY.PATH`))"
-      >
-        {{ t(`home.GALLARY.GALLARY_BUTTON`) }}
-        <template #suffix>
-          <OIcon><IconArrowRight /></OIcon>
-        </template>
-      </OButton>
+      <div class="button-box">
+        <OButton
+          animation
+          class="gallery-entry"
+          @click="router.push(t(`home.GALLARY.PATH1`))"
+        >
+          {{ t(`home.GALLARY.PAINTINGS_BUTTON`) }}
+          <template #suffix>
+            <OIcon><IconArrowRight /></OIcon>
+          </template>
+        </OButton>
+        <OButton
+          animation
+          type="primary"
+          class="gallery-entry"
+          @click="router.push(t(`home.GALLARY.PATH`))"
+        >
+          {{ t(`home.GALLARY.GALLARY_BUTTON`) }}
+          <template #suffix>
+            <OIcon><IconArrowRight /></OIcon>
+          </template>
+        </OButton>
+      </div>
       <div class="unopen" :class="{ open: open }">
         <p class="title title1">{{ t(`home.SHENGSI_JOURNEY.TITLE`) }}</p>
         <p class="introduce introduce2">
@@ -554,7 +580,7 @@ onMounted(() => {
           v-for="(item, index) in 4"
           :key="item"
           class="item"
-          @click="router.push(t(`home.INDUSTRY.CARDS[${index}].PATH`))"
+          @click="toIndusty(t(`home.INDUSTRY.CARDS[${index}].PATH`))"
         >
           <div class="name">
             <img :src="t(`home.INDUSTRY.CARDS[${index}].IMAGE`)" alt="" />{{
@@ -571,6 +597,26 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <!-- <div class="logo">
+    <swiper
+      :modules="logoModules"
+      :autoplay="{ disableOnInteraction: false, autoplay: true }"
+      class="logo-swiper1"
+    >
+    </swiper>
+    <swiper
+      :modules="logoModules"
+      :autoplay="{ disableOnInteraction: false, autoplay: true }"
+      class="logo-swiper2"
+    >
+    </swiper>
+    <swiper
+      :modules="logoModules"
+      :autoplay="{ disableOnInteraction: false, autoplay: true }"
+      class="logo-swiper3"
+    >
+    </swiper>
+  </div> -->
   <footer v-if="route.path === '/'" class="app-footer">
     <app-footer></app-footer>
   </footer>
@@ -675,6 +721,7 @@ onMounted(() => {
       }
     }
     .swiper-pagination-bullet {
+      display: inline-block;
       width: 160px;
       height: 48px;
       line-height: 48px;
@@ -687,9 +734,10 @@ onMounted(() => {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      &:first-child {
-        width: 220px;
-      }
+      padding: 0 17px;
+      // &:first-child {
+      //   width: 220px;
+      // }
       @media screen and (max-width: 820px) {
         width: 24px;
         height: 2px;
@@ -1120,6 +1168,7 @@ p {
     .models-type {
       font-size: 20px;
       line-height: 28px;
+      color: #000;
       margin: 16px 0 24px;
       @media screen and (max-width: 820px) {
         font-size: 14px;
@@ -1162,10 +1211,14 @@ p {
   @media screen and (max-width: 820px) {
     padding: 40px 0;
   }
+  .button-box {
+    text-align: center;
+  }
   .o-button {
-    display: block;
-    margin: 0 auto;
+    display: inline-block;
     margin-top: -20px;
+    margin-left: 12px;
+    margin-right: 12px;
     border-radius: 24px;
     @media screen and (max-width: 820px) {
       margin-top: 16px;
@@ -1273,7 +1326,7 @@ p {
       max-width: 1440px;
       width: calc(100% - 32px);
       top: -50px;
-      z-index: 100;
+      z-index: 99;
       @media screen and (max-width: 820px) {
         width: calc(100% - 32px);
         top: -20px;
@@ -1603,6 +1656,21 @@ p {
         margin-left: 32px;
       }
     }
+  }
+}
+:deep(.swiper) {
+  .hidden {
+    display: none !important;
+  }
+}
+:deep(.swiper-free-mode) {
+  .swiper-wrapper {
+    -webkit-transition-timing-function: linear; /*之前是ease-out*/
+    -moz-transition-timing-function: linear;
+    -ms-transition-timing-function: linear;
+    -o-transition-timing-function: linear;
+    transition-timing-function: linear;
+    margin: 0 auto;
   }
 }
 </style>

@@ -554,7 +554,13 @@ body.el-popup-parent--hidden {
         .search-input {
           border-bottom: 1px solid #999;
         }
+        .empty-icon {
+          color: #979797;
+        }
       }
+    }
+    .header-right .header-tool .user-login-icon {
+      color: #fff;
     }
   }
   .footer-content {
@@ -567,10 +573,13 @@ body.el-popup-parent--hidden {
       }
     }
     .below {
-      color: #fff;
+      color: #fff !important;
     }
   }
   background: #060b29;
+  .header-menu {
+    color: #fff;
+  }
 }
 
 .slide-enter-active,
@@ -671,7 +680,7 @@ body.el-popup-parent--hidden {
       padding-left: 16px;
       min-width: 164px;
       span {
-        border-bottom: 2px solid rgba(255, 255, 255, 0.9);
+        border-bottom: 2px solid rgba(0, 0, 0, 0);
       }
     }
     span {

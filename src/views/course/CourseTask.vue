@@ -113,7 +113,7 @@ function goTaskDetail(item) {
   router.push(`/course/task/${route.params.courseId}/${item.id}`);
 }
 
-const layout = ref('prev, pager, next');
+const layout = ref('prev, pager,next');
 // 课程分页器
 function handleCurrentPage(val) {
   taskPager.page = val;
@@ -122,6 +122,9 @@ function handleCurrentPage(val) {
     taskPager.page * taskPager.size
   );
   toTop();
+}
+function handleSizeChange(val) {
+  taskPager.size = val;
 }
 function toTop() {
   document.documentElement.scrollTop = 0;
@@ -170,12 +173,15 @@ function toTop() {
             <div class="pagination">
               <el-pagination
                 hide-on-single-page
+                :page-sizes="[1, 2, 5]"
                 :current-page="taskPager.page"
                 :page-size="taskPager.size"
                 :total="taskData.length"
                 :layout="layout"
+                @size-change="handleSizeChange"
                 @current-change="handleCurrentPage"
-              ></el-pagination>
+              >
+              </el-pagination>
             </div>
           </div>
           <div v-if="activeName === '' && !taskData.length" class="empty">
@@ -311,9 +317,6 @@ function toTop() {
         margin-top: 16px;
         display: flex;
         justify-content: center;
-        .el-pagination {
-          background-color: red !important;
-        }
       }
     }
     .empty {
@@ -431,6 +434,54 @@ function toTop() {
       .is-active {
         box-shadow: 0 0 0 1px #0d8dff inset;
         color: #0d8dff !important;
+      }
+    }
+  }
+}
+:deep(.el-pagination) {
+  // background-color: red;
+  --el-pagination-bg-color: none !important;
+  .btn-next,
+  .btn-prev {
+    width: 36px;
+    height: 36px;
+    border: none;
+    color: #000;
+  }
+  button:disabled {
+    background-color: #fff !important;
+  }
+  .el-pager {
+    .number {
+      // background-color: red;
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+    }
+    .is-active {
+      // TODO:
+      // background-color: #0d8dff;
+      color: #0d8dff;
+      // opacity: 0.1;
+    }
+  }
+  .el-pagination__sizes {
+    .el-input {
+      width: 100px;
+
+      background: #e5e5e5;
+      .el-input__wrapper {
+        border: none;
+      }
+    }
+  }
+  .el-pagination__jump {
+    .el-input {
+      width: 40px;
+      background: #e5e5e5;
+      .el-input__wrapper {
+        padding: 6px;
+        box-shadow: none;
       }
     }
   }

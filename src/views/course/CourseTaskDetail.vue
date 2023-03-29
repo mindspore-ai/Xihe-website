@@ -40,7 +40,7 @@ getTask();
             课程
           </el-breadcrumb-item>
           <el-breadcrumb-item
-            :to="{ path: `/course/${route.params.courseId}` }"
+            :to="{ path: `/course/${route.params.courseId}/task` }"
           >
             {{ taskData.course_name }}
           </el-breadcrumb-item>

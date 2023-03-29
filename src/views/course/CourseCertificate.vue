@@ -45,6 +45,16 @@ function loadImg() {
   loadDone.value = true;
   generateCertificate();
 }
+
+// 下载证书
+function downloadImage(url) {
+  let aLink = document.createElement('a');
+  aLink.style.display = 'none';
+  aLink.href = url;
+  aLink.download = 'certificate.png';
+  aLink.click();
+  aLink.remove();
+}
 </script>
 <template>
   <div v-if="show" class="course-certificate">
@@ -53,11 +63,10 @@ function loadImg() {
       class="certificate-box"
     >
       <img :src="certificateUrl" alt="" class="certificate-loadImg" />
-      <div class="handleHover">
-
-      </div>
-      <div class="icon-item" @click="downloadImage(item.link)">
-        <o-icon><icon-download></icon-download></o-icon>
+      <div class="certificate-hover">
+        <div class="icon-item" @click="downloadImage(certificateUrl)">
+          <o-icon><icon-download></icon-download></o-icon>
+        </div>
       </div>
     </div>
     <div v-if="!certificateData.is_pass" class="empty">
@@ -70,12 +79,7 @@ function loadImg() {
       class="certificate-img"
     >
       <p>123{{ certificateData.owner }}</p>
-      <img
-        ref="certRef"
-        src="@/assets/imgs/course/cert.png"
-        alt=""
-        @load="loadImg"
-      />
+      <img ref="certRef" src="@/assets/imgs/course/cert.png" @load="loadImg" />
     </div>
   </div>
 </template>
@@ -85,10 +89,16 @@ function loadImg() {
   overflow: hidden;
   .certificate-box {
     position: relative;
+    cursor: pointer;
+    &:hover {
+      .certificate-hover {
+        opacity: 1;
+      }
+    }
     .certificate-loadImg {
       width: 100%;
     }
-    .icon-item {
+    .certificate-hover {
       width: 100%;
       height: 128px;
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
@@ -98,10 +108,27 @@ function loadImg() {
       display: flex;
       justify-content: flex-end;
       align-items: flex-end;
+      cursor: pointer;
       opacity: 0;
-      .o-icon {
-        color: #fff;
-        font-size: 24px;
+      transition: opacity 0.2s ease-in-out;
+      .icon-item {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        top: -40px;
+        right: 40px;
+        .o-icon {
+          color: #fff;
+          font-size: 24px;
+        }
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
       }
     }
   }

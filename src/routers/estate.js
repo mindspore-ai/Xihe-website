@@ -23,10 +23,10 @@ export default [
         },
       },
       {
-        path: 'finance',
-        name: 'finance',
+        path: 'humanity',
+        name: 'humanity',
         component: () => {
-          return import('@/views/estate/finance/TheFinance.vue');
+          return import('@/views/estate/humanity/TheFinance.vue');
         },
       },
       {
@@ -118,6 +118,28 @@ export default [
           );
         },
       }, */
+    ],
+  },
+  // 医疗--子宫内膜癌
+  {
+    path: '/estate/medicine/endometrial-cancer',
+    name: 'endometrialCancer',
+    component: () => {
+      return import(
+        '@/views/estate/medicine/endometrialcancer/EndometrialcancerDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: 'explain',
+        name: 'endometrialcancerExplain',
+        component: () => {
+          return import(
+            '@/views/estate/medicine/endometrialcancer/EndometrialcancerExplain.vue'
+          );
+        },
+      },
     ],
   },
 ];

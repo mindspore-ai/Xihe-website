@@ -84,7 +84,7 @@ watch(
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </p>
             <div class="entrance-item" @click="knowMore">
-              <span class="entrance-item-title">了解更多</span>
+              <span class="entrance-item-title">LuoJiaNET源码</span>
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </div>
           </div>
@@ -114,8 +114,21 @@ watch(
   max-width: 1472px;
   margin: 0 auto;
   padding: 80px 0 64px 0;
+  @media screen and (max-width: 820px) {
+    padding: 64px 0 40px;
+  }
+  @media screen and (max-width: 768px) {
+    padding: 64px 0 40px;
+  }
+
   .bread {
     margin: 40px 0;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
     .el-breadcrumb {
       height: 21px;
       line-height: 21px;
@@ -143,6 +156,20 @@ watch(
     justify-content: space-between;
     background-color: #fff;
     margin-bottom: 24px;
+    @media screen and (max-width: 820px) {
+      padding: 16px;
+      margin: 0 16px;
+      img {
+        display: none;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      padding: 16px;
+      margin: 0 16px;
+      img {
+        display: none;
+      }
+    }
     img {
       width: 392px;
       height: 220px;
@@ -151,24 +178,49 @@ watch(
     &-intro {
       flex: 1;
       padding: 5px 0;
+      @media screen and (max-width: 768px) {
+        padding: 0;
+      }
       .headline {
         font-size: 36px;
         font-weight: 300;
         color: #000000;
         line-height: 48px;
+        @media screen and (max-width: 768px) {
+          font-size: 16px;
+          line-height: 24px;
+          height: 24px;
+          margin-bottom: 8px;
+        }
       }
       .text {
         font-size: 14px;
         color: #555555;
         line-height: 22px;
         margin: 15px 0 37px 0;
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+          line-height: 18px;
+          margin: 0;
+        }
       }
       .entrance {
         display: flex;
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+        }
         &-item {
           margin-right: 49px;
           display: flex;
           cursor: pointer;
+          @media screen and (max-width: 768px) {
+            width: max-content;
+            margin-top: 16px;
+            padding: 5px 16px;
+            border: 1px solid #0d8dff;
+            font-size: 14px;
+            color: #0d8dff;
+          }
           .o-icon {
             transform: translate(0px);
             transition: all 0.2s linear;
@@ -195,6 +247,9 @@ watch(
     }
     height: 48px;
     background-color: #fbfbfb;
+    @media screen and (max-width: 768px) {
+      height: 34px;
+    }
     :deep(.o-nav) {
       width: 100%;
       display: flex;
@@ -203,10 +258,21 @@ watch(
       .nav-item {
         color: #555;
       }
+      @media screen and (max-width: 768px) {
+        .nav-item {
+          font-size: 14px;
+        }
+      }
     }
   }
   .tab-content {
     background: #fff;
+    @media screen and (max-width: 768px) {
+      margin: 16px 16px 0;
+    }
+    @media screen and (max-width: 768px) {
+    }
+    margin: 16px 16px 0;
   }
 }
 </style>

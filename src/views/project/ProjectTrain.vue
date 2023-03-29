@@ -35,7 +35,7 @@ const TypeSet = async function (elements) {
     .then(() => {
       return window.MathJax.typesetPromise(elements);
     })
-    .catch((err) => console.log('Typeset failed: ' + err.message));
+    .catch((err) => console.error('Typeset failed: ' + err.message));
   return window.MathJax.startup.promise;
 };
 onUpdated(() => {

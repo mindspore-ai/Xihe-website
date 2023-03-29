@@ -350,7 +350,7 @@ export function collectedPictures() {
 export function temporaryLink(params) {
   const url = '/server/bigmodel/wukong/link';
   return request
-    .put(url, params, getHeaderConfig())
+    .put(url, params, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })
@@ -377,7 +377,7 @@ export function publicPictures() {
 export function publicTemporaryPicture(params) {
   const url = '/server/bigmodel/wukong/public';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })
@@ -393,7 +393,7 @@ export function publicTemporaryPicture(params) {
 export function cancelPublic(id) {
   const url = `/server/bigmodel/wukong/public/${id}`;
   return request
-    .delete(url, getHeaderConfig())
+    .delete(url, { $noLoading: true, ...getHeaderConfig() })
     .then((res) => {
       return res;
     })
@@ -411,7 +411,6 @@ export function publicCollectedPicture(params) {
   return request
     .post(url, params, {
       $doException: true,
-      // $noLoading: true,
       ...getHeaderConfig(),
     })
     .then((res) => {

@@ -84,6 +84,10 @@ function goPath(val) {
   router.push(val);
 }
 
+function goAiAlblum() {
+  router.push('/modelzoo/wukong/album');
+}
+
 watch(
   () => activeNavItem.value,
   () => {
@@ -148,7 +152,7 @@ watch(
             </div>
           </div>
 
-          <div>
+          <div class="right-button">
             <OButton
               type="primary"
               :size="screenWidth < 820 ? 'mini' : 'medium'"
@@ -156,6 +160,18 @@ watch(
               @click="learnWukongMore"
             >
               了解更多
+              <template #suffix>
+                <OIcon><IconArrowRight /></OIcon>
+              </template>
+            </OButton>
+
+            <OButton
+              type="outline"
+              :size="screenWidth < 820 ? 'mini' : 'medium'"
+              animation
+              @click="goAiAlblum()"
+            >
+              AI画集
               <template #suffix>
                 <OIcon><IconArrowRight /></OIcon>
               </template>
@@ -332,6 +348,14 @@ watch(
           font-size: 14px;
           color: #b2b2b2 !important;
           line-height: 22px;
+        }
+      }
+      .right-button {
+        .o-button:first-child {
+          margin-right: 16px;
+          @media screen and (max-width: 820px) {
+            margin-right: 12px;
+          }
         }
       }
     }

@@ -365,14 +365,12 @@ const handleCommand = () => {
 
   #app {
     min-width: auto;
-    // width: 100vw;
   }
 
   .app-header,
   .app-body,
   .app-footer {
     min-width: auto;
-    // width: 100vw;
   }
 
   .mobile-header {
@@ -381,8 +379,7 @@ const handleCommand = () => {
       display: flex;
     }
     position: fixed;
-    // z-index: 2014;
-    z-index: 2009;
+    z-index: 2008;
     top: 0;
     left: 0;
     right: 0;
@@ -554,7 +551,13 @@ body.el-popup-parent--hidden {
         .search-input {
           border-bottom: 1px solid #999;
         }
+        .empty-icon {
+          color: #979797;
+        }
       }
+    }
+    .header-right .header-tool .user-login-icon {
+      color: #fff;
     }
   }
   .footer-content {
@@ -567,10 +570,13 @@ body.el-popup-parent--hidden {
       }
     }
     .below {
-      color: #fff;
+      color: #fff !important;
     }
   }
   background: #060b29;
+  .header-menu {
+    color: #fff;
+  }
 }
 
 .slide-enter-active,
@@ -671,7 +677,7 @@ body.el-popup-parent--hidden {
       padding-left: 16px;
       min-width: 164px;
       span {
-        border-bottom: 2px solid rgba(255, 255, 255, 0.9);
+        border-bottom: 2px solid rgba(0, 0, 0, 0);
       }
     }
     span {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onUpdated } from 'vue';
+import { ref, watch, onUpdated, provide } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -99,6 +99,7 @@ onUpdated(() => {
     }
   });
 });
+provide('getDetailData', getDetailData);
 </script>
 
 <template>

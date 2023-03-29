@@ -610,11 +610,11 @@ const handleCommand = (command) => {
       </el-menu> -->
       <div v-if="show" class="header-menu">
         <div
-          v-for="(item, index) in navItems"
+          v-for="item in navItems"
           :key="item"
           class="menu-item"
           :class="{ 'is-active': item.isActive }"
-          @click="handleSelect(item.href, index)"
+          @click="handleSelect(item.href)"
         >
           {{ item.label }}
           <div class="children-box" :class="{ 'en-children': locale === 'en' }">
@@ -883,6 +883,7 @@ const handleCommand = (command) => {
   }
   &-logo1 {
     height: 50px;
+    cursor: pointer;
     img {
       height: 100%;
     }
@@ -905,7 +906,7 @@ const handleCommand = (command) => {
         cursor: pointer;
         border-bottom: 2px solid rgba(0, 0, 0, 0);
         position: relative;
-
+        white-space: nowrap;
         &:hover {
           color: #0d8dff;
         }

@@ -18,7 +18,6 @@ import {
 } from '@/api/api-project';
 import { ElMessage } from 'element-plus';
 
-// import warningImg from '@/assets/icons/warning.png';
 
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
@@ -32,7 +31,6 @@ function getHeaderConfig() {
 }
 
 const isLogined = computed(() => useLoginStore().isLogined);
-// const userInfoStore = useUserInfoStore();
 
 const router = useRouter();
 

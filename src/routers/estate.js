@@ -149,4 +149,22 @@ export default [
       },
     ],
   },
+  // 人文--玉知多模态大模型
+  {
+    path: '/estate/humanity/yuzhi',
+    name: 'yuzhi',
+    component: () => {
+      return import('@/views/estate/humanity/yuzhi/TheYuzhiModelzoo.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'yuzhiExplain',
+        component: () => {
+          return import('@/views/estate/humanity/yuzhi/TheYuzhiExplain.vue');
+        },
+      },
+    ],
+  },
 ];

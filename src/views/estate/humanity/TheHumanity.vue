@@ -17,7 +17,7 @@ const cases = [
     type: '玉知-悟空图文理解大模型',
     name: '作为国内专业从事游戏与泛娱乐AI研究和应用的顶尖机构，网易伏羲于2021年起着力打造“玉知”多模态理解大…',
     image: case2,
-    url: '/estate/industry/metal-part',
+    url: '/estate/humanity/yuzhi',
   },
   {
     id: 3,

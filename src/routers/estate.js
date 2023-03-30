@@ -38,9 +38,9 @@ export default [
       },
     ],
   },
-  // 电力专区--案例
+  // 电力--变电站AI分析主机
   {
-    path: '/estate/electricity/substationhost',
+    path: '/estate/electricity/substation-host',
     name: 'substationhost',
     component: () => {
       return import(
@@ -78,6 +78,72 @@ export default [
           );
         },
       }, */
+    ],
+  },
+  // 电力--变电站运维图像识别分析解决方案
+  {
+    path: '/estate/electricity/substation-ops',
+    name: 'substationops',
+    component: () => {
+      return import(
+        '@/views/estate/electricity/substationops/SubstationopsDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'substationopsExplain',
+        component: () => {
+          return import(
+            '@/views/estate/electricity/substationops/SubstationopsExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+  // 电力--变电站运维图像识别分析解决方案
+  {
+    path: '/estate/electricity/substation-ops',
+    name: 'substationops',
+    component: () => {
+      return import(
+        '@/views/estate/electricity/substationops/SubstationopsDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'substationopsExplain',
+        component: () => {
+          return import(
+            '@/views/estate/electricity/substationops/SubstationopsExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+  // 电力--智能在线决策系统
+  {
+    path: '/estate/electricity/intelligent-system',
+    name: 'intelligentsystem',
+    component: () => {
+      return import(
+        '@/views/estate/electricity/intelligentsystem/IntelligentsystemDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'intelligentsystemExplain',
+        component: () => {
+          return import(
+            '@/views/estate/electricity/intelligentsystem/IntelligentsystemExplain.vue'
+          );
+        },
+      },
     ],
   },
   // 工业专区--案例

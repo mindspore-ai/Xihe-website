@@ -274,6 +274,9 @@ function toTop() {
           cursor: pointer;
           display: flex;
           justify-content: space-between;
+          &:hover {
+            box-shadow: 0 6px 18px rgba(13, 141, 255, 0.1411764706);
+          }
           .left {
             .title {
               margin-bottom: 36px;
@@ -333,6 +336,7 @@ function toTop() {
           margin-top: 40px;
           display: flex;
           justify-content: center;
+          margin-bottom: 36px;
         }
         .empty2 {
           display: inline-block;
@@ -395,7 +399,7 @@ function toTop() {
       border: none;
       margin-top: 40px;
       margin-bottom: 24px;
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
 
       .el-tabs__nav {
         border: none;
@@ -425,6 +429,9 @@ function toTop() {
         color: #0d8dff;
       }
     }
+    // .el-tabs__nav-wrap {
+    //   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+    // }
   }
 }
 :deep(.el-pagination) {

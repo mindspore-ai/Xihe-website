@@ -10,15 +10,79 @@ import IconPlus from '~icons/app/plus';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 import IconEmail from '~icons/app/email';
+import IconHome from '~icons/app/home1';
+import IconCourse from '~icons/app/my-course';
+import IconCloud from '~icons/app/cloud';
 import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { getFollowing, cancelFollowing } from '@/api/api-user';
-const router = useRouter();
-const userInfoStore = useUserInfoStore();
-const visitorInfoStore = useVisitorInfoStore();
+
+import IconDialog from '~icons/app/dialog';
+import IconLock from '~icons/app/lock';
+// import IconEmail from '~icons/app/email';
+import IconTrophy from '~icons/app/trophy';
+// import IconInvitation from '~icons/app/invitation';
 const route = useRoute();
+const userInfoStore = useUserInfoStore();
+const settingItems = [
+  {
+    id: userInfoStore.userName,
+    label: '个人主页',
+    icon: IconHome,
+  },
+  {
+    id: 'profile',
+    label: '公开资料',
+    icon: IconDialog,
+  },
+  {
+    id: 'security',
+    label: '账户安全',
+    icon: IconLock,
+  },
+  // {
+  //   id: 'email',
+  //   label: '邮件',
+  //   icon: IconEmail,
+  // },
+  {
+    id: 'course',
+    label: '我的课程',
+    icon: IconCourse,
+  },
+  {
+    id: 'competition',
+    label: '我的比赛',
+    icon: IconTrophy,
+  },
+  // {
+  //   id: 'invitation',
+  //   label: '我的邀请',
+  //   icon: IconInvitation,
+  // },
+  {
+    id: 'clouddev',
+    label: '我的开发环境',
+    icon: IconCloud,
+  },
+];
+const activeId = ref(userInfoStore.userName);
+// const activeId = ref(route.path.split('/')[2] || 'profile');
+watch(
+  () => {
+    return route.path.split('/')[2];
+  },
+  (val) => {
+    if (val) activeId.value = userInfoStore.userName;
+  },
+  { immediate: true }
+);
+
+const router = useRouter();
+
+const visitorInfoStore = useVisitorInfoStore();
 
 // 是否是访客
 const isAuthentic = computed(() => {
@@ -191,8 +255,10 @@ function createNew(item) {
   window.open(routerData.href, '_blank');
 }
 
-function goSetting() {
-  router.push(`/settings`);
+function goSetting(item) {
+  if (item.id === userInfoStore.userName)
+    router.push(`/${userInfoStore.userName}`);
+  else router.push(`/settings/${item.id}`);
 }
 function getKeyWord() {
   queryData.page = 1;
@@ -280,7 +346,13 @@ function handleDomChange(val) {
           ? ''
           : '的'
       }}</span>
-      <span>{{ headTitle[label] ? headTitle[label] : headTitle.user }}</span>
+      <span>{{
+        headTitle[label]
+          ? headTitle[label]
+          : isAuthentic
+          ? '中心'
+          : headTitle.user
+      }}</span>
     </div>
   </div>
   <div class="user-content">
@@ -321,13 +393,13 @@ function handleDomChange(val) {
             </p>
           </div>
 
-          <OButton
+          <!-- <OButton
             v-if="isAuthentic"
             :style="{ marginTop: '24px' }"
             @click="goSetting"
             >设置个人资料</OButton
-          >
-          <div v-else :style="{ marginTop: '24px' }">
+          > -->
+          <div v-if="!isAuthentic" :style="{ marginTop: '24px' }">
             <OButton
               v-if="userInfo.isFollower"
               type="secondary"
@@ -341,7 +413,7 @@ function handleDomChange(val) {
             >
           </div>
         </div>
-        <div class="user-info-extends">
+        <div v-if="!isAuthentic" class="user-info-extends">
           <div class="info-extends-box">
             <p class="info-extends-title">个人介绍</p>
             <div class="info-extends-detail gray">
@@ -378,6 +450,17 @@ function handleDomChange(val) {
             </div>
           </div>
         </div>
+        <ul v-else class="setting-menu-list">
+          <li
+            v-for="item in settingItems"
+            :key="item.id"
+            :class="{ active: activeId === item.id }"
+            @click="goSetting(item)"
+          >
+            <OIcon size="medium"><component :is="item.icon"></component></OIcon>
+            {{ item.label }}
+          </li>
+        </ul>
       </div>
 
       <!-- content -->
@@ -454,6 +537,50 @@ function handleDomChange(val) {
 </template>
 
 <style lang="scss" scoped>
+.setting-menu-list {
+  width: 100%;
+  margin-top: 56px;
+
+  li {
+    position: relative;
+    height: 56px;
+    font-size: 18px;
+    font-weight: normal;
+    color: #555555;
+    line-height: 56px;
+    padding: 0 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .o-icon {
+      margin-right: 12px;
+    }
+
+    &:hover {
+      color: #000000;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 2px;
+      height: 100%;
+      background: transparent;
+    }
+
+    &.active {
+      color: #000000;
+      background-color: #f7f8fa;
+    }
+
+    &.active::after {
+      background-color: #3d8df7;
+    }
+  }
+}
+
 .user-banner {
   width: 100%;
   padding-top: 80px;
@@ -490,7 +617,7 @@ function handleDomChange(val) {
     .content-sidebar {
       width: 25%;
       background: #ffffff;
-      padding: 40px;
+      padding: 40px 0 64px;
       // margin-bottom: 36px;
       .user-info-basic {
         display: flex;
@@ -549,6 +676,7 @@ function handleDomChange(val) {
         display: flex;
         flex-direction: column;
         margin-top: 40px;
+        margin-left: 40px;
 
         .info-extends-box {
           & + .info-extends-box {

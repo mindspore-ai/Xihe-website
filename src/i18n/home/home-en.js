@@ -21,13 +21,13 @@ import card1 from '@/assets/imgs/home1/more/more_card1.png';
 import card2 from '@/assets/imgs/home1/more/more_card2.png';
 import card3 from '@/assets/imgs/home1/more/more_card3.png';
 
-import competition1 from '@/assets/imgs/home1/more/more_card1.png';
-import competition2 from '@/assets/imgs/home1/more/more_card2.png';
-import competition3 from '@/assets/imgs/home1/more/more_card3.png';
+import competition1 from '@/assets/imgs/home1/more/competition11.png';
+import competition2 from '@/assets/imgs/home1/more/competition21.png';
+import competition3 from '@/assets/imgs/home1/more/competition31.png';
 
-import activity1 from '@/assets/imgs/home1/more/more_card1.png';
-import activity2 from '@/assets/imgs/home1/more/more_card2.png';
-import activity3 from '@/assets/imgs/home1/more/more_card3.png';
+import activity1 from '@/assets/imgs/home1/more/activity11.png';
+import activity2 from '@/assets/imgs/home1/more/activity21.png';
+import activity3 from '@/assets/imgs/home1/more/activity31.png';
 export default {
   APP_HEADER: {
     HOME: 'Home',
@@ -51,7 +51,7 @@ export default {
   LANG: 'En',
   BANNER_BUTTON_1: 'MindSpore LLM Platform',
   BANNER_BUTTON_2: 'AI Painter',
-  BANNER_BUTTON_3: '生日会',
+  BANNER_BUTTON_3: '昇思3周年',
   // 轮播
   SWIPER: [
     {
@@ -68,22 +68,22 @@ export default {
       'Perform full-process development in multiple domains, experience inference visualization, and get trained online.',
     CARDS: [
       {
-        NAME: '手写数字体识别',
+        NAME: 'Handwritten digit recognition',
         TYPE: 'CV',
         PATH: '/projects/MindSpore/lenet5/train',
       },
       {
-        NAME: '艺术家画作风格迁移',
+        NAME: 'Artist Painting Style Migration',
         TYPE: 'CV',
         PATH: '/projects/MindSpore/CycleGAN//train',
       },
       {
-        NAME: '图像分类',
+        NAME: 'Image Classification',
         TYPE: 'CV',
         PATH: '/projects/MindSpore/vit_image_classification/train',
       },
       {
-        NAME: '情感分析',
+        NAME: 'Emotion Analysis',
         TYPE: 'NLP',
         PATH: '/projects/MindSpore/LSTM/train',
       },
@@ -170,7 +170,7 @@ export default {
       {
         MODEL_NAME: 'Audio',
         TYPE: 'Audio',
-        CATAGORIES: 'ecapa_tdnn｜lpcnet｜melgan｜tacotron2 …',
+        CATAGORIES: 'ECAPA-TDNN｜LPCNet｜MelGan …',
         HREF: 'https://xihe.mindspore.cn/models/MindSpore/deepfm_criteo',
         IMAGE: models4,
         PATH: '/models/MindSpore/deepfm_criteo',
@@ -183,7 +183,7 @@ export default {
     INTRODUCE:
       'Experience the Chinese text-to-image generative model: Wukong-Huahua. You can generate inspiring images of various styles through text.',
     GALLARY_BUTTON: 'Start Drawing',
-    PAINTINGS_BUTTON: '全部画集',
+    PAINTINGS_BUTTON: 'All Artbooks',
     PATH: '/modelzoo/wukong',
     PATH1: '/modelzoo/wukong/album',
   },
@@ -231,7 +231,7 @@ export default {
         IMAGE: open2,
         CARDS: [
           {
-            NAME: 'Ivory Tower: AI Painter Competition',
+            NAME: '',
             DESC: 'This is an invitation to participate in an AI art creation event and win up to CNY10,000. The Ivory Tower: AI Painter Competition was officially launched in March 2023 for global AI developers. The topics are closely related to diffusion models. The competition provides developers with an opportunity to learn MindSpore and diffusion models.',
             IMAGE: competition1,
             TYPE: '',
@@ -239,7 +239,7 @@ export default {
             PATH: '/competition/ai_painter/0/introduction',
           },
           {
-            NAME: 'MindSpore AI Challenge: Multi-Class Image Classification',
+            NAME: '',
             DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. Image classification is fundamental to computer vision, and related algorithms are developing rapidly. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to preprocess and classify images.',
             IMAGE: competition2,
             TYPE: '',
@@ -247,7 +247,7 @@ export default {
             PATH: '/competition/3/0/introduction',
           },
           {
-            NAME: 'MindSpore AI Challenge: Text Classification',
+            NAME: '',
             DESC: 'MindSpore is a deep learning framework that aims to achieve easy development, efficient execution, and all-scenario coverage. The MindSpore AI Challenge was officially launched in September 2022. It is oriented toward global AI developers and allows them to learn MindSpore and use AI algorithm capabilities. They can study various theories and methods that can realize effective communication between human beings and computers by using natural languages. Text classification plays an important role in AI. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to process and classify text based on NLP.',
             IMAGE: competition3,
             TYPE: '',
@@ -261,7 +261,7 @@ export default {
         IMAGE: open3,
         CARDS: [
           {
-            NAME: "The 4th MindCon: Xi'an Tourism Image Classification",
+            NAME: '',
             DESC: "MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify Xi'an tourism images.",
             IMAGE: activity1,
             TYPE: '',
@@ -269,7 +269,7 @@ export default {
             PATH: '/competition/xian_travel/0/introduction',
           },
           {
-            NAME: 'The 4th MindCon: Takeout Review Text Classification',
+            NAME: '',
             DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to classify takeout reviews.',
             IMAGE: activity2,
             TYPE: '',
@@ -277,7 +277,7 @@ export default {
             PATH: '/competition/text_classification/0/introduction',
           },
           {
-            NAME: 'The 4th MindCon: Mask Recognition Based on Small Sample Learning',
+            NAME: '',
             DESC: 'MindCon Geek Week is a biannual developer carnival held by MindSpore. It inspires research and exploration of AI. At the 4th MindCon Geek Week, challenging tasks were published in multiple fields for developers with different skill levels to explore interesting open-source AI applications. At each MindCon event, experts from various fields are invited to share and experience cutting-edge AI technologies. Participants have the chance to win many prizes and MindSpore certificates. This challenge familiarizes participants with MindSpore and allows them to use MindSpore to detect masks on images.',
             IMAGE: activity3,
             TYPE: '',
@@ -298,24 +298,31 @@ export default {
         NAME: 'Electric Power',
         DESC: 'Build AI models by training electric power data to predict electric power data and fluctuation and assist enterprises in energy management and scheduling.',
         IMAGE: industy2,
+        PATH: '/estate/electricity',
       },
       {
         NAME: 'Industry',
         DESC: 'Build AI models by training object detection data to intelligently identify industrial objects widely used in industrial detection and smart manufacturing.',
         IMAGE: industy1,
+        PATH: '/estate/industry',
       },
       {
         NAME: 'Healthcare',
         DESC: 'Build AI models by exploring medical data to analyze medical big data that is widely used in medical research and decision-making.',
         IMAGE: industy3,
-        STATUS: 'Coming soon',
+        STATUS: '',
+        PATH: '/estate/medicine',
       },
       {
-        NAME: 'Finance',
-        DESC: 'Build AI models by training financial industry data widely used in financial institutions to reduce costs and increase profits.',
+        NAME: 'Humanities',
+        DESC: "Build an AI model by training humanities-related graphic data sets, realize recommendation search, and generate innovative national trend content that meets the public's aesthetics. It is widely used in video recommendation, modeling and design assistance, and other fields.",
         IMAGE: industy4,
-        STATUS: 'Coming soon',
+        STATUS: '',
+        PATH: '/estate/humanity',
       },
     ],
+  },
+  PARTNER: {
+    TITLE: 'Partner',
   },
 };

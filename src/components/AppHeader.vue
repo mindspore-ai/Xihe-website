@@ -168,7 +168,7 @@ const loginedDropdownItems = reactive([
   {
     id: 'user',
     label: computed(() => {
-      return locale.value === 'zh' ? '个人主页' : 'My Page';
+      return locale.value === 'zh' ? '个人中心' : 'Personal Center';
     }),
     action: () => {
       router.push(`/${userInfoStore.userName}`);
@@ -201,15 +201,15 @@ const loginedDropdownItems = reactive([
       router.push('/new/datasets');
     },
   },
-  {
-    id: 'settings',
-    label: computed(() => {
-      return locale.value === 'zh' ? '设置' : 'Settings';
-    }),
-    action: () => {
-      router.push('/settings');
-    },
-  },
+  // {
+  //   id: 'settings',
+  //   label: computed(() => {
+  //     return locale.value === 'zh' ? '设置' : 'Settings';
+  //   }),
+  //   action: () => {
+  //     router.push('/settings');
+  //   },
+  // },
   {
     id: 'logout',
     label: computed(() => {
@@ -567,7 +567,7 @@ const handleCommand = (command) => {
       />
       <img v-else :src="logoImg" alt="" srcset="" />
     </div>
-    <div v-else class="header-logo1" @click="handleLogoClick">
+    <div v-else class="header-logo" @click="handleLogoClick">
       <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="header-content">
@@ -872,13 +872,16 @@ const handleCommand = (command) => {
   position: relative;
 
   &-logo {
-    height: 32px;
+    // height: 32px;
+    width: 105px;
     display: flex;
     align-items: center;
     cursor: pointer;
     img {
       vertical-align: top;
-      height: 100%;
+      // height: 100%;
+      width: 100px;
+      display: inline-block;
     }
   }
   &-logo1 {

@@ -130,4 +130,24 @@ export default [
       return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
     },
   },
+  // 医疗--智慧病理诊断系统
+  {
+    path: '/estate/medicine/diagnosis',
+    name: 'pathologicalDiagnosis',
+    component: () => {
+      return import('@/views/estate/medicine/diagnosis/DiagnosisDetail.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'diagnosisExplain',
+        component: () => {
+          return import(
+            '@/views/estate/medicine/diagnosis/DiagnosisExplain.vue'
+          );
+        },
+      },
+    ],
+  },
 ];

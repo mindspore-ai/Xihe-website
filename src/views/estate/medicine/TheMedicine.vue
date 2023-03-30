@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 
 import cancerImg from '@/assets/imgs/estate/medicine/endometrial-cancer.png';
 import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
+import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
 
 // import substationImg from '@/assets/imgs/estate/electricity-substation.png';
 
@@ -20,6 +21,13 @@ const cases = [
     name: '本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医…',
     image: surgeryImg,
     url: '/estate/medicine/truesight', //TODO
+  },
+  {
+    id: 2,
+    type: '智慧病理诊断系统',
+    name: '智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。',
+    image: diagnosticImg,
+    url: '/estate/medicine/diagnosis',
   },
 ];
 
@@ -63,13 +71,13 @@ function goCasePath(item) {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 24px;
+  grid-template-rows: 320px;
   // height: 240px;
   margin: 40px 0 64px;
   padding: 0px 16px;
   .case-item {
     height: 100%;
     cursor: pointer;
-    // background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
     position: relative;
     &:hover {
@@ -86,15 +94,22 @@ function goCasePath(item) {
         font-size: 24px;
         line-height: 26px;
         font-weight: 500;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: '...';
       }
       .case-name {
         font-size: 16px;
         line-height: 22px;
         font-weight: 400;
         margin-top: 16px;
-        // overflow: hidden;
-        // white-space: nowrap;
-        // text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: '...';
       }
     }
     img {

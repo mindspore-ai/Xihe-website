@@ -13,6 +13,33 @@ import project3 from '@/assets/imgs/home1/project3.png';
 import project4 from '@/assets/imgs/home1/project4.png';
 import project5 from '@/assets/imgs/home1/project5.png';
 import project6 from '@/assets/imgs/home1/project6.png';
+import logo1 from '@/assets/imgs/home1/logo/logo1.png';
+import logo2 from '@/assets/imgs/home1/logo/logo2.png';
+import logo3 from '@/assets/imgs/home1/logo/logo3.png';
+import logo4 from '@/assets/imgs/home1/logo/logo4.png';
+import logo5 from '@/assets/imgs/home1/logo/logo5.png';
+import logo6 from '@/assets/imgs/home1/logo/logo6.png';
+import logo7 from '@/assets/imgs/home1/logo/logo7.png';
+import logo8 from '@/assets/imgs/home1/logo/logo8.png';
+import logo9 from '@/assets/imgs/home1/logo/logo9.png';
+import logo10 from '@/assets/imgs/home1/logo/logo10.png';
+import logo11 from '@/assets/imgs/home1/logo/logo11.png';
+import logo12 from '@/assets/imgs/home1/logo/logo12.png';
+import logo13 from '@/assets/imgs/home1/logo/logo13.png';
+import logo14 from '@/assets/imgs/home1/logo/logo14.png';
+import logo15 from '@/assets/imgs/home1/logo/logo15.png';
+import logo16 from '@/assets/imgs/home1/logo/logo16.png';
+import logo17 from '@/assets/imgs/home1/logo/logo17.png';
+import logo18 from '@/assets/imgs/home1/logo/logo18.png';
+import logo19 from '@/assets/imgs/home1/logo/logo19.png';
+import logo20 from '@/assets/imgs/home1/logo/logo20.png';
+import logo21 from '@/assets/imgs/home1/logo/logo21.png';
+import logo22 from '@/assets/imgs/home1/logo/logo22.png';
+import logo23 from '@/assets/imgs/home1/logo/logo23.png';
+import logo24 from '@/assets/imgs/home1/logo/logo24.png';
+import logo25 from '@/assets/imgs/home1/logo/logo25.png';
+import logo26 from '@/assets/imgs/home1/logo/logo26.png';
+import logo27 from '@/assets/imgs/home1/logo/logo27.png';
 
 import IconUser from '~icons/app/user';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -37,7 +64,7 @@ AOS.init();
 
 const modules = [Pagination, Autoplay];
 const galleryModules = [Autoplay, FreeMode];
-// const logoModules = [Autoplay, FreeMode];
+const logoModules = [FreeMode, Autoplay];
 function renderBullet(index, className) {
   let text = '';
   switch (index) {
@@ -185,6 +212,9 @@ getHomeInfo().then((res) => {
         card.count = res.data.course[index1].count;
       } else if (index === 1) {
         card.count = res.data.comp[index1].count;
+        if (index1 === 0) {
+          card.count = res.data.comp[7].count;
+        }
       } else {
         card.count = res.data.comp[3 + index1].count;
       }
@@ -204,6 +234,35 @@ onMounted(() => {
   let more = document.querySelectorAll('.more')[0];
   io.observe(more);
 });
+const logoPic = [
+  logo1,
+  logo2,
+  logo3,
+  logo4,
+  logo5,
+  logo6,
+  logo7,
+  logo8,
+  logo9,
+  logo10,
+  logo11,
+  logo12,
+  logo13,
+  logo14,
+  logo15,
+  logo16,
+  logo17,
+  logo18,
+  logo19,
+  logo20,
+  logo21,
+  logo22,
+  logo23,
+  logo24,
+  logo25,
+  logo26,
+  logo27,
+];
 </script>
 <template>
   <div class="wrapper">
@@ -596,27 +655,68 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div class="logo">
+      <p class="title">{{ t(`home.PARTNER.TITLE`) }}</p>
+      <swiper
+        :speed="5000"
+        :free-mode="true"
+        centered-slides
+        :modules="logoModules"
+        slides-per-view="auto"
+        :autoplay="{ autoplay: true, delay: 0 }"
+        loop
+        :no-swiping="true"
+        class="logo-swiper"
+      >
+        <swiper-slide
+          v-for="item in logoPic.slice(0, 9)"
+          :key="item"
+          class="swiper-no-swiping"
+        >
+          <img :src="item" />
+        </swiper-slide>
+      </swiper>
+      <swiper
+        :speed="5000"
+        :free-mode="true"
+        slides-per-view="auto"
+        :modules="logoModules"
+        :autoplay="{ autoplay: true, delay: 0, reverseDirection: true }"
+        loop
+        :no-swiping="true"
+        class="logo-swiper"
+      >
+        <swiper-slide
+          v-for="item in logoPic.slice(9, 18)"
+          :key="item"
+          class="swiper-no-swiping"
+        >
+          <img :src="item" />
+        </swiper-slide>
+      </swiper>
+      <swiper
+        :speed="5000"
+        :free-mode="true"
+        centered-slides
+        :modules="logoModules"
+        slides-per-view="auto"
+        :autoplay="{ autoplay: true, delay: 0 }"
+        loop
+        :looped-slides="5"
+        :no-swiping="true"
+        class="logo-swiper"
+      >
+        <swiper-slide
+          v-for="item in logoPic.slice(18, -1)"
+          :key="item"
+          class="swiper-no-swiping"
+        >
+          <img :src="item" />
+        </swiper-slide>
+      </swiper>
+    </div>
   </div>
-  <!-- <div class="logo">
-    <swiper
-      :modules="logoModules"
-      :autoplay="{ disableOnInteraction: false, autoplay: true }"
-      class="logo-swiper1"
-    >
-    </swiper>
-    <swiper
-      :modules="logoModules"
-      :autoplay="{ disableOnInteraction: false, autoplay: true }"
-      class="logo-swiper2"
-    >
-    </swiper>
-    <swiper
-      :modules="logoModules"
-      :autoplay="{ disableOnInteraction: false, autoplay: true }"
-      class="logo-swiper3"
-    >
-    </swiper>
-  </div> -->
+
   <footer v-if="route.path === '/'" class="app-footer">
     <app-footer></app-footer>
   </footer>
@@ -1612,14 +1712,44 @@ p {
           }
         }
       }
-      // &:nth-child(3) {
-      //   background: url(@/assets/imgs/home1/industy/hover-bg3.png);
-      //   background-size: cover;
-      // }
-      // &:last-child {
-      //   background: url(@/assets/imgs/home1/industy/hover-bg4.png);
-      //   background-size: cover;
-      // }
+      &:nth-child(3) {
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        cursor: pointer;
+        .intro {
+          color: #555;
+        }
+        .name {
+          color: #000;
+        }
+        &:hover {
+          background: url(@/assets/imgs/home1/industy/hover-bg3.png);
+          background-size: cover;
+          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          .name,
+          .intro {
+            color: #ffffff;
+          }
+        }
+      }
+      &:last-child {
+        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        cursor: pointer;
+        .intro {
+          color: #555;
+        }
+        .name {
+          color: #000;
+        }
+        &:hover {
+          background: url(@/assets/imgs/home1/industy/hover-bg4.png);
+          background-size: cover;
+          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          .name,
+          .intro {
+            color: #ffffff;
+          }
+        }
+      }
     }
     .name {
       font-size: 24px;
@@ -1651,10 +1781,32 @@ p {
       line-height: 24px;
       color: #999999;
       margin-left: 64px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
       @media screen and (max-width: 820px) {
         font-size: 12px;
         margin-left: 32px;
       }
+    }
+  }
+}
+.logo {
+  padding: 0 0 52px;
+  .title {
+    margin-bottom: 26px;
+  }
+  :deep(.logo-swiper) {
+    .swiper-slide {
+      height: 120px;
+      width: auto !important;
+      background-color: #fff;
+      margin: 12px 12px;
+    }
+    img {
+      height: 120px;
     }
   }
 }

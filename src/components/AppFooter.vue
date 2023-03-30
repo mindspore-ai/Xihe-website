@@ -24,7 +24,7 @@ const route = useRoute();
       />
       <img v-else :src="logoImg" alt="" srcset="" />
     </div>
-    <div v-else class="footer-logo2">
+    <div v-else class="footer-logo">
       <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="footer-content">

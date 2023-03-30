@@ -99,7 +99,10 @@ function goCourseDetail(id) {
 </script>
 
 <template>
-  <div class="course-page">
+  <div
+    v-if="currentCourse.length || activeName !== 'allStatus'"
+    class="course-page"
+  >
     <div class="course-body wrap">
       <el-tabs
         v-model="courseName"
@@ -259,6 +262,10 @@ function goCourseDetail(id) {
         <p>暂无进行中课程</p>
       </div>
     </div>
+  </div>
+  <div v-else class="empty1">
+    <img :src="emptyImg" alt="" />
+    <p>暂未参加课程，<a href="/course">点击报名课程</a></p>
   </div>
 </template>
 
@@ -456,6 +463,23 @@ $theme: #0d8dff;
         font-size: 18px;
       }
     }
+  }
+}
+.empty1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 180px 0 56px;
+  img {
+    width: 280px;
+  }
+  p {
+    color: #555555;
+    margin-top: 24px;
+    font-size: 18px;
+  }
+  a {
+    color: #0d8dff;
   }
 }
 </style>

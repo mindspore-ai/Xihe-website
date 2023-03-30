@@ -1,12 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import endometrialcancerCover from '@/assets/imgs/estate/medicine/endometrialcancer-cover.png';
+import endometrialcancerCover from '@/assets/imgs/estate/medicine/true-sight/truesight-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
-
-// import estateData from '../../../../../config/estate';
 
 const route = useRoute();
 

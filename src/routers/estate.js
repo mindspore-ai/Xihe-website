@@ -98,26 +98,6 @@ export default [
           return import('@/views/estate/industry/IndustryExplain.vue');
         },
       },
-      /*  // 数据准备
-      {
-        path: 'data-prepare',
-        name: 'dataPrepare',
-        component: () => {
-          return import(
-            '@/views/estate/electricity/cases/case-1/ElectricityDataPrepare.vue'
-          );
-        },
-      },
-      // 模型训练
-      {
-        path: 'model-train',
-        name: 'modelTrain',
-        component: () => {
-          return import(
-            '@/views/estate/electricity/cases/case-1/ElectricityModelTrain.vue'
-          );
-        },
-      }, */
     ],
   },
   // 医疗--子宫内膜癌
@@ -132,7 +112,7 @@ export default [
     children: [
       // 项目说明
       {
-        path: 'explain',
+        path: '',
         name: 'endometrialcancerExplain',
         component: () => {
           return import(

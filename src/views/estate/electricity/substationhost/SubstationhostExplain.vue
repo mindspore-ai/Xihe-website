@@ -15,16 +15,6 @@ import painspotImg from '@/assets/imgs/estate/electricity/substationhost/host-pa
         <div class="case-img">
           <img :src="backgroundImg" alt="" />
         </div>
-        <div>
-          早期子宫内膜在筛查的研究主要集中在微创的组织病理学和细胞病理学方向。
-          子宫内膜细胞学检查(ECT)已在许多国家开展，包括意大利、美国和日本。
-          子宫内膜细胞学检查（ECT）于1987年被列入日本《老年人保健法》。
-          日本高危妇女的子宫内膜癌（EC）死亡率从1950年的20%下降到1999年的8%。
-          近20年来，不同地区的学者提出了对子宫内膜采样器的发明和改进，并提出了子宫内膜细胞病理学诊断系统。大量子宫内膜细胞病理切片需要诊断，从而暴露出病理学家的匮乏。
-        </div>
-        <div>
-          随着医学成像技术的发展，医学图像数量正在以指数增加。医学图像的诊断与分析在过去通常由医学专业人员执行，专业人员数量的匮乏以及他们有限的精力与不可避免的主观性，限制了临床诊断和后续治疗的效率深度学习算法，特别是卷积神经网络（CNN），已迅速成为分析医学图像的首选方法。
-        </div>
       </div>
     </div>
     <div class="case-intro">
@@ -44,6 +34,14 @@ import painspotImg from '@/assets/imgs/estate/electricity/substationhost/host-pa
       <div class="description">
         <p>
           变电站环境复杂、设备多样、AI应用场景丰富多变，如果还是按照传统“项目制”赋能方式，每个模型都需要重复投入人力、物力、财力开发，研发流程难以复用，AI应用成本高，难以形成生产力。
+        </p>
+      </div>
+    </div>
+    <div class="case-advantage">
+      <div class="title">案例优势</div>
+      <div class="description">
+        <p>
+          变电站AI分析主机应用昇腾AI基础软硬件平台打造标准化、流程化的模型生产和应用流程，实现“数据-场景-算法”闭环快速迭代，支撑变电站智能巡检定制化需求快速落地。
         </p>
         <div class="case-img">
           <img :src="painspotImg" alt="" />
@@ -67,7 +65,8 @@ import painspotImg from '@/assets/imgs/estate/electricity/substationhost/host-pa
 
   .case-background,
   .case-intro,
-  .case-painspot {
+  .case-painspot,
+  .case-advantage {
     margin-bottom: 40px;
     .title {
       line-height: 22px;

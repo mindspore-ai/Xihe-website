@@ -1,6 +1,6 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
-import opsImg from '@/assets/imgs/estate/electricity/substationops/ops-cover.png';
+import hostCover from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -20,20 +20,20 @@ import { ArrowRight } from '@element-plus/icons-vue';
             电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            变电站AI分析主机
+            变电站运维图像识别分析解决方案
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="opsImg" alt="" />
+            <img draggable="false" :src="hostCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">变电站AI分析主机</div>
+              <div class="banner-title">变电站运维图像识别分析解决方案</div>
               <div class="banner-desc">
-                变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，保障电网安全稳定运行。
+                基于对变电站智能运维场景的深刻洞察，许继软件携手华为推出业内领先的变电站运维图像识别分析解决方案，并完成与全场景AI框架昇思MindSpore的兼容性测试。
               </div>
             </div>
             <div class="banner-btn">

@@ -26,7 +26,7 @@ export default [
         path: 'humanity',
         name: 'humanity',
         component: () => {
-          return import('@/views/estate/humanity/TheFinance.vue');
+          return import('@/views/estate/humanity/TheHumanity.vue');
         },
       },
       {

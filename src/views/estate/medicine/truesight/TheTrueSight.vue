@@ -169,7 +169,7 @@ watch(
               <div class="img-contain">
                 <img
                   class="img-thought-1"
-                  src="@/assets/imgs/estate/medicine/true-sight/thought-1.png"
+                  src="@/assets/imgs/estate/medicine/true-sight/first-method.png"
                   alt=""
                 />
               </div>
@@ -181,7 +181,7 @@ watch(
               <div class="img-contain">
                 <img
                   class="img-thought-2"
-                  src="@/assets/imgs/estate/medicine/true-sight/thought-2 .png"
+                  src="@/assets/imgs/estate/medicine/true-sight/second-method.png"
                   alt=""
                 />
               </div>

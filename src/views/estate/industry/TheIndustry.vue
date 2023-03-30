@@ -5,13 +5,14 @@ import hostImg from '@/assets/imgs/estate/industry/metal-part.png';
 import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
 import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
 
+const router = useRouter();
 const cases = [
   {
     id: 0,
-    type: '金属零部件缺陷检测',
-    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。',
-    image: hostImg,
-    url: '/estate/industry/metal-part',
+    type: '低码智能视频使能平台',
+    name: '行业首个低码智能视频使能平台，赋能工业安全数字化转型。',
+    image: codeImg,
+    url: '/estate/industry/intelligence',
   },
   {
     id: 1,
@@ -22,14 +23,12 @@ const cases = [
   },
   {
     id: 2,
-    type: '低码智能视频使能平台',
-    name: '行业首个低码智能视频使能平台，赋能工业安全数字化转型。',
-    image: codeImg,
-    url: '/estate/industry/intelligence',
+    type: '金属零部件缺陷检测',
+    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。',
+    image: hostImg,
+    url: '/estate/industry/metal-part',
   },
 ];
-
-const router = useRouter();
 
 function goCasePath(item) {
   router.push(item.url);

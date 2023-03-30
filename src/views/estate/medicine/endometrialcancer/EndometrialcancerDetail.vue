@@ -74,7 +74,8 @@ watch(
             <div class="banner-content">
               <div class="banner-title">子宫内膜癌筛查联合方案</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                西安美佳家医疗科技有限责任公司基于昇思MindSpore
+                AI框架在华为昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
               </div>
             </div>
             <div class="banner-btn">

@@ -1,6 +1,6 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
-import hostCover from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
+import opsImg from '@/assets/imgs/estate/electricity/substationops/ops-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -27,7 +27,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="hostCover" alt="" />
+            <img draggable="false" :src="opsImg" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">

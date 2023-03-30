@@ -294,6 +294,7 @@ watch(
             }
           }
           .banner-btn {
+            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }

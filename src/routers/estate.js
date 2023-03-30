@@ -148,21 +148,20 @@ export default [
   },
   // 工业专区--案例
   {
-    path: '/estate/industry/:id',
-    name: 'industryCase',
+    path: '/estate/industry/metal-part',
+    name: 'metalPart',
     component: () => {
-      return import('@/views/estate/industry/IndustryDetail.vue');
-    },
-    redirect: {
-      name: 'industryExplain',
+      return import('@/views/estate/industry/metalpart/MetalpartDetail.vue');
     },
     children: [
       // 项目说明
       {
-        path: 'project-explain',
+        path: '',
         name: 'industryExplain',
         component: () => {
-          return import('@/views/estate/industry/IndustryExplain.vue');
+          return import(
+            '@/views/estate/industry/metalpart/MetalpartExplain.vue'
+          );
         },
       },
     ],
@@ -268,7 +267,7 @@ export default [
       // 项目说明
       {
         path: '',
-        name: 'yuzhiExplain',
+        name: 'languageExplain',
         component: () => {
           return import(
             '@/views/estate/humanity/sign-language/TheProjectExplain.vue'

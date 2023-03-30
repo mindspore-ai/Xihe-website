@@ -1,72 +1,14 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import industryCover from '@/assets/imgs/estate/industry-cover.png';
+import metalpartCover from '@/assets/imgs/estate/industry/metalpart/metalpart-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import estateData from '../../../../config/estate';
-
-const route = useRoute();
-const router = useRouter();
-
-const activeNavItem = ref('');
-
-// TODO:
-const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]);
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
-
 // 点击导航
-function handleNavClick(item) {
+/* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
-}
-
-const estateName = computed(() => {
-  return route.fullPath.split('/')[2];
-});
-const industryData = computed(() => {
-  return estateData.find((item) => {
-    return item.regionId === estateName.value;
-  });
-});
-const industryDetail = computed(() => {
-  return industryData.value.detail.find((val) => {
-    return val.id === route.params.id;
-  });
-});
+} */
 </script>
 
 <template>
@@ -78,20 +20,20 @@ const industryDetail = computed(() => {
             工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            {{ industryDetail.title }}
+            工业零件划痕自动识别
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="industry-content">
         <div class="industry-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="industryCover" alt="" />
+            <img draggable="false" :src="metalpartCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">{{ industryDetail.title }}</div>
+              <div class="banner-title">工业零件划痕自动识别</div>
               <div class="banner-desc">
-                {{ industryDetail.desc }}
+                通过训练物体检测定制化AI模型，实现对于“工业零件划痕”的智能识别，广泛应用于工业质检、智能制造等领域。
               </div>
             </div>
             <div class="banner-btn">
@@ -114,7 +56,7 @@ const industryDetail = computed(() => {
             ></o-nav>
           </div> -->
           <div class="industry-info">
-            <router-view :industry-detail="industryDetail" />
+            <router-view />
           </div>
         </div>
       </div>
@@ -134,11 +76,7 @@ const industryDetail = computed(() => {
     max-width: 1472px;
     overflow: hidden;
     .bread-wrap {
-      // height: 94px;
-      // padding-top: 40px;
-      // padding-bottom: 40px;
       padding: 40px 0;
-      // background-color: #f5f6f8;
       .el-breadcrumb {
         font-size: 12px;
         line-height: 18px;
@@ -157,9 +95,6 @@ const industryDetail = computed(() => {
         :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
           color: #000;
         }
-        // :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-        //   cursor: pointer;
-        // }
       }
     }
     .industry-content {
@@ -196,6 +131,7 @@ const industryDetail = computed(() => {
             }
           }
           .banner-btn {
+            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }

@@ -197,6 +197,7 @@ export default [
       return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
     },
   },
+
   // 医疗--智慧病理诊断系统
   {
     path: '/estate/medicine/diagnosis',
@@ -213,6 +214,43 @@ export default [
           return import(
             '@/views/estate/medicine/diagnosis/DiagnosisExplain.vue'
           );
+        },
+      },
+    ],
+  },
+
+  // 人文--AIGC生态系统
+  {
+    path: '/estate/humanity/AIGC',
+    name: 'aigcEcosystem',
+    component: () => {
+      return import('@/views/estate/humanity/aigc/TheAigcEcosystem.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'aigcExplain',
+        component: () => {
+          return import('@/views/estate/humanity/aigc/TheAigcExplain.vue');
+        },
+      },
+    ],
+  },
+  // 人文--玉知多模态大模型
+  {
+    path: '/estate/humanity/yuzhi',
+    name: 'yuzhi',
+    component: () => {
+      return import('@/views/estate/humanity/yuzhi/TheYuzhiModelzoo.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'yuzhiExplain',
+        component: () => {
+          return import('@/views/estate/humanity/yuzhi/TheYuzhiExplain.vue');
         },
       },
     ],

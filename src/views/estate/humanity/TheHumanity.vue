@@ -1,51 +1,44 @@
 <script setup>
+import case1 from '@/assets/imgs/estate/humanity/case-aigc.png';
+import case2 from '@/assets/imgs/estate/humanity/case-yuzhi.png';
+import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
 import { useRouter } from 'vue-router';
-
-import cancerImg from '@/assets/imgs/estate/medicine/endometrial-cancer.png';
-import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
-import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
-
-// import substationImg from '@/assets/imgs/estate/electricity-substation.png';
-
+const router = useRouter();
 const cases = [
   {
-    id: 0,
-    type: '子宫内膜癌筛查联合方案',
-    name: '西安美佳家医疗科技有限责任公司基于昇思MindSpore AI框架在华为昇腾910处理器中成功构建了一套人工智能…',
-    image: cancerImg,
-    url: '/estate/medicine/endometrial-cancer',
-  },
-  {
     id: 1,
-    type: 'TrueSight人工智能临床外科手术决策支持系统',
-    name: '本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医…',
-    image: surgeryImg,
-    url: '/estate/medicine/truesight', //TODO
+    type: '国潮AIGC生态系统',
+    name: '湖南禾福文化科技有限公司“薪火芳华”团队基于全场景AI框架昇思MindSpore，自行研发基于知识图谱和大模型…',
+    image: case1,
+    url: '/estate/humanity/AIGC',
   },
   {
     id: 2,
-    type: '智慧病理诊断系统',
-    name: '智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。',
-    image: diagnosticImg,
-    url: '/estate/medicine/diagnosis',
+    type: '玉知-悟空图文理解大模型',
+    name: '作为国内专业从事游戏与泛娱乐AI研究和应用的顶尖机构，网易伏羲于2021年起着力打造“玉知”多模态理解大…',
+    image: case2,
+    url: '/estate/humanity/yuzhi',
+  },
+  {
+    id: 3,
+    type: '手语教考一体机',
+    name: 'AI破解手语难题，用科技连接孤岛，拨亮人文关怀的灯盏',
+    image: case3,
+    url: '/estate/humanity/sign-language',
   },
 ];
 
-const router = useRouter();
-
 function goCasePath(item) {
-  console.log('item.url: ', item.url);
   router.push(item.url);
 }
 </script>
 <template>
-  <div class="medicine">
+  <div class="humanity">
     <p class="application-cases">应用案例</p>
-
     <div class="case-cards">
       <div
         v-for="item in cases"
-        :key="item.name"
+        :key="item.id"
         class="case-item"
         @click="goCasePath(item)"
       >
@@ -59,8 +52,10 @@ function goCasePath(item) {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
-.medicine {
+$theme: #0d8dff;
+.humanity {
   .application-cases {
     margin-top: 40px;
     font-size: 36px;
@@ -73,7 +68,6 @@ function goCasePath(item) {
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 24px;
     grid-template-rows: 320px;
-    // height: 240px;
     margin: 40px 0 64px;
     padding: 0px 16px;
     .case-item {

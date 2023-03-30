@@ -1,28 +1,43 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
-import metalImg from '@/assets/imgs/estate/industry-metal.png';
+import hostImg from '@/assets/imgs/estate/industry/metal-part.png';
+import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
+import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
 
+const router = useRouter();
 const cases = [
   {
+    id: 0,
+    type: '低码智能视频使能平台',
+    name: '行业首个低码智能视频使能平台，赋能工业安全数字化转型。',
+    image: codeImg,
+    url: '/estate/industry/intelligence',
+  },
+  {
     id: 1,
+    type: '工业AI算法库READ',
+    name: 'READ专注于研发与集成基于无监督监督学习的大规模异常检测算法和模型，重点解决工业质检中小样本和数据…',
+    image: algorithmImg,
+    url: '/estate/industry/algorithm',
+  },
+  {
+    id: 2,
     type: '金属零部件缺陷检测',
-    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售',
-    image: metalImg,
+    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。',
+    image: hostImg,
     url: '/estate/industry/metal-part',
   },
 ];
 
-const router = useRouter();
-
-// TODO:
 function goCasePath(item) {
   router.push(item.url);
 }
 </script>
 <template>
-  <div class="industry">
+  <div class="electricity">
     <p class="application-cases">应用案例</p>
+
     <div class="case-cards">
       <div
         v-for="item in cases"
@@ -41,7 +56,7 @@ function goCasePath(item) {
   </div>
 </template>
 <style lang="scss" scoped>
-.industry {
+.electricity {
   .application-cases {
     margin-top: 40px;
     font-size: 36px;
@@ -50,35 +65,44 @@ function goCasePath(item) {
     text-align: center;
   }
   .case-cards {
-    height: 240px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 24px;
+    grid-template-rows: 320px;
     margin: 40px 0 64px;
     padding: 0px 16px;
     .case-item {
-      width: 100%;
-      height: 100%;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
       position: relative;
       &:hover {
         box-shadow: 0 6px 18px #0d8dff24;
-        border-radius: 16px;
       }
       .case-info {
+        color: #fff;
+        margin: 0 24px;
         position: absolute;
-        left: 40px;
-        bottom: 40px;
-        color: #ffffff;
+        top: 206px;
         .case-type {
           font-size: 24px;
           line-height: 26px;
           font-weight: 500;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
         }
         .case-name {
           font-size: 16px;
           line-height: 22px;
           font-weight: 400;
           margin-top: 16px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
         }
       }
       img {

@@ -91,7 +91,7 @@ function submitUpload() {
 
 function handleChange(val) {
   if (val.size > 2097152) {
-    fileList.value.pop();
+    // fileList.value.pop();
     return ElMessage({
       type: 'warning',
       message: '图片大小不应超过2M',
@@ -113,7 +113,7 @@ function selectImage(item, index) {
   activeIndex.value = index;
   if (imageUrl.value !== getImage(item)) {
     analysis.value = '';
-    formData.delete('file');
+    formData.delete('picture');
     formData = new FormData();
     imageUrl.value = getImage(item);
 

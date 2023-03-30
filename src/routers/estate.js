@@ -40,21 +40,22 @@ export default [
   },
   // 电力专区--案例
   {
-    path: '/estate/electricity/:id',
-    name: 'electricityCase',
+    path: '/estate/electricity/substationhost',
+    name: 'substationhost',
     component: () => {
-      return import('@/views/estate/electricity/ElectricityDetail.vue');
-    },
-    redirect: {
-      name: 'electricityExplain',
+      return import(
+        '@/views/estate/electricity/substationhost/SubstationhostDetail.vue'
+      );
     },
     children: [
       // 项目说明
       {
-        path: 'project-explain',
-        name: 'electricityExplain',
+        path: '',
+        name: 'substationhostExplain',
         component: () => {
-          return import('@/views/estate/electricity/ElectricityExplain.vue');
+          return import(
+            '@/views/estate/electricity/substationhost/SubstationhostExplain.vue'
+          );
         },
       },
       /*  // 数据准备
@@ -122,12 +123,32 @@ export default [
       },
     ],
   },
-  // 医疗--子宫内膜癌
+  // 医疗--临床外科手术
   {
     path: '/estate/medicine/truesight',
     name: 'truesight',
     component: () => {
       return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
     },
+  },
+  // 医疗--智慧病理诊断系统
+  {
+    path: '/estate/medicine/diagnosis',
+    name: 'pathologicalDiagnosis',
+    component: () => {
+      return import('@/views/estate/medicine/diagnosis/DiagnosisDetail.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'diagnosisExplain',
+        component: () => {
+          return import(
+            '@/views/estate/medicine/diagnosis/DiagnosisExplain.vue'
+          );
+        },
+      },
+    ],
   },
 ];

@@ -1,50 +1,11 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import endometrialcancerCover from '@/assets/imgs/estate/medicine/cancer/cancer-cover.png';
+import hostCover from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
-
-const route = useRoute();
-
-const activeNavItem = ref('');
-
-// TODO:
-/* const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]); */
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
 
 // 点击导航
 /* function handleNavClick(item) {
@@ -57,24 +18,24 @@ watch(
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
-            医疗专区
+          <el-breadcrumb-item :to="{ path: '/estate/electricity' }">
+            电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            子宫内膜癌筛查联合方案
+            变电站AI分析主机
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="endometrialcancerCover" alt="" />
+            <img draggable="false" :src="hostCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">子宫内膜癌筛查联合方案</div>
+              <div class="banner-title">变电站AI分析主机</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，…
               </div>
             </div>
             <div class="banner-btn">
@@ -117,11 +78,7 @@ watch(
     max-width: 1472px;
     overflow: hidden;
     .bread-wrap {
-      // height: 94px;
-      // padding-top: 40px;
-      // padding-bottom: 40px;
       padding: 40px 0;
-      // background-color: #f5f6f8;
       .el-breadcrumb {
         font-size: 12px;
         line-height: 18px;
@@ -140,9 +97,6 @@ watch(
         :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
           color: #000;
         }
-        // :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-        //   cursor: pointer;
-        // }
       }
     }
     .medicine-content {
@@ -179,6 +133,7 @@ watch(
             }
           }
           .banner-btn {
+            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }

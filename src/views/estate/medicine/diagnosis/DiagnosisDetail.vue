@@ -1,97 +1,43 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import electricityBanner from '@/assets/imgs/estate/electricity-cover.png';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import estateData from '../../../../config/estate';
-
-const route = useRoute();
-const router = useRouter();
-
-const activeNavItem = ref('');
-
-// TODO:
-const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]);
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
+// import estateData from '../../../../../config/estate';
 
 // 点击导航
-function handleNavClick(item) {
+/* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
-}
-
-const estateName = computed(() => {
-  return route.fullPath.split('/')[2];
-});
-const electricityData = computed(() => {
-  return estateData.find((item) => {
-    return item.regionId === estateName.value;
-  });
-});
-const electricityDetail = computed(() => {
-  return electricityData.value.detail.find((val) => {
-    return val.id === route.params.id;
-  });
-});
+} */
 </script>
 
 <template>
-  <div class="industry-detail">
-    <div class="industry-wrap">
+  <div class="medicine-detail">
+    <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate' }">
-            电力专区
+          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
+            医疗专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            {{ electricityDetail.title }}
+            智慧病理诊断系统
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="industry-content">
-        <div class="industry-content-banner">
+      <div class="medicine-content">
+        <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="electricityBanner" alt="" />
+            <img draggable="false" :src="diagnosisCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">{{ electricityDetail.title }}</div>
+              <div class="banner-title">智慧病理诊断系统</div>
               <div class="banner-desc">
-                {{ electricityDetail.desc }}
+                智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。
               </div>
             </div>
             <div class="banner-btn">
@@ -104,7 +50,7 @@ const electricityDetail = computed(() => {
             </div>
           </div>
         </div>
-        <div class="industry-content-desc">
+        <div class="medicine-content-desc">
           <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
@@ -114,7 +60,7 @@ const electricityDetail = computed(() => {
             ></o-nav>
           </div> -->
           <div class="industry-info">
-            <router-view :electricity-detail="electricityDetail" />
+            <router-view />
           </div>
         </div>
       </div>
@@ -123,12 +69,12 @@ const electricityDetail = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.industry-detail {
+.medicine-detail {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
 
-  .industry-wrap {
+  .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
@@ -162,13 +108,13 @@ const electricityDetail = computed(() => {
         // }
       }
     }
-    .industry-content {
-      .industry-content-banner {
+    .medicine-content {
+      .medicine-content-banner {
         padding: 40px;
         background-color: #fff;
         display: flex;
         border-radius: 16px;
-        margin-bottom: 40px;
+        margin-bottom: 37px;
         .banner-left {
           width: 416px;
           margin-right: 40px;
@@ -196,16 +142,18 @@ const electricityDetail = computed(() => {
             }
           }
           .banner-btn {
-            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }
           }
         }
       }
-      .industry-content-desc {
+      .medicine-content-desc {
         background: #fff;
         border-radius: 16px;
+        // .o-nav {
+        //   background: #fff;
+        // }
         .industry-tab {
           max-width: 1440px;
           margin: 0 auto;

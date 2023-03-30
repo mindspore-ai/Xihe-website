@@ -166,7 +166,6 @@ const industryDetail = computed(() => {
       .industry-content-banner {
         padding: 40px;
         background-color: #fff;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
         border-radius: 16px;
         margin-bottom: 37px;
@@ -206,12 +205,6 @@ const industryDetail = computed(() => {
       .industry-content-desc {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
-        // .o-nav {
-        //   border-radius: 15px;
-        // }
-      }
-      .industry-content-desc {
         // .o-nav {
         //   background: #fff;
         // }

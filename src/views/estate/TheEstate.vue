@@ -147,7 +147,7 @@ $theme: #0d8dff;
   }
   .estate-wrap {
     margin: 0 auto;
-    padding: 0px 16px;
+    // padding: 0px 16px;
     max-width: 1472px;
     .region-content {
       .application-case {
@@ -174,14 +174,6 @@ $theme: #0d8dff;
         }
       }
     }
-    /* .finance-wrap,
-    .medicine-wrap,
-    .industry-wrap {
-      text-align: center;
-      line-height: 48px;
-      font-size: 36px;
-      color: #000000;
-    } */
   }
 }
 :deep(.el-tabs) {
@@ -190,6 +182,7 @@ $theme: #0d8dff;
   top: -64px;
   .el-tabs__header {
     margin: 0px;
+    padding: 0px 16px;
     .el-tabs__nav-wrap {
       border-radius: 16px;
       backdrop-filter: blur(10px);

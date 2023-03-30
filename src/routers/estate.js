@@ -255,4 +255,26 @@ export default [
       },
     ],
   },
+  // 人文--手语教考一体机
+  {
+    path: '/estate/humanity/sign-language',
+    name: 'signLanguage',
+    component: () => {
+      return import(
+        '@/views/estate/humanity/sign-language/TheSignLanguage.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'yuzhiExplain',
+        component: () => {
+          return import(
+            '@/views/estate/humanity/sign-language/TheProjectExplain.vue'
+          );
+        },
+      },
+    ],
+  },
 ];

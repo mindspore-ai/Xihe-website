@@ -1,6 +1,6 @@
 <script setup>
-import logoImg from '@/assets/imgs/logo1.png';
-import logoImg1 from '@/assets/imgs/logo.png';
+import logoImg from '@/assets/imgs/footer-logo1.png';
+import logoImg1 from '@/assets/imgs/footer-logo.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
 

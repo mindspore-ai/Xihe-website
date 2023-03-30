@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import IconElectricity from '~icons/app/electricity';
-import IconCulture from '~icons/app/culture2';
+import IconCulture from '~icons/app/finance';
 import IconMedicine from '~icons/app/medicine';
 import IconIndustry from '~icons/app/industry';
 
@@ -58,15 +58,15 @@ const sections = [
     path: '/estate/humanity',
     routeName: 'humanity',
     icon: IconCulture,
-    disabled: true,
+    disabled: false,
   },
 ];
 const handleClick = (tab) => {
-  if (tab.index !== '3') {
-    router.push(sections[tab.index].path);
-  } else {
-    return;
-  }
+  // if (tab.index !== '3') {
+  router.push(sections[tab.index].path);
+  // } else {
+  //   return;
+  // }
 };
 </script>
 <template>
@@ -201,9 +201,9 @@ $theme: #0d8dff;
           align-items: center;
           padding: 0;
           // backdrop-filter: blur(10px);
-          &:last-child {
-            color: #999;
-          }
+          // &:last-child {
+          //   color: #999;
+          // }
           &:nth-child(2) {
             .estate-tabs-title {
               border-left: none;

@@ -77,10 +77,10 @@ function goCasePath(item) {
       border-radius: 16px;
     }
     .case-info {
-      position: absolute;
-      left: 24px;
-      bottom: 24px;
       color: #fff;
+      margin: 0 24px;
+      position: absolute;
+      bottom: 24px;
 
       .case-type {
         font-size: 24px;
@@ -92,8 +92,8 @@ function goCasePath(item) {
         line-height: 22px;
         font-weight: 400;
         margin-top: 16px;
-        // white-space: nowrap;
         // overflow: hidden;
+        // white-space: nowrap;
         // text-overflow: ellipsis;
       }
     }

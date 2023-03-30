@@ -86,7 +86,6 @@ function collectPublickImage(item) {
 async function cancelImgCollected(item) {
   try {
     const res = await cancelLikePicture(item.like_id);
-    console.log(res);
     if (res.status === 204) {
       ElMessage({
         type: 'success',

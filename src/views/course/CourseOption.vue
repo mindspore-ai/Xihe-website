@@ -17,18 +17,21 @@ const navItems = reactive([
     label: '课程介绍',
     href: 'introduction',
     isIndividual: false,
+    showTask: true,
   },
   {
     id: 'courseChapter',
     label: '课节',
     href: 'chapter',
     isIndividual: false,
+    showTask: true,
   },
   {
     id: 'courseTask',
     label: '作业',
     href: 'task',
     isIndividual: true,
+    showTask: courseInfo.id === 'c001' ? true : false,
   },
   /* {
     id: 'discussion',
@@ -37,19 +40,22 @@ const navItems = reactive([
     href: 'https://xihe.mindspore.cn/',
     windowOpen: true,
     isIndividual: false,
+    showTask: true,
   }, */
   {
     id: 'courseTeacher',
     label: '教师介绍',
     href: 'teacher',
     isIndividual: false,
+    showTask: true,
   },
-  {
+  /* {
     id: 'courseCertificate',
     label: '结课证书',
     href: 'certificate',
     isIndividual: true,
-  },
+    showTask: true,
+  }, */
 ]);
 
 const renderNav = ref();
@@ -59,7 +65,9 @@ watch(
   (newValue) => {
     // 如果已经报名
     if (newValue) {
-      renderNav.value = navItems;
+      renderNav.value = navItems.filter((item) => {
+        return item.showTask;
+      });
     } else {
       renderNav.value = navItems.filter((item) => {
         return !item.isIndividual;

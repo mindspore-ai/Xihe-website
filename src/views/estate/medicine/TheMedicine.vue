@@ -17,18 +17,18 @@ const cases = [
   },
   {
     id: 1,
-    type: 'TrueSight人工智能临床外科手术决…',
+    type: 'TrueSight人工智能临床外科手术决策支持系统',
     name: '本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医…',
     image: surgeryImg,
     url: '/estate/medicine/truesight', //TODO
   },
-  {
+  /* {
     id: 2,
     type: '智慧病理诊断系统',
     name: '智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。',
     image: diagnosticImg,
     url: '/estate/medicine/diagnosis',
-  },
+  }, */
 ];
 
 const router = useRouter();
@@ -95,7 +95,7 @@ function goCasePath(item) {
         line-height: 26px;
         font-weight: 500;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: '...';

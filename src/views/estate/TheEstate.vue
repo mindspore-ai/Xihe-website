@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import IconElectricity from '~icons/app/electricity';
-import IconCulture from '~icons/app/finance';
+import IconHumanity from '~icons/app/humanity';
 import IconMedicine from '~icons/app/medicine';
 import IconIndustry from '~icons/app/industry';
 
@@ -57,7 +57,7 @@ const sections = [
     name: '人文专区',
     path: '/estate/humanity',
     routeName: 'humanity',
-    icon: IconCulture,
+    icon: IconHumanity,
     disabled: false,
   },
 ];

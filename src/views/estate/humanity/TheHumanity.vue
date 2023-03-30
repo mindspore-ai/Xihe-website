@@ -24,7 +24,7 @@ const cases = [
     type: '手语教考一体机',
     name: 'AI破解手语难题，用科技连接孤岛，拨亮人文关怀的灯盏',
     image: case3,
-    url: '/estate/industry/metal-part',
+    url: '/estate/humanity/sign-language',
   },
 ];
 
@@ -39,7 +39,7 @@ function goCasePath(item) {
       <div
         v-for="item in cases"
         :key="item.id"
-        class="card"
+        class="case-item"
         @click="goCasePath(item)"
       >
         <img :src="item.image" alt="" />
@@ -67,34 +67,42 @@ $theme: #0d8dff;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 24px;
+    grid-template-rows: 320px;
     margin: 40px 0 64px;
     padding: 0px 16px;
-    .card {
-      width: 100%;
-      height: 100%;
+    .case-item {
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.95);
       border-radius: 16px;
       position: relative;
       &:hover {
         box-shadow: 0 6px 18px #0d8dff24;
-        border-radius: 16px;
       }
       .case-info {
+        color: #fff;
+        margin: 0 24px;
         position: absolute;
-        left: 40px;
-        bottom: 40px;
-        color: #ffffff;
+        bottom: 24px;
+
         .case-type {
           font-size: 24px;
           line-height: 26px;
           font-weight: 500;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
         }
         .case-name {
           font-size: 16px;
           line-height: 22px;
           font-weight: 400;
           margin-top: 16px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
         }
       }
       img {

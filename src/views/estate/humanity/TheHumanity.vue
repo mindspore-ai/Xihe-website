@@ -2,14 +2,15 @@
 import case1 from '@/assets/imgs/estate/humanity/case-aigc.png';
 import case2 from '@/assets/imgs/estate/humanity/case-yuzhi.png';
 import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const cases = [
   {
     id: 1,
     type: '国潮AIGC生态系统',
     name: '湖南禾福文化科技有限公司“薪火芳华”团队基于全场景AI框架昇思MindSpore，自行研发基于知识图谱和大模型…',
     image: case1,
-    url: '/estate/industry/metal-part',
+    url: '/estate/humanity/AIGC',
   },
   {
     id: 2,
@@ -26,13 +27,27 @@ const cases = [
     url: '/estate/industry/metal-part',
   },
 ];
+
+function goCasePath(item) {
+  router.push(item.url);
+}
 </script>
 <template>
   <div class="humanity">
     <p class="application-cases">应用案例</p>
     <div class="case-cards">
-      <div v-for="item in cases" :key="item.id" class="card">
-        <p>{{ item.type }}</p>
+      <div
+        v-for="item in cases"
+        :key="item.id"
+        class="card"
+        @click="goCasePath(item)"
+      >
+        <img :src="item.image" alt="" />
+
+        <div class="case-info">
+          <p class="case-type">{{ item.type }}</p>
+          <p class="case-name">{{ item.name }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +69,39 @@ $theme: #0d8dff;
     grid-gap: 24px;
     margin: 40px 0 64px;
     padding: 0px 16px;
+    .card {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      position: relative;
+      &:hover {
+        box-shadow: 0 6px 18px #0d8dff24;
+        border-radius: 16px;
+      }
+      .case-info {
+        position: absolute;
+        left: 40px;
+        bottom: 40px;
+        color: #ffffff;
+        .case-type {
+          font-size: 24px;
+          line-height: 26px;
+          font-weight: 500;
+        }
+        .case-name {
+          font-size: 16px;
+          line-height: 22px;
+          font-weight: 400;
+          margin-top: 16px;
+        }
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }
 </style>

@@ -130,4 +130,23 @@ export default [
       return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
     },
   },
+
+  // 人文--AIGC生态系统
+  {
+    path: '/estate/humanity/AIGC',
+    name: 'aigcEcosystem',
+    component: () => {
+      return import('@/views/estate/humanity/aigc/TheAigcEcosystem.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'aigcExplain',
+        component: () => {
+          return import('@/views/estate/humanity/aigc/TheAigcExplain.vue');
+        },
+      },
+    ],
+  },
 ];

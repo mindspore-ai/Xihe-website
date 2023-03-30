@@ -268,7 +268,7 @@ export default [
       // 项目说明
       {
         path: '',
-        name: 'yuzhiExplain',
+        name: 'languageExplain',
         component: () => {
           return import(
             '@/views/estate/humanity/sign-language/TheProjectExplain.vue'

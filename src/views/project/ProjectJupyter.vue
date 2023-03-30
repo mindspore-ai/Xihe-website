@@ -18,7 +18,6 @@ import {
 } from '@/api/api-project';
 import { ElMessage } from 'element-plus';
 
-
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -82,7 +81,7 @@ async function orderCloudSbuscrible(id) {
 
       // 资源订阅成功，连接websocket
       socket = new WebSocket(
-        ` wss://xihe2.test.osinfra.cn/server/cloud/${cloudId.value}`,
+        `wss://xihe.mindspore.cn/server/cloud/${cloudId.value}`,
         [getHeaderConfig().headers['private-token']]
       );
 
@@ -177,7 +176,7 @@ async function getPodInfo(id) {
 
       // 如果没有建立ws，建立ws链接
       socket = new WebSocket(
-        ` wss://xihe2.test.osinfra.cn/server/cloud/${cloudId.value}`,
+        `wss://xihe.mindspore.cn/server/cloud/${cloudId.value}`,
         [getHeaderConfig().headers['private-token']]
       );
 

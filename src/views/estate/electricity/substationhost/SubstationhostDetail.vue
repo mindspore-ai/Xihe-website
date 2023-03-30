@@ -1,97 +1,41 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import electricityBanner from '@/assets/imgs/estate/electricity-cover.png';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import hostCover from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import estateData from '../../../../config/estate';
-
-const route = useRoute();
-const router = useRouter();
-
-const activeNavItem = ref('');
-
-// TODO:
-const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]);
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
-
 // 点击导航
-function handleNavClick(item) {
+/* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
-}
-
-const estateName = computed(() => {
-  return route.fullPath.split('/')[2];
-});
-const electricityData = computed(() => {
-  return estateData.find((item) => {
-    return item.regionId === estateName.value;
-  });
-});
-const electricityDetail = computed(() => {
-  return electricityData.value.detail.find((val) => {
-    return val.id === route.params.id;
-  });
-});
+} */
 </script>
 
 <template>
-  <div class="industry-detail">
-    <div class="industry-wrap">
+  <div class="medicine-detail">
+    <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate' }">
+          <el-breadcrumb-item :to="{ path: '/estate/electricity' }">
             电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            {{ electricityDetail.title }}
+            变电站AI分析主机
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="industry-content">
-        <div class="industry-content-banner">
+      <div class="medicine-content">
+        <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="electricityBanner" alt="" />
+            <img draggable="false" :src="hostCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">{{ electricityDetail.title }}</div>
+              <div class="banner-title">变电站AI分析主机</div>
               <div class="banner-desc">
-                {{ electricityDetail.desc }}
+                变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，…
               </div>
             </div>
             <div class="banner-btn">
@@ -104,7 +48,7 @@ const electricityDetail = computed(() => {
             </div>
           </div>
         </div>
-        <div class="industry-content-desc">
+        <div class="medicine-content-desc">
           <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
@@ -114,7 +58,7 @@ const electricityDetail = computed(() => {
             ></o-nav>
           </div> -->
           <div class="industry-info">
-            <router-view :electricity-detail="electricityDetail" />
+            <router-view />
           </div>
         </div>
       </div>
@@ -123,22 +67,18 @@ const electricityDetail = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.industry-detail {
+.medicine-detail {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
 
-  .industry-wrap {
+  .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
     overflow: hidden;
     .bread-wrap {
-      // height: 94px;
-      // padding-top: 40px;
-      // padding-bottom: 40px;
       padding: 40px 0;
-      // background-color: #f5f6f8;
       .el-breadcrumb {
         font-size: 12px;
         line-height: 18px;
@@ -157,18 +97,15 @@ const electricityDetail = computed(() => {
         :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
           color: #000;
         }
-        // :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-        //   cursor: pointer;
-        // }
       }
     }
-    .industry-content {
-      .industry-content-banner {
+    .medicine-content {
+      .medicine-content-banner {
         padding: 40px;
         background-color: #fff;
         display: flex;
         border-radius: 16px;
-        margin-bottom: 40px;
+        margin-bottom: 37px;
         .banner-left {
           width: 416px;
           margin-right: 40px;
@@ -203,9 +140,12 @@ const electricityDetail = computed(() => {
           }
         }
       }
-      .industry-content-desc {
+      .medicine-content-desc {
         background: #fff;
         border-radius: 16px;
+        // .o-nav {
+        //   background: #fff;
+        // }
         .industry-tab {
           max-width: 1440px;
           margin: 0 auto;

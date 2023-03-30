@@ -6,8 +6,6 @@ import endometrialcancerCover from '@/assets/imgs/estate/medicine/cancer/cancer-
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-// import estateData from '../../../../../config/estate';
-
 const route = useRoute();
 
 const activeNavItem = ref('');

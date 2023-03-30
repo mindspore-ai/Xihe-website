@@ -22,13 +22,13 @@ const cases = [
     image: surgeryImg,
     url: '/estate/medicine/truesight', //TODO
   },
-  /* {
+  {
     id: 2,
     type: '智慧病理诊断系统',
     name: '智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。',
     image: diagnosticImg,
     url: '/estate/medicine/diagnosis',
-  }, */
+  },
 ];
 
 const router = useRouter();
@@ -39,7 +39,7 @@ function goCasePath(item) {
 }
 </script>
 <template>
-  <div class="electric">
+  <div class="medicine">
     <p class="application-cases">应用案例</p>
 
     <div class="case-cards">
@@ -60,61 +60,61 @@ function goCasePath(item) {
   </div>
 </template>
 <style lang="scss" scoped>
-.application-cases {
-  margin-top: 40px;
-  font-size: 36px;
-  line-height: 48px;
-  color: #000000;
-  text-align: center;
-}
-.case-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 24px;
-  grid-template-rows: 320px;
-  // height: 240px;
-  margin: 40px 0 64px;
-  padding: 0px 16px;
-  .case-item {
-    height: 100%;
-    cursor: pointer;
-    border-radius: 16px;
-    position: relative;
-    &:hover {
-      box-shadow: 0 6px 18px #0d8dff24;
+.medicine {
+  .application-cases {
+    margin-top: 40px;
+    font-size: 36px;
+    line-height: 48px;
+    color: #000000;
+    text-align: center;
+  }
+  .case-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 24px;
+    grid-template-rows: 320px;
+    // height: 240px;
+    margin: 40px 0 64px;
+    padding: 0px 16px;
+    .case-item {
+      cursor: pointer;
       border-radius: 16px;
-    }
-    .case-info {
-      color: #fff;
-      margin: 0 24px;
-      position: absolute;
-      bottom: 24px;
+      position: relative;
+      &:hover {
+        box-shadow: 0 6px 18px #0d8dff24;
+      }
+      .case-info {
+        color: #fff;
+        margin: 0 24px;
+        position: absolute;
+        bottom: 24px;
 
-      .case-type {
-        font-size: 24px;
-        line-height: 26px;
-        font-weight: 500;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: '...';
+        .case-type {
+          font-size: 24px;
+          line-height: 26px;
+          font-weight: 500;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
+        }
+        .case-name {
+          font-size: 16px;
+          line-height: 22px;
+          font-weight: 400;
+          margin-top: 16px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: '...';
+        }
       }
-      .case-name {
-        font-size: 16px;
-        line-height: 22px;
-        font-weight: 400;
-        margin-top: 16px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: '...';
+      img {
+        width: 100%;
+        height: 100%;
       }
-    }
-    img {
-      width: 100%;
-      height: 100%;
     }
   }
 }

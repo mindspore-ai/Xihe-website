@@ -365,14 +365,12 @@ const handleCommand = () => {
 
   #app {
     min-width: auto;
-    // width: 100vw;
   }
 
   .app-header,
   .app-body,
   .app-footer {
     min-width: auto;
-    // width: 100vw;
   }
 
   .mobile-header {
@@ -381,8 +379,7 @@ const handleCommand = () => {
       display: flex;
     }
     position: fixed;
-    // z-index: 2014;
-    z-index: 2009;
+    z-index: 2008;
     top: 0;
     left: 0;
     right: 0;

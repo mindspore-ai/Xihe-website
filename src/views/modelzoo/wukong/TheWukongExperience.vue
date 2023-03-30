@@ -226,8 +226,6 @@ async function publicImage(val, index) {
   } catch (err) {
     console.error(err);
   }
-
-  // count.value++;
 }
 // 取消公开
 async function cancelPublicImage(i) {
@@ -623,42 +621,65 @@ function handleResultClcik(i) {
           <img :src="value" alt="" />
           <div class="handles">
             <div class="public">
-              <p
-                v-if="!inferList[index].publicId"
-                @click="publicImage(key, index)"
-              >
-                <o-icon><icon-arrow></icon-arrow></o-icon>
-              </p>
-              <p v-else class="icon-item" @click="cancelPublicImage(index)">
-                <o-icon><icon-cancel></icon-cancel></o-icon>
-              </p>
+              <template v-if="!inferList[index].publicId">
+                <div @click="publicImage(key, index)">
+                  <p>
+                    <o-icon><icon-arrow></icon-arrow></o-icon>
+                  </p>
+                  <div class="icon-name">公开</div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div @click="cancelPublicImage(index)">
+                  <p class="icon-item">
+                    <o-icon><icon-cancel></icon-cancel></o-icon>
+                  </p>
+                  <div class="icon-name">取消公开</div>
+                </div>
+              </template>
             </div>
             <div class="handles-contain">
-              <p @click="downloadImage(value)">
-                <o-icon><icon-download></icon-download></o-icon>
-              </p>
-              <p @click="shareImage(value)">
-                <o-icon><icon-share></icon-share></o-icon>
-              </p>
-              <p
-                v-if="!inferList[index].isCollected"
-                @click="handleCollect(key, index)"
-              >
-                <o-icon><icon-like></icon-like></o-icon>
-              </p>
+              <div class="func-item" @click="downloadImage(value)">
+                <p>
+                  <o-icon><icon-download></icon-download></o-icon>
+                </p>
+                <div class="icon-name">下载</div>
+              </div>
 
-              <p
-                v-if="inferList[index].isCollected"
-                class="liked"
-                @click="handleCancelCollect(index)"
-              >
-                <o-icon><icon-heart></icon-heart></o-icon>
-              </p>
+              <div class="func-item" @click="shareImage(value)">
+                <p>
+                  <o-icon><icon-share></icon-share></o-icon>
+                </p>
+                <div class="icon-name">分享</div>
+              </div>
+
+              <template v-if="!inferList[index].isCollected">
+                <div class="func-item">
+                  <p @click="handleCollect(key, index)">
+                    <o-icon><icon-like></icon-like></o-icon>
+                  </p>
+                  <div class="icon-name">收藏</div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="func-item">
+                  <p
+                    v-if="inferList[index].isCollected"
+                    class="liked"
+                    @click="handleCancelCollect(index)"
+                  >
+                    <o-icon><icon-heart></icon-heart></o-icon>
+                  </p>
+                  <div class="icon-name">取消收藏</div>
+                </div>
+              </template>
             </div>
           </div>
           <div class="mask"></div>
         </div>
-
+        <!-- mobile -->
         <div
           v-for="(value, key, index) in styleBackground"
           :key="key"
@@ -670,37 +691,52 @@ function handleResultClcik(i) {
           <template v-if="index === resultIndex">
             <div class="handles">
               <div class="public">
-                <p
-                  v-if="!inferList[index].publicId"
-                  @click="publicImage(key, index)"
-                >
-                  <o-icon><icon-arrow></icon-arrow></o-icon>
-                </p>
-                <p v-else class="icon-item" @click="cancelPublicImage(index)">
-                  <o-icon><icon-cancel></icon-cancel></o-icon>
-                </p>
+                <template v-if="!inferList[index].publicId">
+                  <div class="func-item" @click="publicImage(key, index)">
+                    <p>
+                      <o-icon><icon-arrow></icon-arrow></o-icon>
+                    </p>
+                    <div class="icon-name">公开</div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="func-item" @click="cancelPublicImage(index)">
+                    <p class="icon-item">
+                      <o-icon><icon-cancel></icon-cancel></o-icon>
+                    </p>
+                    <div class="icon-name">取消公开</div>
+                  </div>
+                </template>
               </div>
               <div class="handles-contain">
                 <!-- <p @click="downloadImage(value)">
                   <o-icon><icon-download></icon-download></o-icon>
                 </p> -->
-                <p @click="shareImage(value)">
-                  <o-icon><icon-share></icon-share></o-icon>
-                </p>
-                <p
-                  v-if="!inferList[index].isCollected"
-                  @click="handleCollect(key, index)"
-                >
-                  <o-icon><icon-like></icon-like></o-icon>
-                </p>
+                <div class="func-item">
+                  <p @click="shareImage(value)">
+                    <o-icon><icon-share></icon-share></o-icon>
+                  </p>
+                  <div class="icon-name">分享</div>
+                </div>
 
-                <p
-                  v-if="inferList[index].isCollected"
-                  class="liked"
-                  @click="handleCancelCollect(index)"
-                >
-                  <o-icon><icon-heart></icon-heart></o-icon>
-                </p>
+                <template v-if="!inferList[index].isCollected">
+                  <div class="func-item" @click="handleCollect(key, index)">
+                    <p>
+                      <o-icon><icon-like></icon-like></o-icon>
+                    </p>
+                    <div class="icon-name">收藏</div>
+                  </div>
+                </template>
+
+                <template v-if="inferList[index].isCollected">
+                  <div class="func-item" @click="handleCancelCollect(index)">
+                    <p class="liked">
+                      <o-icon><icon-heart></icon-heart></o-icon>
+                    </p>
+                    <div class="icon-name">取消收藏</div>
+                  </div>
+                </template>
               </div>
             </div>
             <div class="mask"></div>
@@ -957,7 +993,7 @@ function handleResultClcik(i) {
         bottom: 0px;
         padding: 8px;
       }
-      &-contain,
+      .handles-contain,
       .public {
         display: flex;
 
@@ -971,6 +1007,25 @@ function handleResultClcik(i) {
             font-size: 20px;
           }
         }
+        .icon-name {
+          color: #fff;
+          font-size: 14px;
+          margin-top: 8px;
+          text-align: center;
+          cursor: pointer;
+        }
+        .func-item {
+          cursor: pointer;
+          &:nth-child(2) {
+            margin: 0 16px;
+          }
+          .icon-name {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+          }
+        }
         p {
           width: 40px;
           height: 40px;
@@ -981,6 +1036,7 @@ function handleResultClcik(i) {
           justify-content: center;
           align-items: center;
           cursor: pointer;
+          margin: 0 auto;
           @media screen and (max-width: 1080px) {
             width: 24px;
             height: 24px;
@@ -1038,7 +1094,7 @@ function handleResultClcik(i) {
       justify-content: space-between;
       bottom: 0px;
       padding: 8px;
-      &-contain,
+      .handles-contain,
       .public {
         display: flex;
 
@@ -1049,8 +1105,22 @@ function handleResultClcik(i) {
             font-size: 16px;
           }
         }
+        .func-item {
+          margin-left: 12px;
+          cursor: pointer;
+          .icon-name {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 6px;
+            text-align: center;
+            @media screen and (max-width: 768px) {
+              font-size: 12px;
+            }
+          }
+        }
 
         .liked {
+          margin: 0 auto;
           .o-icon {
             font-size: 24px;
             @media screen and (max-width: 768px) {
@@ -1195,9 +1265,7 @@ function handleResultClcik(i) {
       padding: 8px 8px 16px;
     }
     .poster-image {
-      // width: 402px;
       width: 100%;
-      // height: 457px;
       position: relative;
       @media screen and (max-width: 768px) {
         width: 100%;
@@ -1205,7 +1273,6 @@ function handleResultClcik(i) {
       }
       .mask {
         width: 100%;
-        // height: 198px;
         height: 70px;
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
         position: absolute;
@@ -1247,12 +1314,10 @@ function handleResultClcik(i) {
         width: 100%;
         min-height: 300px;
         @media screen and (max-width: 820px) {
-          // height: calc(100vw - 48px);
         }
       }
       .info {
         width: 100%;
-        // height: 56px;
         background: #f5f6f8;
         display: flex;
         justify-content: space-between;

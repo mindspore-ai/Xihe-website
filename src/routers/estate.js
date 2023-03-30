@@ -146,7 +146,7 @@ export default [
       },
     ],
   },
-  // 工业专区--案例
+  // 工业--金属零部件
   {
     path: '/estate/industry/metal-part',
     name: 'metalPart',
@@ -161,6 +161,48 @@ export default [
         component: () => {
           return import(
             '@/views/estate/industry/metalpart/MetalpartExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+  // 工业--工业AI算法库READ
+  {
+    path: '/estate/industry/algorithm',
+    name: 'algorithm',
+    component: () => {
+      return import('@/views/estate/industry/algorithm/AlgorithmDetail.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'algorithmExplain',
+        component: () => {
+          return import(
+            '@/views/estate/industry/algorithm/AlgorithmExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+  // 工业--低码智能视频使能平台
+  {
+    path: '/estate/industry/intelligence',
+    name: 'IntelligenceExplain',
+    component: () => {
+      return import(
+        '@/views/estate/industry/intelligence/intelligenceDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'intelligenceExplain',
+        component: () => {
+          return import(
+            '@/views/estate/industry/intelligence/intelligenceExplain.vue'
           );
         },
       },

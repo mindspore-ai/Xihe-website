@@ -2,8 +2,8 @@
 import { useRouter } from 'vue-router';
 
 import hostImg from '@/assets/imgs/estate/industry/metal-part.png';
-import opsImg from '@/assets/imgs/estate/industry/algorithm.png';
-import decisionImg from '@/assets/imgs/estate/industry/code-intelligence.png';
+import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
+import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
 
 const cases = [
   {
@@ -13,20 +13,20 @@ const cases = [
     image: hostImg,
     url: '/estate/industry/metal-part',
   },
-  /* {
+  {
     id: 1,
-    type: '变电站运维图像识别分析解决方案',
-    name: '智能运维的“第三只眼”，变电站运维图像识别分析解决方案，推动变电站运维工作的无人化、智能化、信息化转…',
-    image: opsImg,
-    url: '/estate/electricity/substation-ops',
+    type: '工业AI算法库READ',
+    name: 'READ专注于研发与集成基于无监督监督学习的大规模异常检测算法和模型，重点解决工业质检中小样本和数据…',
+    image: algorithmImg,
+    url: '/estate/industry/algorithm',
   },
   {
     id: 2,
-    type: '智能在线决策系统',
-    name: '智能在线决策系统有效应对复杂实时电力调度',
-    image: decisionImg,
-    url: '/estate/electricity/intelligent-system',
-  }, */
+    type: '低码智能视频使能平台',
+    name: '行业首个低码智能视频使能平台，赋能工业安全数字化转型。',
+    image: codeImg,
+    url: '/estate/industry/intelligence',
+  },
 ];
 
 const router = useRouter();

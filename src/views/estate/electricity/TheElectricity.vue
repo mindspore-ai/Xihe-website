@@ -4,12 +4,10 @@ import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';
 import opsImg from '@/assets/imgs/estate/electricity/substation-ops.png';
 import decisionImg from '@/assets/imgs/estate/electricity/substation-decision.png';
-import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
-import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
 
 const cases = [
   {
-    id: 1,
+    id: 0,
     type: '变电站AI分析主机',
     name: '变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。',
     image: hostImg,
@@ -34,7 +32,6 @@ const cases = [
 const router = useRouter();
 
 function goCasePath(item) {
-  console.log('item.url: ', item.url);
   router.push(item.url);
 }
 </script>

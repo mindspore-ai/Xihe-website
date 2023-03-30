@@ -1,6 +1,6 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
-import opsImg from '@/assets/imgs/estate/electricity/substationops/ops-cover.png';
+import metalpartCover from '@/assets/imgs/estate/industry/intelligence/intelligence-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -12,28 +12,28 @@ import { ArrowRight } from '@element-plus/icons-vue';
 </script>
 
 <template>
-  <div class="medicine-detail">
-    <div class="medicine-wrap">
+  <div class="industry-detail">
+    <div class="industry-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/electricity' }">
-            电力专区
+          <el-breadcrumb-item :to="{ path: '/estate/industry' }">
+            工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            变电站运维图像识别分析解决方案
+            低码智能视频使能平台
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="medicine-content">
-        <div class="medicine-content-banner">
+      <div class="industry-content">
+        <div class="industry-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="opsImg" alt="" />
+            <img draggable="false" :src="metalpartCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">变电站运维图像识别分析解决方案</div>
+              <div class="banner-title">低码智能视频使能平台</div>
               <div class="banner-desc">
-                基于对变电站智能运维场景的深刻洞察，许继软件携手华为推出业内领先的变电站运维图像识别分析解决方案，并完成与全场景AI框架昇思MindSpore的兼容性测试。
+                奥看科技与华为携手，推出行业首个低码智能视频使能平台，并聚焦全场景“大安全”打造了城市治理“一网统管”、工业安全生产等多个AI解决方案，帮助客户解决在复杂视频资源中的管理及使用难题，用人工智能技术全面释放视频新价值。
               </div>
             </div>
             <div class="banner-btn">
@@ -46,7 +46,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
             </div>
           </div>
         </div>
-        <div class="medicine-content-desc">
+        <div class="industry-content-desc">
           <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
@@ -65,12 +65,12 @@ import { ArrowRight } from '@element-plus/icons-vue';
 </template>
 
 <style lang="scss" scoped>
-.medicine-detail {
+.industry-detail {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
 
-  .medicine-wrap {
+  .industry-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1472px;
@@ -97,8 +97,8 @@ import { ArrowRight } from '@element-plus/icons-vue';
         }
       }
     }
-    .medicine-content {
-      .medicine-content-banner {
+    .industry-content {
+      .industry-content-banner {
         padding: 40px;
         background-color: #fff;
         display: flex;
@@ -138,7 +138,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
           }
         }
       }
-      .medicine-content-desc {
+      .industry-content-desc {
         background: #fff;
         border-radius: 16px;
         // .o-nav {

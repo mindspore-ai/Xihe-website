@@ -666,7 +666,7 @@ const logoPic = [
     <div class="logo">
       <p class="title">{{ t(`home.PARTNER.TITLE`) }}</p>
       <swiper
-        :speed="5000"
+        :speed="8000"
         :free-mode="true"
         centered-slides
         :modules="logoModules"
@@ -685,7 +685,7 @@ const logoPic = [
         </swiper-slide>
       </swiper>
       <swiper
-        :speed="5000"
+        :speed="8000"
         :free-mode="true"
         slides-per-view="auto"
         :modules="logoModules"
@@ -703,7 +703,7 @@ const logoPic = [
         </swiper-slide>
       </swiper>
       <swiper
-        :speed="5000"
+        :speed="8000"
         :free-mode="true"
         centered-slides
         :modules="logoModules"
@@ -1819,9 +1819,11 @@ p {
       width: auto !important;
       background-color: #fff;
       margin: 12px 12px;
+      border-radius: 16px;
       @media screen and (max-width: 820px) {
         height: 60px;
         margin: 4px 4px;
+        border-radius: 10px;
       }
     }
     img {

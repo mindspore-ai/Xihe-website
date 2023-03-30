@@ -42,7 +42,6 @@ let i18n = {
 const params = { mine: true };
 function getAllCourse() {
   getMyCourseList(params).then((res) => {
-    console.log(params);
     if (res.data) {
       allCourse.value = res.data;
       currentCourse.value = res.data.slice(0, coursePager.size);
@@ -68,7 +67,6 @@ function handleClick(query, tab) {
     }
   }
   getMyCourseList(params).then((res) => {
-    console.log(params);
     if (res.data) {
       allCourse.value = res.data;
       currentCourse.value = res.data.slice(0, coursePager.size);

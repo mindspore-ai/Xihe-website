@@ -36,7 +36,7 @@ export default [
         },
       },
       // 作业
-      /* {
+      {
         path: 'task',
         name: 'courseTask',
         component: () => {
@@ -50,7 +50,7 @@ export default [
             };
           }
         },
-      }, */
+      },
       // 教师介绍
       {
         path: 'teacher',
@@ -60,7 +60,7 @@ export default [
         },
       },
       // 结课证书
-      /* {
+      {
         path: 'certificate',
         name: 'courseCertificate',
         component: () => {
@@ -74,7 +74,7 @@ export default [
             };
           }
         },
-      }, */
+      },
     ],
   },
   // 课程作业详情

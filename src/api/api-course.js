@@ -28,6 +28,29 @@ export function getCourseList({ status = undefined, type = undefined } = {}) {
     return res.data;
   });
 }
+export function getMyCourseList({
+  status = undefined,
+  type = undefined,
+  mine = undefined,
+} = {}) {
+  const queryParams = {};
+  if (status !== undefined) {
+    queryParams.status = status;
+  }
+  if (type !== undefined) {
+    queryParams.type = type;
+  }
+  if (mine !== undefined) {
+    queryParams.mine = mine;
+  }
+  const queryString = Object.keys(queryParams)
+    .map((key) => `${key}=${queryParams[key]}`)
+    .join('&');
+  const url = `/server/course${queryString ? `?${queryString}` : ''}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 
 /**
  * 获取单个课程信息

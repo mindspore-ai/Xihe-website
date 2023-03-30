@@ -195,6 +195,13 @@ export default [
         },
       },
       {
+        path: 'course',
+        name: 'settingsCourse',
+        component: () => {
+          return import('@/views/setting/SeetingCourse.vue');
+        },
+      },
+      {
         path: 'competition',
         name: 'settingsCompetition',
         component: () => {

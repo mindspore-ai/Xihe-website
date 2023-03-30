@@ -103,5 +103,8 @@ import painspotImg from '@/assets/imgs/estate/electricity/substationhost/host-pa
       }
     }
   }
+  .case-advantage {
+    margin-bottom: 0px;
+  }
 }
 </style>

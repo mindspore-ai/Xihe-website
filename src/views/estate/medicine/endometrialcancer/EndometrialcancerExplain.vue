@@ -1,5 +1,5 @@
 <script setup>
-import electricity1 from '@/assets/imgs/estate/electricity/electricity1.png';
+import backgroundImg from '@/assets/imgs/estate/medicine/cancer/background.png';
 import solutionImg1 from '@/assets/imgs/estate/medicine/cancer/solution-img1.png';
 import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png';
 </script>
@@ -16,7 +16,7 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
           2018年全球新增病例约37.84万例。随着人类预期寿命的延长和生活习惯的改变，子宫内膜癌的发病率呈上升趋势，且患者趋向于年轻化。在恰当的治疗下，早期子宫内膜癌的5年生存率大于85%，中期子宫内膜癌的5年生存率为49%～71%，而晚期的5年生存率小于17%。因此，建议对暴露于高风险的女性进行筛查。强烈建议对子宫内膜癌和癌前病变筛查以早期诊断并降低发病率和死亡率。子宫内膜癌发病率逐年上升，开展子宫内膜癌筛查已迫在眉睫。
         </div>
         <div class="case-img">
-          <img :src="electricity1" alt="" />
+          <img :src="backgroundImg" alt="" class="background-img" />
         </div>
         <div>
           早期子宫内膜在筛查的研究主要集中在微创的组织病理学和细胞病理学方向。
@@ -61,7 +61,7 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
         </p>
         <div class="case-img">
           <img :src="solutionImg1" alt="" />
-          <img :src="solutionImg2" alt="" />
+          <img :src="solutionImg2" alt="" class="solution-img" />
         </div>
         <p>
           美佳家共收集113例(42例恶性，71例良性)子宫内膜样本，构建了包含15,913张图像的数据集。该分割网络共获得了39,000个ECCs补丁。然后，分别使用26880和11520个补丁进行训练和测试。在训练集达到100%的前提下，测试集的准确率为93.5%，特异性为92.2%，灵敏度为92.0%，成功建立了自动识别和诊断子宫内膜细胞团块(ECCs)病理图像的人工智能系统。
@@ -123,10 +123,10 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
         flex-direction: column;
         align-items: center;
         img {
-          width: 48%;
-          &:last-child {
-            margin-top: 24px;
-          }
+          width: 50%;
+        }
+        .solution-img {
+          margin-top: 24px;
         }
       }
       .summary {

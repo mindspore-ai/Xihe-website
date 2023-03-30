@@ -1,50 +1,9 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import endometrialcancerCover from '@/assets/imgs/estate/medicine/cancer/cancer-cover.png';
+import systemCover from '@/assets/imgs/estate/electricity/intelligentsystem/system-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
-
-const route = useRoute();
-
-const activeNavItem = ref('');
-
-// TODO:
-/* const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]); */
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
 
 // 点击导航
 /* function handleNavClick(item) {
@@ -57,24 +16,24 @@ watch(
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
-            医疗专区
+          <el-breadcrumb-item :to="{ path: '/estate/electricity' }">
+            电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            子宫内膜癌筛查联合方案
+            智能在线决策系统
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="endometrialcancerCover" alt="" />
+            <img draggable="false" :src="systemCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">子宫内膜癌筛查联合方案</div>
+              <div class="banner-title">智能在线决策系统</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
               </div>
             </div>
             <div class="banner-btn">
@@ -117,11 +76,7 @@ watch(
     max-width: 1472px;
     overflow: hidden;
     .bread-wrap {
-      // height: 94px;
-      // padding-top: 40px;
-      // padding-bottom: 40px;
       padding: 40px 0;
-      // background-color: #f5f6f8;
       .el-breadcrumb {
         font-size: 12px;
         line-height: 18px;
@@ -140,9 +95,6 @@ watch(
         :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
           color: #000;
         }
-        // :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-        //   cursor: pointer;
-        // }
       }
     }
     .medicine-content {
@@ -179,6 +131,7 @@ watch(
             }
           }
           .banner-btn {
+            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }

@@ -1,50 +1,13 @@
+<!-- 智慧病理诊断系统 -->
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import endometrialcancerCover from '@/assets/imgs/estate/medicine/cancer/cancer-cover.png';
+import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-const route = useRoute();
-
-const activeNavItem = ref('');
-
-// TODO:
-/* const navItems = reactive([
-  {
-    id: 'projectExplain',
-    label: '项目说明',
-    href: 'project-explain',
-    isIndividual: true,
-  },
-  {
-    id: 'dataPrepare',
-    label: '数据准备',
-    href: 'data-prepare',
-    isIndividual: true,
-  },
-  {
-    id: 'modelTrain',
-    label: '模型训练',
-    href: 'model-train',
-    isIndividual: false,
-  },
-]); */
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^projectExplain|dataPrepare|modelTrain/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
+// import estateData from '../../../../../config/estate';
 
 // 点击导航
 /* function handleNavClick(item) {
@@ -61,20 +24,20 @@ watch(
             医疗专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            子宫内膜癌筛查联合方案
+            智慧病理诊断系统
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="endometrialcancerCover" alt="" />
+            <img draggable="false" :src="diagnosisCover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">子宫内膜癌筛查联合方案</div>
+              <div class="banner-title">智慧病理诊断系统</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。
               </div>
             </div>
             <div class="banner-btn">

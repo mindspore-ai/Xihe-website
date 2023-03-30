@@ -1,10 +1,12 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import endometrialcancerCover from '@/assets/imgs/estate/medicine/cancer/cancer-cover.png';
+import cover from '@/assets/imgs/estate/humanity/sign-language/cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
+
+// import estateData from '../../../../../config/estate';
 
 const route = useRoute();
 
@@ -57,24 +59,24 @@ watch(
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
-            医疗专区
+          <el-breadcrumb-item :to="{ path: '/estate/humanity' }">
+            人文专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            子宫内膜癌筛查联合方案
+            手语教考一体机
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="medicine-content">
         <div class="medicine-content-banner">
           <div class="banner-left">
-            <img draggable="false" :src="endometrialcancerCover" alt="" />
+            <img draggable="false" :src="cover" alt="" />
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">子宫内膜癌筛查联合方案</div>
+              <div class="banner-title">手语教考一体机</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                基于紫东太初开发的手语多模态模型，华为联合千博信息，实现了手语动作与示意图片和文字的联动，让初学者更加方便的理解手语。同时，基于手语多模态模型，千博信息打造了手语教考一体机，帮助学生随学随练随考，极大的推动手语标准的推广，帮助听障朋友以及手语爱好者更好的学习。
               </div>
             </div>
             <div class="banner-btn">

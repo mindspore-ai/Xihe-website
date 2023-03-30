@@ -202,23 +202,31 @@ const router = useRouter();
 
 const homeInfo = ref([
   [{ count: 0 }, { count: 0 }, { count: 0 }],
-  [{ count: 0 }, { count: 0 }, { count: 0 }],
-  [{ count: 0 }, { count: 0 }, { count: 0 }],
+  [
+    { count: 0, id: 'ai_painter' },
+    { count: 0, id: '3' },
+    { count: 0, id: '2' },
+  ],
+  [{ count: 320 }, { count: 320 }, { count: 320 }],
 ]);
 getHomeInfo().then((res) => {
-  homeInfo.value.forEach((item, index) => {
-    item.forEach((card, index1) => {
-      if (index === 0) {
-        card.count = res.data.course[index1].count;
-      } else if (index === 1) {
-        card.count = res.data.comp[index1].count;
-        if (index1 === 0) {
-          card.count = res.data.comp[7].count;
-        }
-      } else {
-        card.count = res.data.comp[3 + index1].count;
-      }
-    });
+  res.data.comp.forEach((item) => {
+    if (item.id === 'ai_painter') {
+      homeInfo.value[1][0].count = item.count;
+    } else if (item.id === '3') {
+      homeInfo.value[1][1].count = item.count;
+    } else if (item.id === '2') {
+      homeInfo.value[1][2].count = item.count;
+    }
+  });
+  res.data.course.forEach((item) => {
+    if (item.id === 'c001') {
+      homeInfo.value[0][0].count = item.count;
+    } else if (item.id === 'c002') {
+      homeInfo.value[0][1].count = item.count;
+    } else if (item.id === 'c003') {
+      homeInfo.value[0][2].count = item.count;
+    }
   });
 });
 
@@ -1645,6 +1653,7 @@ p {
     margin-bottom: 40px;
     max-width: 900px;
     @media screen and (max-width: 820px) {
+      margin-bottom: 16px;
     }
   }
   .item-box {
@@ -1795,8 +1804,14 @@ p {
 }
 .logo {
   padding: 0 0 52px;
+  @media screen and (max-width: 820px) {
+    padding: 0 0 36px;
+  }
   .title {
     margin-bottom: 26px;
+    @media screen and (max-width: 820px) {
+      margin-bottom: 12px;
+    }
   }
   :deep(.logo-swiper) {
     .swiper-slide {
@@ -1804,9 +1819,16 @@ p {
       width: auto !important;
       background-color: #fff;
       margin: 12px 12px;
+      @media screen and (max-width: 820px) {
+        height: 60px;
+        margin: 4px 4px;
+      }
     }
     img {
       height: 120px;
+      @media screen and (max-width: 820px) {
+        height: 60px;
+      }
     }
   }
 }

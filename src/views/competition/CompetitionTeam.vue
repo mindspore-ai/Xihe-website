@@ -393,6 +393,7 @@ function confirmDel() {
         >
           <OButton
             v-if="userComData.competitionData.phase === 'preliminary'"
+            disabled
             class="delete"
             size="small"
             @click="showDel = true"

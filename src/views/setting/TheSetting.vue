@@ -401,7 +401,7 @@ function cancelFollow(name) {
     display: flex;
     max-width: 1472px;
     margin: 0 auto;
-    // min-height: calc(100vh - 296px);
+    min-height: calc(100vh - 450px);
     padding: 40px 16px 64px 16px;
 
     .content-sidebar {

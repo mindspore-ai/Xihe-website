@@ -158,7 +158,13 @@ provide('getDetailData', getDetailData);
               class="right1"
             >
               <div class="right1-bonus">
-                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
+                <div class="number">
+                  奖池：{{
+                    competitionData.bonus
+                      ? `￥${competitionData.bonus}`
+                      : '特别礼品'
+                  }}
+                </div>
                 <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
               <div class="right-immediate">
@@ -187,7 +193,13 @@ provide('getDetailData', getDetailData);
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
+                <div class="number">
+                  奖池：{{
+                    competitionData.bonus
+                      ? `￥${competitionData.bonus}`
+                      : '特别礼品'
+                  }}
+                </div>
                 <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
             </div>

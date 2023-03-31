@@ -277,7 +277,7 @@ $theme: #0d8dff;
 .course-page {
   //   background-color: #f5f6f8;
   background-color: #fff;
-  min-height: calc(100vh - 200px);
+  // min-height: calc(100vh - 650px);
 
   .course-body {
     display: flex;

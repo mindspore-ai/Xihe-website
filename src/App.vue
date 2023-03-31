@@ -176,14 +176,14 @@ const mobilNav = reactive([
       return t('home.APP_HEADER.PROJECT');
     }),
     isactive: false,
-    path: '/project',
+    path: '/projects',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.MODEL');
     }),
     isactive: false,
-    path: '/model',
+    path: '/models',
   },
   {
     name: computed(() => {
@@ -210,7 +210,7 @@ const mobilNav = reactive([
       return t('home.APP_HEADER.DATASET');
     }),
     isactive: false,
-    path: '/dataset',
+    path: '/datasets',
   },
   {
     name: computed(() => {

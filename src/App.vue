@@ -258,6 +258,8 @@ function toPage(path) {
   if (path === '/') {
     mobilNav[0].isactive = true;
     mobilNav[3].isactive = false;
+  } else if (path === '/docs') {
+    window.open('https://xihe-docs.mindspore.cn');
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;

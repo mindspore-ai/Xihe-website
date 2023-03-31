@@ -293,6 +293,7 @@ function toTop() {
                 line-height: 20px;
                 font-size: 12px;
                 margin-left: 6px;
+                white-space: nowrap;
               }
               .doing {
                 color: #ffffff;
@@ -329,6 +330,7 @@ function toTop() {
               color: #555555;
               margin-top: 24px;
               background-color: #f4faff;
+              white-space: nowrap;
             }
           }
         }

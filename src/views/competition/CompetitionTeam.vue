@@ -148,6 +148,7 @@ async function foundTeam(formEl) {
         type: 'success',
         message: '创建团队成功！',
       });
+      form1.teamName = '';
     } else {
       console.error('error submit!');
       return false;
@@ -393,7 +394,6 @@ function confirmDel() {
         >
           <OButton
             v-if="userComData.competitionData.phase === 'preliminary'"
-            disabled
             class="delete"
             size="small"
             @click="showDel = true"

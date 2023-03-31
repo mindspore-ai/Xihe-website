@@ -166,7 +166,10 @@ function toTop() {
                 </div>
               </div>
               <div class="task-result">
-                <span class="grade">分数：{{ item.score }}</span>
+                <span v-if="item.id !== 'asg1-comp'" class="grade"
+                  >分数：{{ item.score }}</span
+                >
+                <span v-else class="grade"></span>
                 <span>提交截止时间：{{ item.deadline }}</span>
               </div>
             </div>
@@ -309,6 +312,8 @@ function toTop() {
           font-size: 14px;
           color: #555555;
           .grade {
+            display: inline-block;
+            min-width: 50px;
             margin-right: 64px;
           }
         }

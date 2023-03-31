@@ -214,6 +214,13 @@ const mobilNav = reactive([
   },
   {
     name: computed(() => {
+      return t('home.APP_HEADER.INDUSTRY');
+    }),
+    isactive: false,
+    path: '/estate/electricity',
+  },
+  {
+    name: computed(() => {
       return t('home.APP_HEADER.COURSE');
     }),
     isactive: false,

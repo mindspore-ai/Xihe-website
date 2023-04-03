@@ -146,3 +146,14 @@ export function getReginfo() {
       return res.data;
     });
 }
+
+/**
+ * 视频播放量
+ * @returns
+ */
+export function getViewCounts(params, id) {
+  const url = `/server/course/${id}/record`;
+  return request.put(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}

@@ -71,18 +71,18 @@ function renderBullet(index, className) {
     case 0:
       text = t('home.BANNER_BUTTON_1');
       break;
+    // case 1:
+    //   text = t('home.BANNER_BUTTON_3');
+    //   break;
     case 1:
-      text = t('home.BANNER_BUTTON_3');
-      break;
-    case 2:
       text = t('home.BANNER_BUTTON_2');
       break;
   }
   return '<span class="' + className + '">' + text + '</span>';
 }
-function goDetail() {
-  window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
-}
+// function goDetail() {
+//   window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
+// }
 
 const screenWidth = useWindowResize();
 
@@ -288,12 +288,12 @@ const logoPic = [
           </div>
           <div class="mask" :class="{ hidden: locale === 'en' }"></div>
         </swiper-slide>
-        <swiper-slide
+        <!-- <swiper-slide
           class="slide3"
           :class="{ hidden: locale === 'en' }"
           @click="goDetail"
         >
-        </swiper-slide>
+        </swiper-slide> -->
         <swiper-slide
           class="slide2"
           :class="{ hidden: locale === 'en' }"

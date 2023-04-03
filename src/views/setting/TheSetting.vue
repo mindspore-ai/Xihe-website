@@ -407,7 +407,7 @@ function cancelFollow(name) {
     .content-sidebar {
       width: 25%;
       background: #ffffff;
-      padding: 40px 0;
+      padding: 40px 0 64px;
       // margin-bottom: 36px;
       .user-info-basic {
         display: flex;

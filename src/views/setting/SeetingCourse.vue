@@ -98,7 +98,11 @@ function goCourseDetail(id) {
 
 <template>
   <div
-    v-if="currentCourse.length || activeName !== 'allStatus'"
+    v-if="
+      currentCourse.length ||
+      activeName !== 'allStatus' ||
+      courseName !== 'allClassify'
+    "
     class="course-page"
   >
     <div class="course-body wrap">
@@ -240,6 +244,13 @@ function goCourseDetail(id) {
             @current-change="handleCurrentPage"
           ></el-pagination>
         </div>
+      </div>
+      <div
+        v-if="(activeName === 'allStatus') & !currentCourse.length"
+        class="empty"
+      >
+        <img :src="emptyImg" alt="" />
+        <p>暂未参加课程</p>
       </div>
       <div v-if="(activeName === 'over') & !currentCourse.length" class="empty">
         <img :src="emptyImg" alt="" />

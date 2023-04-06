@@ -15,7 +15,6 @@
     "authing-js-sdk": "^4.23.35",
     "axios": "^0.26.1",
     "cesium": "^1.98.1",
-    "dom-to-image": "^2.6.0",
     "element-plus": "^2.2.26",
     "highlight.js": "^11.5.1",
     "html2canvas": "^1.4.1",

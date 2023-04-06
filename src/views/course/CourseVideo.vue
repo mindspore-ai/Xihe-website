@@ -1,14 +1,51 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onUpdated, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { getCourseData } from '@/api/api-course';
+import { getCourseData, getViewCounts } from '@/api/api-course';
 
 const route = useRoute();
 const router = useRouter();
 const currentCourseData = ref(null); //当前课程信息
 const sectionData = ref([]);
+const videoRef = ref(null);
+const isFirst = ref(true);
+const currentTime = ref(0);
+const videoDuration = ref(null);
+
+onUpdated(() => {
+  // 获取当前视频播放进度
+  if (videaData1.value.points) {
+    const videoTime = localStorage.getItem(`videoTime-${videaData2.value.id}`); // 获取保存的时间
+    if (videoTime) {
+      videoRef.value.currentTime = videoTime;
+    }
+  } else {
+    const videoTime = localStorage.getItem(`videoTime-${videaData1.value.id}`); // 获取保存的时间
+    if (videoTime) {
+      videoRef.value.currentTime = videoTime;
+    }
+  }
+  // 用户第一次点击播放视频
+  videoRef.value.addEventListener('play', () => {
+    if (isFirst.value) {
+      let pointId = '';
+      if (videaData1.value.points) {
+        pointId = videaData2.value.id;
+      }
+      const params = {
+        section_id: chapterData.value.id,
+        lesson_id: videaData1.value.id,
+        point_id: pointId,
+        play_count: 1,
+        finish_count: 0,
+      };
+      getViewCounts(params, currentCourseData.value.id);
+      isFirst.value = false;
+    }
+  });
+});
 
 function getDetailData() {
   getCourseData(route.params.courseId).then((res) => {
@@ -57,6 +94,49 @@ const videaData2 = computed(() => {
       })
     : videaData1.value;
 });
+
+// 视频时长处理
+function handleTimeUpdate() {
+  if (videoRef.value) {
+    currentTime.value = videoRef.value.currentTime;
+    videoDuration.value = videoRef.value.duration;
+    if (videaData1.value.points) {
+      localStorage.setItem(
+        `videoTime-${videaData2.value.id}`,
+        currentTime.value
+      );
+    } else {
+      localStorage.setItem(
+        `videoTime-${videaData1.value.id}`,
+        currentTime.value
+      );
+    }
+    if (currentTime.value === videoDuration.value) {
+      let pointId = '';
+      if (videaData1.value.points) {
+        pointId = videaData2.value.id;
+        localStorage.removeItem(`videoTime-${videaData2.value.id}`);
+      } else {
+        localStorage.removeItem(`videoTime-${videaData1.value.id}`);
+      }
+      const params = {
+        section_id: chapterData.value.id,
+        lesson_id: videaData1.value.id,
+        point_id: pointId,
+        play_count: 0,
+        finish_count: 1,
+      };
+      getViewCounts(params, currentCourseData.value.id);
+    }
+  }
+}
+
+// 移除timeupdate事件
+onUnmounted(() => {
+  if (videoRef.value) {
+    videoRef.value.removeEventListener('timeupdate', handleTimeUpdate);
+  }
+});
 </script>
 <template>
   <div v-if="currentCourseData && chapterData" class="course-content">
@@ -80,6 +160,7 @@ const videaData2 = computed(() => {
         </div>
         <div class="course-videa">
           <video
+            ref="videoRef"
             controls="controls"
             controlslist="nodownload"
             disablepictureinpicture
@@ -87,6 +168,7 @@ const videaData2 = computed(() => {
             height="720"
             :src="videaData1.video"
             class="video-detail"
+            @timeupdate="handleTimeUpdate"
           ></video>
         </div>
       </div>
@@ -94,6 +176,7 @@ const videaData2 = computed(() => {
         <div class="course-name">{{ videaData2.name }}</div>
         <div class="course-videa">
           <video
+            ref="videoRef"
             controls="controls"
             controlslist="nodownload"
             disablepictureinpicture
@@ -101,6 +184,7 @@ const videaData2 = computed(() => {
             height="720"
             :src="videaData2.video"
             class="video-detail"
+            @timeupdate="handleTimeUpdate"
           ></video>
         </div>
       </div>
@@ -155,7 +239,7 @@ const videaData2 = computed(() => {
         box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         .video-detail {
           width: 100%;
-          margin: 0 auto;
+          outline: none;
         }
       }
     }

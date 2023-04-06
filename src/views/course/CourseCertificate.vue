@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import html2canvas from 'html2canvas';
+// import domtoimage from 'dom-to-image';
 
 import emptyImg from '@/assets/imgs/model-empty.png';
 import IconDownload from '~icons/app/wukong-download';
@@ -45,6 +46,25 @@ function loadImg() {
   loadDone.value = true;
   generateCertificate();
 }
+/* function generateCertificate() {
+  const certificateDiv = certificateRef.value;
+  domtoimage
+    .toPng(certificateDiv)
+    .then(function (dataUrl) {
+      console.log('dataUrl: ', dataUrl);
+      certificateUrl.value = dataUrl;
+      showImg.value = false;
+    })
+    .catch(function (error) {
+      console.error('error', error);
+    });
+}
+function loadImg() {
+  loadDone.value = true;
+  // setTimeout(() => {
+  generateCertificate();
+  // }, 1000);
+} */
 
 // 下载证书
 function downloadImage(url) {
@@ -78,7 +98,8 @@ function downloadImage(url) {
       ref="certificateRef"
       class="certificate-img"
     >
-      <p>123{{ certificateData.owner }}</p>
+      <p>{{ certificateData.owner }}</p>
+      <!-- <img ref="certRef" :src="certificateData.cert" @load="loadImg" /> -->
       <img ref="certRef" src="@/assets/imgs/course/cert.png" @load="loadImg" />
     </div>
   </div>

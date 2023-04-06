@@ -204,8 +204,20 @@ function goCourseDetail(id) {
               <div class="card-header">
                 <div class="card-title">
                   <div class="course-title">{{ item.name }}</div>
+                  <div
+                    v-if="item.status === 'in-progress'"
+                    class="course-state doing"
+                  >
+                    火热进行中
+                  </div>
                   <div v-if="item.status === 'over'" class="course-state done">
                     已结束
+                  </div>
+                  <div
+                    v-if="item.status === 'preparing'"
+                    class="course-state will-do"
+                  >
+                    未开始
                   </div>
                 </div>
                 <div class="card-desc">

@@ -49,13 +49,13 @@ const navItems = reactive([
     isIndividual: false,
     showTask: true,
   },
-  /* {
+  {
     id: 'courseCertificate',
     label: '结课证书',
     href: 'certificate',
     isIndividual: true,
     showTask: true,
-  }, */
+  },
 ]);
 
 const renderNav = ref();

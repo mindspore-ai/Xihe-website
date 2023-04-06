@@ -140,7 +140,7 @@ function toTop() {
             type="card"
             @tab-click="toggleTaskState"
           >
-            <el-tab-pane label="竞赛状态" name="status" disabled> </el-tab-pane>
+            <el-tab-pane label="作业状态" name="status" disabled> </el-tab-pane>
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="未完成" name="not-finish"></el-tab-pane>
             <el-tab-pane label="已完成" name="finish"></el-tab-pane>

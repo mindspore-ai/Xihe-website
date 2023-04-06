@@ -16,6 +16,7 @@ const certificateData = ref({});
 const courseInfo = useCourseData().courseData;
 const show = ref(false);
 const showImg = ref(true);
+const certRef = ref(null);
 
 function gainCertificate() {
   if (courseInfo.is_apply) {
@@ -28,9 +29,7 @@ function gainCertificate() {
   }
 }
 gainCertificate();
-const loadDone = ref(false);
-const certRef = ref(null);
-// const certNewvalue = ref('');
+
 // 生成证书
 const certificateUrl = ref('');
 function generateCertificate() {
@@ -42,7 +41,6 @@ function generateCertificate() {
   });
 }
 function loadImg() {
-  loadDone.value = true;
   generateCertificate();
 }
 
@@ -78,7 +76,8 @@ function downloadImage(url) {
       ref="certificateRef"
       class="certificate-img"
     >
-      <p>123{{ certificateData.owner }}</p>
+      <p>{{ certificateData.owner }}</p>
+      <!-- <img ref="certRef" :src="certificateData.cert" @load="loadImg" /> -->
       <img ref="certRef" src="@/assets/imgs/course/cert.png" @load="loadImg" />
     </div>
   </div>
@@ -134,20 +133,16 @@ function downloadImage(url) {
   }
   .certificate-img {
     position: relative;
-    // display: none;
-    // opacity: 0;
     img {
       width: 100%;
-      // height: 640px;
     }
     p {
       color: #000;
       font-size: 36px;
       font-weight: 600;
       position: absolute;
-      // z-index: 10px;
-      top: 375px;
-      left: 185px;
+      top: 37%;
+      left: 15%;
     }
   }
   .empty {

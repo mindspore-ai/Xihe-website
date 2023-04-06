@@ -29,7 +29,7 @@ onUpdated(() => {
   }
   // 用户第一次点击播放视频
   videoRef.value.addEventListener('play', () => {
-    if (isFirst.value) {
+    if (videoRef.value.currentTime === 0 && isFirst.value) {
       let pointId = '';
       if (videaData1.value.points) {
         pointId = videaData2.value.id;

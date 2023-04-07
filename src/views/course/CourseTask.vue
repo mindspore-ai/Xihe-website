@@ -113,7 +113,7 @@ function goTaskDetail(item) {
   router.push(`/course/task/${route.params.courseId}/${item.id}`);
 }
 
-const layout = ref('prev, pager,next');
+const layout = ref('prev,pager,next,sizes,jumper');
 // 课程分页器
 function handleCurrentPage(val) {
   taskPager.page = val;
@@ -125,6 +125,10 @@ function handleCurrentPage(val) {
 }
 function handleSizeChange(val) {
   taskPager.size = val;
+  currentTaskData.value = taskData.value.slice(
+    taskPager.page * taskPager.size - taskPager.size,
+    taskPager.page * taskPager.size
+  );
 }
 function toTop() {
   document.documentElement.scrollTop = 0;
@@ -176,7 +180,7 @@ function toTop() {
             <div class="pagination">
               <el-pagination
                 hide-on-single-page
-                :page-sizes="[1, 2, 5]"
+                :page-sizes="[6, 12, 18]"
                 :current-page="taskPager.page"
                 :page-size="taskPager.size"
                 :total="taskData.length"
@@ -444,7 +448,6 @@ function toTop() {
   }
 }
 :deep(.el-pagination) {
-  // background-color: red;
   --el-pagination-bg-color: none !important;
   .btn-next,
   .btn-prev {
@@ -458,16 +461,13 @@ function toTop() {
   }
   .el-pager {
     .number {
-      // background-color: red;
       width: 36px;
       height: 36px;
       font-size: 14px;
     }
     .is-active {
-      // TODO:
-      // background-color: #0d8dff;
       color: #0d8dff;
-      // opacity: 0.1;
+      background-color: #e6f3ff;
     }
   }
   .el-pagination__sizes {

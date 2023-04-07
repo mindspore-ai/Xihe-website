@@ -27,15 +27,7 @@ let i18n = {
   head: {
     title: '课程',
     introduce: '从入门到精通，深入浅出玩转昇思MindSpore',
-    reference: '参考文档',
-    btn: '新建模型',
-    count: '总数',
   },
-  back: '返回上一级',
-  taskSort: '应用分类',
-  tagPlacholder: '请输入tag名称',
-  more: '更多',
-  clear: '清除',
 };
 
 // 获取所有的课程
@@ -204,8 +196,20 @@ function goCourseDetail(id) {
               <div class="card-header">
                 <div class="card-title">
                   <div class="course-title">{{ item.name }}</div>
+                  <div
+                    v-if="item.status === 'in-progress'"
+                    class="course-state doing"
+                  >
+                    火热进行中
+                  </div>
                   <div v-if="item.status === 'over'" class="course-state done">
                     已结束
+                  </div>
+                  <div
+                    v-if="item.status === 'preparing'"
+                    class="course-state will-do"
+                  >
+                    未开始
                   </div>
                 </div>
                 <div class="card-desc">

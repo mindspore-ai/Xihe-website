@@ -349,7 +349,6 @@ function toTop() {
       line-height: 32px;
       font-size: 24px;
       color: #000000;
-      // font-weight: 550;
       line-height: 40px;
       position: absolute;
       top: 0px;

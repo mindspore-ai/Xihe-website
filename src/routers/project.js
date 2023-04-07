@@ -29,6 +29,14 @@ export default [
       next();
     },
   },
+  // Jupyter
+  {
+    path: '/projects/:user/:name/clouddev',
+    name: 'jupyter',
+    component: () => {
+      return import('@/views/project/ProjectJupyter.vue');
+    },
+  },
   {
     path: '/projects/:user/:name/projectAim',
     name: 'projectsAim',

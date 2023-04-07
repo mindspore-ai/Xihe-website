@@ -4,10 +4,10 @@ import { useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
 
-import comBanner1 from '@/assets/imgs/competition/com-banner1.png';
-import comBanner2 from '@/assets/imgs/competition/com-banner2.png';
-import comBanner3 from '@/assets/imgs/competition/com-banner3.png';
-import comBanner4 from '@/assets/imgs/competition/com-banner4.png';
+import comBanner1 from '@/assets/imgs/competition/artist-banner.jpg';
+import comBanner2 from '@/assets/imgs/competition/book-banner.png';
+import comBanner3 from '@/assets/imgs/competition/insect-banner.png';
+// import comBanner4 from '@/assets/imgs/competition/com-banner4.png';
 
 import emptyImg from '@/assets/imgs/live-empty.png';
 
@@ -85,9 +85,9 @@ function getCompetitions2() {
 }
 getCompetitions2();
 // 跳转到比赛详情页
-function goDetail(competitionName) {
+function goDetail(competitionId) {
   let competitionList = allData.value.filter((item) => {
-    return item.name === competitionName;
+    return item.id === competitionId;
   });
   router.push({
     name: 'competitionDetail',
@@ -139,35 +139,21 @@ function toTop() {
       <div class="wrap">
         <el-carousel :interval="4000" type="card" height="300px">
           <el-carousel-item
-            ><img
-              :src="comBanner1"
-              alt=""
-              @click="goDetail('第四届MindCon-西安旅游主题图像分类')"
-            />
+            ><img :src="comBanner1" alt="" @click="goDetail('ai_painter')" />
           </el-carousel-item>
           <el-carousel-item
-            ><img
-              :src="comBanner2"
-              alt=""
-              @click="goDetail('第四届MindCon-基于小样本学习的口罩识别')"
-            />
+            ><img :src="comBanner2" alt="" @click="goDetail('learn23-text')" />
           </el-carousel-item>
           <el-carousel-item
-            ><img
-              :src="comBanner3"
-              alt=""
-              @click="
-                goDetail('第四届MindCon-爱（AI）美食--10类常见美食图片分类')
-              "
-            />
+            ><img :src="comBanner3" alt="" @click="goDetail('learn23-img')" />
           </el-carousel-item>
-          <el-carousel-item
+          <!-- <el-carousel-item
             ><img
               :src="comBanner4"
               alt=""
               @click="goDetail('第四届MindCon-外卖评论文本分类')"
             />
-          </el-carousel-item>
+          </el-carousel-item> -->
         </el-carousel>
       </div>
     </div>
@@ -214,7 +200,9 @@ function toTop() {
               </div>
               <div class="right1">
                 <div class="right1-bonus">
-                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="number">
+                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                  </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
@@ -288,7 +276,9 @@ function toTop() {
               </div>
               <div class="right1">
                 <div class="right1-bonus">
-                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="number">
+                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                  </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
@@ -347,7 +337,7 @@ function toTop() {
                     {{ item.name }}
                   </div>
                   <div
-                    v-if="item.status === 'done'"
+                    v-if="item.status === 'over'"
                     class="card-head-state done"
                   >
                     已结束
@@ -360,7 +350,9 @@ function toTop() {
               </div>
               <div class="right1">
                 <div class="right1-bonus">
-                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="number">
+                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                  </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">
@@ -434,7 +426,9 @@ function toTop() {
               </div>
               <div class="right1">
                 <div class="right1-bonus">
-                  <div class="number">奖池：￥{{ item.bonus }}</div>
+                  <div class="number">
+                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                  </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>
                 <div class="right-immediate">

@@ -4,6 +4,8 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import { router } from './routers';
 
+import i18n from './i18n';
+
 // import '@authing/native-js-ui-components/lib/index.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/dark.css';
@@ -31,6 +33,7 @@ app.directive('highlight', (el) => {
   });
 });
 
+app.use(i18n);
 app.use(Pagination, {
   locale: zhCn,
 });

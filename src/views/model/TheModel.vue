@@ -26,7 +26,7 @@ const router = useRouter();
 const route = useRoute();
 let i18n = {
   head: {
-    title: '模型',
+    title: '模型库',
     introduce:
       '覆盖全领域主流模型，可体验MindSpore大模型推理API，用户既可下载公开的预训练模型，也可以上传自行训练的模型文件，详情请点击',
     reference: '参考文档',
@@ -418,8 +418,8 @@ function getModel() {
   });
 }
 
-function getModelTag() {
-  getTags('global_model').then((res) => {
+async function getModelTag() {
+  await getTags('global_model').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
       return {
         title: {
@@ -455,7 +455,7 @@ function getModelTag() {
     });
   });
 }
-getModelTag();
+// getModelTag();
 
 const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
@@ -504,6 +504,29 @@ watch(
   queryData,
   () => {
     debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
+watch(
+  () => route.params.modelType,
+  () => {
+    getModelTag().then(() => {
+      if (route.params.modelType === '1') {
+        // checkAllClick(renderCondition.value[0], 0);
+        // sortTagClick(0, 3);
+        conditionClick(0, 0, renderCondition.value[0].condition[0]);
+      } else if (route.params.modelType === '2') {
+        // checkAllClick(renderCondition.value[0], 0);
+        // sortTagClick(0, 4);
+        conditionClick(0, 0, renderCondition.value[0].condition[0]);
+      } else if (route.params.modelType === '3') {
+        conditionClick(0, 1, renderCondition.value[0].condition[1]);
+      } else if (route.params.modelType === '4') {
+        conditionClick(0, 3, renderCondition.value[0].condition[3]);
+      }
+    });
   },
   {
     immediate: true,
@@ -744,7 +767,7 @@ $theme: #0d8dff;
       display: flex;
       justify-content: space-between;
       padding: 42px 16px;
-      color: #fff;
+      color: #000;
       .title {
         padding-bottom: 8px;
         font-size: 36px;

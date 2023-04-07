@@ -25,6 +25,7 @@ import {
   transferCaptain,
   removeMember,
   quitTeam,
+  dissolveTeam,
 } from '@/api/api-competition';
 
 const route = useRoute();
@@ -147,6 +148,7 @@ async function foundTeam(formEl) {
         type: 'success',
         message: '创建团队成功！',
       });
+      form1.teamName = '';
     } else {
       console.error('error submit!');
       return false;
@@ -277,6 +279,17 @@ function confirmQuit() {
     showQuit.value = false;
   });
 }
+// 删除团队（解散）
+function confirmDel() {
+  dissolveTeam(userComData.competitionData.id).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '删除团队成功!',
+    });
+    userComData.competitionData.team_id = '';
+    showDel.value = false;
+  });
+}
 </script>
 <template>
   <div class="competitionTeam">
@@ -380,12 +393,16 @@ function confirmQuit() {
           class="header-button"
         >
           <OButton
-            disabled
+            v-if="userComData.competitionData.phase === 'preliminary'"
             class="delete"
             size="small"
             @click="showDel = true"
-            >{{ i18n.delete.btnText }}</OButton
           >
+            {{ i18n.delete.btnText }}
+          </OButton>
+          <OButton v-else disabled type="primary" size="small" class="delete">
+            {{ i18n.delete.btnText }}
+          </OButton>
           <OButton
             v-if="userComData.competitionData.phase === 'preliminary'"
             type="primary"
@@ -544,6 +561,41 @@ function confirmQuit() {
           {{ i18n.delete.cancel }}
         </o-button>
         <o-button type="primary" @click="confirmQuit">
+          {{ i18n.delete.confirm }}
+        </o-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 删除团队 -->
+  <el-dialog
+    v-model="showDel"
+    width="640px"
+    :show-close="false"
+    center
+    align-center
+  >
+    <template #header="{ titleId, title }">
+      <div :id="titleId" :class="title">
+        <img :src="warningImg" alt="" />
+      </div>
+    </template>
+    <div
+      class="dlg-body"
+      style="
+        color: #555;
+        font-size: 18px;
+        text-align: center;
+        line-height: 28px;
+      "
+    >
+      {{ i18n.delete.describe1 }}
+    </div>
+    <template #footer>
+      <div class="dlg-actions" style="display: flex; justify-content: center">
+        <o-button style="margin-right: 16px" @click="showDel = false">
+          {{ i18n.delete.cancel }}
+        </o-button>
+        <o-button type="primary" @click="confirmDel">
           {{ i18n.delete.confirm }}
         </o-button>
       </div>

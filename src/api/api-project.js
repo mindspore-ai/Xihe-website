@@ -417,3 +417,47 @@ export function autoEvaluate(params, projectId, trainId) {
       return e;
     });
 }
+
+/**
+ * 获取云资源配置列表
+ * @returns
+ */
+export function cloudDisposeList() {
+  const url = `/server/cloud`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res;
+  });
+}
+
+/**
+ * 订阅云
+ * @returns
+ */
+export function cloudSubscribe(id) {
+  const url = `/server/cloud/subscribe`;
+  return request.post(url, { cloud_id: id }, getHeaderConfig()).then((res) => {
+    return res;
+  });
+}
+
+/**
+ * 删除云资源
+ * @returns
+ */
+// export function deleteCloudSource(id) {
+//   const url = `/server/cloud/subscribe`;
+//   return request.post(url, { cloud_id: id }, getHeaderConfig()).then((res) => {
+//     return res;
+//   });
+// }
+
+/**
+ * 获取pod信息
+ * @returns
+ */
+export function cloudDisposeTarget(cid) {
+  const url = `/server/cloud/pod/${cid}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}

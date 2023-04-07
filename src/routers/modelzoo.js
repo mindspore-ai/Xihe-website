@@ -16,7 +16,6 @@ export default [
     component: () => {
       return import('@/views/modelzoo/taichu/ModelzooTaichu.vue');
     },
-
     children: [
       {
         path: 'vision',
@@ -25,13 +24,6 @@ export default [
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-      /* {
-        path: 'experience',
-        name: 'taichuExperience',
-        component: () => {
-          return import('@/views/modelzoo/taichu/ModelzooTaichuExperience.vue');
-        },
-      }, */
       {
         path: 'introduce',
         name: 'taichuIntroduction',
@@ -120,34 +112,34 @@ export default [
     ],
   },
   // 鹏程.盘古
-  {
-    path: '/modelzoo/pangu',
-    name: 'pangu',
-    component: () => {
-      return import('@/views/modelzoo/pangu/ThePangu.vue');
-    },
-    children: [
-      {
-        path: '',
-        name: 'panguExperience',
-        component: () => {
-          return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
-        },
-      },
-      {
-        path: 'introduce',
-        name: 'panguIntroduce',
-        component: () => {
-          return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
-        },
-      },
-      {
-        path: 'experience',
-        // name: 'pangutest',
-        redirect: '/modelzoo/pangu',
-      },
-    ],
-  },
+  // {
+  //   path: '/modelzoo/pangu',
+  //   name: 'pangu',
+  //   component: () => {
+  //     return import('@/views/modelzoo/pangu/ThePangu.vue');
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'panguExperience',
+  //       component: () => {
+  //         return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'introduce',
+  //       name: 'panguIntroduce',
+  //       component: () => {
+  //         return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'experience',
+  //       // name: 'pangutest',
+  //       redirect: '/modelzoo/pangu',
+  //     },
+  //   ],
+  // },
   // 鹏程.神农
   {
     path: '/modelzoo/shennong',
@@ -208,13 +200,20 @@ export default [
           return import('@/views/modelzoo/wukong/TheCollection.vue');
         },
       },
-      // {
-      //   path: 'public',
-      //   name: 'wukongPublic',
-      //   component: () => {
-      //     return import('@/views/modelzoo/wukong/ThePublic.vue');
-      //   },
-      // },
+      {
+        path: 'public',
+        name: 'wukongPublic',
+        component: () => {
+          return import('@/views/modelzoo/wukong/ThePublic.vue');
+        },
+      },
     ],
+  },
+  {
+    path: '/modelzoo/wukong/album',
+    name: 'AIAlbum',
+    component: () => {
+      return import('@/views/modelzoo/wukong/WukongAlbum.vue');
+    },
   },
 ];

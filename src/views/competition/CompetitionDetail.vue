@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onUpdated } from 'vue';
+import { ref, watch, onUpdated, provide } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getCompetition } from '@/api/api-competition';
@@ -99,6 +99,7 @@ onUpdated(() => {
     }
   });
 });
+provide('getDetailData', getDetailData);
 </script>
 
 <template>
@@ -140,7 +141,7 @@ onUpdated(() => {
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status === 'done'"
+                  v-if="competitionData.status === 'over'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -157,7 +158,13 @@ onUpdated(() => {
               class="right1"
             >
               <div class="right1-bonus">
-                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
+                <div class="number">
+                  奖池：{{
+                    competitionData.bonus
+                      ? `￥${competitionData.bonus}`
+                      : '特别礼品'
+                  }}
+                </div>
                 <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
               <div class="right-immediate">
@@ -175,7 +182,7 @@ onUpdated(() => {
                   <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status === 'done'">
+                  <div v-if="competitionData.status === 'over'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <div class="number">
@@ -186,7 +193,13 @@ onUpdated(() => {
             </div>
             <div v-else class="right2">
               <div class="right2-bonus">
-                <div class="number">奖池：￥{{ competitionData.bonus }}</div>
+                <div class="number">
+                  奖池：{{
+                    competitionData.bonus
+                      ? `￥${competitionData.bonus}`
+                      : '特别礼品'
+                  }}
+                </div>
                 <div class="time">赛期:{{ competitionData.duration }}</div>
               </div>
             </div>
@@ -210,7 +223,7 @@ onUpdated(() => {
                   未开始
                 </div>
                 <div
-                  v-if="competitionData.status === 'done'"
+                  v-if="competitionData.status === 'over'"
                   class="card-head-state finished"
                 >
                   已结束
@@ -242,7 +255,7 @@ onUpdated(() => {
                   <div v-if="competitionData.status === 'preparing'">
                     <div class="competitionState">报名未开始</div>
                   </div>
-                  <div v-if="competitionData.status === 'done'">
+                  <div v-if="competitionData.status === 'over'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
                   <!-- <div class="number">

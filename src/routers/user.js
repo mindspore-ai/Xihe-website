@@ -195,6 +195,13 @@ export default [
         },
       },
       {
+        path: 'course',
+        name: 'settingsCourse',
+        component: () => {
+          return import('@/views/setting/SeetingCourse.vue');
+        },
+      },
+      {
         path: 'competition',
         name: 'settingsCompetition',
         component: () => {
@@ -208,6 +215,13 @@ export default [
       //     return import('@/views/setting/SettingInvitation.vue');
       //   },
       // },
+      {
+        path: 'clouddev',
+        name: 'developEnvironment',
+        component: () => {
+          return import('@/views/setting/MyDevelopEnvironment.vue');
+        },
+      },
     ],
   },
 ];

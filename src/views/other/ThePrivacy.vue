@@ -36,7 +36,7 @@ const activeName = ref('first');
       max-width: 1472px;
       margin: 0 auto;
       padding: 42px 16px 70px;
-      color: #fff;
+      color: #000;
       font-size: 36px;
     }
   }

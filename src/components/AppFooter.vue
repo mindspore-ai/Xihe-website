@@ -1,28 +1,51 @@
 <script setup>
-import logoImg from '@/assets/imgs/footer-logo.png';
+import logoImg from '@/assets/imgs/footer-logo1.png';
+import logoImg1 from '@/assets/imgs/footer-logo.png';
+import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
+
+import { useRoute } from 'vue-router';
+
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
+
+const route = useRoute();
 </script>
 
 <template>
   <footer class="footer">
-    <div class="footer-logo">
-      <img :src="logoImg" alt="" srcset="" />
+    <div v-if="locale === 'zh'" class="footer-logo">
+      <img
+        v-if="route.path === '/modelzoo/wukong'"
+        :src="logoImg1"
+        alt=""
+        srcset=""
+      />
+      <img v-else :src="logoImg" alt="" srcset="" />
+    </div>
+    <div v-else class="footer-logo">
+      <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="footer-content">
       <div class="above">
-        <router-link class="text" to="/privacy">隐私政策</router-link>
+        <router-link class="text" to="/privacy">{{
+          t('home.PRIVACY_POLICY')
+        }}</router-link>
         <div class="division"></div>
-        <router-link class="text" to="/legal">法律声明</router-link>
+        <router-link class="text" to="/legal">{{
+          t('home.LEGAL_NOTICE')
+        }}</router-link>
       </div>
       <div class="below">
-        <span>版权所有</span>
+        <span>{{ t('home.COPYRIGHT') }}</span>
         <span>©&nbsp;2022&nbsp;MindSpore</span>
-        <span>&nbsp;保留一切权利</span>
+        <span>&nbsp;{{ t('home.OWNERSHIP') }}</span>
       </div>
     </div>
     <div class="footer-code">
       <img :src="qrCodeImg" />
-      <p>扫码关注公众号</p>
+      <p>{{ t('home.SCANNING_CODE') }}</p>
     </div>
   </footer>
 </template>
@@ -36,14 +59,25 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
   max-width: 1472px;
   margin: 0 auto;
   height: 200px;
-  padding: 16px 16px;
-  color: rgba(255, 255, 255, 1);
-
+  padding: 141px 16px 87px;
+  // color: rgba(255, 255, 255, 1);
   &-logo {
     display: flex;
     align-items: center;
     height: 64px;
     // cursor: pointer;
+    img {
+      vertical-align: top;
+      height: 100%;
+    }
+  }
+  &-logo2 {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
     img {
       vertical-align: top;
       height: 100%;
@@ -61,7 +95,8 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
       font-size: 14px;
       margin: 0 auto;
       .text {
-        color: rgba(255, 255, 255, 1);
+        // color: rgba(255, 255, 255, 1);
+        color: #000000;
         height: 26px;
         line-height: 26px;
         cursor: pointer;
@@ -70,7 +105,8 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
       .division {
         width: 1px;
         height: 20px;
-        background-color: rgba(255, 255, 255, 1);
+        // background-color: rgba(255, 255, 255, 1);
+        background-color: #000000;
         margin-top: 2px;
       }
     }
@@ -94,7 +130,7 @@ import qrCodeImg from '@/assets/imgs/qr-code.png';
     p {
       margin-top: 8px;
       font-size: 12px;
-      color: #ffffff;
+      // color: #ffffff;
       opacity: 0.8;
       line-height: 12px;
     }

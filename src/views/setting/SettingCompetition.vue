@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { getUserCompetition } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/competition-empty.png';
 import { useRouter } from 'vue-router';
@@ -8,9 +8,25 @@ import { useUserInfoStore } from '@/stores';
 const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
 const router = useRouter();
-const competitionDatas = ref([]); //所有的比赛
-const competitionDatas2 = ref([]); //进行中的比赛
-const competitionDatas3 = ref([]); //已结束的比赛
+const allCompetition = ref([]); //所有的比赛
+const inprogressCompetition = ref([]); //进行中的比赛
+const overCompetition = ref([]); //已结束的比赛
+const perPageAllData = ref([]); //所有比赛的每页数据
+const perPageInprogressData = ref([]); //进行中比赛的每页数据
+const perPageOverData = ref([]); //已结束比赛的每页数据
+
+let allPager = reactive({
+  page: 1,
+  size: 5,
+});
+let inProgressPager = reactive({
+  page: 1,
+  size: 5,
+});
+let overPager = reactive({
+  page: 1,
+  size: 5,
+});
 
 // 获取用户参加的所有比赛
 function getCompetitons() {
@@ -18,7 +34,8 @@ function getCompetitons() {
     mine: userInfoStore.userName,
   }).then((res) => {
     if (res.status === 200) {
-      competitionDatas.value = res.data.data;
+      allCompetition.value = res.data.data.reverse();
+      perPageAllData.value = allCompetition.value.slice(0, allPager.size);
     }
   });
 }
@@ -30,14 +47,19 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'in-progress',
     }).then((res) => {
-      competitionDatas2.value = res.data.data;
+      inprogressCompetition.value = res.data.data.reverse();
+      perPageInprogressData.value = inprogressCompetition.value.slice(
+        0,
+        inProgressPager.size
+      );
     });
   } else if (tab.props.name === 'done') {
     getUserCompetition({
       mine: userInfoStore.userName,
-      status: 'done',
+      status: 'over',
     }).then((res) => {
-      competitionDatas3.value = res.data.data;
+      overCompetition.value = res.data.data.reverse();
+      perPageOverData.value = overCompetition.value.slice(0, overPager.size);
     });
   }
 };
@@ -52,12 +74,42 @@ function goDetail(id) {
     params: { id: id },
   });
 }
+// 分页器
+const layout = ref('prev, pager, next');
+function handleAllPager(val) {
+  allPager.page = val;
+  perPageAllData.value = allCompetition.value.slice(
+    allPager.page * allPager.size - allPager.size,
+    allPager.page * allPager.size
+  );
+  toTop();
+}
+
+function handleInprogressPager(val) {
+  inProgressPager.page = val;
+  perPageInprogressData.value = inprogressCompetition.value.slice(
+    inProgressPager.page * inProgressPager.size - inProgressPager.size,
+    inProgressPager.page * inProgressPager.size
+  );
+  toTop();
+}
+function handleOverPager(val) {
+  overPager.page = val;
+  perPageOverData.value = overCompetition.value.slice(
+    overPager.page * overPager.size - overPager.size,
+    overPager.page * overPager.size
+  );
+  toTop();
+}
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 </script>
 <template>
   <!-- 我的比赛 -->
   <div class="competition">
     <div
-      v-if="competitionDatas && competitionDatas.length"
+      v-if="allCompetition && allCompetition.length"
       class="competition-list"
     >
       <el-tabs
@@ -70,7 +122,7 @@ function goDetail(id) {
         <el-tab-pane label="全部" name="all">
           <div>
             <div
-              v-for="item in competitionDatas"
+              v-for="item in perPageAllData"
               :key="item.id"
               class="competition-card"
               @click="goDetail(item.id)"
@@ -92,12 +144,23 @@ function goDetail(id) {
                 <div class="time">赛期:{{ item.duration }}</div>
               </div>
             </div>
+            <!-- 全部比赛页的分页器 -->
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="allPager.page"
+                :page-size="allPager.size"
+                :total="allCompetition.length"
+                :layout="layout"
+                @current-change="handleAllPager"
+              ></el-pagination>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="进行中" name="doing">
-          <div v-if="competitionDatas2">
+          <div v-if="inprogressCompetition">
             <div
-              v-for="item in competitionDatas2"
+              v-for="item in perPageInprogressData"
               :key="item.id"
               class="competition-card"
               @click="goDetail(item.id)"
@@ -118,6 +181,17 @@ function goDetail(id) {
                 <div class="time">赛期:{{ item.duration }}</div>
               </div>
             </div>
+            <!-- 进行中比赛页的分页器 -->
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="inProgressPager.page"
+                :page-size="inProgressPager.size"
+                :total="inprogressCompetition.length"
+                :layout="layout"
+                @current-change="handleInprogressPager"
+              ></el-pagination>
+            </div>
           </div>
           <div v-else class="empty2">
             <img class="empty-img" :src="emptyImg" />
@@ -128,9 +202,9 @@ function goDetail(id) {
         </el-tab-pane>
 
         <el-tab-pane label="已结束" name="done">
-          <div v-if="competitionDatas3">
+          <div v-if="overCompetition">
             <div
-              v-for="item in competitionDatas3"
+              v-for="item in perPageOverData"
               :key="item.id"
               class="competition-card"
               @click="goDetail(item.id)"
@@ -138,7 +212,7 @@ function goDetail(id) {
               <div class="left">
                 <div class="title">
                   <span> {{ item.name }} </span>
-                  <span v-if="item.status === 'done'" class="state finished"
+                  <span v-if="item.status === 'over'" class="state finished"
                     >已结束</span
                   >
                 </div>
@@ -150,6 +224,17 @@ function goDetail(id) {
                 <div class="bonus">奖池：￥{{ item.bonus }}</div>
                 <div class="time">赛期:{{ item.duration }}</div>
               </div>
+            </div>
+            <!-- 已结束比赛页的分页器 -->
+            <div class="pagination">
+              <el-pagination
+                hide-on-single-page
+                :current-page="overPager.page"
+                :page-size="overPager.size"
+                :total="overCompetition.length"
+                :layout="layout"
+                @current-change="handleOverPager"
+              ></el-pagination>
             </div>
           </div>
           <div v-else class="empty3">
@@ -189,6 +274,9 @@ function goDetail(id) {
           cursor: pointer;
           display: flex;
           justify-content: space-between;
+          &:hover {
+            box-shadow: 0 6px 18px rgba(13, 141, 255, 0.1411764706);
+          }
           .left {
             .title {
               margin-bottom: 36px;
@@ -205,6 +293,7 @@ function goDetail(id) {
                 line-height: 20px;
                 font-size: 12px;
                 margin-left: 6px;
+                white-space: nowrap;
               }
               .doing {
                 color: #ffffff;
@@ -241,8 +330,15 @@ function goDetail(id) {
               color: #555555;
               margin-top: 24px;
               background-color: #f4faff;
+              white-space: nowrap;
             }
           }
+        }
+        .pagination {
+          margin-top: 40px;
+          display: flex;
+          justify-content: center;
+          margin-bottom: 36px;
         }
         .empty2 {
           display: inline-block;
@@ -305,7 +401,7 @@ function goDetail(id) {
       border: none;
       margin-top: 40px;
       margin-bottom: 24px;
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
 
       .el-tabs__nav {
         border: none;
@@ -334,6 +430,24 @@ function goDetail(id) {
         box-shadow: 0 0 0 1px #0d8dff inset;
         color: #0d8dff;
       }
+    }
+    // .el-tabs__nav-wrap {
+    //   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+    // }
+  }
+}
+:deep(.el-pagination) {
+  --el-pagination-bg-color: none !important;
+  .btn-next,
+  .btn-prev {
+    width: 36px;
+    height: 36px;
+    color: #000;
+  }
+  .el-pager {
+    .number {
+      width: 36px;
+      height: 36px;
     }
   }
 }

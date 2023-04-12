@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 
 import html2canvas from 'html2canvas';
 
@@ -24,6 +24,7 @@ import IconRight from '~icons/app/arrow-right';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import useClipboard from 'vue-clipboard3';
 
 import {
   wuKongInfer,
@@ -34,9 +35,13 @@ import {
   cancelPublic,
 } from '@/api/api-modelzoo.js';
 import { ElMessage } from 'element-plus';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
+
+const { toClipboard } = useClipboard();
 
 const inputText = ref('');
 const sortTag = ref('');
@@ -103,6 +108,15 @@ const styleData = ref([
       { tag: '蒸汽波', isSelected: false },
     ],
   },
+  {
+    style: '随机风格',
+    options: [],
+  },
+]);
+
+const mobileStyleData = ref([]);
+mobileStyleData.value = [...styleData.value].splice(0, 4);
+const mobileRandomData = ref([
   {
     style: '随机风格',
     options: [],
@@ -191,7 +205,6 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
-const inputDom = ref();
 
 userAvatar.value = userInfoStore.avatar.replace(
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
@@ -213,8 +226,6 @@ async function publicImage(val, index) {
   } catch (err) {
     console.error(err);
   }
-
-  // count.value++;
 }
 // 取消公开
 async function cancelPublicImage(i) {
@@ -231,6 +242,8 @@ async function cancelPublicImage(i) {
 }
 
 // 分享图片
+const isSharedPoster = ref(false);
+const shareImg = ref('');
 function shareImage(url) {
   posterDlg.value = true;
   posterLink.value = url.replace(
@@ -238,6 +251,18 @@ function shareImage(url) {
     '/obs-big-model/'
   );
   posterInfo.value = inputText.value + '  ' + sortTag.value;
+
+  if (screenWidth.value <= 820) {
+    nextTick(() => {
+      const poster = document.querySelector('#screenshot');
+      html2canvas(poster, {
+        useCORS: true,
+      }).then((canvas) => {
+        shareImg.value = canvas.toDataURL('image/png');
+        isSharedPoster.value = true;
+      });
+    });
+  }
 }
 // 下载海报截图
 function downloadPoster() {
@@ -256,16 +281,20 @@ function downloadPoster() {
     aLink.remove();
   });
 }
+// 海报蒙层关闭事件
+function handlePosterDlgClose() {
+  posterLink.value = '';
+  isSharedPoster.value = false;
+}
+
 // 复制用户名
-function copyText(textValue) {
-  inputDom.value.value = textValue;
-  inputDom.value.select();
-  if (document.execCommand('Copy'))
-    ElMessage({
-      type: 'success',
-      message: '复制成功',
-      center: true,
-    });
+async function copyText(textValue) {
+  await toClipboard(textValue);
+  ElMessage({
+    type: 'success',
+    message: '复制成功',
+    center: true,
+  });
 }
 
 // 选择样例
@@ -305,7 +334,9 @@ function choseSortTag(val) {
 function getRandomStyle(index) {
   if (index === 4) {
     const i = Math.floor(Math.random() * randomList.value.length);
-    styleData.value[index].options = [randomList.value[i]];
+    styleData.value[index].options = mobileRandomData.value.options = [
+      randomList.value[i],
+    ];
   } else {
     return;
   }
@@ -318,7 +349,7 @@ function reEnterDesc() {
 }
 // 初始化推理数据
 function initData() {
-  inputText.value = '';
+  // inputText.value = '';
   sortTag.value = '';
 
   styleBackground.value = [];
@@ -333,6 +364,8 @@ function initData() {
     item.isSelected = false;
   });
 }
+
+const errorMsg = ref('');
 // wk推理
 async function handleInfer() {
   if (!isLogined.value) {
@@ -360,11 +393,17 @@ async function handleInfer() {
           desc: inputText.value,
           style: sortTag.value,
         });
-
         isInferred.value = true;
-
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
+        if (err.code === 'bigmodel_sensitive_info') {
+          errorMsg.value = '内容不合规，请重新输入描述词';
+        } else if (err.code === 'bigmodel_resource_busy') {
+          errorMsg.value = '前方道路拥挤，请稍后再试';
+        } else if (err.code === 'system_error') {
+          errorMsg.value = '系统错误';
+        }
+        isInferred.value = true;
         isError.value = true;
       }
     } else if (!inputText.value) {
@@ -450,6 +489,7 @@ function handleDlgClose() {
   isInferred.value = false;
   isError.value = false;
   posterLink.value = '';
+  resultIndex.value = -1;
 
   inferList.value.forEach((item) => {
     item.isCollected = false;
@@ -476,6 +516,12 @@ function getDescExamples(arr, count) {
 // 换一批
 function refreshTags() {
   exampleData.value = getDescExamples(lists.value, 5);
+}
+
+const resultIndex = ref(-1);
+
+function handleResultClcik(i) {
+  resultIndex.value = i;
 }
 </script>
 <template>
@@ -544,22 +590,23 @@ function refreshTags() {
       </div>
     </div>
     <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
-    <!-- 推理dialog -->
+
     <el-dialog
       v-model="showInferDlg"
       class="infer-dlg"
       :fullscreen="true"
       :append-to-body="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       @close="handleDlgClose"
     >
       <template #header="{ titleClass }">
-        <div class="infer-dlg-head">
-          <p class="title" :class="titleClass">
-            {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
-            >{{ sortTag }}
-          </p>
-        </div>
+        <p :class="titleClass">
+          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
+          >{{ sortTag }}
+        </p>
       </template>
+
       <div v-if="!isInferred" class="infer-dlg-loading">
         <img :src="loading" alt="" />
         <p>正在创作中，请耐心等待</p>
@@ -573,44 +620,127 @@ function refreshTags() {
         >
           <img :src="value" alt="" />
           <div class="handles">
-            <!-- 公开 -->
-            <!-- <div class="public">
-              <p
-                v-if="!inferList[index].publicId"
-                @click="publicImage(key, index)"
-              >
-                <o-icon><icon-arrow></icon-arrow></o-icon>
-              </p>
-              <p v-else class="icon-item" @click="cancelPublicImage(index)">
-                <o-icon><icon-cancel></icon-cancel></o-icon>
-              </p>
-            </div> -->
-            <!-- 下载收藏 -->
-            <div class="handles-contain">
-              <p @click="downloadImage(value)">
-                <o-icon><icon-download></icon-download></o-icon>
-              </p>
-              <p @click="shareImage(value)">
-                <o-icon><icon-share></icon-share></o-icon>
-              </p>
-              <p
-                v-if="!inferList[index].isCollected"
-                @click="handleCollect(key, index)"
-              >
-                <o-icon><icon-like></icon-like></o-icon>
-              </p>
+            <div class="public">
+              <template v-if="!inferList[index].publicId">
+                <div @click="publicImage(key, index)">
+                  <p>
+                    <o-icon><icon-arrow></icon-arrow></o-icon>
+                  </p>
+                  <div class="icon-name">公开</div>
+                </div>
+              </template>
 
-              <p
-                v-if="inferList[index].isCollected"
-                class="liked"
-                @click="handleCancelCollect(index)"
-              >
-                <o-icon><icon-heart></icon-heart></o-icon>
-              </p>
+              <template v-else>
+                <div @click="cancelPublicImage(index)">
+                  <p class="icon-item">
+                    <o-icon><icon-cancel></icon-cancel></o-icon>
+                  </p>
+                  <div class="icon-name">取消公开</div>
+                </div>
+              </template>
+            </div>
+            <div class="handles-contain">
+              <div class="func-item" @click="downloadImage(value)">
+                <p>
+                  <o-icon><icon-download></icon-download></o-icon>
+                </p>
+                <div class="icon-name">下载</div>
+              </div>
+
+              <div class="func-item" @click="shareImage(value)">
+                <p>
+                  <o-icon><icon-share></icon-share></o-icon>
+                </p>
+                <div class="icon-name">分享</div>
+              </div>
+
+              <template v-if="!inferList[index].isCollected">
+                <div class="func-item">
+                  <p @click="handleCollect(key, index)">
+                    <o-icon><icon-like></icon-like></o-icon>
+                  </p>
+                  <div class="icon-name">收藏</div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="func-item">
+                  <p
+                    v-if="inferList[index].isCollected"
+                    class="liked"
+                    @click="handleCancelCollect(index)"
+                  >
+                    <o-icon><icon-heart></icon-heart></o-icon>
+                  </p>
+                  <div class="icon-name">取消收藏</div>
+                </div>
+              </template>
             </div>
           </div>
-
           <div class="mask"></div>
+        </div>
+        <!-- mobile -->
+        <div
+          v-for="(value, key, index) in styleBackground"
+          :key="key"
+          class="mobile-result-item"
+          @click="handleResultClcik(index)"
+        >
+          <img :src="value" alt="" />
+
+          <template v-if="index === resultIndex">
+            <div class="handles">
+              <div class="public">
+                <template v-if="!inferList[index].publicId">
+                  <div class="func-item" @click="publicImage(key, index)">
+                    <p>
+                      <o-icon><icon-arrow></icon-arrow></o-icon>
+                    </p>
+                    <div class="icon-name">公开</div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="func-item" @click="cancelPublicImage(index)">
+                    <p class="icon-item">
+                      <o-icon><icon-cancel></icon-cancel></o-icon>
+                    </p>
+                    <div class="icon-name">取消公开</div>
+                  </div>
+                </template>
+              </div>
+              <div class="handles-contain">
+                <!-- <p @click="downloadImage(value)">
+                  <o-icon><icon-download></icon-download></o-icon>
+                </p> -->
+                <div class="func-item">
+                  <p @click="shareImage(value)">
+                    <o-icon><icon-share></icon-share></o-icon>
+                  </p>
+                  <div class="icon-name">分享</div>
+                </div>
+
+                <template v-if="!inferList[index].isCollected">
+                  <div class="func-item" @click="handleCollect(key, index)">
+                    <p>
+                      <o-icon><icon-like></icon-like></o-icon>
+                    </p>
+                    <div class="icon-name">收藏</div>
+                  </div>
+                </template>
+
+                <template v-if="inferList[index].isCollected">
+                  <div class="func-item" @click="handleCancelCollect(index)">
+                    <p class="liked">
+                      <o-icon><icon-heart></icon-heart></o-icon>
+                    </p>
+                    <div class="icon-name">取消收藏</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <div class="mask"></div>
+          </template>
         </div>
       </div>
 
@@ -619,7 +749,7 @@ function refreshTags() {
           <o-icon><icon-warning></icon-warning></o-icon>
         </p>
 
-        <p>内容不合规，请重新输入描述词</p>
+        <p>{{ errorMsg }}</p>
 
         <p @click="reEnterDesc">
           <span>重新输入</span>
@@ -636,10 +766,18 @@ function refreshTags() {
       class="poster-dlg-wk"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      @close="handlePosterDlgClose"
     >
+      <template #header="{ titleClass }">
+        <p :class="titleClass">
+          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
+          >{{ sortTag }}
+        </p>
+      </template>
+
       <div class="poster">
-        <div id="screenshot" class="poster-image">
-          <img draggable="false" :src="posterLink" alt="" />
+        <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
+          <img class="infer-img" draggable="false" :src="posterLink" alt="" />
 
           <img
             class="qr-code"
@@ -664,42 +802,485 @@ function refreshTags() {
             </div>
           </div>
         </div>
+
+        <img v-else class="shared-image" :src="shareImg" alt="" />
+
         <div class="poster-download">
           <div class="link">
             <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
+
             <o-icon
               @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
               ><icon-copy></icon-copy
             ></o-icon>
           </div>
-          <div class="button" @click="downloadPoster">下载海报</div>
+          <div v-if="screenWidth > 820" class="button" @click="downloadPoster">
+            下载海报
+          </div>
         </div>
+        <p v-if="screenWidth <= 820" class="poster-tip">长按保存海报</p>
       </div>
     </el-dialog>
-    <textarea ref="inputDom" class="input-dom"></textarea>
+
+    <textarea class="input-dom"></textarea>
+  </div>
+  <!-- mobile -->
+  <div class="wk-experience-mobile">
+    <el-input
+      v-model="inputText"
+      maxlength="75"
+      placeholder="请输入简体中文或选择下方样例"
+      show-word-limit
+      type="text"
+      @input="handleInput"
+    >
+      <template #suffix
+        ><o-icon v-if="inputText" class="clear-input" @click="clearInputText"
+          ><icon-x></icon-x></o-icon
+      ></template>
+    </el-input>
+
+    <div class="mobile-examples">
+      <div class="example-head">
+        <p class="title">选择样例</p>
+        <div class="refresh" @click="refreshTags">
+          <o-icon><icon-refresh></icon-refresh></o-icon>
+          <p>换一批</p>
+        </div>
+      </div>
+
+      <div class="example-items">
+        <p
+          v-for="item in exampleData"
+          :key="item.text"
+          :class="item.isSelected ? 'active' : ''"
+          @click="exampleSelectHandler(item)"
+        >
+          {{ item.text }}
+        </p>
+      </div>
+    </div>
+
+    <div class="mobile-styles">
+      <p class="title">选择风格</p>
+      <div class="content">
+        <div class="style-tag">
+          <div
+            v-for="(item, index) in mobileStyleData"
+            :key="item.style"
+            class="style-item"
+            :class="styleIndex === index ? 'active-1' : ''"
+            @click="choseStyleSort(index)"
+          >
+            <img :src="styleBackgrounds[index]" alt="" />
+
+            <div class="style-item-name" @click="getRandomStyle(index)">
+              {{ item.style }}
+            </div>
+
+            <div v-if="styleIndex === index" class="triangle"></div>
+          </div>
+
+          <div v-if="styleIndex < 4" class="sort-tag">
+            <div
+              v-for="item in styleData[styleIndex].options"
+              :key="item"
+              class="sort-item"
+              :class="item.isSelected ? 'active' : ' '"
+              @click="choseSortTag(item)"
+            >
+              {{ item.tag }}
+            </div>
+          </div>
+        </div>
+
+        <div class="style-tag">
+          <div
+            v-for="(item, index) in mobileRandomData"
+            :key="item.style"
+            class="style-item"
+            :class="styleIndex === index + 4 ? 'active-1' : ''"
+            @click="choseStyleSort(index + 4)"
+          >
+            <img :src="styleBackgrounds[index + 4]" alt="" />
+
+            <div class="style-item-name" @click="getRandomStyle(index + 4)">
+              {{ item.style }}
+            </div>
+            <div v-if="styleIndex === 4" class="triangle"></div>
+          </div>
+          <div v-if="styleIndex === 4" class="sort-tag">
+            <div
+              v-for="item in mobileRandomData.options"
+              :key="item"
+              class="sort-item"
+              :class="item.isSelected ? 'active' : ' '"
+              @click="choseSortTag(item)"
+            >
+              {{ item.tag }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-btn" @click="handleInfer">立即生成</div>
   </div>
 </template>
-<style lang="scss">
-.infer-dlg,
+<style lang="scss" scoped>
+/* 推理弹窗 */
+.infer-dlg-result {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  @media screen and (max-width: 820px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 8px;
+    margin-top: 12vh;
+  }
+  @media screen and (max-width: 767px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 0;
+  }
+  /* pc生成图片 */
+  .result-item {
+    position: relative;
+    margin-right: 24px;
+    width: 34vw;
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
+    &:hover {
+      .handles,
+      .mask {
+        opacity: 1;
+      }
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    img {
+      height: 100%;
+      width: 100%;
+    }
+    .mask {
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      width: 100%;
+      height: 16vh;
+      opacity: 0;
+      @media screen and (max-width: 768px) {
+        height: 10vh;
+      }
+    }
+
+    .handles {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      z-index: 20;
+      opacity: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 18px 24px;
+      @media screen and (max-width: 1450px) {
+        bottom: 10px;
+      }
+      @media screen and (max-width: 768px) {
+        bottom: 0px;
+        padding: 8px;
+      }
+      .handles-contain,
+      .public {
+        display: flex;
+
+        .o-icon {
+          color: #fff;
+          font-size: 24px;
+        }
+
+        .liked {
+          .o-icon {
+            font-size: 20px;
+          }
+        }
+        .icon-name {
+          color: #fff;
+          font-size: 14px;
+          margin-top: 8px;
+          text-align: center;
+          cursor: pointer;
+        }
+        .func-item {
+          cursor: pointer;
+          &:nth-child(2) {
+            margin: 0 16px;
+          }
+          .icon-name {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+          }
+        }
+        p {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          font-size: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          margin: 0 auto;
+          @media screen and (max-width: 1080px) {
+            width: 24px;
+            height: 24px;
+            .o-icon {
+              font-size: 16px;
+            }
+          }
+          &:nth-child(2) {
+            margin: 0 16px;
+            @media screen and (max-width: 1450px) {
+              margin: 0 8px;
+            }
+          }
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+
+  /* mobile生成图片 */
+  .mobile-result-item {
+    position: relative;
+    margin-right: 0;
+    width: auto;
+    height: calc(50vw - 20px);
+    display: none;
+    @media screen and (max-width: 820px) {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    img {
+      height: 100%;
+      width: 100%;
+    }
+    .mask {
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      width: 100%;
+      height: 16vh;
+      height: 10vh;
+    }
+
+    .handles {
+      width: 100%;
+      position: absolute;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      bottom: 0px;
+      padding: 8px;
+      .handles-contain,
+      .public {
+        display: flex;
+
+        .o-icon {
+          color: #fff;
+          font-size: 24px;
+          @media screen and (max-width: 768px) {
+            font-size: 16px;
+          }
+        }
+        .func-item {
+          margin-left: 12px;
+          cursor: pointer;
+          .icon-name {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 6px;
+            text-align: center;
+            @media screen and (max-width: 768px) {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .liked {
+          margin: 0 auto;
+          .o-icon {
+            font-size: 24px;
+            @media screen and (max-width: 768px) {
+              font-size: 16px;
+            }
+          }
+        }
+        p {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          font-size: 16pxpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          @media screen and (max-width: 768px) {
+            width: 24px;
+            height: 24px;
+          }
+          &:nth-child(2) {
+            margin: 0 4px;
+          }
+        }
+      }
+    }
+  }
+}
+.infer-dlg-loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  img {
+    width: 56px;
+    align-self: center;
+    @media screen and (max-width: 820px) {
+      width: 48px;
+    }
+  }
+  p {
+    font-size: 18px;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 25px;
+    text-align: center;
+    @media screen and (max-width: 820px) {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+}
+.infer-dlg-error {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  @media screen and (max-width: 820px) {
+    margin-top: 20vh;
+  }
+  p {
+    align-self: center;
+    &:first-child {
+      .o-icon {
+        font-size: 48px;
+        @media screen and (max-width: 820px) {
+          font-size: 32px;
+        }
+      }
+    }
+    &:nth-child(2) {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 25px;
+      margin-top: 40px;
+      @media screen and (max-width: 820px) {
+        margin-top: 16px;
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+    &:nth-child(3) {
+      border: 1px solid #fff;
+      padding: 12px 60px 12px 28px;
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 48px;
+      cursor: pointer;
+      position: relative;
+      @media screen and (max-width: 820px) {
+        margin-top: 16px;
+        font-size: 12px;
+        line-height: 18px;
+        padding: 8px 32px 8px 16px;
+      }
+      &:hover {
+        .o-icon {
+          right: 16px;
+        }
+      }
+      .o-icon {
+        margin-left: 16px;
+        font-size: 24px;
+        position: absolute;
+        right: 20px;
+        transition: all 0.2s linear;
+        @media screen and (max-width: 820px) {
+          right: 8px;
+          margin-left: 8px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+/* 海报 */
 .poster-dlg-wk {
-  background: none;
+  .el-dialog__body {
+    padding-top: 0;
+    @media screen and (max-width: 820px) {
+      padding: 16px !important;
+      width: 434px;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
   .poster {
-    width: 434px;
-    height: 566px;
+    width: 540px;
     background: #ffffff;
     padding: 16px;
     margin: 0 auto;
-    margin-top: calc(50vh - 630px);
-    &-image {
-      width: 402px;
-      height: 457px;
+    @media screen and (max-width: 767px) {
+      width: 100%;
+      margin-top: 6vh;
+      padding: 8px 8px 16px;
+    }
+    .poster-image {
+      width: 100%;
       position: relative;
+      @media screen and (max-width: 768px) {
+        width: 100%;
+        height: calc(100% - 40px);
+      }
       .mask {
         width: 100%;
-        height: 198px;
+        height: 70px;
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
         position: absolute;
         bottom: 55px;
+        @media screen and (max-width: 768px) {
+          bottom: 40px;
+          height: 160px;
+        }
       }
       .qr-code {
         width: 78px;
@@ -708,6 +1289,12 @@ function refreshTags() {
         right: 16px;
         bottom: 72px;
         z-index: 1;
+        @media screen and (max-width: 768px) {
+          width: 56px;
+          height: 56px;
+          right: 8px;
+          bottom: 48px;
+        }
       }
       .logo {
         position: absolute;
@@ -716,24 +1303,38 @@ function refreshTags() {
         width: 64px;
         height: 21px;
         z-index: 1;
+        @media screen and (max-width: 768px) {
+          width: 48px;
+          height: 16px;
+          left: 8px;
+          bottom: 48px;
+        }
       }
-      img {
+      .infer-img {
         width: 100%;
-        height: 402px;
+        min-height: 300px;
+        @media screen and (max-width: 820px) {
+        }
       }
       .info {
         width: 100%;
-        height: 56px;
         background: #f5f6f8;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 16px;
+        padding: 16px;
+        @media screen and (max-width: 768px) {
+          padding: 8px;
+        }
         .desc {
           font-size: 14px;
           font-weight: 400;
           color: #000000;
           line-height: 24px;
+          @media screen and (max-width: 768px) {
+            font-size: 12px;
+            line-height: 24px;
+          }
         }
         .user-info {
           display: flex;
@@ -744,6 +1345,11 @@ function refreshTags() {
             height: 24px;
             border-radius: 50%;
             margin-right: 8px;
+            @media screen and (max-width: 768px) {
+              width: 16px;
+              height: 16px;
+              margin-right: 4px;
+            }
           }
           p {
             font-size: 14px;
@@ -754,15 +1360,21 @@ function refreshTags() {
         }
       }
     }
-    &-download {
+    .shared-image {
+      width: 100%;
+      height: auto;
+    }
+    .poster-download {
       margin-top: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      @media screen and (max-width: 768px) {
+        margin-top: 8px;
+      }
       .link {
         flex: 1;
         height: 36px;
-        line-height: 36px;
         background: #ffffff;
         border: 1px solid #999999;
         padding-left: 16px;
@@ -771,245 +1383,197 @@ function refreshTags() {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        @media screen and (max-width: 768px) {
+          width: 200px;
+          height: 32px;
+          padding: 0 8px;
+        }
         p {
           font-size: 12px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         .o-icon {
           cursor: pointer;
-          &:hover {
-            color: #40adff;
-          }
         }
       }
       .button {
         width: 112px;
         height: 36px;
+        line-height: 36px;
         border: 1px solid #40adff;
         color: #40adff;
         text-align: center;
-        line-height: 36px;
         cursor: pointer;
-      }
-    }
-  }
-  .infer-dlg-head {
-    .title {
-      color: #fff;
-      padding-top: 27px;
-    }
-  }
-
-  .infer-dlg-result {
-    display: flex;
-    // justify-content: space-between;
-    justify-content: center;
-    width: 100%;
-    .result-item {
-      position: relative;
-      margin-right: 24px;
-      width: 23vw;
-      height: 23vw;
-      &:hover {
-        .handles,
-        .mask {
-          opacity: 1;
+        @media screen and (max-width: 768px) {
+          width: 74px;
+          height: 32px;
+          line-height: 30px;
+          font-size: 12px;
         }
       }
-      &:last-child {
-        margin-right: 0;
+    }
+    .poster-tip {
+      font-size: 12px;
+      color: #555;
+      margin-top: 8px;
+    }
+  }
+}
+
+.wk-experience-mobile {
+  display: none;
+  @media screen and (max-width: 767px) {
+    display: block;
+  }
+  .active {
+    color: #fff !important;
+    background: #008eff !important;
+  }
+  .active-1 {
+    border: 1px solid #008eff !important;
+  }
+  .mobile-examples {
+    .example-head {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      .title {
+        font-size: 14px;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 20px;
       }
-      img {
-        height: 100%;
-        width: 100%;
-      }
-      .mask {
-        position: absolute;
-        bottom: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-        width: 100%;
-        height: 16vh;
-        opacity: 0;
-      }
-      .handles {
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        z-index: 20;
-        opacity: 0;
+      .refresh {
+        font-size: 10px;
+        font-weight: 400;
+        color: #0d8dff;
+        line-height: 14px;
         display: flex;
-        justify-content: flex-end;
-        // justify-content: space-between;
-        padding: 18px 24px;
-        @media screen and (max-width: 1450px) {
-          bottom: 10px;
-        }
-        &-contain,
-        .public {
-          display: flex;
-
-          .o-icon {
-            color: #fff;
-            font-size: 24px;
-          }
-
-          .liked {
-            .o-icon {
-              font-size: 20px;
-            }
-          }
-          p {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            @media screen and (max-width: 1080px) {
-              width: 24px;
-              height: 24px;
-              .o-icon {
-                font-size: 16px;
-              }
-            }
-            &:nth-child(2) {
-              margin: 0 16px;
-              @media screen and (max-width: 1450px) {
-                margin: 0 8px;
-              }
-            }
-            &:hover {
-              background: rgba(255, 255, 255, 0.3);
-            }
-          }
+        align-items: center;
+        .o-icon {
+          margin-right: 4px;
         }
       }
     }
-  }
-
-  .infer-dlg-loading {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    img {
-      width: 56px;
-      align-self: center;
+    .example-items {
+      display: flex;
+      flex-wrap: wrap;
+      p {
+        margin-top: 8px;
+        color: #b2b2b2;
+        border: 1px solid #0d8dff;
+        margin-right: 16px;
+        border-radius: 6px;
+        background: rgba(13, 141, 255, 0.3);
+        padding: 0px 7px;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+      }
     }
-    p {
-      font-size: 18px;
+  }
+  .mobile-styles {
+    .title {
+      font-size: 14px;
+      line-height: 20px;
       font-weight: 400;
       color: #ffffff;
-      line-height: 25px;
-      text-align: center;
+      margin-top: 16px;
     }
-  }
 
-  .infer-dlg-error {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #fff;
+    .content {
+      .style-tag {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .style-item {
+          flex: 1;
+          margin-top: 16px;
+          position: relative;
+          width: 68px;
+          height: 42px;
+          border-radius: 6px;
+          border: 1px solid transparent;
+          flex: unset;
+          .triangle {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid rgba(85, 85, 85, 0.3);
+            position: absolute;
+            bottom: -17px;
+            left: 50%;
+            transform: translateX(-50%);
+          }
 
-    p {
-      align-self: center;
-      &:first-child {
-        .o-icon {
-          font-size: 48px;
-        }
-      }
-      &:nth-child(2) {
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-top: 40px;
-      }
-      &:nth-child(3) {
-        border: 1px solid #fff;
-        padding: 12px 60px 12px 28px;
-        font-size: 16px;
-        line-height: 24px;
-        margin-top: 48px;
-        cursor: pointer;
-        position: relative;
-        &:hover {
-          .o-icon {
-            right: 16px;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+          }
+          .style-item-name {
+            position: absolute;
+            bottom: 0px;
+            font-size: 12px;
+            line-height: 17px;
+            font-weight: 400;
+            color: #ffffff;
+            width: 100%;
+            background: linear-gradient(
+              180deg,
+              rgba(0, 0, 0, 0) 0%,
+              #000000 100%
+            );
+            text-align: center;
+            padding-bottom: 6px;
+            border-radius: 0 0 6px 6px;
           }
         }
-        .o-icon {
-          margin-left: 16px;
-          font-size: 24px;
-          position: absolute;
-          right: 20px;
-          transition: all 0.2s linear;
+      }
+      .sort-tag {
+        display: flex;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border-radius: 8px;
+        margin-top: 16px;
+        padding: 0 8px 8px;
+        width: 100%;
+        min-height: auto;
+        .sort-item {
+          background: rgba(13, 141, 255, 0.3);
+          border-radius: 6px;
+          border: 1px solid #0d8dff;
+          padding: 6px;
+          margin-right: 8px;
+          margin-top: 8px;
+          font-size: 12px;
+          color: #b2b2b2;
         }
       }
     }
   }
-
-  .el-dialog__header {
-    height: 80px;
-    padding: 0;
+  .mobile-btn {
+    background-image: url('@/assets/imgs/wukong/button-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 104px;
+    height: 32px;
+    line-height: 32px;
     text-align: center;
-    line-height: 80px;
-    background: #000;
-    margin-right: 0;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 24px auto 8px;
   }
-  .el-dialog__body {
-    padding-left: 64px;
-    padding-right: 64px;
-    padding-bottom: 120px;
-    height: calc(100vh - 80px);
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.85);
-  }
-  .el-dialog__headerbtn {
-    top: 16px;
-    right: 24px;
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-    }
-  }
-}
-</style>
-<style lang="scss" scoped>
-.input-dom {
-  position: fixed;
-  top: -1200px;
 }
 .wk-experience {
-  .clear-input {
-    cursor: pointer;
+  @media screen and (max-width: 767px) {
+    display: none;
   }
-  :deep(.el-input) {
-    max-width: 1416px;
-    width: 100%;
-    .el-input__wrapper {
-      box-shadow: none;
-      height: 56px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      backdrop-filter: blur(5px);
-      padding: 8px 24px;
-      .el-input__inner {
-        font-size: 14px;
-        color: #fff;
-      }
-      .el-input__count .el-input__count-inner {
-        background: none;
-      }
-    }
-  }
-
   .title {
     font-size: 18px;
     font-weight: 400;
@@ -1028,6 +1592,10 @@ function refreshTags() {
     display: flex;
     margin-top: 48px;
     align-items: center;
+    @media screen and (max-width: 820px) {
+      margin-top: 24px;
+      align-items: flex-start;
+    }
     .example-items {
       flex: 1;
       display: flex;
@@ -1042,6 +1610,9 @@ function refreshTags() {
         font-size: 14px;
         font-size: 14px;
         cursor: pointer;
+        @media screen and (max-width: 820px) {
+          margin-bottom: 8px;
+        }
       }
     }
     .refresh {
@@ -1059,8 +1630,15 @@ function refreshTags() {
   .wk-experience-styles {
     margin-top: 48px;
     display: flex;
+    @media screen and (max-width: 820px) {
+      flex-direction: column;
+      margin-top: 16px;
+    }
     .content {
       flex: 1;
+      @media screen and (max-width: 820px) {
+        margin-top: 24px;
+      }
       .style-tag {
         display: flex;
         cursor: pointer;
@@ -1111,6 +1689,12 @@ function refreshTags() {
           font-weight: 400;
           color: #b2b2b2;
           cursor: pointer;
+          @media screen and (max-width: 768px) {
+            padding: 8px 12px;
+            font-size: 16px;
+            height: 36px;
+            line-height: 18px;
+          }
         }
       }
     }
@@ -1119,7 +1703,7 @@ function refreshTags() {
       justify-content: center;
       width: 129px;
       height: 80px;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+      // background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
       margin-right: 16px;
       border-radius: 5px;
       color: #fff;
@@ -1157,6 +1741,46 @@ function refreshTags() {
     font-weight: 500;
     margin: 48px auto 0px;
     cursor: pointer;
+    @media screen and (max-width: 820px) {
+      margin: 24px auto 0px;
+    }
+  }
+}
+.input-dom {
+  position: fixed;
+  top: -1200px;
+}
+.clear-input {
+  cursor: pointer;
+}
+:deep(.el-input) {
+  max-width: 1416px;
+  width: 100%;
+  .el-input__wrapper {
+    box-shadow: none;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    padding: 8px 24px;
+    @media screen and (max-width: 820px) {
+      height: 40px;
+    }
+    @media screen and (max-width: 767px) {
+      padding: 4px 8px;
+      height: 30px;
+    }
+    .el-input__inner {
+      font-size: 14px;
+      color: #fff;
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+    .el-input__count .el-input__count-inner {
+      background: none;
+    }
   }
 }
 </style>

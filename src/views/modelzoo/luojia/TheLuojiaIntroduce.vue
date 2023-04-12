@@ -18,7 +18,8 @@
     <p class="text-class">
       基于自研LuoJiaNET框架，使用数据通道自适应优选模块，对高光谱遥感影像（尺寸为200×145×145，分辨率为20m）进行直接处理得到的分类结果为：
     </p>
-    <img class="img-class" src="@/assets/imgs/luojia/luojia-2.png" />
+    <img class="img-class img2" src="@/assets/imgs/luojia/luojia-2.png" />
+    <img class="img-class img2-1" src="@/assets/imgs/luojia/luojia-2-1.png" />
     <img class="img-class" src="@/assets/imgs/luojia/luojia-3.png" />
     <h4 class="left">LuoJiaNET支持遥感经验知识引导</h4>
     <p class="text-class">
@@ -29,16 +30,19 @@
         class="img-class guide-left"
         src="@/assets/imgs/luojia/luojia-4.png"
       />
-      <img
-        class="img-class guide-right"
-        src="@/assets/imgs/luojia/luojia-5.png"
-      />
+      <div class="scroll">
+        <img
+          class="img-class guide-right"
+          src="@/assets/imgs/luojia/luojia-5.png"
+        />
+      </div>
     </div>
     <h4 class="left">LuoJiaNET支持大幅面处理</h4>
     <p class="text-class">
       基于自研LuoJiaNET框架，使用算子等价分解的分布式计算方式，对整张大幅遥感影像（尺寸为4×6000×6000，分辨率为2m）进行直接处理得到的分类结果：
     </p>
-    <img class="img-class" src="@/assets/imgs/luojia/luojia-6.png" />
+    <img class="img-class img6" src="@/assets/imgs/luojia/luojia-6.png" />
+    <img class="img-class img6-1" src="@/assets/imgs/luojia/luojia-6-1.png" />
     <img class="img-class" src="@/assets/imgs/luojia/luojia-7.png" />
     <h4 class="left">LuoJiaSET遥感影像样本库概况</h4>
     <div class="luojia-set">
@@ -51,7 +55,11 @@
         <p><span class="circle"></span>SAR影像样本：4个（1.3万张）</p>
       </div>
       <div class="date-situation">
-        <img class="img-class" src="@/assets/imgs/luojia/luojia-8.png" />
+        <img class="img-class img8" src="@/assets/imgs/luojia/luojia-8.png" />
+        <img
+          class="img-class img8-1"
+          src="@/assets/imgs/luojia/luojia-8-1.png"
+        />
       </div>
     </div>
   </div>
@@ -60,12 +68,36 @@
 .sketch {
   background-color: #fff;
   padding: 40px 80px;
+  .img2-1,
+  .img6-1,
+  .img8-1 {
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    padding: 16px;
+    .img2,
+    .img6,
+    .img8 {
+      display: none;
+    }
+    .img2-1,
+    .img6-1,
+    .img8-1 {
+      display: block;
+    }
+  }
   &-title {
     font-size: 24px;
     font-weight: 500;
     color: #000000;
     line-height: 32px;
     margin-bottom: 24px;
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+      height: 22px;
+      line-height: 22px;
+      margin: 0 0 8px;
+    }
   }
   &-content {
     margin-bottom: 24px;
@@ -73,6 +105,12 @@
     font-weight: 400;
     color: #555555;
     line-height: 22px;
+    @media screen and (max-width: 768px) {
+      height: auto;
+      font-size: 12px;
+      line-height: 18px;
+      margin-bottom: 8px;
+    }
   }
   .center {
     font-size: 24px;
@@ -80,6 +118,14 @@
     line-height: 32px;
     margin-bottom: 24px;
     text-align: center;
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+      height: 22px;
+      line-height: 22px;
+      margin: 16px 0 8px;
+      text-align: left;
+      font-weight: unset;
+    }
   }
   .architecture-img {
     width: 100%;
@@ -89,16 +135,32 @@
     color: #000000;
     line-height: 32px;
     margin: 39px 0 16px 0;
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+      height: 22px;
+      line-height: 22px;
+      margin: 24px 0 8px;
+      text-align: left;
+      font-weight: unset;
+    }
   }
   .text-class {
     font-size: 14px;
     font-weight: 400;
     color: #555555;
     line-height: 22px;
+    @media screen and (max-width: 768px) {
+      height: auto;
+      font-size: 12px;
+      line-height: 18px;
+    }
   }
   .img-class {
     width: 100%;
     margin-top: 24px;
+    @media screen and (max-width: 768px) {
+      margin-top: 8px;
+    }
   }
   .guide-box {
     // display: flex;
@@ -111,10 +173,31 @@
       width: 808px;
       height: 547px;
     }
+    @media screen and (max-width: 768px) {
+      .guide-left,
+      .guide-right {
+        width: 100%;
+        height: auto;
+        margin: 8px 0 0;
+      }
+      // .guide-right {
+      //   width: 808px;
+      //   overflow: scroll;
+      // }
+    }
+    @media screen and (max-width: 820px) {
+      .scroll {
+        overflow: scroll;
+      }
+    }
   }
   .luojia-set {
     display: flex;
     align-items: center;
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+    }
+
     .general-situation {
       width: 260px;
       font-size: 14px;
@@ -124,6 +207,11 @@
       p {
         display: flex;
         align-items: center;
+      }
+      @media screen and (max-width: 768px) {
+        height: auto;
+        font-size: 12px;
+        line-height: 18px;
       }
       .circle {
         width: 5px;

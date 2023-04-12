@@ -32,7 +32,7 @@ const router = useRouter();
 
 let i18n = {
   head: {
-    title: '项目',
+    title: 'AI实验室',
     introduce:
       '覆盖多领域任务，体验全流程开发，支持用户在线训练和推理可视化，可创建自己的项目空间，详情请点击',
     reference: '参考文档',
@@ -466,6 +466,14 @@ function getKeyWord() {
   queryData.page_num = 1;
   queryData.name = keyWord.value;
 }
+//打开jupyter useLoginStore
+function openJupyter() {
+  if (loginStore.isLogined) {
+    router.push('/settings/clouddev', '_blank');
+  } else {
+    goAuthorize();
+  }
+}
 
 // 二次点击数据集，跳转刷新数据集页面数据
 watch(
@@ -511,6 +519,13 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="banner-right">
+          <o-button
+            type="primary"
+            style="margin-right: 16px"
+            @click="openJupyter"
+            >打开jupyter</o-button
+          >
+
           <o-button type="primary" @click="goSetNew">{{
             i18n.head.btn
           }}</o-button>
@@ -808,7 +823,7 @@ $theme: #0d8dff;
       display: flex;
       justify-content: space-between;
       padding: 42px 16px;
-      color: #fff;
+      color: #000;
       .title {
         padding-bottom: 8px;
         font-size: 36px;

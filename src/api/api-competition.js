@@ -161,12 +161,12 @@ export function transferCaptain(competitionId, params) {
  * 删除团队----复赛无此功能
  * @returns
  */
-/* export function deleteTeam(id) {
-  const url = `/api/competitions/groups/${id}`;
-  return request.delete(url, getHeaderConfig()).then((res) => {
+export function dissolveTeam(id) {
+  const url = `/server/competition/${id}/team/action/dissolve`;
+  return request.put(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
-} */
+}
 
 /**
  * 获取城市数据

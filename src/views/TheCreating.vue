@@ -14,7 +14,7 @@ const i18n = {
   datasets: {
     new: '新建数据集',
     introduce:
-      '新建一个项目仓库，你可以将合规的数据集上传到此仓库，详细操作参考文档。',
+      '新建一个数据集仓库，你可以将合规的数据集上传到此仓库，详细操作参考文档。',
 
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
@@ -69,7 +69,7 @@ const bannerLabel = computed(() => {
     display: flex;
     justify-content: space-between;
     padding: 42px 16px;
-    color: #fff;
+    color: #000;
     margin: 0 auto;
 
     .title {

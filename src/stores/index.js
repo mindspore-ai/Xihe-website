@@ -77,8 +77,12 @@ export const useLangStore = defineStore('lang', {
       lang: '',
     };
   },
+  actions: {
+    setLangStore(val) {
+      this.lang = val;
+    },
+  },
 });
-
 // 文件仓库信息
 export const useFileData = defineStore('file', {
   state: () => {

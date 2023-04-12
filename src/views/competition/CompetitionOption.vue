@@ -15,6 +15,7 @@ const navItems = reactive([
     label: '介绍',
     href: 'introduction',
     isIndividual: true,
+    showDiscuss: true,
     competitionType: 'competition',
   },
   {
@@ -22,6 +23,7 @@ const navItems = reactive([
     label: '数据集',
     href: 'dataset',
     isIndividual: true,
+    showDiscuss: true,
     competitionType: 'competition',
   },
   {
@@ -29,6 +31,7 @@ const navItems = reactive([
     label: '结果',
     href: 'result',
     isIndividual: false,
+    showDiscuss: true,
     competitionType: 'competition',
   },
   {
@@ -36,6 +39,7 @@ const navItems = reactive([
     label: '我的团队',
     href: 'team',
     isIndividual: false,
+    showDiscuss: true,
     competitionType: 'challenge',
   },
   {
@@ -43,6 +47,7 @@ const navItems = reactive([
     label: '排行榜',
     href: 'leaderboard',
     isIndividual: true,
+    showDiscuss: true,
     competitionType: 'competition',
   },
   {
@@ -51,6 +56,7 @@ const navItems = reactive([
     href: comInfo.forum,
     windowOpen: true,
     isIndividual: true,
+    showDiscuss: comInfo.forum ? true : false, //无forum时不显示讨论tab
     competitionType: 'challenge',
   },
   {
@@ -58,6 +64,7 @@ const navItems = reactive([
     label: '协议',
     href: 'agreement',
     isIndividual: true,
+    showDiscuss: true,
     competitionType: 'competition',
   },
 ]);
@@ -71,7 +78,9 @@ watch(
     if (newValue) {
       // 比赛
       if (comInfo.type === '') {
-        renderNav.value = navItems;
+        renderNav.value = navItems.filter((item) => {
+          return item.showDiscuss;
+        });
       } else {
         // 活动
         renderNav.value = navItems.filter((item) => {
@@ -81,7 +90,7 @@ watch(
     } else {
       if (comInfo.type === '') {
         renderNav.value = navItems.filter((item) => {
-          return item.isIndividual;
+          return item.isIndividual && item.showDiscuss;
         });
       } else {
         renderNav.value = navItems.filter((item) => {
@@ -92,13 +101,6 @@ watch(
   },
   { immediate: true }
 );
-/* const renderNav = computed(() => {
-  return comInfo.is_competitor && comInfo.type === 'challenge'
-    ? navItems
-    : navItems.filter((item) => {
-        return item.isIndividual;
-      });
-}); */
 
 watch(
   () => {

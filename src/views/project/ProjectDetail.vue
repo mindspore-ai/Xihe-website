@@ -562,6 +562,13 @@ function checkName(rule, value, callback) {
     });
   }, 500);
 }
+
+// 开启Jupyter
+function openJupyter() {
+  router.push(
+    `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
+  );
+}
 </script>
 
 <template>
@@ -604,16 +611,22 @@ function checkName(rule, value, callback) {
             </div>
           </div>
         </div>
-        <div
-          v-if="
-            loginStore.isLogined && userInfoStore.userName !== detailData.owner
-          "
-        >
-          <o-button @click="forkClick">
+        <div>
+          <o-button
+            v-if="userInfoStore.userName !== detailData.owner"
+            @click="forkClick"
+          >
             <div class="fork-btn">
               <o-icon><icon-fork></icon-fork></o-icon> Fork
             </div>
           </o-button>
+        </div>
+        <div
+          v-if="
+            loginStore.isLogined && userInfoStore.userName === detailData.owner
+          "
+        >
+          <o-button type="primary" @click="openJupyter">打开Jupyter</o-button>
         </div>
       </div>
       <div class="head-tabs">

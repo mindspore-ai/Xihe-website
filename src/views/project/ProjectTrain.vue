@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onUpdated } from 'vue';
+import { ref, watch, computed, onUpdated,onUnmounted  } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -39,6 +39,7 @@ const TypeSet = async function (elements) {
   return window.MathJax.startup.promise;
 };
 let head = document.head;
+let script1 = document.createElement('script');
 let script = document.createElement('script');
 script.setAttribute('type', 'text/javascript');
 script.setAttribute('id', 'MathJax-script');
@@ -47,10 +48,26 @@ script.setAttribute(
   'src',
   'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
 );
+let code =
+  'MathJax = {' +
+  '  tex: {' +
+  '    inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]],' +
+  '    displayMath: [["$$", "$$"], ["\\\\[", "\\\\]"]]' +
+  '  },' +
+  '  svg: {' +
+  '    fontCache: "global"' +
+  '  }' +
+  '}';
+script1.appendChild(document.createTextNode(code));
+head.appendChild(script1);
 head.appendChild(script);
 onUpdated(() => {
   TypeSet(document.querySelectorAll('p'));
   TypeSet(document.querySelectorAll('li'));
+});
+onUnmounted(() => {
+  head.removeChild(script);
+  head.removeChild(script1);
 });
 
 const route = useRoute();

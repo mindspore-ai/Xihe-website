@@ -507,9 +507,18 @@ onUnmounted(() => {
         class="dlg-body"
         style="color: #555; font-size: 14px; line-height: 24px; padding: 0 24px"
       >
-        <div>1. 填写申请信息（用户名、邮箱、职业、申请理由)。</div>
+        <div>
+          <span> 1. 点击 </span>
+          <a
+            href="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/finetune/%E7%94%B3%E8%AF%B7%E8%A1%A8%20.xlsx"
+            style="color: #0d8dff"
+          >
+            大模型微调公测申请表
+          </a>
+          <span> 获取申请表，填写必要信息。 </span>
+        </div>
         <div class="send-email">
-          <span> 2. 发送申请信息至官方邮箱: </span>
+          <span> 2. 附上申请表发送申请信息至官方邮箱：</span>
           <span style="color: #0d8dff" class="email">
             public@xihe.mindspore.cn
           </span>

@@ -36,6 +36,7 @@ getGuide(comInfo.value.doc)
   .then((tree) => {
     README = tree.data;
     codeString.value = README;
+    // codeString.value = codeString.value.replace(/<(?!img\b)[^>]*>/gi, '');
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {
@@ -43,7 +44,7 @@ getGuide(comInfo.value.doc)
   });
 </script>
 <template>
-  <div class="markdown-file" v-html="result"></div>
+  <div v-dompurify-html="result" class="markdown-file"></div>
 </template>
 
 <style lang="scss" scoped>

@@ -1,9 +1,9 @@
 import Markdown from 'markdown-it';
 import markdownItAnchor from 'markdown-it-anchor';
 import forInlinePlugin from 'markdown-it-for-inline';
+import MarkdownItSanitizer from 'markdown-it-sanitizer';
 
 const mkit = new Markdown({ html: true, linkify: true });
-
 const slugify = (s) =>
   decodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'));
 
@@ -29,5 +29,6 @@ export function handleMarkdown() {
       slugify,
     })
     .use(forInlinePlugin, 'url_new_win', 'link_open', newWindow);
+  // .use(MarkdownItSanitizer);
   return mkit;
 }

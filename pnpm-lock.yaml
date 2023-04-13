@@ -8,6 +8,7 @@ specifiers:
   authing-js-sdk: ^4.23.35
   axios: ^0.26.1
   cesium: ^1.98.1
+  dompurify: ^3.0.1
   element-plus: ^2.2.26
   eslint: ^8.13.0
   eslint-plugin-prettier: ^4.0.0
@@ -20,6 +21,7 @@ specifiers:
   markdown-it: ^12.3.2
   markdown-it-anchor: ^8.6.4
   markdown-it-for-inline: ^0.1.1
+  markdown-it-sanitizer: ^0.4.3
   markdown-it-toc: ^1.1.0
   moment: ^2.29.4
   monaco-editor: ^0.33.0
@@ -36,6 +38,7 @@ specifiers:
   vite-plugin-cesium: ^1.1.1
   vue: ^3.2.25
   vue-clipboard3: ^2.0.0
+  vue-dompurify-html: ^4.0.0
   vue-i18n: ^9.2.2
   vue-router: ^4.0.14
 
@@ -45,6 +48,7 @@ dependencies:
   authing-js-sdk: registry.npmmirror.com/authing-js-sdk/4.23.35
   axios: 0.26.1
   cesium: 1.98.1
+  dompurify: registry.npmmirror.com/dompurify/3.0.1
   element-plus: registry.npmmirror.com/element-plus/2.2.26_vue@3.2.33
   highlight.js: 11.5.1
   html2canvas: 1.4.1
@@ -53,6 +57,7 @@ dependencies:
   markdown-it: 12.3.2
   markdown-it-anchor: registry.npmmirror.com/markdown-it-anchor/8.6.4_markdown-it@12.3.2
   markdown-it-for-inline: 0.1.1
+  markdown-it-sanitizer: registry.npmmirror.com/markdown-it-sanitizer/0.4.3
   markdown-it-toc: 1.1.0
   moment: registry.npmmirror.com/moment/2.29.4
   monaco-editor: 0.33.0
@@ -62,6 +67,7 @@ dependencies:
   swiper: 8.4.4
   vue: 3.2.33
   vue-clipboard3: registry.npmmirror.com/vue-clipboard3/2.0.0
+  vue-dompurify-html: registry.npmmirror.com/vue-dompurify-html/4.0.0_vue@3.2.33
   vue-i18n: 9.2.2_vue@3.2.33
   vue-router: 4.0.14_vue@3.2.33
 
@@ -485,7 +491,7 @@ packages:
       '@zip.js/zip.js': 2.4.26
       autolinker: 3.16.2
       bitmap-sdf: 1.0.4
-      dompurify: 2.4.0
+      dompurify: registry.npmmirror.com/dompurify/2.4.0
       earcut: 2.2.4
       grapheme-splitter: 1.0.4
       jsep: 0.3.5
@@ -608,9 +614,6 @@ packages:
     dependencies:
       ssr-window: 4.0.2
     dev: false
-
-  /dompurify/2.4.0:
-    resolution: {integrity: sha512-Be9tbQMZds4a3C6xTmz68NlMfeONA//4dOavl/1rNw50E+/QO0KVpbcU0PcaW0nsQxurXls9ZocqFxk8R2mWEA==}
 
   /earcut/2.2.4:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
@@ -2123,7 +2126,7 @@ packages:
       '@types/web-bluetooth': registry.npmmirror.com/@types/web-bluetooth/0.0.16
       '@vueuse/metadata': registry.npmmirror.com/@vueuse/metadata/9.6.0
       '@vueuse/shared': registry.npmmirror.com/@vueuse/shared/9.6.0_vue@3.2.33
-      vue-demi: registry.npmmirror.com/vue-demi/0.12.5_vue@3.2.33
+      vue-demi: registry.npmmirror.com/vue-demi/0.13.11_vue@3.2.33
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -2141,7 +2144,7 @@ packages:
     name: '@vueuse/shared'
     version: 9.6.0
     dependencies:
-      vue-demi: registry.npmmirror.com/vue-demi/0.12.5_vue@3.2.33
+      vue-demi: registry.npmmirror.com/vue-demi/0.13.11_vue@3.2.33
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -2277,6 +2280,17 @@ packages:
     resolution: {integrity: sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/delegate/-/delegate-3.2.0.tgz}
     name: delegate
     version: 3.2.0
+    dev: false
+
+  registry.npmmirror.com/dompurify/2.4.0:
+    resolution: {integrity: sha512-Be9tbQMZds4a3C6xTmz68NlMfeONA//4dOavl/1rNw50E+/QO0KVpbcU0PcaW0nsQxurXls9ZocqFxk8R2mWEA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dompurify/-/dompurify-2.4.0.tgz}
+    name: dompurify
+    version: 2.4.0
+
+  registry.npmmirror.com/dompurify/3.0.1:
+    resolution: {integrity: sha512-60tsgvPKwItxZZdfLmamp0MTcecCta3avOhsLgPZ0qcWt96OasFfhkeIRbJ6br5i0fQawT1/RBGB5L58/Jpwuw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dompurify/-/dompurify-3.0.1.tgz}
+    name: dompurify
+    version: 3.0.1
     dev: false
 
   registry.npmmirror.com/element-plus/2.2.26_vue@3.2.33:
@@ -2715,6 +2729,12 @@ packages:
       markdown-it: 12.3.2
     dev: false
 
+  registry.npmmirror.com/markdown-it-sanitizer/0.4.3:
+    resolution: {integrity: sha512-0Q2ua8+oDN7/3r5UXMnbVq8C+LRfT2pzVKA+h4nXTLEMBFQDwp7qJZOe7DkBa79C7V2cSBXJyScxJ7vYs9kE2w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/markdown-it-sanitizer/-/markdown-it-sanitizer-0.4.3.tgz}
+    name: markdown-it-sanitizer
+    version: 0.4.3
+    dev: false
+
   registry.npmmirror.com/memoize-one/6.0.0:
     resolution: {integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/memoize-one/-/memoize-one-6.0.0.tgz}
     name: memoize-one
@@ -2854,11 +2874,11 @@ packages:
       clipboard: registry.npmmirror.com/clipboard/2.0.11
     dev: false
 
-  registry.npmmirror.com/vue-demi/0.12.5_vue@3.2.33:
-    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-demi/-/vue-demi-0.12.5.tgz}
-    id: registry.npmmirror.com/vue-demi/0.12.5
+  registry.npmmirror.com/vue-demi/0.13.11_vue@3.2.33:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-demi/-/vue-demi-0.13.11.tgz}
+    id: registry.npmmirror.com/vue-demi/0.13.11
     name: vue-demi
-    version: 0.12.5
+    version: 0.13.11
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
@@ -2870,6 +2890,21 @@ packages:
         optional: true
     dependencies:
       vue: 3.2.33
+    dev: false
+
+  registry.npmmirror.com/vue-dompurify-html/4.0.0_vue@3.2.33:
+    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-dompurify-html/-/vue-dompurify-html-4.0.0.tgz}
+    id: registry.npmmirror.com/vue-dompurify-html/4.0.0
+    name: vue-dompurify-html
+    version: 4.0.0
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+    dependencies:
+      dompurify: registry.npmmirror.com/dompurify/3.0.1
+      vue: 3.2.33
+      vue-demi: registry.npmmirror.com/vue-demi/0.13.11_vue@3.2.33
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: false
 
   registry.npmmirror.com/webpack-sources/3.2.3:

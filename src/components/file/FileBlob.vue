@@ -298,8 +298,8 @@ watch(
         <div
           v-if="showBlob"
           v-highlight
+          v-dompurify-html="result"
           class="blank markdown-file"
-          v-html="result"
         ></div>
         <div v-else class="big-file">
           文件太大或格式不支持展示但你仍然可以<span

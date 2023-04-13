@@ -207,7 +207,7 @@ watch(
 <template>
   <div v-if="detailData.id" class="model-card">
     <div v-if="codeString" class="markdown-body">
-      <div v-highlight class="markdown-file" v-html="result"></div>
+      <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
       <o-button
         v-if="detailData.owner === userInfo.userName"
         @click="goEditor"

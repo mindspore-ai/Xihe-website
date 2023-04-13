@@ -1,5 +1,6 @@
 <script setup>
 import Markdown from 'markdown-it';
+import MarkdownItSanitizer from 'markdown-it-sanitizer';
 
 const props = defineProps({
   statement: {
@@ -8,14 +9,14 @@ const props = defineProps({
   },
 });
 const mkit = new Markdown({ html: true });
+// mkit.use(MarkdownItSanitizer);
 
 const statementHtml = mkit.render(props.statement);
 </script>
 
 <template>
   <div class="statement markdown-file">
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-html="statementHtml"></div>
+    <div v-dompurify-html="statementHtml"></div>
   </div>
 </template>
 

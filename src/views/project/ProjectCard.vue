@@ -500,7 +500,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="fail-log">
-            <div v-html="failLog"></div>
+            <div v-dompurify-html="failLog"></div>
           </div>
         </div>
         <o-button
@@ -514,7 +514,7 @@ onUnmounted(() => {
         v-else-if="detailData.owner === userInfo.userName"
         class="markdown-body"
       >
-        <div class="markdown-file" v-html="result2"></div>
+        <div v-dompurify-html="result2" class="markdown-file"></div>
         <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
@@ -535,7 +535,7 @@ onUnmounted(() => {
     </div>
     <div v-else class="left-data1">
       <div v-if="codeString" class="markdown-body">
-        <div v-highlight class="markdown-file" v-html="result"></div>
+        <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
         <o-button
           v-if="detailData.owner === userInfo.userName"
           @click="goEditor"

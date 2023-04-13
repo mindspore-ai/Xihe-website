@@ -42,7 +42,7 @@ function downloadDataset() {
           <o-icon><icon-download></icon-download></o-icon> </template
       ></o-button>
     </div>
-    <div class="markdown-file" v-html="result"></div>
+    <div v-dompurify-html="result" class="markdown-file"></div>
   </div>
 </template>
 

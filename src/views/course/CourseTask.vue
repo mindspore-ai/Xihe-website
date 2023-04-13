@@ -113,7 +113,7 @@ function goTaskDetail(item) {
   router.push(`/course/task/${route.params.courseId}/${item.id}`);
 }
 
-const layout = ref('prev, pager,next');
+const layout = ref('prev,pager,next,sizes,jumper');
 // 课程分页器
 function handleCurrentPage(val) {
   taskPager.page = val;
@@ -125,6 +125,10 @@ function handleCurrentPage(val) {
 }
 function handleSizeChange(val) {
   taskPager.size = val;
+  currentTaskData.value = taskData.value.slice(
+    taskPager.page * taskPager.size - taskPager.size,
+    taskPager.page * taskPager.size
+  );
 }
 function toTop() {
   document.documentElement.scrollTop = 0;
@@ -140,7 +144,7 @@ function toTop() {
             type="card"
             @tab-click="toggleTaskState"
           >
-            <el-tab-pane label="竞赛状态" name="status" disabled> </el-tab-pane>
+            <el-tab-pane label="作业状态" name="status" disabled> </el-tab-pane>
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="未完成" name="not-finish"></el-tab-pane>
             <el-tab-pane label="已完成" name="finish"></el-tab-pane>
@@ -176,7 +180,7 @@ function toTop() {
             <div class="pagination">
               <el-pagination
                 hide-on-single-page
-                :page-sizes="[1, 2, 5]"
+                :page-sizes="[6, 12, 18]"
                 :current-page="taskPager.page"
                 :page-size="taskPager.size"
                 :total="taskData.length"
@@ -345,7 +349,6 @@ function toTop() {
       line-height: 32px;
       font-size: 24px;
       color: #000000;
-      // font-weight: 550;
       line-height: 40px;
       position: absolute;
       top: 0px;
@@ -444,7 +447,6 @@ function toTop() {
   }
 }
 :deep(.el-pagination) {
-  // background-color: red;
   --el-pagination-bg-color: none !important;
   .btn-next,
   .btn-prev {
@@ -458,16 +460,13 @@ function toTop() {
   }
   .el-pager {
     .number {
-      // background-color: red;
       width: 36px;
       height: 36px;
       font-size: 14px;
     }
     .is-active {
-      // TODO:
-      // background-color: #0d8dff;
       color: #0d8dff;
-      // opacity: 0.1;
+      background-color: #e6f3ff;
     }
   }
   .el-pagination__sizes {

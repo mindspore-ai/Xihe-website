@@ -427,7 +427,7 @@ watch(
         </o-button>
       </div>
       <div v-if="codeString" class="markdown-body">
-        <div v-highlight class="markdown-file" v-html="result"></div>
+        <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
         <o-button v-show="detailData.is_owner" @click="goEditor">{{
           i18n.editor
         }}</o-button>

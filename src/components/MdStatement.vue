@@ -1,6 +1,5 @@
 <script setup>
 import Markdown from 'markdown-it';
-import MarkdownItSanitizer from 'markdown-it-sanitizer';
 
 const props = defineProps({
   statement: {
@@ -9,7 +8,6 @@ const props = defineProps({
   },
 });
 const mkit = new Markdown({ html: true });
-// mkit.use(MarkdownItSanitizer);
 
 const statementHtml = mkit.render(props.statement);
 </script>

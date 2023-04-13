@@ -8,7 +8,6 @@ specifiers:
   authing-js-sdk: ^4.23.35
   axios: ^0.26.1
   cesium: ^1.98.1
-  dompurify: ^3.0.1
   element-plus: ^2.2.26
   eslint: ^8.13.0
   eslint-plugin-prettier: ^4.0.0
@@ -48,7 +47,6 @@ dependencies:
   authing-js-sdk: registry.npmmirror.com/authing-js-sdk/4.23.35
   axios: 0.26.1
   cesium: 1.98.1
-  dompurify: registry.npmmirror.com/dompurify/3.0.1
   element-plus: registry.npmmirror.com/element-plus/2.2.26_vue@3.2.33
   highlight.js: 11.5.1
   html2canvas: 1.4.1

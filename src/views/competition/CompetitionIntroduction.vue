@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onUpdated } from 'vue';
-// import { useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -36,7 +35,6 @@ getGuide(comInfo.value.doc)
   .then((tree) => {
     README = tree.data;
     codeString.value = README;
-    // codeString.value = codeString.value.replace(/<(?!img\b)[^>]*>/gi, '');
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {

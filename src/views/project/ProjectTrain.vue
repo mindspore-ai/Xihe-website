@@ -38,6 +38,16 @@ const TypeSet = async function (elements) {
     .catch((err) => console.error('Typeset failed: ' + err.message));
   return window.MathJax.startup.promise;
 };
+let head = document.head;
+let script = document.createElement('script');
+script.setAttribute('type', 'text/javascript');
+script.setAttribute('id', 'MathJax-script');
+script.setAttribute('async', '');
+script.setAttribute(
+  'src',
+  'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
+);
+head.appendChild(script);
 onUpdated(() => {
   TypeSet(document.querySelectorAll('p'));
   TypeSet(document.querySelectorAll('li'));

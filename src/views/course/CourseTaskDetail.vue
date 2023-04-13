@@ -51,7 +51,7 @@ getTask();
       </div>
       <div class="task-content">
         <div class="task-name">{{ taskData.asg_name }}</div>
-        <div class="markdown-file" v-html="result"></div>
+        <div v-dompurify-html="result" class="markdown-file"></div>
       </div>
     </div>
   </div>

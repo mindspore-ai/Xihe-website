@@ -18,6 +18,7 @@ import Pagination from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import OIcon from '@/components/OIcon.vue';
 import OAlert from '@/components/hooks/useAlert';
+import VueDOMPurifyHTML from 'vue-dompurify-html';
 
 const app = createApp(App);
 
@@ -39,6 +40,7 @@ app.use(Pagination, {
 });
 app.use(createPinia());
 app.use(router);
+app.use(VueDOMPurifyHTML); //防止v-html进行xss注入
 
 app.provide('message', OAlert);
 app.component('OIcon', OIcon);

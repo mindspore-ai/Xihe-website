@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onUpdated } from 'vue';
-// import { useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -43,7 +42,7 @@ getGuide(comInfo.value.doc)
   });
 </script>
 <template>
-  <div class="markdown-file" v-html="result"></div>
+  <div v-dompurify-html="result" class="markdown-file"></div>
 </template>
 
 <style lang="scss" scoped>

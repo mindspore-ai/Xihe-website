@@ -20,7 +20,7 @@ getGuide(userCourseData.courseData.doc)
   });
 </script>
 <template>
-  <div class="markdown-file" v-html="result"></div>
+  <div v-dompurify-html="result" class="markdown-file"></div>
 </template>
 
 <style lang="scss" scoped>

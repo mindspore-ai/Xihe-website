@@ -672,9 +672,9 @@ const handleCommand = (command) => {
                     v-for="(project, index) in projectResult"
                     v-show="index < 3"
                     :key="index"
+                    v-dompurify-html="project.name"
                     class="result-item-list"
                     @click="goProjectDetail(index, project)"
-                    v-html="project.name"
                   ></li>
                 </ul>
               </div>
@@ -699,9 +699,9 @@ const handleCommand = (command) => {
                     v-for="(model, index) in modelResult"
                     v-show="index < 3"
                     :key="index"
+                    v-dompurify-html="model.name"
                     class="result-item-list"
                     @click="goModelDetail(index, model)"
-                    v-html="model.name"
                   ></li>
                 </ul>
               </div>
@@ -727,9 +727,9 @@ const handleCommand = (command) => {
                     v-for="(dataset, index) in datasetResult"
                     v-show="index < 3"
                     :key="index"
+                    v-dompurify-html="dataset.name"
                     class="result-item-list"
                     @click="goDatasetDetail(index, dataset)"
-                    v-html="dataset.name"
                   ></li>
                 </ul>
               </div>
@@ -753,9 +753,9 @@ const handleCommand = (command) => {
                     v-for="(user, index) in userResult"
                     v-show="index < 7"
                     :key="index"
+                    v-dompurify-html="user.name"
                     class="result-item-list"
                     @click="goUserDetail(index, user)"
-                    v-html="user.name"
                   ></li>
                 </ul>
               </div>

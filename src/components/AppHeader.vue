@@ -544,13 +544,15 @@ const options = ref([
 ]);
 // 选择语言
 const handleCommand = (command) => {
-  locale.value = command.value;
+  // locale.value = command.value;
 
   const { pathname } = window.location;
 
-  if (command.value === 'zh') {
+  if (command === 'En') {
+    locale.value = 'zh';
     window.location.href = pathname.replace('en', '');
   } else {
+    locale.value = 'en';
     window.location.href = '/en';
   }
 };
@@ -798,13 +800,16 @@ const handleCommand = (command) => {
 
         <!-- language -->
         <div v-if="translateWhitelist.includes(route.name)" class="language">
-          <el-dropdown popper-class="language-change" @command="handleCommand">
-            <span class="el-dropdown-link">
+          <el-dropdown popper-class="language-change">
+            <span
+              class="el-dropdown-link"
+              @click="handleCommand(t('home.LANG'))"
+            >
               {{ t('home.LANG') }}
-              <OIcon><IconDown></IconDown></OIcon>
+              <!-- <OIcon><IconDown></IconDown></OIcon> -->
             </span>
 
-            <template #dropdown>
+            <!-- <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item
                   v-for="(item, key) in options"
@@ -814,7 +819,7 @@ const handleCommand = (command) => {
                   >{{ item.label }}</el-dropdown-item
                 >
               </el-dropdown-menu>
-            </template>
+            </template> -->
           </el-dropdown>
         </div>
 
@@ -1214,7 +1219,8 @@ const handleCommand = (command) => {
         display: flex;
         justify-content: flex-end;
         margin-right: 16px;
-        width: 72px;
+        // width: 72px;
+        min-width: 15px;
         text-align: right;
         .el-dropdown {
           color: #000;

@@ -548,7 +548,7 @@ const handleCommand = (command) => {
 
   const { pathname } = window.location;
 
-  if (command === 'En') {
+  if (command === '中文') {
     locale.value = 'zh';
     window.location.href = pathname.replace('en', '');
   } else {

@@ -183,8 +183,8 @@ const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
   { text: '城市夜景', isSelected: false },
   { text: '悬崖 美景 壮观 高清', isSelected: false },
-  { text: '西湖 烟雨', isSelected: false },
-  { text: '海滩 美景 高清', isSelected: false },
+  // { text: '西湖 烟雨', isSelected: false },
+  // { text: '海滩 美景 高清', isSelected: false },
 ]);
 
 const lists = ref([
@@ -535,7 +535,7 @@ function getDescExamples(arr, count) {
 }
 // 换一批
 function refreshTags() {
-  exampleData.value = getDescExamples(lists.value, 5);
+  exampleData.value = getDescExamples(lists.value, 3);
 }
 
 const resultIndex = ref(-1);
@@ -552,7 +552,7 @@ function handleResultClcik(i) {
         maxlength="75"
         placeholder="请输入简体中文或选择下方样例"
         show-word-limit
-        type="text"
+        type="textarea"
         @input="handleInput"
       >
         <template #suffix
@@ -1609,9 +1609,24 @@ function handleResultClcik(i) {
   .wrap-left {
     width: 354px;
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    :deep(.el-textarea) {
+      width: calc(100% - 48px) !important;
+      margin: 24px 24px 16px;
+      border-radius: 8px;
+      .el-textarea__inner {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 1px #fff inset;
+        border-radius: 8px;
+      }
+    }
   }
   .wrap-right {
     width: calc(100% - 370px);
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-left: 16px;
+    border-radius: 16px;
     .empty {
       height: 100%;
       display: flex;
@@ -1627,19 +1642,19 @@ function handleResultClcik(i) {
     display: none;
   }
   .title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
-    color: #ffffff;
+    color: #555;
     line-height: 25px;
     margin-right: 40px;
   }
   .active {
-    color: #fff !important;
-    background: #008eff !important;
+    color: #0d8dff !important;
+    background: #e5f3ff !important;
   }
   .active-1 {
     img {
-      border: 1px solid #008eff !important;
+      border: 3px solid #008eff !important;
       border-radius: 6px;
     }
   }
@@ -1647,6 +1662,7 @@ function handleResultClcik(i) {
     display: flex;
     margin-top: 48px;
     align-items: center;
+    margin: 0 24px;
     @media screen and (max-width: 820px) {
       margin-top: 24px;
       align-items: flex-start;
@@ -1657,13 +1673,13 @@ function handleResultClcik(i) {
       flex-wrap: wrap;
       p {
         color: #b2b2b2;
-        border: 1px solid #0d8dff;
-        margin-right: 16px;
+        // border: 1px solid #0d8dff;
+        margin-right: 4px;
         border-radius: 8px;
-        background: rgba(13, 141, 255, 0.3);
-        padding: 7px 12px;
-        font-size: 14px;
-        font-size: 14px;
+        background: #f5f5f5;
+        padding: 3px 8px;
+        font-size: 12px;
+        margin: 4px 2px;
         cursor: pointer;
         @media screen and (max-width: 820px) {
           margin-bottom: 8px;
@@ -1683,8 +1699,12 @@ function handleResultClcik(i) {
     }
   }
   .wk-experience-styles {
-    margin-top: 48px;
+    margin-top: 40px;
     // display: flex;
+    .title {
+      text-align: left;
+      margin-left: 24px;
+    }
     @media screen and (max-width: 820px) {
       flex-direction: column;
       margin-top: 16px;
@@ -1693,6 +1713,7 @@ function handleResultClcik(i) {
       flex: 1;
       height: 354px;
       overflow: auto;
+      margin-top: 16px;
       &::-webkit-scrollbar {
         width: 0;
         height: 6px;
@@ -1780,7 +1801,7 @@ function handleResultClcik(i) {
       justify-content: center;
       width: 65px;
       // height: 65px;
-      margin-top: 16px;
+      margin-bottom: 16px;
       // background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
       // margin-right: 16px;
       border-radius: 5px;
@@ -1803,7 +1824,6 @@ function handleResultClcik(i) {
       }
     }
     .all-kind {
-      margin-top: 16px;
       text-align: center;
       color: #555555;
       cursor: pointer;
@@ -1828,7 +1848,7 @@ function handleResultClcik(i) {
     color: #fff;
     font-size: 14px;
     font-weight: 500;
-    margin: 48px auto 0px;
+    margin: 25px auto 40px;
     cursor: pointer;
     @media screen and (max-width: 820px) {
       margin: 24px auto 0px;

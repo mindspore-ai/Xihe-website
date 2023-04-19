@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconArrow from '~icons/app/arrow-top';
+import IconOpen from '~icons/app/eye-open';
 import IconLike from '~icons/app/like';
 
 import { useUserInfoStore } from '@/stores';
@@ -20,7 +20,7 @@ const navItems = [
   },
   {
     id: 2,
-    icon: IconArrow,
+    icon: IconOpen,
     tag: '我的公开',
     path: '/modelzoo/wukong/admin/public',
   },
@@ -63,6 +63,14 @@ watch(
 onMounted(() => {
   window.addEventListener('resize', onResize);
 });
+// 跳转粉丝页
+function goFollow() {
+  router.push({ path: `/${userInfoStore.userName}/follows` });
+}
+// 跳转关注页
+function goWatched() {
+  router.push({ path: `/${userInfoStore.userName}/watched` });
+}
 </script>
 <template>
   <div class="wrapper">
@@ -80,6 +88,32 @@ onMounted(() => {
           <div class="user-info">
             <img :src="userInfoStore.avatar" alt="" />
             <p>{{ userInfoStore.userName }}</p>
+            <div class="user-social">
+              <p class="user-social-item" @click="goFollow()">
+                <span>粉丝</span>
+                <span class="social-item-fans">{{
+                  userInfoStore.fansCount > 10000
+                    ? (userInfoStore.fansCount -
+                        (userInfoStore.fansCount % 1000)) /
+                        10000 +
+                      'W'
+                    : userInfoStore.fansCount
+                }}</span>
+              </p>
+              <p class="user-social-item" @click="goWatched()">
+                <span>关注</span>
+                <span class="social-item-follow">
+                  {{
+                    userInfoStore.followingCount > 10000
+                      ? (userInfoStore.followingCount -
+                          (userInfoStore.followingCount % 1000)) /
+                          10000 +
+                        'W'
+                      : userInfoStore.followingCount
+                  }}
+                </span>
+              </p>
+            </div>
           </div>
 
           <div class="nav">
@@ -176,26 +210,66 @@ onMounted(() => {
           line-height: 24px;
           margin-top: 16px;
         }
+        .user-social {
+          margin-top: 16px;
+          display: grid;
+          grid-gap: 20px 20px;
+          grid-template-columns: 1fr 1fr;
+
+          &-item {
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: normal;
+            color: #000000;
+            line-height: 22px;
+            color: #555555;
+            cursor: pointer;
+            &:hover {
+              color: #0d8dff;
+              .social-item-fans {
+                color: #0d8dff;
+              }
+              .social-item-follow {
+                color: #0d8dff;
+              }
+            }
+
+            span:nth-child(2) {
+              color: #000000;
+              margin-left: 8px;
+            }
+          }
+        }
       }
       .nav {
         margin-top: 48px;
+        padding: 0 24px;
+        font-size: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .nav-item {
           width: 100%;
           height: 56px;
+          color: #555;
           background: #fff;
           display: flex;
-          padding-left: 48px;
+          padding-left: 24px;
           align-items: center;
           cursor: pointer;
+          border-radius: 28px;
+          backdrop-filter: blur(0px);
           .o-icon {
             margin-right: 12px;
-            font-size: 22px;
+            font-size: 24px;
           }
         }
         .active {
+          color: #000;
           background: #f7f8fa;
           backdrop-filter: blur(0px);
-          border-right: 2px solid #0d8dff;
         }
       }
     }

@@ -177,6 +177,15 @@ export default [
     ],
   },
 
+  //新视觉改版后-悟空路由
+  {
+    path: '/modelzoo/wukong/introduce',
+    name: 'wukongIntroduce',
+    component: () => {
+      return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+    },
+  },
+
   {
     path: '/modelzoo/wukong/admin',
     name: 'paintingManage',

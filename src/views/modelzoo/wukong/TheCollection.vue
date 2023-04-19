@@ -228,8 +228,17 @@ function handleImageClick(img) {
             alt=""
           />
         </div>
-
-        <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
+        <div class="img-desc">
+          <p>来自{{ item.desc }}&nbsp;{{ item.style }}</p>
+          <div class="img-owner">
+            <div class="info-left">
+              <img :src="item.avatar" alt="" />
+              <span class="user-name">
+                {{ item.owner }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -262,10 +271,6 @@ function handleImageClick(img) {
             <img :src="userInfoStore.avatar" alt="" />
             <p>{{ userInfoStore.userName }}</p>
           </div>
-          <!-- <div class="dig-counts">
-            <o-icon><icon-fingure></icon-fingure></o-icon>
-            <span>999</span>
-          </div> -->
         </div>
       </div>
 
@@ -374,10 +379,13 @@ function handleImageClick(img) {
     .el-dialog__title {
       color: #fff;
       padding-top: 27px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       @media screen and (max-width: 820px) {
         font-size: 14px;
         line-height: 24px;
-        padding: 0;
+        padding: 0 40px;
       }
     }
   }
@@ -412,6 +420,7 @@ function handleImageClick(img) {
   }
 }
 :deep(.imginfo-dlg) {
+  border-radius: 0;
   .el-dialog__body {
     display: flex;
     flex-direction: column;
@@ -689,19 +698,21 @@ function handleImageClick(img) {
     }
     .collect-item {
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
       .image-box {
         position: relative;
-        background: #fff;
         flex: 1;
         display: flex;
         align-items: center;
-        @media screen and (max-width: 820px) {
-          width: calc(50vw - 24px);
-        }
+        // @media screen and (max-width: 820px) {
+        //   width: calc(50vw - 24px);
+        // }
         &:hover {
           .handles {
             opacity: 1;
@@ -749,6 +760,7 @@ function handleImageClick(img) {
         img {
           width: 310px;
           min-height: 232px;
+          border-radius: 16px 16px 0 0;
           @media screen and (max-width: 820px) {
             width: 100%;
             min-height: 270px;
@@ -759,20 +771,49 @@ function handleImageClick(img) {
           }
         }
       }
+      .img-desc {
+        margin-bottom: 16px;
+        p {
+          padding: 0 16px;
+        }
+        .img-owner {
+          color: #999;
+          font-size: 14px;
+          margin-top: 16px;
+          padding: 0 16px;
+          img {
+            width: 24px;
+          }
+          .info-left {
+            display: flex;
+            align-items: center;
+            .user-name {
+              margin-left: 8px;
+            }
+          }
+          @media screen and (max-width: 768px) {
+            font-size: 12px;
+          }
+        }
+      }
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 500;
-        color: #555555;
+        color: #000;
         line-height: 26px;
-        height: 26px;
         text-align: left;
         margin-top: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @media screen and (max-width: 820px) {
+          width: calc(50vw - 22px);
+        }
         @media screen and (max-width: 768px) {
           font-size: 12px;
           font-weight: 400;
           color: #000000;
           line-height: 17px;
-          height: 17px;
         }
       }
     }

@@ -35,6 +35,7 @@ async function getCollectedImages() {
     const res = await collectedPictures();
     if (res.status === 200) {
       collecteImages.value = res.data.data;
+      console.log('collecteImages.value: ', collecteImages.value);
     }
   } catch (err) {
     console.error(err);
@@ -484,6 +485,17 @@ function handleImageClick(img) {
   }
 }
 :deep(.poster-dlg) {
+  .el-dialog__body {
+    margin-top: 18vh;
+    @media screen and (max-width: 820px) {
+      margin-top: 16vh;
+      padding: 16px;
+    }
+
+    @media screen and (max-width: 767px) {
+      margin-top: 4vh;
+    }
+  }
   .poster {
     width: 520px;
     background: #ffffff;

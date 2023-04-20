@@ -16,13 +16,13 @@ const route = useRoute();
 <template>
   <footer class="footer">
     <div v-if="locale === 'zh'" class="footer-logo">
-      <img
+      <!-- <img
         v-if="route.path === '/modelzoo/wukong'"
         :src="logoImg1"
         alt=""
         srcset=""
-      />
-      <img v-else :src="logoImg" alt="" srcset="" />
+      /> -->
+      <img :src="logoImg" alt="" srcset="" />
     </div>
     <div v-else class="footer-logo">
       <img :src="logoImg2" alt="" srcset="" />

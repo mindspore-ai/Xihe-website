@@ -325,7 +325,6 @@ const handleCommand = () => {
     :class="{
       opaque: isHeaderTransparent,
       'no-header': noHeader,
-      wukong1: route.path === '/modelzoo/wukong',
     }"
   >
     <app-header></app-header>
@@ -334,11 +333,7 @@ const handleCommand = () => {
   <main class="app-body">
     <router-view></router-view>
   </main>
-  <footer
-    v-if="showFooter"
-    class="app-footer"
-    :class="{ wukong1: route.path === '/modelzoo/wukong' }"
-  >
+  <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
   <div class="mobile-menu" :class="{ 'menu-active': meauActive }">

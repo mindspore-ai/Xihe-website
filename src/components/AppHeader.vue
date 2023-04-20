@@ -559,13 +559,13 @@ const handleCommand = (command) => {
 <template>
   <div class="header">
     <div v-if="locale === 'zh'" class="header-logo" @click="handleLogoClick">
-      <img
+      <!-- <img
         v-if="route.path === '/modelzoo/wukong'"
         :src="logoImg1"
         alt=""
         srcset=""
-      />
-      <img v-else :src="logoImg" alt="" srcset="" />
+      /> -->
+      <img :src="logoImg" alt="" srcset="" />
     </div>
     <div v-else class="header-logo" @click="handleLogoClick">
       <img :src="logoImg2" alt="" srcset="" />

@@ -63,6 +63,9 @@ import {
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useRouter } from 'vue-router';
+import { ArrowRight } from '@element-plus/icons-vue';
+
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
@@ -212,6 +215,22 @@ function handleReturn() {
   isLarge.value = false;
   largeImg.value = {};
 }
+function toggleCollectionDlg() {
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    router.push('/modelzoo/wukong/admin');
+  }
+}
+const router = useRouter();
+nextTick(() => {
+  let bgImg = document.getElementById('app');
+
+  bgImg.style.background = 'url(../src/assets/imgs/wukong/wukong-bg1.png)';
+  bgImg.style.backgroundSize = 'cover';
+  bgImg.children[1].style.background = 'unset';
+  bgImg.children[2].style.backgroundColor = 'unset';
+});
 
 const lists = ref([
   { text: '城市夜景 油画', isSelected: false },
@@ -580,6 +599,14 @@ function handleResultClcik(i) {
 }
 </script>
 <template>
+  <div class="wukong-bread">
+    <el-breadcrumb :separator-icon="ArrowRight">
+      <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+        >大模型</el-breadcrumb-item
+      >
+      <el-breadcrumb-item>悟空在线体验</el-breadcrumb-item>
+    </el-breadcrumb>
+  </div>
   <div class="wk-experience">
     <div class="wrap-left">
       <el-input
@@ -662,11 +689,11 @@ function handleResultClcik(i) {
         </div>
         <div v-else></div>
         <div class="content-right">
-          <span class="album">
+          <span class="album" @click="router.push('/modelzoo/wukong/album')">
             <o-icon><icon-album></icon-album></o-icon>
             AI画集
           </span>
-          <span class="painting">
+          <span class="painting" @click="toggleCollectionDlg">
             <o-icon><icon-painting></icon-painting></o-icon>
             画作管理
           </span>
@@ -937,7 +964,7 @@ function handleResultClcik(i) {
       maxlength="75"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
-      type="text"
+      type="textarea"
       @input="handleInput"
     >
       <template #suffix
@@ -948,7 +975,7 @@ function handleResultClcik(i) {
 
     <div class="mobile-examples">
       <div class="example-head">
-        <p class="title">选择样例</p>
+        <!-- <p class="title">选择样例</p> -->
         <div class="refresh" @click="refreshTags">
           <o-icon><icon-refresh></icon-refresh></o-icon>
           <p>换一批</p>
@@ -972,22 +999,22 @@ function handleResultClcik(i) {
       <div class="content">
         <div class="style-tag">
           <div
-            v-for="(item, index) in mobileStyleData"
+            v-for="(item, index) in newStyleData"
             :key="item.style"
             class="style-item"
-            :class="styleIndex === index ? 'active-1' : ''"
-            @click="choseStyleSort(index)"
+            :class="item.isSelected ? 'active-1' : ''"
+            @click="choseStyleSort(index, item)"
           >
-            <img :src="styleBackgrounds[index]" alt="" />
+            <img :src="item.img" alt="" />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
-              {{ item.style }}
+              {{ index === 0 ? item.tag1 : item.tag }}
             </div>
 
-            <div v-if="styleIndex === index" class="triangle"></div>
+            <!-- <div v-if="styleIndex === index" class="triangle"></div> -->
           </div>
 
-          <div v-if="styleIndex < 4" class="sort-tag">
+          <!-- <div v-if="styleIndex < 4" class="sort-tag">
             <div
               v-for="item in styleData[styleIndex].options"
               :key="item"
@@ -997,10 +1024,16 @@ function handleResultClcik(i) {
             >
               {{ item.tag }}
             </div>
-          </div>
+          </div> -->
+        </div>
+        <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
+          查看全部<o-icon><icon-down></icon-down></o-icon>
+        </div>
+        <div v-else class="all-kind retract" @click="retract">
+          收起<o-icon><icon-down></icon-down></o-icon>
         </div>
 
-        <div class="style-tag">
+        <!-- <div class="style-tag">
           <div
             v-for="(item, index) in mobileRandomData"
             :key="item.style"
@@ -1026,14 +1059,37 @@ function handleResultClcik(i) {
               {{ item.tag }}
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
-    <div class="mobile-btn" @click="handleInfer">立即生成</div>
+    <!-- <div class="mobile-btn" @click="handleInfer">立即生成</div> -->
+    <o-button type="primary" @click="handleInfer">立即生成</o-button>
   </div>
 </template>
 <style lang="scss" scoped>
+.wukong-bread {
+  padding-top: 104px;
+  padding-left: 16px;
+  max-width: 1440px;
+  margin: 0 auto;
+  @media screen and (max-width: 820px) {
+    padding-top: 64px;
+    padding-bottom: 16px;
+  }
+  :deep(.el-breadcrumb) {
+    font-size: 12px;
+    line-height: 18px;
+    .el-breadcrumb__item {
+      .el-breadcrumb__inner {
+        color: #555;
+      }
+      &:last-child .el-breadcrumb__inner {
+        color: #000;
+      }
+    }
+  }
+}
 /* 推理弹窗 */
 .infer-dlg-result {
   display: flex;
@@ -1420,18 +1476,42 @@ function handleResultClcik(i) {
   @media screen and (max-width: 767px) {
     display: block;
   }
+  margin: 0 16px;
+  padding: 16px 16px 24px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+
+  :deep(.el-textarea) {
+    width: 100% !important;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    .el-textarea__inner {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 1px #fff inset;
+      border-radius: 8px;
+      padding: 8px;
+      height: 80px;
+    }
+  }
   .active {
     color: #fff !important;
     background: #008eff !important;
   }
   .active-1 {
-    border: 1px solid #008eff !important;
+    img {
+      border: 2px solid #008eff !important;
+      border-radius: 6px;
+    }
   }
   .mobile-examples {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin-top: 8px;
     .example-head {
       display: flex;
       justify-content: space-between;
-      margin-top: 16px;
+      // margin-top: 16px;
       .title {
         font-size: 14px;
         font-weight: 400;
@@ -1448,22 +1528,27 @@ function handleResultClcik(i) {
         .o-icon {
           margin-right: 4px;
         }
+        p {
+          white-space: nowrap;
+        }
       }
     }
     .example-items {
       display: flex;
       flex-wrap: wrap;
       p {
-        margin-top: 8px;
         color: #b2b2b2;
-        border: 1px solid #0d8dff;
-        margin-right: 16px;
-        border-radius: 6px;
-        background: rgba(13, 141, 255, 0.3);
-        padding: 0px 7px;
+        // border: 1px solid #0d8dff;
+        margin-right: 4px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        padding: 3px 8px;
         font-size: 12px;
-        height: 24px;
-        line-height: 24px;
+        margin: 4px 2px;
+        cursor: pointer;
+        @media screen and (max-width: 820px) {
+          margin-bottom: 8px;
+        }
       }
     }
   }
@@ -1472,21 +1557,29 @@ function handleResultClcik(i) {
       font-size: 14px;
       line-height: 20px;
       font-weight: 400;
-      color: #ffffff;
+      color: #555;
       margin-top: 16px;
     }
 
     .content {
+      height: 354px;
+      overflow: auto;
+      margin-top: 16px;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 6px;
+      }
       .style-tag {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+
         .style-item {
           flex: 1;
-          margin-top: 16px;
+          margin-bottom: 16px;
           position: relative;
           width: 68px;
-          height: 42px;
+          // height: 42px;
           border-radius: 6px;
           border: 1px solid transparent;
           flex: unset;
@@ -1504,26 +1597,39 @@ function handleResultClcik(i) {
 
           img {
             width: 100%;
-            height: 100%;
+            // height: 100%;
             border-radius: 6px;
           }
           .style-item-name {
-            position: absolute;
+            // position: absolute;
             bottom: 0px;
             font-size: 12px;
             line-height: 17px;
             font-weight: 400;
-            color: #ffffff;
+            color: #555555;
             width: 100%;
-            background: linear-gradient(
-              180deg,
-              rgba(0, 0, 0, 0) 0%,
-              #000000 100%
-            );
+            // background: linear-gradient(
+            //   180deg,
+            //   rgba(0, 0, 0, 0) 0%,
+            //   #000000 100%
+            // );
             text-align: center;
-            padding-bottom: 6px;
+            // padding-bottom: 6px;
             border-radius: 0 0 6px 6px;
           }
+        }
+      }
+      .all-kind {
+        text-align: center;
+        color: #555555;
+        cursor: pointer;
+        .o-icon {
+          margin-left: 8px;
+        }
+      }
+      .retract {
+        .o-icon svg {
+          transform: rotate(180deg);
         }
       }
       .sort-tag {
@@ -1562,10 +1668,18 @@ function handleResultClcik(i) {
     font-weight: 500;
     margin: 24px auto 8px;
   }
+  .o-button {
+    display: block;
+    margin: 22px auto 24px;
+  }
 }
 .wk-experience {
   display: flex;
   width: 100%;
+  max-width: 1472px;
+  padding: 24px 16px 64px;
+  margin: 0 auto;
+
   .wrap-left {
     width: 354px;
     text-align: center;
@@ -1663,7 +1777,7 @@ function handleResultClcik(i) {
       position: relative;
       // margin-right: 24px;
       // width: 34vw;
-      margin: 30px 36px;
+      margin: 54px 36px;
       width: calc(100% - 64px);
       display: flex;
       justify-content: space-between;
@@ -1691,8 +1805,11 @@ function handleResultClcik(i) {
         // margin-right: 0;
       }
       img {
+        height: 100%;
+        max-width: calc(100% - 138px);
+        // max-width: 766px;
+        // max-height: calc(100% - 190px);
         // height: 100%;
-        width: calc(100% - 138px);
       }
       .mask {
         position: absolute;

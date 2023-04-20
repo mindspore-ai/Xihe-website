@@ -149,33 +149,33 @@ export default [
     },
   },
   // 悟空
-  {
-    path: '/modelzoo/wukong',
-    name: 'wukong',
-    component: () => {
-      return import('@/views/modelzoo/wukong/TheWukong.vue');
-    },
-    children: [
-      {
-        path: '',
-        name: 'wukongExperience',
-        component: () => {
-          return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
-        },
-      },
-      {
-        path: 'introduce',
-        name: 'wukongIntroduce',
-        component: () => {
-          return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
-        },
-      },
-      {
-        path: 'experience',
-        redirect: '/modelzoo/wukong',
-      },
-    ],
-  },
+  // {
+  //   path: '/modelzoo/wukong',
+  //   name: 'wukong',
+  //   component: () => {
+  //     return import('@/views/modelzoo/wukong/TheWukong.vue');
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'wukongExperience',
+  //       component: () => {
+  //         return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'introduce',
+  //       name: 'wukongIntroduce',
+  //       component: () => {
+  //         return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'experience',
+  //       redirect: '/modelzoo/wukong',
+  //     },
+  //   ],
+  // },
 
   //新视觉改版后-悟空路由
   {
@@ -183,6 +183,13 @@ export default [
     name: 'wukongIntroduce',
     component: () => {
       return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+    },
+  },
+  {
+    path: '/modelzoo/wukong',
+    name: 'wukongExperience',
+    component: () => {
+      return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
     },
   },
 

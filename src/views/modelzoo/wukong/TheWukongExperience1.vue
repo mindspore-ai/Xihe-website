@@ -47,6 +47,7 @@ import IconLeft from '~icons/app/left';
 import IconDown from '~icons/app/down';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
+import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -81,10 +82,7 @@ const isInferred = ref(false);
 const isError = ref(false);
 
 const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
-const styleBackground = ref({
-  a: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/MindSpore/1681289520/上海陆家嘴 未来城市 科幻风格-00.png',
-  b: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/wukong-huahua/AI-gallery/gallery/MindSpore/1681289520/上海陆家嘴 未来城市 科幻风格-00.png',
-});
+const styleBackground = ref({});
 
 const styleData = ref([
   {
@@ -185,7 +183,7 @@ newStyleData.value.unshift(
 );
 newStyleData.value[0].tag1 = '随机风格';
 // newStyleData.value[0].img1 = random;
-newStyleData.value[0].isSelected = true;
+// newStyleData.value[0].isSelected = true;
 function retract() {
   isAllStyle.value = false;
   newStyleData.value = newStyleData.value.slice(0, 12);
@@ -207,9 +205,11 @@ const isLarge = ref(false);
 const largeImg = ref({});
 const largeIndex = ref(null);
 function handleEnlage(value, key, index) {
+  largeImg.value = {};
   largeImg.value[key] = value;
   largeIndex.value = index;
   isLarge.value = true;
+  // console.log(Object.keys(styleBackground.value)[index]);
 }
 function handleReturn() {
   isLarge.value = false;
@@ -231,6 +231,21 @@ nextTick(() => {
   bgImg.children[1].style.background = 'unset';
   bgImg.children[2].style.backgroundColor = 'unset';
 });
+const routeList = [
+  {
+    name: 'AI画集',
+    path: '/modelzoo/wukong/album',
+    icon: IconAlbum,
+  },
+  {
+    name: '画作管理',
+    path: '/modelzoo/wukong/admin',
+    icon: IconPainting,
+  },
+];
+function goPath(val) {
+  router.push(val);
+}
 
 const lists = ref([
   { text: '城市夜景 油画', isSelected: false },
@@ -445,8 +460,10 @@ async function handleInfer() {
     goAuthorize();
   } else {
     if (inputText.value) {
-      showInferDlg.value = true;
-
+      if (screenWidth.value < 768) {
+        showInferDlg.value = true;
+      }
+      isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
         // item.options.forEach((style) => {
@@ -467,8 +484,8 @@ async function handleInfer() {
           style: sortTag.value,
         });
         isInferred.value = true;
+        isWaiting.value = false;
         styleBackground.value = res.data.data.pictures;
-        console.log(styleBackground.value);
       } catch (err) {
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
@@ -477,6 +494,7 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
+        isWaiting.value = false;
         isInferred.value = true;
         isError.value = true;
       }
@@ -699,12 +717,14 @@ function handleResultClcik(i) {
           </span>
         </div>
       </div>
-      <div v-if="styleBackground.length" class="empty">
-        <div v-if="isWaiting">
+      <div v-if="!isInferred" class="empty">
+        <div v-if="isWaiting" class="waiting">
           <img :src="loading" alt="" />
+          <p>正在创作中，请耐心等待</p>
         </div>
         <div v-else class="tip">
           <img :src="tip" alt="" />
+          <p>在左侧选择样例风格开始画画</p>
         </div>
       </div>
       <div class="img-box">
@@ -723,9 +743,29 @@ function handleResultClcik(i) {
             :key="key"
             class="result-item1"
           >
-            <o-icon class="turn"><icon-left></icon-left></o-icon>
+            <o-icon
+              class="turn"
+              @click="
+                handleEnlage(
+                  Object.values(styleBackground)[0],
+                  Object.keys(styleBackground)[0],
+                  0
+                )
+              "
+              ><icon-left></icon-left
+            ></o-icon>
             <img :src="value" alt="" />
-            <o-icon class="turn"><icon-right2></icon-right2></o-icon>
+            <o-icon
+              class="turn"
+              @click="
+                handleEnlage(
+                  Object.values(styleBackground)[1],
+                  Object.keys(styleBackground)[1],
+                  1
+                )
+              "
+              ><icon-right2></icon-right2
+            ></o-icon>
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
@@ -958,6 +998,22 @@ function handleResultClcik(i) {
     <textarea class="input-dom"></textarea>
   </div>
   <!-- mobile -->
+  <div class="mobile-sider-content">
+    <div
+      v-for="item in routeList"
+      :key="item.path"
+      class="jump-item"
+      @click="goPath(item.path)"
+    >
+      <div class="left">
+        <OIcon><component :is="item.icon"></component></OIcon>
+        <span>{{ item.name }}</span>
+      </div>
+      <div class="right">
+        <o-icon><icon-arrowRight></icon-arrowRight></o-icon>
+      </div>
+    </div>
+  </div>
   <div class="wk-experience-mobile">
     <el-input
       v-model="inputText"
@@ -1064,7 +1120,9 @@ function handleResultClcik(i) {
     </div>
 
     <!-- <div class="mobile-btn" @click="handleInfer">立即生成</div> -->
-    <o-button type="primary" @click="handleInfer">立即生成</o-button>
+    <o-button size="mini" type="primary" @click="handleInfer"
+      >立即生成</o-button
+    >
   </div>
 </template>
 <style lang="scss" scoped>
@@ -1471,12 +1529,63 @@ function handleResultClcik(i) {
   }
 }
 
+.mobile-sider-content {
+  display: none;
+  @media screen and (max-width: 767px) {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px 24px;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+    color: #555555;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 12px;
+    padding: 0 16px 16px;
+  }
+  .jump-item {
+    flex: 1;
+    background: #ffffff;
+    box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @media screen and (max-width: 820px) {
+      padding: 24px;
+    }
+    @media screen and (max-width: 767px) {
+      padding: 8px 12px;
+    }
+    &:first-child {
+      margin-right: 16px;
+    }
+    .left {
+      display: flex;
+      align-items: center;
+      .o-icon {
+        font-size: 24px;
+        margin-right: 12px;
+      }
+    }
+    .right {
+      font-size: 24px;
+      height: 24px;
+      @media screen and (max-width: 767px) {
+        font-size: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
 .wk-experience-mobile {
   display: none;
   @media screen and (max-width: 767px) {
     display: block;
   }
-  margin: 0 16px;
+  margin: 0 16px 34px;
   padding: 16px 16px 24px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 16px;
@@ -1562,7 +1671,7 @@ function handleResultClcik(i) {
     }
 
     .content {
-      height: 354px;
+      height: 315px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
@@ -1596,8 +1705,8 @@ function handleResultClcik(i) {
           }
 
           img {
-            width: 100%;
-            // height: 100%;
+            width: 65px;
+            height: 65px;
             border-radius: 6px;
           }
           .style-item-name {
@@ -1623,6 +1732,7 @@ function handleResultClcik(i) {
         text-align: center;
         color: #555555;
         cursor: pointer;
+        font-size: 12px;
         .o-icon {
           margin-left: 8px;
         }
@@ -1670,7 +1780,8 @@ function handleResultClcik(i) {
   }
   .o-button {
     display: block;
-    margin: 22px auto 24px;
+    margin: 24px auto 0;
+    padding: 9px 12px;
   }
 }
 .wk-experience {
@@ -1748,14 +1859,24 @@ function handleResultClcik(i) {
       border-radius: 16px;
       margin: 0 40px 40px;
       height: calc(100% - 116px);
+      p {
+        width: 100%;
+        color: #555555;
+        font-size: 14px;
+        margin-top: 21px;
+      }
       img {
         width: 54px;
         height: 54px;
       }
       .tip {
+        text-align: center;
         img {
           width: 99px;
         }
+      }
+      .waiting {
+        text-align: center;
       }
     }
     .img-box {
@@ -1792,7 +1913,7 @@ function handleResultClcik(i) {
         //   font-size: 14px;
         // }
       }
-      @media screen and (max-width: 820px) {
+      @media screen and (max-width: 767px) {
         display: none;
       }
       &:hover {

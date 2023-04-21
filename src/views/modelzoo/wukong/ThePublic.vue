@@ -161,7 +161,7 @@ async function cancelImgCollected(item) {
 
     <el-dialog
       v-model="imgInfoDlg"
-      class="public-page-dialog"
+      class="fullscreen-dialog"
       :fullscreen="true"
       center
       :close-on-click-modal="false"
@@ -281,7 +281,7 @@ async function cancelImgCollected(item) {
   }
 }
 /* 移动端点击图片dlg */
-:deep(.public-page-dialog) {
+:deep(.fullscreen-dialog) {
   border-radius: 0;
   .el-dialog__body {
     display: flex;

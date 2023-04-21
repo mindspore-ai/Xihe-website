@@ -24,8 +24,10 @@ import IconLiked from '~icons/app/liked.svg';
 import IconLeft from '~icons/app/left.svg';
 import IconRight from '~icons/app/right.svg';
 import IconDownload from '~icons/app/wukong-download';
-import IconDownload2 from '~icons/app/wukong-download2';
+import IconDownloadgray from '~icons/app/download-gray';
 import IconShare from '~icons/app/share';
+import IconSharegray from '~icons/app/share-gray';
+import IconHeartgray from '~icons/app/heart-gray';
 import IconLike from '~icons/app/wukong-like';
 import IconHeart from '~icons/app/collected';
 import IconCopy from '~icons/app/copy-nickname';
@@ -43,6 +45,8 @@ const activeName = ref('official');
 
 const showPic = ref(false);
 const showShare = ref(false);
+const isSharedPoster = ref(false);
+const shareImg = ref('');
 const dialogData = ref();
 const picIndex = ref();
 const picTotal = ref();
@@ -115,7 +119,8 @@ function getDialogData(num) {
     '/obs-xihe-avatar/'
   );
 }
-// 大图弹窗
+
+// 点击大图弹窗
 function toggleDialog(num) {
   showPic.value = true;
   getDialogData(num);
@@ -123,13 +128,17 @@ function toggleDialog(num) {
 
 // 点赞图片
 function giveLike(num) {
-  console.log('num: ', num);
   if (isLogined) {
     if (imgs.value[num].is_digg) {
       cancelDigg({ user: imgs.value[num].owner, id: imgs.value[num].id }).then(
         (res) => {
           imgs.value[num].is_digg = false;
           imgs.value[num].digg_count = res.data.digg_count;
+          ElMessage({
+            type: 'success',
+            message: '取消点赞成功',
+            center: true,
+          });
         }
       );
     } else {
@@ -148,11 +157,6 @@ function giveLike(num) {
   } else {
     goAuthorize();
   }
-}
-
-// 点赞图片
-function likePic(num) {
-  getDialogData(num);
 }
 
 // 下载图片
@@ -174,8 +178,6 @@ function downloadPic(index) {
   x.send();
 }
 
-const isSharedPoster = ref(false);
-const shareImg = ref('');
 // 分享图片
 function sharePic(index) {
   if (!dialogData.value) {
@@ -184,7 +186,6 @@ function sharePic(index) {
   if (isLogined) {
     showShare.value = true;
     if (screenWidth.value <= 820) {
-      console.log(22222);
       nextTick(() => {
         const poster = document.querySelector('#screenshot');
         html2canvas(poster, {
@@ -205,12 +206,19 @@ function handleDlgClose() {
 function closeDialog() {
   showShare.value = false;
 }
-function savePic() {
-  console.log(1111);
+// 收藏图片
+function collectPic(index) {
+  if (!dialogData.value) {
+    getDialogData(index);
+  }
   if (isLogined) {
     if (dialogData.value.is_like) {
       cancelLikePicture(dialogData.value.like_id).then(() => {
         dialogData.value.is_like = false;
+        ElMessage({
+          type: 'success',
+          message: '取消收藏成功',
+        });
       });
     } else {
       addLikePicture2({
@@ -349,8 +357,7 @@ function toNextPic() {
                   <div class="icon-item middle" @click.stop="sharePic(index)">
                     <o-icon><icon-share></icon-share></o-icon>
                   </div>
-                  <div class="icon-item" @click="likePic(index)">
-                    <!-- <o-icon><icon-heart></icon-heart></o-icon> -->
+                  <div class="icon-item" @click.stop="collectPic(index)">
                     <o-icon v-if="items.is_like"
                       ><icon-heart></icon-heart
                     ></o-icon>
@@ -380,45 +387,51 @@ function toNextPic() {
       </div>
     </div>
     <!-- 画集图片弹窗 -->
+    <!-- :title="dialogData?.desc" -->
     <el-dialog
       v-model="showPic"
-      :title="dialogData?.desc"
       :destroy-on-close="true"
       :fullscreen="true"
       lock-scroll
       center
       @close="closeDialog"
     >
+      <template #header="{ titleClass }">
+        <p :class="titleClass">来自{{ dialogData.desc }}</p>
+      </template>
       <o-icon class="check" @click="toPrePic"> <icon-left /></o-icon>
       <div class="pic-box">
-        <img :src="dialogData.link" alt="" />
-        <div class="user-info">
-          <p class="left" @click="goUser(dialogData.owner)">
-            <img :src="dialogData.avatar" alt="" />
-            <span>{{ dialogData.owner }}</span>
-          </p>
-          <p class="right" @click="giveLike(picIndex)">
-            <o-icon v-if="dialogData.is_digg"> <icon-liked /></o-icon>
-            <o-icon v-else> <icon-likes /></o-icon>
-            <span class="digg-count">{{ dialogData?.digg_count }}</span>
-          </p>
-          <div class="pic-handle">
-            <o-icon class="download pic-right1" @click.stop="downloadPic"
-              ><icon-download2></icon-download2
-            ></o-icon>
-            <o-icon class="share pic-right2" @click="sharePic"
-              ><icon-share></icon-share
-            ></o-icon>
-            <o-icon
-              v-if="dialogData.is_like"
-              class="heart pic-right3"
-              @click="savePic"
-              ><icon-heart></icon-heart
-            ></o-icon>
-            <o-icon v-else class="heart pic-right3" @click="savePic"
-              ><icon-like></icon-like
-            ></o-icon>
+        <div class="pic-info">
+          <div class="pic-source">来自{{ dialogData.desc }}</div>
+          <img :src="dialogData.link" alt="" />
+          <div class="user-info">
+            <p class="left" @click="goUser(dialogData.owner)">
+              <img :src="dialogData.avatar" alt="" />
+              <span>{{ dialogData.owner }}</span>
+            </p>
+            <p class="right" @click="giveLike(picIndex)">
+              <o-icon v-if="dialogData.is_digg"> <icon-liked /></o-icon>
+              <o-icon v-else class="o-like"> <icon-likes1 /></o-icon>
+              <span class="digg-count">{{ dialogData?.digg_count }}</span>
+            </p>
           </div>
+        </div>
+        <div class="pic-handle">
+          <o-icon class="download" @click.stop="downloadPic">
+            <icon-downloadgray></icon-downloadgray>
+          </o-icon>
+          <o-icon class="share" @click="sharePic">
+            <icon-sharegray></icon-sharegray>
+          </o-icon>
+          <!-- <o-icon
+            v-if="dialogData.is_like"
+            class="heart "
+            @click="collectPic"
+            ><icon-heart></icon-heart
+          ></o-icon> -->
+          <o-icon class="heart" @click="collectPic">
+            <icon-heartgray></icon-heartgray>
+          </o-icon>
         </div>
       </div>
       <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
@@ -619,7 +632,8 @@ function toNextPic() {
       column-gap: 24px;
       row-gap: 24px;
       padding-bottom: 64px;
-      @media screen and (max-width: 820px) {
+      // TODO:821px
+      @media screen and (max-width: 821px) {
         grid-template-columns: 1fr 1fr 1fr;
       }
       @media screen and (max-width: 767px) {
@@ -766,39 +780,41 @@ function toNextPic() {
     }
   }
   :deep(.el-dialog) {
-    --el-dialog-bg-color: #f5f6f8;
+    // --el-dialog-bg-color: #f5f6f8;
+    --el-dialog-bg-color: rgba(0, 0, 0, 0.75);
     border-radius: 0px;
     position: relative;
     overflow: hidden;
     .el-dialog__title {
+      color: #fff;
+      font-size: 14px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: inline-block;
+      display: none;
       max-width: calc(100vh - 380px);
     }
-    @media screen and (max-width: 820px) {
-      .el-dialog__body {
-        width: 640px;
-        margin: 0 auto;
+    @media screen and (max-width: 821px) {
+      .el-dialog__title {
+        display: block;
       }
-    }
-    @media screen and (max-width: 767px) {
-      .el-dialog__body {
-        width: 100%;
-      }
+      // --el-dialog-bg-color: #f5f6f8;
     }
 
     .el-dialog__header {
-      padding: 15px 0 15px;
+      height: 80px;
       position: sticky;
       top: 0;
-      background: #000;
       z-index: 200;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       @media screen and (max-width: 768px) {
         height: 48px;
         line-height: 14px;
-        padding: 12px 0 12px;
+        padding: 12px 0;
       }
       span {
         color: #fff;
@@ -809,19 +825,36 @@ function toNextPic() {
       }
     }
     .el-dialog__body {
-      padding-top: 0;
+      width: 100%;
+      height: calc(100vh - 80px);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: calc(100vh - 80px);
-      color: #fff;
-      padding: 16px !important;
-      margin-top: auto;
-      transform: none;
-      @media screen and (max-width: 768px) {
-        height: auto;
-        margin-top: 12vh;
-        // transform: translateY(-50%);
+      padding: 0 68px;
+      background-color: #f5f6f8;
+      border-radius: 24px 24px 0px 0px;
+      // TODO:
+      @media screen and (max-width: 821px) {
+        height: calc(100vh - 48px);
+        padding: 0 16px;
+        .pic-box .pic-handle {
+          width: auto;
+          margin-top: 16px;
+          padding: 8px;
+          display: flex;
+          right: 0;
+          top: 100%;
+          .o-icon {
+            margin-bottom: 0;
+            margin-right: 16px;
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+        .pic-source {
+          display: none;
+        }
       }
     }
     &::-webkit-scrollbar {
@@ -839,9 +872,11 @@ function toNextPic() {
       background: #ffffff;
     }
     .el-dialog__headerbtn {
+      width: 48px;
+      height: 48px;
       position: fixed;
-      top: 6px;
-      right: 15px;
+      top: 16px;
+      right: 24px;
       z-index: 201;
       @media screen and (max-width: 768px) {
         top: 12px;
@@ -867,138 +902,155 @@ function toNextPic() {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: #000;
-      @media screen and (max-width: 768px) {
+      color: #fff;
+      background: #e5e8f0;
+      @media screen and (max-width: 821px) {
         display: none;
       }
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
+      // &:hover {
+      //   background: rgba(255, 255, 255, 0.3);
+      // }
     }
     .pic-box {
-      width: 33%;
+      width: 35%;
+      margin: 0 auto;
+      // height: 100%;
+      // margin: 120px 0 122px;
       position: relative;
-      @media screen and (max-width: 820px) {
-        width: auto;
+      @media screen and (max-width: 821px) {
+        width: 100%;
       }
       @media screen and (max-width: 768px) {
         width: 100%;
       }
-      img {
-        width: 100%;
-        border-radius: 16px;
+      .pic-info {
+        margin: 0 auto;
+        .pic-source {
+          height: 24px;
+          font-size: 18px;
+          color: #555;
+          line-height: 24px;
+          margin-bottom: 38px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        img {
+          width: 100%;
+          border-radius: 16px;
+        }
+        .user-info {
+          margin-top: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          @media screen and (max-width: 821px) {
+            margin-top: 0px;
+            width: 100%;
+            position: absolute;
+            top: -40px;
+          }
+          .left,
+          .right {
+            cursor: pointer;
+            img {
+              width: 24px;
+            }
+            span {
+              line-height: 24px;
+              color: #555;
+              margin-left: 8px;
+            }
+            .o-icon {
+              font-size: 18px;
+              line-height: 18px;
+              @media screen and (max-width: 768px) {
+                display: inline-block;
+                font-size: 12px;
+                line-height: 12px;
+              }
+            }
+            .o-like {
+              color: #fff;
+            }
+            .digg-count {
+              line-height: 10px;
+              height: 18px;
+              @media screen and (max-width: 768px) {
+                font-size: 10px;
+                line-height: 12px;
+              }
+            }
+          }
+        }
       }
-      .user-info {
-        margin-top: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        @media screen and (max-width: 768px) {
-          margin-top: 0px;
-          position: absolute;
-          right: 8px;
-          left: 8px;
-          top: -44px;
-        }
-        .left,
-        .right {
+      .pic-handle {
+        width: 40px;
+        background-color: #fff;
+        border-radius: 22px;
+        padding: 16px 8px;
+        position: absolute;
+        top: 62px;
+        right: -65px;
+        .o-icon {
+          height: 24px;
+          width: 24px;
+          margin-bottom: 16px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           cursor: pointer;
-          img {
-            width: 24px;
+          &:hover {
+            color: #0d8dff;
           }
-          span {
-            line-height: 24px;
-            color: #555;
-            margin-left: 8px;
-          }
-          .o-icon {
-            font-size: 18px;
-            line-height: 18px;
-            @media screen and (max-width: 768px) {
-              display: inline-block;
-              font-size: 12px;
-              line-height: 12px;
-            }
-          }
-          .digg-count {
-            line-height: 10px;
-            height: 18px;
-            @media screen and (max-width: 768px) {
-              font-size: 10px;
-              line-height: 12px;
-            }
+          &:last-child {
+            margin-bottom: 0;
           }
         }
-        .pic-handle {
-          width: 40px;
-          background-color: red;
-          border-radius: 22px;
-          padding: 16px 8px;
-          position: absolute;
-          top: 0;
-          right: -65px;
-          .download,
-          .pic-right1 {
+        .download {
+          &:hover {
+            color: #0d8dff;
+          }
+
+          @media screen and (max-width: 768px) {
+            // height: 24px;
+            // width: 24px;
+            right: 64px;
+            bottom: -32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-size: 16px !important;
+            display: flex !important;
+          }
+          // @media screen and (max-width: 820px) {
+          //   display: none !important;
+          // }
+        }
+        .share {
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+          @media screen and (max-width: 768px) {
+            // height: 24px;
+            // width: 24px;
+            right: 32px;
+            bottom: -32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-size: 16px !important;
+            display: flex !important;
+          }
+        }
+        .heart {
+          &:hover {
+            color: #0d8dff;
+          }
+          @media screen and (max-width: 768px) {
             height: 24px;
             width: 24px;
-            // border-radius: 50%;
-            // background: #3a3a3a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            @media screen and (max-width: 768px) {
-              // height: 24px;
-              // width: 24px;
-              right: 64px;
-              bottom: -32px;
-              background-color: rgba(255, 255, 255, 0.1);
-              font-size: 16px !important;
-              display: flex !important;
-            }
-            @media screen and (max-width: 820px) {
-              display: none !important;
-            }
-          }
-          .pic-right2,
-          .share {
-            background: #3a3a3a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            &:hover {
-              background: rgba(255, 255, 255, 0.3);
-            }
-            @media screen and (max-width: 768px) {
-              // height: 24px;
-              // width: 24px;
-              right: 32px;
-              bottom: -32px;
-              background-color: rgba(255, 255, 255, 0.1);
-              font-size: 16px !important;
-              display: flex !important;
-            }
-          }
-          .heart,
-          .pic-right3 {
-            background: #3a3a3a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            &:hover {
-              background: rgba(255, 255, 255, 0.3);
-            }
-            @media screen and (max-width: 768px) {
-              height: 24px;
-              width: 24px;
-              right: 0;
-              bottom: -32px;
-              background-color: rgba(255, 255, 255, 0.1);
-              font-size: 16px !important;
-              display: flex !important;
-            }
+            right: 0;
+            bottom: -32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-size: 16px !important;
+            display: flex !important;
           }
         }
       }

@@ -8,6 +8,7 @@ body{
           font-size: var(--o-dialog-header-font_size);
           line-height:var(--o-dialog-header-line_height);
           padding: 40px 40px 24px;
+          margin: 0;
           text-align: center;
           .el-dialog__headerbtn {
             font-size: var(--o-dialog-headerbtn-font_size);
@@ -28,7 +29,10 @@ body{
     }
 
     /* 添加appen-to-body 的样式 */
-    .public-page-dialog.is-fullscreen{
+    .fullscreen-dialog.is-fullscreen{
       background: var(--o-dialog-fullscreen-bg);
+      .el-dialog__header{
+         background: var(--o-dialog-fullscreen-header-bg);
+      }
     }
 }

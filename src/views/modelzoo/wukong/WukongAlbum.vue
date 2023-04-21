@@ -17,10 +17,8 @@ import {
 } from '@/api/api-modelzoo.js';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-import IconLikes from '~icons/app/likes.svg';
 import IconLikes1 from '~icons/app/likes1.svg';
 import IconLiked from '~icons/app/liked.svg';
-// import IconLiked1 from '~icons/app/liked1.svg';
 import IconLeft from '~icons/app/left.svg';
 import IconRight from '~icons/app/right.svg';
 import IconDownload from '~icons/app/wukong-download';
@@ -31,13 +29,11 @@ import IconHeartgray from '~icons/app/heart-gray';
 import IconLike from '~icons/app/wukong-like';
 import IconHeart from '~icons/app/collected';
 import IconCopy from '~icons/app/copy-nickname';
-// import IconEyeopen2 from '~icons/app/eye-open2';
 
 import useClipboard from 'vue-clipboard3';
 const { toClipboard } = useClipboard();
 
 const router = useRouter();
-// const route = useRoute();
 const userInfo = useUserInfoStore();
 const isLogined = useLoginStore().isLogined;
 const imgs = ref([]);
@@ -265,13 +261,6 @@ function downloadPoster() {
   });
 }
 
-// function goToBigmodel() {
-//   router.push('/modelzoo');
-// }
-// function goToWukong() {
-//   router.push('/modelzoo/wukong');
-// }
-
 function goUser(owner) {
   router.push(`/${owner}`);
 }
@@ -387,13 +376,13 @@ function toNextPic() {
       </div>
     </div>
     <!-- 画集图片弹窗 -->
-    <!-- :title="dialogData?.desc" -->
     <el-dialog
       v-model="showPic"
       :destroy-on-close="true"
       :fullscreen="true"
       lock-scroll
       center
+      class="fullscreen-dialog"
       @close="closeDialog"
     >
       <template #header="{ titleClass }">
@@ -437,10 +426,12 @@ function toNextPic() {
       <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
     </el-dialog>
     <!-- 海报弹窗 -->
+    <!-- :fullscreen="true" -->
     <el-dialog
       v-model="showShare"
-      :fullscreen="true"
-      class="share-pic"
+      class="poster-dialog"
+      align-center
+      width="434"
       @click="showShare = false"
       @close="handleDlgClose"
     >
@@ -712,8 +703,6 @@ function toNextPic() {
           color: #999999;
           display: flex;
           justify-content: space-between;
-          // width: 100%;
-          // align-items: center;
           line-height: 24px;
           position: absolute;
           bottom: 0;
@@ -779,9 +768,8 @@ function toNextPic() {
       }
     }
   }
-  :deep(.el-dialog) {
-    // --el-dialog-bg-color: #f5f6f8;
-    --el-dialog-bg-color: rgba(0, 0, 0, 0.75);
+  // 画集大图弹窗
+  :deep(.el-dialog.fullscreen-dialog) {
     border-radius: 0px;
     position: relative;
     overflow: hidden;
@@ -1056,22 +1044,54 @@ function toNextPic() {
       }
     }
   }
-  .share-pic {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.85);
+  // 分享海报弹窗
+  :deep(.el-dialog.poster-dialog) {
+    background-color: transparent;
+    .el-dialog__header {
+      display: none;
+    }
+    .el-dialog__body {
+      background-color: transparent;
+      padding: 0;
+    }
+
+    @media screen and (max-width: 821px) {
+      // width: 100%;
+      .el-dialog__body {
+        padding: 0;
+        // width: 100%;
+        // padding: 0 16px;
+        // .poster {
+        //   width: 100%;
+        // }
+      }
+    }
+    @media screen and (max-width: 769px) {
+      width: 100%;
+      .el-dialog__body {
+        width: 100%;
+        // background-color: red;
+        padding: 0 16px;
+        .poster {
+          width: 100%;
+          .poster-image {
+            width: 100%;
+          }
+        }
+      }
+    }
+    // .el-dialog__body {
+    //   @media screen and (max-width: 821px) {
+    //     width: 100%;
+    //   }
+    // }
     .poster {
-      width: 434px;
-      // height: 566px;
+      width: 100%;
+
       background: #ffffff;
       padding: 16px;
       margin: 0 auto;
-      margin-top: -5%;
-      // margin-top: calc(50vh - 430px);
-      // margin-top: 100px;
+      border-radius: 16px;
       @media screen and (max-width: 820px) {
         width: auto;
         height: auto;
@@ -1186,6 +1206,10 @@ function toNextPic() {
               color: #555555;
               line-height: 24px;
               white-space: nowrap;
+              @media screen and (max-width: 768px) {
+                font-size: 12px;
+                line-height: 24px;
+              }
             }
           }
         }
@@ -1202,6 +1226,7 @@ function toNextPic() {
       .shared-image {
         width: 100%;
         height: auto;
+        border-radius: 16px;
       }
       &-download {
         margin-top: 16px;
@@ -1214,7 +1239,6 @@ function toNextPic() {
         .link {
           flex: 1;
           height: 36px;
-          // line-height: 36px;
           background: #ffffff;
           border: 1px solid #999999;
           padding-left: 16px;
@@ -1224,8 +1248,8 @@ function toNextPic() {
           justify-content: space-between;
           align-items: center;
           color: #adadad;
+          border-radius: 18px;
           @media screen and (max-width: 768px) {
-            width: 200px;
             height: 32px;
             padding: 0 8px;
           }
@@ -1263,6 +1287,7 @@ function toNextPic() {
           text-align: center;
           line-height: 36px;
           cursor: pointer;
+          border-radius: 18px;
           @media screen and (max-width: 768px) {
             width: 74px;
             height: 32px;

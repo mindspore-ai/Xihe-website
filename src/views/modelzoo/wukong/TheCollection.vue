@@ -303,16 +303,16 @@ function handleImageClick(img) {
 
     <el-dialog
       v-model="posterDlg"
-      :fullscreen="true"
-      center
+      align-center
+      width="434"
       class="poster-dlg"
-      :close-on-click-modal="false"
+      :show-close="false"
       :close-on-press-escape="false"
       @close="handleDlgClose"
     >
-      <template #header="{ titleClass }">
+      <!-- <template #header="{ titleClass }">
         <p :class="titleClass">{{ posterInfo }}</p>
-      </template>
+      </template> -->
 
       <div class="poster">
         <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
@@ -363,7 +363,7 @@ function handleImageClick(img) {
 </template>
 <style lang="scss" scoped>
 :deep(.el-dialog) {
-  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
+  // --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
   .el-dialog__header {
     padding: 0;
     position: sticky;
@@ -484,9 +484,13 @@ function handleImageClick(img) {
     }
   }
 }
-:deep(.poster-dlg) {
+// 分享海报弹窗
+:deep(.el-dialog.poster-dlg) {
+  .el-dialog__header {
+    display: none;
+  }
   .el-dialog__body {
-    margin-top: 18vh;
+    padding: 0;
     @media screen and (max-width: 820px) {
       margin-top: 16vh;
       padding: 16px;
@@ -497,10 +501,13 @@ function handleImageClick(img) {
     }
   }
   .poster {
-    width: 520px;
+    // width: 520px;
+    width: 100%;
     background: #ffffff;
     padding: 16px;
     margin: 0 auto;
+    border-radius: 16px;
+
     @media screen and (max-width: 767px) {
       width: 100%;
       height: auto;

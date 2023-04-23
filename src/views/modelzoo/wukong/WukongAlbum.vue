@@ -426,13 +426,11 @@ function toNextPic() {
       <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
     </el-dialog>
     <!-- 海报弹窗 -->
-    <!-- :fullscreen="true" -->
     <el-dialog
       v-model="showShare"
       class="poster-dialog"
       align-center
       width="434"
-      @click="showShare = false"
       @close="handleDlgClose"
     >
       <div class="poster">
@@ -1046,7 +1044,6 @@ function toNextPic() {
   }
   // 分享海报弹窗
   :deep(.el-dialog.poster-dialog) {
-    background-color: transparent;
     .el-dialog__header {
       display: none;
     }
@@ -1056,21 +1053,14 @@ function toNextPic() {
     }
 
     @media screen and (max-width: 821px) {
-      // width: 100%;
       .el-dialog__body {
         padding: 0;
-        // width: 100%;
-        // padding: 0 16px;
-        // .poster {
-        //   width: 100%;
-        // }
       }
     }
     @media screen and (max-width: 769px) {
       width: 100%;
       .el-dialog__body {
         width: 100%;
-        // background-color: red;
         padding: 0 16px;
         .poster {
           width: 100%;
@@ -1080,14 +1070,8 @@ function toNextPic() {
         }
       }
     }
-    // .el-dialog__body {
-    //   @media screen and (max-width: 821px) {
-    //     width: 100%;
-    //   }
-    // }
     .poster {
       width: 100%;
-
       background: #ffffff;
       padding: 16px;
       margin: 0 auto;

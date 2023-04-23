@@ -211,7 +211,7 @@ export function getWkExamples() {
  * @returns
  */
 export function wuKongInfer(params) {
-  const url = '/server/bigmodel/wukong';
+  const url = '/server/bigmodel/wukong_async';
   return request
     .post(url, params, {
       $doException: true,
@@ -415,5 +415,27 @@ export function publicCollectedPicture(params) {
     })
     .then((res) => {
       return res;
+    });
+}
+/**
+ * 悟空-查询排位
+ * @returns
+ */
+export function getRank() {
+  const url = '/server/bigmodel/wukong/rank';
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 悟空-查询图片
+ * @returns
+ */
+export function getPic() {
+  const url = '/server/bigmodel/wukong/task';
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
     });
 }

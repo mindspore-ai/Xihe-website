@@ -32,13 +32,13 @@ import loading from '@/assets/gifs/loading.gif';
 import tip from '@/assets/imgs/wukong/tip.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
-import IconDownload from '~icons/app/wukong-download';
-import IconLike from '~icons/app/wukong-like';
+import IconDownload from '~icons/app/download-gray';
+import IconLike from '~icons/app/heart-gray';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
 import IconCancel from '~icons/app/cancel-public';
 import IconArrow from '~icons/app/arrow-top';
-import IconShare from '~icons/app/share';
+import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
 import IconWarning from '~icons/app/warning1';
 import IconRight from '~icons/app/arrow-right';
@@ -60,6 +60,8 @@ import {
   temporaryLink,
   publicTemporaryPicture,
   cancelPublic,
+  getRank,
+  getPic,
 } from '@/api/api-modelzoo.js';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
@@ -82,7 +84,7 @@ const isInferred = ref(false);
 const isError = ref(false);
 
 const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
-const styleBackground = ref({});
+const styleBackground = ref([]);
 
 const styleData = ref([
   {
@@ -206,8 +208,9 @@ const largeImg = ref({});
 const largeIndex = ref(null);
 function handleEnlage(value, key, index) {
   largeImg.value = {};
+  console.log(value, key, index);
   largeImg.value[key] = value;
-  largeIndex.value = index;
+  largeIndex.value = key;
   isLarge.value = true;
   // console.log(Object.keys(styleBackground.value)[index]);
 }
@@ -245,6 +248,43 @@ const routeList = [
 ];
 function goPath(val) {
   router.push(val);
+}
+function closePosterDlg() {
+  posterDlg.value = false;
+}
+getRank().then((res) => {
+  if (res?.data?.rank === 0) {
+    getPic()
+      .then((res) => {
+        console.log(decodeURIComponent(res.data.pictures[0]));
+        styleBackground.value = res.data.pictures;
+        console.log(styleBackground.value);
+
+        // const index1 = styleBackground.value[0].indexOf('=');
+        // const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+
+        // const i1 = styleBackground.value[0].indexOf('&');
+        // const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+
+        // const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+        // const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+        // if ((deadTime - currentTime) / 60 < 60) {
+        //   temporaryLink({ link: styleBackground.value[0] }).then((res) => {
+        //     styleBackground.value[0] = res.data.data.link;
+        //     temporaryLink({ link: styleBackground.value[1] }).then((res) => {
+        //       styleBackground.value[1] = res.data.data.link;
+        //     });
+        //   });
+        // }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
+function imgErr() {
+  console.log(1);
 }
 
 const lists = ref([
@@ -294,7 +334,15 @@ userAvatar.value = userInfoStore.avatar.replace(
 // 公开图片
 async function publicImage(val, index) {
   try {
-    const res = await publicTemporaryPicture({ obspath: val });
+    const res = await publicTemporaryPicture({
+      obspath: decodeURIComponent(
+        val
+          .split('?')[0]
+          .split(
+            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+          )[1]
+      ),
+    });
     if (res.data) {
       inferList.value[index].publicId = res.data.data.id;
 
@@ -463,6 +511,7 @@ async function handleInfer() {
       if (screenWidth.value < 768) {
         showInferDlg.value = true;
       }
+      styleBackground.value = [];
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
@@ -485,6 +534,7 @@ async function handleInfer() {
         });
         isInferred.value = true;
         isWaiting.value = false;
+        console.log(res.data.data.pictures);
         styleBackground.value = res.data.data.pictures;
       } catch (err) {
         if (err.code === 'bigmodel_sensitive_info') {
@@ -514,7 +564,15 @@ const inferList = ref([
 ]);
 // 收藏
 function handleCollect(key, index) {
-  addLikePicture({ obspath: key }).then((res) => {
+  addLikePicture({
+    obspath: decodeURIComponent(
+      key
+        .split('?')[0]
+        .split(
+          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+        )[1]
+    ),
+  }).then((res) => {
     if (res.data.data) {
       inferList.value[index].isCollected = true;
       inferList.value[index].id = res.data.data.id;
@@ -717,7 +775,7 @@ function handleResultClcik(i) {
           </span>
         </div>
       </div>
-      <div v-if="!isInferred" class="empty">
+      <div v-if="!styleBackground.length" class="empty">
         <div v-if="isWaiting" class="waiting">
           <img :src="loading" alt="" />
           <p>正在创作中，请耐心等待</p>
@@ -727,14 +785,19 @@ function handleResultClcik(i) {
           <p>在左侧选择样例风格开始画画</p>
         </div>
       </div>
-      <div class="img-box">
+      <div v-else class="img-box">
         <template v-if="!isLarge">
           <div
             v-for="(value, key, index) in styleBackground"
             :key="key"
             class="result-item"
           >
-            <img :src="value" alt="" @click="handleEnlage(value, key, index)" />
+            <img
+              :src="value"
+              alt=""
+              on-error="imgErr()"
+              @click="handleEnlage(value, key, index)"
+            />
           </div>
         </template>
         <template v-else>
@@ -769,7 +832,7 @@ function handleResultClcik(i) {
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
-                  <div @click="publicImage(key, largeIndex)">
+                  <div @click="publicImage(value, largeIndex)">
                     <p>
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </p>
@@ -801,9 +864,9 @@ function handleResultClcik(i) {
                   <!-- <div class="icon-name">分享</div> -->
                 </div>
 
-                <template v-if="!inferList[index].isCollected">
+                <template v-if="!inferList[largeIndex].isCollected">
                   <div class="func-item">
-                    <p @click="handleCollect(key, largeIndex)">
+                    <p @click="handleCollect(value, largeIndex)">
                       <o-icon><icon-like></icon-like></o-icon>
                     </p>
                     <!-- <div class="icon-name">收藏</div> -->
@@ -812,11 +875,7 @@ function handleResultClcik(i) {
 
                 <template v-else>
                   <div class="func-item">
-                    <p
-                      v-if="inferList[index].isCollected"
-                      class="liked"
-                      @click="handleCancelCollect(largeIndex)"
-                    >
+                    <p class="liked" @click="handleCancelCollect(largeIndex)">
                       <o-icon><icon-heart></icon-heart></o-icon>
                     </p>
                     <!-- <div class="icon-name">取消收藏</div> -->
@@ -829,171 +888,6 @@ function handleResultClcik(i) {
         </template>
       </div>
     </div>
-
-    <el-dialog
-      v-model="showInferDlg"
-      class="infer-dlg"
-      :fullscreen="true"
-      :append-to-body="true"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      @close="handleDlgClose"
-    >
-      <template #header="{ titleClass }">
-        <p :class="titleClass">
-          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
-          >{{ sortTag }}
-        </p>
-      </template>
-
-      <div v-if="!isInferred" class="infer-dlg-loading">
-        <img :src="loading" alt="" />
-        <p>正在创作中，请耐心等待</p>
-      </div>
-
-      <div v-if="isInferred && !isError" class="infer-dlg-result">
-        <!-- mobile -->
-        <div
-          v-for="(value, key, index) in styleBackground"
-          :key="key"
-          class="mobile-result-item"
-          @click="handleResultClcik(index)"
-        >
-          <img :src="value" alt="" />
-
-          <template v-if="index === resultIndex">
-            <div class="handles">
-              <div class="public">
-                <template v-if="!inferList[index].publicId">
-                  <div class="func-item" @click="publicImage(key, index)">
-                    <p>
-                      <o-icon><icon-arrow></icon-arrow></o-icon>
-                    </p>
-                    <div class="icon-name">公开</div>
-                  </div>
-                </template>
-
-                <template v-else>
-                  <div class="func-item" @click="cancelPublicImage(index)">
-                    <p class="icon-item">
-                      <o-icon><icon-cancel></icon-cancel></o-icon>
-                    </p>
-                    <div class="icon-name">取消公开</div>
-                  </div>
-                </template>
-              </div>
-              <div class="handles-contain">
-                <!-- <p @click="downloadImage(value)">
-                  <o-icon><icon-download></icon-download></o-icon>
-                </p> -->
-                <div class="func-item">
-                  <p @click="shareImage(value)">
-                    <o-icon><icon-share></icon-share></o-icon>
-                  </p>
-                  <div class="icon-name">分享</div>
-                </div>
-
-                <template v-if="!inferList[index].isCollected">
-                  <div class="func-item" @click="handleCollect(key, index)">
-                    <p>
-                      <o-icon><icon-like></icon-like></o-icon>
-                    </p>
-                    <div class="icon-name">收藏</div>
-                  </div>
-                </template>
-
-                <template v-if="inferList[index].isCollected">
-                  <div class="func-item" @click="handleCancelCollect(index)">
-                    <p class="liked">
-                      <o-icon><icon-heart></icon-heart></o-icon>
-                    </p>
-                    <div class="icon-name">取消收藏</div>
-                  </div>
-                </template>
-              </div>
-            </div>
-            <div class="mask"></div>
-          </template>
-        </div>
-      </div>
-
-      <div v-if="isError" class="infer-dlg-error">
-        <p>
-          <o-icon><icon-warning></icon-warning></o-icon>
-        </p>
-
-        <p>{{ errorMsg }}</p>
-
-        <p @click="reEnterDesc">
-          <span>重新输入</span>
-          <o-icon><icon-right></icon-right></o-icon>
-        </p>
-      </div>
-    </el-dialog>
-
-    <el-dialog
-      v-model="posterDlg"
-      :fullscreen="true"
-      :append-to-body="true"
-      center
-      class="poster-dlg-wk"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      @close="handlePosterDlgClose"
-    >
-      <template #header="{ titleClass }">
-        <p :class="titleClass">
-          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
-          >{{ sortTag }}
-        </p>
-      </template>
-
-      <div class="poster">
-        <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
-          <img class="infer-img" draggable="false" :src="posterLink" alt="" />
-
-          <img
-            class="qr-code"
-            draggable="false"
-            src="@/assets/imgs/wukong/qr-code.png"
-            alt=""
-          />
-          <img
-            class="logo"
-            draggable="false"
-            src="@/assets/imgs/logo.png"
-            alt=""
-          />
-
-          <div class="mask"></div>
-
-          <div class="info">
-            <p class="desc">{{ posterInfo }}</p>
-            <div class="user-info">
-              <img :src="userAvatar" alt="" />
-              <p>{{ userInfoStore.userName }}</p>
-            </div>
-          </div>
-        </div>
-
-        <img v-else class="shared-image" :src="shareImg" alt="" />
-
-        <div class="poster-download">
-          <div class="link">
-            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
-
-            <o-icon
-              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
-              ><icon-copy></icon-copy
-            ></o-icon>
-          </div>
-          <div v-if="screenWidth > 820" class="button" @click="downloadPoster">
-            下载海报
-          </div>
-        </div>
-        <p v-if="screenWidth <= 820" class="poster-tip">长按保存海报</p>
-      </div>
-    </el-dialog>
 
     <textarea class="input-dom"></textarea>
   </div>
@@ -1124,6 +1018,169 @@ function handleResultClcik(i) {
       >立即生成</o-button
     >
   </div>
+  <div>
+    <el-dialog
+      v-model="showInferDlg"
+      class="infer-dlg"
+      :fullscreen="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handleDlgClose"
+    >
+      <template #header="{ titleClass }">
+        <p :class="titleClass">
+          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
+          >{{ sortTag }}
+        </p>
+      </template>
+
+      <div v-if="!isInferred" class="infer-dlg-loading">
+        <img :src="loading" alt="" />
+        <p>正在创作中，请耐心等待</p>
+      </div>
+
+      <div v-if="isInferred && !isError" class="infer-dlg-result">
+        <!-- mobile -->
+        <div
+          v-for="(value, key, index) in styleBackground"
+          :key="key"
+          class="mobile-result-item"
+          @click="handleResultClcik(index)"
+        >
+          <img :src="value" alt="" />
+
+          <div class="handles">
+            <div class="public">
+              <template v-if="!inferList[index].publicId">
+                <div class="func-item" @click="publicImage(value, index)">
+                  <p>
+                    <o-icon><icon-arrow></icon-arrow></o-icon>
+                  </p>
+                  <!-- <div class="icon-name">公开</div> -->
+                </div>
+              </template>
+
+              <template v-else>
+                <div class="func-item" @click="cancelPublicImage(index)">
+                  <p class="icon-item">
+                    <o-icon><icon-cancel></icon-cancel></o-icon>
+                  </p>
+                  <!-- <div class="icon-name">取消公开</div> -->
+                </div>
+              </template>
+            </div>
+            <div class="handles-contain">
+              <!-- <p @click="downloadImage(value)">
+                  <o-icon><icon-download></icon-download></o-icon>
+                </p> -->
+              <div class="func-item">
+                <p @click="shareImage(value)">
+                  <o-icon><icon-share></icon-share></o-icon>
+                </p>
+                <!-- <div class="icon-name">分享</div> -->
+              </div>
+
+              <template v-if="!inferList[index].isCollected">
+                <div class="func-item" @click="handleCollect(key, index)">
+                  <p>
+                    <o-icon><icon-like></icon-like></o-icon>
+                  </p>
+                  <!-- <div class="icon-name">收藏</div> -->
+                </div>
+              </template>
+
+              <template v-if="inferList[index].isCollected">
+                <div class="func-item" @click="handleCancelCollect(index)">
+                  <p class="liked">
+                    <o-icon><icon-heart></icon-heart></o-icon>
+                  </p>
+                  <!-- <div class="icon-name">取消收藏</div> -->
+                </div>
+              </template>
+            </div>
+          </div>
+          <!-- <div class="mask"></div> -->
+        </div>
+      </div>
+
+      <div v-if="isError" class="infer-dlg-error">
+        <p>
+          <o-icon><icon-warning></icon-warning></o-icon>
+        </p>
+
+        <p>{{ errorMsg }}</p>
+
+        <p @click="reEnterDesc">
+          <span>重新输入</span>
+          <o-icon><icon-right></icon-right></o-icon>
+        </p>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      v-model="posterDlg"
+      :fullscreen="true"
+      center
+      class="poster-dlg-wk"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="handlePosterDlgClose"
+      @click="closePosterDlg"
+    >
+      <template #header="{ titleClass }">
+        <p :class="titleClass">
+          {{ inputText }}&nbsp;&nbsp;&nbsp;<span v-if="sortTag">#风格：</span
+          >{{ sortTag }}
+        </p>
+      </template>
+
+      <div class="poster">
+        <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
+          <img class="infer-img" draggable="false" :src="posterLink" alt="" />
+
+          <img
+            class="qr-code"
+            draggable="false"
+            src="@/assets/imgs/wukong/qr-code.png"
+            alt=""
+          />
+          <img
+            class="logo"
+            draggable="false"
+            src="@/assets/imgs/logo.png"
+            alt=""
+          />
+
+          <div class="mask"></div>
+
+          <div class="info">
+            <p class="desc">{{ posterInfo }}</p>
+            <div class="user-info">
+              <img :src="userAvatar" alt="" />
+              <p>{{ userInfoStore.userName }}</p>
+            </div>
+          </div>
+        </div>
+
+        <img v-else class="shared-image" :src="shareImg" alt="" />
+
+        <div class="poster-download">
+          <div class="link">
+            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
+
+            <o-icon
+              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+              ><icon-copy></icon-copy
+            ></o-icon>
+          </div>
+          <div v-if="screenWidth > 820" class="button" @click="downloadPoster">
+            下载海报
+          </div>
+        </div>
+        <p v-if="screenWidth <= 820" class="poster-tip">长按保存海报</p>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 <style lang="scss" scoped>
 .wukong-bread {
@@ -1181,8 +1238,9 @@ function handleResultClcik(i) {
       margin-right: 0;
     }
     img {
-      height: 100%;
+      // height: 100%;
       width: 100%;
+      border-radius: 16px;
     }
     .mask {
       position: absolute;
@@ -1195,7 +1253,7 @@ function handleResultClcik(i) {
 
     .handles {
       width: 100%;
-      position: absolute;
+      position: relative;
       z-index: 20;
       display: flex;
       justify-content: space-between;
@@ -1204,9 +1262,11 @@ function handleResultClcik(i) {
       .handles-contain,
       .public {
         display: flex;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 3px 5px;
 
         .o-icon {
-          color: #fff;
+          color: #b2b2b2;
           font-size: 24px;
           @media screen and (max-width: 768px) {
             font-size: 16px;
@@ -1240,7 +1300,7 @@ function handleResultClcik(i) {
           height: 40px;
           border-radius: 50%;
           background: rgba(255, 255, 255, 0.1);
-          font-size: 16pxpx;
+          font-size: 16px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -1252,6 +1312,14 @@ function handleResultClcik(i) {
             margin: 0 4px;
           }
         }
+      }
+      .public {
+        border-bottom-left-radius: 16px;
+        border-top-left-radius: 16px;
+      }
+      .handles-contain {
+        border-bottom-right-radius: 16px;
+        border-top-right-radius: 16px;
       }
     }
   }
@@ -1362,10 +1430,11 @@ function handleResultClcik(i) {
     }
   }
   .poster {
-    width: 540px;
+    width: 434px;
     background: #ffffff;
     padding: 16px;
     margin: 0 auto;
+    border-radius: 16px;
     @media screen and (max-width: 767px) {
       width: 100%;
       margin-top: 6vh;
@@ -1374,6 +1443,7 @@ function handleResultClcik(i) {
     .poster-image {
       width: 100%;
       position: relative;
+      border-radius: 16px;
       @media screen and (max-width: 768px) {
         width: 100%;
         height: calc(100% - 40px);
@@ -1420,6 +1490,8 @@ function handleResultClcik(i) {
       .infer-img {
         width: 100%;
         min-height: 300px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
         @media screen and (max-width: 820px) {
         }
       }
@@ -1430,6 +1502,8 @@ function handleResultClcik(i) {
         justify-content: space-between;
         align-items: center;
         padding: 16px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
         @media screen and (max-width: 768px) {
           padding: 8px;
         }
@@ -1490,6 +1564,7 @@ function handleResultClcik(i) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 16px;
         @media screen and (max-width: 768px) {
           width: 200px;
           height: 32px;
@@ -1513,6 +1588,7 @@ function handleResultClcik(i) {
         color: #40adff;
         text-align: center;
         cursor: pointer;
+        border-radius: 16px;
         @media screen and (max-width: 768px) {
           width: 74px;
           height: 32px;
@@ -1525,6 +1601,53 @@ function handleResultClcik(i) {
       font-size: 12px;
       color: #555;
       margin-top: 8px;
+    }
+  }
+}
+:deep(.poster-dlg-wk) {
+  background: transparent;
+  .el-dialog__title {
+    display: none;
+  }
+
+  .el-dialog__headerbtn {
+    display: none;
+    .el-icon {
+      color: #ffffff;
+    }
+  }
+}
+:deep(.infer-dlg) {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 0;
+  .el-dialog__header {
+    padding: 12px 0;
+  }
+  .el-dialog__title {
+    font-size: 14px;
+    color: #ffffff;
+  }
+  .el-dialog__headerbtn {
+    top: 0;
+    color: #ffffff;
+    .el-icon {
+      color: #ffffff;
+    }
+  }
+  .el-dialog__body {
+    min-height: calc(100% - 48px);
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+  }
+  .mobile-result-item {
+    .handles {
+      justify-content: flex-end;
+      .o-icon {
+        color: #b2b2b2;
+      }
     }
   }
 }
@@ -1909,6 +2032,7 @@ function handleResultClcik(i) {
         color: #fff;
         background-color: rgba(229, 232, 240, 1);
         border-radius: 50%;
+        cursor: pointer;
         // svg {
         //   font-size: 14px;
         // }
@@ -1916,12 +2040,12 @@ function handleResultClcik(i) {
       @media screen and (max-width: 767px) {
         display: none;
       }
-      &:hover {
-        .handles,
-        .mask {
-          opacity: 1;
-        }
-      }
+      // &:hover {
+      //   .handles,
+      //   .mask {
+      //     opacity: 1;
+      //   }
+      // }
       &:last-child {
         // margin-right: 0;
       }
@@ -1938,7 +2062,7 @@ function handleResultClcik(i) {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
         width: 100%;
         height: 16vh;
-        opacity: 0;
+        // opacity: 0;
         border-radius: 18px;
         @media screen and (max-width: 768px) {
           height: 10vh;
@@ -1948,7 +2072,7 @@ function handleResultClcik(i) {
       .handles {
         // width: 100%;
         position: absolute;
-        top: 0;
+        top: -20px;
         right: 0;
         z-index: 20;
         // opacity: 0;
@@ -1959,8 +2083,9 @@ function handleResultClcik(i) {
         background: #fff;
         color: #b2b2b2;
         border-radius: 22px;
+        max-height: 190px;
         @media screen and (max-width: 1450px) {
-          bottom: 10px;
+          // bottom: 10px;
         }
         @media screen and (max-width: 768px) {
           bottom: 0px;
@@ -1980,6 +2105,7 @@ function handleResultClcik(i) {
             .o-icon {
               font-size: 20px;
             }
+            // color: #000;
           }
           .icon-name {
             color: #b2b2b2;

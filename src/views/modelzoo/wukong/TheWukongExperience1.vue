@@ -30,6 +30,7 @@ import style19 from '@/assets/imgs/wukong/style/style19.png';
 import style20 from '@/assets/imgs/wukong/style/style20.png';
 import loading from '@/assets/gifs/loading.gif';
 import tip from '@/assets/imgs/wukong/tip.png';
+import wukongbg from '@/assets/imgs/wukong/wukong-bg1.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/download-gray';
@@ -229,7 +230,7 @@ const router = useRouter();
 nextTick(() => {
   let bgImg = document.getElementById('app');
 
-  bgImg.style.background = 'url(../src/assets/imgs/wukong/wukong-bg1.png)';
+  bgImg.style.background = `url(${wukongbg})`;
   bgImg.style.backgroundSize = 'cover';
   bgImg.children[1].style.background = 'unset';
   bgImg.children[2].style.backgroundColor = 'unset';
@@ -260,23 +261,23 @@ getRank().then((res) => {
         styleBackground.value = res.data.pictures;
         console.log(styleBackground.value);
 
-        // const index1 = styleBackground.value[0].indexOf('=');
-        // const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+        const index1 = styleBackground.value[0].indexOf('=');
+        const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
 
-        // const i1 = styleBackground.value[0].indexOf('&');
-        // const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+        const i1 = styleBackground.value[0].indexOf('&');
+        const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
 
-        // const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
-        // const currentTime = (new Date().getTime() + '').substring(0, 10);
+        const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+        const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-        // if ((deadTime - currentTime) / 60 < 60) {
-        //   temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-        //     styleBackground.value[0] = res.data.data.link;
-        //     temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-        //       styleBackground.value[1] = res.data.data.link;
-        //     });
-        //   });
-        // }
+        if ((deadTime - currentTime) / 60 < 60) {
+          temporaryLink({ link: styleBackground.value[0] }).then((res) => {
+            styleBackground.value[0] = res.data.data.link;
+            temporaryLink({ link: styleBackground.value[1] }).then((res) => {
+              styleBackground.value[1] = res.data.data.link;
+            });
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -333,6 +334,7 @@ userAvatar.value = userInfoStore.avatar.replace(
 
 // 公开图片
 async function publicImage(val, index) {
+  console.log(val, index);
   try {
     const res = await publicTemporaryPicture({
       obspath: decodeURIComponent(
@@ -511,7 +513,7 @@ async function handleInfer() {
       if (screenWidth.value < 768) {
         showInferDlg.value = true;
       }
-      styleBackground.value = [];
+      // styleBackground.value = [];
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
@@ -535,7 +537,7 @@ async function handleInfer() {
         isInferred.value = true;
         isWaiting.value = false;
         console.log(res.data.data.pictures);
-        styleBackground.value = res.data.data.pictures;
+        // styleBackground.value = res.data.data.pictures;
       } catch (err) {
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
@@ -564,6 +566,7 @@ const inferList = ref([
 ]);
 // 收藏
 function handleCollect(key, index) {
+  console.log(key, index);
   addLikePicture({
     obspath: decodeURIComponent(
       key
@@ -573,8 +576,10 @@ function handleCollect(key, index) {
         )[1]
     ),
   }).then((res) => {
+    console.log(res);
     if (res.data.data) {
       inferList.value[index].isCollected = true;
+      console.log(inferList.value[index]);
       inferList.value[index].id = res.data.data.id;
       ElMessage({
         type: 'success',
@@ -795,7 +800,7 @@ function handleResultClcik(i) {
             <img
               :src="value"
               alt=""
-              on-error="imgErr()"
+              :onerror="imgErr"
               @click="handleEnlage(value, key, index)"
             />
           </div>
@@ -1022,6 +1027,7 @@ function handleResultClcik(i) {
     <el-dialog
       v-model="showInferDlg"
       class="infer-dlg"
+      lock-scroll
       :fullscreen="true"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -1034,25 +1040,25 @@ function handleResultClcik(i) {
         </p>
       </template>
 
-      <div v-if="!isInferred" class="infer-dlg-loading">
+      <div v-if="!styleBackground.length" class="infer-dlg-loading">
         <img :src="loading" alt="" />
         <p>正在创作中，请耐心等待</p>
       </div>
 
-      <div v-if="isInferred && !isError" class="infer-dlg-result">
+      <div v-if="styleBackground.length && !isError" class="infer-dlg-result">
         <!-- mobile -->
         <div
-          v-for="(value, key, index) in styleBackground"
+          v-for="(value, key) in styleBackground"
           :key="key"
           class="mobile-result-item"
-          @click="handleResultClcik(index)"
+          @click="handleResultClcik(key)"
         >
           <img :src="value" alt="" />
 
           <div class="handles">
             <div class="public">
-              <template v-if="!inferList[index].publicId">
-                <div class="func-item" @click="publicImage(value, index)">
+              <template v-if="!inferList[key].publicId">
+                <div class="func-item" @click="publicImage(value, key)">
                   <p>
                     <o-icon><icon-arrow></icon-arrow></o-icon>
                   </p>
@@ -1061,7 +1067,7 @@ function handleResultClcik(i) {
               </template>
 
               <template v-else>
-                <div class="func-item" @click="cancelPublicImage(index)">
+                <div class="func-item" @click="cancelPublicImage(key)">
                   <p class="icon-item">
                     <o-icon><icon-cancel></icon-cancel></o-icon>
                   </p>
@@ -1080,8 +1086,8 @@ function handleResultClcik(i) {
                 <!-- <div class="icon-name">分享</div> -->
               </div>
 
-              <template v-if="!inferList[index].isCollected">
-                <div class="func-item" @click="handleCollect(key, index)">
+              <template v-if="!inferList[key].isCollected">
+                <div class="func-item" @click="handleCollect(value, key)">
                   <p>
                     <o-icon><icon-like></icon-like></o-icon>
                   </p>
@@ -1089,8 +1095,8 @@ function handleResultClcik(i) {
                 </div>
               </template>
 
-              <template v-if="inferList[index].isCollected">
-                <div class="func-item" @click="handleCancelCollect(index)">
+              <template v-if="inferList[key].isCollected">
+                <div class="func-item" @click="handleCancelCollect(key)">
                   <p class="liked">
                     <o-icon><icon-heart></icon-heart></o-icon>
                   </p>
@@ -1119,13 +1125,12 @@ function handleResultClcik(i) {
 
     <el-dialog
       v-model="posterDlg"
-      :fullscreen="true"
       center
+      align-center
       class="poster-dlg-wk"
-      :close-on-click-modal="false"
+      width="434"
       :close-on-press-escape="false"
       @close="handlePosterDlgClose"
-      @click="closePosterDlg"
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
@@ -1342,7 +1347,7 @@ function handleResultClcik(i) {
   p {
     font-size: 18px;
     font-weight: 400;
-    color: #ffffff;
+    color: #555555;
     line-height: 25px;
     text-align: center;
     @media screen and (max-width: 820px) {
@@ -1436,8 +1441,8 @@ function handleResultClcik(i) {
     margin: 0 auto;
     border-radius: 16px;
     @media screen and (max-width: 767px) {
-      width: 100%;
-      margin-top: 6vh;
+      width: 328px;
+      // margin-top: 6vh;
       padding: 8px 8px 16px;
     }
     .poster-image {
@@ -1606,6 +1611,12 @@ function handleResultClcik(i) {
 }
 :deep(.poster-dlg-wk) {
   background: transparent;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
   .el-dialog__title {
     display: none;
   }

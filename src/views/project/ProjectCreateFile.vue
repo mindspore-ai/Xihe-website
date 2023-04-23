@@ -101,11 +101,11 @@ const optionData = reactive({
         name: 'mindspore_1.7.0-cann_5.1.0-py_3.7-euler_2.8.3-aarch64',
         content: 'mindspore_1.7.0-cann_5.1.0-py_3.7-euler_2.8.3-aarch64',
       },
-      /* {30日注释
+      {
         value: 'B2',
-        name: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
-        content: 'mindspore_1.5.1-cann_5.0.3-py_3.7-euler_2.8.3-aarch64',
-      }, */
+        name: 'mindspore_1.9.0-cann_6.0.RC1-py_3.7-ubuntu_18.04-amd64',
+        content: 'mindspore_1.9.0-cann_6.0.RC1-py_3.7-ubuntu_18.04-amd64',
+      },
     ],
   },
   com3: {

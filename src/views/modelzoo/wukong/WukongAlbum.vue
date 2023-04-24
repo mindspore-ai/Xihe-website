@@ -386,12 +386,18 @@ function toNextPic() {
       @close="closeDialog"
     >
       <template #header="{ titleClass }">
-        <p :class="titleClass">来自{{ dialogData.desc }}</p>
+        <p :class="titleClass">
+          来自{{ dialogData.desc }}&nbsp;&nbsp;
+          <span v-if="dialogData.style"> #风格：{{ dialogData.style }} </span>
+        </p>
       </template>
       <o-icon class="check" @click="toPrePic"> <icon-left /></o-icon>
       <div class="pic-box">
         <div class="pic-info">
-          <div class="pic-source">来自{{ dialogData.desc }}</div>
+          <div class="pic-source">
+            来自{{ dialogData.desc }}&nbsp;&nbsp;
+            <span v-if="dialogData.style"> #风格：{{ dialogData.style }} </span>
+          </div>
           <img :src="dialogData.link" alt="" />
           <div class="user-info">
             <p class="left" @click="goUser(dialogData.owner)">
@@ -412,12 +418,6 @@ function toNextPic() {
           <o-icon class="share" @click="sharePic">
             <icon-sharegray></icon-sharegray>
           </o-icon>
-          <!-- <o-icon
-            v-if="dialogData.is_like"
-            class="heart "
-            @click="collectPic"
-            ><icon-heart></icon-heart
-          ></o-icon> -->
           <o-icon class="heart" @click="collectPic">
             <icon-heartgray></icon-heartgray>
           </o-icon>
@@ -621,7 +621,6 @@ function toNextPic() {
       column-gap: 24px;
       row-gap: 24px;
       padding-bottom: 64px;
-      // TODO:821px
       @media screen and (max-width: 821px) {
         grid-template-columns: 1fr 1fr 1fr;
       }
@@ -771,29 +770,11 @@ function toNextPic() {
     border-radius: 0px;
     position: relative;
     overflow: hidden;
-    .el-dialog__title {
-      color: #fff;
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: none;
-      max-width: calc(100vh - 380px);
-    }
-    @media screen and (max-width: 821px) {
-      .el-dialog__title {
-        display: block;
-      }
-      // --el-dialog-bg-color: #f5f6f8;
-    }
-
     .el-dialog__header {
       height: 80px;
       position: sticky;
       top: 0;
       z-index: 200;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(5px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -802,14 +783,18 @@ function toNextPic() {
         line-height: 14px;
         padding: 12px 0;
       }
-      span {
+      .el-dialog__title {
         color: #fff;
-        font-size: 24px;
-        @media screen and (max-width: 768px) {
-          font-size: 14px;
+        font-size: 14px;
+        display: none;
+        @media screen and (max-width: 821px) {
+          display: block;
+          line-height: 24px;
+          padding: 0 40px;
         }
       }
     }
+
     .el-dialog__body {
       width: 100%;
       height: calc(100vh - 80px);
@@ -819,7 +804,6 @@ function toNextPic() {
       padding: 0 68px;
       background-color: #f5f6f8;
       border-radius: 24px 24px 0px 0px;
-      // TODO:
       @media screen and (max-width: 821px) {
         height: calc(100vh - 48px);
         padding: 0 16px;
@@ -866,6 +850,7 @@ function toNextPic() {
       z-index: 201;
       @media screen and (max-width: 768px) {
         top: 12px;
+        right: 12px;
         width: 24px;
         height: 24px;
       }
@@ -893,15 +878,10 @@ function toNextPic() {
       @media screen and (max-width: 821px) {
         display: none;
       }
-      // &:hover {
-      //   background: rgba(255, 255, 255, 0.3);
-      // }
     }
     .pic-box {
       width: 35%;
       margin: 0 auto;
-      // height: 100%;
-      // margin: 120px 0 122px;
       position: relative;
       @media screen and (max-width: 821px) {
         width: 100%;
@@ -978,6 +958,7 @@ function toNextPic() {
         position: absolute;
         top: 62px;
         right: -65px;
+
         .o-icon {
           height: 24px;
           width: 24px;
@@ -993,50 +974,17 @@ function toNextPic() {
             margin-bottom: 0;
           }
         }
-        .download {
-          &:hover {
-            color: #0d8dff;
-          }
-
-          @media screen and (max-width: 768px) {
-            // height: 24px;
-            // width: 24px;
-            right: 64px;
-            bottom: -32px;
-            background-color: rgba(255, 255, 255, 0.1);
-            font-size: 16px !important;
-            display: flex !important;
-          }
-          // @media screen and (max-width: 820px) {
-          //   display: none !important;
-          // }
-        }
-        .share {
-          &:hover {
-            background: rgba(255, 255, 255, 0.3);
-          }
-          @media screen and (max-width: 768px) {
-            // height: 24px;
-            // width: 24px;
-            right: 32px;
-            bottom: -32px;
-            background-color: rgba(255, 255, 255, 0.1);
-            font-size: 16px !important;
-            display: flex !important;
+        @media screen and (max-width: 820px) {
+          .download {
+            display: none;
           }
         }
-        .heart {
-          &:hover {
-            color: #0d8dff;
-          }
-          @media screen and (max-width: 768px) {
-            height: 24px;
-            width: 24px;
-            right: 0;
-            bottom: -32px;
-            background-color: rgba(255, 255, 255, 0.1);
-            font-size: 16px !important;
-            display: flex !important;
+        @media screen and (max-width: 768px) {
+          .share,
+          .heart {
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
           }
         }
       }
@@ -1044,6 +992,7 @@ function toNextPic() {
   }
   // 分享海报弹窗
   :deep(.el-dialog.poster-dialog) {
+    background-color: transparent;
     .el-dialog__header {
       display: none;
     }
@@ -1083,16 +1032,13 @@ function toNextPic() {
       @media screen and (max-width: 767px) {
         width: 100%;
         height: auto;
-        // margin-top: -15vh;
         padding: 8px;
       }
       &-image {
         width: 402px;
-        // height: 457px;
         position: relative;
         @media screen and (max-width: 768px) {
           width: 100%;
-          // height: calc(100% - 40px);
         }
         .mask {
           width: 100%;
@@ -1139,7 +1085,6 @@ function toNextPic() {
         }
         img {
           width: 100%;
-          // height: 402px;
           @media screen and (max-width: 768px) {
             // height: calc(100% - 40px);
           }
@@ -1187,7 +1132,7 @@ function toNextPic() {
             p {
               font-size: 14px;
               font-weight: 400;
-              color: #555555;
+              color: #555;
               line-height: 24px;
               white-space: nowrap;
               @media screen and (max-width: 768px) {

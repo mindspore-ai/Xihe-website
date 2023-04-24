@@ -6,6 +6,7 @@ import IconFingure from '~icons/app/fingure2';
 import IconEyeclose from '~icons/app/eye-close';
 import IconHeart from '~icons/app/collected';
 import IconLike from '~icons/app/wukong-like';
+import IconHeartgray from '~icons/app/heart-gray';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -138,7 +139,10 @@ async function cancelImgCollected(item) {
           <img draggable="false" :src="item.link" alt="" />
         </div>
         <div class="img-desc">
-          <p>来自{{ item.desc }}&nbsp;{{ item.style }}</p>
+          <p>
+            来自{{ item.desc }}&nbsp;&nbsp;
+            <span v-if="item.style"> #风格：{{ item.style }}</span>
+          </p>
           <div class="img-owner">
             <div class="info-left">
               <img :src="userInfoStore.avatar" alt="" />
@@ -158,7 +162,7 @@ async function cancelImgCollected(item) {
       <o-icon><icon-public></icon-public></o-icon>
       <p>暂无公开画作</p>
     </div>
-
+    <!-- 移动端大图弹窗 -->
     <el-dialog
       v-model="imgInfoDlg"
       class="fullscreen-dialog"
@@ -169,13 +173,24 @@ async function cancelImgCollected(item) {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          {{ imageInfo.desc }}&nbsp;&nbsp;&nbsp;<span v-if="imageInfo.style"
-            >#风格：</span
-          >{{ imageInfo.style }}
+          来自{{ imageInfo.desc }}&nbsp;&nbsp;
+          <span v-if="imageInfo.style">#风格：{{ imageInfo.style }}</span>
         </p>
       </template>
 
       <div class="image-info">
+        <div class="img-owner">
+          <div class="info-left">
+            <img :src="userInfoStore.avatar" alt="" />
+            <span class="user-name">
+              {{ userInfoStore.userName }}
+            </span>
+          </div>
+          <div class="info-right">
+            <o-icon><icon-fingure></icon-fingure></o-icon>
+            <div class="count">{{ imageInfo.digg_count }}</div>
+          </div>
+        </div>
         <img class="collect-img" :src="imageInfo.link" alt="" />
         <div class="information">
           <div class="mobile-handle">
@@ -195,7 +210,7 @@ async function cancelImgCollected(item) {
               class="collect-image"
               @click="collectPublickImage(imageInfo)"
             >
-              <o-icon><icon-like></icon-like></o-icon>
+              <o-icon><icon-heartgray></icon-heartgray></o-icon>
             </p>
           </div>
 
@@ -240,7 +255,7 @@ async function cancelImgCollected(item) {
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-dialog) {
+/* :deep(.el-dialog) {
   .el-dialog__header {
     @media screen and (max-width: 820px) {
       display: flex;
@@ -279,60 +294,103 @@ async function cancelImgCollected(item) {
       }
     }
   }
-}
+} */
 /* 移动端点击图片dlg */
 :deep(.fullscreen-dialog) {
   border-radius: 0;
-  .el-dialog__body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    @media screen and (max-width: 820px) {
-      padding: 16px;
-      width: 640px;
-      margin: 14vh auto;
-    }
-    @media screen and (max-width: 767px) {
-      width: 100%;
-    }
-  }
   .el-dialog__header {
-    background: #000;
-    height: 48px;
-    padding: 0;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-
+    height: 80px;
+    @media screen and (max-width: 769px) {
+      height: 48px;
+      line-height: 14px;
+      padding: 12px 0;
+      .el-dialog__title {
+        padding: 0 40px;
+      }
+    }
     .el-dialog__headerbtn {
       width: 24px;
       height: 24px;
+      position: fixed;
+      top: 6px;
+      right: 15px;
+      @media screen and (max-width: 768px) {
+        top: 12px;
+        right: 12px;
+        width: 24px;
+        height: 24px;
+      }
+      .el-dialog__close {
+        color: #fff;
+        font-size: 40px;
+        @media screen and (max-width: 768px) {
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  .el-dialog__body {
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f5f6f8;
+    border-radius: 24px 24px 0px 0px;
+
+    @media screen and (max-width: 768px) {
+      height: calc(100vh - 48px);
+      padding: 0 16px;
     }
   }
   .image-info {
     position: relative;
+    .img-owner {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 17px;
+      display: flex;
+      justify-content: space-between;
+      img {
+        width: 24px;
+      }
+      .info-left {
+        display: flex;
+        align-items: center;
+        .user-name {
+          margin-left: 8px;
+        }
+      }
+      .info-right {
+        display: flex;
+        align-items: center;
+        .o-icon {
+          font-size: 17px;
+        }
+        .count {
+          margin-left: 8px;
+        }
+      }
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+      }
+    }
     .collect-img {
       width: 100%;
+      border-radius: 16px;
     }
     .information {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      color: #ffffff;
+      flex-direction: row-reverse;
       font-size: 12px;
       line-height: 18px;
-      height: 74px;
-      width: 100%;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      padding: 16px;
-      position: absolute;
-      bottom: 0;
-      @media screen and (max-width: 767px) {
-        padding: 8px;
-      }
+      height: 32px;
+      margin-top: 16px;
       .mobile-handle {
         display: flex;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 22px;
+        padding: 8px;
         .cancel-public {
           margin-right: 12px;
           @media screen and (max-width: 767px) {

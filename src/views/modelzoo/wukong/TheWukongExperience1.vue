@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick, onUnmounted } from 'vue';
+import { ref, computed, nextTick, onUnmounted, watch } from 'vue';
 
 import html2canvas from 'html2canvas';
 
@@ -236,6 +236,7 @@ nextTick(() => {
 });
 onUnmounted(() => {
   let bgImg = document.getElementById('app');
+  bgImg.children[1].style.backgroundColor = '#f5f7fc';
   bgImg.children[2].style.backgroundColor = '#f5f7fc';
 });
 const routeList = [
@@ -288,6 +289,16 @@ getRank().then((res) => {
 function imgErr() {
   console.log(1);
 }
+watch(
+  () => {
+    return screenWidth.value;
+  },
+  (val) => {
+    if (val > 820) {
+      showInferDlg.value = false;
+    }
+  }
+);
 
 const lists = ref([
   { text: '城市夜景 油画', isSelected: false },
@@ -353,7 +364,9 @@ async function publicImage(val, index) {
         message: '公开成功，可在画作管理中查看',
       });
     }
+    showConfirmDlg.value = false;
   } catch (err) {
+    showConfirmDlg.value = false;
     console.error(err);
   }
 }
@@ -513,7 +526,7 @@ async function handleInfer() {
       if (screenWidth.value < 768) {
         showInferDlg.value = true;
       }
-      styleBackground.value = [];
+      // styleBackground.value = [];
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
@@ -674,6 +687,7 @@ const resultIndex = ref(-1);
 function handleResultClcik(i) {
   resultIndex.value = i;
 }
+const showConfirmDlg = ref(false);
 </script>
 <template>
   <div class="wukong-bread">
@@ -833,7 +847,7 @@ function handleResultClcik(i) {
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
-                  <div @click="publicImage(value, largeIndex)">
+                  <div @click="showConfirmDlg = true">
                     <p>
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </p>
@@ -1054,7 +1068,13 @@ function handleResultClcik(i) {
           <div class="handles">
             <div class="public">
               <template v-if="!inferList[key].publicId">
-                <div class="func-item" @click="publicImage(value, key)">
+                <div
+                  class="func-item"
+                  @click="
+                    showConfirmDlg = true;
+                    largeIndex = key;
+                  "
+                >
                   <p>
                     <o-icon><icon-arrow></icon-arrow></o-icon>
                   </p>
@@ -1181,6 +1201,37 @@ function handleResultClcik(i) {
         <p v-if="screenWidth <= 820" class="poster-tip">长按保存海报</p>
       </div>
     </el-dialog>
+
+    <el-dialog
+      v-model="showConfirmDlg"
+      class="confirm-dlg"
+      align-center
+      width="640"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <template #header>
+        <p class="confirm-title">公开画作</p>
+      </template>
+      <div class="confirm-desc">
+        若该作品未收藏，取消公开后将无法找回，是否确定取消公开画作？
+      </div>
+      <template #footer>
+        <OButton
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          style="margin-right: 16px"
+          @click="showConfirmDlg = false"
+          >取消</OButton
+        >
+        <OButton
+          type="primary"
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          @click="publicImage(styleBackground[largeIndex], largeIndex)"
+          >确认</OButton
+        >
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -1240,6 +1291,7 @@ function handleResultClcik(i) {
     }
     img {
       // height: 100%;
+      max-width: 360px;
       width: 100%;
       border-radius: 16px;
     }
@@ -1317,10 +1369,12 @@ function handleResultClcik(i) {
       .public {
         border-bottom-left-radius: 16px;
         border-top-left-radius: 16px;
+        padding-right: 0;
       }
       .handles-contain {
         border-bottom-right-radius: 16px;
         border-top-right-radius: 16px;
+        padding-left: 0;
       }
     }
   }
@@ -1490,7 +1544,7 @@ function handleResultClcik(i) {
       }
       .infer-img {
         width: 100%;
-        min-height: 300px;
+        // min-height: 300px;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
         @media screen and (max-width: 820px) {
@@ -1712,7 +1766,7 @@ function handleResultClcik(i) {
 }
 .wk-experience-mobile {
   display: none;
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 820px) {
     display: block;
   }
   margin: 0 16px 34px;
@@ -1801,12 +1855,15 @@ function handleResultClcik(i) {
     }
 
     .content {
-      height: 315px;
+      height: 215px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
         width: 0;
         height: 6px;
+      }
+      @media screen and (max-width: 476px) {
+        height: 315px;
       }
       .style-tag {
         display: flex;
@@ -2094,8 +2151,11 @@ function handleResultClcik(i) {
         @media screen and (max-width: 1450px) {
           // bottom: 10px;
         }
+        @media screen and (max-width: 1080px) {
+          top: -50px;
+        }
         @media screen and (max-width: 768px) {
-          bottom: 0px;
+          // bottom: 0px;
           padding: 8px;
         }
         .handles-contain,
@@ -2107,7 +2167,7 @@ function handleResultClcik(i) {
             color: #b2b2b2;
             font-size: 24px;
             &:hover {
-              color: #000;
+              color: #2197ff;
             }
           }
 
@@ -2147,7 +2207,7 @@ function handleResultClcik(i) {
             align-items: center;
             cursor: pointer;
             margin: 0 auto;
-            @media screen and (max-width: 1080px) {
+            @media screen and (max-width: 1280px) {
               width: 24px;
               height: 24px;
               .o-icon {
@@ -2168,7 +2228,7 @@ function handleResultClcik(i) {
       }
     }
   }
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 820px) {
     display: none;
   }
   .title {
@@ -2386,6 +2446,22 @@ function handleResultClcik(i) {
   }
   .o-button {
     margin: 25px auto 40px;
+  }
+}
+:deep(.confirm-dlg) {
+  @media screen and (max-width: 768px) {
+    --el-dialog-width: 80vw !important;
+    .confirm-title {
+      font-size: 16px;
+    }
+    .confirm-desc {
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 4px;
+    }
+  }
+  .el-dialog__footer {
+    text-align: center;
   }
 }
 .input-dom {

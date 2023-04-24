@@ -170,6 +170,7 @@ function goWatched() {
     .left {
       min-width: 438px;
       margin-right: 24px;
+      border-radius: 16px;
       min-height: calc(100vh - 442px);
       background-color: #fff;
       .user-info {
@@ -270,6 +271,7 @@ function goWatched() {
     margin: 16px 16px 0;
     padding: 16px 12px;
     background-color: #fff;
+    border-radius: 16px;
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
     display: flex;
     align-items: center;

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, onUnmounted } from 'vue';
 
 import html2canvas from 'html2canvas';
 
@@ -37,8 +37,8 @@ import IconDownload from '~icons/app/download-gray';
 import IconLike from '~icons/app/heart-gray';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
-import IconCancel from '~icons/app/cancel-public';
-import IconArrow from '~icons/app/arrow-top';
+import IconCancel from '~icons/app/eye-close';
+import IconArrow from '~icons/app/eye-open1';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
 import IconWarning from '~icons/app/warning1';
@@ -209,7 +209,6 @@ const largeImg = ref({});
 const largeIndex = ref(null);
 function handleEnlage(value, key, index) {
   largeImg.value = {};
-  console.log(value, key, index);
   largeImg.value[key] = value;
   largeIndex.value = key;
   isLarge.value = true;
@@ -235,6 +234,10 @@ nextTick(() => {
   bgImg.children[1].style.background = 'unset';
   bgImg.children[2].style.backgroundColor = 'unset';
 });
+onUnmounted(() => {
+  let bgImg = document.getElementById('app');
+  bgImg.children[2].style.backgroundColor = '#f5f7fc';
+});
 const routeList = [
   {
     name: 'AI画集',
@@ -257,9 +260,7 @@ getRank().then((res) => {
   if (res?.data?.rank === 0) {
     getPic()
       .then((res) => {
-        console.log(decodeURIComponent(res.data.pictures[0]));
         styleBackground.value = res.data.pictures;
-        console.log(styleBackground.value);
 
         const index1 = styleBackground.value[0].indexOf('=');
         const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
@@ -334,7 +335,6 @@ userAvatar.value = userInfoStore.avatar.replace(
 
 // 公开图片
 async function publicImage(val, index) {
-  console.log(val, index);
   try {
     const res = await publicTemporaryPicture({
       obspath: decodeURIComponent(
@@ -513,7 +513,7 @@ async function handleInfer() {
       if (screenWidth.value < 768) {
         showInferDlg.value = true;
       }
-      // styleBackground.value = [];
+      styleBackground.value = [];
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
@@ -535,8 +535,7 @@ async function handleInfer() {
           style: sortTag.value,
         });
         isInferred.value = true;
-        isWaiting.value = false;
-        console.log(res.data.data.pictures);
+        // isWaiting.value = false;
         // styleBackground.value = res.data.data.pictures;
       } catch (err) {
         if (err.code === 'bigmodel_sensitive_info') {
@@ -546,7 +545,7 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
-        isWaiting.value = false;
+        // isWaiting.value = false;
         isInferred.value = true;
         isError.value = true;
       }
@@ -566,7 +565,6 @@ const inferList = ref([
 ]);
 // 收藏
 function handleCollect(key, index) {
-  console.log(key, index);
   addLikePicture({
     obspath: decodeURIComponent(
       key
@@ -576,10 +574,8 @@ function handleCollect(key, index) {
         )[1]
     ),
   }).then((res) => {
-    console.log(res);
     if (res.data.data) {
       inferList.value[index].isCollected = true;
-      console.log(inferList.value[index]);
       inferList.value[index].id = res.data.data.id;
       ElMessage({
         type: 'success',
@@ -2110,6 +2106,9 @@ function handleResultClcik(i) {
           .o-icon {
             color: #b2b2b2;
             font-size: 24px;
+            &:hover {
+              color: #000;
+            }
           }
 
           .liked {

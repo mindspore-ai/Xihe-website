@@ -582,6 +582,7 @@ function toNextPic() {
         .is-active {
           box-shadow: 0 0 0 1px #0d8dff inset;
           color: #0d8dff;
+          border-radius: 11px;
           @media screen and (max-width: 768px) {
           }
         }

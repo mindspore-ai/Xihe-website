@@ -4,14 +4,12 @@ import { ref, onMounted, nextTick } from 'vue';
 import html2canvas from 'html2canvas';
 
 import IconEyeopen from '~icons/app/eye-open';
-import IconArrow from '~icons/app/arrow-top';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
 import IconSharegray from '~icons/app/share-gray';
 import IconHeart from '~icons/app/heart-gray';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
-// import IconFingure from '~icons/app/fingure';
 import useClipboard from 'vue-clipboard3';
 
 import {
@@ -499,7 +497,6 @@ function handleImageClick(img) {
   .el-dialog__body {
     padding: 0;
     @media screen and (max-width: 820px) {
-      // margin-top: 16vh;
       padding: 0 16px;
     }
 
@@ -508,7 +505,6 @@ function handleImageClick(img) {
     }
   }
   .poster {
-    // width: 520px;
     width: 100%;
     background: #ffffff;
     padding: 16px;
@@ -521,9 +517,7 @@ function handleImageClick(img) {
       padding: 8px 8px 16px;
     }
     .poster-image {
-      // width: 402px;
       width: 100%;
-      // height: 457px;
       position: relative;
       @media screen and (max-width: 768px) {
         width: 100%;
@@ -577,7 +571,6 @@ function handleImageClick(img) {
       }
       .info {
         width: 100%;
-        // height: 56px;
         background: #f5f6f8;
         display: flex;
         justify-content: space-between;

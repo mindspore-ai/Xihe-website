@@ -10,6 +10,14 @@ body{
           padding: 40px 40px 24px;
           margin: 0;
           text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .el-dialog__title{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
           .el-dialog__headerbtn {
             font-size: var(--o-dialog-headerbtn-font_size);
           }
@@ -33,6 +41,12 @@ body{
       background: var(--o-dialog-fullscreen-bg);
       .el-dialog__header{
          background: var(--o-dialog-fullscreen-header-bg);
+         backdrop-filter: blur(5px);
+         .el-dialog__title{
+           color: var(--o-dialog-fullscreen-title-color);
+           font-size: var(--o-dialog-fullscreen-title-font_size);
+           line-height: var(--o-dialog-fullscreen-title-line_height);
+         }
       }
     }
 }

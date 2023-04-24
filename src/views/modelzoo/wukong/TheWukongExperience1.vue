@@ -38,7 +38,7 @@ import IconLike from '~icons/app/heart-gray';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
 import IconCancel from '~icons/app/eye-close';
-import IconArrow from '~icons/app/eye-open1';
+import IconArrow from '~icons/app/eye-open';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
 import IconWarning from '~icons/app/warning1';

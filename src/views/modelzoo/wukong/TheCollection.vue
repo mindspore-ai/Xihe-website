@@ -3,6 +3,7 @@ import { ref, onMounted, nextTick } from 'vue';
 
 import html2canvas from 'html2canvas';
 
+import IconEyeopen from '~icons/app/eye-open';
 import IconArrow from '~icons/app/arrow-top';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
@@ -36,7 +37,6 @@ async function getCollectedImages() {
     const res = await collectedPictures();
     if (res.status === 200) {
       collecteImages.value = res.data.data;
-      console.log('collecteImages.value: ', collecteImages.value);
     }
   } catch (err) {
     console.error(err);
@@ -119,7 +119,6 @@ function shareImage(link, desc, style) {
   posterDlg.value = true;
 
   if (screenWidth.value <= 820) {
-    console.log(1111);
     nextTick(() => {
       const poster = document.querySelector('#screenshot');
       html2canvas(poster, {
@@ -204,7 +203,7 @@ function handleImageClick(img) {
 
           <div class="handles">
             <div class="icon-item" @click="publicImage(item.id)">
-              <o-icon><icon-arrow></icon-arrow></o-icon>
+              <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
             </div>
             <div class="right">
               <div class="icon-item" @click="downloadImage(item.link)">
@@ -281,10 +280,10 @@ function handleImageClick(img) {
       </div>
 
       <div class="mobile-dlg-handles">
-        <div class="icon-item" @click="publicImage(imageInfo.id)">
-          <o-icon><icon-arrow></icon-arrow></o-icon>
-        </div>
-        <div class="right">
+        <div class="img-handles">
+          <div class="icon-item" @click="publicImage(imageInfo.id)">
+            <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
+          </div>
           <div
             v-if="screenWidth > 820"
             class="icon-item"
@@ -294,7 +293,7 @@ function handleImageClick(img) {
             <!-- 测试移动端下载图片到本地 -->
           </div>
           <div
-            class="icon-item middle"
+            class="icon-item"
             @click="shareImage(imageInfo.link, imageInfo.desc, imageInfo.style)"
           >
             <o-icon><icon-sharegray></icon-sharegray></o-icon>
@@ -462,24 +461,30 @@ function handleImageClick(img) {
     }
   }
   .mobile-dlg-handles {
+    height: 32px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: 16px;
     margin-top: 16px;
-    .icon-item {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+    .img-handles {
+      padding: 8px;
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-    .right {
-      display: flex;
-      .middle {
-        margin: 0 4px;
+      background-color: #fff;
+      border-radius: 22px;
+      .icon-item {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:last-child {
+          margin-right: 0px;
+        }
       }
     }
   }
@@ -804,6 +809,9 @@ function handleImageClick(img) {
           padding: 0 16px;
           img {
             width: 24px;
+            @media screen and (max-width: 768px) {
+              width: 16px;
+            }
           }
           .info-left {
             display: flex;

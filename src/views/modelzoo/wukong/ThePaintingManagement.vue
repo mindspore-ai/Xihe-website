@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 import IconOpen from '~icons/app/eye-open';
 import IconLike from '~icons/app/like';
+import { ArrowRight } from '@element-plus/icons-vue';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -33,15 +34,8 @@ function handleNavClick(item) {
   router.push(item.path);
 }
 
-function goToBigmodel() {
-  router.push('/modelzoo');
-}
-function goToWukong() {
-  router.push('/modelzoo/wukong');
-}
-
 const screenWidth = ref(
-  window.innerWidth ||
+  window.innerWiscreenWidthdth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth
 );
@@ -75,13 +69,17 @@ function goWatched() {
 <template>
   <div class="wrapper">
     <div v-if="screenWidth > 820" class="painting-management">
-      <div class="painting-management-bread">
-        <p @click="goToBigmodel">大模型</p>
-        <span>></span>
-        <p @click="goToWukong">悟空</p>
-        <span>></span>
-        <p class="current">画作管理</p>
-      </div>
+      <el-breadcrumb :separator-icon="ArrowRight">
+        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+          >大模型</el-breadcrumb-item
+        >
+        <el-breadcrumb-item
+          :to="{ path: '/modelzoo/wukong' }"
+          class="breadcrumb-item"
+          >悟空</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>画作管理</el-breadcrumb-item>
+      </el-breadcrumb>
 
       <div class="painting-management-main">
         <div class="left">
@@ -166,26 +164,6 @@ function goWatched() {
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
-  .painting-management-bread {
-    display: flex;
-    height: 18px;
-    p {
-      font-size: 12px;
-      line-height: 18px;
-      color: #555550;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    span {
-      margin: 0 4px;
-      color: #555550;
-    }
-    .current {
-      color: #000;
-      font-weight: bold;
-      cursor: auto;
-    }
-  }
   .painting-management-main {
     margin-top: 40px;
     display: flex;

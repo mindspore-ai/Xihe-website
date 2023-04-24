@@ -301,7 +301,7 @@ function toNextPic() {
   <div class="wrapper">
     <div class="picture-album">
       <el-breadcrumb :separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: '/modelzoo/' }"
+        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
           >大模型</el-breadcrumb-item
         >
         <el-breadcrumb-item
@@ -311,13 +311,6 @@ function toNextPic() {
         >
         <el-breadcrumb-item>AI画集</el-breadcrumb-item>
       </el-breadcrumb>
-      <!-- <div class="painting-management-bread">
-        <p @click="goToBigmodel">大模型</p>
-        <span>></span>
-        <p @click="goToWukong">悟空</p>
-        <span>></span>
-        <p class="current">AI画集</p>
-      </div> -->
       <!-- tab栏 -->
       <el-tabs
         v-model="activeName"
@@ -496,33 +489,12 @@ function toNextPic() {
 }
 
 .el-breadcrumb {
-  height: 21px;
-  line-height: 21px;
   padding-top: 120px;
   @media screen and (max-width: 820px) {
     display: none;
   }
   @media screen and (max-width: 768px) {
     display: none;
-  }
-
-  .el-breadcrumb__item {
-    :deep(.el-breadcrumb__inner.is-link) {
-      color: #555;
-      font-weight: 400;
-      &:hover {
-        color: #0d8dff;
-      }
-    }
-    :deep(.el-breadcrumb__separator.el-icon) {
-      color: #555;
-    }
-  }
-  :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-    color: #000;
-  }
-  :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-    cursor: pointer;
   }
 }
 .wrapper {
@@ -532,6 +504,7 @@ function toNextPic() {
     max-width: 1440px;
     margin: 0 auto;
     width: 100%;
+    overflow: hidden;
     .painting-management-bread {
       padding: 120px 0 0;
       display: flex;

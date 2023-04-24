@@ -229,26 +229,6 @@ function learnWukongMore() {
     @media screen and (max-width: 820px) {
       display: none;
     }
-    :deep(.el-breadcrumb) {
-      font-size: 12px;
-      line-height: 18px;
-      .el-breadcrumb__item {
-        .el-breadcrumb__inner {
-          color: #555;
-        }
-        &:last-child .el-breadcrumb__inner {
-          color: #000;
-        }
-      }
-      // :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-      //   // color: #fff !important;
-      //   z-index: 99;
-      // }
-      // :deep(.el-breadcrumb__item:first-child .el-breadcrumb__inner) {
-      //   color: #b2b2b2 !important;
-      //   z-index: 99;
-      // }
-    }
   }
   .intro-head {
     padding: 40px;

@@ -380,7 +380,7 @@ async function cancelImgCollected(item) {
     }
     .information {
       display: flex;
-      flex-direction: row-reverse;
+      justify-content: flex-end;
       font-size: 12px;
       line-height: 18px;
       height: 32px;
@@ -605,12 +605,18 @@ async function cancelImgCollected(item) {
           justify-content: space-between;
           img {
             width: 24px;
+            @media screen and (max-width: 768px) {
+              width: 16px;
+            }
           }
           .info-left {
             display: flex;
             align-items: center;
             .user-name {
               margin-left: 8px;
+              @media screen and (max-width: 768px) {
+                margin-left: 4px;
+              }
             }
           }
           .info-right {
@@ -618,9 +624,15 @@ async function cancelImgCollected(item) {
             align-items: center;
             .o-icon {
               font-size: 17px;
+              @media screen and (max-width: 768px) {
+                font-size: 12px;
+              }
             }
             .count {
               margin-left: 8px;
+              @media screen and (max-width: 768px) {
+                margin-left: 2px;
+              }
             }
           }
           @media screen and (max-width: 820px) {

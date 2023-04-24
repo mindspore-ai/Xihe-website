@@ -270,9 +270,12 @@ function getHeaderConfig() {
     : {};
   return headersConfig;
 }
+let token = getHeaderConfig().headers
+  ? getHeaderConfig().headers['private-token']
+  : null;
 let socket = new WebSocket(
   'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
-  [getHeaderConfig().headers['private-token']]
+  [token]
 );
 socket.onmessage = function (event) {
   try {

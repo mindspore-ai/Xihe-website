@@ -31,6 +31,7 @@ import style20 from '@/assets/imgs/wukong/style/style20.png';
 import loading from '@/assets/gifs/loading.gif';
 import tip from '@/assets/imgs/wukong/tip.png';
 import wukongbg from '@/assets/imgs/wukong/wukong-bg1.png';
+import warning from '@/assets/imgs/wukong/warning.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/download-gray';
@@ -64,6 +65,7 @@ import {
   getRank,
   getPic,
 } from '@/api/api-modelzoo.js';
+import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
@@ -196,6 +198,7 @@ function viewAll() {
   newStyleData.value = newStyleData.value.concat(randomList.value.slice(11));
 }
 const isWaiting = ref(false);
+const isLine = ref(false);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
@@ -257,35 +260,55 @@ function goPath(val) {
 function closePosterDlg() {
   posterDlg.value = false;
 }
-getRank().then((res) => {
-  if (res?.data?.rank === 0) {
-    getPic()
-      .then((res) => {
-        styleBackground.value = res.data.pictures;
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+let socket = new WebSocket(
+  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+  [getHeaderConfig().headers['private-token']]
+);
+socket.onmessage = function (event) {
+  try {
+    if (JSON.parse(event.data).data.rank === 0) {
+      getPic()
+        .then((res) => {
+          styleBackground.value = res.data.pictures;
 
-        const index1 = styleBackground.value[0].indexOf('=');
-        const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+          const index1 = styleBackground.value[0].indexOf('=');
+          const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
 
-        const i1 = styleBackground.value[0].indexOf('&');
-        const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+          const i1 = styleBackground.value[0].indexOf('&');
+          const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
 
-        const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
-        const currentTime = (new Date().getTime() + '').substring(0, 10);
+          const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+          const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-        if ((deadTime - currentTime) / 60 < 60) {
-          temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-            styleBackground.value[0] = res.data.data.link;
-            temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-              styleBackground.value[1] = res.data.data.link;
+          if ((deadTime - currentTime) / 60 < 60) {
+            temporaryLink({ link: styleBackground.value[0] }).then((res) => {
+              styleBackground.value[0] = res.data.data.link;
+              temporaryLink({ link: styleBackground.value[1] }).then((res) => {
+                styleBackground.value[1] = res.data.data.link;
+              });
             });
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-});
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  } catch {}
+};
+// getRank().then((res) => {
+//   if (res?.data?.rank === 0) {
+//   }
+// });
 function imgErr() {
   console.log(1);
 }
@@ -526,7 +549,7 @@ async function handleInfer() {
       if (screenWidth.value < 768) {
         showInferDlg.value = true;
       }
-      // styleBackground.value = [];
+      styleBackground.value = [];
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
@@ -550,7 +573,32 @@ async function handleInfer() {
         isInferred.value = true;
         // isWaiting.value = false;
         // styleBackground.value = res.data.data.pictures;
+        console.log(res.status);
+        if (res.status === 201) {
+          setTimeout(() => {
+            socket = new WebSocket(
+              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+              [getHeaderConfig().headers['private-token']]
+            );
+            socket.onmessage = function (event) {
+              isWaiting.value = false;
+              isLine.value = JSON.parse(event.data).data.rank;
+              console.log(isLine.value);
+              if (JSON.parse(event.data).data.rank === 0) {
+                getPic()
+                  .then((res) => {
+                    styleBackground.value = res.data.pictures;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+            };
+          }, 2000);
+        }
       } catch (err) {
+        console.log(err.code);
+        isWaiting.value = false;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -794,6 +842,14 @@ const showConfirmDlg = ref(false);
         <div v-if="isWaiting" class="waiting">
           <img :src="loading" alt="" />
           <p>正在创作中，请耐心等待</p>
+        </div>
+        <div v-else-if="isLine" class="waiting">
+          <img :src="loading" alt="" />
+          <p>前面还有{{ isLine }}位排队，请耐心等待</p>
+        </div>
+        <div v-else-if="errorMsg" class="waiting">
+          <img :src="warning" alt="" />
+          <p>敏感信息，请重新输入关键词</p>
         </div>
         <div v-else class="tip">
           <img :src="tip" alt="" />
@@ -1051,8 +1107,19 @@ const showConfirmDlg = ref(false);
       </template>
 
       <div v-if="!styleBackground.length" class="infer-dlg-loading">
-        <img :src="loading" alt="" />
-        <p>正在创作中，请耐心等待</p>
+        <template v-if="isWaiting">
+          <img :src="loading" alt="" />
+          <p>正在创作中，请耐心等待</p></template
+        >
+        <template v-else-if="isLine">
+          <img :src="loading" alt="" />
+          <p>前面还有{{ isLine }}位排队，请耐心等待</p></template
+        >
+        <template v-else-if="errorMsg">
+          <img :src="warning" alt="" />
+          <p>敏感信息，请重新输入关键词</p></template
+        >
+        <template v-else> </template>
       </div>
 
       <div v-if="styleBackground.length && !isError" class="infer-dlg-result">
@@ -1125,7 +1192,7 @@ const showConfirmDlg = ref(false);
         </div>
       </div>
 
-      <div v-if="isError" class="infer-dlg-error">
+      <!-- <div v-if="isError" class="infer-dlg-error">
         <p>
           <o-icon><icon-warning></icon-warning></o-icon>
         </p>
@@ -1136,7 +1203,7 @@ const showConfirmDlg = ref(false);
           <span>重新输入</span>
           <o-icon><icon-right></icon-right></o-icon>
         </p>
-      </div>
+      </div> -->
     </el-dialog>
 
     <el-dialog
@@ -2289,7 +2356,7 @@ const showConfirmDlg = ref(false);
     }
   }
   .wk-experience-styles {
-    margin-top: 40px;
+    margin-top: 30px;
     // display: flex;
     .title {
       text-align: left;
@@ -2446,11 +2513,13 @@ const showConfirmDlg = ref(false);
   }
   .o-button {
     margin: 25px auto 40px;
+    padding: 9px 28px;
   }
 }
 :deep(.confirm-dlg) {
   @media screen and (max-width: 768px) {
-    --el-dialog-width: 80vw !important;
+    // --el-dialog-width: 80vw !important;
+    max-width: 335px;
     .confirm-title {
       font-size: 16px;
     }

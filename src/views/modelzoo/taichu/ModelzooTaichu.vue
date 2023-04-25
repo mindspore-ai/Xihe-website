@@ -66,7 +66,7 @@ function goTaichuMore() {
 
 <template>
   <div class="taichu">
-    <div class="taichu-wrap">
+    <!-- <div class="taichu-wrap">
       <div class="taichu-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
@@ -102,7 +102,7 @@ function goTaichuMore() {
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="taichu-content-desc">
       <div class="taichu-tab">
         <o-nav

@@ -198,7 +198,7 @@ function viewAll() {
   newStyleData.value = newStyleData.value.concat(randomList.value.slice(11));
 }
 const isWaiting = ref(false);
-const isLine = ref(false);
+const isLine = ref(null);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
@@ -279,6 +279,7 @@ let socket = new WebSocket(
 );
 socket.onmessage = function (event) {
   try {
+    isLine.value = JSON.parse(event.data).data.rank;
     if (JSON.parse(event.data).data.rank === 0) {
       getPic()
         .then((res) => {
@@ -753,7 +754,7 @@ const showConfirmDlg = ref(false);
     <div class="wrap-left">
       <el-input
         v-model="inputText"
-        maxlength="75"
+        maxlength="55"
         placeholder="请输入简体中文或选择下方样例"
         show-word-limit
         type="textarea"
@@ -846,9 +847,10 @@ const showConfirmDlg = ref(false);
           <img :src="loading" alt="" />
           <p>正在创作中，请耐心等待</p>
         </div>
-        <div v-else-if="isLine" class="waiting">
+        <div v-else-if="isLine !== null" class="waiting">
           <img :src="loading" alt="" />
-          <p>前面还有{{ isLine }}位排队，请耐心等待</p>
+          <p v-if="isLine <= 1">正在创作中，请耐心等待</p>
+          <p v-else>前面还有{{ isLine }}位排队，请耐心等待</p>
         </div>
         <div v-else-if="errorMsg" class="waiting">
           <img :src="warning" alt="" />
@@ -1114,9 +1116,10 @@ const showConfirmDlg = ref(false);
           <img :src="loading" alt="" />
           <p>正在创作中，请耐心等待</p></template
         >
-        <template v-else-if="isLine">
+        <template v-else-if="isLine !== null">
           <img :src="loading" alt="" />
-          <p>前面还有{{ isLine }}位排队，请耐心等待</p></template
+          <p v-if="isLine <= 1">正在创作中，请耐心等待</p>
+          <p v-else>前面还有{{ isLine }}位排队，请耐心等待</p></template
         >
         <template v-else-if="errorMsg">
           <img :src="warning" alt="" />

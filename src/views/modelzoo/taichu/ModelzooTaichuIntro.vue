@@ -1,5 +1,6 @@
 <script setup>
 import { ref, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 import taichuEfficient from '@/assets/imgs/taichu/taichu-efficient.png';
@@ -19,6 +20,12 @@ import taichuPlay from '@/assets/imgs/taichu/taichuplay.png';
 import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
 import taichuCompanyImg from '@/assets/imgs/taichu/taichu-companyimg.png';
 import taichuFixImg from '@/assets/imgs/taichu/taichuFixImage.png';
+
+import OButton from '@/components/OButton.vue';
+import { ArrowRight } from '@element-plus/icons-vue';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
+
 const taichuvideo1 =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
 const taichuvideo2 =
@@ -35,6 +42,7 @@ const instancevideo =
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
+const router = useRouter();
 // 图片数组
 const videoImgArr1 = [
   {
@@ -99,6 +107,9 @@ function closeInstanceVideo() {
   instanceVideo.currentTime = 0;
   showInstanceVideo.value = false;
 }
+function goTaichuExperience() {
+  router.push('/modelzoo/taichu');
+}
 function goTaichuMore() {
   window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
 }
@@ -133,9 +144,6 @@ function goTaichuMore() {
               @click="goTaichuExperience"
             >
               在线体验
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
             </OButton>
             <OButton
               :size="screenWidth < 820 ? 'mini' : 'medium'"
@@ -143,9 +151,6 @@ function goTaichuMore() {
               @click="goTaichuMore"
             >
               了解更多
-              <template #suffix>
-                <OIcon><IconArrowRight /></OIcon>
-              </template>
             </OButton>
           </div>
         </div>

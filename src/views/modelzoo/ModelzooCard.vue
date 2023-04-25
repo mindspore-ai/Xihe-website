@@ -1,5 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import OButton from '@/components/OButton.vue';
+
 const router = useRouter();
 
 const prop = defineProps({
@@ -131,19 +133,7 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 821px) {
-    width: 386px;
-    padding: 8px 8px 16px;
-    // .card-bottom .card-bottom-title {
-    //   font-size: 14px;
-    //   padding: 16px 0 8px;
-    // }
-    // .card-bottom .card-bottom-text {
-    //   font-size: 12px;
-    //   margin-bottom: 16px;
-    // }
-  }
-  @media screen and (max-width: 769px) {
-    width: 343px;
+    width: 360px;
     padding: 8px 8px 16px;
     .card-bottom .card-bottom-title {
       font-size: 14px;
@@ -153,6 +143,10 @@ function goIntroduction() {
       font-size: 12px;
       margin-bottom: 16px;
     }
+  }
+  @media screen and (max-width: 768px) {
+    width: 343px;
+    padding: 8px 8px 16px;
   }
 }
 .card-closed {

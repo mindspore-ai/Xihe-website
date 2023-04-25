@@ -883,6 +883,9 @@ onUnmounted(() => {
   line-height: 22px;
 }
 .model-page {
+  background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
+  background-position: 0% 0%;
+  background-size: 100%;
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {

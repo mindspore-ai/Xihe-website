@@ -83,7 +83,7 @@ function goModelzoo() {
 </script>
 <template>
   <div class="modelzoo">
-    <div class="model-head">
+    <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
           <div class="title">{{ i18n.head.title }}</div>
@@ -94,9 +94,9 @@ function goModelzoo() {
       </div>
     </div>
 
-    <AppContent :mobile-top="24">
+    <AppContent :mobile-top="16">
       <div class="card-lists">
-        <div v-for="item in i18n.cardLists" :key="item">
+        <div v-for="item in i18n.cardLists" :key="item" class="card-item">
           <ModelzooCard
             :title="item.title"
             :introduce="item.introduce"
@@ -116,23 +116,17 @@ function goModelzoo() {
 </template>
 
 <style lang="scss" scoped>
-.wrap {
-  margin: 0 auto;
-  padding: 50px 16px 136px 16px;
-  max-width: 1472px;
-}
 .modelzoo {
-  .model-head {
+  .modelzoo-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
-    @media screen and (max-width: 768px) {
-      padding-top: 48px;
-    }
+    background-image: url('@/assets/imgs/modelzoo/modelzoo-banner.png');
     .wrap {
+      max-width: 1472px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
-      padding: 42px 16px;
+      padding: 160px 16px 240px;
       color: #000;
       .title {
         padding-bottom: 8px;
@@ -158,6 +152,12 @@ function goModelzoo() {
       .banner-right {
         display: flex;
         align-items: center;
+      }
+    }
+    @media screen and (max-width: 821px) {
+      padding-top: 48px;
+      .wrap {
+        padding: 44px 16px 62px;
       }
     }
   }
@@ -207,11 +207,11 @@ function goModelzoo() {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 24px;
-    @media screen and (max-width: 1080px) {
+    @media screen and (max-width: 821px) {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 16px;
     }
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 768px) {
       grid-template-columns: repeat(1, 1fr);
     }
   }

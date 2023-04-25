@@ -3,11 +3,11 @@ import { computed } from 'vue';
 const props = defineProps({
   pcTop: {
     type: Number,
-    default: 64,
+    default: 40,
   },
   mobileTop: {
     type: Number,
-    default: 40,
+    default: 16,
   },
 });
 

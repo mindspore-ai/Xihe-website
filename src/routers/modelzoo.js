@@ -149,7 +149,7 @@ export default [
   // },
   // 鹏程.神农
   {
-    path: '/modelzoo/shennong',
+    path: '/modelzoo/shennong/introduce',
     name: 'shennong',
     component: () => {
       return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');

@@ -11,6 +11,13 @@ export default [
   },
   // 紫东.太初
   {
+    path: '/modelzoo/taichu/introduce',
+    name: 'taichuIntroduction',
+    component: () => {
+      return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
+    },
+  },
+  {
     path: '/modelzoo/taichu',
     name: 'taichu',
     component: () => {
@@ -24,13 +31,13 @@ export default [
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-      {
+      /*  {
         path: 'introduce',
         name: 'taichuIntroduction',
         component: () => {
           return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
         },
-      },
+      }, */
       {
         path: 'text',
         name: 'textToImage',

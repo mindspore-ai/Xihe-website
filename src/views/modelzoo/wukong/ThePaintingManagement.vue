@@ -68,7 +68,7 @@ function goWatched() {
 </script>
 <template>
   <div class="wrapper">
-    <div v-if="screenWidth > 820" class="painting-management">
+    <div class="painting-management">
       <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item :to="{ path: '/modelzoo' }"
           >大模型</el-breadcrumb-item
@@ -81,7 +81,7 @@ function goWatched() {
         <el-breadcrumb-item>画作管理</el-breadcrumb-item>
       </el-breadcrumb>
 
-      <div class="painting-management-main">
+      <div v-if="screenWidth > 820" class="painting-management-main">
         <div class="left">
           <div class="user-info">
             <img :src="userInfoStore.avatar" alt="" />
@@ -129,29 +129,28 @@ function goWatched() {
         </div>
         <div class="content"><router-view></router-view></div>
       </div>
-    </div>
-
-    <div v-else class="mobile-management">
-      <div class="user-info">
-        <div class="avatar">
-          <img :src="userInfoStore.avatar" alt="" />
+      <div v-else class="mobile-management">
+        <div class="user-info">
+          <div class="avatar">
+            <img :src="userInfoStore.avatar" alt="" />
+          </div>
+          <div class="user-name">{{ userInfoStore.userName }}</div>
         </div>
-        <div class="user-name">{{ userInfoStore.userName }}</div>
-      </div>
 
-      <div class="manage-tabs">
-        <div
-          v-for="item in navItems"
-          :key="item.id"
-          class="tab-item"
-          :class="currentNav === item.id ? 'active-mo' : ''"
-          @click="handleNavClick(item)"
-        >
-          {{ item.tag }}
+        <div class="manage-tabs">
+          <div
+            v-for="item in navItems"
+            :key="item.id"
+            class="tab-item"
+            :class="currentNav === item.id ? 'active-mo' : ''"
+            @click="handleNavClick(item)"
+          >
+            {{ item.tag }}
+          </div>
         </div>
-      </div>
-      <div class="mobile-content">
-        <router-view></router-view>
+        <div class="mobile-content">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -159,13 +158,25 @@ function goWatched() {
 <style lang="scss" scoped>
 .wrapper {
   background-color: #f5f6f8;
+  background-image: url(@/assets/imgs/wukong/wukong-banner.png);
+  background-size: 100% 246px;
+  background-repeat: no-repeat;
+  @media screen and (max-width: 821px) {
+    background-image: unset;
+    .painting-management {
+      padding-top: 64px;
+    }
+    .mobile-management {
+      padding-top: 0px;
+    }
+  }
 }
 .painting-management {
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
   .painting-management-main {
-    margin-top: 40px;
+    margin-top: 146px;
     display: flex;
     .left {
       min-width: 438px;
@@ -268,7 +279,7 @@ function goWatched() {
   display: flex;
   flex-direction: column;
   .user-info {
-    margin: 16px 16px 0;
+    margin-top: 16px;
     padding: 16px 12px;
     background-color: #fff;
     border-radius: 16px;

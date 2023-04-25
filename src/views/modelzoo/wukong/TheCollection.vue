@@ -713,7 +713,7 @@ function handleImageClick(img) {
     @media screen and (max-width: 820px) {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 12px;
-      padding: 16px 16px 40px;
+      padding: 16px 0px 40px;
     }
     .collect-item {
       cursor: pointer;
@@ -728,7 +728,7 @@ function handleImageClick(img) {
         position: relative;
         flex: 1;
         display: flex;
-        align-items: center;
+        // align-items: center;
         // @media screen and (max-width: 820px) {
         //   width: calc(50vw - 24px);
         // }

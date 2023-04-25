@@ -500,10 +500,10 @@ async function cancelImgCollected(item) {
     display: grid;
     grid-template-columns: repeat(3, 310px);
     grid-gap: 24px;
-    @media screen and (max-width: 820px) {
+    @media screen and (max-width: 821px) {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 12px;
-      padding: 16px 16px 40px;
+      padding: 16px 0px 40px;
     }
     .collect-item {
       cursor: pointer;
@@ -517,7 +517,7 @@ async function cancelImgCollected(item) {
         position: relative;
         flex: 1;
         display: flex;
-        align-items: center;
+        // align-items: center;
         &:hover {
           .handles {
             opacity: 1;
@@ -579,7 +579,7 @@ async function cancelImgCollected(item) {
         }
 
         img {
-          width: 310px;
+          width: 100%;
           border-radius: 16px 16px 0 0;
           @media screen and (max-width: 820px) {
             width: calc(50vw - 24px);

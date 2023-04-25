@@ -300,30 +300,31 @@ function toNextPic() {
 <template>
   <div class="wrapper">
     <div class="picture-album">
-      <el-breadcrumb :separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-          >大模型</el-breadcrumb-item
+      <div class="album-top">
+        <el-breadcrumb :separator-icon="ArrowRight">
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+            >大模型</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            :to="{ path: '/modelzoo/wukong' }"
+            class="breadcrumb-item"
+            >悟空</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>AI画集</el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- tab栏 -->
+        <el-tabs
+          v-model="activeName"
+          class="album-tabs"
+          @tab-change="changeTab"
         >
-        <el-breadcrumb-item
-          :to="{ path: '/modelzoo/wukong' }"
-          class="breadcrumb-item"
-          >悟空</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>AI画集</el-breadcrumb-item>
-      </el-breadcrumb>
-      <!-- tab栏 -->
-      <el-tabs
-        v-model="activeName"
-        type="card"
-        class="demo-tabs1"
-        @tab-change="changeTab"
-      >
-        <el-tab-pane label="筛选" name="0" disabled></el-tab-pane>
-        <el-tab-pane label="官方" name="official"></el-tab-pane>
-        <el-tab-pane label="全部" name=""></el-tab-pane>
-        <!-- <el-tab-pane label="最热" name="3"></el-tab-pane>
-        <el-tab-pane label="最新" name="4"></el-tab-pane> -->
-      </el-tabs>
+          <el-tab-pane label="筛选" name="0" disabled></el-tab-pane>
+          <el-tab-pane label="官方" name="official"></el-tab-pane>
+          <el-tab-pane label="全部" name=""></el-tab-pane>
+          <!-- <el-tab-pane label="最热" name="3"></el-tab-pane>
+          <el-tab-pane label="最新" name="4"></el-tab-pane> -->
+        </el-tabs>
+      </div>
 
       <!-- 画集图片 -->
       <div class="album-item">
@@ -411,8 +412,11 @@ function toNextPic() {
           <o-icon class="share" @click="sharePic">
             <icon-sharegray></icon-sharegray>
           </o-icon>
-          <o-icon class="heart" @click="collectPic">
+          <o-icon v-if="!dialogData.is_like" class="heart" @click="collectPic">
             <icon-heartgray></icon-heartgray>
+          </o-icon>
+          <o-icon v-else class="heart" @click="collectPic">
+            <icon-heart></icon-heart>
           </o-icon>
         </div>
       </div>
@@ -487,103 +491,51 @@ function toNextPic() {
   position: fixed;
   top: -1200px;
 }
-
 .el-breadcrumb {
   padding-top: 120px;
-  @media screen and (max-width: 820px) {
-    display: none;
-  }
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
 }
 .wrapper {
   background-color: #f5f6f8;
   padding: 0 16px;
+  background-image: url(@/assets/imgs/wukong/wukong-banner.png);
+  background-size: 100% 246px;
+  background-repeat: no-repeat;
+  @media screen and (max-width: 821px) {
+    background-image: unset;
+    .el-breadcrumb {
+      padding-top: 68px;
+    }
+  }
   .picture-album {
     max-width: 1440px;
     margin: 0 auto;
     width: 100%;
     overflow: hidden;
-    .painting-management-bread {
-      padding: 120px 0 0;
-      display: flex;
-      height: 18px;
-      p {
-        font-size: 12px;
-        line-height: 18px;
-        color: #555550;
-        cursor: pointer;
-      }
-      span {
-        margin: 0 4px;
-        color: #555550;
-      }
-      .current {
-        color: #000;
-        cursor: auto;
-      }
-    }
-
-    :deep(.demo-tabs1) {
+    :deep(.album-tabs) {
       .el-tabs__header {
-        border: none;
-        margin: 40px 0px 24px;
-        height: 100%;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-        @media screen and (max-width: 820px) {
-          margin: 0;
-          padding: 74px 0 24px;
-          box-shadow: none;
-        }
-        // @media screen and (max-width: 820px) {
-        // }
-        .el-tabs__nav {
-          border: none;
-        }
-        .el-tabs__nav-scroll {
-          background-color: #ffffff;
-          @media screen and (max-width: 768px) {
-            background-color: #f5f6f8;
-          }
-        }
-        .el-tabs__item {
-          border: none;
-          line-height: 28px;
-          height: 28px;
-          margin: 14px 6px;
-          padding: 0 12px;
-          color: #555555;
-          &:first-child {
-            color: #000000;
-            font-weight: 550;
-            margin-left: 12px;
-            margin-right: 22px;
-            @media screen and (max-width: 768px) {
-              margin-left: 0;
-              margin-right: 16px;
-              padding-left: 0;
+        margin: 68px 0px 0px;
+        @media screen and (max-width: 821px) {
+          margin-top: 16px;
+          height: 22px;
+          .el-tabs__nav {
+            height: 22px;
+            .el-tabs__item {
+              height: 22px;
+              line-height: 22px;
+              padding: 0 8px;
+              margin-right: 8px;
+              &:nth-child(2) {
+                padding-left: 0px;
+                margin-right: 16px;
+              }
+            }
+            .el-tabs__active-bar {
+              display: none;
             }
           }
-          &:last-child {
-            padding-right: 12px;
-            @media screen and (max-width: 768px) {
-              padding-right: 8px;
-            }
-          }
-          @media screen and (max-width: 768px) {
-            padding: 2px 8px;
-            margin: 0;
-            font-size: 12px;
-            height: 20px;
-            line-height: 18px;
-          }
-        }
-        .is-active {
-          box-shadow: 0 0 0 1px #0d8dff inset;
-          color: #0d8dff;
-          border-radius: 11px;
-          @media screen and (max-width: 768px) {
+          .el-tabs__item.is-active {
+            border: 1px solid #0d8dff;
+            border-radius: 11px;
           }
         }
       }
@@ -595,8 +547,10 @@ function toNextPic() {
       column-gap: 24px;
       row-gap: 24px;
       padding-bottom: 64px;
+      margin-top: 64px;
       @media screen and (max-width: 821px) {
         grid-template-columns: 1fr 1fr 1fr;
+        margin-top: 26px;
       }
       @media screen and (max-width: 767px) {
         grid-template-columns: 1fr 1fr;
@@ -854,7 +808,7 @@ function toNextPic() {
       }
     }
     .pic-box {
-      width: 35%;
+      width: 33%;
       margin: 0 auto;
       position: relative;
       @media screen and (max-width: 821px) {

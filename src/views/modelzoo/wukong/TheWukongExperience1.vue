@@ -8,6 +8,7 @@ import classic from '@/assets/imgs/wukong/style-bg-2.png';
 import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
 import more from '@/assets/imgs/wukong/style-bg-4.png';
 import random from '@/assets/imgs/wukong/style-bg-5.png';
+import style from '@/assets/imgs/wukong/style/style.png';
 import style1 from '@/assets/imgs/wukong/style/style1.png';
 import style2 from '@/assets/imgs/wukong/style/style2.png';
 import style3 from '@/assets/imgs/wukong/style/style3.png';
@@ -162,7 +163,6 @@ const randomList = ref([
   { tag: '巴洛克', isSelected: false, img: style1 },
   { tag: '毕加索', isSelected: false, img: style2 },
   { tag: '达芬奇', isSelected: false, img: style3 },
-  { tag: '动漫', isSelected: false, img: style4 },
   { tag: '梵高', isSelected: false, img: style5 },
   { tag: '浮世绘', isSelected: false, img: style6 },
   { tag: '宫崎骏', isSelected: false, img: style7 },
@@ -179,6 +179,7 @@ const randomList = ref([
   { tag: '印象主义', isSelected: false, img: style18 },
   { tag: '油画', isSelected: false, img: style19 },
   { tag: '蒸汽波', isSelected: false, img: style20 },
+  { tag: '动漫', isSelected: false, img: style4 },
 ]);
 const newStyleData = ref([]);
 const isAllStyle = ref(false);
@@ -187,7 +188,7 @@ newStyleData.value.unshift(
   randomList.value[Math.floor(Math.random() * randomList.value.length)]
 );
 newStyleData.value[0].tag1 = '随机风格';
-// newStyleData.value[0].img1 = random;
+newStyleData.value[0].img1 = style;
 // newStyleData.value[0].isSelected = true;
 function retract() {
   isAllStyle.value = false;
@@ -202,8 +203,8 @@ const isLine = ref(null);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
-  { text: '城市夜景', isSelected: false },
-  { text: '悬崖 美景 壮观 高清', isSelected: false },
+  // { text: '城市夜景', isSelected: false },
+  // { text: '悬崖 美景 壮观 高清', isSelected: false },
   // { text: '西湖 烟雨', isSelected: false },
   // { text: '海滩 美景 高清', isSelected: false },
 ]);
@@ -313,9 +314,7 @@ socket.onmessage = function (event) {
 //   if (res?.data?.rank === 0) {
 //   }
 // });
-function imgErr() {
-  console.log(1);
-}
+function imgErr() {}
 watch(
   () => {
     return screenWidth.value;
@@ -500,7 +499,7 @@ function choseStyleSort(val, item) {
     newStyleData.value[0] =
       randomList.value[Math.floor(Math.random() * randomList.value.length)];
     newStyleData.value[0].tag1 = '随机风格';
-    // newStyleData.value[0].img1 = random;
+    newStyleData.value[0].img1 = style;
     // newStyleData.value[0].isSelected = true;
   }
 }
@@ -731,7 +730,7 @@ function getDescExamples(arr, count) {
 }
 // 换一批
 function refreshTags() {
-  exampleData.value = getDescExamples(lists.value, 3);
+  exampleData.value = getDescExamples(lists.value, 1);
 }
 
 const resultIndex = ref(-1);
@@ -754,7 +753,7 @@ const showConfirmDlg = ref(false);
     <div class="wrap-left">
       <el-input
         v-model="inputText"
-        maxlength="55"
+        maxlength="75"
         placeholder="请输入简体中文或选择下方样例"
         show-word-limit
         type="textarea"
@@ -779,11 +778,17 @@ const showConfirmDlg = ref(false);
         </div>
         <div class="refresh" @click="refreshTags">
           <o-icon><icon-refresh></icon-refresh></o-icon>
-          <p>换一批</p>
+          <!-- <p>换一批</p> -->
         </div>
       </div>
       <div class="wk-experience-styles">
-        <p class="title">选择风格</p>
+        <div class="title">
+          选择风格
+          <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
+            查看全部
+          </div>
+          <div v-else class="all-kind retract" @click="retract">收起</div>
+        </div>
         <div class="content">
           <div class="style-tag">
             <div
@@ -793,19 +798,19 @@ const showConfirmDlg = ref(false);
               :class="item.isSelected ? 'active-1' : ''"
               @click="choseStyleSort(index, item)"
             >
-              <img :src="item.img" alt="" />
+              <img
+                v-if="index === 0"
+                :src="item.isSelected ? item.img : item.img1"
+                alt=""
+              />
+              <img v-else :src="item.img" alt="" />
 
               <div class="style-item-name" @click="getRandomStyle(index)">
                 {{ index === 0 ? item.tag1 : item.tag }}
               </div>
             </div>
           </div>
-          <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
-            查看全部<o-icon><icon-down></icon-down></o-icon>
-          </div>
-          <div v-else class="all-kind retract" @click="retract">
-            收起<o-icon><icon-down></icon-down></o-icon>
-          </div>
+
           <!-- <div class="sort-tag">
             <div
               v-for="item in styleData[styleIndex].options"
@@ -908,20 +913,20 @@ const showConfirmDlg = ref(false);
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
-                  <div @click="showConfirmDlg = true">
+                  <div class="func-item" @click="showConfirmDlg = true">
                     <p>
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </p>
-                    <!-- <div class="icon-name">公开</div> -->
+                    <div class="icon-name">公开</div>
                   </div>
                 </template>
 
                 <template v-else>
-                  <div @click="cancelPublicImage(largeIndex)">
+                  <div class="func-item" @click="cancelPublicImage(largeIndex)">
                     <p class="icon-item">
                       <o-icon><icon-cancel></icon-cancel></o-icon>
                     </p>
-                    <!-- <div class="icon-name">取消公开</div> -->
+                    <div class="icon-name">取消公开</div>
                   </div>
                 </template>
               </div>
@@ -930,14 +935,14 @@ const showConfirmDlg = ref(false);
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>
                   </p>
-                  <!-- <div class="icon-name">下载</div> -->
+                  <div class="icon-name">下载</div>
                 </div>
 
                 <div class="func-item" @click="shareImage(value)">
                   <p>
                     <o-icon><icon-share></icon-share></o-icon>
                   </p>
-                  <!-- <div class="icon-name">分享</div> -->
+                  <div class="icon-name">分享</div>
                 </div>
 
                 <template v-if="!inferList[largeIndex].isCollected">
@@ -945,7 +950,7 @@ const showConfirmDlg = ref(false);
                     <p @click="handleCollect(value, largeIndex)">
                       <o-icon><icon-like></icon-like></o-icon>
                     </p>
-                    <!-- <div class="icon-name">收藏</div> -->
+                    <div class="icon-name">收藏</div>
                   </div>
                 </template>
 
@@ -954,7 +959,7 @@ const showConfirmDlg = ref(false);
                     <p class="liked" @click="handleCancelCollect(largeIndex)">
                       <o-icon><icon-heart></icon-heart></o-icon>
                     </p>
-                    <!-- <div class="icon-name">取消收藏</div> -->
+                    <div class="icon-name">取消收藏</div>
                   </div>
                 </template>
               </div>
@@ -1004,7 +1009,7 @@ const showConfirmDlg = ref(false);
         <!-- <p class="title">选择样例</p> -->
         <div class="refresh" @click="refreshTags">
           <o-icon><icon-refresh></icon-refresh></o-icon>
-          <p>换一批</p>
+          <!-- <p>换一批</p> -->
         </div>
       </div>
 
@@ -1021,7 +1026,11 @@ const showConfirmDlg = ref(false);
     </div>
 
     <div class="mobile-styles">
-      <p class="title">选择风格</p>
+      <div class="title">
+        选择风格
+        <div v-if="!isAllStyle" class="all-kind" @click="viewAll">查看全部</div>
+        <div v-else class="all-kind retract" @click="retract">收起</div>
+      </div>
       <div class="content">
         <div class="style-tag">
           <div
@@ -1051,12 +1060,6 @@ const showConfirmDlg = ref(false);
               {{ item.tag }}
             </div>
           </div> -->
-        </div>
-        <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
-          查看全部<o-icon><icon-down></icon-down></o-icon>
-        </div>
-        <div v-else class="all-kind retract" @click="retract">
-          收起<o-icon><icon-down></icon-down></o-icon>
         </div>
 
         <!-- <div class="style-tag">
@@ -1716,7 +1719,7 @@ const showConfirmDlg = ref(false);
         color: #40adff;
         text-align: center;
         cursor: pointer;
-        border-radius: 16px;
+        border-radius: 18px;
         @media screen and (max-width: 768px) {
           width: 74px;
           height: 32px;
@@ -1893,6 +1896,7 @@ const showConfirmDlg = ref(false);
         align-items: center;
         .o-icon {
           margin-right: 4px;
+          font-size: 16px;
         }
         p {
           white-space: nowrap;
@@ -1920,11 +1924,16 @@ const showConfirmDlg = ref(false);
   }
   .mobile-styles {
     .title {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       font-weight: 400;
       color: #555;
       margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      .all-kind {
+        font-size: 12px;
+      }
     }
 
     .content {
@@ -1936,7 +1945,7 @@ const showConfirmDlg = ref(false);
         height: 6px;
       }
       @media screen and (max-width: 476px) {
-        height: 315px;
+        height: 335px;
       }
       .style-tag {
         display: flex;
@@ -1971,6 +1980,7 @@ const showConfirmDlg = ref(false);
           }
           .style-item-name {
             // position: absolute;
+            padding-top: 7px;
             bottom: 0px;
             font-size: 12px;
             line-height: 17px;
@@ -2040,7 +2050,7 @@ const showConfirmDlg = ref(false);
   }
   .o-button {
     display: block;
-    margin: 24px auto 0;
+    margin: 0 auto 0;
     padding: 9px 12px;
   }
 }
@@ -2253,20 +2263,36 @@ const showConfirmDlg = ref(false);
           .icon-name {
             color: #b2b2b2;
             font-size: 14px;
-            margin-top: 8px;
             text-align: center;
             cursor: pointer;
           }
           .func-item {
             cursor: pointer;
-            &:nth-child(2) {
-              // margin: 0 16px;
-            }
+            position: relative;
+            // &:nth-child(2) {
+            // margin: 0 16px;
+            // }
             .icon-name {
               color: #b2b2b2;
               font-size: 14px;
-              margin-top: 8px;
               text-align: center;
+              position: absolute;
+              left: 50px;
+              white-space: nowrap;
+              top: 8px;
+              padding: 4px 8px;
+              background-color: #ffffff;
+              display: none;
+              @media screen and (max-width: 1280px) {
+                font-size: 12px;
+                top: 4px;
+                left: 30px;
+              }
+            }
+            &:hover {
+              .icon-name {
+                display: block;
+              }
             }
           }
           p {
@@ -2309,7 +2335,7 @@ const showConfirmDlg = ref(false);
     font-weight: 400;
     color: #555;
     line-height: 25px;
-    margin-right: 40px;
+    margin-right: 24px;
   }
   .active {
     color: #0d8dff !important;
@@ -2358,6 +2384,7 @@ const showConfirmDlg = ref(false);
       align-items: center;
       .o-icon {
         margin-right: 4px;
+        font-size: 16px;
       }
     }
   }
@@ -2367,6 +2394,8 @@ const showConfirmDlg = ref(false);
     .title {
       text-align: left;
       margin-left: 24px;
+      display: flex;
+      justify-content: space-between;
     }
     @media screen and (max-width: 820px) {
       flex-direction: column;
@@ -2374,7 +2403,7 @@ const showConfirmDlg = ref(false);
     }
     .content {
       flex: 1;
-      height: 354px;
+      height: 332px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
@@ -2490,6 +2519,7 @@ const showConfirmDlg = ref(false);
       text-align: center;
       color: #555555;
       cursor: pointer;
+      font-size: 12px;
       .o-icon {
         margin-left: 8px;
       }
@@ -2518,8 +2548,9 @@ const showConfirmDlg = ref(false);
     }
   }
   .o-button {
-    margin: 25px auto 40px;
+    margin: 6px auto 40px;
     padding: 9px 28px;
+    border-radius: 22px;
   }
 }
 :deep(.confirm-dlg) {

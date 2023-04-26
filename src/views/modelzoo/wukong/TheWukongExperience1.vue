@@ -1291,7 +1291,7 @@ const showConfirmDlg = ref(false);
         <p class="confirm-title">公开画作</p>
       </template>
       <div class="confirm-desc">
-        若该作品未收藏，取消公开后将无法找回，是否确定取消公开画作？
+        公开画作让更多的人欣赏和了解艺术，其中仅能包含纯粹的色彩和线条，不能含任何政治、宗教、种族、性别等敏感话题
       </div>
       <template #footer>
         <OButton
@@ -1304,7 +1304,7 @@ const showConfirmDlg = ref(false);
           type="primary"
           :size="screenWidth < 820 ? 'mini' : 'small'"
           @click="publicImage(styleBackground[largeIndex], largeIndex)"
-          >确认</OButton
+          >提交审核</OButton
         >
       </template>
     </el-dialog>
@@ -1314,7 +1314,7 @@ const showConfirmDlg = ref(false);
 .wukong-bread {
   padding-top: 104px;
   padding-left: 16px;
-  max-width: 1440px;
+  max-width: 1472px;
   margin: 0 auto;
   @media screen and (max-width: 820px) {
     padding-top: 64px;
@@ -2561,7 +2561,7 @@ const showConfirmDlg = ref(false);
       font-size: 16px;
     }
     .confirm-desc {
-      font-size: 12px;
+      font-size: 14px;
       line-height: 18px;
       margin-top: 4px;
     }

@@ -70,7 +70,6 @@ function goIntroduction() {
 </template>
 <style lang="scss" scoped>
 .card {
-  width: 464px;
   height: 100%;
   padding: 16px 16px 24px;
   box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
@@ -104,6 +103,7 @@ function goIntroduction() {
       }
     }
     .card-bottom-text {
+      max-width: 434px;
       margin-bottom: 24px;
       font-size: 14px;
       color: #555;
@@ -133,29 +133,24 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 821px) {
-    width: 386px;
+    .card-bottom .card-bottom-text {
+      max-width: 326px;
+    }
   }
   @media screen and (max-width: 820px) {
-    width: 360px;
-    // width: 100%;
     padding: 8px 8px 16px;
     .card-bottom .card-bottom-title {
       font-size: 14px;
       padding: 16px 0 8px;
     }
     .card-bottom .card-bottom-text {
+      max-width: 326px;
       font-size: 12px;
       margin-bottom: 16px;
     }
   }
-  @media screen and (max-width: 768px) {
-    // width: 343px;
-    width: 100%;
-    padding: 8px 8px 16px;
-  }
 }
 .card-closed {
-  width: 464px;
   height: 100%;
   padding: 16px 16px 24px;
   box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
@@ -169,9 +164,6 @@ function goIntroduction() {
   .card-top {
     width: 100%;
     overflow: hidden;
-    @media screen and (max-width: 600px) {
-      // height: 190px;
-    }
     .cover {
       width: 100%;
       height: 146px;
@@ -196,6 +188,7 @@ function goIntroduction() {
       }
     }
     .card-bottom-text {
+      max-width: 434px;
       margin-bottom: 24px;
       font-size: 14px;
       color: #555;
@@ -215,14 +208,13 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 821px) {
-    // width: 343px;
-    width: 100%;
     padding: 8px 8px 16px;
     .card-bottom .card-bottom-title {
       font-size: 14px;
       padding: 16px 0 8px;
     }
     .card-bottom .card-bottom-text {
+      max-width: 326px;
       font-size: 12px;
       margin-bottom: 16px;
     }

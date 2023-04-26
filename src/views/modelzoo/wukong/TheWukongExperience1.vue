@@ -386,6 +386,7 @@ async function publicImage(val, index) {
       inferList.value[index].publicId = res.data.data.id;
 
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '公开成功，可在画作管理中查看',
       });
@@ -402,6 +403,7 @@ async function cancelPublicImage(i) {
     const res = await cancelPublic(inferList.value[i].publicId);
     inferList.value[i].publicId = '';
     ElMessage({
+      offset: 64,
       type: 'success',
       message: '已取消公开',
     });
@@ -460,6 +462,7 @@ function handlePosterDlgClose() {
 async function copyText(textValue) {
   await toClipboard(textValue);
   ElMessage({
+    offset: 64,
     type: 'success',
     message: '复制成功',
     center: true,
@@ -615,6 +618,7 @@ async function handleInfer() {
       }
     } else if (!inputText.value) {
       ElMessage({
+        offset: 64,
         type: 'warning',
         message: '请输入样例描述',
       });
@@ -642,6 +646,7 @@ function handleCollect(key, index) {
       inferList.value[index].isCollected = true;
       inferList.value[index].id = res.data.data.id;
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '收藏成功，可在画作管理中查看',
       });
@@ -655,6 +660,7 @@ function handleCancelCollect(index) {
       inferList.value[index].isCollected = false;
       inferList.value[index].id = '';
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '取消收藏成功',
       });
@@ -2275,6 +2281,7 @@ const showConfirmDlg = ref(false);
             .icon-name {
               color: #b2b2b2;
               font-size: 14px;
+              line-height: 20px;
               text-align: center;
               position: absolute;
               left: 50px;

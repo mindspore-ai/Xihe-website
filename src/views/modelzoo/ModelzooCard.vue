@@ -133,7 +133,11 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 821px) {
+    width: 386px;
+  }
+  @media screen and (max-width: 820px) {
     width: 360px;
+    // width: 100%;
     padding: 8px 8px 16px;
     .card-bottom .card-bottom-title {
       font-size: 14px;
@@ -145,7 +149,8 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 768px) {
-    width: 343px;
+    // width: 343px;
+    width: 100%;
     padding: 8px 8px 16px;
   }
 }
@@ -176,9 +181,6 @@ function goIntroduction() {
     }
   }
   .card-bottom {
-    @media screen and (max-width: 768px) {
-      // padding: 0 16px;
-    }
     .card-bottom-title {
       font-size: 20px;
       color: #000000;
@@ -187,20 +189,10 @@ function goIntroduction() {
       justify-content: space-between;
       align-items: center;
       padding: 24px 0 8px;
-      @media screen and (max-width: 768px) {
-        // font-size: 14px;
-        // line-height: 22px;
-        // font-weight: 500;
-        // padding: 16px 0;
-      }
       .closed {
         font-size: 16px;
         color: #999999;
         line-height: 24px;
-        @media screen and (max-width: 768px) {
-          // font-size: 14px;
-          // line-height: 22px;
-        }
       }
     }
     .card-bottom-text {
@@ -223,7 +215,8 @@ function goIntroduction() {
     }
   }
   @media screen and (max-width: 821px) {
-    width: 343px;
+    // width: 343px;
+    width: 100%;
     padding: 8px 8px 16px;
     .card-bottom .card-bottom-title {
       font-size: 14px;

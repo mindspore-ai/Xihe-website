@@ -274,7 +274,7 @@ function toPrePic() {
     );
   } else {
     ElMessage({
-      type: 'error',
+      type: 'warning',
       message: '已是第一张',
       center: true,
     });
@@ -318,7 +318,12 @@ function toNextPic() {
           class="album-tabs"
           @tab-change="changeTab"
         >
-          <el-tab-pane label="筛选" name="0" disabled></el-tab-pane>
+          <el-tab-pane
+            v-if="screenWidth <= 820"
+            label="筛选"
+            name="0"
+            disabled
+          ></el-tab-pane>
           <el-tab-pane label="官方" name="official"></el-tab-pane>
           <el-tab-pane label="全部" name=""></el-tab-pane>
           <!-- <el-tab-pane label="最热" name="3"></el-tab-pane>
@@ -385,42 +390,50 @@ function toNextPic() {
           <span v-if="dialogData.style"> #风格：{{ dialogData.style }} </span>
         </p>
       </template>
-      <o-icon class="check" @click="toPrePic"> <icon-left /></o-icon>
-      <div class="pic-box">
-        <div class="pic-info">
-          <div class="pic-source">
-            来自{{ dialogData.desc }}&nbsp;&nbsp;
-            <span v-if="dialogData.style"> #风格：{{ dialogData.style }} </span>
+      <div class="album-wrapper">
+        <o-icon class="check" @click="toPrePic"> <icon-left /></o-icon>
+        <div class="pic-box">
+          <div class="pic-info">
+            <div class="pic-source">
+              来自{{ dialogData.desc }}&nbsp;&nbsp;
+              <span v-if="dialogData.style">
+                #风格：{{ dialogData.style }}
+              </span>
+            </div>
+            <img :src="dialogData.link" alt="" />
+            <div class="user-info">
+              <p class="left" @click="goUser(dialogData.owner)">
+                <img :src="dialogData.avatar" alt="" />
+                <span>{{ dialogData.owner }}</span>
+              </p>
+              <p class="right" @click="giveLike(picIndex)">
+                <o-icon v-if="dialogData.is_digg"> <icon-liked /></o-icon>
+                <o-icon v-else class="o-like"> <icon-likes1 /></o-icon>
+                <span class="digg-count">{{ dialogData?.digg_count }}</span>
+              </p>
+            </div>
           </div>
-          <img :src="dialogData.link" alt="" />
-          <div class="user-info">
-            <p class="left" @click="goUser(dialogData.owner)">
-              <img :src="dialogData.avatar" alt="" />
-              <span>{{ dialogData.owner }}</span>
-            </p>
-            <p class="right" @click="giveLike(picIndex)">
-              <o-icon v-if="dialogData.is_digg"> <icon-liked /></o-icon>
-              <o-icon v-else class="o-like"> <icon-likes1 /></o-icon>
-              <span class="digg-count">{{ dialogData?.digg_count }}</span>
-            </p>
+          <div class="pic-handle">
+            <o-icon class="download" @click.stop="downloadPic">
+              <icon-downloadgray></icon-downloadgray>
+            </o-icon>
+            <o-icon class="share" @click="sharePic">
+              <icon-sharegray></icon-sharegray>
+            </o-icon>
+            <o-icon
+              v-if="!dialogData.is_like"
+              class="heart"
+              @click="collectPic"
+            >
+              <icon-heartgray></icon-heartgray>
+            </o-icon>
+            <o-icon v-else class="heart" @click="collectPic">
+              <icon-heart></icon-heart>
+            </o-icon>
           </div>
         </div>
-        <div class="pic-handle">
-          <o-icon class="download" @click.stop="downloadPic">
-            <icon-downloadgray></icon-downloadgray>
-          </o-icon>
-          <o-icon class="share" @click="sharePic">
-            <icon-sharegray></icon-sharegray>
-          </o-icon>
-          <o-icon v-if="!dialogData.is_like" class="heart" @click="collectPic">
-            <icon-heartgray></icon-heartgray>
-          </o-icon>
-          <o-icon v-else class="heart" @click="collectPic">
-            <icon-heart></icon-heart>
-          </o-icon>
-        </div>
+        <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
       </div>
-      <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
     </el-dialog>
     <!-- 海报弹窗 -->
     <el-dialog
@@ -525,6 +538,8 @@ function toNextPic() {
               padding: 0 8px;
               margin-right: 8px;
               &:nth-child(2) {
+                color: #000;
+                font-weight: 550;
                 padding-left: 0px;
                 margin-right: 16px;
               }
@@ -721,14 +736,32 @@ function toNextPic() {
           padding: 0 40px;
         }
       }
+      .el-dialog__headerbtn {
+        width: 48px;
+        height: 48px;
+        position: fixed;
+        top: 16px;
+        right: 24px;
+        z-index: 201;
+        @media screen and (max-width: 768px) {
+          top: 12px;
+          right: 12px;
+          width: 24px;
+          height: 24px;
+        }
+        .el-dialog__close {
+          color: #fff;
+          font-size: 40px;
+          @media screen and (max-width: 768px) {
+            font-size: 24px;
+          }
+        }
+      }
     }
 
     .el-dialog__body {
       width: 100%;
       height: calc(100vh - 80px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       padding: 0 68px;
       background-color: #f5f6f8;
       border-radius: 24px 24px 0px 0px;
@@ -743,6 +776,7 @@ function toNextPic() {
           right: 0;
           top: 100%;
           .o-icon {
+            color: #b2b2b2;
             margin-bottom: 0;
             margin-right: 16px;
             &:last-child {
@@ -755,41 +789,13 @@ function toNextPic() {
         }
       }
     }
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    .album-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
     }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background-color: #d8d8d8;
-      background-clip: content-box;
-    }
-    &::-webkit-scrollbar-track {
-      border-radius: 3px;
-      box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
-      background: #ffffff;
-    }
-    .el-dialog__headerbtn {
-      width: 48px;
-      height: 48px;
-      position: fixed;
-      top: 16px;
-      right: 24px;
-      z-index: 201;
-      @media screen and (max-width: 768px) {
-        top: 12px;
-        right: 12px;
-        width: 24px;
-        height: 24px;
-      }
-      .el-dialog__close {
-        color: #fff;
-        font-size: 40px;
-        @media screen and (max-width: 768px) {
-          font-size: 24px;
-        }
-      }
-    }
+
     .o-icon {
       font-size: 60px;
       cursor: pointer;
@@ -803,22 +809,20 @@ function toNextPic() {
       border-radius: 50%;
       color: #fff;
       background: #e5e8f0;
+
       @media screen and (max-width: 821px) {
         display: none;
       }
     }
     .pic-box {
-      width: 33%;
+      width: 35%;
       margin: 0 auto;
       position: relative;
       @media screen and (max-width: 821px) {
         width: 100%;
       }
-      @media screen and (max-width: 768px) {
-        width: 100%;
-      }
       .pic-info {
-        margin: 0 auto;
+        width: 100%;
         .pic-source {
           height: 24px;
           font-size: 18px;
@@ -856,6 +860,7 @@ function toNextPic() {
               margin-left: 8px;
             }
             .o-icon {
+              color: #b2b2b2;
               font-size: 18px;
               line-height: 18px;
               @media screen and (max-width: 768px) {
@@ -888,6 +893,7 @@ function toNextPic() {
         right: -65px;
 
         .o-icon {
+          color: #b2b2b2;
           height: 24px;
           width: 24px;
           margin-bottom: 16px;

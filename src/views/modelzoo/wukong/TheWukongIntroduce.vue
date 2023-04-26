@@ -10,7 +10,6 @@ import cityView from '@/assets/imgs/wukong/city-view.png';
 import seaRunner from '@/assets/imgs/wukong/sea-runner.png';
 import umbrellaWomen from '@/assets/imgs/wukong/umbrella-women.png';
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
-
 // import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -83,16 +82,16 @@ function learnWukongMore() {
 
         <div class="right-button">
           <OButton
-            type="outline"
-            :size="screenWidth < 820 ? 'mini' : 'medium'"
+            type="primary"
+            :size="screenWidth < 820 ? 'mini' : 'small'"
             animation
             @click="goExperience"
           >
             在线体验
           </OButton>
           <OButton
-            type="primary"
-            :size="screenWidth < 820 ? 'mini' : 'medium'"
+            type="outline"
+            :size="screenWidth < 820 ? 'mini' : 'small'"
             animation
             @click="learnWukongMore"
           >
@@ -233,7 +232,6 @@ function learnWukongMore() {
   .intro-head {
     padding: 40px;
     background-color: #fff;
-    box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
     display: flex;
     margin: 40px 0px;
     border-radius: 16px;

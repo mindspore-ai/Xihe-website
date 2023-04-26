@@ -63,7 +63,7 @@ function goIntroduction() {
         </OButton>
       </div>
       <div v-else class="card-btn">
-        <OButton disabled size="mini" type="secondary"> 敬请期待 </OButton>
+        <OButton size="mini" type="secondary"> 敬请期待 </OButton>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@ function goIntroduction() {
 .card {
   height: 100%;
   padding: 16px 16px 24px;
-  box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+  // box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
   background-color: #fff;
   border-radius: 16px;
   cursor: pointer;
@@ -126,7 +126,8 @@ function goIntroduction() {
     }
   }
   &:hover {
-    box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
+    box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s linear;
     .cover {
       transform: scale(1.05);
       transition: all 0.2s linear;

@@ -476,6 +476,7 @@ function handleImageClick(img) {
         height: 24px;
         margin-right: 8px;
         border-radius: 50%;
+        color: #b2b2b2;
         background: rgba(255, 255, 255, 0.1);
         display: flex;
         align-items: center;

@@ -213,6 +213,9 @@ function goModelzoo() {
     }
     @media screen and (max-width: 768px) {
       grid-template-columns: repeat(1, 1fr);
+      .card-item {
+        width: 89%;
+      }
     }
   }
 }

@@ -33,6 +33,7 @@ import loading from '@/assets/gifs/loading.gif';
 import tip from '@/assets/imgs/wukong/tip.png';
 import wukongbg from '@/assets/imgs/wukong/wukong-bg1.png';
 import warning from '@/assets/imgs/wukong/warning.png';
+import arrow from '@/assets/imgs/wukong/arrow.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/download-gray';
@@ -923,6 +924,7 @@ const showConfirmDlg = ref(false);
                     <p>
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </p>
+                    <img class="arrow" :src="arrow" alt="" />
                     <div class="icon-name">公开</div>
                   </div>
                 </template>
@@ -932,6 +934,7 @@ const showConfirmDlg = ref(false);
                     <p class="icon-item">
                       <o-icon><icon-cancel></icon-cancel></o-icon>
                     </p>
+                    <img class="arrow" :src="arrow" alt="" />
                     <div class="icon-name">取消公开</div>
                   </div>
                 </template>
@@ -941,6 +944,7 @@ const showConfirmDlg = ref(false);
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>
                   </p>
+                  <img class="arrow" :src="arrow" alt="" />
                   <div class="icon-name">下载</div>
                 </div>
 
@@ -948,6 +952,7 @@ const showConfirmDlg = ref(false);
                   <p>
                     <o-icon><icon-share></icon-share></o-icon>
                   </p>
+                  <img class="arrow" :src="arrow" alt="" />
                   <div class="icon-name">分享</div>
                 </div>
 
@@ -956,6 +961,7 @@ const showConfirmDlg = ref(false);
                     <p @click="handleCollect(value, largeIndex)">
                       <o-icon><icon-like></icon-like></o-icon>
                     </p>
+                    <img class="arrow" :src="arrow" alt="" />
                     <div class="icon-name">收藏</div>
                   </div>
                 </template>
@@ -965,6 +971,7 @@ const showConfirmDlg = ref(false);
                     <p class="liked" @click="handleCancelCollect(largeIndex)">
                       <o-icon><icon-heart></icon-heart></o-icon>
                     </p>
+                    <img class="arrow" :src="arrow" alt="" />
                     <div class="icon-name">取消收藏</div>
                   </div>
                 </template>
@@ -1046,7 +1053,12 @@ const showConfirmDlg = ref(false);
             :class="item.isSelected ? 'active-1' : ''"
             @click="choseStyleSort(index, item)"
           >
-            <img :src="item.img" alt="" />
+            <img
+              v-if="index === 0"
+              :src="item.isSelected ? item.img : item.img1"
+              alt=""
+            />
+            <img v-else :src="item.img" alt="" />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
               {{ index === 0 ? item.tag1 : item.tag }}
@@ -1394,6 +1406,7 @@ const showConfirmDlg = ref(false);
       justify-content: space-between;
       bottom: 0px;
       padding: 8px;
+      box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
       .handles-contain,
       .public {
         display: flex;
@@ -2165,6 +2178,7 @@ const showConfirmDlg = ref(false);
       width: calc(100% - 80px);
       img {
         width: 100%;
+        max-width: 500px;
         border-radius: 18px;
         cursor: pointer;
       }
@@ -2204,7 +2218,8 @@ const showConfirmDlg = ref(false);
       }
       img {
         height: 100%;
-        max-width: calc(100% - 138px);
+        width: calc(100% - 138px);
+        max-width: 675px;
         // max-width: 766px;
         // max-height: calc(100% - 190px);
         // height: 100%;
@@ -2226,7 +2241,7 @@ const showConfirmDlg = ref(false);
         // width: 100%;
         position: absolute;
         top: -20px;
-        right: 0;
+        right: 20px;
         z-index: 20;
         // opacity: 0;
         display: flex;
@@ -2237,6 +2252,7 @@ const showConfirmDlg = ref(false);
         color: #b2b2b2;
         border-radius: 22px;
         max-height: 190px;
+        box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
         @media screen and (max-width: 1450px) {
           // bottom: 10px;
         }
@@ -2289,15 +2305,34 @@ const showConfirmDlg = ref(false);
               top: 8px;
               padding: 4px 8px;
               background-color: #ffffff;
+              border-radius: 3px;
               display: none;
+              box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
               @media screen and (max-width: 1280px) {
                 font-size: 12px;
                 top: 4px;
                 left: 30px;
               }
             }
+            .arrow {
+              // height: 100px;
+              position: absolute;
+              left: 25px;
+              top: -18px;
+              width: 80px;
+              height: 80px;
+              display: none;
+              @media screen and (max-width: 1280px) {
+                left: 8px;
+                top: -12px;
+                height: 60px;
+              }
+            }
             &:hover {
               .icon-name {
+                display: block;
+              }
+              .arrow {
                 display: block;
               }
             }

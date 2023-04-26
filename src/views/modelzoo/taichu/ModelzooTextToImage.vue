@@ -243,9 +243,7 @@ onUnmounted(() => {
     <div class="model-wrap">
       <!-- 以文生图 -->
       <div class="text-to-img">
-        <div class="title">
-          <span> 以文生图（Text-To-Image）</span>
-        </div>
+        <p class="text-title">以文生图（Text-To-Image）</p>
         <p class="experience-text">
           以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
         </p>
@@ -702,11 +700,12 @@ onUnmounted(() => {
   @media screen and (max-width: 820px) {
     display: none;
   }
-  .title {
-    font-weight: 300;
+  .text-title {
     color: #000000;
     display: flex;
     align-items: center;
+    text-align: center;
+    // background-color: red;
     margin-bottom: 10px;
     font-size: 20px;
     line-height: 28px;
@@ -720,6 +719,8 @@ onUnmounted(() => {
     font-weight: 400;
     color: #555555;
     line-height: 22px;
+    text-align: center;
+    background-color: red;
   }
   .content {
     margin-top: 16px;

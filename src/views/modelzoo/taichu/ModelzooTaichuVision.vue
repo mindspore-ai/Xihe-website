@@ -368,7 +368,7 @@ onUnmounted(() => {
 
         <div class="img-list-item custom" @click="customUpload">
           <o-icon><icon-upload></icon-upload></o-icon>
-          <p>自定义</p>
+          <p>自定义图片</p>
 
           <input
             ref="inp"
@@ -430,6 +430,9 @@ onUnmounted(() => {
     &:hover {
       box-shadow: none;
     }
+    .el-input__inner {
+      font-size: 16px;
+    }
     @media screen and (max-width: 1080px) {
       padding: 6px 16px;
       height: 29px;
@@ -453,12 +456,13 @@ onUnmounted(() => {
     // background-image: none;
     // background: #f5f6f8;
   }
-  &-box {
+  .vision-box {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-    padding: 40px 8px 40px 40px;
+    padding: 40px;
+    border-radius: 16px;
     @media screen and (max-width: 1080px) {
       padding: 16px 16px 24px;
       width: 100%;
@@ -650,7 +654,7 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-right: 40px;
+      // padding-right: 40px;
       @media screen and (max-width: 1080px) {
         padding-right: 0px;
         margin-top: 16px;
@@ -678,7 +682,7 @@ onUnmounted(() => {
     }
 
     .img-list {
-      padding: 24px 32px 0 0;
+      padding: 24px 0 0;
       display: flex;
       background-color: #fff;
       justify-content: space-between;

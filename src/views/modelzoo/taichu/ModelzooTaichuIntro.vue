@@ -139,14 +139,14 @@ function goTaichuMore() {
           <div class="banner-btn">
             <OButton
               type="primary"
-              :size="screenWidth < 820 ? 'mini' : 'medium'"
+              :size="screenWidth < 820 ? 'mini' : 'small'"
               animation
               @click="goTaichuExperience"
             >
               在线体验
             </OButton>
             <OButton
-              :size="screenWidth < 820 ? 'mini' : 'medium'"
+              :size="screenWidth < 820 ? 'mini' : 'small'"
               animation
               @click="goTaichuMore"
             >
@@ -451,7 +451,6 @@ function goTaichuMore() {
   .taichu-banner {
     padding: 40px;
     background-color: #fff;
-    box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
     display: flex;
     border-radius: 16px;
     @media screen and (max-width: 1080px) {
@@ -514,7 +513,6 @@ function goTaichuMore() {
   padding: 40px 80px;
   background-color: #fff;
   border-radius: 16px;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   @media screen and (max-width: 820px) {
     padding: 16px 16px 24px;
   }

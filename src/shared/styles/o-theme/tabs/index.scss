@@ -7,12 +7,6 @@ body{
        .el-tabs__item {
         font-size: var(--o-tabs-header-font_size);
         color: var(--o-tabs-color);
-        
-        // line-height: var(--o-tabs-header-line_height);
-        &:nth-child(2){
-          color: #000;//TODO:
-          font-weight: 550;
-        }
       } 
   
       .el-tabs__item.is-active {

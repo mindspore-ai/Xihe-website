@@ -293,6 +293,9 @@ function customUpload() {
     color: #999;
     line-height: 22px;
     margin-top: 8px;
+    @media screen and (max-width: 820px) {
+      font-size: 12px;
+    }
   }
 }
 :deep(.el-upload) {
@@ -309,6 +312,7 @@ function customUpload() {
     @media screen and (max-width: 820px) {
       height: 346px;
       border: 1px solid #acacac;
+      border-radius: 16px;
     }
     @media screen and (max-width: 767px) {
       height: 196px;
@@ -378,8 +382,8 @@ function customUpload() {
       border: 1px solid transparent;
     }
     @media screen and (max-width: 767px) {
-      width: 62px;
-      height: 62px;
+      width: 54px;
+      height: 54px;
       border: 1px solid transparent;
       &:nth-child(5),
       &:nth-child(6) {
@@ -415,11 +419,12 @@ function customUpload() {
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
-    padding: 16px 16px 40px;
+    padding-bottom: 40px;
   }
   .model-wrap {
     margin: 0 auto;
     max-width: 1440px;
+    border-radius: 16px;
     @media screen and (max-width: 820px) {
       background-color: #fff;
       padding: 16px 16px 24px;

@@ -2258,7 +2258,7 @@ const showConfirmDlg = ref(false);
       img {
         height: 100%;
         width: calc(100% - 138px);
-        max-width: 675px;
+        max-width: 670px;
         // max-width: 766px;
         // max-height: calc(100% - 190px);
         // height: 100%;

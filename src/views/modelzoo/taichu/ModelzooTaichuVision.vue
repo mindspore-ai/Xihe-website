@@ -295,9 +295,7 @@ onUnmounted(() => {
 <template>
   <div class="vision">
     <div class="vision-box">
-      <div class="title">
-        <span>视觉问答（Visual Question Answer, VQA）</span>
-      </div>
+      <div class="title">视觉问答（Visual Question Answer, VQA）</div>
 
       <p class="description">
         视觉问答是给定一幅图片和一个相关的问题，算法输出相应的答案，是多模态理解中的基础任务之一。
@@ -452,7 +450,7 @@ onUnmounted(() => {
   width: 100%;
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
-    padding: 16px 16px 40px;
+    padding: 0px 0px 0px;
     // background-image: none;
     // background: #f5f6f8;
   }
@@ -460,7 +458,6 @@ onUnmounted(() => {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
-    box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     padding: 40px;
     border-radius: 16px;
     @media screen and (max-width: 1080px) {
@@ -469,7 +466,6 @@ onUnmounted(() => {
     }
     .title {
       font-size: 36px;
-      font-weight: 300;
       color: #000000;
       line-height: 48px;
       display: flex;
@@ -484,13 +480,11 @@ onUnmounted(() => {
 
     .description {
       font-size: 18px;
-      font-weight: 300;
       color: #000000;
       line-height: 24px;
       margin-top: 16px;
       @media screen and (max-width: 1080px) {
         font-size: 12px;
-        font-weight: 400;
         color: #555555;
         line-height: 18px;
         margin-top: 8px;
@@ -544,7 +538,6 @@ onUnmounted(() => {
           border-radius: 16px 0px 16px 16px;
           margin-left: 56px;
           font-size: 16px;
-          font-weight: 400;
           color: #000000;
           line-height: 22px;
           position: relative;
@@ -552,7 +545,6 @@ onUnmounted(() => {
             padding: 8px;
             margin-left: 28px;
             font-size: 12px;
-            font-weight: 400;
             color: #000000;
             line-height: 17px;
             border-radius: 8px 0px 8px 8px;
@@ -613,14 +605,12 @@ onUnmounted(() => {
           border-radius: 0px 16px 16px 16px;
           margin-right: 82px;
           font-size: 16px;
-          font-weight: 400;
           color: #000000;
           line-height: 22px;
           @media screen and (max-width: 1080px) {
             padding: 8px;
             margin-right: 28px;
             font-size: 12px;
-            font-weight: 400;
             color: #000000;
             line-height: 17px;
             border-radius: 0px 8px 8px 8px;
@@ -708,12 +698,10 @@ onUnmounted(() => {
 
         p {
           font-size: 14px;
-          font-weight: 400;
           line-height: 20px;
           margin-top: 8px;
           @media screen and (max-width: 1080px) {
             font-size: 9px;
-            font-weight: 400;
             line-height: 13px;
             margin-top: 2px;
           }

@@ -83,67 +83,53 @@ function handleNavClick(item) {
   min-height: calc(100vh - 200px);
   background-color: #f5f6f8;
   background-image: url(@/assets/imgs/wukong/wukong-banner.png);
-  background-size: 100% 258px;
+  background-size: 100% 254px;
   background-repeat: no-repeat;
   @media screen and (max-width: 1080px) {
     padding-top: 80px;
     padding-top: 0;
+    background-size: 100% 172px;
+    .taichu-wrapper {
+      padding: 16px 16px 40px;
+    }
   }
   .taichu-wrapper {
     margin: 0 auto;
     max-width: 1440px;
-  }
-  .taichu-bread {
-    padding-top: 120px;
-    @media screen and (max-width: 1080px) {
-      // display: none;
-    }
-    .el-breadcrumb {
-      height: 21px;
-      line-height: 21px;
-      .el-breadcrumb__item {
-        :deep(.el-breadcrumb__inner.is-link) {
-          color: #555;
-          font-weight: 400;
-          &:hover {
-            color: #0d8dff;
-          }
-        }
-        :deep(.el-breadcrumb__separator.el-icon) {
-          color: #555;
-        }
-      }
-      :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-        color: #000;
-      }
-    }
-  }
-  .taichu-content-desc {
-    margin-top: 68px;
-    @media screen and (max-width: 820px) {
-      margin-top: 16px;
-    }
-    .o-nav {
-      // background: #fff;
-    }
-    .taichu-tab {
-      height: 48px;
+    .taichu-bread {
+      padding-top: 120px;
       @media screen and (max-width: 1080px) {
-        height: 34px;
+        padding-top: 64px;
       }
-      :deep(.o-nav) {
-        .nav-item {
-          color: #555;
-          @media screen and (max-width: 1080px) {
-            font-size: 14px;
-            font-weight: 400;
-            color: #000000;
-            line-height: 22px;
-          }
+    }
+    .taichu-content-desc {
+      margin-top: 68px;
+      @media screen and (max-width: 1080px) {
+        margin-top: 40px;
+        .taichu-info {
+          padding-top: 16px;
         }
       }
-      .taichu-info {
-        background-color: #f5f6f8;
+      .taichu-tab {
+        height: 48px;
+        @media screen and (max-width: 1080px) {
+          height: 34px;
+        }
+        :deep(.o-nav) {
+          .nav-item {
+            color: #555;
+            @media screen and (max-width: 1080px) {
+              font-size: 14px;
+              font-weight: 400;
+              color: #000000;
+              line-height: 22px;
+            }
+          }
+        }
+        .taichu-info {
+          background-color: #f5f6f8;
+          border-radius: 16px;
+        }
       }
     }
   }

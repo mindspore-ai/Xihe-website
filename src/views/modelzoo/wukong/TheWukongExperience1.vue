@@ -307,7 +307,7 @@ socket.onmessage = function (event) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
   } catch {}
@@ -581,7 +581,6 @@ async function handleInfer() {
         isInferred.value = true;
         // isWaiting.value = false;
         // styleBackground.value = res.data.data.pictures;
-        console.log(res.status);
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
@@ -591,7 +590,6 @@ async function handleInfer() {
             socket.onmessage = function (event) {
               isWaiting.value = false;
               isLine.value = JSON.parse(event.data).data.rank;
-              console.log(isLine.value);
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
@@ -599,14 +597,13 @@ async function handleInfer() {
                     isLarge.value = false;
                   })
                   .catch((err) => {
-                    console.log(err);
+                    console.error(err);
                   });
               }
             };
           }, 2000);
         }
       } catch (err) {
-        console.log(err.code);
         isWaiting.value = false;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';

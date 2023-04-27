@@ -584,8 +584,8 @@ function toNextPic() {
         position: relative;
         .img {
           width: 100%;
-          height: 0;
-          padding-bottom: 100%;
+          // height: 0;
+          // padding-bottom: 100%;
           position: relative;
           img {
             width: 100%;

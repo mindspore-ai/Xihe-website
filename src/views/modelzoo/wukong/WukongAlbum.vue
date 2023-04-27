@@ -333,27 +333,33 @@ function toNextPic() {
 
       <!-- 画集图片 -->
       <div class="album-item">
-        <div v-for="(items, index) in imgs" :key="items.id" class="img-box">
-          <div @click="toggleDialog(index)">
-            <div class="img">
-              <img :src="items.link" alt="" />
-              <div class="handles">
-                <div class="right">
-                  <div class="icon-item" @click.stop="downloadPic(index)">
-                    <o-icon><icon-download></icon-download></o-icon>
-                  </div>
-                  <div class="icon-item middle" @click.stop="sharePic(index)">
-                    <o-icon><icon-share></icon-share></o-icon>
-                  </div>
-                  <div class="icon-item" @click.stop="collectPic(index)">
-                    <o-icon v-if="items.is_like"
-                      ><icon-heart></icon-heart
-                    ></o-icon>
-                    <o-icon v-else><icon-like></icon-like></o-icon>
-                  </div>
+        <div
+          v-for="(items, index) in imgs"
+          :key="items.id"
+          class="img-box"
+          @click="toggleDialog(index)"
+        >
+          <!-- <div> -->
+          <div class="box-top">
+            <img :src="items.link" alt="" />
+            <div class="handles">
+              <div class="right">
+                <div class="icon-item" @click.stop="downloadPic(index)">
+                  <o-icon><icon-download></icon-download></o-icon>
+                </div>
+                <div class="icon-item middle" @click.stop="sharePic(index)">
+                  <o-icon><icon-share></icon-share></o-icon>
+                </div>
+                <div class="icon-item" @click.stop="collectPic(index)">
+                  <o-icon v-if="items.is_like"
+                    ><icon-heart></icon-heart
+                  ></o-icon>
+                  <o-icon v-else><icon-like></icon-like></o-icon>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="box-bottom">
             <div class="style">
               来自{{ items.desc }}
               <p v-if="items.style">#风格：{{ items.style }}</p>
@@ -371,6 +377,7 @@ function toNextPic() {
               </div>
             </div>
           </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -558,16 +565,19 @@ function toNextPic() {
 
     .album-item {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(4, 342px);
       column-gap: 24px;
       row-gap: 24px;
       padding-bottom: 64px;
       margin-top: 64px;
       @media screen and (max-width: 821px) {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 246px);
         margin-top: 26px;
       }
-      @media screen and (max-width: 767px) {
+      @media screen and (max-width: 820px) {
+        grid-template-columns: repeat(3, 230px);
+      }
+      @media screen and (max-width: 768px) {
         grid-template-columns: 1fr 1fr;
         padding-bottom: 40px;
         column-gap: 8px;
@@ -578,17 +588,33 @@ function toNextPic() {
         background-color: #fff;
         box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
         &:hover {
           box-shadow: 0 6px 18px #0d8dff24;
         }
-        position: relative;
-        .img {
-          width: 100%;
-          // height: 0;
-          // padding-bottom: 100%;
+        /* @media screen and (max-width: 821px) {
+          width: 230px;
+        } */
+        @media screen and (max-width: 820px) {
+          width: 226px;
+        }
+        @media screen and (max-width: 768px) {
+          width: 166px;
+          // height: 160px;
+        }
+        .box-top {
+          // width: 100%;
+          height: 340px;
           position: relative;
+          @media screen and (max-width: 821px) {
+            // width: 160px;
+            height: 160px;
+          }
           img {
             width: 100%;
+            height: 100%;
             border-radius: 16px 16px 0 0;
           }
           &:hover {
@@ -636,73 +662,86 @@ function toNextPic() {
             }
           }
         }
-        .imgs-info {
-          font-size: 14px;
-          margin: 0 16px 16px;
-          text-overflow: ellipsis;
-          color: #999999;
+        .box-bottom {
+          height: calc(100% - 340px);
+          padding: 0 16px 16px;
           display: flex;
+          flex-direction: column;
           justify-content: space-between;
-          line-height: 24px;
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          left: 0;
-          @media screen and (max-width: 768px) {
-            font-size: 10px;
-            height: 18px;
-            line-height: 18px;
-            margin: 0 8px 8px;
-            .user-name {
-              display: inline-block;
-              width: 60px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
+          @media screen and (max-width: 821px) {
+            // width: 160px;
+            height: calc(100% - 160px);
           }
-          img {
-            width: 24px;
-            margin-right: 8px;
-            @media screen and (max-width: 768px) {
-              width: 16px;
-              margin-right: 4px;
-            }
-          }
-        }
-        .style {
-          margin: 8px 16px 56px;
-          line-height: 22px;
-          white-space: nowrap;
-          width: 180px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          @media screen and (max-width: 768px) {
-            font-size: 12px;
-            line-height: 18px;
-          }
-          p {
-            width: 100%;
-            height: 22px;
+          .style {
+            margin: 8px 0px 16px;
+            line-height: 22px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             @media screen and (max-width: 768px) {
-              height: 18px;
+              font-size: 12px;
+              line-height: 18px;
+              width: 140px;
             }
+            p {
+              width: 100%;
+              height: 22px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              @media screen and (max-width: 768px) {
+                height: 18px;
+              }
+            }
+            // @media screen and (max-width: 768px) {
+            //   margin: 8px 8px 34px;
+            //   width: 140px;
+            // }
           }
-          @media screen and (max-width: 768px) {
-            margin: 8px 8px 34px;
-            width: 140px;
-          }
-        }
-        .like {
-          display: flex;
-          align-items: center;
-          .o-icon {
-            margin-right: 8px;
-          }
-          .likes1 {
-            color: #fff;
+          .imgs-info {
+            font-size: 14px;
+            // margin: 0px 0px 16px;
+            text-overflow: ellipsis;
+            color: #999999;
+            display: flex;
+            justify-content: space-between;
+            line-height: 24px;
+            // position: absolute;
+            // bottom: 0;
+            // right: 0;
+            // left: 0;
+            @media screen and (max-width: 768px) {
+              font-size: 10px;
+              height: 18px;
+              line-height: 18px;
+              // margin: 0 8px 8px;
+              .user-name {
+                display: inline-block;
+                width: 60px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+            .user {
+              img {
+                width: 24px;
+                margin-right: 8px;
+                @media screen and (max-width: 768px) {
+                  width: 16px;
+                  margin-right: 4px;
+                }
+              }
+            }
+            .like {
+              display: flex;
+              align-items: center;
+              .o-icon {
+                margin-right: 8px;
+              }
+              .likes1 {
+                color: #fff;
+              }
+            }
           }
         }
       }

@@ -8,6 +8,7 @@ import classic from '@/assets/imgs/wukong/style-bg-2.png';
 import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
 import more from '@/assets/imgs/wukong/style-bg-4.png';
 import random from '@/assets/imgs/wukong/style-bg-5.png';
+import style from '@/assets/imgs/wukong/style/style.png';
 import style1 from '@/assets/imgs/wukong/style/style1.png';
 import style2 from '@/assets/imgs/wukong/style/style2.png';
 import style3 from '@/assets/imgs/wukong/style/style3.png';
@@ -32,6 +33,8 @@ import loading from '@/assets/gifs/loading.gif';
 import tip from '@/assets/imgs/wukong/tip.png';
 import wukongbg from '@/assets/imgs/wukong/wukong-bg1.png';
 import warning from '@/assets/imgs/wukong/warning.png';
+import arrow from '@/assets/imgs/wukong/arrow.png';
+import viewAllImg from '@/assets/imgs/wukong/style/view-all.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
 import IconDownload from '~icons/app/download-gray';
@@ -162,7 +165,6 @@ const randomList = ref([
   { tag: '巴洛克', isSelected: false, img: style1 },
   { tag: '毕加索', isSelected: false, img: style2 },
   { tag: '达芬奇', isSelected: false, img: style3 },
-  { tag: '动漫', isSelected: false, img: style4 },
   { tag: '梵高', isSelected: false, img: style5 },
   { tag: '浮世绘', isSelected: false, img: style6 },
   { tag: '宫崎骏', isSelected: false, img: style7 },
@@ -179,23 +181,24 @@ const randomList = ref([
   { tag: '印象主义', isSelected: false, img: style18 },
   { tag: '油画', isSelected: false, img: style19 },
   { tag: '蒸汽波', isSelected: false, img: style20 },
+  { tag: '动漫', isSelected: false, img: style4 },
 ]);
 const newStyleData = ref([]);
 const isAllStyle = ref(false);
-newStyleData.value = randomList.value.slice(0, 11);
+newStyleData.value = randomList.value.slice(0, 10);
 newStyleData.value.unshift(
   randomList.value[Math.floor(Math.random() * randomList.value.length)]
 );
 newStyleData.value[0].tag1 = '随机风格';
-// newStyleData.value[0].img1 = random;
+newStyleData.value[0].img1 = style;
 // newStyleData.value[0].isSelected = true;
 function retract() {
   isAllStyle.value = false;
-  newStyleData.value = newStyleData.value.slice(0, 12);
+  newStyleData.value = newStyleData.value.slice(0, 11);
 }
 function viewAll() {
   isAllStyle.value = !isAllStyle.value;
-  newStyleData.value = newStyleData.value.concat(randomList.value.slice(11));
+  newStyleData.value = newStyleData.value.concat(randomList.value.slice(10));
 }
 const isWaiting = ref(false);
 const isLine = ref(null);
@@ -203,7 +206,7 @@ const isLine = ref(null);
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
   { text: '城市夜景', isSelected: false },
-  { text: '悬崖 美景 壮观 高清', isSelected: false },
+  // { text: '悬崖 美景 壮观 高清', isSelected: false },
   // { text: '西湖 烟雨', isSelected: false },
   // { text: '海滩 美景 高清', isSelected: false },
 ]);
@@ -304,7 +307,7 @@ socket.onmessage = function (event) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
   } catch {}
@@ -313,9 +316,7 @@ socket.onmessage = function (event) {
 //   if (res?.data?.rank === 0) {
 //   }
 // });
-function imgErr() {
-  console.log(1);
-}
+function imgErr() {}
 watch(
   () => {
     return screenWidth.value;
@@ -387,6 +388,7 @@ async function publicImage(val, index) {
       inferList.value[index].publicId = res.data.data.id;
 
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '公开成功，可在画作管理中查看',
       });
@@ -403,6 +405,7 @@ async function cancelPublicImage(i) {
     const res = await cancelPublic(inferList.value[i].publicId);
     inferList.value[i].publicId = '';
     ElMessage({
+      offset: 64,
       type: 'success',
       message: '已取消公开',
     });
@@ -461,6 +464,7 @@ function handlePosterDlgClose() {
 async function copyText(textValue) {
   await toClipboard(textValue);
   ElMessage({
+    offset: 64,
     type: 'success',
     message: '复制成功',
     center: true,
@@ -500,7 +504,7 @@ function choseStyleSort(val, item) {
     newStyleData.value[0] =
       randomList.value[Math.floor(Math.random() * randomList.value.length)];
     newStyleData.value[0].tag1 = '随机风格';
-    // newStyleData.value[0].img1 = random;
+    newStyleData.value[0].img1 = style;
     // newStyleData.value[0].isSelected = true;
   }
 }
@@ -550,7 +554,7 @@ async function handleInfer() {
     goAuthorize();
   } else {
     if (inputText.value) {
-      if (screenWidth.value < 768) {
+      if (screenWidth.value < 821) {
         showInferDlg.value = true;
       }
       styleBackground.value = [];
@@ -577,7 +581,6 @@ async function handleInfer() {
         isInferred.value = true;
         // isWaiting.value = false;
         // styleBackground.value = res.data.data.pictures;
-        console.log(res.status);
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
@@ -587,21 +590,20 @@ async function handleInfer() {
             socket.onmessage = function (event) {
               isWaiting.value = false;
               isLine.value = JSON.parse(event.data).data.rank;
-              console.log(isLine.value);
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
                     styleBackground.value = res.data.pictures;
+                    isLarge.value = false;
                   })
                   .catch((err) => {
-                    console.log(err);
+                    console.error(err);
                   });
               }
             };
           }, 2000);
         }
       } catch (err) {
-        console.log(err.code);
         isWaiting.value = false;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
@@ -616,6 +618,7 @@ async function handleInfer() {
       }
     } else if (!inputText.value) {
       ElMessage({
+        offset: 64,
         type: 'warning',
         message: '请输入样例描述',
       });
@@ -643,6 +646,7 @@ function handleCollect(key, index) {
       inferList.value[index].isCollected = true;
       inferList.value[index].id = res.data.data.id;
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '收藏成功，可在画作管理中查看',
       });
@@ -656,6 +660,7 @@ function handleCancelCollect(index) {
       inferList.value[index].isCollected = false;
       inferList.value[index].id = '';
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '取消收藏成功',
       });
@@ -731,7 +736,7 @@ function getDescExamples(arr, count) {
 }
 // 换一批
 function refreshTags() {
-  exampleData.value = getDescExamples(lists.value, 3);
+  exampleData.value = getDescExamples(lists.value, 2);
 }
 
 const resultIndex = ref(-1);
@@ -754,7 +759,7 @@ const showConfirmDlg = ref(false);
     <div class="wrap-left">
       <el-input
         v-model="inputText"
-        maxlength="55"
+        maxlength="75"
         placeholder="请输入简体中文或选择下方样例"
         show-word-limit
         type="textarea"
@@ -779,11 +784,11 @@ const showConfirmDlg = ref(false);
         </div>
         <div class="refresh" @click="refreshTags">
           <o-icon><icon-refresh></icon-refresh></o-icon>
-          <p>换一批</p>
+          <!-- <p>换一批</p> -->
         </div>
       </div>
       <div class="wk-experience-styles">
-        <p class="title">选择风格</p>
+        <div class="title">选择风格</div>
         <div class="content">
           <div class="style-tag">
             <div
@@ -793,19 +798,25 @@ const showConfirmDlg = ref(false);
               :class="item.isSelected ? 'active-1' : ''"
               @click="choseStyleSort(index, item)"
             >
-              <img :src="item.img" alt="" />
+              <img
+                v-if="index === 0"
+                :src="item.isSelected ? item.img : item.img1"
+                alt=""
+              />
+              <img v-else :src="item.img" alt="" />
 
               <div class="style-item-name" @click="getRandomStyle(index)">
                 {{ index === 0 ? item.tag1 : item.tag }}
               </div>
             </div>
+            <div v-if="!isAllStyle" class="style-item" @click="viewAll">
+              <img :src="viewAllImg" alt="" />
+            </div>
           </div>
-          <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
-            查看全部<o-icon><icon-down></icon-down></o-icon>
+          <div v-if="isAllStyle" class="all-kind retract" @click="retract">
+            收起
           </div>
-          <div v-else class="all-kind retract" @click="retract">
-            收起<o-icon><icon-down></icon-down></o-icon>
-          </div>
+
           <!-- <div class="sort-tag">
             <div
               v-for="item in styleData[styleIndex].options"
@@ -822,7 +833,9 @@ const showConfirmDlg = ref(false);
         </div>
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
-      <o-button type="primary" @click="handleInfer">立即生成</o-button>
+      <div class="experience-btn">
+        <o-button type="primary" @click="handleInfer">立即生成</o-button>
+      </div>
     </div>
     <div class="wrap-right">
       <div class="sider-content">
@@ -908,20 +921,22 @@ const showConfirmDlg = ref(false);
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
-                  <div @click="showConfirmDlg = true">
+                  <div class="func-item" @click="showConfirmDlg = true">
                     <p>
                       <o-icon><icon-arrow></icon-arrow></o-icon>
                     </p>
-                    <!-- <div class="icon-name">公开</div> -->
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">公开</div>
                   </div>
                 </template>
 
                 <template v-else>
-                  <div @click="cancelPublicImage(largeIndex)">
+                  <div class="func-item" @click="cancelPublicImage(largeIndex)">
                     <p class="icon-item">
                       <o-icon><icon-cancel></icon-cancel></o-icon>
                     </p>
-                    <!-- <div class="icon-name">取消公开</div> -->
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">取消公开</div>
                   </div>
                 </template>
               </div>
@@ -930,14 +945,16 @@ const showConfirmDlg = ref(false);
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>
                   </p>
-                  <!-- <div class="icon-name">下载</div> -->
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">下载</div>
                 </div>
 
                 <div class="func-item" @click="shareImage(value)">
                   <p>
                     <o-icon><icon-share></icon-share></o-icon>
                   </p>
-                  <!-- <div class="icon-name">分享</div> -->
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">分享</div>
                 </div>
 
                 <template v-if="!inferList[largeIndex].isCollected">
@@ -945,7 +962,8 @@ const showConfirmDlg = ref(false);
                     <p @click="handleCollect(value, largeIndex)">
                       <o-icon><icon-like></icon-like></o-icon>
                     </p>
-                    <!-- <div class="icon-name">收藏</div> -->
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">收藏</div>
                   </div>
                 </template>
 
@@ -954,7 +972,8 @@ const showConfirmDlg = ref(false);
                     <p class="liked" @click="handleCancelCollect(largeIndex)">
                       <o-icon><icon-heart></icon-heart></o-icon>
                     </p>
-                    <!-- <div class="icon-name">取消收藏</div> -->
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">取消收藏</div>
                   </div>
                 </template>
               </div>
@@ -1004,7 +1023,7 @@ const showConfirmDlg = ref(false);
         <!-- <p class="title">选择样例</p> -->
         <div class="refresh" @click="refreshTags">
           <o-icon><icon-refresh></icon-refresh></o-icon>
-          <p>换一批</p>
+          <!-- <p>换一批</p> -->
         </div>
       </div>
 
@@ -1021,7 +1040,7 @@ const showConfirmDlg = ref(false);
     </div>
 
     <div class="mobile-styles">
-      <p class="title">选择风格</p>
+      <div class="title">选择风格</div>
       <div class="content">
         <div class="style-tag">
           <div
@@ -1031,13 +1050,21 @@ const showConfirmDlg = ref(false);
             :class="item.isSelected ? 'active-1' : ''"
             @click="choseStyleSort(index, item)"
           >
-            <img :src="item.img" alt="" />
+            <img
+              v-if="index === 0"
+              :src="item.isSelected ? item.img : item.img1"
+              alt=""
+            />
+            <img v-else :src="item.img" alt="" />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
               {{ index === 0 ? item.tag1 : item.tag }}
             </div>
 
             <!-- <div v-if="styleIndex === index" class="triangle"></div> -->
+          </div>
+          <div v-if="!isAllStyle" class="style-item" @click="viewAll">
+            <img :src="viewAllImg" alt="" />
           </div>
 
           <!-- <div v-if="styleIndex < 4" class="sort-tag">
@@ -1052,11 +1079,8 @@ const showConfirmDlg = ref(false);
             </div>
           </div> -->
         </div>
-        <div v-if="!isAllStyle" class="all-kind" @click="viewAll">
-          查看全部<o-icon><icon-down></icon-down></o-icon>
-        </div>
-        <div v-else class="all-kind retract" @click="retract">
-          收起<o-icon><icon-down></icon-down></o-icon>
+        <div v-if="isAllStyle" class="all-kind retract" @click="retract">
+          收起
         </div>
 
         <!-- <div class="style-tag">
@@ -1090,9 +1114,11 @@ const showConfirmDlg = ref(false);
     </div>
 
     <!-- <div class="mobile-btn" @click="handleInfer">立即生成</div> -->
-    <o-button size="mini" type="primary" @click="handleInfer"
-      >立即生成</o-button
-    >
+    <div class="experience-btn">
+      <o-button size="mini" type="primary" @click="handleInfer"
+        >立即生成</o-button
+      >
+    </div>
   </div>
   <div>
     <el-dialog
@@ -1288,7 +1314,7 @@ const showConfirmDlg = ref(false);
         <p class="confirm-title">公开画作</p>
       </template>
       <div class="confirm-desc">
-        若该作品未收藏，取消公开后将无法找回，是否确定取消公开画作？
+        公开画作让更多的人看到您的创意，但作品中不能包含任何政治、宗教、种族、性别等敏感信息，一经公开，造成的后果由公开者承担
       </div>
       <template #footer>
         <OButton
@@ -1301,7 +1327,7 @@ const showConfirmDlg = ref(false);
           type="primary"
           :size="screenWidth < 820 ? 'mini' : 'small'"
           @click="publicImage(styleBackground[largeIndex], largeIndex)"
-          >确认</OButton
+          >提交审核</OButton
         >
       </template>
     </el-dialog>
@@ -1311,7 +1337,7 @@ const showConfirmDlg = ref(false);
 .wukong-bread {
   padding-top: 104px;
   padding-left: 16px;
-  max-width: 1440px;
+  max-width: 1472px;
   margin: 0 auto;
   @media screen and (max-width: 820px) {
     padding-top: 64px;
@@ -1385,6 +1411,7 @@ const showConfirmDlg = ref(false);
       justify-content: space-between;
       bottom: 0px;
       padding: 8px;
+      // box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
       .handles-contain,
       .public {
         display: flex;
@@ -1716,7 +1743,7 @@ const showConfirmDlg = ref(false);
         color: #40adff;
         text-align: center;
         cursor: pointer;
-        border-radius: 16px;
+        border-radius: 18px;
         @media screen and (max-width: 768px) {
           width: 74px;
           height: 32px;
@@ -1756,6 +1783,7 @@ const showConfirmDlg = ref(false);
   border-radius: 0;
   .el-dialog__header {
     padding: 12px 0;
+    backdrop-filter: blur(5px);
   }
   .el-dialog__title {
     font-size: 14px;
@@ -1839,6 +1867,7 @@ const showConfirmDlg = ref(false);
 }
 .wk-experience-mobile {
   display: none;
+  position: relative;
   @media screen and (max-width: 820px) {
     display: block;
   }
@@ -1893,6 +1922,7 @@ const showConfirmDlg = ref(false);
         align-items: center;
         .o-icon {
           margin-right: 4px;
+          font-size: 16px;
         }
         p {
           white-space: nowrap;
@@ -1901,10 +1931,15 @@ const showConfirmDlg = ref(false);
     }
     .example-items {
       display: flex;
-      flex-wrap: wrap;
+      max-width: 280px;
+      flex-wrap: nowrap;
+
       p {
         color: #b2b2b2;
         // border: 1px solid #0d8dff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         margin-right: 4px;
         border-radius: 8px;
         background: #f5f5f5;
@@ -1920,15 +1955,21 @@ const showConfirmDlg = ref(false);
   }
   .mobile-styles {
     .title {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       font-weight: 400;
       color: #555;
       margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      .all-kind {
+        font-size: 12px;
+      }
     }
 
     .content {
-      height: 215px;
+      // height: 275px;
+      padding-bottom: 85px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
@@ -1936,16 +1977,21 @@ const showConfirmDlg = ref(false);
         height: 6px;
       }
       @media screen and (max-width: 476px) {
-        height: 315px;
+        height: 365px;
+        padding-bottom: 55px;
       }
       .style-tag {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        column-gap: 50px;
+        @media screen and (max-width: 476px) {
+          gap: 12px;
+        }
 
         .style-item {
           flex: 1;
-          margin-bottom: 16px;
+          margin-bottom: 4px;
           position: relative;
           width: 68px;
           // height: 42px;
@@ -1971,6 +2017,7 @@ const showConfirmDlg = ref(false);
           }
           .style-item-name {
             // position: absolute;
+            padding-top: 7px;
             bottom: 0px;
             font-size: 12px;
             line-height: 17px;
@@ -1993,6 +2040,11 @@ const showConfirmDlg = ref(false);
         color: #555555;
         cursor: pointer;
         font-size: 12px;
+        padding: 4px 14px;
+        background: #e1effd;
+        width: 52px;
+        margin: 10px auto 0;
+        border-radius: 14px;
         .o-icon {
           margin-left: 8px;
         }
@@ -2025,6 +2077,15 @@ const showConfirmDlg = ref(false);
       }
     }
   }
+  .experience-btn {
+    padding-top: 16px;
+    position: absolute;
+    bottom: 22px;
+    width: calc(100% - 32px);
+    @media screen and (max-width: 476px) {
+      background: rgba(255, 255, 255, 0.8);
+    }
+  }
   .mobile-btn {
     background-image: url('@/assets/imgs/wukong/button-bg.png');
     background-repeat: no-repeat;
@@ -2040,7 +2101,7 @@ const showConfirmDlg = ref(false);
   }
   .o-button {
     display: block;
-    margin: 24px auto 0;
+    margin: 0 auto 0;
     padding: 9px 12px;
   }
 }
@@ -2056,6 +2117,8 @@ const showConfirmDlg = ref(false);
     text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 16px;
+    padding-bottom: 40px;
+    position: relative;
     :deep(.el-textarea) {
       width: calc(100% - 48px) !important;
       margin: 24px 24px 16px;
@@ -2149,6 +2212,7 @@ const showConfirmDlg = ref(false);
       width: calc(100% - 80px);
       img {
         width: 100%;
+        max-width: 500px;
         border-radius: 18px;
         cursor: pointer;
       }
@@ -2188,7 +2252,8 @@ const showConfirmDlg = ref(false);
       }
       img {
         height: 100%;
-        max-width: calc(100% - 138px);
+        width: calc(100% - 138px);
+        max-width: 670px;
         // max-width: 766px;
         // max-height: calc(100% - 190px);
         // height: 100%;
@@ -2210,7 +2275,7 @@ const showConfirmDlg = ref(false);
         // width: 100%;
         position: absolute;
         top: -20px;
-        right: 0;
+        right: 20px;
         z-index: 20;
         // opacity: 0;
         display: flex;
@@ -2221,6 +2286,7 @@ const showConfirmDlg = ref(false);
         color: #b2b2b2;
         border-radius: 22px;
         max-height: 190px;
+        box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
         @media screen and (max-width: 1450px) {
           // bottom: 10px;
         }
@@ -2253,20 +2319,56 @@ const showConfirmDlg = ref(false);
           .icon-name {
             color: #b2b2b2;
             font-size: 14px;
-            margin-top: 8px;
             text-align: center;
             cursor: pointer;
           }
           .func-item {
             cursor: pointer;
-            &:nth-child(2) {
-              // margin: 0 16px;
-            }
+            position: relative;
+            // &:nth-child(2) {
+            // margin: 0 16px;
+            // }
             .icon-name {
               color: #b2b2b2;
               font-size: 14px;
-              margin-top: 8px;
+              line-height: 20px;
               text-align: center;
+              position: absolute;
+              left: 50px;
+              white-space: nowrap;
+              top: 8px;
+              padding: 4px 8px;
+              background-color: #ffffff;
+              border-radius: 3px;
+              display: none;
+              box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
+              @media screen and (max-width: 1280px) {
+                font-size: 12px;
+                top: 4px;
+                left: 30px;
+              }
+            }
+            .arrow {
+              // height: 100px;
+              position: absolute;
+              left: 25px;
+              top: -18px;
+              width: 80px;
+              height: 80px;
+              display: none;
+              @media screen and (max-width: 1280px) {
+                left: 8px;
+                top: -12px;
+                height: 60px;
+              }
+            }
+            &:hover {
+              .icon-name {
+                display: block;
+              }
+              .arrow {
+                display: block;
+              }
             }
           }
           p {
@@ -2309,7 +2411,7 @@ const showConfirmDlg = ref(false);
     font-weight: 400;
     color: #555;
     line-height: 25px;
-    margin-right: 40px;
+    margin-right: 24px;
   }
   .active {
     color: #0d8dff !important;
@@ -2333,10 +2435,14 @@ const showConfirmDlg = ref(false);
     .example-items {
       flex: 1;
       display: flex;
-      flex-wrap: wrap;
+      max-width: 280px;
+      flex-wrap: nowrap;
       p {
         color: #b2b2b2;
         // border: 1px solid #0d8dff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         margin-right: 4px;
         border-radius: 8px;
         background: #f5f5f5;
@@ -2358,6 +2464,7 @@ const showConfirmDlg = ref(false);
       align-items: center;
       .o-icon {
         margin-right: 4px;
+        font-size: 16px;
       }
     }
   }
@@ -2367,6 +2474,8 @@ const showConfirmDlg = ref(false);
     .title {
       text-align: left;
       margin-left: 24px;
+      display: flex;
+      justify-content: space-between;
     }
     @media screen and (max-width: 820px) {
       flex-direction: column;
@@ -2374,7 +2483,8 @@ const showConfirmDlg = ref(false);
     }
     .content {
       flex: 1;
-      height: 354px;
+      height: 380px;
+      padding-bottom: 68px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
@@ -2490,6 +2600,12 @@ const showConfirmDlg = ref(false);
       text-align: center;
       color: #555555;
       cursor: pointer;
+      font-size: 12px;
+      padding: 4px 14px;
+      background: #e1effd;
+      width: 52px;
+      margin: 10px auto 0;
+      border-radius: 14px;
       .o-icon {
         margin-left: 8px;
       }
@@ -2517,9 +2633,16 @@ const showConfirmDlg = ref(false);
       margin: 24px auto 0px;
     }
   }
+  .experience-btn {
+    padding-top: 24px;
+    background: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+  }
   .o-button {
-    margin: 25px auto 40px;
     padding: 9px 28px;
+    border-radius: 22px;
   }
 }
 :deep(.confirm-dlg) {
@@ -2530,7 +2653,7 @@ const showConfirmDlg = ref(false);
       font-size: 16px;
     }
     .confirm-desc {
-      font-size: 12px;
+      font-size: 14px;
       line-height: 18px;
       margin-top: 4px;
     }

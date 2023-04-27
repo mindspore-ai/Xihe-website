@@ -1314,7 +1314,7 @@ const showConfirmDlg = ref(false);
         <p class="confirm-title">公开画作</p>
       </template>
       <div class="confirm-desc">
-        公开画作让更多的人欣赏和了解艺术，其中仅能包含纯粹的色彩和线条，不能含任何政治、宗教、种族、性别等敏感话题，如有违反，公开者承担主要责任
+        公开画作让更多的人看到您的创意，但作品中不能包含任何政治、宗教、种族、性别等敏感信息，一经公开，造成的后果由公开者承担
       </div>
       <template #footer>
         <OButton
@@ -1759,9 +1759,6 @@ const showConfirmDlg = ref(false);
     }
   }
 }
-:deep(.el-overlay) {
-  backdrop-filter: blur(5px);
-}
 :deep(.poster-dlg-wk) {
   background: transparent;
   .el-dialog__header {
@@ -1786,6 +1783,7 @@ const showConfirmDlg = ref(false);
   border-radius: 0;
   .el-dialog__header {
     padding: 12px 0;
+    backdrop-filter: blur(5px);
   }
   .el-dialog__title {
     font-size: 14px;

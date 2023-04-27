@@ -1762,6 +1762,9 @@ const showConfirmDlg = ref(false);
     }
   }
 }
+:deep(.el-overlay) {
+  backdrop-filter: blur(5px);
+}
 :deep(.poster-dlg-wk) {
   background: transparent;
   .el-dialog__header {

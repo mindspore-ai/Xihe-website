@@ -451,8 +451,6 @@ onUnmounted(() => {
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
     padding: 0px 0px 0px;
-    // background-image: none;
-    // background: #f5f6f8;
   }
   .vision-box {
     margin: 0 auto;
@@ -468,6 +466,7 @@ onUnmounted(() => {
       font-size: 36px;
       color: #000000;
       line-height: 48px;
+      font-weight: 300;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -701,9 +700,11 @@ onUnmounted(() => {
           line-height: 20px;
           margin-top: 8px;
           @media screen and (max-width: 1080px) {
+            width: 60px;
             font-size: 9px;
             line-height: 13px;
             margin-top: 2px;
+            transform: scale(0.7);
           }
         }
       }

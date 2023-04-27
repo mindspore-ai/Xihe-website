@@ -72,7 +72,6 @@ function goIntroduction() {
 .card {
   height: 100%;
   padding: 16px 16px 24px;
-  // box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
   background-color: #fff;
   border-radius: 16px;
   cursor: pointer;
@@ -154,14 +153,9 @@ function goIntroduction() {
 .card-closed {
   height: 100%;
   padding: 16px 16px 24px;
-  box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
   background-color: #fff;
   cursor: auto;
   border-radius: 16px;
-  .o-icon {
-    transform: translate(0);
-    transition: all 0.2s linear;
-  }
   .card-top {
     width: 100%;
     overflow: hidden;

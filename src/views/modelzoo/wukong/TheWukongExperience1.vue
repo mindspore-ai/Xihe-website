@@ -3,11 +3,11 @@ import { ref, computed, nextTick, onUnmounted, watch } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-import comic from '@/assets/imgs/wukong/style-bg-1.png';
-import classic from '@/assets/imgs/wukong/style-bg-2.png';
-import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
-import more from '@/assets/imgs/wukong/style-bg-4.png';
-import random from '@/assets/imgs/wukong/style-bg-5.png';
+// import comic from '@/assets/imgs/wukong/style-bg-1.png';
+// import classic from '@/assets/imgs/wukong/style-bg-2.png';
+// import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
+// import more from '@/assets/imgs/wukong/style-bg-4.png';
+// import random from '@/assets/imgs/wukong/style-bg-5.png';
 import style from '@/assets/imgs/wukong/style/style.png';
 import style1 from '@/assets/imgs/wukong/style/style1.png';
 import style2 from '@/assets/imgs/wukong/style/style2.png';
@@ -45,11 +45,11 @@ import IconCancel from '~icons/app/eye-close';
 import IconArrow from '~icons/app/eye-open';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
-import IconWarning from '~icons/app/warning1';
+// import IconWarning from '~icons/app/warning1';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
 import IconLeft from '~icons/app/left';
-import IconDown from '~icons/app/down';
+// import IconDown from '~icons/app/down';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -65,7 +65,7 @@ import {
   temporaryLink,
   publicTemporaryPicture,
   cancelPublic,
-  getRank,
+  // getRank,
   getPic,
 } from '@/api/api-modelzoo.js';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -89,7 +89,7 @@ const showInferDlg = ref(false);
 const isInferred = ref(false);
 const isError = ref(false);
 
-const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
+// const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
 
 const styleData = ref([
@@ -213,7 +213,7 @@ const exampleData = ref([
 const isLarge = ref(false);
 const largeImg = ref({});
 const largeIndex = ref(null);
-function handleEnlage(value, key, index) {
+function handleEnlage(value, key) {
   largeImg.value = {};
   largeImg.value[key] = value;
   largeIndex.value = key;
@@ -260,9 +260,9 @@ const routeList = [
 function goPath(val) {
   router.push(val);
 }
-function closePosterDlg() {
-  posterDlg.value = false;
-}
+// function closePosterDlg() {
+//   posterDlg.value = false;
+// }
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -306,8 +306,12 @@ socket.onmessage = function (event) {
             });
           }
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
+          isWaiting.value = false;
+          isLine.value = null;
+          errorMsg.value = '内容不合规，请重新输入描述词';
+          isInferred.value = true;
+          isError.value = true;
         });
     }
   } catch {}
@@ -509,9 +513,9 @@ function choseStyleSort(val, item) {
   }
 }
 // 选择风格标签
-function choseSortTag(val) {
-  val.isSelected = !val.isSelected;
-}
+// function choseSortTag(val) {
+//   val.isSelected = !val.isSelected;
+// }
 // 随机风格
 function getRandomStyle(index) {
   if (index === 0) {
@@ -596,8 +600,12 @@ async function handleInfer() {
                     styleBackground.value = res.data.pictures;
                     isLarge.value = false;
                   })
-                  .catch((err) => {
-                    console.error(err);
+                  .catch(() => {
+                    isWaiting.value = false;
+                    isLine.value = null;
+                    errorMsg.value = '内容不合规，请重新输入描述词';
+                    isInferred.value = true;
+                    isError.value = true;
                   });
               }
             };
@@ -605,6 +613,7 @@ async function handleInfer() {
         }
       } catch (err) {
         isWaiting.value = false;
+        isLine.value = null;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -890,11 +899,7 @@ const showConfirmDlg = ref(false);
           </div>
         </template>
         <template v-else>
-          <div
-            v-for="(value, key, index) in largeImg"
-            :key="key"
-            class="result-item1"
-          >
+          <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
             <o-icon
               class="turn"
               @click="
@@ -1314,7 +1319,12 @@ const showConfirmDlg = ref(false);
         <p class="confirm-title">公开画作</p>
       </template>
       <div class="confirm-desc">
-        公开画作让更多的人看到您的创意，但作品中不能包含任何政治、宗教、种族、性别等敏感信息，一经公开，造成的后果由公开者承担
+        当前体验服务的内容均由人工智能模型生成，平台对其生成内容的准确性、完整性和功能性不做任何保证，在使用体验服务前，请您务必仔细阅读并理解透彻
+        <a
+          target="blank"
+          href="https://xihe-docs.mindspore.cn/zh/appendix/license/"
+          >《昇思大模型平台协议》</a
+        >
       </div>
       <template #footer>
         <OButton
@@ -2660,6 +2670,11 @@ const showConfirmDlg = ref(false);
   }
   .el-dialog__footer {
     text-align: center;
+  }
+  .confirm-desc {
+    a {
+      color: #008eff;
+    }
   }
 }
 .input-dom {

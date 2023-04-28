@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onUnmounted } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 
 import { useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -241,7 +241,7 @@ onUnmounted(() => {
           以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
         </p>
         <div class="content">
-          <div class="content-left">
+          <div class="content-top">
             <el-input
               ref="inputValue"
               v-model="inferenceText"
@@ -284,8 +284,8 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
-          <div class="content-right">
-            <p class="content-right-title">图片结果</p>
+          <div class="content-bottom">
+            <p class="content-bottom-title">图片结果</p>
             <div class="result">
               <div v-for="item in inferUrlList" :key="item" class="img-item">
                 <img
@@ -578,7 +578,7 @@ onUnmounted(() => {
       }
       .content {
         margin-top: 16px;
-        .content-left {
+        .content-top {
           background: #ffffff;
           padding: 32px 40px 40px;
           border-radius: 16px;
@@ -589,8 +589,24 @@ onUnmounted(() => {
             color: #000000;
             line-height: 25px;
           }
-          .el-input.text-input {
-            // width: 100%;
+          :deep(.el-input) {
+            width: 100%;
+            .el-input__wrapper {
+              box-shadow: none;
+              border-bottom: 1px solid #cdebff;
+              padding: 8px 0;
+              .el-input__inner {
+                font-size: 20px;
+                height: 33px;
+                line-height: 33px;
+              }
+              &:hover {
+                box-shadow: none;
+              }
+            }
+            .el-input__wrapper.is-focus {
+              box-shadow: none;
+            }
           }
           .example {
             margin-top: 32px;
@@ -656,7 +672,7 @@ onUnmounted(() => {
             margin-top: 8px;
           }
         }
-        .content-right {
+        .content-bottom {
           background: #ffffff;
           padding: 40px 40px 106px;
           margin-top: 24px;

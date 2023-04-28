@@ -2494,7 +2494,7 @@ const showConfirmDlg = ref(false);
     .content {
       flex: 1;
       height: 380px;
-      padding-bottom: 68px;
+      padding-bottom: 67px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {

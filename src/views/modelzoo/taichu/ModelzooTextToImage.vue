@@ -248,7 +248,7 @@ onUnmounted(() => {
               maxlength="30"
               :show-word-limit="true"
               placeholder="请输入简体中文或选择下方样例"
-              class="text-area"
+              class="text-input"
               @input="handleTextChange"
             >
             </el-input>
@@ -561,6 +561,7 @@ onUnmounted(() => {
         display: none;
       }
       .text-title {
+        font-weight: 300;
         color: #000000;
         font-size: 36px;
         line-height: 48px;
@@ -588,9 +589,8 @@ onUnmounted(() => {
             color: #000000;
             line-height: 25px;
           }
-          .el-input.text-area {
-            width: 100%;
-            border: none;
+          .el-input.text-input {
+            // width: 100%;
           }
           .example {
             margin-top: 32px;

@@ -439,6 +439,7 @@ function customUpload() {
       text-align: center;
       padding: 40px 0px;
       .experience-title {
+        font-weight: 300;
         font-size: 36px;
         color: #000000;
         line-height: 48px;

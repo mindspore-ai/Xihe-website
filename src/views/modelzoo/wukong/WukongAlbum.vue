@@ -30,6 +30,8 @@ import IconLike from '~icons/app/wukong-like';
 import IconHeart from '~icons/app/collected';
 import IconCopy from '~icons/app/copy-nickname';
 
+import arrow from '@/assets/imgs/wukong/arrow.png';
+
 import useClipboard from 'vue-clipboard3';
 const { toClipboard } = useClipboard();
 
@@ -421,22 +423,36 @@ function toNextPic() {
             </div>
           </div>
           <div class="pic-handle">
-            <o-icon class="download" @click.stop="downloadPic">
-              <icon-downloadgray></icon-downloadgray>
-            </o-icon>
-            <o-icon class="share" @click="sharePic">
-              <icon-sharegray></icon-sharegray>
-            </o-icon>
-            <o-icon
-              v-if="!dialogData.is_like"
-              class="heart"
-              @click="collectPic"
-            >
-              <icon-heartgray></icon-heartgray>
-            </o-icon>
-            <o-icon v-else class="heart" @click="collectPic">
-              <icon-heart></icon-heart>
-            </o-icon>
+            <div class="func-item download-item">
+              <o-icon class="download" @click.stop="downloadPic">
+                <icon-downloadgray></icon-downloadgray>
+              </o-icon>
+              <img class="arrow" :src="arrow" alt="" />
+              <div class="icon-name">下载</div>
+            </div>
+            <div class="func-item">
+              <o-icon class="share" @click="sharePic">
+                <icon-sharegray></icon-sharegray>
+              </o-icon>
+              <img class="arrow" :src="arrow" alt="" />
+              <div class="icon-name">分享</div>
+            </div>
+            <div class="func-item">
+              <div v-if="!dialogData.is_like">
+                <o-icon class="heart" @click="collectPic">
+                  <icon-heartgray></icon-heartgray>
+                </o-icon>
+                <img class="arrow" :src="arrow" alt="" />
+                <div class="icon-name">收藏</div>
+              </div>
+              <div v-else>
+                <o-icon class="heart" @click="collectPic">
+                  <icon-heart></icon-heart>
+                </o-icon>
+                <img class="arrow" :src="arrow" alt="" />
+                <div class="icon-name">取消收藏</div>
+              </div>
+            </div>
           </div>
         </div>
         <o-icon class="check" @click="toNextPic"> <icon-right /></o-icon>
@@ -594,22 +610,16 @@ function toNextPic() {
         &:hover {
           box-shadow: 0 6px 18px #0d8dff24;
         }
-        /* @media screen and (max-width: 821px) {
-          width: 230px;
-        } */
         @media screen and (max-width: 820px) {
           width: 226px;
         }
         @media screen and (max-width: 768px) {
           width: 166px;
-          // height: 160px;
         }
         .box-top {
-          // width: 100%;
-          height: 340px;
+          height: 342px;
           position: relative;
           @media screen and (max-width: 821px) {
-            // width: 160px;
             height: 160px;
           }
           img {
@@ -693,28 +703,18 @@ function toNextPic() {
                 height: 18px;
               }
             }
-            // @media screen and (max-width: 768px) {
-            //   margin: 8px 8px 34px;
-            //   width: 140px;
-            // }
           }
           .imgs-info {
             font-size: 14px;
-            // margin: 0px 0px 16px;
             text-overflow: ellipsis;
             color: #999999;
             display: flex;
             justify-content: space-between;
             line-height: 24px;
-            // position: absolute;
-            // bottom: 0;
-            // right: 0;
-            // left: 0;
             @media screen and (max-width: 768px) {
               font-size: 10px;
               height: 18px;
               line-height: 18px;
-              // margin: 0 8px 8px;
               .user-name {
                 display: inline-block;
                 width: 60px;
@@ -814,13 +814,14 @@ function toNextPic() {
           display: flex;
           right: 0;
           top: 100%;
+          .func-item {
+            &:nth-child(2) {
+              margin-right: 8px;
+            }
+          }
           .o-icon {
             color: #b2b2b2;
             margin-bottom: 0;
-            margin-right: 16px;
-            &:last-child {
-              margin-right: 0;
-            }
           }
         }
         .pic-source {
@@ -930,34 +931,84 @@ function toNextPic() {
         position: absolute;
         top: 62px;
         right: -65px;
-
-        .o-icon {
-          color: #b2b2b2;
-          height: 24px;
-          width: 24px;
-          margin-bottom: 16px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        .func-item {
           cursor: pointer;
+          position: relative;
           &:hover {
-            color: #0d8dff;
+            .icon-name,
+            .arrow {
+              display: block;
+            }
           }
-          &:last-child {
-            margin-bottom: 0;
+          .o-icon {
+            color: #b2b2b2;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+              color: #0d8dff;
+            }
+            &:last-child {
+              margin-bottom: 0;
+            }
           }
-        }
-        @media screen and (max-width: 820px) {
-          .download {
+          .icon-name {
+            color: #b2b2b2;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+            position: absolute;
+            left: 50px;
+            white-space: nowrap;
+            top: 8px;
+            padding: 4px 8px;
+            background-color: #ffffff;
+            border-radius: 3px;
             display: none;
+            box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
+            @media screen and (max-width: 1280px) {
+              font-size: 12px;
+              top: 4px;
+              left: 30px;
+            }
+          }
+          .arrow {
+            // height: 100px;
+            position: absolute;
+            left: 25px;
+            top: -18px;
+            width: 80px;
+            height: 80px;
+            display: none;
+            @media screen and (max-width: 1280px) {
+              left: 8px;
+              top: -12px;
+              height: 60px;
+            }
           }
         }
-        @media screen and (max-width: 768px) {
-          .share,
-          .heart {
-            width: 16px;
+
+        @media screen and (max-width: 821px) {
+          .func-item {
             height: 16px;
-            font-size: 16px;
+            .o-icon {
+              height: 16px;
+              width: 16px;
+              height: 16px;
+              font-size: 16px;
+            }
+            &:hover {
+              .icon-name,
+              .arrow {
+                display: none;
+                background-color: red;
+              }
+            }
+          }
+          .download-item {
+            display: none;
           }
         }
       }

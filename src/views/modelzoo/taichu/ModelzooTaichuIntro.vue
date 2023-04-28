@@ -444,7 +444,6 @@ function goTaichuMore() {
       }
     }
   }
-  // .taichu-content {
   @media screen and (max-width: 1080px) {
     padding-top: 62px;
   }
@@ -505,7 +504,6 @@ function goTaichuMore() {
         }
       }
     }
-    // }
   }
 }
 .taichu-detail {
@@ -586,10 +584,8 @@ function goTaichuMore() {
         }
         .diagram-left {
           max-width: 213px;
-          // margin-right: 166px;
           @media screen and (max-width: 767px) {
             height: 234px;
-            // margin: 16px 42px;
             margin: 0 auto 16px;
           }
         }
@@ -746,8 +742,6 @@ function goTaichuMore() {
       }
       @media screen and (max-width: 767px) {
         height: 167px;
-        // margin-bottom: 24px;
-        // margin-top: 16px;
       }
       .video-img1 {
         width: 100%;

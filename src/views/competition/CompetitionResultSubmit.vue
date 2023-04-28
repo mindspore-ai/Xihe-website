@@ -101,11 +101,12 @@ function togglePhoneDlg(flag) {
   }
 }
 // 绑定关联项目
-const relatedPro = ref();
-function confirmAdd() {
-  if (relatedPro.value === '') return;
+const relatedPro = ref('');
+const newProject = ref('');
+function confirmAdd(intValue) {
+  if (intValue === '') return;
   let params = {};
-  let paramsArr = relatedPro.value.split('/');
+  let paramsArr = intValue.split('/');
   params.owner = paramsArr[0];
   params.project_name = paramsArr[1];
   addProject(params, detailData1.id)
@@ -114,7 +115,7 @@ function confirmAdd() {
         type: 'success',
         message: '绑定成功~',
       });
-      detailData.value.project = relatedPro.value;
+      detailData.value.project = intValue;
     })
     .catch(() => {
       ElMessage({
@@ -122,6 +123,7 @@ function confirmAdd() {
         message: '绑定失败，请检查后重试~',
       });
     });
+  newProject.value = '';
 }
 
 getSubmissions(detailData1.id).then((res) => {
@@ -202,16 +204,17 @@ function handelCancel() {
           placeholder="请输入用户名/项目名"
         ></el-input>
         <div class="submit">
-          <div></div>
           <OButton
             v-if="relatedPro"
             type="primary"
             size="small"
-            @click="confirmAdd"
+            @click="confirmAdd(relatedPro)"
           >
-            确定
+            关联项目
           </OButton>
-          <OButton v-else disabled type="primary" size="small"> 确定 </OButton>
+          <OButton v-else disabled type="primary" size="small">
+            关联项目
+          </OButton>
         </div>
       </div>
       <div v-else-if="detailData && detailData.project">
@@ -232,6 +235,23 @@ function handelCancel() {
         <div class="project" @click="goProjectClick">
           <o-icon><icon-project></icon-project></o-icon>
           {{ detailData.project.split('/')[1] }}
+        </div>
+        <el-input
+          v-model="newProject"
+          placeholder="请输入用户名/项目名"
+        ></el-input>
+        <div class="project-btn">
+          <OButton
+            v-if="newProject"
+            type="primary"
+            size="small"
+            @click="confirmAdd(newProject)"
+          >
+            更新项目
+          </OButton>
+          <OButton v-else disabled type="primary" size="small">
+            更新项目
+          </OButton>
         </div>
       </div>
       <div v-else class="empty">
@@ -410,7 +430,7 @@ function handelCancel() {
     .submit {
       margin-top: 16px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
     }
     .empty {
       color: #999999;
@@ -425,7 +445,7 @@ function handelCancel() {
     .project {
       text-align: center;
       font-size: 18px;
-      margin-top: 24px;
+      margin: 24px 0px;
       cursor: pointer;
       height: 100px;
       line-height: 100px;
@@ -439,6 +459,13 @@ function handelCancel() {
         margin-right: 36px;
         display: inline-block;
       }
+    }
+    .el-input {
+      margin-bottom: 24px;
+    }
+    .project-btn {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 }

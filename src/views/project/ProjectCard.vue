@@ -366,7 +366,13 @@ const clientSrc = ref('');
 // }
 //拥有者启动推理
 function handleStart() {
-  if (detailData.value.owner === userInfo.userName) {
+  ElMessage({
+    message:
+      '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
+    type: 'warning',
+    duration: 4000,
+  });
+  /* if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
       [getHeaderConfig().headers['private-token']]
@@ -423,7 +429,7 @@ function handleStart() {
       }
     };
     msg.value = '启动中';
-  }
+  } */
 }
 
 //停止推理

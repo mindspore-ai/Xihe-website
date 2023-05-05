@@ -602,7 +602,6 @@ function toNextPic() {
       .img-box {
         cursor: pointer;
         background-color: #fff;
-        // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         border-radius: 16px;
         display: flex;
         flex-direction: column;
@@ -753,14 +752,13 @@ function toNextPic() {
     border-radius: 0px;
     position: relative;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
     .el-dialog__header {
       height: 80px;
-      position: sticky;
-      top: 0;
-      z-index: 200;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: rgba(0, 0, 0, 0.5);
       @media screen and (max-width: 768px) {
         height: 48px;
         line-height: 14px;
@@ -808,6 +806,9 @@ function toNextPic() {
       @media screen and (max-width: 821px) {
         height: calc(100vh - 48px);
         padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .pic-box .pic-handle {
           width: auto;
           margin-top: 16px;
@@ -831,8 +832,10 @@ function toNextPic() {
       }
     }
     .album-wrapper {
-      height: 100%;
+      // height: 100%;
       display: flex;
+      align-items: center;
+      padding-top: 40px;
     }
 
     .o-icon {
@@ -848,19 +851,20 @@ function toNextPic() {
       border-radius: 50%;
       color: #fff;
       background: #e5e8f0;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
+      // position: relative;
+      // top: 50%;
+      // transform: translateY(-50%);
       @media screen and (max-width: 821px) {
         display: none;
       }
     }
     .pic-box {
-      max-width: 512px;
+      max-height: 512px;
+      flex-grow: 0.1;
       margin: 0 auto;
       position: relative;
       display: flex;
-      align-items: center;
+      // align-items: center;
       @media screen and (max-width: 821px) {
         width: 100%;
       }
@@ -878,6 +882,7 @@ function toNextPic() {
           text-overflow: ellipsis;
         }
         img {
+          max-height: 512px;
           width: 100%;
           border-radius: 16px;
         }

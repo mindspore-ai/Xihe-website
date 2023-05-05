@@ -2094,6 +2094,7 @@ const showConfirmDlg = ref(false);
     width: calc(100% - 32px);
     @media screen and (max-width: 476px) {
       background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
     }
   }
   .mobile-btn {
@@ -2649,6 +2650,7 @@ const showConfirmDlg = ref(false);
     position: absolute;
     bottom: 40px;
     width: 100%;
+    backdrop-filter: blur(10px);
   }
   .o-button {
     padding: 9px 28px;

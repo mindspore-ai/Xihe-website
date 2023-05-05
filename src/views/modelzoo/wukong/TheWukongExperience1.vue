@@ -743,9 +743,15 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
+
+const svgRotate = ref(false);
 // 换一批
 function refreshTags() {
+  svgRotate.value = true;
   exampleData.value = getDescExamples(lists.value, 2);
+}
+function reset(val) {
+  svgRotate.value = val;
 }
 
 const resultIndex = ref(-1);
@@ -791,8 +797,10 @@ const showConfirmDlg = ref(false);
             {{ item.text }}
           </p>
         </div>
-        <div class="refresh" @click="refreshTags">
-          <o-icon><icon-refresh></icon-refresh></o-icon>
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
           <!-- <p>换一批</p> -->
         </div>
       </div>
@@ -1026,8 +1034,10 @@ const showConfirmDlg = ref(false);
     <div class="mobile-examples">
       <div class="example-head">
         <!-- <p class="title">选择样例</p> -->
-        <div class="refresh" @click="refreshTags">
-          <o-icon><icon-refresh></icon-refresh></o-icon>
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
           <!-- <p>换一批</p> -->
         </div>
       </div>
@@ -1908,6 +1918,7 @@ const showConfirmDlg = ref(false);
       border-radius: 6px;
     }
   }
+
   .mobile-examples {
     display: flex;
     flex-direction: row-reverse;
@@ -2114,6 +2125,17 @@ const showConfirmDlg = ref(false);
     margin: 0 auto 0;
     padding: 9px 12px;
   }
+}
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(180deg);
+  }
+}
+.rotating {
+  animation: rotate 0.5s ease-out;
 }
 .wk-experience {
   display: flex;
@@ -2433,6 +2455,7 @@ const showConfirmDlg = ref(false);
       border-radius: 6px;
     }
   }
+
   .wk-experience-examples {
     display: flex;
     margin-top: 48px;

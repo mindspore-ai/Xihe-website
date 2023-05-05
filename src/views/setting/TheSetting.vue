@@ -41,11 +41,11 @@ const settingItems = [
     label: '账户安全',
     icon: IconLock,
   },
-  // {
-  //   id: 'email',
-  //   label: '邮件',
-  //   icon: IconEmail,
-  // },
+  {
+    id: 'email',
+    label: '邮件',
+    icon: IconEmail,
+  },
   {
     id: 'course',
     label: '我的课程',
@@ -409,6 +409,7 @@ function cancelFollow(name) {
       background: #ffffff;
       padding: 40px 0 64px;
       // margin-bottom: 36px;
+      border-radius: 16px;
       .user-info-basic {
         display: flex;
         flex-direction: column;

@@ -497,7 +497,7 @@ function reKeepEmail(formEl) {
 
 .el-form {
   width: 520px;
-  margin: 0 50px;
+  // margin: 0 50px;
   .el-form-item {
     :deep(.el-form-item__content) {
       justify-content: space-between;

@@ -277,7 +277,7 @@ let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['private-token']
   : null;
 let socket = new WebSocket(
-  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
   [token]
 );
 socket.onmessage = function (event) {
@@ -306,10 +306,14 @@ socket.onmessage = function (event) {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
           isWaiting.value = false;
           isLine.value = null;
-          errorMsg.value = '内容不合规，请重新输入描述词';
+          if (err.response.data.code === 'bigmodel_no_wukong_picture') {
+            errorMsg.value = '';
+          } else if (err.response.data.code === 'bigmodel_sensitive_info') {
+            errorMsg.value = '内容不合规，请重新输入描述词';
+          }
           isInferred.value = true;
           isError.value = true;
         });
@@ -588,7 +592,7 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {
@@ -600,10 +604,18 @@ async function handleInfer() {
                     styleBackground.value = res.data.pictures;
                     isLarge.value = false;
                   })
-                  .catch(() => {
+                  .catch((err) => {
                     isWaiting.value = false;
                     isLine.value = null;
-                    errorMsg.value = '内容不合规，请重新输入描述词';
+                    if (
+                      err.response.data.code === 'bigmodel_no_wukong_picture'
+                    ) {
+                      errorMsg.value = '';
+                    } else if (
+                      err.response.data.code === 'bigmodel_sensitive_info'
+                    ) {
+                      errorMsg.value = '内容不合规，请重新输入描述词';
+                    }
                     isInferred.value = true;
                     isError.value = true;
                   });

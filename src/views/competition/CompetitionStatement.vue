@@ -59,16 +59,8 @@ function goNextStep() {
       padding-top: 0px;
     }
   }
-  // :deep(.el-textarea) {
-  //   width: 100% !important;
-  //   height: 100%;
-  //   .el-textarea__inner {
-  //     min-height: 500px !important;
-  //     // min-height: 865px !important;
-  //     height: 100%;
-  //   }
-  // }
-  :deep .statement-detail {
+  :deep(.statement-detail) {
+    // border-radius: 16px;
     &::-webkit-scrollbar {
       width: 6px;
       height: 6px;

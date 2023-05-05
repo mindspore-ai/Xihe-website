@@ -602,13 +602,13 @@ function toNextPic() {
       .img-box {
         cursor: pointer;
         background-color: #fff;
-        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+        // box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         border-radius: 16px;
         display: flex;
         flex-direction: column;
         position: relative;
         &:hover {
-          box-shadow: 0 6px 18px #0d8dff24;
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         }
         @media screen and (max-width: 820px) {
           width: 226px;

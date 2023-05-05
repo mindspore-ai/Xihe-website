@@ -421,36 +421,36 @@ function toNextPic() {
                 <span class="digg-count">{{ dialogData?.digg_count }}</span>
               </p>
             </div>
-          </div>
-          <div class="pic-handle">
-            <div class="func-item download-item">
-              <o-icon class="download" @click.stop="downloadPic">
-                <icon-downloadgray></icon-downloadgray>
-              </o-icon>
-              <img class="arrow" :src="arrow" alt="" />
-              <div class="icon-name">下载</div>
-            </div>
-            <div class="func-item">
-              <o-icon class="share" @click="sharePic">
-                <icon-sharegray></icon-sharegray>
-              </o-icon>
-              <img class="arrow" :src="arrow" alt="" />
-              <div class="icon-name">分享</div>
-            </div>
-            <div class="func-item">
-              <div v-if="!dialogData.is_like">
-                <o-icon class="heart" @click="collectPic">
-                  <icon-heartgray></icon-heartgray>
+            <div class="pic-handle">
+              <div class="func-item download-item">
+                <o-icon class="download" @click.stop="downloadPic">
+                  <icon-downloadgray></icon-downloadgray>
                 </o-icon>
                 <img class="arrow" :src="arrow" alt="" />
-                <div class="icon-name">收藏</div>
+                <div class="icon-name">下载</div>
               </div>
-              <div v-else>
-                <o-icon class="heart" @click="collectPic">
-                  <icon-heart></icon-heart>
+              <div class="func-item">
+                <o-icon class="share" @click="sharePic">
+                  <icon-sharegray></icon-sharegray>
                 </o-icon>
                 <img class="arrow" :src="arrow" alt="" />
-                <div class="icon-name">取消收藏</div>
+                <div class="icon-name">分享</div>
+              </div>
+              <div class="func-item">
+                <div v-if="!dialogData.is_like">
+                  <o-icon class="heart" @click="collectPic">
+                    <icon-heartgray></icon-heartgray>
+                  </o-icon>
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">收藏</div>
+                </div>
+                <div v-else>
+                  <o-icon class="heart" @click="collectPic">
+                    <icon-heart></icon-heart>
+                  </o-icon>
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">取消收藏</div>
+                </div>
               </div>
             </div>
           </div>
@@ -830,10 +830,8 @@ function toNextPic() {
       }
     }
     .album-wrapper {
-      width: 100%;
       height: 100%;
       display: flex;
-      align-items: center;
     }
 
     .o-icon {
@@ -849,20 +847,25 @@ function toNextPic() {
       border-radius: 50%;
       color: #fff;
       background: #e5e8f0;
-
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
       @media screen and (max-width: 821px) {
         display: none;
       }
     }
     .pic-box {
-      width: 35%;
+      max-width: 512px;
       margin: 0 auto;
       position: relative;
+      display: flex;
+      align-items: center;
       @media screen and (max-width: 821px) {
         width: 100%;
       }
       .pic-info {
         width: 100%;
+        position: relative;
         .pic-source {
           height: 24px;
           font-size: 18px;
@@ -971,11 +974,10 @@ function toNextPic() {
             @media screen and (max-width: 1280px) {
               font-size: 12px;
               top: 4px;
-              left: 30px;
+              left: 44px;
             }
           }
           .arrow {
-            // height: 100px;
             position: absolute;
             left: 25px;
             top: -18px;
@@ -983,7 +985,7 @@ function toNextPic() {
             height: 80px;
             display: none;
             @media screen and (max-width: 1280px) {
-              left: 8px;
+              left: 20px;
               top: -12px;
               height: 60px;
             }
@@ -1003,7 +1005,6 @@ function toNextPic() {
               .icon-name,
               .arrow {
                 display: none;
-                background-color: red;
               }
             }
           }

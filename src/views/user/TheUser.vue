@@ -42,11 +42,11 @@ const settingItems = [
     label: '账户安全',
     icon: IconLock,
   },
-  // {
-  //   id: 'email',
-  //   label: '邮件',
-  //   icon: IconEmail,
-  // },
+  {
+    id: 'email',
+    label: '邮件',
+    icon: IconEmail,
+  },
   {
     id: 'course',
     label: '我的课程',
@@ -620,6 +620,7 @@ function handleDomChange(val) {
       background: #ffffff;
       padding: 40px 0 64px;
       // margin-bottom: 36px;
+      border-radius: 16px;
       .user-info-basic {
         display: flex;
         flex-direction: column;
@@ -730,6 +731,7 @@ function handleDomChange(val) {
           padding: 0 40px;
           background: #ffffff;
           // box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+          border-radius: 24px;
           .moderl-head-right {
             .el-input {
               width: 200px;

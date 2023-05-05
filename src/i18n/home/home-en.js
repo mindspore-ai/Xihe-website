@@ -48,7 +48,7 @@ export default {
   LEGAL_NOTICE: 'Terms of Use',
   COPYRIGHT: 'Copyright',
   OWNERSHIP: 'All Rights Reserved',
-  LANG: 'En',
+  LANG: '中文',
   BANNER_BUTTON_1: 'MindSpore LLM Platform',
   BANNER_BUTTON_2: 'AI Painter',
   BANNER_BUTTON_3: '昇思3周年',

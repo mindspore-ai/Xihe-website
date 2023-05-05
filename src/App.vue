@@ -255,10 +255,12 @@ function toggleMenu(menu) {
   mobilNav[3].isactive = false;
 }
 function toPage(path) {
-  if (path === '/') {
-    mobilNav[0].isactive = true;
-    mobilNav[3].isactive = false;
-  } else if (path === '/docs') {
+  // if (path === '/') {
+  //   mobilNav[0].isactive = true;
+  //   mobilNav[3].isactive = false;
+  //   router.push(path);
+  // } else
+  if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (path) {
     isMobileFit.value = false;
@@ -291,25 +293,16 @@ const handleCommand = () => {
       noHeader === true ? 'no-header' : '')
     "
   >
-    <div
-      v-if="currentPage === '首页'"
-      class="back"
-      @click="toggleMenu(!meauActive)"
-    >
+    <div class="back" @click="toggleMenu(!meauActive)">
       <OIcon><icon-menu></icon-menu></OIcon>
     </div>
-    <div v-else class="back" @click="goBack">
+    <!-- <div v-else class="back" @click="goBack">
       <OIcon><icon-back></icon-back></OIcon>
-    </div>
+    </div> -->
 
+    <img v-if="locale === 'zh'" :src="logoImg" alt="" @click="toPage('/')" />
     <img
-      v-if="currentPage === '首页' && locale === 'zh'"
-      :src="logoImg"
-      alt=""
-      @click="toPage('/')"
-    />
-    <img
-      v-else-if="currentPage === '首页' && locale === 'en'"
+      v-else-if="locale === 'en'"
       :src="logoImg2"
       alt=""
       class="en-logo"
@@ -325,7 +318,6 @@ const handleCommand = () => {
     :class="{
       opaque: isHeaderTransparent,
       'no-header': noHeader,
-      wukong1: route.path === '/modelzoo/wukong',
     }"
   >
     <app-header></app-header>
@@ -334,11 +326,7 @@ const handleCommand = () => {
   <main class="app-body">
     <router-view></router-view>
   </main>
-  <footer
-    v-if="showFooter"
-    class="app-footer"
-    :class="{ wukong1: route.path === '/modelzoo/wukong' }"
-  >
+  <footer v-if="showFooter" class="app-footer">
     <app-footer></app-footer>
   </footer>
   <div class="mobile-menu" :class="{ 'menu-active': meauActive }">
@@ -361,7 +349,13 @@ const handleCommand = () => {
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
-      <div class="language" @click="handleCommand">中文 ｜ EN</div>
+      <div
+        v-if="currentPage === '首页'"
+        class="language"
+        @click="handleCommand"
+      >
+        中文 ｜ EN
+      </div>
     </div>
   </div>
 </template>

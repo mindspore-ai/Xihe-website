@@ -1,6 +1,8 @@
 <script setup>
 import { ref, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 
+import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 import taichuEfficient from '@/assets/imgs/taichu/taichu-efficient.png';
 import taichuEfficient1 from '@/assets/imgs/taichu/taichu-efficient1.png';
 import taichuEfficient2 from '@/assets/imgs/taichu/taichu-efficient2.png';
@@ -18,6 +20,12 @@ import taichuPlay from '@/assets/imgs/taichu/taichuplay.png';
 import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
 import taichuCompanyImg from '@/assets/imgs/taichu/taichu-companyimg.png';
 import taichuFixImg from '@/assets/imgs/taichu/taichuFixImage.png';
+
+import OButton from '@/components/OButton.vue';
+import { ArrowRight } from '@element-plus/icons-vue';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
+
 const taichuvideo1 =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
 const taichuvideo2 =
@@ -34,6 +42,7 @@ const instancevideo =
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
+const router = useRouter();
 // 图片数组
 const videoImgArr1 = [
   {
@@ -98,9 +107,56 @@ function closeInstanceVideo() {
   instanceVideo.currentTime = 0;
   showInstanceVideo.value = false;
 }
+function goTaichuExperience() {
+  router.push('/modelzoo/taichu');
+}
+function goTaichuMore() {
+  window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
+}
 </script>
 <template>
   <div class="wrapper">
+    <div class="taichu-wrap">
+      <div class="taichu-bread">
+        <el-breadcrumb :separator-icon="ArrowRight">
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+            >大模型</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>紫东.太初</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+      <!-- <div class="taichu-content"> -->
+      <div class="taichu-banner">
+        <div class="banner-left">
+          <img draggable="false" :src="taichuBanner" alt="" />
+        </div>
+        <div class="banner-right">
+          <div class="banner-title">紫东.太初</div>
+          <div class="banner-content">
+            OPT（Omni-Perception
+            Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
+          </div>
+          <div class="banner-btn">
+            <OButton
+              type="primary"
+              :size="screenWidth < 820 ? 'mini' : 'small'"
+              animation
+              @click="goTaichuExperience"
+            >
+              在线体验
+            </OButton>
+            <OButton
+              :size="screenWidth < 820 ? 'mini' : 'small'"
+              animation
+              @click="goTaichuMore"
+            >
+              了解更多
+            </OButton>
+          </div>
+        </div>
+      </div>
+      <!-- </div> -->
+    </div>
     <div class="taichu-detail">
       <div class="taichu-detail-intro">
         <div class="intro-title">简述</div>
@@ -356,10 +412,105 @@ function closeInstanceVideo() {
     background: #f5f6f8;
   }
 }
+.taichu-wrap {
+  padding-top: 120px;
+  margin: 0 auto;
+  max-width: 1472px;
+  @media screen and (max-width: 1080px) {
+    padding: 0;
+  }
+  .taichu-bread {
+    margin-bottom: 40px;
+    @media screen and (max-width: 1080px) {
+      display: none;
+    }
+    .el-breadcrumb {
+      height: 21px;
+      line-height: 21px;
+      .el-breadcrumb__item {
+        :deep(.el-breadcrumb__inner.is-link) {
+          color: #555;
+          font-weight: 400;
+          &:hover {
+            color: #0d8dff;
+          }
+        }
+        :deep(.el-breadcrumb__separator.el-icon) {
+          color: #555;
+        }
+      }
+      :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+        color: #000;
+      }
+    }
+  }
+  @media screen and (max-width: 1080px) {
+    padding-top: 62px;
+  }
+  .taichu-banner {
+    padding: 40px;
+    background-color: #fff;
+    display: flex;
+    border-radius: 16px;
+    @media screen and (max-width: 1080px) {
+      padding: 16px;
+      margin: 0 16px;
+    }
+    .banner-left {
+      margin-right: 40px;
+      @media screen and (max-width: 1080px) {
+        display: none;
+      }
+      img {
+        width: 416px;
+        height: 100%;
+        border-radius: 16px;
+      }
+    }
+    .banner-right {
+      .banner-title {
+        line-height: 48px;
+        font-size: 36px;
+        color: #000000;
+        margin-bottom: 16px;
+        @media screen and (max-width: 820px) {
+          font-size: 16px;
+          line-height: 24px;
+          font-weight: 300;
+          margin-bottom: 16px;
+        }
+        @media screen and (max-width: 768px) {
+          margin-bottom: 8px;
+        }
+      }
+
+      .banner-content {
+        font-size: 14px;
+        color: #555555;
+        line-height: 22px;
+        margin-bottom: 54px;
+        @media screen and (max-width: 820px) {
+          margin-bottom: 16px;
+          font-size: 12px;
+          line-height: 18px;
+          font-weight: 400;
+        }
+      }
+      .banner-btn {
+        .o-button {
+          &:first-child {
+            margin-right: 24px;
+          }
+        }
+      }
+    }
+  }
+}
 .taichu-detail {
+  margin-top: 40px;
   padding: 40px 80px;
   background-color: #fff;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  border-radius: 16px;
   @media screen and (max-width: 820px) {
     padding: 16px 16px 24px;
   }
@@ -407,14 +558,12 @@ function closeInstanceVideo() {
         margin-top: 16px;
       }
       &-title {
-        // height: 28px;
         line-height: 28px;
         font-size: 20px;
         color: #000000;
         margin-bottom: 24px;
         text-align: center;
         @media screen and (max-width: 767px) {
-          // display: none;
           font-size: 14px;
           color: #000000;
           line-height: 22px;
@@ -435,10 +584,8 @@ function closeInstanceVideo() {
         }
         .diagram-left {
           max-width: 213px;
-          // margin-right: 166px;
           @media screen and (max-width: 767px) {
             height: 234px;
-            // margin: 16px 42px;
             margin: 0 auto 16px;
           }
         }
@@ -515,9 +662,6 @@ function closeInstanceVideo() {
                 z-index: 1;
               }
             }
-            // video {
-            //   margin-bottom: 17px;
-            // }
             p {
               height: 14px;
               line-height: 14px;
@@ -598,8 +742,6 @@ function closeInstanceVideo() {
       }
       @media screen and (max-width: 767px) {
         height: 167px;
-        // margin-bottom: 24px;
-        // margin-top: 16px;
       }
       .video-img1 {
         width: 100%;
@@ -763,7 +905,6 @@ function closeInstanceVideo() {
           display: none;
         }
         &-item {
-          // width: 410px;
           height: 136px;
           padding: 17px 16px;
           align-items: center;
@@ -777,7 +918,6 @@ function closeInstanceVideo() {
               margin-bottom: 0;
             }
           }
-          // 最后一个子元素
           &:last-child {
             margin-right: 0;
           }
@@ -852,9 +992,6 @@ function closeInstanceVideo() {
                 color: #000000;
               }
             }
-            // .bottom {
-            //   margin-top: 10px;
-            // }
             .difference-arr {
               display: flex;
               .difference-item {
@@ -1025,14 +1162,8 @@ function closeInstanceVideo() {
   }
 }
 :deep(.el-dialog) {
-  .el-dialog__header {
-    .el-dialog__headerbtn {
-      font-size: 24px;
-    }
-  }
   video {
     width: 100%;
-    // height: 500px;
     @media screen and (max-width: 767px) {
       width: 100%;
       height: 40vh;

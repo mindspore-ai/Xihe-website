@@ -2,10 +2,13 @@
 import { ref } from 'vue';
 
 import IconPublic from '~icons/app/public';
-import IconFingure from '~icons/app/fingure';
-import IconCancel from '~icons/app/cancel-public';
+import IconFingure from '~icons/app/fingure2';
+import IconEyeclose from '~icons/app/eye-close';
 import IconHeart from '~icons/app/collected';
 import IconLike from '~icons/app/wukong-like';
+import IconHeartgray from '~icons/app/heart-gray';
+
+import { useUserInfoStore } from '@/stores';
 
 import {
   publicPictures,
@@ -15,6 +18,7 @@ import {
 } from '@/api/api-modelzoo.js';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+const userInfoStore = useUserInfoStore();
 const screenWidth = useWindowResize();
 const publicList = ref([]);
 const cancelPublicId = ref('');
@@ -107,7 +111,7 @@ async function cancelImgCollected(item) {
           <div class="handles">
             <div class="left">
               <p class="cancel-public" @click="quitPublicClick(item.id)">
-                <o-icon><icon-cancel></icon-cancel></o-icon>
+                <o-icon><icon-eyeclose></icon-eyeclose></o-icon>
               </p>
               <p
                 v-if="item.is_like"
@@ -124,29 +128,44 @@ async function cancelImgCollected(item) {
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
             </div>
-
-            <div class="right">
+            <!-- <div class="right">
               <o-icon><icon-fingure></icon-fingure></o-icon>
               <p class="dig-counts">{{ item.digg_count }}</p>
-            </div>
+            </div> -->
           </div>
         </div>
 
         <div v-else class="image-box" @click="handleImageClick(item)">
           <img draggable="false" :src="item.link" alt="" />
         </div>
-
-        <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
+        <div class="img-desc">
+          <p>
+            来自{{ item.desc }}&nbsp;&nbsp;
+            <span v-if="item.style"> #风格：{{ item.style }}</span>
+          </p>
+          <div class="img-owner">
+            <div class="info-left">
+              <img :src="userInfoStore.avatar" alt="" />
+              <span class="user-name">
+                {{ userInfoStore.userName }}
+              </span>
+            </div>
+            <div class="info-right">
+              <o-icon><icon-fingure></icon-fingure></o-icon>
+              <div class="count">{{ item.digg_count }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div v-else class="no-public">
       <o-icon><icon-public></icon-public></o-icon>
       <p>暂无公开画作</p>
     </div>
-
+    <!-- 移动端大图弹窗 -->
     <el-dialog
       v-model="imgInfoDlg"
-      class="imginfo-dlg"
+      class="fullscreen-dialog"
       :fullscreen="true"
       center
       :close-on-click-modal="false"
@@ -154,24 +173,30 @@ async function cancelImgCollected(item) {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          {{ imageInfo.desc }}&nbsp;&nbsp;&nbsp;<span v-if="imageInfo.style"
-            >#风格：</span
-          >{{ imageInfo.style }}
+          来自{{ imageInfo.desc }}&nbsp;&nbsp;
+          <span v-if="imageInfo.style">#风格：{{ imageInfo.style }}</span>
         </p>
       </template>
 
       <div class="image-info">
+        <div class="img-owner">
+          <div class="info-left">
+            <img :src="userInfoStore.avatar" alt="" />
+            <span class="user-name">
+              {{ userInfoStore.userName }}
+            </span>
+          </div>
+          <div class="info-right">
+            <o-icon><icon-fingure></icon-fingure></o-icon>
+            <div class="count">{{ imageInfo.digg_count }}</div>
+          </div>
+        </div>
         <img class="collect-img" :src="imageInfo.link" alt="" />
         <div class="information">
-          <!-- <div class="user-info">
-            <img :src="userInfoStore.avatar" alt="" />
-            <p>{{ userInfoStore.userName }}</p>
-          </div> -->
           <div class="mobile-handle">
             <p class="cancel-public" @click="quitPublicClick(imageInfo.id)">
-              <o-icon><icon-cancel></icon-cancel></o-icon>
+              <o-icon><icon-eyeclose></icon-eyeclose></o-icon>
             </p>
-
             <p
               v-if="imageInfo.is_like"
               class="collect-image"
@@ -185,7 +210,7 @@ async function cancelImgCollected(item) {
               class="collect-image"
               @click="collectPublickImage(imageInfo)"
             >
-              <o-icon><icon-like></icon-like></o-icon>
+              <o-icon><icon-heartgray></icon-heartgray></o-icon>
             </p>
           </div>
 
@@ -214,7 +239,7 @@ async function cancelImgCollected(item) {
       <template #footer>
         <OButton
           :size="screenWidth < 820 ? 'mini' : 'small'"
-          style="margin-right: 24px"
+          style="margin-right: 16px"
           @click="cancelQuitPublic(false)"
           >取消</OButton
         >
@@ -230,13 +255,8 @@ async function cancelImgCollected(item) {
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-dialog) {
+/* :deep(.el-dialog) {
   .el-dialog__header {
-    padding: 0;
-    position: sticky;
-    top: 0;
-    height: 48px;
-    z-index: 200;
     @media screen and (max-width: 820px) {
       display: flex;
       justify-content: center;
@@ -263,8 +283,8 @@ async function cancelImgCollected(item) {
     right: 15px;
     z-index: 201;
     @media screen and (max-width: 820px) {
-      top: -4px;
-      right: 4px;
+      top: 12px;
+      right: 12px;
     }
     .el-dialog__close {
       color: #fff;
@@ -274,60 +294,103 @@ async function cancelImgCollected(item) {
       }
     }
   }
-}
+} */
 /* 移动端点击图片dlg */
-:deep(.imginfo-dlg) {
-  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
+:deep(.fullscreen-dialog) {
+  border-radius: 0;
+  .el-dialog__header {
+    height: 80px;
+    @media screen and (max-width: 769px) {
+      height: 48px;
+      line-height: 14px;
+      padding: 12px 0;
+      .el-dialog__title {
+        padding: 0 40px;
+      }
+    }
+    .el-dialog__headerbtn {
+      width: 24px;
+      height: 24px;
+      position: fixed;
+      top: 6px;
+      right: 15px;
+      @media screen and (max-width: 768px) {
+        top: 12px;
+        right: 12px;
+        width: 24px;
+        height: 24px;
+      }
+      .el-dialog__close {
+        color: #fff;
+        font-size: 40px;
+        @media screen and (max-width: 768px) {
+          font-size: 24px;
+        }
+      }
+    }
+  }
   .el-dialog__body {
+    height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #f5f6f8;
+    border-radius: 24px 24px 0px 0px;
 
-    @media screen and (max-width: 820px) {
-      padding: 16px !important;
-      width: 640px;
-      margin: 14vh auto;
+    @media screen and (max-width: 768px) {
+      height: calc(100vh - 48px);
+      padding: 0 16px;
     }
-    @media screen and (max-width: 767px) {
-      width: 100%;
-    }
-  }
-  .el-dialog__header {
-    background: #000;
   }
   .image-info {
     position: relative;
+    .img-owner {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 17px;
+      display: flex;
+      justify-content: space-between;
+      img {
+        width: 24px;
+      }
+      .info-left {
+        display: flex;
+        align-items: center;
+        .user-name {
+          margin-left: 8px;
+        }
+      }
+      .info-right {
+        display: flex;
+        align-items: center;
+        .o-icon {
+          font-size: 17px;
+        }
+        .count {
+          margin-left: 8px;
+        }
+      }
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+      }
+    }
     .collect-img {
       width: 100%;
+      border-radius: 16px;
     }
     .information {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      color: #ffffff;
+      justify-content: flex-end;
       font-size: 12px;
       line-height: 18px;
-      height: 74px;
-      width: 100%;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      padding: 16px;
-      position: absolute;
-      bottom: 0;
-      @media screen and (max-width: 767px) {
-        padding: 8px;
-      }
-      // .user-info {
-      //   display: flex;
-      //   align-items: flex-end;
-      //   img {
-      //     width: 16px;
-      //     height: 16px;
-      //     border-radius: 50%;
-      //     margin-right: 4px;
-      //   }
-      // }
+      height: 32px;
+      margin-top: 16px;
       .mobile-handle {
         display: flex;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 22px;
+        padding: 8px;
         .cancel-public {
           margin-right: 12px;
           @media screen and (max-width: 767px) {
@@ -381,17 +444,11 @@ async function cancelImgCollected(item) {
     }
   }
   .el-dialog__header {
-    text-align: center;
-    margin-right: 0;
-    padding: 40px 0 24px;
     @media screen and (max-width: 768px) {
       padding: 16px 0 0;
     }
   }
   .el-dialog__body {
-    padding: 24px 40px 0 !important;
-    text-align: center;
-
     @media screen and (max-width: 820px) {
       padding: 8px 16px !important;
       width: 454px;
@@ -404,7 +461,6 @@ async function cancelImgCollected(item) {
   .el-dialog__footer {
     display: flex;
     justify-content: center;
-    padding-top: 24px;
     @media screen and (max-width: 768px) {
       padding: 16px;
       .o-button:first-child {
@@ -444,22 +500,24 @@ async function cancelImgCollected(item) {
     display: grid;
     grid-template-columns: repeat(3, 310px);
     grid-gap: 24px;
-    @media screen and (max-width: 820px) {
+    @media screen and (max-width: 821px) {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 12px;
-      padding: 16px 16px 40px;
+      padding: 16px 0px 40px;
     }
     .collect-item {
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       .image-box {
         position: relative;
-        background: #fff;
         flex: 1;
         display: flex;
-        align-items: center;
+        // align-items: center;
         &:hover {
           .handles {
             opacity: 1;
@@ -521,7 +579,8 @@ async function cancelImgCollected(item) {
         }
 
         img {
-          width: 310px;
+          width: 100%;
+          border-radius: 16px 16px 0 0;
           @media screen and (max-width: 820px) {
             width: calc(50vw - 24px);
             min-height: 270px;
@@ -532,12 +591,60 @@ async function cancelImgCollected(item) {
           }
         }
       }
+      .img-desc {
+        margin-bottom: 16px;
+        p {
+          padding: 0 16px;
+        }
+        .img-owner {
+          color: #999;
+          font-size: 14px;
+          margin-top: 16px;
+          padding: 0 16px;
+          display: flex;
+          justify-content: space-between;
+          img {
+            width: 24px;
+            @media screen and (max-width: 768px) {
+              width: 16px;
+            }
+          }
+          .info-left {
+            display: flex;
+            align-items: center;
+            .user-name {
+              margin-left: 8px;
+              @media screen and (max-width: 768px) {
+                margin-left: 4px;
+              }
+            }
+          }
+          .info-right {
+            display: flex;
+            align-items: center;
+            .o-icon {
+              font-size: 17px;
+              @media screen and (max-width: 768px) {
+                font-size: 12px;
+              }
+            }
+            .count {
+              margin-left: 8px;
+              @media screen and (max-width: 768px) {
+                margin-left: 2px;
+              }
+            }
+          }
+          @media screen and (max-width: 820px) {
+            font-size: 12px;
+          }
+        }
+      }
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 500;
-        color: #555555;
+        color: #000;
         line-height: 26px;
-        height: 26px;
         text-align: left;
         margin-top: 8px;
         overflow: hidden;
@@ -551,7 +658,6 @@ async function cancelImgCollected(item) {
           font-weight: 400;
           color: #000000;
           line-height: 17px;
-          height: 17px;
         }
       }
     }

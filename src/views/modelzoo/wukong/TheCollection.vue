@@ -3,13 +3,13 @@ import { ref, onMounted, nextTick } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-import IconArrow from '~icons/app/arrow-top';
+import IconEyeopen from '~icons/app/eye-open';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
-import IconHeart from '~icons/app/collected';
+import IconSharegray from '~icons/app/share-gray';
+import IconHeart from '~icons/app/heart-gray';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
-// import IconFingure from '~icons/app/fingure';
 import useClipboard from 'vue-clipboard3';
 
 import {
@@ -201,7 +201,7 @@ function handleImageClick(img) {
 
           <div class="handles">
             <div class="icon-item" @click="publicImage(item.id)">
-              <o-icon><icon-arrow></icon-arrow></o-icon>
+              <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
             </div>
             <div class="right">
               <div class="icon-item" @click="downloadImage(item.link)">
@@ -228,8 +228,20 @@ function handleImageClick(img) {
             alt=""
           />
         </div>
-
-        <p>{{ item.desc }}&nbsp;{{ item.style }}</p>
+        <div class="img-desc">
+          <p>
+            来自{{ item.desc }}&nbsp;&nbsp;
+            <span v-if="item.style"> #风格：{{ item.style }} </span>
+          </p>
+          <div class="img-owner">
+            <div class="info-left">
+              <img :src="item.avatar" alt="" />
+              <span class="user-name">
+                {{ item.owner }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -238,9 +250,10 @@ function handleImageClick(img) {
       <p>暂无收藏</p>
     </div>
 
+    <!-- 移动端大图弹窗 -->
     <el-dialog
       v-model="imgInfoDlg"
-      class="imginfo-dlg"
+      class="imginfo-dlg fullscreen-dialog"
       :fullscreen="true"
       center
       :close-on-click-modal="false"
@@ -248,9 +261,8 @@ function handleImageClick(img) {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          {{ imageInfo.desc }}&nbsp;&nbsp;&nbsp;<span v-if="imageInfo.style"
-            >#风格：</span
-          >{{ imageInfo.style }}
+          来自{{ imageInfo.desc }}&nbsp;&nbsp;
+          <span v-if="imageInfo.style">#风格：{{ imageInfo.style }}</span>
         </p>
       </template>
 
@@ -262,18 +274,14 @@ function handleImageClick(img) {
             <img :src="userInfoStore.avatar" alt="" />
             <p>{{ userInfoStore.userName }}</p>
           </div>
-          <!-- <div class="dig-counts">
-            <o-icon><icon-fingure></icon-fingure></o-icon>
-            <span>999</span>
-          </div> -->
         </div>
       </div>
 
       <div class="mobile-dlg-handles">
-        <div class="icon-item" @click="publicImage(imageInfo.id)">
-          <o-icon><icon-arrow></icon-arrow></o-icon>
-        </div>
-        <div class="right">
+        <div class="img-handles">
+          <div class="icon-item" @click="publicImage(imageInfo.id)">
+            <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
+          </div>
           <div
             v-if="screenWidth > 820"
             class="icon-item"
@@ -283,10 +291,10 @@ function handleImageClick(img) {
             <!-- 测试移动端下载图片到本地 -->
           </div>
           <div
-            class="icon-item middle"
+            class="icon-item"
             @click="shareImage(imageInfo.link, imageInfo.desc, imageInfo.style)"
           >
-            <o-icon><icon-share></icon-share></o-icon>
+            <o-icon><icon-sharegray></icon-sharegray></o-icon>
           </div>
           <div class="icon-item" @click="cancelCollect(imageInfo.id)">
             <o-icon><icon-heart></icon-heart></o-icon>
@@ -297,17 +305,13 @@ function handleImageClick(img) {
 
     <el-dialog
       v-model="posterDlg"
-      :fullscreen="true"
-      center
+      align-center
+      width="434"
       class="poster-dlg"
-      :close-on-click-modal="false"
+      :show-close="false"
       :close-on-press-escape="false"
       @close="handleDlgClose"
     >
-      <template #header="{ titleClass }">
-        <p :class="titleClass">{{ posterInfo }}</p>
-      </template>
-
       <div class="poster">
         <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
           <img class="infer-img" draggable="false" :src="posterLink" alt="" />
@@ -357,36 +361,25 @@ function handleImageClick(img) {
 </template>
 <style lang="scss" scoped>
 :deep(.el-dialog) {
-  --el-dialog-bg-color: rgba(0, 0, 0, 0.85) !important;
   .el-dialog__header {
     padding: 0;
     position: sticky;
     top: 0;
-    background: #000;
     height: 48px;
     z-index: 200;
-    @media screen and (max-width: 820px) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 0;
-    }
     .el-dialog__title {
-      color: #fff;
-      padding-top: 27px;
+      // color: #fff;
       @media screen and (max-width: 820px) {
         font-size: 14px;
         line-height: 24px;
-        padding: 0;
+        padding: 0 40px;
       }
     }
   }
   .el-dialog__body {
     padding-top: 0;
     @media screen and (max-width: 820px) {
-      padding: 16px !important;
       width: 640px;
-      margin: 14vh auto 0;
     }
     @media screen and (max-width: 767px) {
       width: 100%;
@@ -394,13 +387,17 @@ function handleImageClick(img) {
   }
 
   .el-dialog__headerbtn {
+    width: 48px;
+    height: 48px;
     position: fixed;
     top: 6px;
     right: 15px;
     z-index: 201;
     @media screen and (max-width: 820px) {
-      top: -4px;
-      right: 4px;
+      width: 24px;
+      height: 24px;
+      top: 12px;
+      right: 12px;
     }
     .el-dialog__close {
       color: #fff;
@@ -411,84 +408,117 @@ function handleImageClick(img) {
     }
   }
 }
-:deep(.imginfo-dlg) {
+// 大图弹窗
+:deep(.imginfo-dlg.fullscreen-dialog) {
+  border-radius: 0;
+  .el-dialog__header {
+    height: 80px;
+    @media screen and (max-width: 768px) {
+      height: 48px;
+      line-height: 14px;
+      padding: 12px 0;
+    }
+  }
   .el-dialog__body {
+    height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #f5f6f8;
+    border-radius: 24px 24px 0px 0px;
+    @media screen and (max-width: 821px) {
+      height: calc(100vh - 48px);
+      padding: 0 16px;
+    }
   }
   .image-info {
     position: relative;
     .collect-img {
       width: 100%;
+      border-radius: 16px;
     }
     .information {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      color: #ffffff;
-      font-size: 12px;
-      line-height: 18px;
-      height: 74px;
+      color: #555;
+      font-size: 14px;
+      line-height: 24px;
       width: 100%;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      padding: 8px;
       position: absolute;
-      bottom: 0;
+      top: -40px;
       .user-info {
         display: flex;
         align-items: flex-end;
         img {
           width: 24px;
-          height: 24px;
           border-radius: 50%;
-          margin-right: 4px;
-        }
-        p {
-          line-height: 24px;
+          margin-right: 8px;
         }
       }
     }
   }
   .mobile-dlg-handles {
+    height: 32px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    color: #fff;
+    justify-content: flex-end;
     font-size: 16px;
-    margin-top: 8px;
-    .icon-item {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+    margin-top: 16px;
+    .img-handles {
+      padding: 8px;
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-    .right {
-      display: flex;
-      .middle {
-        margin: 0 4px;
+      background-color: #fff;
+      border-radius: 22px;
+      .icon-item {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        border-radius: 50%;
+        color: #b2b2b2;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:last-child {
+          margin-right: 0px;
+        }
       }
     }
   }
 }
-:deep(.poster-dlg) {
+// 分享海报弹窗
+:deep(.el-dialog.poster-dlg) {
+  background-color: transparent;
+
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    @media screen and (max-width: 820px) {
+      padding: 0 16px;
+    }
+
+    @media screen and (max-width: 767px) {
+      // margin-top: 4vh;
+    }
+  }
   .poster {
-    width: 520px;
+    width: 100%;
     background: #ffffff;
     padding: 16px;
     margin: 0 auto;
+    border-radius: 16px;
+
     @media screen and (max-width: 767px) {
       width: 100%;
       height: auto;
       padding: 8px 8px 16px;
     }
     .poster-image {
-      // width: 402px;
       width: 100%;
-      // height: 457px;
       position: relative;
       @media screen and (max-width: 768px) {
         width: 100%;
@@ -542,7 +572,6 @@ function handleImageClick(img) {
       }
       .info {
         width: 100%;
-        // height: 56px;
         background: #f5f6f8;
         display: flex;
         justify-content: space-between;
@@ -685,23 +714,25 @@ function handleImageClick(img) {
     @media screen and (max-width: 820px) {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 12px;
-      padding: 16px 16px 40px;
+      padding: 16px 0px 40px;
     }
     .collect-item {
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
       .image-box {
         position: relative;
-        background: #fff;
         flex: 1;
         display: flex;
-        align-items: center;
-        @media screen and (max-width: 820px) {
-          width: calc(50vw - 24px);
-        }
+        // align-items: center;
+        // @media screen and (max-width: 820px) {
+        //   width: calc(50vw - 24px);
+        // }
         &:hover {
           .handles {
             opacity: 1;
@@ -749,6 +780,7 @@ function handleImageClick(img) {
         img {
           width: 310px;
           min-height: 232px;
+          border-radius: 16px 16px 0 0;
           @media screen and (max-width: 820px) {
             width: 100%;
             min-height: 270px;
@@ -759,20 +791,52 @@ function handleImageClick(img) {
           }
         }
       }
+      .img-desc {
+        margin-bottom: 16px;
+        p {
+          padding: 0 16px;
+        }
+        .img-owner {
+          color: #999;
+          font-size: 14px;
+          margin-top: 16px;
+          padding: 0 16px;
+          img {
+            width: 24px;
+            @media screen and (max-width: 768px) {
+              width: 16px;
+            }
+          }
+          .info-left {
+            display: flex;
+            align-items: center;
+            .user-name {
+              margin-left: 8px;
+            }
+          }
+          @media screen and (max-width: 768px) {
+            font-size: 12px;
+          }
+        }
+      }
       p {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 500;
-        color: #555555;
+        color: #000;
         line-height: 26px;
-        height: 26px;
         text-align: left;
         margin-top: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @media screen and (max-width: 820px) {
+          width: calc(50vw - 22px);
+        }
         @media screen and (max-width: 768px) {
           font-size: 12px;
           font-weight: 400;
           color: #000000;
           line-height: 17px;
-          height: 17px;
         }
       }
     }

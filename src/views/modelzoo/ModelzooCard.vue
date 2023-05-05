@@ -1,8 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-
-import IconForward from '~icons/app/forward';
-import OIcon from '@/components/OIcon.vue';
+import OButton from '@/components/OButton.vue';
 
 const router = useRouter();
 
@@ -28,74 +26,75 @@ const prop = defineProps({
     default: false,
   },
 });
-function jumpDetail() {
+function goExperience() {
   router.push(`${prop.path}`);
+}
+function goIntroduction() {
+  router.push(`${prop.path}/introduce`);
 }
 </script>
 <template>
-  <div :class="openness ? 'card' : 'card-closed'" @click="jumpDetail">
+  <div :class="openness ? 'card' : 'card-closed'">
     <div class="card-top">
       <img class="cover" :src="prop.url" alt="" />
     </div>
     <div class="card-bottom">
       <div class="card-bottom-title">
         <p>{{ prop.title }}</p>
-        <o-icon v-if="prop.openness"><icon-forward></icon-forward></o-icon>
-        <p v-else class="closed">敬请期待</p>
       </div>
       <div class="card-bottom-text">{{ prop.introduce }}</div>
+      <div v-if="prop.openness" class="card-btn">
+        <OButton
+          size="mini"
+          :type="prop.title === '鹏程.神农' ? 'primary' : 'outline'"
+          animation
+          @click="goIntroduction"
+        >
+          查看介绍
+        </OButton>
+        <OButton
+          v-if="prop.title !== '鹏程.神农'"
+          size="mini"
+          type="primary"
+          animation
+          @click="goExperience"
+        >
+          在线体验
+        </OButton>
+      </div>
+      <div v-else class="card-btn">
+        <OButton size="mini" type="secondary"> 敬请期待 </OButton>
+      </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .card {
   height: 100%;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  padding: 16px 16px 24px;
+  background-color: #fff;
+  border-radius: 16px;
   cursor: pointer;
-  .o-icon {
-    transform: translate(0);
-    transition: all 0.2s linear;
-  }
   .card-top {
     width: 100%;
-    height: 270px;
     overflow: hidden;
-    @media screen and (max-width: 600px) {
-      height: 190px;
-    }
+    border-radius: 16px;
     .cover {
       width: 100%;
-      height: 100%;
+      height: 146px;
       transform: scale(1);
       transition: all 0.2s linear;
     }
   }
   .card-bottom {
-    width: 100%;
-    padding: 0 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    @media screen and (max-width: 768px) {
-      padding: 0 16px;
-    }
     .card-bottom-title {
-      font-size: 24px;
-      font-weight: normal;
+      font-size: 20px;
       color: #000000;
-      line-height: 36px;
+      line-height: 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 0;
-      border-bottom: 1px solid #ccc;
-      @media screen and (max-width: 768px) {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 22px;
-        padding: 16px 0;
-        .o-icon {
-          font-size: 16px;
-        }
-      }
+      padding: 24px 0 8px;
       .closed {
         font-size: 16px;
         color: #999999;
@@ -103,99 +102,116 @@ function jumpDetail() {
       }
     }
     .card-bottom-text {
-      padding: 24px 0;
-      font-size: 16px;
-      color: #555555;
-      line-height: 24px;
-      @media screen and (max-width: 768px) {
-        font-size: 12px;
-        line-height: 18px;
-        font-weight: 400;
-        padding: 8px 0 16px;
+      max-width: 434px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #555;
+      line-height: 22px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-btn {
+      font-size: 14px;
+      display: flex;
+      justify-content: flex-end;
+      .o-button {
+        width: 88px;
+        height: 32px;
+        &:last-child {
+          margin-left: 16px;
+        }
       }
     }
   }
   &:hover {
-    box-shadow: 0px 6px 18px 0px rgb(13 141 255 / 14%);
-    .o-icon {
-      transform: translate(3px);
-      transition: all 0.2s linear;
-    }
+    box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s linear;
     .cover {
       transform: scale(1.05);
       transition: all 0.2s linear;
     }
   }
+  @media screen and (max-width: 821px) {
+    .card-bottom .card-bottom-text {
+      max-width: 326px;
+    }
+  }
+  @media screen and (max-width: 820px) {
+    padding: 8px 8px 16px;
+    .card-bottom .card-bottom-title {
+      font-size: 14px;
+      padding: 16px 0 8px;
+    }
+    .card-bottom .card-bottom-text {
+      max-width: 326px;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+  }
 }
 .card-closed {
   height: 100%;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  padding: 16px 16px 24px;
+  background-color: #fff;
   cursor: auto;
-  .o-icon {
-    transform: translate(0);
-    transition: all 0.2s linear;
-  }
+  border-radius: 16px;
   .card-top {
     width: 100%;
-    height: 270px;
     overflow: hidden;
-    @media screen and (max-width: 600px) {
-      height: 190px;
-    }
     .cover {
       width: 100%;
-      height: 100%;
+      height: 146px;
+      border-radius: 16px;
       transform: scale(1);
       transition: all 0.2s linear;
     }
   }
   .card-bottom {
-    width: 100%;
-    padding: 0 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    @media screen and (max-width: 768px) {
-      padding: 0 16px;
-    }
     .card-bottom-title {
-      font-size: 24px;
-      font-weight: normal;
+      font-size: 20px;
       color: #000000;
-      line-height: 36px;
+      line-height: 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 0;
-      border-bottom: 1px solid #ccc;
-      @media screen and (max-width: 768px) {
-        font-size: 14px;
-        line-height: 22px;
-        font-weight: 500;
-        padding: 16px 0;
-      }
+      padding: 24px 0 8px;
       .closed {
         font-size: 16px;
         color: #999999;
         line-height: 24px;
-        @media screen and (max-width: 768px) {
-          font-size: 14px;
-          line-height: 22px;
-        }
       }
     }
     .card-bottom-text {
-      padding: 24px 0;
-      font-size: 16px;
-      color: #555555;
-      line-height: 24px;
+      max-width: 434px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #555;
+      line-height: 22px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      @media screen and (max-width: 768px) {
-        font-size: 12px;
-        line-height: 18px;
-        font-weight: 400;
-        padding: 8px 0 16px;
+    }
+    .card-btn {
+      font-size: 14px;
+      display: flex;
+      justify-content: flex-end;
+      .o-button {
+        width: 88px;
+        height: 32px;
       }
+    }
+  }
+  @media screen and (max-width: 821px) {
+    padding: 8px 8px 16px;
+    .card-bottom .card-bottom-title {
+      font-size: 14px;
+      padding: 16px 0 8px;
+    }
+    .card-bottom .card-bottom-text {
+      max-width: 326px;
+      font-size: 12px;
+      margin-bottom: 16px;
     }
   }
 }

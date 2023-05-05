@@ -1,0 +1,23 @@
+@charset 'UFT-8';
+@use './var.scss';
+
+body{
+  .el-breadcrumb {
+    font-size: var(--o-breadcrumb-font_size);
+    line-height: var(--o-breadcrumb-line_height);
+    .el-breadcrumb__item {
+      .el-breadcrumb__inner {
+        color: var(--o-breadcrumb-color);
+        &.is-link {
+          font-weight: 500;
+          &:hover {
+            color: var(--o-breadcrumb-color-hover);
+          }
+        }
+      }
+      &:last-child .el-breadcrumb__inner {
+        color: #000;
+      }
+    }
+  }
+}

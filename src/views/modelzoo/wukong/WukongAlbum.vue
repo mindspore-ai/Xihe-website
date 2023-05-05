@@ -609,6 +609,7 @@ function toNextPic() {
         position: relative;
         &:hover {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+          transition: all 0.3s linear;
         }
         @media screen and (max-width: 820px) {
           width: 226px;

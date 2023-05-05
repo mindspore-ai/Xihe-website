@@ -36,7 +36,6 @@ export default [
     component: () => {
       return import('@/views/project/ProjectJupyter.vue');
     },
-    redirect: '/404',
   },
   {
     path: '/projects/:user/:name/projectAim',

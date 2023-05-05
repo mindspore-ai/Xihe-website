@@ -565,15 +565,9 @@ function checkName(rule, value, callback) {
 
 // 开启Jupyter
 function openJupyter() {
-  ElMessage({
-    message:
-      '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
-    type: 'warning',
-    duration: 4000,
-  });
-  // router.push(
-  //   `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
-  // );
+  router.push(
+    `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
+  );
 }
 </script>
 

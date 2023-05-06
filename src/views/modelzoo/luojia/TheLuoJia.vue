@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import ONav from '@/components/ONav.vue';
@@ -39,6 +39,12 @@ function handleNavClick(item) {
   router.push({ path: item.href });
 }
 
+const currentPage = computed(() => {
+  return route.name === 'luojiaIntroduce'
+    ? '武汉.LuoJia'
+    : '武汉.LuoJia在线体验';
+});
+
 watch(
   () => {
     return route.name;
@@ -61,11 +67,11 @@ watch(
           <el-breadcrumb-item :to="{ path: '/modelzoo' }"
             >大模型</el-breadcrumb-item
           >
-          <el-breadcrumb-item>武汉.LuoJia</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ currentPage }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <div class="luojia-title">
-        <img src="@/assets/imgs/home/modelzoo2.jpg" alt="" />
+      <div v-if="route.name === 'luojiaIntroduce'" class="luojia-title">
+        <img src="@/assets/imgs/modelzoo/Luojia.png" alt="" />
         <div class="luojia-title-intro">
           <p class="headline">武汉.Luojia</p>
           <p class="text">
@@ -91,13 +97,13 @@ watch(
         </div>
       </div>
 
-      <div class="nav-tab">
+      <!-- <div class="nav-tab">
         <o-nav
           :nav-items="navItems"
           :active-item="activeNavItem"
           @nav-click="handleNavClick"
         ></o-nav>
-      </div>
+      </div> -->
       <div class="tab-content">
         <router-view></router-view>
       </div>
@@ -155,7 +161,8 @@ watch(
     display: flex;
     justify-content: space-between;
     background-color: #fff;
-    margin-bottom: 24px;
+    border-radius: 16px;
+    // margin-bottom: 24px;
     @media screen and (max-width: 820px) {
       padding: 16px;
       margin: 0 16px;
@@ -267,12 +274,11 @@ watch(
   }
   .tab-content {
     background: #fff;
+    border-radius: 16px;
+    margin-top: 40px;
     @media screen and (max-width: 768px) {
       margin: 16px 16px 0;
     }
-    @media screen and (max-width: 768px) {
-    }
-    margin: 16px 16px 0;
   }
 }
 </style>

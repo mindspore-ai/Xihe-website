@@ -70,10 +70,10 @@ function handleNavClick(item) {
             @nav-click="handleNavClick"
           ></o-nav>
         </div>
-        <div class="taichu-info">
-          <router-view></router-view>
-        </div>
       </div>
+    </div>
+    <div class="taichu-info">
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -90,6 +90,9 @@ function handleNavClick(item) {
     padding-top: 0;
     background-size: 100% 172px;
     .taichu-wrapper {
+      padding: 16px 16px 0px;
+    }
+    .taichu-info {
       padding: 16px 16px 40px;
     }
   }
@@ -106,9 +109,6 @@ function handleNavClick(item) {
       margin-top: 68px;
       @media screen and (max-width: 1080px) {
         margin-top: 40px;
-        .taichu-info {
-          padding-top: 16px;
-        }
       }
       .taichu-tab {
         height: 48px;
@@ -126,12 +126,12 @@ function handleNavClick(item) {
             }
           }
         }
-        .taichu-info {
-          background-color: #f5f6f8;
-          border-radius: 16px;
-        }
       }
     }
+  }
+  .taichu-info {
+    background-color: #f5f6f8;
+    border-radius: 16px;
   }
 }
 </style>

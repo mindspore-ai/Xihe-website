@@ -432,7 +432,7 @@ export function getRank() {
  * @returns
  */
 export function getPic() {
-  const url = '/server/bigmodel/wukong/task';
+  const url = '/server/bigmodel/wukong/task/wukong';
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {

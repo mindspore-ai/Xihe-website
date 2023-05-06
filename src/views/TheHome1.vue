@@ -668,7 +668,6 @@ const logoPic = [
       <swiper
         :speed="8000"
         :free-mode="true"
-        centered-slides
         :modules="logoModules"
         slides-per-view="auto"
         :autoplay="{ autoplay: true, delay: 0 }"
@@ -705,7 +704,6 @@ const logoPic = [
       <swiper
         :speed="8000"
         :free-mode="true"
-        centered-slides
         :modules="logoModules"
         slides-per-view="auto"
         :autoplay="{ autoplay: true, delay: 0 }"

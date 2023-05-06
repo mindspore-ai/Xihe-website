@@ -68,6 +68,7 @@
 .sketch {
   background-color: #fff;
   padding: 40px 80px;
+  border-radius: 16px;
   .img2-1,
   .img6-1,
   .img8-1 {

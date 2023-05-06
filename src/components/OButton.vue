@@ -106,7 +106,7 @@ const classNames = computed(() => {
   cursor: pointer;
   min-width: 112px;
   transition: color 0.2s, background-color 0.3s, border-color 0.3s;
-  border-radius: 18px;
+  border-radius: 24px;
 
   &:hover {
     color: #0065bf;

@@ -3,11 +3,11 @@ import { ref, computed, nextTick, onUnmounted, watch } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-import comic from '@/assets/imgs/wukong/style-bg-1.png';
-import classic from '@/assets/imgs/wukong/style-bg-2.png';
-import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
-import more from '@/assets/imgs/wukong/style-bg-4.png';
-import random from '@/assets/imgs/wukong/style-bg-5.png';
+// import comic from '@/assets/imgs/wukong/style-bg-1.png';
+// import classic from '@/assets/imgs/wukong/style-bg-2.png';
+// import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
+// import more from '@/assets/imgs/wukong/style-bg-4.png';
+// import random from '@/assets/imgs/wukong/style-bg-5.png';
 import style from '@/assets/imgs/wukong/style/style.png';
 import style1 from '@/assets/imgs/wukong/style/style1.png';
 import style2 from '@/assets/imgs/wukong/style/style2.png';
@@ -45,11 +45,11 @@ import IconCancel from '~icons/app/eye-close';
 import IconArrow from '~icons/app/eye-open';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
-import IconWarning from '~icons/app/warning1';
+// import IconWarning from '~icons/app/warning1';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
 import IconLeft from '~icons/app/left';
-import IconDown from '~icons/app/down';
+// import IconDown from '~icons/app/down';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -65,7 +65,7 @@ import {
   temporaryLink,
   publicTemporaryPicture,
   cancelPublic,
-  getRank,
+  // getRank,
   getPic,
 } from '@/api/api-modelzoo.js';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -89,7 +89,7 @@ const showInferDlg = ref(false);
 const isInferred = ref(false);
 const isError = ref(false);
 
-const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
+// const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
 
 const styleData = ref([
@@ -213,7 +213,7 @@ const exampleData = ref([
 const isLarge = ref(false);
 const largeImg = ref({});
 const largeIndex = ref(null);
-function handleEnlage(value, key, index) {
+function handleEnlage(value, key) {
   largeImg.value = {};
   largeImg.value[key] = value;
   largeIndex.value = key;
@@ -260,9 +260,9 @@ const routeList = [
 function goPath(val) {
   router.push(val);
 }
-function closePosterDlg() {
-  posterDlg.value = false;
-}
+// function closePosterDlg() {
+//   posterDlg.value = false;
+// }
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -277,7 +277,7 @@ let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['private-token']
   : null;
 let socket = new WebSocket(
-  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
   [token]
 );
 socket.onmessage = function (event) {
@@ -307,7 +307,15 @@ socket.onmessage = function (event) {
           }
         })
         .catch((err) => {
-          console.error(err);
+          isWaiting.value = false;
+          isLine.value = null;
+          if (err.response.data.code === 'bigmodel_no_wukong_picture') {
+            errorMsg.value = '';
+          } else if (err.response.data.code === 'bigmodel_sensitive_info') {
+            errorMsg.value = '内容不合规，请重新输入描述词';
+          }
+          isInferred.value = true;
+          isError.value = true;
         });
     }
   } catch {}
@@ -509,9 +517,9 @@ function choseStyleSort(val, item) {
   }
 }
 // 选择风格标签
-function choseSortTag(val) {
-  val.isSelected = !val.isSelected;
-}
+// function choseSortTag(val) {
+//   val.isSelected = !val.isSelected;
+// }
 // 随机风格
 function getRandomStyle(index) {
   if (index === 0) {
@@ -545,6 +553,31 @@ function initData() {
   exampleData.value.forEach((item) => {
     item.isSelected = false;
   });
+}
+
+// 添加水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '32px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', canvas.width - 230, canvas.height - 58);
+
+    styleBackground.value[index] = canvas.toDataURL('image/png');
+
+    return styleBackground.value[index];
+  };
 }
 
 const errorMsg = ref('');
@@ -584,7 +617,7 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank',
+              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {
@@ -593,11 +626,29 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    styleBackground.value = res.data.pictures;
+                    // console.log(res.data.pictures);
+                    // styleBackground.value = res.data.pictures;
+                    res.data.pictures.forEach((item, index) => {
+                      addWatermark(item, index);
+                    });
+                    console.log(styleBackground.value);
+
                     isLarge.value = false;
                   })
                   .catch((err) => {
-                    console.error(err);
+                    isWaiting.value = false;
+                    isLine.value = null;
+                    if (
+                      err.response.data.code === 'bigmodel_no_wukong_picture'
+                    ) {
+                      errorMsg.value = '';
+                    } else if (
+                      err.response.data.code === 'bigmodel_sensitive_info'
+                    ) {
+                      errorMsg.value = '内容不合规，请重新输入描述词';
+                    }
+                    isInferred.value = true;
+                    isError.value = true;
                   });
               }
             };
@@ -605,6 +656,7 @@ async function handleInfer() {
         }
       } catch (err) {
         isWaiting.value = false;
+        isLine.value = null;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -679,6 +731,8 @@ function requestImg(item) {
     a.href = url;
     a.download = 'infer.png';
     a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
   x.send();
 }
@@ -734,9 +788,15 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
+
+const svgRotate = ref(false);
 // 换一批
 function refreshTags() {
+  svgRotate.value = true;
   exampleData.value = getDescExamples(lists.value, 2);
+}
+function reset(val) {
+  svgRotate.value = val;
 }
 
 const resultIndex = ref(-1);
@@ -782,8 +842,10 @@ const showConfirmDlg = ref(false);
             {{ item.text }}
           </p>
         </div>
-        <div class="refresh" @click="refreshTags">
-          <o-icon><icon-refresh></icon-refresh></o-icon>
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
           <!-- <p>换一批</p> -->
         </div>
       </div>
@@ -890,11 +952,7 @@ const showConfirmDlg = ref(false);
           </div>
         </template>
         <template v-else>
-          <div
-            v-for="(value, key, index) in largeImg"
-            :key="key"
-            class="result-item1"
-          >
+          <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
             <o-icon
               class="turn"
               @click="
@@ -1021,8 +1079,10 @@ const showConfirmDlg = ref(false);
     <div class="mobile-examples">
       <div class="example-head">
         <!-- <p class="title">选择样例</p> -->
-        <div class="refresh" @click="refreshTags">
-          <o-icon><icon-refresh></icon-refresh></o-icon>
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
           <!-- <p>换一批</p> -->
         </div>
       </div>
@@ -1314,7 +1374,12 @@ const showConfirmDlg = ref(false);
         <p class="confirm-title">公开画作</p>
       </template>
       <div class="confirm-desc">
-        公开画作让更多的人看到您的创意，但作品中不能包含任何政治、宗教、种族、性别等敏感信息，一经公开，造成的后果由公开者承担
+        当前体验服务的内容均由人工智能模型生成，平台对其生成内容的准确性、完整性和功能性不做任何保证，在使用体验服务前，请您务必仔细阅读并理解透彻
+        <a
+          target="blank"
+          href="https://xihe-docs.mindspore.cn/zh/appendix/license/"
+          >《昇思大模型平台协议》</a
+        >
       </div>
       <template #footer>
         <OButton
@@ -1898,6 +1963,7 @@ const showConfirmDlg = ref(false);
       border-radius: 6px;
     }
   }
+
   .mobile-examples {
     display: flex;
     flex-direction: row-reverse;
@@ -2084,6 +2150,7 @@ const showConfirmDlg = ref(false);
     width: calc(100% - 32px);
     @media screen and (max-width: 476px) {
       background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
     }
   }
   .mobile-btn {
@@ -2104,6 +2171,17 @@ const showConfirmDlg = ref(false);
     margin: 0 auto 0;
     padding: 9px 12px;
   }
+}
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(180deg);
+  }
+}
+.rotating {
+  animation: rotate 0.4s ease-out;
 }
 .wk-experience {
   display: flex;
@@ -2423,6 +2501,7 @@ const showConfirmDlg = ref(false);
       border-radius: 6px;
     }
   }
+
   .wk-experience-examples {
     display: flex;
     margin-top: 48px;
@@ -2484,7 +2563,7 @@ const showConfirmDlg = ref(false);
     .content {
       flex: 1;
       height: 380px;
-      padding-bottom: 68px;
+      padding-bottom: 67px;
       overflow: auto;
       margin-top: 16px;
       &::-webkit-scrollbar {
@@ -2639,6 +2718,7 @@ const showConfirmDlg = ref(false);
     position: absolute;
     bottom: 40px;
     width: 100%;
+    backdrop-filter: blur(10px);
   }
   .o-button {
     padding: 9px 28px;
@@ -2660,6 +2740,11 @@ const showConfirmDlg = ref(false);
   }
   .el-dialog__footer {
     text-align: center;
+  }
+  .confirm-desc {
+    a {
+      color: #008eff;
+    }
   }
 }
 .input-dom {

@@ -73,7 +73,7 @@ watch(
       <div v-if="route.name === 'luojiaIntroduce'" class="luojia-title">
         <img src="@/assets/imgs/modelzoo/Luojia.png" alt="" />
         <div class="luojia-title-intro">
-          <p class="headline">武汉.Luojia</p>
+          <p class="headline">武汉.LuoJia</p>
           <p class="text">
             由武汉大学与华为昇腾AI团队联合研发，是遥感领域首个国产化自主可控的遥感专用机器学习框架，针对遥感数据像幅尺寸大、数据通道多、尺度变化大等特性，
             具备内存可扩展、尺度通道灵活创建、数据通道自主优选、框架与数据协同处理的特点。可兼容已有深度学习框架，

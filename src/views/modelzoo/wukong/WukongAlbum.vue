@@ -135,6 +135,7 @@ function giveLike(num) {
           ElMessage({
             type: 'success',
             message: '取消点赞成功',
+            offset: 64,
             center: true,
           });
         }
@@ -147,6 +148,7 @@ function giveLike(num) {
           ElMessage({
             type: 'success',
             message: '点赞成功',
+            offset: 64,
             center: true,
           });
         }
@@ -216,6 +218,7 @@ function collectPic(index) {
         ElMessage({
           type: 'success',
           message: '取消收藏成功',
+          offset: 64,
         });
       });
     } else {
@@ -228,6 +231,7 @@ function collectPic(index) {
         ElMessage({
           type: 'success',
           message: '收藏成功，可在画作管理中查看',
+          offset: 64,
         });
       });
     }
@@ -240,6 +244,7 @@ async function copyText(textValue) {
   ElMessage({
     type: 'success',
     message: '复制成功',
+    offset: 64,
     center: true,
   });
 }
@@ -278,6 +283,7 @@ function toPrePic() {
     ElMessage({
       type: 'warning',
       message: '已是第一张',
+      offset: 64,
       center: true,
     });
   }
@@ -294,6 +300,7 @@ function toNextPic() {
     ElMessage({
       type: 'error',
       message: '已是最后一张',
+      offset: 64,
       center: true,
     });
   }
@@ -630,6 +637,7 @@ function toNextPic() {
           &:hover {
             .handles {
               opacity: 1;
+              transition: all 0.2s linear;
             }
           }
           .handles {
@@ -809,7 +817,7 @@ function toNextPic() {
         display: flex;
         align-items: center;
         justify-content: center;
-        .pic-box .pic-handle {
+        .pic-box .pic-info .pic-handle {
           width: auto;
           margin-top: 16px;
           padding: 8px;
@@ -832,190 +840,187 @@ function toNextPic() {
       }
     }
     .album-wrapper {
-      // height: 100%;
       display: flex;
       align-items: center;
       padding-top: 40px;
-    }
-
-    .o-icon {
-      font-size: 60px;
-      cursor: pointer;
-    }
-    .check {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      color: #fff;
-      background: #e5e8f0;
-      // position: relative;
-      // top: 50%;
-      // transform: translateY(-50%);
-      @media screen and (max-width: 821px) {
-        display: none;
+      .o-icon {
+        font-size: 60px;
+        cursor: pointer;
       }
-    }
-    .pic-box {
-      max-height: 512px;
-      flex-grow: 0.1;
-      margin: 0 auto;
-      position: relative;
-      display: flex;
-      // align-items: center;
-      @media screen and (max-width: 821px) {
-        width: 100%;
-      }
-      .pic-info {
-        width: 100%;
-        position: relative;
-        .pic-source {
-          height: 24px;
-          font-size: 18px;
-          color: #555;
-          line-height: 24px;
-          margin-bottom: 38px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        img {
-          max-height: 512px;
-          width: 100%;
-          border-radius: 16px;
-        }
-        .user-info {
-          margin-top: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          @media screen and (max-width: 821px) {
-            margin-top: 0px;
-            width: 100%;
-            position: absolute;
-            top: -40px;
-          }
-          .left,
-          .right {
-            cursor: pointer;
-            img {
-              width: 24px;
-            }
-            span {
-              line-height: 24px;
-              color: #555;
-              margin-left: 8px;
-            }
-            .o-icon {
-              color: #b2b2b2;
-              font-size: 18px;
-              line-height: 18px;
-              @media screen and (max-width: 768px) {
-                display: inline-block;
-                font-size: 12px;
-                line-height: 12px;
-              }
-            }
-            .o-like {
-              color: #fff;
-            }
-            .digg-count {
-              line-height: 10px;
-              height: 18px;
-              @media screen and (max-width: 768px) {
-                font-size: 10px;
-                line-height: 12px;
-              }
-            }
-          }
-        }
-      }
-      .pic-handle {
-        width: 40px;
-        background-color: #fff;
-        border-radius: 22px;
-        padding: 16px 8px;
-        position: absolute;
-        top: 62px;
-        right: -65px;
-        .func-item {
-          cursor: pointer;
-          position: relative;
-          &:hover {
-            .icon-name,
-            .arrow {
-              display: block;
-            }
-          }
-          .o-icon {
-            color: #b2b2b2;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            &:hover {
-              color: #0d8dff;
-            }
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-          .icon-name {
-            color: #b2b2b2;
-            font-size: 14px;
-            line-height: 20px;
-            text-align: center;
-            position: absolute;
-            left: 50px;
-            white-space: nowrap;
-            top: 8px;
-            padding: 4px 8px;
-            background-color: #ffffff;
-            border-radius: 3px;
-            display: none;
-            box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
-            @media screen and (max-width: 1280px) {
-              font-size: 12px;
-              top: 4px;
-              left: 44px;
-            }
-          }
-          .arrow {
-            position: absolute;
-            left: 25px;
-            top: -18px;
-            width: 80px;
-            height: 80px;
-            display: none;
-            @media screen and (max-width: 1280px) {
-              left: 20px;
-              top: -12px;
-              height: 60px;
-            }
-          }
-        }
-
+      .check {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        color: #fff;
+        background: #e5e8f0;
+        // position: relative;
+        // top: 50%;
+        // transform: translateY(-50%);
         @media screen and (max-width: 821px) {
-          .func-item {
-            height: 16px;
-            .o-icon {
-              height: 16px;
-              width: 16px;
-              height: 16px;
-              font-size: 16px;
+          display: none;
+        }
+      }
+      .pic-box {
+        flex-grow: 0.1;
+        margin: 0 auto;
+        position: relative;
+        display: flex;
+        @media screen and (max-width: 821px) {
+          width: 100%;
+        }
+        .pic-info {
+          width: 100%;
+          position: relative;
+          .pic-source {
+            height: 24px;
+            font-size: 18px;
+            color: #555;
+            line-height: 24px;
+            margin-bottom: 38px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          img {
+            max-height: 512px;
+            width: 100%;
+            border-radius: 16px;
+          }
+          .user-info {
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            @media screen and (max-width: 821px) {
+              margin-top: 0px;
+              width: 100%;
+              position: absolute;
+              top: -40px;
             }
+            .left,
+            .right {
+              cursor: pointer;
+              img {
+                width: 24px;
+              }
+              span {
+                line-height: 24px;
+                color: #555;
+                margin-left: 8px;
+              }
+              .o-icon {
+                color: #b2b2b2;
+                font-size: 18px;
+                line-height: 18px;
+                @media screen and (max-width: 768px) {
+                  display: inline-block;
+                  font-size: 12px;
+                  line-height: 12px;
+                }
+              }
+              .o-like {
+                color: #fff;
+              }
+              .digg-count {
+                line-height: 10px;
+                height: 18px;
+                @media screen and (max-width: 768px) {
+                  font-size: 10px;
+                  line-height: 12px;
+                }
+              }
+            }
+          }
+        }
+        .pic-handle {
+          width: 40px;
+          background-color: #fff;
+          border-radius: 22px;
+          padding: 16px 8px;
+          position: absolute;
+          top: 62px;
+          right: -65px;
+          z-index: 100;
+          .func-item {
+            cursor: pointer;
+            position: relative;
             &:hover {
               .icon-name,
               .arrow {
-                display: none;
+                display: block;
+              }
+            }
+            .o-icon {
+              color: #b2b2b2;
+              height: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              &:hover {
+                color: #0d8dff;
+              }
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+            .icon-name {
+              color: #b2b2b2;
+              font-size: 14px;
+              line-height: 20px;
+              text-align: center;
+              position: absolute;
+              left: 50px;
+              white-space: nowrap;
+              top: 8px;
+              padding: 4px 8px;
+              background-color: #ffffff;
+              border-radius: 3px;
+              display: none;
+              box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
+              @media screen and (max-width: 1280px) {
+                font-size: 12px;
+                top: 4px;
+                left: 44px;
+              }
+            }
+            .arrow {
+              position: absolute;
+              left: 25px;
+              top: -18px;
+              width: 80px;
+              height: 80px;
+              display: none;
+              @media screen and (max-width: 1280px) {
+                left: 20px;
+                top: -12px;
+                height: 60px;
               }
             }
           }
-          .download-item {
-            display: none;
+
+          @media screen and (max-width: 821px) {
+            .func-item {
+              height: 16px;
+              .o-icon {
+                height: 16px;
+                width: 16px;
+                height: 16px;
+                font-size: 16px;
+              }
+              &:hover {
+                .icon-name,
+                .arrow {
+                  display: none;
+                }
+              }
+            }
+            .download-item {
+              display: none;
+            }
           }
         }
       }

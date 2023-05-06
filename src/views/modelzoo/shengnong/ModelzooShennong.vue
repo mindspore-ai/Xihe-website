@@ -47,12 +47,14 @@ function closeShennongVideo() {
             <img :src="shennongBanner" alt="" />
           </div>
           <div class="banner-right">
-            <div class="banner-right-title">鹏程.神农</div>
-            <div class="banner-right-content">
-              面向生物医学领域的人工智能平台，包含蛋白质结构预测等多个模块，为制药企业和医学研究机构提供平台能力，加速新型药物的筛选与创制。
+            <div class="right-wrapper">
+              <div class="banner-right-title">鹏程.神农</div>
+              <div class="banner-right-content">
+                面向生物医学领域的人工智能平台，包含蛋白质结构预测等多个模块，为制药企业和医学研究机构提供平台能力，加速新型药物的筛选与创制。
+              </div>
             </div>
             <div class="banner-right-btn">
-              <OButton type="secondary" animation class="home-btn">
+              <OButton type="secondary" size="small" animation class="home-btn">
                 敬请期待
               </OButton>
             </div>
@@ -138,9 +140,10 @@ function closeShennongVideo() {
     }
     .shennong-content {
       .shennong-banner {
-        padding: 80px;
+        padding: 40px;
         background-color: #fff;
         display: flex;
+        border-radius: 16px;
         @media screen and (max-width: 820px) {
           margin-top: 0;
           padding: 16px;
@@ -153,12 +156,17 @@ function closeShennongVideo() {
           margin-right: 40px;
           img {
             width: 416px;
+            height: 100%;
+            border-radius: 16px;
           }
           @media screen and (max-width: 820px) {
             display: none;
           }
         }
         .banner-right {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
           &-title {
             height: 48px;
             line-height: 48px;
@@ -173,11 +181,9 @@ function closeShennongVideo() {
             }
           }
           &-content {
-            // height: 44px;
             font-size: 14px;
             color: #555555;
             line-height: 22px;
-            margin-bottom: 54px;
             @media screen and (max-width: 820px) {
               margin: 8px 0 16px;
               font-size: 12px;
@@ -198,6 +204,7 @@ function closeShennongVideo() {
         margin-top: 24px;
         padding: 40px 80px;
         background-color: #fff;
+        border-radius: 16px;
         @media screen and (max-width: 820px) {
           padding: 16px;
           margin-top: 16px;

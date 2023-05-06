@@ -546,7 +546,7 @@ onUnmounted(() => {
 .model-page {
   background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
   background-position: 0% 0%;
-  background-size: 100%;
+  background-size: cover;
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
@@ -660,6 +660,9 @@ onUnmounted(() => {
               display: flex;
               justify-content: flex-end;
               margin-left: 20px;
+              .o-button {
+                font-size: 14px;
+              }
               .infer-button {
                 margin-left: 16px;
               }

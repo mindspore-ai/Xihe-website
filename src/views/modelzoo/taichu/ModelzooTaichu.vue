@@ -118,6 +118,7 @@ function handleNavClick(item) {
         :deep(.o-nav) {
           .nav-item {
             color: #555;
+            font-size: 14px;
             @media screen and (max-width: 1080px) {
               font-size: 14px;
               font-weight: 400;

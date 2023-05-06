@@ -555,6 +555,31 @@ function initData() {
   });
 }
 
+// 添加水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '32px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', canvas.width - 230, canvas.height - 58);
+
+    styleBackground.value[index] = canvas.toDataURL('image/png');
+
+    return styleBackground.value[index];
+  };
+}
+
 const errorMsg = ref('');
 // wk推理
 async function handleInfer() {
@@ -601,7 +626,13 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    styleBackground.value = res.data.pictures;
+                    // console.log(res.data.pictures);
+                    // styleBackground.value = res.data.pictures;
+                    res.data.pictures.forEach((item, index) => {
+                      addWatermark(item, index);
+                    });
+                    console.log(styleBackground.value);
+
                     isLarge.value = false;
                   })
                   .catch((err) => {
@@ -700,6 +731,8 @@ function requestImg(item) {
     a.href = url;
     a.download = 'infer.png';
     a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
   x.send();
 }
@@ -2148,7 +2181,7 @@ const showConfirmDlg = ref(false);
   }
 }
 .rotating {
-  animation: rotate 0.5s ease-out;
+  animation: rotate 0.4s ease-out;
 }
 .wk-experience {
   display: flex;

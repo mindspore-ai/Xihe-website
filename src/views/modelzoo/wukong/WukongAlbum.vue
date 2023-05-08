@@ -237,7 +237,7 @@ function downloadPic(index) {
 
 // 分享图片
 function sharePic(index) {
-  if (!dialogData.value) {
+  if (typeof index === 'number') {
     getDialogData(index);
   }
   if (isLogined) {
@@ -683,12 +683,15 @@ function toNextPic() {
         .box-top {
           height: 342px;
           position: relative;
+          overflow: hidden;
           @media screen and (max-width: 821px) {
             height: 160px;
           }
           img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
+            object-position: right center;
             border-radius: 16px 16px 0 0;
           }
           &:hover {
@@ -744,7 +747,6 @@ function toNextPic() {
           flex-direction: column;
           justify-content: space-between;
           @media screen and (max-width: 821px) {
-            // width: 160px;
             height: calc(100% - 160px);
           }
           .style {
@@ -913,15 +915,11 @@ function toNextPic() {
         border-radius: 50%;
         color: #fff;
         background: #e5e8f0;
-        // position: relative;
-        // top: 50%;
-        // transform: translateY(-50%);
         @media screen and (max-width: 821px) {
           display: none;
         }
       }
       .pic-box {
-        flex-grow: 0.1;
         margin: 0 auto;
         position: relative;
         display: flex;
@@ -943,8 +941,10 @@ function toNextPic() {
           }
           img {
             max-height: 512px;
-            width: 100%;
             border-radius: 16px;
+            @media screen and (max-width: 821px) {
+              width: 100%;
+            }
           }
           .user-info {
             margin-top: 40px;

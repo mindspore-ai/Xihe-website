@@ -54,16 +54,63 @@ const params = ref({
   level: 'official',
 });
 
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '24px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+
+    imgs.value[index].waterImg = canvas.toDataURL('image/png');
+
+    return imgs.value[index];
+  };
+}
+
 getWuKongPic(params.value).then((res) => {
-  imgs.value = res.data.pictures;
   picTotal.value = res.data.total;
+  imgs.value = res.data.pictures;
+
+  res.data.pictures.forEach((item, index) => {
+    addWatermark(
+      item.link.replace(
+        'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
+        '/obs-big-model/'
+      ),
+      index
+    );
+  });
 });
+
 function getMore() {
   params.value.page_num++;
   if (imgs.value.length < picTotal.value) {
     getWuKongPic(params.value)
       .then((res) => {
+        let oldLen = imgs.value.length;
+
         imgs.value = imgs.value.concat(res.data.pictures);
+
+        for (let i = oldLen; i < imgs.value.length; i++) {
+          addWatermark(
+            imgs.value[i].link.replace(
+              'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
+              '/obs-big-model/'
+            ),
+            i
+          );
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -91,12 +138,22 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
 function changeTab(name) {
   params.value.level = name;
   params.value.page_num = 1;
   getWuKongPic(params.value).then((res) => {
-    imgs.value = res.data.pictures;
     picTotal.value = res.data.total;
+    imgs.value = res.data.pictures;
+    res.data.pictures.forEach((item, index) => {
+      addWatermark(
+        item.link.replace(
+          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
+          '/obs-big-model/'
+        ),
+        index
+      );
+    });
   });
 }
 
@@ -350,7 +407,7 @@ function toNextPic() {
         >
           <!-- <div> -->
           <div class="box-top">
-            <img :src="items.link" alt="" />
+            <img :src="items.waterImg" alt="" />
             <div class="handles">
               <div class="right">
                 <div class="icon-item" @click.stop="downloadPic(index)">
@@ -416,7 +473,7 @@ function toNextPic() {
                 #风格：{{ dialogData.style }}
               </span>
             </div>
-            <img :src="dialogData.link" alt="" />
+            <img :src="dialogData.waterImg" alt="" />
             <div class="user-info">
               <p class="left" @click="goUser(dialogData.owner)">
                 <img :src="dialogData.avatar" alt="" />

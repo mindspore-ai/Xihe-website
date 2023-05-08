@@ -477,10 +477,15 @@ function saveInfo(formEl) {
       </o-button>
     </div>
     <div v-else class="next-btn">
-      <o-button v-if="!agree" disabled type="secondary">
+      <o-button v-if="!agree" size="small" disabled type="secondary">
         {{ i18n.save }}
       </o-button>
-      <o-button v-if="agree" type="primary" @click="saveInfo(queryRef)">
+      <o-button
+        v-if="agree"
+        size="small"
+        type="primary"
+        @click="saveInfo(queryRef)"
+      >
         {{ i18n.save }}
       </o-button>
     </div>
@@ -523,6 +528,7 @@ function saveInfo(formEl) {
       position: relative;
       background: rgba(13, 141, 255, 0.03);
       border: 1px solid #d8d8d8;
+      border-radius: 19px;
       .tips-icon {
         position: absolute;
         left: 18px;

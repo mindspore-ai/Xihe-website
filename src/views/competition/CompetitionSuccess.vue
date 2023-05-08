@@ -46,10 +46,12 @@ function goTeam() {
     </div>
     <div class="tips">{{ i18n.joinTeam }}</div>
     <div class="btn">
-      <o-button type="primary" @click="goCompetitionIntro">{{
-        i18n.personal
-      }}</o-button>
-      <o-button type="primary" @click="goTeam">{{ i18n.team }}</o-button>
+      <o-button type="primary" size="small" @click="goCompetitionIntro">
+        {{ i18n.personal }}
+      </o-button>
+      <o-button type="primary" size="small" @click="goTeam">
+        {{ i18n.team }}
+      </o-button>
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue';
 
 import { useRoute } from 'vue-router';
-import { useCompetitionData } from '@/stores';
+import { useUserInfoStore, useCompetitionData } from '@/stores';
 
 import { ElMessage } from 'element-plus';
 import { ElDialog } from 'element-plus';
@@ -63,6 +63,7 @@ const showDel = ref(false);
 const showEdit = ref(false);
 const showQuit = ref(false);
 const userComData = useCompetitionData();
+const userInfo = useUserInfoStore();
 
 const form1 = reactive({
   teamName: '',
@@ -295,7 +296,10 @@ function confirmDel() {
   <div class="competitionTeam">
     <div v-if="!userComData.competitionData.team_id" class="personal-page">
       <div class="title">
-        {{ i18n.title }}
+        <span>{{ userInfo.userName }}，</span>
+        <span>
+          {{ i18n.title }}
+        </span>
       </div>
       <div class="tips">
         {{ i18n.teamTips }}
@@ -622,14 +626,6 @@ function confirmDel() {
     :deep(.el-tabs) {
       .el-tabs__header {
         margin-bottom: 24px;
-        .el-tabs__nav-wrap {
-          &::after {
-            height: 0px;
-          }
-          .el-tabs__active-bar {
-            height: 1px;
-          }
-        }
       }
       .el-tabs__content {
         .creating,
@@ -675,24 +671,27 @@ function confirmDel() {
     }
   }
   .team-page {
-    padding: 60px 40px 64px;
+    padding: 40px 40px 64px;
     .header {
       display: flex;
       justify-content: space-between;
+      margin-bottom: 40px;
       &-title {
         display: flex;
         align-items: center;
         .text {
+          font-size: 24px;
+          line-height: 32px;
           margin-right: 40px;
         }
         .tips {
           line-height: 38px;
-
           display: flex;
           align-items: center;
           position: relative;
           background: rgba(13, 141, 255, 0.03);
           border: 1px solid #d8d8d8;
+          border-radius: 19px;
           .tips-icon {
             position: absolute;
             left: 16px;
@@ -704,13 +703,13 @@ function confirmDel() {
             padding-right: 24px;
           }
         }
-        :deep(.el-input) {
+        /* :deep(.el-input) {
           width: 220px;
           .el-input__wrapper {
             padding-left: 45px !important;
             background: rgba(13, 141, 255, 0.03);
           }
-        }
+        } */
       }
       &-button {
         .delete {
@@ -719,13 +718,8 @@ function confirmDel() {
       }
     }
     :deep(.el-table) {
-      margin-top: 24px;
-      border: 1px solid #e5e5e5;
-      --el-table-header-bg-color: #e5e8f0;
-      --el-table-header-text-color: #555;
       .el-table__inner-wrapper {
         .el-table__cell {
-          padding: 0;
           .cell {
             display: flex;
             .o-icon {
@@ -735,12 +729,6 @@ function confirmDel() {
               display: flex;
               align-items: center;
             }
-          }
-        }
-        .el-table__header {
-          color: #000000;
-          .cell {
-            padding: 13px 24px;
           }
         }
         .el-table__body {
@@ -753,25 +741,15 @@ function confirmDel() {
               }
             }
             .cell {
-              padding: 16px 24px;
               .operate {
                 display: flex;
                 align-items: center;
-                .delete {
-                  display: flex;
-                  align-items: center;
-                  cursor: pointer;
-                  margin-right: 24px;
-                  .o-icon {
-                    display: inline-block;
-                    display: flex;
-                    align-items: center;
-                  }
-                }
+                .delete,
                 .delivery {
                   display: flex;
                   align-items: center;
                   cursor: pointer;
+                  margin-right: 24px;
                   .o-icon {
                     display: inline-block;
                     display: flex;
@@ -793,6 +771,11 @@ function confirmDel() {
       top: 48px;
       left: 0px;
     }
+  }
+}
+:deep(.el-input) {
+  .el-input__wrapper {
+    border-radius: 16px;
   }
 }
 </style>

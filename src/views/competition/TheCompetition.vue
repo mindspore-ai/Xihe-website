@@ -500,6 +500,8 @@ function toTop() {
     .el-carousel {
       img {
         width: 100%;
+        box-shadow: 0px 2px 50px 0px rgba(16, 99, 0, 0.1);
+        border-radius: 16px;
       }
 
       .is-active {
@@ -516,48 +518,31 @@ function toTop() {
         .el-tabs__nav {
           border: none;
         }
-        .el-tabs__nav-scroll {
-          background-color: #ffffff;
-        }
         .el-tabs__item {
-          border: none;
-          line-height: 28px;
-          height: 28px;
-          margin: 14px 6px;
-          padding: 0 12px;
-          color: #555555;
           &:first-child {
             color: #000000;
             font-weight: 550;
             margin-left: 12px;
             margin-right: 22px;
           }
-          &:last-child {
-            padding-right: 12px;
-          }
-        }
-        .is-active {
-          box-shadow: 0 0 0 1px #0d8dff inset;
-          color: #0d8dff;
         }
       }
       .el-tabs__content {
         margin-top: 24px;
         .competition-box {
           font-size: 14px;
-          // padding: 40px 48px 24px 40px;
           background-color: #ffffff;
           margin-bottom: 24px;
+          border-radius: 16px;
+          cursor: pointer;
           display: flex;
           justify-content: space-between;
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           &:hover {
-            box-shadow: 0 6px 18px #0d8dff24;
-            cursor: pointer;
+            box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s linear;
           }
           .left {
             padding: 40px 0px 24px 40px;
-            // background-color: red;
             .card-head {
               display: flex;
               align-items: center;
@@ -570,6 +555,7 @@ function toTop() {
                 line-height: 20px;
                 margin-left: 15px;
                 padding: 0 8px;
+                border-radius: 24px;
               }
               .will-do {
                 color: #ffffff;
@@ -618,6 +604,7 @@ function toTop() {
                 color: #555555;
                 margin-top: 24px;
                 background-color: #f4faff;
+                border-radius: 24px;
               }
             }
             .right-immediate {

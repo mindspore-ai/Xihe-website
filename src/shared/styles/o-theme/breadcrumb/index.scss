@@ -18,6 +18,9 @@ body{
       &:last-child .el-breadcrumb__inner {
         color: #000;
       }
+      .el-breadcrumb__separator.el-icon{
+        color: #555;
+      }
     }
   }
 }

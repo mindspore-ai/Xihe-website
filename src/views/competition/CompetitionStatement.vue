@@ -25,12 +25,12 @@ function goNextStep() {
       <MdStatement :statement="agreement"></MdStatement>
     </div>
     <div class="nextBtn">
-      <o-button v-if="!agree" disabled type="secondary">{{
-        i18n.next
-      }}</o-button>
-      <o-button v-else type="primary" @click="goNextStep">{{
-        i18n.next
-      }}</o-button>
+      <o-button v-if="!agree" size="small" disabled type="secondary">
+        {{ i18n.next }}
+      </o-button>
+      <o-button v-else type="primary" size="small" @click="goNextStep">
+        {{ i18n.next }}
+      </o-button>
     </div>
     <div class="isAgree">
       <input v-model="agree" type="checkbox" />
@@ -60,7 +60,7 @@ function goNextStep() {
     }
   }
   :deep(.statement-detail) {
-    // border-radius: 16px;
+    border-radius: 16px;
     &::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -73,9 +73,10 @@ function goNextStep() {
     }
 
     &::-webkit-scrollbar-track {
-      border-radius: 3px;
+      border-radius: 16px;
       box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
       background: #ffffff;
+      margin: 8px 0px;
     }
   }
   .isAgree {

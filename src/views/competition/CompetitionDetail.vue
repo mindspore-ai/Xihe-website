@@ -258,9 +258,6 @@ provide('getDetailData', getDetailData);
                   <div v-if="competitionData.status === 'over'">
                     <div class="competitionState">比赛已结束</div>
                   </div>
-                  <!-- <div class="number">
-                    报名人数：{{ competitionData.user_count }}
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -283,7 +280,6 @@ provide('getDetailData', getDetailData);
 .competition-detail {
   background-color: #f5f6f8;
   padding-top: 80px;
-  // margin-top: 80px;
   min-height: calc(100vh - 200px);
 
   .competition-wrap {
@@ -293,35 +289,12 @@ provide('getDetailData', getDetailData);
     overflow: hidden;
     .bread-wrap {
       height: 94px;
-      // position: fixed;
-      // z-index: 10;
-      // min-width: 100%;
-      // max-width: 100%;
       padding-top: 40px;
       padding-bottom: 40px;
       background-color: #f5f6f8;
       .competition-bread {
-        width: 100%;
-        overflow-y: auto;
-        // background-color: #f5f6f8;
+        // overflow-y: auto;
         .el-breadcrumb {
-          height: 21px;
-          line-height: 21px;
-          .el-breadcrumb__item {
-            :deep(.el-breadcrumb__inner.is-link) {
-              color: #555;
-              font-weight: 400;
-              &:hover {
-                color: #0d8dff;
-              }
-            }
-            :deep(.el-breadcrumb__separator.el-icon) {
-              color: #555;
-            }
-          }
-          :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-            color: #000;
-          }
           :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
             cursor: pointer;
           }
@@ -329,47 +302,14 @@ provide('getDetailData', getDetailData);
       }
     }
     .competition-content {
-      // margin-top: 94px;
       scroll-behavior: smooth;
-      /*  .fixed {
-        position: fixed;
-        height: 128px;
-        z-index: 100;
-        top: 174px;
-        width: 100%;
-        max-width: 1440px;
-        .competition-box {
-          justify-content: space-between;
-          width: 100%;
-        }
-        .card-body {
-          display: none;
-        }
-        .card-footer {
-          display: none;
-        }
-        .number {
-          display: none;
-        }
-        .time {
-          margin: 0 !important;
-        }
-      } */
-      // .competition-card {
-      //   background-color: #ffffff;
-      //   display: flex;
-      //   align-items: center;
-      //   font-size: 14px;
-      //   margin-bottom: 24px;
-
       .competition-box {
         font-size: 14px;
-        // padding: 40px 48px 24px 40px;
         background-color: #ffffff;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        border-radius: 16px;
         .left {
           padding: 40px 0px 24px 40px;
 
@@ -385,6 +325,7 @@ provide('getDetailData', getDetailData);
               line-height: 20px;
               margin-left: 15px;
               padding: 0 8px;
+              border-radius: 24px;
             }
             .doing {
               color: #ffffff;
@@ -418,7 +359,6 @@ provide('getDetailData', getDetailData);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            // align-items: center;
             white-space: nowrap;
             .number {
               color: #6189ff;
@@ -432,6 +372,7 @@ provide('getDetailData', getDetailData);
               color: #555555;
               margin-top: 24px;
               background-color: #f4faff;
+              border-radius: 24px;
             }
           }
           .right-immediate {
@@ -454,14 +395,6 @@ provide('getDetailData', getDetailData);
                 margin-top: 16px;
               }
             }
-            //
-            //   margin-right: 48px;
-            //   .number {
-            //
-            //     line-height: 22px;
-            //     text-align: center;
-            //
-            //   }
           }
         }
         .right2 {
@@ -485,6 +418,7 @@ provide('getDetailData', getDetailData);
               color: #555555;
               margin-top: 24px;
               background-color: #f4faff;
+              border-radius: 24px;
             }
           }
         }
@@ -510,6 +444,7 @@ provide('getDetailData', getDetailData);
               margin: 0px 90px 0px 88px;
               .time {
                 margin-top: 0px;
+                border-radius: 24px;
               }
             }
           }
@@ -517,6 +452,7 @@ provide('getDetailData', getDetailData);
         .right2 {
           .time {
             margin-top: 0px;
+            border-radius: 24px;
           }
         }
       }
@@ -524,22 +460,7 @@ provide('getDetailData', getDetailData);
     .competition-desc {
       margin-top: 24px;
       background-color: #fff;
-      /* &-tab {
-          height: 48px;
-          background-color: #fbfbfb;
-          :deep(.o-nav) {
-            .nav-item {
-              margin-left: 40px;
-            }
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 0 auto;
-            .nav-item {
-              color: #555;
-            }
-          }
-        } */
+      border-radius: 16px;
     }
   }
 }

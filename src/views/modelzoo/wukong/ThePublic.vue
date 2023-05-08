@@ -22,10 +22,34 @@ const userInfoStore = useUserInfoStore();
 const screenWidth = useWindowResize();
 const publicList = ref([]);
 const cancelPublicId = ref('');
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
 
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '24px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+
+    publicList.value[index].waterImg = canvas.toDataURL('image/png');
+
+    return publicList.value[index];
+  };
+}
 // 开启取消公开弹窗
 const showConfirmDlg = ref(false);
-function quitPublicClick(id) {
+const deleteIndex = ref();
+function quitPublicClick(id, index) {
+  deleteIndex.value = index;
   cancelPublicId.value = id;
   showConfirmDlg.value = true;
 }
@@ -34,7 +58,19 @@ function quitPublicClick(id) {
 async function getPublicPictures() {
   try {
     const res = await publicPictures();
-    publicList.value = res.data.data ? res.data.data : [];
+
+    if (res.status === 200) {
+      publicList.value = res.data.data;
+      res.data.data.forEach((item, index) => {
+        addWatermark(
+          item.link.replace(
+            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
+            '/obs-big-model/'
+          ),
+          index
+        );
+      });
+    }
   } catch (e) {
     console.error(e);
   }
@@ -56,7 +92,8 @@ async function confirmQuitPublic() {
         message: '取消公开成功',
       });
     }
-    getPublicPictures();
+    publicList.value.splice(deleteIndex.value, 1);
+    // getPublicPictures();
   } catch (err) {
     console.error(err);
   }
@@ -105,12 +142,16 @@ async function cancelImgCollected(item) {
 <template>
   <div class="public">
     <div v-if="publicList.length !== 0" class="have-public">
-      <div v-for="item in publicList" :key="item.id" class="collect-item">
+      <div
+        v-for="(item, index) in publicList"
+        :key="item.id"
+        class="collect-item"
+      >
         <div v-if="screenWidth > 820" class="image-box">
-          <img draggable="false" :src="item.link" alt="" />
+          <img draggable="false" :src="item.waterImg" alt="" />
           <div class="handles">
             <div class="left">
-              <p class="cancel-public" @click="quitPublicClick(item.id)">
+              <p class="cancel-public" @click="quitPublicClick(item.id, index)">
                 <o-icon><icon-eyeclose></icon-eyeclose></o-icon>
               </p>
               <p
@@ -517,7 +558,7 @@ async function cancelImgCollected(item) {
         position: relative;
         flex: 1;
         display: flex;
-        // align-items: center;
+        min-height: 232px;
         &:hover {
           .handles {
             opacity: 1;

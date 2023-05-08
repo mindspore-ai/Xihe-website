@@ -35,9 +35,9 @@ function enterLuoJiaSet() {
 }
 
 // 点击导航
-function handleNavClick(item) {
-  router.push({ path: item.href });
-}
+// function handleNavClick(item) {
+//   router.push({ path: item.href });
+// }
 
 const currentPage = computed(() => {
   return route.name === 'luojiaIntroduce'
@@ -180,7 +180,7 @@ watch(
     img {
       width: 392px;
       height: 220px;
-      margin-right: 105px;
+      margin-right: 40px;
     }
     &-intro {
       flex: 1;

@@ -15,7 +15,7 @@ import useClipboard from 'vue-clipboard3';
 import {
   collectedPictures,
   cancelLikePicture,
-  temporaryLink,
+  // temporaryLink,
   publicCollectedPicture,
 } from '@/api/api-modelzoo.js';
 
@@ -29,12 +29,38 @@ const userInfoStore = useUserInfoStore();
 const { toClipboard } = useClipboard();
 
 const collecteImages = ref([]);
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '24px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+
+    collecteImages.value[index].waterImg = canvas.toDataURL('image/png');
+
+    return collecteImages.value[index];
+  };
+}
 // 获取收藏图片
 async function getCollectedImages() {
   try {
     const res = await collectedPictures();
     if (res.status === 200) {
       collecteImages.value = res.data.data;
+      res.data.data.forEach((item, index) => {
+        addWatermark(item.link, index);
+      });
     }
   } catch (err) {
     console.error(err);
@@ -56,45 +82,52 @@ function cancelCollect(id) {
     }
   });
 }
+
+// function requestImage(item) {
+// const link = item.replace(
+//   'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
+//   '/obs-big-model/'
+// );
+// let x = new XMLHttpRequest();
+// x.open('GET', link, true);
+// x.responseType = 'blob';
+// x.onload = function () {
+//   const blobs = new Blob([x.response], { type: 'image/png' });
+//   let url = window.URL.createObjectURL(blobs);
+//   let a = document.createElement('a');
+//   a.href = url;
+//   a.download = 'collection.png';
+//   a.click();
+// };
+// x.send();
+// }
+
 // 下载图片
-function requestImage(item) {
-  const link = item.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-    '/obs-big-model/'
-  );
-  let x = new XMLHttpRequest();
-  x.open('GET', link, true);
-  x.responseType = 'blob';
-  x.onload = function () {
-    const blobs = new Blob([x.response], { type: 'image/png' });
-    let url = window.URL.createObjectURL(blobs);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'collection.png';
-    a.click();
-  };
-  x.send();
-}
-
 function downloadImage(item) {
-  const j1 = item.indexOf('=');
-  const j2 = item.indexOf('=', j1 + 1);
+  let aLink = document.createElement('a');
+  aLink.href = item;
+  aLink.download = 'collection.png';
+  aLink.click();
+  document.body.removeChild(aLink);
 
-  const i1 = item.indexOf('&');
-  const i2 = item.indexOf('&', i1 + 1);
+  // const j1 = item.indexOf('=');
+  // const j2 = item.indexOf('=', j1 + 1);
 
-  const deadTime = item.substring(j2 + 1, i2);
-  const currentTime = (new Date().getTime() + '').substring(0, 10);
+  // const i1 = item.indexOf('&');
+  // const i2 = item.indexOf('&', i1 + 1);
 
-  if ((deadTime - currentTime) / 60 < 1) {
-    temporaryLink({ link: item }).then((res) => {
-      if (res.data.data) {
-        requestImage(res.data.data.link);
-      }
-    });
-  } else {
-    requestImage(item);
-  }
+  // const deadTime = item.substring(j2 + 1, i2);
+  // const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+  // if ((deadTime - currentTime) / 60 < 1) {
+  //   temporaryLink({ link: item }).then((res) => {
+  //     if (res.data.data) {
+  //       requestImage(res.data.data.link);
+  //     }
+  //   });
+  // } else {
+  //   requestImage(item);
+  // }
 }
 const posterDlg = ref(false);
 const posterLink = ref('');
@@ -197,14 +230,14 @@ function handleImageClick(img) {
     <div v-if="collecteImages" class="have-collections">
       <div v-for="item in collecteImages" :key="item.id" class="collect-item">
         <div v-if="screenWidth > 820" class="image-box">
-          <img draggable="false" :src="item.link" alt="" />
+          <img draggable="false" :src="item.waterImg" alt="" />
 
           <div class="handles">
             <div class="icon-item" @click="publicImage(item.id)">
               <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
             </div>
             <div class="right">
-              <div class="icon-item" @click="downloadImage(item.link)">
+              <div class="icon-item" @click="downloadImage(item.waterImg)">
                 <o-icon><icon-download></icon-download></o-icon>
               </div>
               <div

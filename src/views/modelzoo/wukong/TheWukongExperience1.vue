@@ -3,11 +3,6 @@ import { ref, computed, nextTick, onUnmounted, watch } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-// import comic from '@/assets/imgs/wukong/style-bg-1.png';
-// import classic from '@/assets/imgs/wukong/style-bg-2.png';
-// import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
-// import more from '@/assets/imgs/wukong/style-bg-4.png';
-// import random from '@/assets/imgs/wukong/style-bg-5.png';
 import style from '@/assets/imgs/wukong/style/style.png';
 import style1 from '@/assets/imgs/wukong/style/style1.png';
 import style2 from '@/assets/imgs/wukong/style/style2.png';
@@ -45,11 +40,9 @@ import IconCancel from '~icons/app/eye-close';
 import IconArrow from '~icons/app/eye-open';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
-// import IconWarning from '~icons/app/warning1';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
 import IconLeft from '~icons/app/left';
-// import IconDown from '~icons/app/down';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -65,7 +58,6 @@ import {
   temporaryLink,
   publicTemporaryPicture,
   cancelPublic,
-  // getRank,
   getPic,
 } from '@/api/api-modelzoo.js';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -89,7 +81,6 @@ const showInferDlg = ref(false);
 const isInferred = ref(false);
 const isError = ref(false);
 
-// const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
 
 const styleData = ref([
@@ -191,7 +182,6 @@ newStyleData.value.unshift(
 );
 newStyleData.value[0].tag1 = '随机风格';
 newStyleData.value[0].img1 = style;
-// newStyleData.value[0].isSelected = true;
 function retract() {
   isAllStyle.value = false;
   newStyleData.value = newStyleData.value.slice(0, 11);
@@ -206,9 +196,6 @@ const isLine = ref(null);
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
   { text: '城市夜景', isSelected: false },
-  // { text: '悬崖 美景 壮观 高清', isSelected: false },
-  // { text: '西湖 烟雨', isSelected: false },
-  // { text: '海滩 美景 高清', isSelected: false },
 ]);
 const isLarge = ref(false);
 const largeImg = ref({});
@@ -218,7 +205,6 @@ function handleEnlage(value, key) {
   largeImg.value[key] = value;
   largeIndex.value = key;
   isLarge.value = true;
-  // console.log(Object.keys(styleBackground.value)[index]);
 }
 function handleReturn() {
   isLarge.value = false;
@@ -260,9 +246,7 @@ const routeList = [
 function goPath(val) {
   router.push(val);
 }
-// function closePosterDlg() {
-//   posterDlg.value = false;
-// }
+
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -286,25 +270,28 @@ socket.onmessage = function (event) {
     if (JSON.parse(event.data).data.rank === 0) {
       getPic()
         .then((res) => {
-          styleBackground.value = res.data.pictures;
+          // styleBackground.value = res.data.pictures;
+          res.data.pictures.forEach((item, index) => {
+            addWatermark(item, index);
+          });
 
-          const index1 = styleBackground.value[0].indexOf('=');
-          const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+          // const index1 = styleBackground.value[0].indexOf('=');
+          // const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
 
-          const i1 = styleBackground.value[0].indexOf('&');
-          const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+          // const i1 = styleBackground.value[0].indexOf('&');
+          // const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
 
-          const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
-          const currentTime = (new Date().getTime() + '').substring(0, 10);
+          // const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+          // const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-          if ((deadTime - currentTime) / 60 < 60) {
-            temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-              styleBackground.value[0] = res.data.data.link;
-              temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-                styleBackground.value[1] = res.data.data.link;
-              });
-            });
-          }
+          // if ((deadTime - currentTime) / 60 < 60) {
+          //   temporaryLink({ link: styleBackground.value[0] }).then((res) => {
+          //     styleBackground.value[0] = res.data.data.link;
+          //     temporaryLink({ link: styleBackground.value[1] }).then((res) => {
+          //       styleBackground.value[1] = res.data.data.link;
+          //     });
+          //   });
+          // }
         })
         .catch((err) => {
           isWaiting.value = false;
@@ -320,10 +307,7 @@ socket.onmessage = function (event) {
     }
   } catch {}
 };
-// getRank().then((res) => {
-//   if (res?.data?.rank === 0) {
-//   }
-// });
+
 function imgErr() {}
 watch(
   () => {
@@ -467,7 +451,6 @@ function handlePosterDlgClose() {
   posterLink.value = '';
   isSharedPoster.value = false;
 }
-
 // 复制用户名
 async function copyText(textValue) {
   await toClipboard(textValue);
@@ -478,7 +461,6 @@ async function copyText(textValue) {
     center: true,
   });
 }
-
 // 选择样例
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
@@ -531,15 +513,9 @@ function getRandomStyle(index) {
     return;
   }
 }
-// 重新输入描述
-function reEnterDesc() {
-  showInferDlg.value = false;
-  isError.value = false;
-  initData();
-}
+
 // 初始化推理数据
 function initData() {
-  // inputText.value = '';
   sortTag.value = '';
 
   styleBackground.value = [];
@@ -555,10 +531,9 @@ function initData() {
   });
 }
 
-// 添加水印
+// 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
   const img = new Image();
-
   img.crossOrigin = 'Anonymous';
   img.src = imgUrl;
 
@@ -570,9 +545,9 @@ function addWatermark(imgUrl, index) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
 
-    ctx.font = '32px 微软雅黑';
+    ctx.font = '24px 微软雅黑';
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('由AI模型生成', canvas.width - 230, canvas.height - 58);
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
 
     styleBackground.value[index] = canvas.toDataURL('image/png');
 
@@ -594,7 +569,6 @@ async function handleInfer() {
       isWaiting.value = true;
       let count = 0;
       randomList.value.forEach((item) => {
-        // item.options.forEach((style) => {
         if (item.isSelected) {
           count++;
           if (count <= 1) {
@@ -603,7 +577,6 @@ async function handleInfer() {
             sortTag.value = sortTag.value + ' ' + item.tag;
           }
         }
-        // });
       });
 
       try {
@@ -626,12 +599,10 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    // console.log(res.data.pictures);
                     // styleBackground.value = res.data.pictures;
                     res.data.pictures.forEach((item, index) => {
                       addWatermark(item, index);
                     });
-                    console.log(styleBackground.value);
 
                     isLarge.value = false;
                   })

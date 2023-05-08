@@ -82,6 +82,7 @@ const isInferred = ref(false);
 const isError = ref(false);
 
 const styleBackground = ref([]);
+const styleBackground1 = ref([]);
 
 const styleData = ref([
   {
@@ -270,28 +271,30 @@ socket.onmessage = function (event) {
     if (JSON.parse(event.data).data.rank === 0) {
       getPic()
         .then((res) => {
-          // styleBackground.value = res.data.pictures;
-          res.data.pictures.forEach((item, index) => {
-            addWatermark(item, index);
-          });
+          styleBackground.value = res.data.pictures;
+          // res.data.pictures.forEach((item, index) => {
+          //   addWatermark(item, index);
+          // });
 
-          // const index1 = styleBackground.value[0].indexOf('=');
-          // const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+          const index1 = styleBackground.value[0].indexOf('=');
+          const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
 
-          // const i1 = styleBackground.value[0].indexOf('&');
-          // const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+          const i1 = styleBackground.value[0].indexOf('&');
+          const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
 
-          // const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
-          // const currentTime = (new Date().getTime() + '').substring(0, 10);
+          const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+          const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-          // if ((deadTime - currentTime) / 60 < 60) {
-          //   temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-          //     styleBackground.value[0] = res.data.data.link;
-          //     temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-          //       styleBackground.value[1] = res.data.data.link;
-          //     });
-          //   });
-          // }
+          if ((deadTime - currentTime) / 60 < 60) {
+            temporaryLink({ link: styleBackground.value[0] }).then((res) => {
+              styleBackground1.value[0] = res.data.data.link;
+              addWatermark(res.data.data.link, 0);
+              temporaryLink({ link: styleBackground.value[1] }).then((res) => {
+                styleBackground1.value[1] = res.data.data.link;
+                addWatermark(res.data.data.link, 1);
+              });
+            });
+          }
         })
         .catch((err) => {
           isWaiting.value = false;
@@ -369,7 +372,7 @@ async function publicImage(val, index) {
   try {
     const res = await publicTemporaryPicture({
       obspath: decodeURIComponent(
-        val
+        styleBackground1.value[index]
           .split('?')[0]
           .split(
             'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
@@ -533,6 +536,7 @@ function initData() {
 
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
+  console.log(imgUrl, index);
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = imgUrl;
@@ -599,10 +603,11 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    // styleBackground.value = res.data.pictures;
+                    styleBackground1.value = res.data.pictures;
                     res.data.pictures.forEach((item, index) => {
                       addWatermark(item, index);
                     });
+                    console.log(styleBackground1.value);
 
                     isLarge.value = false;
                   })
@@ -658,7 +663,7 @@ const inferList = ref([
 function handleCollect(key, index) {
   addLikePicture({
     obspath: decodeURIComponent(
-      key
+      styleBackground1.value[index]
         .split('?')[0]
         .split(
           'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
@@ -970,7 +975,10 @@ const showConfirmDlg = ref(false);
                 </template>
               </div>
               <div class="handles-contain">
-                <div class="func-item" @click="downloadImage(value)">
+                <div
+                  class="func-item"
+                  @click="downloadImage(styleBackground1[largeIndex])"
+                >
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>
                   </p>
@@ -2386,6 +2394,7 @@ const showConfirmDlg = ref(false);
               left: 50px;
               white-space: nowrap;
               top: 8px;
+              z-index: 15;
               padding: 4px 8px;
               background-color: #ffffff;
               border-radius: 3px;
@@ -2404,6 +2413,7 @@ const showConfirmDlg = ref(false);
               top: -18px;
               width: 80px;
               height: 80px;
+              z-index: 10;
               display: none;
               @media screen and (max-width: 1280px) {
                 left: 8px;

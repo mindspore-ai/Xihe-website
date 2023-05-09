@@ -523,12 +523,13 @@ function confirmDel() {
     <template #footer>
       <div class="dlg-actions" style="display: flex; justify-content: center">
         <o-button
+          size="small"
           style="margin-right: 16px"
           @click="(showEdit = false), (form3.teamName = '')"
         >
           {{ i18n.delete.cancel }}
         </o-button>
-        <o-button type="primary" @click="confirmEdit(queryRef3)">
+        <o-button size="small" type="primary" @click="confirmEdit(queryRef3)">
           {{ i18n.delete.confirm }}
         </o-button>
       </div>
@@ -561,10 +562,14 @@ function confirmDel() {
     </div>
     <template #footer>
       <div class="dlg-actions" style="display: flex; justify-content: center">
-        <o-button style="margin-right: 16px" @click="showQuit = false">
+        <o-button
+          size="small"
+          style="margin-right: 16px"
+          @click="showQuit = false"
+        >
           {{ i18n.delete.cancel }}
         </o-button>
-        <o-button type="primary" @click="confirmQuit">
+        <o-button size="small" type="primary" @click="confirmQuit">
           {{ i18n.delete.confirm }}
         </o-button>
       </div>
@@ -596,10 +601,14 @@ function confirmDel() {
     </div>
     <template #footer>
       <div class="dlg-actions" style="display: flex; justify-content: center">
-        <o-button style="margin-right: 16px" @click="showDel = false">
+        <o-button
+          size="small"
+          style="margin-right: 16px"
+          @click="showDel = false"
+        >
           {{ i18n.delete.cancel }}
         </o-button>
-        <o-button type="primary" @click="confirmDel">
+        <o-button size="small" type="primary" @click="confirmDel">
           {{ i18n.delete.confirm }}
         </o-button>
       </div>

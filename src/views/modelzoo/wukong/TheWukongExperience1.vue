@@ -1234,7 +1234,6 @@ const showConfirmDlg = ref(false);
       </div>
     </div>
 
-    <!-- <div class="mobile-btn" @click="handleInfer">立即生成</div> -->
     <div class="experience-btn">
       <o-button size="mini" type="primary" @click="handleInfer"
         >立即生成</o-button
@@ -2214,19 +2213,7 @@ const showConfirmDlg = ref(false);
       backdrop-filter: blur(10px);
     }
   }
-  .mobile-btn {
-    background-image: url('@/assets/imgs/wukong/button-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 104px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 500;
-    margin: 24px auto 8px;
-  }
+
   .o-button {
     display: block;
     margin: 0 auto 0;

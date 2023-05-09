@@ -271,29 +271,42 @@ socket.onmessage = function (event) {
     if (JSON.parse(event.data).data.rank === 0) {
       getPic()
         .then((res) => {
-          styleBackground.value = res.data.pictures;
+          styleBackground.value = res.data;
+          styleBackground.value.forEach((item, index) => {
+            // TODO:公开记录
+            inferList.value[index].isCollected = item.is_like;
+            inferList.value[index].id = item.like_id;
+          });
           // res.data.pictures.forEach((item, index) => {
           //   addWatermark(item, index);
           // });
 
-          const index1 = styleBackground.value[0].indexOf('=');
-          const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+          const index1 = styleBackground.value[0].link.indexOf('=');
+          const index2 = styleBackground.value[0].link.indexOf('=', index1 + 1);
 
-          const i1 = styleBackground.value[0].indexOf('&');
-          const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+          const i1 = styleBackground.value[0].link.indexOf('&');
+          const i2 = styleBackground.value[0].link.indexOf('&', i1 + 1);
 
-          const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+          const deadTime = styleBackground.value[0].link.substring(
+            index2 + 1,
+            i2
+          );
           const currentTime = (new Date().getTime() + '').substring(0, 10);
+          console.log((deadTime - currentTime) / 60 < 60);
 
           if ((deadTime - currentTime) / 60 < 60) {
-            temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-              styleBackground1.value[0] = res.data.data.link;
-              addWatermark(res.data.data.link, 0);
-              temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-                styleBackground1.value[1] = res.data.data.link;
-                addWatermark(res.data.data.link, 1);
-              });
-            });
+            temporaryLink({ link: styleBackground.value[0].link }).then(
+              (res) => {
+                styleBackground1.value[0] = res.data.data.link;
+                addWatermark(res.data.data.link, 0);
+                temporaryLink({ link: styleBackground.value[1].link }).then(
+                  (res) => {
+                    styleBackground1.value[1] = res.data.data.link;
+                    addWatermark(res.data.data.link, 1);
+                  }
+                );
+              }
+            );
           }
         })
         .catch((err) => {
@@ -603,9 +616,12 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    styleBackground1.value = res.data.pictures;
-                    res.data.pictures.forEach((item, index) => {
-                      addWatermark(item, index);
+                    styleBackground1.value = [
+                      res.data[0].link,
+                      res.data[1].link,
+                    ];
+                    res.data.forEach((item, index) => {
+                      addWatermark(item.link, index);
                     });
                     console.log(styleBackground1.value);
 
@@ -714,24 +730,24 @@ function requestImg(item) {
 }
 // 临时url小于1min重新获取下载
 function downloadImage(item) {
-  const index1 = item.indexOf('=');
-  const index2 = item.indexOf('=', index1 + 1);
+  // const index1 = item.indexOf('=');
+  // const index2 = item.indexOf('=', index1 + 1);
 
-  const i1 = item.indexOf('&');
-  const i2 = item.indexOf('&', i1 + 1);
+  // const i1 = item.indexOf('&');
+  // const i2 = item.indexOf('&', i1 + 1);
 
-  const deadTime = item.substring(index2 + 1, i2);
-  const currentTime = (new Date().getTime() + '').substring(0, 10);
+  // const deadTime = item.substring(index2 + 1, i2);
+  // const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-  if ((deadTime - currentTime) / 60 < 60) {
-    temporaryLink({ link: item }).then((res) => {
-      if (res.data.data) {
-        requestImg(res.data.data.link);
-      }
-    });
-  } else {
-    requestImg(item);
-  }
+  // if ((deadTime - currentTime) / 60 < 60) {
+  //   temporaryLink({ link: item }).then((res) => {
+  //     if (res.data.data) {
+  //       requestImg(res.data.data.link);
+  //     }
+  //   });
+  // } else {
+  requestImg(item);
+  // }
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -977,7 +993,7 @@ const showConfirmDlg = ref(false);
               <div class="handles-contain">
                 <div
                   class="func-item"
-                  @click="downloadImage(styleBackground1[largeIndex])"
+                  @click="downloadImage(styleBackground[largeIndex])"
                 >
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>

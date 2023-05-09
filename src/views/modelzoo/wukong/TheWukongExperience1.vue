@@ -502,8 +502,11 @@ function handleInput() {
     }
   });
 }
+//
+const activeIndex = ref(null);
 // 选择风格类别
 function choseStyleSort(val, item) {
+  activeIndex.value = val;
   styleIndex.value = val;
   item.isSelected = !item.isSelected;
   if (val === 0 && item.isSelected === false) {
@@ -849,15 +852,22 @@ const showConfirmDlg = ref(false);
               v-for="(item, index) in newStyleData"
               :key="item.style"
               class="style-item"
-              :class="item.isSelected ? 'active-1' : ''"
               @click="choseStyleSort(index, item)"
             >
               <img
                 v-if="index === 0"
-                :src="item.isSelected ? item.img : item.img1"
+                :src="
+                  item.isSelected && activeIndex === 0 ? item.img : item.img1
+                "
                 alt=""
+                :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
               />
-              <img v-else :src="item.img" alt="" />
+              <img
+                v-else
+                :src="item.img"
+                alt=""
+                :class="item.isSelected ? 'active-1' : ''"
+              />
 
               <div class="style-item-name" @click="getRandomStyle(index)">
                 {{ index === 0 ? item.tag1 : item.tag }}
@@ -1102,15 +1112,20 @@ const showConfirmDlg = ref(false);
             v-for="(item, index) in newStyleData"
             :key="item.style"
             class="style-item"
-            :class="item.isSelected ? 'active-1' : ''"
             @click="choseStyleSort(index, item)"
           >
             <img
               v-if="index === 0"
-              :src="item.isSelected ? item.img : item.img1"
+              :src="item.isSelected && activeIndex === 0 ? item.img : item.img1"
               alt=""
+              :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
             />
-            <img v-else :src="item.img" alt="" />
+            <img
+              v-else
+              :src="item.img"
+              alt=""
+              :class="item.isSelected ? 'active-1' : ''"
+            />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
               {{ index === 0 ? item.tag1 : item.tag }}
@@ -1953,10 +1968,8 @@ const showConfirmDlg = ref(false);
     background: #008eff !important;
   }
   .active-1 {
-    img {
-      border: 2px solid #008eff !important;
-      border-radius: 6px;
-    }
+    border: 2px solid #008eff !important;
+    border-radius: 6px;
   }
 
   .mobile-examples {
@@ -2493,10 +2506,8 @@ const showConfirmDlg = ref(false);
     background: #e5f3ff !important;
   }
   .active-1 {
-    img {
-      border: 3px solid #008eff !important;
-      border-radius: 6px;
-    }
+    border: 3px solid #008eff !important;
+    border-radius: 6px;
   }
 
   .wk-experience-examples {

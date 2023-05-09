@@ -432,12 +432,14 @@ function shareImage(url) {
   );
   posterInfo.value = inputText.value + '  ' + sortTag.value;
   if (posterInfo.value === '  ') {
-    posterInfo.value = decodeURIComponent(styleBackground1.value[1])
-      .split('?')[0]
-      .split(
-        'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
-      )[1]
-      .split('/')[5]
+    posterInfo.value = decodeURIComponent(
+      styleBackground1.value[1]
+        .split('?')[0]
+        .split(
+          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+        )[1]
+    )
+      .split('/')[4]
       .split('-01.jpg')[0];
   }
 
@@ -1805,6 +1807,10 @@ const showConfirmDlg = ref(false);
           font-weight: 400;
           color: #000000;
           line-height: 24px;
+          max-width: 250px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           @media screen and (max-width: 768px) {
             font-size: 12px;
             line-height: 24px;
@@ -1830,6 +1836,7 @@ const showConfirmDlg = ref(false);
             font-weight: 400;
             color: #555555;
             line-height: 24px;
+            white-space: nowrap;
           }
         }
       }

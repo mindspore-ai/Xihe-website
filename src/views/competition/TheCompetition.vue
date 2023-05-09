@@ -578,10 +578,12 @@ function toTop() {
               .doing {
                 color: #ffffff;
                 background-color: #ff7f0d;
+                min-width: 76px;
               }
               .done {
                 color: #555555;
                 background-color: #efefef;
+                min-width: 52px;
               }
             }
             .card-body {

@@ -292,7 +292,6 @@ socket.onmessage = function (event) {
             i2
           );
           const currentTime = (new Date().getTime() + '').substring(0, 10);
-          console.log((deadTime - currentTime) / 60 < 60);
 
           if ((deadTime - currentTime) / 60 < 60) {
             temporaryLink({ link: styleBackground.value[0].link }).then(
@@ -432,6 +431,15 @@ function shareImage(url) {
     '/obs-big-model/'
   );
   posterInfo.value = inputText.value + '  ' + sortTag.value;
+  if (posterInfo.value === '  ') {
+    posterInfo.value = decodeURIComponent(styleBackground1.value[1])
+      .split('?')[0]
+      .split(
+        'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+      )[1]
+      .split('/')[5]
+      .split('-01.jpg')[0];
+  }
 
   if (screenWidth.value <= 820) {
     nextTick(() => {
@@ -552,7 +560,6 @@ function initData() {
 
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
-  console.log(imgUrl, index);
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = imgUrl;
@@ -626,7 +633,6 @@ async function handleInfer() {
                     res.data.forEach((item, index) => {
                       addWatermark(item.link, index);
                     });
-                    console.log(styleBackground1.value);
 
                     isLarge.value = false;
                   })

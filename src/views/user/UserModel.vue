@@ -163,6 +163,9 @@ watch(props, () => {
     column-gap: 24px;
     row-gap: 24px;
     margin-top: 24px;
+    .app-card {
+      border-radius: 16px;
+    }
   }
   .pagination {
     display: flex;

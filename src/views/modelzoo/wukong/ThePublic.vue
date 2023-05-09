@@ -114,6 +114,7 @@ function collectPublickImage(item) {
     id: item.id,
   }).then((res) => {
     if (res.data) {
+      item.like_id = res.data.id;
       item.is_like = true;
       ElMessage({
         type: 'success',
@@ -622,6 +623,8 @@ async function cancelImgCollected(item) {
         img {
           width: 100%;
           border-radius: 16px 16px 0 0;
+          object-fit: cover;
+          object-position: right bottom;
           @media screen and (max-width: 820px) {
             width: calc(50vw - 24px);
             min-height: 270px;

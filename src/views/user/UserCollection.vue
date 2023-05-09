@@ -143,6 +143,21 @@ function toTop() {
 </template>
 
 <style lang="scss" scoped>
+.collection-list-item {
+  :deep(.project-card) {
+    border-radius: 16px;
+    .card-top {
+      img {
+        border-top-right-radius: 16px;
+        border-top-left-radius: 16px;
+      }
+    }
+    .card-bottom {
+      border-bottom-right-radius: 16px;
+      border-bottom-left-radius: 16px;
+    }
+  }
+}
 .user-collection-wrap {
   height: 100%;
   .collection-list {

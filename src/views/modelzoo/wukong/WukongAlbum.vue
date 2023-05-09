@@ -218,11 +218,11 @@ function giveLike(num) {
 
 // 下载图片
 function downloadPic(index) {
-  if (!dialogData.value) {
+  if (typeof index === 'number') {
     getDialogData(index);
   }
   let x = new XMLHttpRequest();
-  x.open('GET', dialogData.value.link, true);
+  x.open('GET', dialogData.value.waterImg, true);
   x.responseType = 'blob';
   x.onload = function () {
     const blobs = new Blob([x.response], { type: 'image/png' });
@@ -265,7 +265,7 @@ function closeDialog() {
 }
 // 收藏图片
 function collectPic(index) {
-  if (!dialogData.value) {
+  if (typeof index === 'number') {
     getDialogData(index);
   }
   if (isLogined) {
@@ -307,7 +307,25 @@ async function copyText(textValue) {
 }
 
 const screenWidth = useWindowResize();
-
+// 绘制圆角矩形（使用 arcTo）
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  // 保存当前环境的状态
+  ctx.save();
+  // 重置当前路径
+  ctx.beginPath();
+  // 移动到左上角
+  ctx.moveTo(x + radius, y);
+  // 绘制右上角
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  // 绘制右下角
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  // 绘制左下角
+  ctx.arcTo(x, height, x, height - radius, radius);
+  // 绘制左上角
+  ctx.arcTo(x, y, x + radius, y, radius);
+  // 填充当前路径
+  ctx.fill();
+}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
@@ -316,12 +334,31 @@ function downloadPoster() {
     useCORS: true,
   }).then((canvas) => {
     let url = canvas.toDataURL('image/png');
-    let aLink = document.createElement('a');
-    aLink.style.display = 'none';
-    aLink.href = url;
-    aLink.download = 'poster.png';
-    aLink.click();
-    aLink.remove();
+
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      // 绘制圆角矩形
+      drawRoundedRect(ctx, 0, 0, img.width, img.height, 28);
+      // 对矩形进行剪切
+      ctx.clip();
+      // 绘制图片
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const posterLink = canvas.toDataURL('image/png');
+      let aLink = document.createElement('a');
+      aLink.style.display = 'none';
+      aLink.href = posterLink;
+      aLink.download = 'poster.png';
+      aLink.click();
+      aLink.remove();
+    };
   });
 }
 
@@ -532,7 +569,12 @@ function toNextPic() {
     >
       <div class="poster">
         <div v-if="!isSharedPoster" id="screenshot" class="poster-image">
-          <img draggable="false" :src="dialogData.link" alt="" />
+          <img
+            class="infer-img"
+            draggable="false"
+            :src="dialogData.link"
+            alt=""
+          />
 
           <img
             class="qr-code"
@@ -546,6 +588,7 @@ function toNextPic() {
             src="@/assets/imgs/logo.png"
             alt=""
           />
+          <p class="water-mark">由AI模型生成</p>
 
           <div class="mask"></div>
 
@@ -1153,14 +1196,27 @@ function toNextPic() {
           height: 78px;
           position: absolute;
           right: 16px;
-          bottom: 72px;
+          bottom: 100px;
           z-index: 1;
           @media screen and (max-width: 768px) {
             width: 56px;
             height: 56px;
             right: 8px;
-            bottom: 48px;
+            bottom: 70px;
           }
+        }
+        .water-mark {
+          position: absolute;
+          right: 20px;
+          bottom: 72px;
+          color: #fff;
+          font-size: 12px;
+          z-index: 2;
+          @media screen and (max-width: 768px) {
+          bottom: 48px;
+          right: 8px;
+          font-size: 8px;
+        }
         }
         .logo {
           position: absolute;
@@ -1176,6 +1232,9 @@ function toNextPic() {
             bottom: 48px;
           }
         }
+        .infer-img {
+          border-radius: 16px 16px 0 0;
+        }
         img {
           width: 100%;
           @media screen and (max-width: 768px) {
@@ -1190,6 +1249,7 @@ function toNextPic() {
           justify-content: space-between;
           align-items: center;
           padding: 0 16px;
+          border-radius: 0 0 16px 16px;
           @media screen and (max-width: 768px) {
             padding: 8px;
             height: auto;

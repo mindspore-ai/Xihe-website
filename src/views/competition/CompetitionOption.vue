@@ -89,9 +89,16 @@ watch(
       }
     } else {
       if (comInfo.type === '') {
-        renderNav.value = navItems.filter((item) => {
-          return item.isIndividual && item.showDiscuss;
-        });
+        // 南方电网比赛只显示介绍
+        if (comInfo.id === 'southern_power') {
+          renderNav.value = navItems.filter((item) => {
+            return item.id === 'introduction';
+          });
+        } else {
+          renderNav.value = navItems.filter((item) => {
+            return item.isIndividual && item.showDiscuss;
+          });
+        }
       } else {
         renderNav.value = navItems.filter((item) => {
           return item.isIndividual && item.label !== '讨论';

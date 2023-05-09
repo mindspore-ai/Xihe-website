@@ -453,21 +453,58 @@ function shareImage(url) {
     });
   }
 }
+// 绘制圆角矩形（使用 arcTo）
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  // 保存当前环境的状态
+  ctx.save();
+  // 重置当前路径
+  ctx.beginPath();
+  // 移动到左上角
+  ctx.moveTo(x + radius, y);
+  // 绘制右上角
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  // 绘制右下角
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  // 绘制左下角
+  ctx.arcTo(x, height, x, height - radius, radius);
+  // 绘制左上角
+  ctx.arcTo(x, y, x + radius, y, radius);
+  // 填充当前路径
+  ctx.fill();
+}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
 
   html2canvas(poster, {
     useCORS: true,
-  }).then((canvas) => {
-    let url = canvas.toDataURL('image/png');
+  }).then((val) => {
+    let url = val.toDataURL('image/png');
 
-    let aLink = document.createElement('a');
-    aLink.style.display = 'none';
-    aLink.href = url;
-    aLink.download = 'poster.png';
-    aLink.click();
-    aLink.remove();
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      // 绘制圆角矩形
+      drawRoundedRect(ctx, 0, 0, img.width, img.height, 38);
+      // 对矩形进行剪切
+      ctx.clip();
+      // 绘制图片
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const posterLink = canvas.toDataURL('image/png');
+      let aLink = document.createElement('a');
+      aLink.style.display = 'none';
+      aLink.href = posterLink;
+      aLink.download = 'poster.png';
+      aLink.click();
+      aLink.remove();
+    };
   });
 }
 // 海报蒙层关闭事件
@@ -1355,6 +1392,8 @@ const showConfirmDlg = ref(false);
             alt=""
           />
 
+          <p class="water-mark-text">由AI模型生成</p>
+
           <div class="mask"></div>
 
           <div class="info">
@@ -1478,7 +1517,6 @@ const showConfirmDlg = ref(false);
       margin-right: 0;
     }
     img {
-      // height: 100%;
       max-width: 360px;
       width: 100%;
       border-radius: 16px;
@@ -1500,7 +1538,6 @@ const showConfirmDlg = ref(false);
       justify-content: space-between;
       bottom: 0px;
       padding: 8px;
-      // box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
       .handles-contain,
       .public {
         display: flex;
@@ -1679,15 +1716,16 @@ const showConfirmDlg = ref(false);
     padding: 16px;
     margin: 0 auto;
     border-radius: 16px;
+    overflow: hidden;
     @media screen and (max-width: 767px) {
       width: 328px;
-      // margin-top: 6vh;
       padding: 8px 8px 16px;
     }
     .poster-image {
       width: 100%;
       position: relative;
       border-radius: 16px;
+      background: transparent;
       @media screen and (max-width: 768px) {
         width: 100%;
         height: calc(100% - 40px);
@@ -1703,18 +1741,31 @@ const showConfirmDlg = ref(false);
           height: 160px;
         }
       }
+      .water-mark-text {
+        color: #fff;
+        position: absolute;
+        bottom: 66px;
+        right: 18px;
+        z-index: 2;
+        font-size: 12px;
+        @media screen and (max-width: 768px) {
+          bottom: 48px;
+          right: 8px;
+          font-size: 8px;
+        }
+      }
       .qr-code {
         width: 78px;
         height: 78px;
         position: absolute;
         right: 16px;
-        bottom: 72px;
+        bottom: 92px;
         z-index: 1;
         @media screen and (max-width: 768px) {
           width: 56px;
           height: 56px;
           right: 8px;
-          bottom: 48px;
+          bottom: 70px;
         }
       }
       .logo {
@@ -1733,7 +1784,6 @@ const showConfirmDlg = ref(false);
       }
       .infer-img {
         width: 100%;
-        // min-height: 300px;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
         @media screen and (max-width: 820px) {
@@ -1994,7 +2044,6 @@ const showConfirmDlg = ref(false);
     .example-head {
       display: flex;
       justify-content: space-between;
-      // margin-top: 16px;
       .title {
         font-size: 14px;
         font-weight: 400;
@@ -2024,7 +2073,6 @@ const showConfirmDlg = ref(false);
 
       p {
         color: #b2b2b2;
-        // border: 1px solid #0d8dff;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -2056,7 +2104,6 @@ const showConfirmDlg = ref(false);
     }
 
     .content {
-      // height: 275px;
       padding-bottom: 85px;
       overflow: auto;
       margin-top: 16px;
@@ -2082,7 +2129,6 @@ const showConfirmDlg = ref(false);
           margin-bottom: 4px;
           position: relative;
           width: 68px;
-          // height: 42px;
           border-radius: 6px;
           border: 1px solid transparent;
           flex: unset;
@@ -2104,7 +2150,6 @@ const showConfirmDlg = ref(false);
             border-radius: 6px;
           }
           .style-item-name {
-            // position: absolute;
             padding-top: 7px;
             bottom: 0px;
             font-size: 12px;
@@ -2112,13 +2157,7 @@ const showConfirmDlg = ref(false);
             font-weight: 400;
             color: #555555;
             width: 100%;
-            // background: linear-gradient(
-            //   180deg,
-            //   rgba(0, 0, 0, 0) 0%,
-            //   #000000 100%
-            // );
             text-align: center;
-            // padding-bottom: 6px;
             border-radius: 0 0 6px 6px;
           }
         }
@@ -2306,7 +2345,6 @@ const showConfirmDlg = ref(false);
       display: flex;
       height: calc(100% - 116px);
       align-items: center;
-      // justify-content: space-between;
       gap: 24px;
       margin: 0 40px;
       width: calc(100% - 80px);
@@ -2320,8 +2358,6 @@ const showConfirmDlg = ref(false);
     /* pc生成图片 */
     .result-item1 {
       position: relative;
-      // margin-right: 24px;
-      // width: 34vw;
       margin: 54px 36px;
       width: calc(100% - 64px);
       display: flex;
@@ -2334,29 +2370,15 @@ const showConfirmDlg = ref(false);
         background-color: rgba(229, 232, 240, 1);
         border-radius: 50%;
         cursor: pointer;
-        // svg {
-        //   font-size: 14px;
-        // }
       }
       @media screen and (max-width: 767px) {
         display: none;
       }
-      // &:hover {
-      //   .handles,
-      //   .mask {
-      //     opacity: 1;
-      //   }
-      // }
-      &:last-child {
-        // margin-right: 0;
-      }
+
       img {
         height: 100%;
         width: calc(100% - 138px);
         max-width: 670px;
-        // max-width: 766px;
-        // max-height: calc(100% - 190px);
-        // height: 100%;
       }
       .mask {
         position: absolute;
@@ -2364,7 +2386,6 @@ const showConfirmDlg = ref(false);
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
         width: 100%;
         height: 16vh;
-        // opacity: 0;
         border-radius: 18px;
         @media screen and (max-width: 768px) {
           height: 10vh;
@@ -2372,29 +2393,23 @@ const showConfirmDlg = ref(false);
       }
 
       .handles {
-        // width: 100%;
         position: absolute;
         top: -20px;
         right: 20px;
         z-index: 20;
-        // opacity: 0;
         display: flex;
         flex-direction: column;
-        // justify-content: space-between;
         padding: 16px 0;
         background: #fff;
         color: #b2b2b2;
         border-radius: 22px;
         max-height: 190px;
         box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
-        @media screen and (max-width: 1450px) {
-          // bottom: 10px;
-        }
+
         @media screen and (max-width: 1080px) {
           top: -50px;
         }
         @media screen and (max-width: 768px) {
-          // bottom: 0px;
           padding: 8px;
         }
         .handles-contain,
@@ -2414,7 +2429,6 @@ const showConfirmDlg = ref(false);
             .o-icon {
               font-size: 20px;
             }
-            // color: #000;
           }
           .icon-name {
             color: #b2b2b2;
@@ -2425,9 +2439,6 @@ const showConfirmDlg = ref(false);
           .func-item {
             cursor: pointer;
             position: relative;
-            // &:nth-child(2) {
-            // margin: 0 16px;
-            // }
             .icon-name {
               color: #b2b2b2;
               font-size: 14px;
@@ -2450,7 +2461,6 @@ const showConfirmDlg = ref(false);
               }
             }
             .arrow {
-              // height: 100px;
               position: absolute;
               left: 25px;
               top: -18px;
@@ -2671,13 +2681,9 @@ const showConfirmDlg = ref(false);
       }
     }
     .style-item {
-      // display: flex;
       justify-content: center;
       width: 65px;
-      // height: 65px;
       margin-bottom: 16px;
-      // background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      // margin-right: 16px;
       border-radius: 5px;
       color: #555555;
       position: relative;
@@ -2691,7 +2697,6 @@ const showConfirmDlg = ref(false);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        // padding: 40px 0 16px;
         padding-top: 7px;
         text-align: center;
         font-size: 14px;

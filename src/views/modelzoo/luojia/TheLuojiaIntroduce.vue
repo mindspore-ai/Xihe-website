@@ -30,12 +30,12 @@
         class="img-class guide-left"
         src="@/assets/imgs/luojia/luojia-4.png"
       />
-      <div class="scroll">
-        <img
-          class="img-class guide-right"
-          src="@/assets/imgs/luojia/luojia-5.png"
-        />
-      </div>
+      <!-- <div class="scroll"> -->
+      <img
+        class="img-class guide-right"
+        src="@/assets/imgs/luojia/luojia-5.png"
+      />
+      <!-- </div> -->
     </div>
     <h4 class="left">LuoJiaNET支持大幅面处理</h4>
     <p class="text-class">
@@ -183,15 +183,6 @@
         width: 100%;
         height: auto;
         margin: 8px 0 0;
-      }
-      // .guide-right {
-      //   width: 808px;
-      //   overflow: scroll;
-      // }
-    }
-    @media screen and (max-width: 820px) {
-      .scroll {
-        overflow: scroll;
       }
     }
   }

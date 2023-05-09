@@ -161,7 +161,25 @@ function shareImage(link, desc, style) {
     });
   }
 }
-
+// 绘制圆角矩形（使用 arcTo）
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  // 保存当前环境的状态
+  ctx.save();
+  // 重置当前路径
+  ctx.beginPath();
+  // 移动到左上角
+  ctx.moveTo(x + radius, y);
+  // 绘制右上角
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  // 绘制右下角
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  // 绘制左下角
+  ctx.arcTo(x, height, x, height - radius, radius);
+  // 绘制左上角
+  ctx.arcTo(x, y, x + radius, y, radius);
+  // 填充当前路径
+  ctx.fill();
+}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
@@ -169,12 +187,30 @@ function downloadPoster() {
     useCORS: true,
   }).then((canvas) => {
     let url = canvas.toDataURL('image/png');
-    let aLink = document.createElement('a');
-    aLink.style.display = 'none';
-    aLink.href = url;
-    aLink.download = 'poster.png';
-    aLink.click();
-    aLink.remove();
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      // 绘制圆角矩形
+      drawRoundedRect(ctx, 0, 0, img.width, img.height, 38);
+      // 对矩形进行剪切
+      ctx.clip();
+      // 绘制图片
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const posterLink = canvas.toDataURL('image/png');
+      let aLink = document.createElement('a');
+      aLink.style.display = 'none';
+      aLink.href = posterLink;
+      aLink.download = 'poster.png';
+      aLink.click();
+      aLink.remove();
+    };
   });
 }
 // 海报蒙层关闭事件
@@ -361,6 +397,8 @@ function handleImageClick(img) {
             src="@/assets/imgs/logo.png"
             alt=""
           />
+
+          <p class="water-mark">由AI模型生成</p>
 
           <div class="mask"></div>
 
@@ -568,18 +606,31 @@ function handleImageClick(img) {
           height: 60px;
         }
       }
+      .water-mark {
+        position: absolute;
+        right: 16px;
+        bottom: 72px;
+        z-index: 2;
+        font-size: 12px;
+        color: #fff;
+        @media screen and (max-width: 768px) {
+          bottom: 48px;
+          right: 8px;
+          font-size: 8px;
+        }
+      }
       .qr-code {
         width: 68px;
         height: 68px;
         position: absolute;
         right: 16px;
-        bottom: 72px;
+        bottom: 100px;
         z-index: 1;
         @media screen and (max-width: 768px) {
           width: 56px;
           height: 56px;
           right: 8px;
-          bottom: 48px;
+          bottom: 70px;
         }
       }
       .logo {
@@ -599,6 +650,7 @@ function handleImageClick(img) {
       .infer-img {
         width: 100%;
         min-height: 300px;
+        border-radius: 16px 16px 0 0;
         @media screen and (max-width: 820px) {
           height: calc(100% - 40px);
         }
@@ -609,6 +661,7 @@ function handleImageClick(img) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 0 0 16px 16px;
         padding: 16px;
         @media screen and (max-width: 768px) {
           padding: 8px;

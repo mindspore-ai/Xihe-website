@@ -13,7 +13,6 @@ import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
-// import IconLeft from '~icons/app/left.svg';
 
 import gif from '@/assets/gifs/loading.gif';
 
@@ -207,6 +206,8 @@ function handleOriImgDownload() {
       a.href = URL.createObjectURL(blob);
       a.download = 'input.png';
       a.click();
+      URL.revokeObjectURL(a.href);
+      a.remove();
     });
 }
 
@@ -281,13 +282,6 @@ const imgLists = [
 const fileList = ref([]);
 function handleChange(val) {
   activeIndex1.value = 5;
-  // if (val.size > 204800) {
-  //   fileList.value.pop();
-  //   return ElMessage({
-  //     type: 'warning',
-  //     message: '图片大小不应超过200K',
-  //   });
-  // } else {
   analysis.value = '';
   formData.delete('file');
   formData = new FormData();
@@ -295,7 +289,6 @@ function handleChange(val) {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
-  // }
 }
 function selectImage(item, index) {
   activeIndex.value = index;
@@ -397,20 +390,17 @@ function enlarge(url) {
       <template #header>
         <p>历史记录</p>
       </template>
-      <el-table :data="gridData">
-        <el-table-column property="id" label="任务ID" width="200" />
+      <el-table :data="gridData" table-layout="auto">
+        <el-table-column property="id" label="任务ID" />
         <el-table-column property="name" label="任务类型" />
         <el-table-column property="origin" label="地图源数据" />
-        <el-table-column property="status" label="状态" />
-        <el-table-column property="create_at" label="创建时间" width="220" />
+        <el-table-column property="status" label="状态" width="92" />
+        <el-table-column property="create_at" label="创建时间" />
         <el-table-column label="操作">
           <span class="detail" @click="handleDetailClick">查看详情</span>
         </el-table-column>
       </el-table>
       <p class="history-tip">仅展示最近一条记录</p>
-
-      <!-- <template #footer>
-      </template> -->
     </el-dialog>
     <!-- 详情 -->
     <el-dialog

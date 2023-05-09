@@ -341,6 +341,7 @@ function openJupyter() {
       height: 224px;
       border: 1px solid #d8d8d8;
       cursor: pointer;
+      border-radius: 16px;
       .card-inner {
         width: 100%;
         height: 100%;
@@ -398,6 +399,7 @@ function openJupyter() {
         position: absolute;
         left: 0;
         top: 0;
+        border-radius: 16px;
       }
       .price-tag,
       .waiting-tag {

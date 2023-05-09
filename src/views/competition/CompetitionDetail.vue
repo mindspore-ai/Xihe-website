@@ -39,6 +39,15 @@ async function getDetailData() {
 }
 getDetailData();
 
+// 奖池超过百万，以单位万结尾显示
+function formatBonus(bonus) {
+  if (bonus >= 1000000) {
+    return `${(bonus / 10000).toFixed(0)}万`;
+  } else {
+    return `${bonus}`;
+  }
+}
+
 // 点击报名
 function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
@@ -161,7 +170,7 @@ provide('getDetailData', getDetailData);
                 <div class="number">
                   奖池：{{
                     competitionData.bonus
-                      ? `￥${competitionData.bonus}`
+                      ? `￥${formatBonus(competitionData.bonus)}`
                       : '特别礼品'
                   }}
                 </div>
@@ -199,7 +208,7 @@ provide('getDetailData', getDetailData);
                 <div class="number">
                   奖池：{{
                     competitionData.bonus
-                      ? `￥${competitionData.bonus}`
+                      ? `￥${formatBonus(competitionData.bonus)}`
                       : '特别礼品'
                   }}
                 </div>

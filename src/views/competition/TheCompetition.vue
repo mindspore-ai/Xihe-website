@@ -84,6 +84,16 @@ function getCompetitions2() {
     });
 }
 getCompetitions2();
+
+// 奖池超过百万，以单位万结尾显示
+function formatBonus(bonus) {
+  if (bonus >= 1000000) {
+    return `${(bonus / 10000).toFixed(0)}万`;
+  } else {
+    return `${bonus}`;
+  }
+}
+
 // 跳转到比赛详情页
 function goDetail(competitionId) {
   let competitionList = allData.value.filter((item) => {
@@ -201,7 +211,9 @@ function toTop() {
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">
-                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                    奖池：{{
+                      item.bonus ? `￥${formatBonus(item.bonus)}` : '特别礼品'
+                    }}
                   </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>

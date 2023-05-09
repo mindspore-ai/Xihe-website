@@ -359,9 +359,10 @@ $theme: #0d8dff;
         margin-bottom: 24px;
         display: flex;
         justify-content: space-between;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        border: 1px solid #d8d8d8;
+        border-radius: 16px;
         &:hover {
-          box-shadow: 0 6px 18px #0d8dff24;
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           cursor: pointer;
         }
         .box-left {

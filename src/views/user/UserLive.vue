@@ -182,6 +182,19 @@ getCount();
     .card-list {
       width: 100%;
       &-item {
+        :deep(.project-card) {
+          border-radius: 16px;
+          .card-top {
+            img {
+              border-top-right-radius: 16px;
+              border-top-left-radius: 16px;
+            }
+          }
+          .card-bottom {
+            border-bottom-right-radius: 16px;
+            border-bottom-left-radius: 16px;
+          }
+        }
         & + .card-list-item {
           margin-top: 30px;
         }
@@ -211,7 +224,7 @@ getCount();
         .card-list-item-content {
           // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           &:hover {
-            box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+            box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           }
         }
       }

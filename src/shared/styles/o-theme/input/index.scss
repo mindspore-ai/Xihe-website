@@ -1,0 +1,61 @@
+@charset 'UFT-8';
+@use './var.scss';
+body {
+  .el-input {
+    width: var(--o-input-width);
+
+    .el-input__wrapper {
+      padding: var(--o-input-padding);
+      box-shadow: var(--o-input-box_shadow);
+      border-radius: var(--o-input-border_radius);
+
+      &.is-focus {
+        box-shadow: var(--o-input-focus-box_shadow);
+      }
+
+      input::-webkit-input-placeholder {
+        color: var(--o-input-placeholder-color);
+      }
+      input:-moz-placeholder {
+        color: var(--o-input-placeholder-color);
+      }
+      input::-moz-placeholder {
+        color: var(--o-input-placeholder-color);
+      }
+      input:-ms-input-placeholder {
+        color: var(--o-input-placeholder-color);
+      }
+    }
+
+    &.is-disabled {
+      .el-input__wrapper {
+        box-shadow: var(--o-input-box_shadow);
+      }
+      .el-input__inner {
+        cursor: not-allowed;
+      }
+    }
+
+    .el-input__inner {
+      height: var(--o-input-height);
+      line-height: var(--o-input-line_height);
+      font-size: var(--o-input-font_size);
+    }
+  }
+
+  .el-textarea {
+    width: var(--o-textarea-width);
+
+    .el-textarea__inner {
+      padding: var(--o-textarea-padding);
+      box-shadow: var(--o-textarea-box_shadow);
+      border-radius: var(--o-textarea-border_radius);
+      resize: var(--o-textarea-resize);
+      height: var(--o-textarea-height);
+
+      &:focus {
+        box-shadow: var(--o-textarea-focus-box_shadow);
+      }
+    }
+  }
+}

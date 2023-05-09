@@ -273,9 +273,9 @@ socket.onmessage = function (event) {
         .then((res) => {
           styleBackground.value = res.data;
           styleBackground.value.forEach((item, index) => {
-            // TODO:公开记录
             inferList.value[index].isCollected = item.is_like;
             inferList.value[index].id = item.like_id;
+            inferList.value[index].publicId = item.public_id;
           });
           // res.data.pictures.forEach((item, index) => {
           //   addWatermark(item, index);
@@ -642,6 +642,14 @@ async function handleInfer() {
           }
         }
       });
+
+      // 重置喜欢公开数据
+      inferList.value = [
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+      ];
 
       try {
         const res = await wuKongInfer({

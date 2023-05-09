@@ -13,6 +13,7 @@ const route = useRoute();
 const router = useRouter();
 
 const userComData = useCompetitionData();
+console.log('userComData: ', userComData);
 
 const competitionData = ref([]);
 const show = ref(true);
@@ -171,7 +172,10 @@ provide('getDetailData', getDetailData);
                 <div class="right-wrap">
                   <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.phase === 'final'"
+                      :disabled="
+                        competitionData.phase === 'final' ||
+                        userComData.competitionData.id === 'southern_power'
+                      "
                       type="primary"
                       animation
                       @click="goApplication"
@@ -244,7 +248,10 @@ provide('getDetailData', getDetailData);
                 <div class="right-wrap">
                   <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.phase === 'final'"
+                      :disabled="
+                        competitionData.phase === 'final' ||
+                        userComData.competitionData.id === 'southern_power'
+                      "
                       type="primary"
                       animation
                       @click="goApplication"
@@ -318,6 +325,7 @@ provide('getDetailData', getDetailData);
             align-items: center;
             &-title {
               font-size: 24px;
+              // max-width: 82%;
             }
             &-state {
               font-size: 12px;
@@ -330,6 +338,7 @@ provide('getDetailData', getDetailData);
             .doing {
               color: #ffffff;
               background-color: #ff7f0d;
+              min-width: 76px;
             }
             .noStarted {
               color: #ffffff;
@@ -338,6 +347,7 @@ provide('getDetailData', getDetailData);
             .finished {
               color: #555555;
               background-color: #efefef;
+              min-width: 52px;
             }
           }
           .card-body {

@@ -42,7 +42,7 @@ getDetailData();
 // 奖池超过百万，以单位万结尾显示
 function formatBonus(bonus) {
   if (bonus >= 1000000) {
-    return `${(bonus / 10000).toFixed(0)}万`;
+    return `${(bonus / 10000).toFixed(0)}+万`;
   } else {
     return `${bonus}`;
   }

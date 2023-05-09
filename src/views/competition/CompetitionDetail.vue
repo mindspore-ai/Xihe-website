@@ -13,7 +13,6 @@ const route = useRoute();
 const router = useRouter();
 
 const userComData = useCompetitionData();
-console.log('userComData: ', userComData);
 
 const competitionData = ref([]);
 const show = ref(true);
@@ -325,7 +324,6 @@ provide('getDetailData', getDetailData);
             align-items: center;
             &-title {
               font-size: 24px;
-              // max-width: 82%;
             }
             &-state {
               font-size: 12px;

@@ -126,7 +126,6 @@ function collectPublickImage(item) {
 
 // 取消收藏公开图片
 async function cancelImgCollected(item) {
-  console.log('item: ', item);
   try {
     const res = await cancelLikePicture(item.like_id);
     if (res.status === 204) {
@@ -624,6 +623,8 @@ async function cancelImgCollected(item) {
         img {
           width: 100%;
           border-radius: 16px 16px 0 0;
+          object-fit: cover;
+          object-position: right bottom;
           @media screen and (max-width: 820px) {
             width: calc(50vw - 24px);
             min-height: 270px;

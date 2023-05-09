@@ -500,6 +500,7 @@ function toTop() {
     .el-carousel {
       img {
         width: 100%;
+        height: 100%;
         box-shadow: 0px 2px 50px 0px rgba(16, 99, 0, 0.1);
         border-radius: 16px;
       }
@@ -552,7 +553,7 @@ function toTop() {
                 line-height: 20px;
                 margin-left: 15px;
                 padding: 0 8px;
-                border-radius: 24px;
+                border-radius: 16px;
               }
               .will-do {
                 color: #ffffff;
@@ -581,15 +582,13 @@ function toTop() {
             }
           }
           .right1 {
-            // background-color: blue;
             display: flex;
             padding-right: 48px;
             &-bonus {
-              margin: 40px 90px 24px 88px;
+              margin: 40px 48px 24px;
               display: flex;
               flex-direction: column;
               justify-content: center;
-              // align-items: center;
               white-space: nowrap;
               .number {
                 color: #6189ff;

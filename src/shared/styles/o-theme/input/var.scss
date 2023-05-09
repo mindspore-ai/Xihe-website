@@ -1,0 +1,22 @@
+.el-input {
+  --o-input-width: 400px;
+  --o-input-color: #000000;
+  --o-input-box_shadow: 0 0 0 1px #999999 inset;
+  --o-input-focus-box_shadow: 0 0 0 1px #555555 inset;
+  --o-input-placeholder-color: #999999;
+  --o-input-border_radius: 18px;
+  --o-input-padding: 8px 16px;
+  --o-input-height:20px;
+  --o-input-line_height: 20px;
+  --o-input-font_size: 14px;
+  --o-input-border_radius: 18px;
+}
+.el-textarea {
+  --o-textarea-width: 400px;
+  --o-textarea-height: 126px;
+  --o-textarea-resize: none;
+  --o-textarea-box_shadow: 0 0 0 1px #999999 inset;
+  --o-textarea-focus-box_shadow: 0 0 0 1px #555555 inset;
+  --o-textarea-padding: 8px 16px;
+  --o-textarea-border_radius: 16px;
+}

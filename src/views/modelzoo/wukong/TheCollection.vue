@@ -814,6 +814,8 @@ function handleImageClick(img) {
           width: 310px;
           min-height: 232px;
           border-radius: 16px 16px 0 0;
+          object-fit: cover;
+          object-position: right bottom;
           @media screen and (max-width: 820px) {
             width: 100%;
             min-height: 270px;

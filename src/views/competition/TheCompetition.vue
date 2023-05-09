@@ -552,7 +552,7 @@ function toTop() {
                 line-height: 20px;
                 margin-left: 15px;
                 padding: 0 8px;
-                border-radius: 24px;
+                border-radius: 16px;
               }
               .will-do {
                 color: #ffffff;

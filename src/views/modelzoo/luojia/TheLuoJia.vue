@@ -135,34 +135,14 @@ watch(
     @media screen and (max-width: 820px) {
       display: none;
     }
-    .el-breadcrumb {
-      height: 21px;
-      line-height: 21px;
-      .el-breadcrumb__item {
-        :deep(.el-breadcrumb__inner.is-link) {
-          color: #555;
-          font-weight: 400;
-          &:hover {
-            color: #0d8dff;
-          }
-        }
-        :deep(.el-breadcrumb__separator.el-icon) {
-          color: #555;
-        }
-      }
-      :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-        color: #000;
-      }
-    }
   }
 
   .luojia-title {
-    padding: 80px;
+    padding: 40px;
     display: flex;
     justify-content: space-between;
     background-color: #fff;
     border-radius: 16px;
-    // margin-bottom: 24px;
     @media screen and (max-width: 820px) {
       padding: 16px;
       margin: 0 16px;

@@ -165,6 +165,9 @@
   }
   .guide-box {
     // display: flex;
+    .scroll {
+      display: inline-block;
+    }
     .guide-left {
       width: 434px;
       height: 523px;
@@ -172,7 +175,7 @@
     }
     .guide-right {
       width: 808px;
-      height: 547px;
+      height: 523px;
     }
     @media screen and (max-width: 768px) {
       .guide-left,

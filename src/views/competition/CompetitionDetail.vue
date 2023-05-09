@@ -39,6 +39,15 @@ async function getDetailData() {
 }
 getDetailData();
 
+// 奖池超过百万，以单位万结尾显示
+function formatBonus(bonus) {
+  if (bonus >= 1000000) {
+    return `${(bonus / 10000).toFixed(0)}+万`;
+  } else {
+    return `${bonus}`;
+  }
+}
+
 // 点击报名
 function goApplication() {
   // 如果用户没有登录，则跳转到登录页面, 如果用户已经登录，则跳转到报名页面
@@ -161,7 +170,7 @@ provide('getDetailData', getDetailData);
                 <div class="number">
                   奖池：{{
                     competitionData.bonus
-                      ? `￥${competitionData.bonus}`
+                      ? `￥${formatBonus(competitionData.bonus)}`
                       : '特别礼品'
                   }}
                 </div>
@@ -171,7 +180,10 @@ provide('getDetailData', getDetailData);
                 <div class="right-wrap">
                   <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.phase === 'final'"
+                      :disabled="
+                        competitionData.phase === 'final' ||
+                        userComData.competitionData.id === 'southern_power'
+                      "
                       type="primary"
                       animation
                       @click="goApplication"
@@ -196,7 +208,7 @@ provide('getDetailData', getDetailData);
                 <div class="number">
                   奖池：{{
                     competitionData.bonus
-                      ? `￥${competitionData.bonus}`
+                      ? `￥${formatBonus(competitionData.bonus)}`
                       : '特别礼品'
                   }}
                 </div>
@@ -244,7 +256,10 @@ provide('getDetailData', getDetailData);
                 <div class="right-wrap">
                   <div v-if="competitionData.status === 'in-progress'">
                     <OButton
-                      :disabled="competitionData.phase === 'final'"
+                      :disabled="
+                        competitionData.phase === 'final' ||
+                        userComData.competitionData.id === 'southern_power'
+                      "
                       type="primary"
                       animation
                       @click="goApplication"
@@ -389,6 +404,7 @@ provide('getDetailData', getDetailData);
             .doing {
               color: #ffffff;
               background-color: #ff7f0d;
+              min-width: 76px;
             }
             .noStarted {
               color: #ffffff;
@@ -397,6 +413,7 @@ provide('getDetailData', getDetailData);
             .finished {
               color: #555555;
               background-color: #efefef;
+              min-width: 52px;
             }
           }
           .card-body {

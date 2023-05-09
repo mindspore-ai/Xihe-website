@@ -211,7 +211,7 @@ export async function goAuthorize() {
     //   scope: 'openid profile email phone address username',
     // });
 
-    window.location.href = `https://xiheapi.test.osinfra.cn/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username`;
+    window.location.href = `https://xiheapi.test.osinfra.cn/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

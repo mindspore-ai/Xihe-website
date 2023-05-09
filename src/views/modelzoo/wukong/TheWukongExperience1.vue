@@ -271,29 +271,41 @@ socket.onmessage = function (event) {
     if (JSON.parse(event.data).data.rank === 0) {
       getPic()
         .then((res) => {
-          styleBackground.value = res.data.pictures;
+          styleBackground.value = res.data;
+          styleBackground.value.forEach((item, index) => {
+            inferList.value[index].isCollected = item.is_like;
+            inferList.value[index].id = item.like_id;
+            inferList.value[index].publicId = item.public_id;
+          });
           // res.data.pictures.forEach((item, index) => {
           //   addWatermark(item, index);
           // });
 
-          const index1 = styleBackground.value[0].indexOf('=');
-          const index2 = styleBackground.value[0].indexOf('=', index1 + 1);
+          const index1 = styleBackground.value[0].link.indexOf('=');
+          const index2 = styleBackground.value[0].link.indexOf('=', index1 + 1);
 
-          const i1 = styleBackground.value[0].indexOf('&');
-          const i2 = styleBackground.value[0].indexOf('&', i1 + 1);
+          const i1 = styleBackground.value[0].link.indexOf('&');
+          const i2 = styleBackground.value[0].link.indexOf('&', i1 + 1);
 
-          const deadTime = styleBackground.value[0].substring(index2 + 1, i2);
+          const deadTime = styleBackground.value[0].link.substring(
+            index2 + 1,
+            i2
+          );
           const currentTime = (new Date().getTime() + '').substring(0, 10);
 
           if ((deadTime - currentTime) / 60 < 60) {
-            temporaryLink({ link: styleBackground.value[0] }).then((res) => {
-              styleBackground1.value[0] = res.data.data.link;
-              addWatermark(res.data.data.link, 0);
-              temporaryLink({ link: styleBackground.value[1] }).then((res) => {
-                styleBackground1.value[1] = res.data.data.link;
-                addWatermark(res.data.data.link, 1);
-              });
-            });
+            temporaryLink({ link: styleBackground.value[0].link }).then(
+              (res) => {
+                styleBackground1.value[0] = res.data.data.link;
+                addWatermark(res.data.data.link, 0);
+                temporaryLink({ link: styleBackground.value[1].link }).then(
+                  (res) => {
+                    styleBackground1.value[1] = res.data.data.link;
+                    addWatermark(res.data.data.link, 1);
+                  }
+                );
+              }
+            );
           }
         })
         .catch((err) => {
@@ -419,6 +431,15 @@ function shareImage(url) {
     '/obs-big-model/'
   );
   posterInfo.value = inputText.value + '  ' + sortTag.value;
+  if (posterInfo.value === '  ') {
+    posterInfo.value = decodeURIComponent(styleBackground1.value[1])
+      .split('?')[0]
+      .split(
+        'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+      )[1]
+      .split('/')[5]
+      .split('-01.jpg')[0];
+  }
 
   if (screenWidth.value <= 820) {
     nextTick(() => {
@@ -489,8 +510,11 @@ function handleInput() {
     }
   });
 }
+//
+const activeIndex = ref(null);
 // 选择风格类别
 function choseStyleSort(val, item) {
+  activeIndex.value = val;
   styleIndex.value = val;
   item.isSelected = !item.isSelected;
   if (val === 0 && item.isSelected === false) {
@@ -536,7 +560,6 @@ function initData() {
 
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
-  console.log(imgUrl, index);
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = imgUrl;
@@ -583,6 +606,14 @@ async function handleInfer() {
         }
       });
 
+      // 重置喜欢公开数据
+      inferList.value = [
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+      ];
+
       try {
         const res = await wuKongInfer({
           desc: inputText.value,
@@ -603,11 +634,13 @@ async function handleInfer() {
               if (JSON.parse(event.data).data.rank === 0) {
                 getPic()
                   .then((res) => {
-                    styleBackground1.value = res.data.pictures;
-                    res.data.pictures.forEach((item, index) => {
-                      addWatermark(item, index);
+                    styleBackground1.value = [
+                      res.data[0].link,
+                      res.data[1].link,
+                    ];
+                    res.data.forEach((item, index) => {
+                      addWatermark(item.link, index);
                     });
-                    console.log(styleBackground1.value);
 
                     isLarge.value = false;
                   })
@@ -714,24 +747,24 @@ function requestImg(item) {
 }
 // 临时url小于1min重新获取下载
 function downloadImage(item) {
-  const index1 = item.indexOf('=');
-  const index2 = item.indexOf('=', index1 + 1);
+  // const index1 = item.indexOf('=');
+  // const index2 = item.indexOf('=', index1 + 1);
 
-  const i1 = item.indexOf('&');
-  const i2 = item.indexOf('&', i1 + 1);
+  // const i1 = item.indexOf('&');
+  // const i2 = item.indexOf('&', i1 + 1);
 
-  const deadTime = item.substring(index2 + 1, i2);
-  const currentTime = (new Date().getTime() + '').substring(0, 10);
+  // const deadTime = item.substring(index2 + 1, i2);
+  // const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-  if ((deadTime - currentTime) / 60 < 60) {
-    temporaryLink({ link: item }).then((res) => {
-      if (res.data.data) {
-        requestImg(res.data.data.link);
-      }
-    });
-  } else {
-    requestImg(item);
-  }
+  // if ((deadTime - currentTime) / 60 < 60) {
+  //   temporaryLink({ link: item }).then((res) => {
+  //     if (res.data.data) {
+  //       requestImg(res.data.data.link);
+  //     }
+  //   });
+  // } else {
+  requestImg(item);
+  // }
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -833,15 +866,22 @@ const showConfirmDlg = ref(false);
               v-for="(item, index) in newStyleData"
               :key="item.style"
               class="style-item"
-              :class="item.isSelected ? 'active-1' : ''"
               @click="choseStyleSort(index, item)"
             >
               <img
                 v-if="index === 0"
-                :src="item.isSelected ? item.img : item.img1"
+                :src="
+                  item.isSelected && activeIndex === 0 ? item.img : item.img1
+                "
                 alt=""
+                :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
               />
-              <img v-else :src="item.img" alt="" />
+              <img
+                v-else
+                :src="item.img"
+                alt=""
+                :class="item.isSelected ? 'active-1' : ''"
+              />
 
               <div class="style-item-name" @click="getRandomStyle(index)">
                 {{ index === 0 ? item.tag1 : item.tag }}
@@ -977,7 +1017,7 @@ const showConfirmDlg = ref(false);
               <div class="handles-contain">
                 <div
                   class="func-item"
-                  @click="downloadImage(styleBackground1[largeIndex])"
+                  @click="downloadImage(styleBackground[largeIndex])"
                 >
                   <p>
                     <o-icon><icon-download></icon-download></o-icon>
@@ -1086,15 +1126,20 @@ const showConfirmDlg = ref(false);
             v-for="(item, index) in newStyleData"
             :key="item.style"
             class="style-item"
-            :class="item.isSelected ? 'active-1' : ''"
             @click="choseStyleSort(index, item)"
           >
             <img
               v-if="index === 0"
-              :src="item.isSelected ? item.img : item.img1"
+              :src="item.isSelected && activeIndex === 0 ? item.img : item.img1"
               alt=""
+              :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
             />
-            <img v-else :src="item.img" alt="" />
+            <img
+              v-else
+              :src="item.img"
+              alt=""
+              :class="item.isSelected ? 'active-1' : ''"
+            />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
               {{ index === 0 ? item.tag1 : item.tag }}
@@ -1937,10 +1982,8 @@ const showConfirmDlg = ref(false);
     background: #008eff !important;
   }
   .active-1 {
-    img {
-      border: 2px solid #008eff !important;
-      border-radius: 6px;
-    }
+    border: 2px solid #008eff !important;
+    border-radius: 6px;
   }
 
   .mobile-examples {
@@ -2477,10 +2520,8 @@ const showConfirmDlg = ref(false);
     background: #e5f3ff !important;
   }
   .active-1 {
-    img {
-      border: 3px solid #008eff !important;
-      border-radius: 6px;
-    }
+    border: 3px solid #008eff !important;
+    border-radius: 6px;
   }
 
   .wk-experience-examples {

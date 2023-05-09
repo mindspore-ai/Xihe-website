@@ -8,6 +8,7 @@ const route = useRoute();
 const router = useRouter();
 const activeNavItem = ref('');
 const comInfo = useCompetitionData().competitionData;
+console.log('comInfo: ', comInfo);
 
 const navItems = reactive([
   {
@@ -89,9 +90,17 @@ watch(
       }
     } else {
       if (comInfo.type === '') {
-        renderNav.value = navItems.filter((item) => {
-          return item.isIndividual && item.showDiscuss;
-        });
+        console.log('renderNav.value: ', renderNav.value);
+        // 南方电网比赛只显示介绍
+        if (comInfo.id === 'southern_power') {
+          renderNav.value = navItems.filter((item) => {
+            return item.id === 'introduction';
+          });
+        } else {
+          renderNav.value = navItems.filter((item) => {
+            return item.isIndividual && item.showDiscuss;
+          });
+        }
       } else {
         renderNav.value = navItems.filter((item) => {
           return item.isIndividual && item.label !== '讨论';

@@ -338,10 +338,12 @@ function cancelFollow(name) {
     font-weight: normal;
     color: #555555;
     line-height: 56px;
-    padding: 0 48px;
+    padding: 0 24px;
+    margin: 0 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    border-radius: 28px;
 
     .o-icon {
       margin-right: 12px;
@@ -365,9 +367,9 @@ function cancelFollow(name) {
       background-color: #f7f8fa;
     }
 
-    &.active::after {
-      background-color: #3d8df7;
-    }
+    // &.active::after {
+    //   background-color: #3d8df7;
+    // }
   }
 }
 
@@ -508,6 +510,7 @@ function cancelFollow(name) {
       margin-left: 24px;
       width: calc(75% - 24px);
       background-color: #ffffff;
+      border-radius: 16px;
 
       &-tool {
         display: flex;

@@ -218,11 +218,11 @@ function giveLike(num) {
 
 // 下载图片
 function downloadPic(index) {
-  if (!dialogData.value) {
+  if (typeof index === 'number') {
     getDialogData(index);
   }
   let x = new XMLHttpRequest();
-  x.open('GET', dialogData.value.link, true);
+  x.open('GET', dialogData.value.waterImg, true);
   x.responseType = 'blob';
   x.onload = function () {
     const blobs = new Blob([x.response], { type: 'image/png' });
@@ -265,7 +265,7 @@ function closeDialog() {
 }
 // 收藏图片
 function collectPic(index) {
-  if (!dialogData.value) {
+  if (typeof index === 'number') {
     getDialogData(index);
   }
   if (isLogined) {

@@ -114,6 +114,7 @@ function collectPublickImage(item) {
     id: item.id,
   }).then((res) => {
     if (res.data) {
+      item.like_id = res.data.id;
       item.is_like = true;
       ElMessage({
         type: 'success',
@@ -125,6 +126,7 @@ function collectPublickImage(item) {
 
 // 取消收藏公开图片
 async function cancelImgCollected(item) {
+  console.log('item: ', item);
   try {
     const res = await cancelLikePicture(item.like_id);
     if (res.status === 204) {

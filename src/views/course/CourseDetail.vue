@@ -45,8 +45,7 @@ function goApplication() {
         reginfo.value = res.data;
         showApplication.value = true;
       })
-      .catch((err) => {
-        // TODO:
+      .catch(() => {
         showApplication.value = true;
       });
   }
@@ -59,29 +58,6 @@ function hideForm(val, type) {
     getDetailData();
   }
 }
-
-/* onUpdated(() => {
-  let card = document.querySelector('.course-card');
-  let box = document.querySelector('.course-info');
-  let top1 = card.offsetTop + 30;
-  window.addEventListener('scroll', function () {
-    if (
-      window.pageYOffset > top1 &&
-      (route.name === 'courseIntroduction' ||
-        route.name === 'courseChapter' ||
-        route.name === 'courseTask' ||
-        route.name === 'courseTeacher' ||
-        route.name === 'courseCertificate')
-    ) {
-      box.style.display = 'flex';
-      fixed.value = true;
-    }
-    if (window.pageYOffset < top1) {
-      box.style.display = 'none';
-      fixed.value = false;
-    }
-  });
-}); */
 
 onBeforeRouteLeave(() => {
   userCourseData.$reset();
@@ -105,7 +81,7 @@ provide('goApplication', goApplication);
         </div>
       </div>
       <div class="course-content">
-        <!-- 正常展示的课程信息 -->
+        <!-- 课程信息 -->
         <div class="course-box course-card">
           <div class="box-left">
             <div class="course-cover">
@@ -170,10 +146,9 @@ provide('goApplication', goApplication);
                     <OIcon><IconArrowRight /></OIcon>
                   </template>
                 </OButton>
-                <!-- TODO:暂时隐藏 -->
-                <!-- <div class="number">
+                <div class="number">
                   报名人数：{{ currentCourseData.count }}
-                </div> -->
+                </div>
               </div>
               <div
                 v-else-if="currentCourseData.status === 'preparing'"
@@ -184,56 +159,6 @@ provide('goApplication', goApplication);
               <div v-else class="right-wrap">
                 <div class="not-started">报名已截止</div>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- 下滑后展示的课程信息 -->
-        <div class="course-box course-info">
-          <div class="left">
-            <div class="card-header">
-              <div class="course-title">
-                {{ currentCourseData.name }}
-              </div>
-              <div
-                v-if="currentCourseData.status === 'in-progress'"
-                class="course-state doing"
-              >
-                火热进行中
-              </div>
-              <div
-                v-if="currentCourseData.status === 'preparing'"
-                class="course-state preparing"
-              >
-                未开始
-              </div>
-              <div
-                v-if="currentCourseData.status === 'over'"
-                class="course-state finished"
-              >
-                已结束
-              </div>
-            </div>
-          </div>
-          <div v-if="!currentCourseData.is_apply" class="right1">
-            <div class="right-immediate">
-              <div class="right-wrap">
-                <div v-if="currentCourseData.status === 'in-progress'">
-                  <OButton type="primary" animation @click="goApplication">
-                    立即报名
-                  </OButton>
-                </div>
-                <div v-if="currentCourseData.status === 'preparing'">
-                  <div class="course-state">报名未开始</div>
-                </div>
-                <div v-if="currentCourseData.status === 'over'">
-                  <div class="course-state">课程已结束</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else class="right2">
-            <div class="right2-bonus">
-              <div class="time">日期: {{ currentCourseData.duration }}</div>
             </div>
           </div>
         </div>
@@ -278,43 +203,16 @@ provide('goApplication', goApplication);
       padding-top: 40px;
       padding-bottom: 40px;
       background-color: #f5f6f8;
-      .course-bread {
-        width: 100%;
-        overflow-y: auto;
-        .el-breadcrumb {
-          height: 21px;
-          line-height: 21px;
-          .el-breadcrumb__item {
-            :deep(.el-breadcrumb__inner.is-link) {
-              color: #555;
-              font-weight: 400;
-              &:hover {
-                color: #0d8dff;
-              }
-            }
-            :deep(.el-breadcrumb__separator.el-icon) {
-              color: #555;
-            }
-          }
-          :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-            color: #000;
-          }
-          :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-            cursor: pointer;
-          }
-        }
-      }
     }
     .course-content {
       scroll-behavior: smooth;
       .course-box {
-        // min-height: 216px;
         font-size: 14px;
         color: #555555;
         background-color: #ffffff;
         display: flex;
         justify-content: space-between;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        border-radius: 16px;
         .box-left {
           width: 100%;
           margin: 24px;
@@ -325,6 +223,7 @@ provide('goApplication', goApplication);
             img {
               width: 100%;
               height: 100%;
+              border-radius: 16px;
             }
           }
           .course-data {
@@ -348,6 +247,7 @@ provide('goApplication', goApplication);
                   line-height: 20px;
                   margin-left: 15px;
                   padding: 0 8px;
+                  border-radius: 16px;
                 }
                 .will-do {
                   color: #ffffff;
@@ -356,10 +256,12 @@ provide('goApplication', goApplication);
                 .doing {
                   color: #ffffff;
                   background-color: #ff7f0d;
+                  min-width: 76px;
                 }
                 .done {
                   color: #555555;
                   background-color: #efefef;
+                  min-width: 52px;
                 }
               }
               .card-desc {
@@ -407,75 +309,6 @@ provide('goApplication', goApplication);
           }
         }
       }
-      .course-info {
-        display: none;
-        position: fixed;
-        scroll-behavior: smooth;
-        z-index: 10;
-        width: 100%;
-        max-width: 1440px;
-        height: 128px;
-        top: 80px;
-        overflow: hidden;
-        padding: 0 40px;
-        vertical-align: middle;
-        .left {
-          display: flex;
-          align-items: center;
-          .card-header {
-            display: flex;
-            align-items: center;
-            .course-title {
-              font-size: 24px;
-              color: #000;
-            }
-            .course-state {
-              font-size: 12px;
-              height: 20px;
-              line-height: 20px;
-              margin-left: 15px;
-              padding: 0 8px;
-            }
-            .preparing {
-              color: #ffffff;
-              background-color: #6189ff;
-            }
-            .doing {
-              color: #ffffff;
-              background-color: #ff7f0d;
-            }
-            .finished {
-              color: #555555;
-              background-color: #efefef;
-            }
-          }
-        }
-        .right1 {
-          display: flex;
-          align-items: center;
-          .right-immediate {
-            border-left: 0px;
-            .right-wrap {
-              .course-state {
-                font-size: 16px;
-                color: #cccccc;
-                line-height: 22px;
-              }
-            }
-          }
-        }
-        .right2 {
-          display: flex;
-          align-items: center;
-          .time {
-            line-height: 24px;
-            padding: 12px 40px;
-            color: #555555;
-            background-color: #f4faff;
-            margin-top: 0px;
-          }
-        }
-      }
     }
     .course-desc {
       margin-top: 24px;
@@ -487,10 +320,10 @@ provide('goApplication', goApplication);
   :deep(.el-dialog) {
     .el-dialog__header {
       display: none;
-      // height: 40px !important;
     }
     .el-dialog__body {
-      padding: 40px !important;
+      padding: 40px;
+      text-align: left;
       .application {
         padding: 0px;
         .application-title {

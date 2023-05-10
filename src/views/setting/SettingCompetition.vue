@@ -287,7 +287,7 @@ function toTop() {
               font-weight: 400;
               line-height: 32px;
               display: flex;
-              align-items: center;
+              align-items: baseline;
               .state {
                 display: inline-block;
                 padding-left: 8px;
@@ -296,6 +296,7 @@ function toTop() {
                 font-size: 12px;
                 margin-left: 6px;
                 white-space: nowrap;
+                border-radius: 100px;
               }
               .doing {
                 color: #ffffff;
@@ -333,6 +334,7 @@ function toTop() {
               margin-top: 24px;
               background-color: #f4faff;
               white-space: nowrap;
+              border-radius: 24px;
             }
           }
         }

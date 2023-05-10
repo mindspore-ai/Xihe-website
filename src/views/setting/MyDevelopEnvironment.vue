@@ -411,6 +411,7 @@ function openJupyter() {
         color: #ffffff;
         line-height: 14px;
         background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
+        
       }
       .waiting-tag {
         background: linear-gradient(

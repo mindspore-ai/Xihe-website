@@ -183,9 +183,9 @@ function toTop() {
         }
       }
       &-content2 {
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        transition: all 0.3s ease;
         &:hover {
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         }
       }
     }

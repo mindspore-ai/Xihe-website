@@ -361,6 +361,7 @@ $theme: #0d8dff;
         justify-content: space-between;
         border: 1px solid #d8d8d8;
         border-radius: 16px;
+        transition: all 0.3s ease;
         &:hover {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           cursor: pointer;

@@ -67,6 +67,7 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
@@ -262,7 +263,7 @@ let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['private-token']
   : null;
 let socket = new WebSocket(
-  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
+  `wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`,
   [token]
 );
 socket.onmessage = function (event) {
@@ -664,7 +665,7 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
+              `wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`,
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {

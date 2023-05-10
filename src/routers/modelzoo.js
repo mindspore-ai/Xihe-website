@@ -196,7 +196,7 @@ export default [
     path: '/modelzoo/wukong',
     name: 'wukongExperience',
     component: () => {
-      return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
+      return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
     },
   },
 

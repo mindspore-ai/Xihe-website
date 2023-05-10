@@ -213,7 +213,7 @@ function cancelFollow(name) {
       >
         <div class="user-info-basic">
           <div class="user-avatar">
-            <el-avatar :size="160" :src="userInfo.avatar" fit="fill" />
+            <el-avatar :size="120" :src="userInfo.avatar" fit="fill" />
           </div>
           <p class="user-name">{{ userInfo.userName }}</p>
           <div class="user-social">
@@ -329,7 +329,7 @@ function cancelFollow(name) {
 <style lang="scss" scoped>
 .setting-menu-list {
   width: 100%;
-  margin-top: 56px;
+  margin-top: 24px;
 
   li {
     position: relative;
@@ -378,7 +378,7 @@ function cancelFollow(name) {
   padding-top: 80px;
   background-color: #f5f6f8;
   color: #000;
-  background-image: url('@/assets/imgs/banner-head.png');
+  background-image: url('@/assets/imgs/user-banner-head.png');
   background-size: cover;
   background-repeat: no-repeat;
 
@@ -407,6 +407,7 @@ function cancelFollow(name) {
     padding: 40px 16px 64px 16px;
 
     .content-sidebar {
+      min-width: 360px;
       width: 25%;
       background: #ffffff;
       padding: 40px 0 64px;
@@ -416,6 +417,9 @@ function cancelFollow(name) {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin: 0 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #f5f6f8;
         .user-avatar {
           border-radius: 50%;
           border: 3px solid #bfddff;

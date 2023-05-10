@@ -441,18 +441,14 @@ function toTop() {
   }
 }
 :deep(.el-pagination) {
-  --el-pagination-bg-color: none !important;
+  .el-pager {
+    li {
+      background-color: #fff;
+    }
+  }
   .btn-next,
   .btn-prev {
-    width: 36px;
-    height: 36px;
-    color: #000;
-  }
-  .el-pager {
-    .number {
-      width: 36px;
-      height: 36px;
-    }
+    background-color: #fff;
   }
 }
 </style>

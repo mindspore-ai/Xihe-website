@@ -1,13 +1,13 @@
 @import './_dropdown';
-// @import './_message';
 @import './_popper';
-@import './_pagination';
 @import './_filter';
 @import './_nav';
-// @import './_input';
 @import './_select';
 @import './_formerror';
 // @import './_dialog';
+// @import './_input';
+// @import './_message';
+// @import './_pagination';
 
 // 引入优化后的组件style.TODO:
 @import './dialog/index.scss';
@@ -16,4 +16,5 @@
 @import './message/index.scss';
 @import './table/index.scss';
 @import './input/index.scss';
+@import './pagination/index.scss';
 

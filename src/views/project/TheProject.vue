@@ -469,7 +469,13 @@ function getKeyWord() {
 //打开jupyter useLoginStore
 function openJupyter() {
   if (loginStore.isLogined) {
-    router.push('/settings/clouddev', '_blank');
+    ElMessage({
+      message:
+        '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
+      type: 'warning',
+      duration: 4000,
+    });
+    // router.push('/settings/clouddev', '_blank');
   } else {
     goAuthorize();
   }

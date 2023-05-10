@@ -59,7 +59,7 @@ async function getPublicPictures() {
   try {
     const res = await publicPictures();
 
-    if (res.status === 200) {
+    if (res.status === 200 && res.data.data) {
       publicList.value = res.data.data;
       res.data.data.forEach((item, index) => {
         addWatermark(

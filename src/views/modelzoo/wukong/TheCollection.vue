@@ -8,6 +8,7 @@ import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
 import IconSharegray from '~icons/app/share-gray';
 import IconHeart from '~icons/app/heart-white';
+import IconHeart2 from '~icons/app/heart-gray';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
 import useClipboard from 'vue-clipboard3';
@@ -269,9 +270,14 @@ function handleImageClick(img) {
           <img draggable="false" :src="item.waterImg" alt="" />
 
           <div class="handles">
-            <div class="icon-item" @click="publicImage(item.id)">
+            <div
+              v-if="item.owner === userInfoStore.userName"
+              class="icon-item"
+              @click="publicImage(item.id)"
+            >
               <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
             </div>
+            <div v-else></div>
             <div class="right">
               <div class="icon-item" @click="downloadImage(item.waterImg)">
                 <o-icon><icon-download></icon-download></o-icon>
@@ -366,7 +372,7 @@ function handleImageClick(img) {
             <o-icon><icon-sharegray></icon-sharegray></o-icon>
           </div>
           <div class="icon-item" @click="cancelCollect(imageInfo.id)">
-            <o-icon><icon-heart></icon-heart></o-icon>
+            <o-icon><icon-heart2></icon-heart2></o-icon>
           </div>
         </div>
       </div>

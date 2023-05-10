@@ -228,6 +228,7 @@ watch([userDescription, avatar], () => {
       background: #f7f8fa;
       border: 1px solid #dfe1e8;
       cursor: pointer;
+      border-radius: 8px;
       img {
         width: 100%;
       }

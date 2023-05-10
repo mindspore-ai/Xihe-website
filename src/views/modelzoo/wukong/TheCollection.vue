@@ -57,7 +57,7 @@ function addWatermark(imgUrl, index) {
 async function getCollectedImages() {
   try {
     const res = await collectedPictures();
-    if (res.status === 200) {
+    if (res.status === 200 && res.data.data) {
       collecteImages.value = res.data.data;
       res.data.data.forEach((item, index) => {
         addWatermark(item.link, index);
@@ -264,7 +264,7 @@ function handleImageClick(img) {
 </script>
 <template>
   <div class="collection">
-    <div v-if="collecteImages" class="have-collections">
+    <div v-if="collecteImages.length !== 0" class="have-collections">
       <div v-for="item in collecteImages" :key="item.id" class="collect-item">
         <div v-if="screenWidth > 820" class="image-box">
           <img draggable="false" :src="item.waterImg" alt="" />

@@ -182,7 +182,8 @@ function goWatched() {
       min-width: 438px;
       margin-right: 24px;
       border-radius: 16px;
-      min-height: calc(100vh - 442px);
+      padding-bottom: 64px;
+      // min-height: calc(100vh - 442px);
       background-color: #fff;
       .user-info {
         margin-top: 48px;

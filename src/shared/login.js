@@ -3,12 +3,11 @@ import {
   queryUserToken,
   queryUserIdToken,
 } from '@/api/api-user';
+import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
 const APP_ID = import.meta.env.VITE_APP_ID;
-const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
-const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
-// const APP_HOST = import.meta.env.VITE_APP_HOST;
+const APP_HOST = import.meta.env.VITE_APP_HOST;
 
 // 登录事件
 export const LOGIN_EVENTS = {
@@ -160,7 +159,7 @@ export async function logout() {
     // });
     setStatus(LOGIN_STATUS.NOT);
     saveUserAuth();
-    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
+    window.location.href = `https://id.mindspore.cn/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
   } catch (error) {
     console.error('退出失败！');
   }
@@ -212,7 +211,7 @@ export async function goAuthorize() {
     //   scope: 'openid profile email phone address username',
     // });
 
-    window.location.href = `${LOGIN_URL}/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
+    window.location.href = `https://xiheapi.osinfra.cn/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取登录信息失败！');

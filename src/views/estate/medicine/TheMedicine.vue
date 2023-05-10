@@ -34,7 +34,6 @@ const cases = [
 const router = useRouter();
 
 function goCasePath(item) {
-  console.log('item.url: ', item.url);
   router.push(item.url);
 }
 </script>

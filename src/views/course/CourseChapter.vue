@@ -114,6 +114,7 @@ function handleNodeClick(node, data) {
         &:hover {
           background-color: #f7f8fa;
           color: #0d8dff;
+          border-radius: 21px;
         }
         .course-tree-node {
           &:hover .course-name {

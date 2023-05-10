@@ -352,22 +352,14 @@ $theme: #0d8dff;
     display: flex;
     flex-direction: column;
     :deep(.el-tabs) {
-      width: 100%;
       .el-tabs__header {
         border: none;
         height: inherit;
         margin: 0px;
+        border-radius: 0 0 16px 16px;
         .el-tabs__nav-scroll {
-          background-color: #ffffff;
           .el-tabs__nav {
-            border: none;
             .el-tabs__item {
-              border: none;
-              line-height: 28px;
-              height: 28px;
-              padding: 0 12px;
-              margin: 14px 12px 14px 0px;
-              color: #555555;
               &:first-child {
                 color: #000000;
                 font-weight: 550;
@@ -375,8 +367,6 @@ $theme: #0d8dff;
               }
             }
             .is-active {
-              box-shadow: 0 0 0 1px #0d8dff inset;
-              color: #0d8dff;
               .o-icon {
                 display: block;
               }
@@ -387,8 +377,7 @@ $theme: #0d8dff;
     }
     :deep(.category-tabs) {
       .el-tabs__header {
-        padding: 0px;
-        margin: 0px;
+        border-radius: 16px 16px 0 0;
         .el-tabs__item {
           position: relative;
           .category-tabs-label {
@@ -417,10 +406,11 @@ $theme: #0d8dff;
         margin-bottom: 24px;
         display: flex;
         justify-content: space-between;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        cursor: pointer;
+        border-radius: 16px;
         &:hover {
-          box-shadow: 0 6px 18px #0d8dff24;
-          cursor: pointer;
+          box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+          transition: all 0.2s linear;
         }
         .box-left {
           width: 100%;
@@ -430,6 +420,7 @@ $theme: #0d8dff;
           .course-cover {
             img {
               width: 300px;
+              border-radius: 16px;
             }
           }
           .course-info {
@@ -453,6 +444,7 @@ $theme: #0d8dff;
                   line-height: 20px;
                   margin-left: 15px;
                   padding: 0 8px;
+                  border-radius: 16px;
                 }
                 .will-do {
                   color: #ffffff;
@@ -461,10 +453,12 @@ $theme: #0d8dff;
                 .doing {
                   color: #ffffff;
                   background-color: #ff7f0d;
+                  min-width: 76px;
                 }
                 .done {
                   color: #555555;
                   background-color: #efefef;
+                  min-width: 52px;
                 }
               }
               .card-desc {

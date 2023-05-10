@@ -404,14 +404,14 @@ function openJupyter() {
       .price-tag,
       .waiting-tag {
         position: absolute;
-        right: 0;
+        right: -5px;
         top: 0;
         padding: 3px 8px;
         font-size: 12px;
         color: #ffffff;
         line-height: 14px;
         background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
-        
+        border-radius: 10px;
       }
       .waiting-tag {
         background: linear-gradient(

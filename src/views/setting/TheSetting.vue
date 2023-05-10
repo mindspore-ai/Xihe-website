@@ -380,6 +380,7 @@ function cancelFollow(name) {
   color: #000;
   background-image: url('@/assets/imgs/user-banner-head.png');
   background-size: cover;
+  background-position: 50% 50%;
   background-repeat: no-repeat;
 
   .wrap {

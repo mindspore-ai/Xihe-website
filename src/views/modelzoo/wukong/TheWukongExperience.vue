@@ -1,26 +1,51 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, onUnmounted, watch } from 'vue';
 
 import html2canvas from 'html2canvas';
 
-import comic from '@/assets/imgs/wukong/style-bg-1.png';
-import classic from '@/assets/imgs/wukong/style-bg-2.png';
-import fantasy from '@/assets/imgs/wukong/style-bg-3.png';
-import more from '@/assets/imgs/wukong/style-bg-4.png';
-import random from '@/assets/imgs/wukong/style-bg-5.png';
+import style from '@/assets/imgs/wukong/style/style.png';
+import style1 from '@/assets/imgs/wukong/style/style1.png';
+import style2 from '@/assets/imgs/wukong/style/style2.png';
+import style3 from '@/assets/imgs/wukong/style/style3.png';
+import style4 from '@/assets/imgs/wukong/style/style4.png';
+import style5 from '@/assets/imgs/wukong/style/style5.png';
+import style6 from '@/assets/imgs/wukong/style/style6.png';
+import style7 from '@/assets/imgs/wukong/style/style7.png';
+import style8 from '@/assets/imgs/wukong/style/style8.png';
+import style9 from '@/assets/imgs/wukong/style/style9.png';
+import style10 from '@/assets/imgs/wukong/style/style10.png';
+import style11 from '@/assets/imgs/wukong/style/style11.png';
+import style12 from '@/assets/imgs/wukong/style/style12.png';
+import style13 from '@/assets/imgs/wukong/style/style13.png';
+import style14 from '@/assets/imgs/wukong/style/style14.png';
+import style15 from '@/assets/imgs/wukong/style/style15.png';
+import style16 from '@/assets/imgs/wukong/style/style16.png';
+import style17 from '@/assets/imgs/wukong/style/style17.png';
+import style18 from '@/assets/imgs/wukong/style/style18.png';
+import style19 from '@/assets/imgs/wukong/style/style19.png';
+import style20 from '@/assets/imgs/wukong/style/style20.png';
 import loading from '@/assets/gifs/loading.gif';
+import tip from '@/assets/imgs/wukong/tip.png';
+import wukongbg from '@/assets/imgs/wukong/wukong-bg1.png';
+import warning from '@/assets/imgs/wukong/warning.png';
+import arrow from '@/assets/imgs/wukong/arrow.png';
+import viewAllImg from '@/assets/imgs/wukong/style/view-all.png';
 
 import IconRefresh from '~icons/app/refresh-taichu';
-import IconDownload from '~icons/app/wukong-download';
-import IconLike from '~icons/app/wukong-like';
+import IconDownload from '~icons/app/download-gray';
+import IconLike from '~icons/app/heart-gray';
 import IconX from '~icons/app/x';
 import IconHeart from '~icons/app/collected';
-import IconCancel from '~icons/app/cancel-public';
-import IconArrow from '~icons/app/arrow-top';
-import IconShare from '~icons/app/share';
+import IconCancel from '~icons/app/eye-close';
+import IconArrow from '~icons/app/eye-open';
+import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
-import IconWarning from '~icons/app/warning1';
 import IconRight from '~icons/app/arrow-right';
+import IconRight2 from '~icons/app/arrow-right2';
+import IconLeft from '~icons/app/left';
+import IconAlbum from '~icons/app/wukong-album';
+import IconPainting from '~icons/app/painting';
+import IconArrowRight from '~icons/app/arrow-right.svg';
 
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
@@ -33,9 +58,14 @@ import {
   temporaryLink,
   publicTemporaryPicture,
   cancelPublic,
+  getPic,
 } from '@/api/api-modelzoo.js';
+import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
+import { useRouter } from 'vue-router';
+import { ArrowRight } from '@element-plus/icons-vue';
 
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -51,8 +81,8 @@ const showInferDlg = ref(false);
 const isInferred = ref(false);
 const isError = ref(false);
 
-const styleBackgrounds = ref([comic, classic, fantasy, more, random]);
 const styleBackground = ref([]);
+const styleBackground1 = ref([]);
 
 const styleData = ref([
   {
@@ -124,48 +154,186 @@ const mobileRandomData = ref([
 ]);
 
 const randomList = ref([
-  { tag: '宫崎骏', isSelected: false },
-  { tag: '新海诚', isSelected: false },
-  { tag: '达芬奇', isSelected: false },
-  { tag: '毕加索', isSelected: false },
-  { tag: '梵高', isSelected: false },
-  { tag: '莫奈', isSelected: false },
-  { tag: '温斯洛.霍默', isSelected: false },
-  { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
-  { tag: '韦恩.巴洛', isSelected: false },
-  { tag: '格雷格.鲁特科夫斯基', isSelected: false },
-  { tag: '动漫', isSelected: false },
-  { tag: '国风', isSelected: false },
-  { tag: '田园', isSelected: false },
-  { tag: '涂鸦', isSelected: false },
-  { tag: '立体', isSelected: false },
-  { tag: '浮雕', isSelected: false },
-  { tag: '水彩', isSelected: false },
-  { tag: '油画', isSelected: false },
-  { tag: '暗黑', isSelected: false },
-  { tag: '写实', isSelected: false },
-  { tag: '高清', isSelected: false },
-  { tag: '蜡笔画', isSelected: false },
-  { tag: '专业CG艺术', isSelected: false },
-  { tag: '彩色国风水墨', isSelected: false },
-  { tag: '生动色彩', isSelected: false },
-  { tag: '星际漫游', isSelected: false },
-  { tag: '赛博朋克', isSelected: false },
-  { tag: '印象主义', isSelected: false },
-  { tag: '现代主义', isSelected: false },
-  { tag: '巴洛克风格', isSelected: false },
-  { tag: '像素风格', isSelected: false },
-  { tag: '浮世绘', isSelected: false },
-  { tag: '蒸汽波', isSelected: false },
+  { tag: '巴洛克', isSelected: false, img: style1 },
+  { tag: '毕加索', isSelected: false, img: style2 },
+  { tag: '达芬奇', isSelected: false, img: style3 },
+  { tag: '梵高', isSelected: false, img: style5 },
+  { tag: '浮世绘', isSelected: false, img: style6 },
+  { tag: '宫崎骏', isSelected: false, img: style7 },
+  { tag: '国风', isSelected: false, img: style8 },
+  { tag: '莫奈', isSelected: false, img: style9 },
+  { tag: '赛博朋克', isSelected: false, img: style10 },
+  { tag: '水彩', isSelected: false, img: style11 },
+  { tag: '田园', isSelected: false, img: style12 },
+  { tag: '涂鸦', isSelected: false, img: style13 },
+  { tag: '现代主义', isSelected: false, img: style14 },
+  { tag: '像素风', isSelected: false, img: style15 },
+  { tag: '写实', isSelected: false, img: style16 },
+  { tag: '新海城', isSelected: false, img: style17 },
+  { tag: '印象主义', isSelected: false, img: style18 },
+  { tag: '油画', isSelected: false, img: style19 },
+  { tag: '蒸汽波', isSelected: false, img: style20 },
+  { tag: '动漫', isSelected: false, img: style4 },
 ]);
+const newStyleData = ref([]);
+const isAllStyle = ref(false);
+newStyleData.value = randomList.value.slice(0, 10);
+newStyleData.value.unshift(
+  randomList.value[Math.floor(Math.random() * randomList.value.length)]
+);
+newStyleData.value[0].tag1 = '随机风格';
+newStyleData.value[0].img1 = style;
+function retract() {
+  isAllStyle.value = false;
+  newStyleData.value = newStyleData.value.slice(0, 11);
+}
+function viewAll() {
+  isAllStyle.value = !isAllStyle.value;
+  newStyleData.value = newStyleData.value.concat(randomList.value.slice(10));
+}
+const isWaiting = ref(false);
+const isLine = ref(null);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
   { text: '城市夜景', isSelected: false },
-  { text: '悬崖 美景 壮观 高清', isSelected: false },
-  { text: '西湖 烟雨', isSelected: false },
-  { text: '海滩 美景 高清', isSelected: false },
 ]);
+const isLarge = ref(false);
+const largeImg = ref({});
+const largeIndex = ref(null);
+function handleEnlage(value, key) {
+  largeImg.value = {};
+  largeImg.value[key] = value;
+  largeIndex.value = key;
+  isLarge.value = true;
+}
+function handleReturn() {
+  isLarge.value = false;
+  largeImg.value = {};
+}
+function toggleCollectionDlg() {
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
+    router.push('/modelzoo/wukong/admin');
+  }
+}
+const router = useRouter();
+nextTick(() => {
+  let bgImg = document.getElementById('app');
+
+  bgImg.style.background = `url(${wukongbg})`;
+  bgImg.style.backgroundSize = 'cover';
+  bgImg.children[1].style.background = 'unset';
+  bgImg.children[2].style.backgroundColor = 'unset';
+});
+onUnmounted(() => {
+  let bgImg = document.getElementById('app');
+  bgImg.children[1].style.backgroundColor = '#f5f7fc';
+  bgImg.children[2].style.backgroundColor = '#f5f7fc';
+});
+const routeList = [
+  {
+    name: 'AI画集',
+    path: '/modelzoo/wukong/album',
+    icon: IconAlbum,
+  },
+  {
+    name: '画作管理',
+    path: '/modelzoo/wukong/admin',
+    icon: IconPainting,
+  },
+];
+function goPath(val) {
+  router.push(val);
+}
+
+function getHeaderConfig() {
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+    ? {
+        headers: {
+          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+let token = getHeaderConfig().headers
+  ? getHeaderConfig().headers['private-token']
+  : null;
+let socket = new WebSocket(
+  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
+  [token]
+);
+socket.onmessage = function (event) {
+  try {
+    isLine.value = JSON.parse(event.data).data.rank;
+    if (JSON.parse(event.data).data.rank === 0) {
+      getPic()
+        .then((res) => {
+          styleBackground.value = res.data;
+          styleBackground.value.forEach((item, index) => {
+            inferList.value[index].isCollected = item.is_like;
+            inferList.value[index].id = item.like_id;
+            inferList.value[index].publicId = item.public_id;
+          });
+          // res.data.pictures.forEach((item, index) => {
+          //   addWatermark(item, index);
+          // });
+
+          const index1 = styleBackground.value[0].link.indexOf('=');
+          const index2 = styleBackground.value[0].link.indexOf('=', index1 + 1);
+
+          const i1 = styleBackground.value[0].link.indexOf('&');
+          const i2 = styleBackground.value[0].link.indexOf('&', i1 + 1);
+
+          const deadTime = styleBackground.value[0].link.substring(
+            index2 + 1,
+            i2
+          );
+          const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+          if ((deadTime - currentTime) / 60 < 60) {
+            temporaryLink({ link: styleBackground.value[0].link }).then(
+              (res) => {
+                styleBackground1.value[0] = res.data.data.link;
+                addWatermark(res.data.data.link, 0);
+                temporaryLink({ link: styleBackground.value[1].link }).then(
+                  (res) => {
+                    styleBackground1.value[1] = res.data.data.link;
+                    addWatermark(res.data.data.link, 1);
+                  }
+                );
+              }
+            );
+          }
+        })
+        .catch((err) => {
+          isWaiting.value = false;
+          isLine.value = null;
+          if (err.response.data.code === 'bigmodel_no_wukong_picture') {
+            errorMsg.value = '';
+          } else if (err.response.data.code === 'bigmodel_sensitive_info') {
+            errorMsg.value = '内容不合规，请重新输入描述词';
+          }
+          isInferred.value = true;
+          isError.value = true;
+        });
+    }
+  } catch {}
+};
+
+function imgErr() {}
+watch(
+  () => {
+    return screenWidth.value;
+  },
+  (val) => {
+    if (val > 820) {
+      showInferDlg.value = false;
+    }
+  }
+);
 
 const lists = ref([
   { text: '城市夜景 油画', isSelected: false },
@@ -214,16 +382,27 @@ userAvatar.value = userInfoStore.avatar.replace(
 // 公开图片
 async function publicImage(val, index) {
   try {
-    const res = await publicTemporaryPicture({ obspath: val });
+    const res = await publicTemporaryPicture({
+      obspath: decodeURIComponent(
+        styleBackground1.value[index]
+          .split('?')[0]
+          .split(
+            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+          )[1]
+      ),
+    });
     if (res.data) {
       inferList.value[index].publicId = res.data.data.id;
 
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '公开成功，可在画作管理中查看',
       });
     }
+    showConfirmDlg.value = false;
   } catch (err) {
+    showConfirmDlg.value = false;
     console.error(err);
   }
 }
@@ -233,6 +412,7 @@ async function cancelPublicImage(i) {
     const res = await cancelPublic(inferList.value[i].publicId);
     inferList.value[i].publicId = '';
     ElMessage({
+      offset: 64,
       type: 'success',
       message: '已取消公开',
     });
@@ -251,6 +431,17 @@ function shareImage(url) {
     '/obs-big-model/'
   );
   posterInfo.value = inputText.value + '  ' + sortTag.value;
+  if (posterInfo.value === '  ') {
+    posterInfo.value = decodeURIComponent(
+      styleBackground1.value[1]
+        .split('?')[0]
+        .split(
+          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+        )[1]
+    )
+      .split('/')[4]
+      .split('-01.jpg')[0];
+  }
 
   if (screenWidth.value <= 820) {
     nextTick(() => {
@@ -264,21 +455,58 @@ function shareImage(url) {
     });
   }
 }
+// 绘制圆角矩形（使用 arcTo）
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  // 保存当前环境的状态
+  ctx.save();
+  // 重置当前路径
+  ctx.beginPath();
+  // 移动到左上角
+  ctx.moveTo(x + radius, y);
+  // 绘制右上角
+  ctx.arcTo(x + width, y, x + width, y + radius, radius);
+  // 绘制右下角
+  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+  // 绘制左下角
+  ctx.arcTo(x, height, x, height - radius, radius);
+  // 绘制左上角
+  ctx.arcTo(x, y, x + radius, y, radius);
+  // 填充当前路径
+  ctx.fill();
+}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
 
   html2canvas(poster, {
     useCORS: true,
-  }).then((canvas) => {
-    let url = canvas.toDataURL('image/png');
+  }).then((val) => {
+    let url = val.toDataURL('image/png');
 
-    let aLink = document.createElement('a');
-    aLink.style.display = 'none';
-    aLink.href = url;
-    aLink.download = 'poster.png';
-    aLink.click();
-    aLink.remove();
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      // 绘制圆角矩形
+      drawRoundedRect(ctx, 0, 0, img.width, img.height, 38);
+      // 对矩形进行剪切
+      ctx.clip();
+      // 绘制图片
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      const posterLink = canvas.toDataURL('image/png');
+      let aLink = document.createElement('a');
+      aLink.style.display = 'none';
+      aLink.href = posterLink;
+      aLink.download = 'poster.png';
+      aLink.click();
+      aLink.remove();
+    };
   });
 }
 // 海报蒙层关闭事件
@@ -286,17 +514,16 @@ function handlePosterDlgClose() {
   posterLink.value = '';
   isSharedPoster.value = false;
 }
-
 // 复制用户名
 async function copyText(textValue) {
   await toClipboard(textValue);
   ElMessage({
+    offset: 64,
     type: 'success',
     message: '复制成功',
     center: true,
   });
 }
-
 // 选择样例
 function exampleSelectHandler(item) {
   exampleData.value.forEach((item) => {
@@ -322,17 +549,28 @@ function handleInput() {
     }
   });
 }
+// 当前点击风格下标
+const activeIndex = ref(null);
 // 选择风格类别
-function choseStyleSort(val) {
+function choseStyleSort(val, item) {
+  activeIndex.value = val;
   styleIndex.value = val;
+  item.isSelected = !item.isSelected;
+  if (val === 0 && item.isSelected === false) {
+    newStyleData.value[0] =
+      randomList.value[Math.floor(Math.random() * randomList.value.length)];
+    newStyleData.value[0].tag1 = '随机风格';
+    newStyleData.value[0].img1 = style;
+    // newStyleData.value[0].isSelected = true;
+  }
 }
 // 选择风格标签
-function choseSortTag(val) {
-  val.isSelected = !val.isSelected;
-}
+// function choseSortTag(val) {
+//   val.isSelected = !val.isSelected;
+// }
 // 随机风格
 function getRandomStyle(index) {
-  if (index === 4) {
+  if (index === 0) {
     const i = Math.floor(Math.random() * randomList.value.length);
     styleData.value[index].options = mobileRandomData.value.options = [
       randomList.value[i],
@@ -341,15 +579,9 @@ function getRandomStyle(index) {
     return;
   }
 }
-// 重新输入描述
-function reEnterDesc() {
-  showInferDlg.value = false;
-  isError.value = false;
-  initData();
-}
+
 // 初始化推理数据
 function initData() {
-  // inputText.value = '';
   sortTag.value = '';
 
   styleBackground.value = [];
@@ -365,6 +597,30 @@ function initData() {
   });
 }
 
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '24px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+
+    styleBackground.value[index] = canvas.toDataURL('image/png');
+
+    return styleBackground.value[index];
+  };
+}
+
 const errorMsg = ref('');
 // wk推理
 async function handleInfer() {
@@ -372,21 +628,30 @@ async function handleInfer() {
     goAuthorize();
   } else {
     if (inputText.value) {
-      showInferDlg.value = true;
-
+      if (screenWidth.value < 821) {
+        showInferDlg.value = true;
+      }
+      styleBackground.value = [];
+      isWaiting.value = true;
       let count = 0;
-      styleData.value.forEach((item) => {
-        item.options.forEach((style) => {
-          if (style.isSelected) {
-            count++;
-            if (count <= 1) {
-              sortTag.value = style.tag;
-            } else {
-              sortTag.value = sortTag.value + ' ' + style.tag;
-            }
+      randomList.value.forEach((item) => {
+        if (item.isSelected) {
+          count++;
+          if (count <= 1) {
+            sortTag.value = item.tag;
+          } else {
+            sortTag.value = sortTag.value + ' ' + item.tag;
           }
-        });
+        }
       });
+
+      // 重置喜欢公开数据
+      inferList.value = [
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+        { isCollected: false, id: '', publicId: '' },
+      ];
 
       try {
         const res = await wuKongInfer({
@@ -394,8 +659,52 @@ async function handleInfer() {
           style: sortTag.value,
         });
         isInferred.value = true;
-        styleBackground.value = res.data.data.pictures;
+        // isWaiting.value = false;
+        // styleBackground.value = res.data.data.pictures;
+        if (res.status === 201) {
+          setTimeout(() => {
+            socket = new WebSocket(
+              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
+              [getHeaderConfig().headers['private-token']]
+            );
+            socket.onmessage = function (event) {
+              isWaiting.value = false;
+              isLine.value = JSON.parse(event.data).data.rank;
+              if (JSON.parse(event.data).data.rank === 0) {
+                getPic()
+                  .then((res) => {
+                    styleBackground1.value = [
+                      res.data[0].link,
+                      res.data[1].link,
+                    ];
+                    res.data.forEach((item, index) => {
+                      addWatermark(item.link, index);
+                    });
+
+                    isLarge.value = false;
+                  })
+                  .catch((err) => {
+                    isWaiting.value = false;
+                    isLine.value = null;
+                    if (
+                      err.response.data.code === 'bigmodel_no_wukong_picture'
+                    ) {
+                      errorMsg.value = '';
+                    } else if (
+                      err.response.data.code === 'bigmodel_sensitive_info'
+                    ) {
+                      errorMsg.value = '内容不合规，请重新输入描述词';
+                    }
+                    isInferred.value = true;
+                    isError.value = true;
+                  });
+              }
+            };
+          }, 2000);
+        }
       } catch (err) {
+        isWaiting.value = false;
+        isLine.value = null;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -403,11 +712,13 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
+        // isWaiting.value = false;
         isInferred.value = true;
         isError.value = true;
       }
     } else if (!inputText.value) {
       ElMessage({
+        offset: 64,
         type: 'warning',
         message: '请输入样例描述',
       });
@@ -422,11 +733,20 @@ const inferList = ref([
 ]);
 // 收藏
 function handleCollect(key, index) {
-  addLikePicture({ obspath: key }).then((res) => {
+  addLikePicture({
+    obspath: decodeURIComponent(
+      styleBackground1.value[index]
+        .split('?')[0]
+        .split(
+          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
+        )[1]
+    ),
+  }).then((res) => {
     if (res.data.data) {
       inferList.value[index].isCollected = true;
       inferList.value[index].id = res.data.data.id;
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '收藏成功，可在画作管理中查看',
       });
@@ -440,6 +760,7 @@ function handleCancelCollect(index) {
       inferList.value[index].isCollected = false;
       inferList.value[index].id = '';
       ElMessage({
+        offset: 64,
         type: 'success',
         message: '取消收藏成功',
       });
@@ -458,29 +779,31 @@ function requestImg(item) {
     a.href = url;
     a.download = 'infer.png';
     a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
   x.send();
 }
 // 临时url小于1min重新获取下载
 function downloadImage(item) {
-  const index1 = item.indexOf('=');
-  const index2 = item.indexOf('=', index1 + 1);
+  // const index1 = item.indexOf('=');
+  // const index2 = item.indexOf('=', index1 + 1);
 
-  const i1 = item.indexOf('&');
-  const i2 = item.indexOf('&', i1 + 1);
+  // const i1 = item.indexOf('&');
+  // const i2 = item.indexOf('&', i1 + 1);
 
-  const deadTime = item.substring(index2 + 1, i2);
-  const currentTime = (new Date().getTime() + '').substring(0, 10);
+  // const deadTime = item.substring(index2 + 1, i2);
+  // const currentTime = (new Date().getTime() + '').substring(0, 10);
 
-  if ((deadTime - currentTime) / 60 < 60) {
-    temporaryLink({ link: item }).then((res) => {
-      if (res.data.data) {
-        requestImg(res.data.data.link);
-      }
-    });
-  } else {
-    requestImg(item);
-  }
+  // if ((deadTime - currentTime) / 60 < 60) {
+  //   temporaryLink({ link: item }).then((res) => {
+  //     if (res.data.data) {
+  //       requestImg(res.data.data.link);
+  //     }
+  //   });
+  // } else {
+  requestImg(item);
+  // }
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -513,9 +836,15 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
+
+const svgRotate = ref(false);
 // 换一批
 function refreshTags() {
-  exampleData.value = getDescExamples(lists.value, 5);
+  svgRotate.value = true;
+  exampleData.value = getDescExamples(lists.value, 2);
+}
+function reset(val) {
+  svgRotate.value = val;
 }
 
 const resultIndex = ref(-1);
@@ -523,15 +852,280 @@ const resultIndex = ref(-1);
 function handleResultClcik(i) {
   resultIndex.value = i;
 }
+const showConfirmDlg = ref(false);
 </script>
 <template>
+  <div class="wukong-bread">
+    <el-breadcrumb :separator-icon="ArrowRight">
+      <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+        >大模型</el-breadcrumb-item
+      >
+      <el-breadcrumb-item>悟空在线体验</el-breadcrumb-item>
+    </el-breadcrumb>
+  </div>
   <div class="wk-experience">
+    <div class="wrap-left">
+      <el-input
+        v-model="inputText"
+        maxlength="75"
+        placeholder="请输入简体中文或选择下方样例"
+        show-word-limit
+        type="textarea"
+        @input="handleInput"
+      >
+        <template #suffix
+          ><o-icon v-if="inputText" class="clear-input" @click="clearInputText"
+            ><icon-x></icon-x></o-icon
+        ></template>
+      </el-input>
+      <div class="wk-experience-examples">
+        <!-- <p class="title">选择样例</p> -->
+        <div class="example-items">
+          <p
+            v-for="item in exampleData"
+            :key="item.text"
+            :class="item.isSelected ? 'active' : ''"
+            @click="exampleSelectHandler(item)"
+          >
+            {{ item.text }}
+          </p>
+        </div>
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
+          <!-- <p>换一批</p> -->
+        </div>
+      </div>
+      <div class="wk-experience-styles">
+        <div class="title">选择风格</div>
+        <div class="content">
+          <div class="style-tag">
+            <div
+              v-for="(item, index) in newStyleData"
+              :key="item.style"
+              class="style-item"
+              @click="choseStyleSort(index, item)"
+            >
+              <img
+                v-if="index === 0"
+                :src="
+                  item.isSelected && activeIndex === 0 ? item.img : item.img1
+                "
+                alt=""
+                :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
+              />
+              <img
+                v-else
+                :src="item.img"
+                alt=""
+                :class="item.isSelected ? 'active-1' : ''"
+              />
+
+              <div class="style-item-name" @click="getRandomStyle(index)">
+                {{ index === 0 ? item.tag1 : item.tag }}
+              </div>
+            </div>
+            <div v-if="!isAllStyle" class="style-item" @click="viewAll">
+              <img :src="viewAllImg" alt="" />
+            </div>
+          </div>
+          <div v-if="isAllStyle" class="all-kind retract" @click="retract">
+            收起
+          </div>
+
+          <!-- <div class="sort-tag">
+            <div
+              v-for="item in styleData[styleIndex].options"
+              :key="item"
+              class="sort-item"
+              :class="item.isSelected ? 'active' : ' '"
+              @click="choseSortTag(item)"
+            >
+              {{ item.tag }}
+            </div>
+
+            <div class="triangle" :class="`triangle${styleIndex}`"></div>
+          </div> -->
+        </div>
+      </div>
+      <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
+      <div class="experience-btn">
+        <o-button type="primary" @click="handleInfer">立即生成</o-button>
+      </div>
+    </div>
+    <div class="wrap-right">
+      <div class="sider-content">
+        <div v-if="isLarge" class="content-left" @click="handleReturn">
+          <o-icon><icon-right></icon-right></o-icon>
+          返回
+        </div>
+        <div v-else></div>
+        <div class="content-right">
+          <span class="album" @click="router.push('/modelzoo/wukong/album')">
+            <o-icon><icon-album></icon-album></o-icon>
+            AI画集
+          </span>
+          <span class="painting" @click="toggleCollectionDlg">
+            <o-icon><icon-painting></icon-painting></o-icon>
+            画作管理
+          </span>
+        </div>
+      </div>
+      <div v-if="!styleBackground.length" class="empty">
+        <div v-if="isWaiting" class="waiting">
+          <img :src="loading" alt="" />
+          <p>正在创作中，请耐心等待</p>
+        </div>
+        <div v-else-if="isLine !== null" class="waiting">
+          <img :src="loading" alt="" />
+          <p v-if="isLine <= 1">正在创作中，请耐心等待</p>
+          <p v-else>前面还有{{ isLine }}位排队，请耐心等待</p>
+        </div>
+        <div v-else-if="errorMsg" class="waiting">
+          <img :src="warning" alt="" />
+          <p>敏感信息，请重新输入关键词</p>
+        </div>
+        <div v-else class="tip">
+          <img :src="tip" alt="" />
+          <p>在左侧选择样例风格开始画画</p>
+        </div>
+      </div>
+      <div v-else class="img-box">
+        <template v-if="!isLarge">
+          <div
+            v-for="(value, key, index) in styleBackground"
+            :key="key"
+            class="result-item"
+          >
+            <img
+              :src="value"
+              alt=""
+              :onerror="imgErr"
+              @click="handleEnlage(value, key, index)"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
+            <o-icon
+              class="turn"
+              @click="
+                handleEnlage(
+                  Object.values(styleBackground)[0],
+                  Object.keys(styleBackground)[0],
+                  0
+                )
+              "
+              ><icon-left></icon-left
+            ></o-icon>
+            <img :src="value" alt="" />
+            <o-icon
+              class="turn"
+              @click="
+                handleEnlage(
+                  Object.values(styleBackground)[1],
+                  Object.keys(styleBackground)[1],
+                  1
+                )
+              "
+              ><icon-right2></icon-right2
+            ></o-icon>
+            <div class="handles">
+              <div class="public">
+                <template v-if="!inferList[largeIndex].publicId">
+                  <div class="func-item" @click="showConfirmDlg = true">
+                    <p>
+                      <o-icon><icon-arrow></icon-arrow></o-icon>
+                    </p>
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">公开</div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="func-item" @click="cancelPublicImage(largeIndex)">
+                    <p class="icon-item">
+                      <o-icon><icon-cancel></icon-cancel></o-icon>
+                    </p>
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">取消公开</div>
+                  </div>
+                </template>
+              </div>
+              <div class="handles-contain">
+                <div
+                  class="func-item"
+                  @click="downloadImage(styleBackground[largeIndex])"
+                >
+                  <p>
+                    <o-icon><icon-download></icon-download></o-icon>
+                  </p>
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">下载</div>
+                </div>
+
+                <div class="func-item" @click="shareImage(value)">
+                  <p>
+                    <o-icon><icon-share></icon-share></o-icon>
+                  </p>
+                  <img class="arrow" :src="arrow" alt="" />
+                  <div class="icon-name">分享</div>
+                </div>
+
+                <template v-if="!inferList[largeIndex].isCollected">
+                  <div class="func-item">
+                    <p @click="handleCollect(value, largeIndex)">
+                      <o-icon><icon-like></icon-like></o-icon>
+                    </p>
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">收藏</div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="func-item">
+                    <p class="liked" @click="handleCancelCollect(largeIndex)">
+                      <o-icon><icon-heart></icon-heart></o-icon>
+                    </p>
+                    <img class="arrow" :src="arrow" alt="" />
+                    <div class="icon-name">取消收藏</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <!-- <div class="mask"></div> -->
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <textarea class="input-dom"></textarea>
+  </div>
+  <!-- mobile -->
+  <div class="mobile-sider-content">
+    <div
+      v-for="item in routeList"
+      :key="item.path"
+      class="jump-item"
+      @click="goPath(item.path)"
+    >
+      <div class="left">
+        <OIcon><component :is="item.icon"></component></OIcon>
+        <span>{{ item.name }}</span>
+      </div>
+      <div class="right">
+        <o-icon><icon-arrowRight></icon-arrowRight></o-icon>
+      </div>
+    </div>
+  </div>
+  <div class="wk-experience-mobile">
     <el-input
       v-model="inputText"
       maxlength="75"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
-      type="text"
+      type="textarea"
       @input="handleInput"
     >
       <template #suffix
@@ -539,8 +1133,18 @@ function handleResultClcik(i) {
           ><icon-x></icon-x></o-icon
       ></template>
     </el-input>
-    <div class="wk-experience-examples">
-      <p class="title">选择样例</p>
+
+    <div class="mobile-examples">
+      <div class="example-head">
+        <!-- <p class="title">选择样例</p> -->
+        <div class="refresh" @click="refreshTags" @animationend="reset(false)">
+          <o-icon :class="svgRotate ? 'rotating' : ''"
+            ><icon-refresh></icon-refresh
+          ></o-icon>
+          <!-- <p>换一批</p> -->
+        </div>
+      </div>
+
       <div class="example-items">
         <p
           v-for="item in exampleData"
@@ -551,51 +1155,99 @@ function handleResultClcik(i) {
           {{ item.text }}
         </p>
       </div>
-      <div class="refresh" @click="refreshTags">
-        <o-icon><icon-refresh></icon-refresh></o-icon>
-        <p>换一批</p>
-      </div>
     </div>
-    <div class="wk-experience-styles">
-      <p class="title">选择风格</p>
+
+    <div class="mobile-styles">
+      <div class="title">选择风格</div>
       <div class="content">
         <div class="style-tag">
           <div
-            v-for="(item, index) in styleData"
+            v-for="(item, index) in newStyleData"
             :key="item.style"
             class="style-item"
-            :class="styleIndex === index ? 'active-1' : ''"
-            @click="choseStyleSort(index)"
+            @click="choseStyleSort(index, item)"
           >
-            <img :src="styleBackgrounds[index]" alt="" />
+            <img
+              v-if="index === 0"
+              :src="item.isSelected && activeIndex === 0 ? item.img : item.img1"
+              alt=""
+              :class="item.isSelected && activeIndex === 0 ? 'active-1' : ''"
+            />
+            <img
+              v-else
+              :src="item.img"
+              alt=""
+              :class="item.isSelected ? 'active-1' : ''"
+            />
 
             <div class="style-item-name" @click="getRandomStyle(index)">
+              {{ index === 0 ? item.tag1 : item.tag }}
+            </div>
+
+            <!-- <div v-if="styleIndex === index" class="triangle"></div> -->
+          </div>
+          <div v-if="!isAllStyle" class="style-item" @click="viewAll">
+            <img :src="viewAllImg" alt="" />
+          </div>
+
+          <!-- <div v-if="styleIndex < 4" class="sort-tag">
+            <div
+              v-for="item in styleData[styleIndex].options"
+              :key="item"
+              class="sort-item"
+              :class="item.isSelected ? 'active' : ' '"
+              @click="choseSortTag(item)"
+            >
+              {{ item.tag }}
+            </div>
+          </div> -->
+        </div>
+        <div v-if="isAllStyle" class="all-kind retract" @click="retract">
+          收起
+        </div>
+
+        <!-- <div class="style-tag">
+          <div
+            v-for="(item, index) in mobileRandomData"
+            :key="item.style"
+            class="style-item"
+            :class="styleIndex === index + 4 ? 'active-1' : ''"
+            @click="choseStyleSort(index + 4)"
+          >
+            <img :src="styleBackgrounds[index + 4]" alt="" />
+
+            <div class="style-item-name" @click="getRandomStyle(index + 4)">
               {{ item.style }}
             </div>
+            <div v-if="styleIndex === 4" class="triangle"></div>
           </div>
-        </div>
-        <div class="sort-tag">
-          <div
-            v-for="item in styleData[styleIndex].options"
-            :key="item"
-            class="sort-item"
-            :class="item.isSelected ? 'active' : ' '"
-            @click="choseSortTag(item)"
-          >
-            {{ item.tag }}
+          <div v-if="styleIndex === 4" class="sort-tag">
+            <div
+              v-for="item in mobileRandomData.options"
+              :key="item"
+              class="sort-item"
+              :class="item.isSelected ? 'active' : ' '"
+              @click="choseSortTag(item)"
+            >
+              {{ item.tag }}
+            </div>
           </div>
-
-          <div class="triangle" :class="`triangle${styleIndex}`"></div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="wk-experience-btn" @click="handleInfer">立即生成</div>
 
+    <div class="experience-btn">
+      <o-button size="mini" type="primary" @click="handleInfer"
+        >立即生成</o-button
+      >
+    </div>
+  </div>
+  <div>
     <el-dialog
       v-model="showInferDlg"
       class="infer-dlg"
+      lock-scroll
       :fullscreen="true"
-      :append-to-body="true"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       @close="handleDlgClose"
@@ -607,144 +1259,94 @@ function handleResultClcik(i) {
         </p>
       </template>
 
-      <div v-if="!isInferred" class="infer-dlg-loading">
-        <img :src="loading" alt="" />
-        <p>正在创作中，请耐心等待</p>
+      <div v-if="!styleBackground.length" class="infer-dlg-loading">
+        <template v-if="isWaiting">
+          <img :src="loading" alt="" />
+          <p>正在创作中，请耐心等待</p></template
+        >
+        <template v-else-if="isLine !== null">
+          <img :src="loading" alt="" />
+          <p v-if="isLine <= 1">正在创作中，请耐心等待</p>
+          <p v-else>前面还有{{ isLine }}位排队，请耐心等待</p></template
+        >
+        <template v-else-if="errorMsg">
+          <img :src="warning" alt="" />
+          <p>敏感信息，请重新输入关键词</p></template
+        >
+        <template v-else> </template>
       </div>
 
-      <div v-if="isInferred && !isError" class="infer-dlg-result">
+      <div v-if="styleBackground.length && !isError" class="infer-dlg-result">
+        <!-- mobile -->
         <div
-          v-for="(value, key, index) in styleBackground"
+          v-for="(value, key) in styleBackground"
           :key="key"
-          class="result-item"
+          class="mobile-result-item"
+          @click="handleResultClcik(key)"
         >
           <img :src="value" alt="" />
+
           <div class="handles">
             <div class="public">
-              <template v-if="!inferList[index].publicId">
-                <div @click="publicImage(key, index)">
+              <template v-if="!inferList[key].publicId">
+                <div
+                  class="func-item"
+                  @click="
+                    showConfirmDlg = true;
+                    largeIndex = key;
+                  "
+                >
                   <p>
                     <o-icon><icon-arrow></icon-arrow></o-icon>
                   </p>
-                  <div class="icon-name">公开</div>
+                  <!-- <div class="icon-name">公开</div> -->
                 </div>
               </template>
 
               <template v-else>
-                <div @click="cancelPublicImage(index)">
+                <div class="func-item" @click="cancelPublicImage(key)">
                   <p class="icon-item">
                     <o-icon><icon-cancel></icon-cancel></o-icon>
                   </p>
-                  <div class="icon-name">取消公开</div>
+                  <!-- <div class="icon-name">取消公开</div> -->
                 </div>
               </template>
             </div>
             <div class="handles-contain">
-              <div class="func-item" @click="downloadImage(value)">
-                <p>
+              <!-- <p @click="downloadImage(value)">
                   <o-icon><icon-download></icon-download></o-icon>
-                </p>
-                <div class="icon-name">下载</div>
-              </div>
-
-              <div class="func-item" @click="shareImage(value)">
-                <p>
+                </p> -->
+              <div class="func-item">
+                <p @click="shareImage(value)">
                   <o-icon><icon-share></icon-share></o-icon>
                 </p>
-                <div class="icon-name">分享</div>
+                <!-- <div class="icon-name">分享</div> -->
               </div>
 
-              <template v-if="!inferList[index].isCollected">
-                <div class="func-item">
-                  <p @click="handleCollect(key, index)">
+              <template v-if="!inferList[key].isCollected">
+                <div class="func-item" @click="handleCollect(value, key)">
+                  <p>
                     <o-icon><icon-like></icon-like></o-icon>
                   </p>
-                  <div class="icon-name">收藏</div>
+                  <!-- <div class="icon-name">收藏</div> -->
                 </div>
               </template>
 
-              <template v-else>
-                <div class="func-item">
-                  <p
-                    v-if="inferList[index].isCollected"
-                    class="liked"
-                    @click="handleCancelCollect(index)"
-                  >
+              <template v-if="inferList[key].isCollected">
+                <div class="func-item" @click="handleCancelCollect(key)">
+                  <p class="liked">
                     <o-icon><icon-heart></icon-heart></o-icon>
                   </p>
-                  <div class="icon-name">取消收藏</div>
+                  <!-- <div class="icon-name">取消收藏</div> -->
                 </div>
               </template>
             </div>
           </div>
-          <div class="mask"></div>
-        </div>
-        <!-- mobile -->
-        <div
-          v-for="(value, key, index) in styleBackground"
-          :key="key"
-          class="mobile-result-item"
-          @click="handleResultClcik(index)"
-        >
-          <img :src="value" alt="" />
-
-          <template v-if="index === resultIndex">
-            <div class="handles">
-              <div class="public">
-                <template v-if="!inferList[index].publicId">
-                  <div class="func-item" @click="publicImage(key, index)">
-                    <p>
-                      <o-icon><icon-arrow></icon-arrow></o-icon>
-                    </p>
-                    <div class="icon-name">公开</div>
-                  </div>
-                </template>
-
-                <template v-else>
-                  <div class="func-item" @click="cancelPublicImage(index)">
-                    <p class="icon-item">
-                      <o-icon><icon-cancel></icon-cancel></o-icon>
-                    </p>
-                    <div class="icon-name">取消公开</div>
-                  </div>
-                </template>
-              </div>
-              <div class="handles-contain">
-                <!-- <p @click="downloadImage(value)">
-                  <o-icon><icon-download></icon-download></o-icon>
-                </p> -->
-                <div class="func-item">
-                  <p @click="shareImage(value)">
-                    <o-icon><icon-share></icon-share></o-icon>
-                  </p>
-                  <div class="icon-name">分享</div>
-                </div>
-
-                <template v-if="!inferList[index].isCollected">
-                  <div class="func-item" @click="handleCollect(key, index)">
-                    <p>
-                      <o-icon><icon-like></icon-like></o-icon>
-                    </p>
-                    <div class="icon-name">收藏</div>
-                  </div>
-                </template>
-
-                <template v-if="inferList[index].isCollected">
-                  <div class="func-item" @click="handleCancelCollect(index)">
-                    <p class="liked">
-                      <o-icon><icon-heart></icon-heart></o-icon>
-                    </p>
-                    <div class="icon-name">取消收藏</div>
-                  </div>
-                </template>
-              </div>
-            </div>
-            <div class="mask"></div>
-          </template>
+          <!-- <div class="mask"></div> -->
         </div>
       </div>
 
-      <div v-if="isError" class="infer-dlg-error">
+      <!-- <div v-if="isError" class="infer-dlg-error">
         <p>
           <o-icon><icon-warning></icon-warning></o-icon>
         </p>
@@ -755,16 +1357,15 @@ function handleResultClcik(i) {
           <span>重新输入</span>
           <o-icon><icon-right></icon-right></o-icon>
         </p>
-      </div>
+      </div> -->
     </el-dialog>
 
     <el-dialog
       v-model="posterDlg"
-      :fullscreen="true"
-      :append-to-body="true"
       center
+      align-center
       class="poster-dlg-wk"
-      :close-on-click-modal="false"
+      width="434"
       :close-on-press-escape="false"
       @close="handlePosterDlgClose"
     >
@@ -791,6 +1392,8 @@ function handleResultClcik(i) {
             src="@/assets/imgs/logo.png"
             alt=""
           />
+
+          <p class="water-mark-text">由AI模型生成</p>
 
           <div class="mask"></div>
 
@@ -822,112 +1425,66 @@ function handleResultClcik(i) {
       </div>
     </el-dialog>
 
-    <textarea class="input-dom"></textarea>
-  </div>
-  <!-- mobile -->
-  <div class="wk-experience-mobile">
-    <el-input
-      v-model="inputText"
-      maxlength="75"
-      placeholder="请输入简体中文或选择下方样例"
-      show-word-limit
-      type="text"
-      @input="handleInput"
+    <el-dialog
+      v-model="showConfirmDlg"
+      class="confirm-dlg"
+      align-center
+      width="640"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
-      <template #suffix
-        ><o-icon v-if="inputText" class="clear-input" @click="clearInputText"
-          ><icon-x></icon-x></o-icon
-      ></template>
-    </el-input>
-
-    <div class="mobile-examples">
-      <div class="example-head">
-        <p class="title">选择样例</p>
-        <div class="refresh" @click="refreshTags">
-          <o-icon><icon-refresh></icon-refresh></o-icon>
-          <p>换一批</p>
-        </div>
-      </div>
-
-      <div class="example-items">
-        <p
-          v-for="item in exampleData"
-          :key="item.text"
-          :class="item.isSelected ? 'active' : ''"
-          @click="exampleSelectHandler(item)"
+      <template #header>
+        <p class="confirm-title">公开画作</p>
+      </template>
+      <div class="confirm-desc">
+        当前体验服务的内容均由人工智能模型生成，平台对其生成内容的准确性、完整性和功能性不做任何保证，在使用体验服务前，请您务必仔细阅读并理解透彻
+        <a
+          target="blank"
+          href="https://xihe-docs.mindspore.cn/zh/appendix/license/"
+          >《昇思大模型平台协议》</a
         >
-          {{ item.text }}
-        </p>
       </div>
-    </div>
-
-    <div class="mobile-styles">
-      <p class="title">选择风格</p>
-      <div class="content">
-        <div class="style-tag">
-          <div
-            v-for="(item, index) in mobileStyleData"
-            :key="item.style"
-            class="style-item"
-            :class="styleIndex === index ? 'active-1' : ''"
-            @click="choseStyleSort(index)"
-          >
-            <img :src="styleBackgrounds[index]" alt="" />
-
-            <div class="style-item-name" @click="getRandomStyle(index)">
-              {{ item.style }}
-            </div>
-
-            <div v-if="styleIndex === index" class="triangle"></div>
-          </div>
-
-          <div v-if="styleIndex < 4" class="sort-tag">
-            <div
-              v-for="item in styleData[styleIndex].options"
-              :key="item"
-              class="sort-item"
-              :class="item.isSelected ? 'active' : ' '"
-              @click="choseSortTag(item)"
-            >
-              {{ item.tag }}
-            </div>
-          </div>
-        </div>
-
-        <div class="style-tag">
-          <div
-            v-for="(item, index) in mobileRandomData"
-            :key="item.style"
-            class="style-item"
-            :class="styleIndex === index + 4 ? 'active-1' : ''"
-            @click="choseStyleSort(index + 4)"
-          >
-            <img :src="styleBackgrounds[index + 4]" alt="" />
-
-            <div class="style-item-name" @click="getRandomStyle(index + 4)">
-              {{ item.style }}
-            </div>
-            <div v-if="styleIndex === 4" class="triangle"></div>
-          </div>
-          <div v-if="styleIndex === 4" class="sort-tag">
-            <div
-              v-for="item in mobileRandomData.options"
-              :key="item"
-              class="sort-item"
-              :class="item.isSelected ? 'active' : ' '"
-              @click="choseSortTag(item)"
-            >
-              {{ item.tag }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-btn" @click="handleInfer">立即生成</div>
+      <template #footer>
+        <OButton
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          style="margin-right: 16px"
+          @click="showConfirmDlg = false"
+          >取消</OButton
+        >
+        <OButton
+          type="primary"
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          @click="publicImage(styleBackground[largeIndex], largeIndex)"
+          >提交审核</OButton
+        >
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
+.wukong-bread {
+  padding-top: 104px;
+  padding-left: 16px;
+  max-width: 1472px;
+  margin: 0 auto;
+  @media screen and (max-width: 820px) {
+    padding-top: 64px;
+    padding-bottom: 16px;
+  }
+  :deep(.el-breadcrumb) {
+    font-size: 12px;
+    line-height: 18px;
+    .el-breadcrumb__item {
+      .el-breadcrumb__inner {
+        color: #555;
+      }
+      &:last-child .el-breadcrumb__inner {
+        color: #000;
+      }
+    }
+  }
+}
 /* 推理弹窗 */
 .infer-dlg-result {
   display: flex;
@@ -943,119 +1500,6 @@ function handleResultClcik(i) {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     margin-top: 0;
-  }
-  /* pc生成图片 */
-  .result-item {
-    position: relative;
-    margin-right: 24px;
-    width: 34vw;
-    @media screen and (max-width: 820px) {
-      display: none;
-    }
-    &:hover {
-      .handles,
-      .mask {
-        opacity: 1;
-      }
-    }
-    &:last-child {
-      margin-right: 0;
-    }
-    img {
-      height: 100%;
-      width: 100%;
-    }
-    .mask {
-      position: absolute;
-      bottom: 0;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      width: 100%;
-      height: 16vh;
-      opacity: 0;
-      @media screen and (max-width: 768px) {
-        height: 10vh;
-      }
-    }
-
-    .handles {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      z-index: 20;
-      opacity: 0;
-      display: flex;
-      justify-content: space-between;
-      padding: 18px 24px;
-      @media screen and (max-width: 1450px) {
-        bottom: 10px;
-      }
-      @media screen and (max-width: 768px) {
-        bottom: 0px;
-        padding: 8px;
-      }
-      .handles-contain,
-      .public {
-        display: flex;
-
-        .o-icon {
-          color: #fff;
-          font-size: 24px;
-        }
-
-        .liked {
-          .o-icon {
-            font-size: 20px;
-          }
-        }
-        .icon-name {
-          color: #fff;
-          font-size: 14px;
-          margin-top: 8px;
-          text-align: center;
-          cursor: pointer;
-        }
-        .func-item {
-          cursor: pointer;
-          &:nth-child(2) {
-            margin: 0 16px;
-          }
-          .icon-name {
-            color: #fff;
-            font-size: 14px;
-            margin-top: 8px;
-            text-align: center;
-          }
-        }
-        p {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.1);
-          font-size: 24px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          margin: 0 auto;
-          @media screen and (max-width: 1080px) {
-            width: 24px;
-            height: 24px;
-            .o-icon {
-              font-size: 16px;
-            }
-          }
-          &:nth-child(2) {
-            margin: 0 16px;
-            @media screen and (max-width: 1450px) {
-              margin: 0 8px;
-            }
-          }
-          &:hover {
-            background: rgba(255, 255, 255, 0.3);
-          }
-        }
-      }
-    }
   }
 
   /* mobile生成图片 */
@@ -1074,8 +1518,9 @@ function handleResultClcik(i) {
       margin-right: 0;
     }
     img {
-      height: 100%;
+      max-width: 360px;
       width: 100%;
+      border-radius: 16px;
     }
     .mask {
       position: absolute;
@@ -1088,7 +1533,7 @@ function handleResultClcik(i) {
 
     .handles {
       width: 100%;
-      position: absolute;
+      position: relative;
       z-index: 20;
       display: flex;
       justify-content: space-between;
@@ -1097,9 +1542,11 @@ function handleResultClcik(i) {
       .handles-contain,
       .public {
         display: flex;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 3px 5px;
 
         .o-icon {
-          color: #fff;
+          color: #b2b2b2;
           font-size: 24px;
           @media screen and (max-width: 768px) {
             font-size: 16px;
@@ -1133,7 +1580,7 @@ function handleResultClcik(i) {
           height: 40px;
           border-radius: 50%;
           background: rgba(255, 255, 255, 0.1);
-          font-size: 16pxpx;
+          font-size: 16px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -1145,6 +1592,16 @@ function handleResultClcik(i) {
             margin: 0 4px;
           }
         }
+      }
+      .public {
+        border-bottom-left-radius: 16px;
+        border-top-left-radius: 16px;
+        padding-right: 0;
+      }
+      .handles-contain {
+        border-bottom-right-radius: 16px;
+        border-top-right-radius: 16px;
+        padding-left: 0;
       }
     }
   }
@@ -1167,7 +1624,7 @@ function handleResultClcik(i) {
   p {
     font-size: 18px;
     font-weight: 400;
-    color: #ffffff;
+    color: #555555;
     line-height: 25px;
     text-align: center;
     @media screen and (max-width: 820px) {
@@ -1255,18 +1712,21 @@ function handleResultClcik(i) {
     }
   }
   .poster {
-    width: 540px;
+    width: 434px;
     background: #ffffff;
     padding: 16px;
     margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
     @media screen and (max-width: 767px) {
-      width: 100%;
-      margin-top: 6vh;
+      width: 328px;
       padding: 8px 8px 16px;
     }
     .poster-image {
       width: 100%;
       position: relative;
+      border-radius: 16px;
+      background: transparent;
       @media screen and (max-width: 768px) {
         width: 100%;
         height: calc(100% - 40px);
@@ -1282,18 +1742,31 @@ function handleResultClcik(i) {
           height: 160px;
         }
       }
+      .water-mark-text {
+        color: #fff;
+        position: absolute;
+        bottom: 66px;
+        right: 18px;
+        z-index: 2;
+        font-size: 12px;
+        @media screen and (max-width: 768px) {
+          bottom: 48px;
+          right: 8px;
+          font-size: 8px;
+        }
+      }
       .qr-code {
         width: 78px;
         height: 78px;
         position: absolute;
         right: 16px;
-        bottom: 72px;
+        bottom: 92px;
         z-index: 1;
         @media screen and (max-width: 768px) {
           width: 56px;
           height: 56px;
           right: 8px;
-          bottom: 48px;
+          bottom: 70px;
         }
       }
       .logo {
@@ -1312,7 +1785,8 @@ function handleResultClcik(i) {
       }
       .infer-img {
         width: 100%;
-        min-height: 300px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
         @media screen and (max-width: 820px) {
         }
       }
@@ -1323,6 +1797,8 @@ function handleResultClcik(i) {
         justify-content: space-between;
         align-items: center;
         padding: 16px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
         @media screen and (max-width: 768px) {
           padding: 8px;
         }
@@ -1331,6 +1807,10 @@ function handleResultClcik(i) {
           font-weight: 400;
           color: #000000;
           line-height: 24px;
+          max-width: 250px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           @media screen and (max-width: 768px) {
             font-size: 12px;
             line-height: 24px;
@@ -1356,6 +1836,7 @@ function handleResultClcik(i) {
             font-weight: 400;
             color: #555555;
             line-height: 24px;
+            white-space: nowrap;
           }
         }
       }
@@ -1383,6 +1864,7 @@ function handleResultClcik(i) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 16px;
         @media screen and (max-width: 768px) {
           width: 200px;
           height: 32px;
@@ -1406,6 +1888,7 @@ function handleResultClcik(i) {
         color: #40adff;
         text-align: center;
         cursor: pointer;
+        border-radius: 18px;
         @media screen and (max-width: 768px) {
           width: 74px;
           height: 32px;
@@ -1421,24 +1904,152 @@ function handleResultClcik(i) {
     }
   }
 }
+:deep(.poster-dlg-wk) {
+  background: transparent;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
+  .el-dialog__title {
+    display: none;
+  }
 
-.wk-experience-mobile {
+  .el-dialog__headerbtn {
+    display: none;
+    .el-icon {
+      color: #ffffff;
+    }
+  }
+}
+:deep(.infer-dlg) {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 0;
+  .el-dialog__header {
+    padding: 12px 0;
+    backdrop-filter: blur(5px);
+  }
+  .el-dialog__title {
+    font-size: 14px;
+    color: #ffffff;
+  }
+  .el-dialog__headerbtn {
+    top: 0;
+    color: #ffffff;
+    .el-icon {
+      color: #ffffff;
+    }
+  }
+  .el-dialog__body {
+    min-height: calc(100% - 48px);
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+  }
+  .mobile-result-item {
+    .handles {
+      justify-content: flex-end;
+      .o-icon {
+        color: #b2b2b2;
+      }
+    }
+  }
+}
+
+.mobile-sider-content {
   display: none;
   @media screen and (max-width: 767px) {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px 24px;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+    color: #555555;
+  }
+  @media screen and (max-width: 767px) {
+    font-size: 12px;
+    padding: 0 16px 16px;
+  }
+  .jump-item {
+    flex: 1;
+    background: #ffffff;
+    box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @media screen and (max-width: 820px) {
+      padding: 24px;
+    }
+    @media screen and (max-width: 767px) {
+      padding: 8px 12px;
+    }
+    &:first-child {
+      margin-right: 16px;
+    }
+    .left {
+      display: flex;
+      align-items: center;
+      .o-icon {
+        font-size: 24px;
+        margin-right: 12px;
+      }
+    }
+    .right {
+      font-size: 24px;
+      height: 24px;
+      @media screen and (max-width: 767px) {
+        font-size: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
+.wk-experience-mobile {
+  display: none;
+  position: relative;
+  @media screen and (max-width: 820px) {
     display: block;
+  }
+  margin: 0 16px 34px;
+  padding: 16px 16px 24px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+
+  :deep(.el-textarea) {
+    width: 100% !important;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    .el-textarea__inner {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 1px #fff inset;
+      border-radius: 8px;
+      padding: 8px;
+      height: 80px;
+    }
   }
   .active {
     color: #fff !important;
     background: #008eff !important;
   }
   .active-1 {
-    border: 1px solid #008eff !important;
+    border: 2px solid #008eff !important;
+    border-radius: 6px;
   }
+
   .mobile-examples {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin-top: 8px;
     .example-head {
       display: flex;
       justify-content: space-between;
-      margin-top: 16px;
       .title {
         font-size: 14px;
         font-weight: 400;
@@ -1454,46 +2065,76 @@ function handleResultClcik(i) {
         align-items: center;
         .o-icon {
           margin-right: 4px;
+          font-size: 16px;
+        }
+        p {
+          white-space: nowrap;
         }
       }
     }
     .example-items {
       display: flex;
-      flex-wrap: wrap;
+      max-width: 280px;
+      flex-wrap: nowrap;
+
       p {
-        margin-top: 8px;
         color: #b2b2b2;
-        border: 1px solid #0d8dff;
-        margin-right: 16px;
-        border-radius: 6px;
-        background: rgba(13, 141, 255, 0.3);
-        padding: 0px 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 4px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        padding: 3px 8px;
         font-size: 12px;
-        height: 24px;
-        line-height: 24px;
+        margin: 4px 2px;
+        cursor: pointer;
+        @media screen and (max-width: 820px) {
+          margin-bottom: 8px;
+        }
       }
     }
   }
   .mobile-styles {
     .title {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       font-weight: 400;
-      color: #ffffff;
+      color: #555;
       margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      .all-kind {
+        font-size: 12px;
+      }
     }
 
     .content {
+      padding-bottom: 85px;
+      overflow: auto;
+      margin-top: 16px;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 6px;
+      }
+      @media screen and (max-width: 476px) {
+        height: 365px;
+        padding-bottom: 55px;
+      }
       .style-tag {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        column-gap: 50px;
+        @media screen and (max-width: 476px) {
+          gap: 12px;
+        }
+
         .style-item {
           flex: 1;
-          margin-top: 16px;
+          margin-bottom: 4px;
           position: relative;
           width: 68px;
-          height: 42px;
           border-radius: 6px;
           border: 1px solid transparent;
           flex: unset;
@@ -1510,27 +2151,40 @@ function handleResultClcik(i) {
           }
 
           img {
-            width: 100%;
-            height: 100%;
+            width: 65px;
+            height: 65px;
             border-radius: 6px;
           }
           .style-item-name {
-            position: absolute;
+            padding-top: 7px;
             bottom: 0px;
             font-size: 12px;
             line-height: 17px;
             font-weight: 400;
-            color: #ffffff;
+            color: #555555;
             width: 100%;
-            background: linear-gradient(
-              180deg,
-              rgba(0, 0, 0, 0) 0%,
-              #000000 100%
-            );
             text-align: center;
-            padding-bottom: 6px;
             border-radius: 0 0 6px 6px;
           }
+        }
+      }
+      .all-kind {
+        text-align: center;
+        color: #555555;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 4px 14px;
+        background: #e1effd;
+        width: 52px;
+        margin: 10px auto 0;
+        border-radius: 14px;
+        .o-icon {
+          margin-left: 8px;
+        }
+      }
+      .retract {
+        .o-icon svg {
+          transform: rotate(180deg);
         }
       }
       .sort-tag {
@@ -1556,42 +2210,329 @@ function handleResultClcik(i) {
       }
     }
   }
-  .mobile-btn {
-    background-image: url('@/assets/imgs/wukong/button-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 104px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 500;
-    margin: 24px auto 8px;
+  .experience-btn {
+    padding-top: 16px;
+    position: absolute;
+    bottom: 22px;
+    width: calc(100% - 32px);
+    @media screen and (max-width: 476px) {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  .o-button {
+    display: block;
+    margin: 0 auto 0;
+    padding: 9px 12px;
   }
 }
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(180deg);
+  }
+}
+.rotating {
+  animation: rotate 0.4s ease-out;
+}
 .wk-experience {
-  @media screen and (max-width: 767px) {
+  display: flex;
+  width: 100%;
+  max-width: 1472px;
+  padding: 24px 16px 64px;
+  margin: 0 auto;
+
+  .wrap-left {
+    width: 354px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding-bottom: 40px;
+    position: relative;
+    :deep(.el-textarea) {
+      width: calc(100% - 48px) !important;
+      margin: 24px 24px 16px;
+      border-radius: 8px;
+      .el-textarea__inner {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 1px #fff inset;
+        border-radius: 8px;
+      }
+    }
+  }
+  .wrap-right {
+    width: calc(100% - 370px);
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-left: 16px;
+    border-radius: 16px;
+    .sider-content {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .content-left {
+      font-size: 14px;
+      color: #555555;
+      padding: 4px 12px;
+      background: rgba(13, 141, 255, 0.1);
+      border-radius: 14px;
+      cursor: pointer;
+      .o-icon svg {
+        transform: rotate(180deg);
+        color: #0d8dff;
+        margin-left: 2px;
+        font-size: 16px;
+      }
+    }
+    .content-right {
+      text-align: right;
+      font-size: 14px;
+      color: #555555;
+      .album {
+        margin-right: 12px;
+      }
+      .painting,
+      .album {
+        padding: 4px 12px;
+        background: rgba(13, 141, 255, 0.1);
+        border-radius: 14px;
+        cursor: pointer;
+      }
+      .o-icon {
+        color: #0d8dff;
+        margin-left: 2px;
+        font-size: 16px;
+      }
+    }
+    .empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px dashed #dfe7fa;
+      border-radius: 16px;
+      margin: 0 40px 40px;
+      height: calc(100% - 116px);
+      p {
+        width: 100%;
+        color: #555555;
+        font-size: 14px;
+        margin-top: 21px;
+      }
+      img {
+        width: 54px;
+        height: 54px;
+      }
+      .tip {
+        text-align: center;
+        img {
+          width: 99px;
+        }
+      }
+      .waiting {
+        text-align: center;
+      }
+    }
+    .img-box {
+      display: flex;
+      height: calc(100% - 116px);
+      align-items: center;
+      gap: 24px;
+      margin: 0 40px;
+      width: calc(100% - 80px);
+      img {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 18px;
+        cursor: pointer;
+      }
+    }
+    /* pc生成图片 */
+    .result-item1 {
+      position: relative;
+      margin: 54px 36px;
+      width: calc(100% - 64px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 42px;
+      .turn {
+        font-size: 28px;
+        color: #fff;
+        background-color: rgba(229, 232, 240, 1);
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      @media screen and (max-width: 767px) {
+        display: none;
+      }
+
+      img {
+        height: 100%;
+        width: calc(100% - 138px);
+        max-width: 670px;
+      }
+      .mask {
+        position: absolute;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        width: 100%;
+        height: 16vh;
+        border-radius: 18px;
+        @media screen and (max-width: 768px) {
+          height: 10vh;
+        }
+      }
+
+      .handles {
+        position: absolute;
+        top: -20px;
+        right: 20px;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        padding: 16px 0;
+        background: #fff;
+        color: #b2b2b2;
+        border-radius: 22px;
+        max-height: 190px;
+        box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
+
+        @media screen and (max-width: 1080px) {
+          top: -50px;
+        }
+        @media screen and (max-width: 768px) {
+          padding: 8px;
+        }
+        .handles-contain,
+        .public {
+          display: flex;
+          flex-direction: column;
+
+          .o-icon {
+            color: #b2b2b2;
+            font-size: 24px;
+            &:hover {
+              color: #2197ff;
+            }
+          }
+
+          .liked {
+            .o-icon {
+              font-size: 20px;
+            }
+          }
+          .icon-name {
+            color: #b2b2b2;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+          }
+          .func-item {
+            cursor: pointer;
+            position: relative;
+            .icon-name {
+              color: #b2b2b2;
+              font-size: 14px;
+              line-height: 20px;
+              text-align: center;
+              position: absolute;
+              left: 50px;
+              white-space: nowrap;
+              top: 8px;
+              z-index: 15;
+              padding: 4px 8px;
+              background-color: #ffffff;
+              border-radius: 3px;
+              display: none;
+              box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05);
+              @media screen and (max-width: 1280px) {
+                font-size: 12px;
+                top: 4px;
+                left: 30px;
+              }
+            }
+            .arrow {
+              position: absolute;
+              left: 25px;
+              top: -18px;
+              width: 80px;
+              height: 80px;
+              z-index: 10;
+              display: none;
+              @media screen and (max-width: 1280px) {
+                left: 8px;
+                top: -12px;
+                height: 60px;
+              }
+            }
+            &:hover {
+              .icon-name {
+                display: block;
+              }
+              .arrow {
+                display: block;
+              }
+            }
+          }
+          p {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin: 0 auto;
+            @media screen and (max-width: 1280px) {
+              width: 24px;
+              height: 24px;
+              .o-icon {
+                font-size: 16px;
+              }
+            }
+            &:nth-child(2) {
+              margin: 0 16px;
+              @media screen and (max-width: 1450px) {
+                margin: 0 8px;
+              }
+            }
+            &:hover {
+              background: rgba(255, 255, 255, 0.3);
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 820px) {
     display: none;
   }
   .title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
-    color: #ffffff;
+    color: #555;
     line-height: 25px;
-    margin-right: 40px;
+    margin-right: 24px;
   }
   .active {
-    color: #fff !important;
-    background: #008eff !important;
+    color: #0d8dff !important;
+    background: #e5f3ff !important;
   }
   .active-1 {
-    border: 1px solid #008eff;
+    border: 3px solid #008eff !important;
+    border-radius: 6px;
   }
+
   .wk-experience-examples {
     display: flex;
     margin-top: 48px;
     align-items: center;
+    margin: 0 24px;
     @media screen and (max-width: 820px) {
       margin-top: 24px;
       align-items: flex-start;
@@ -1599,16 +2540,20 @@ function handleResultClcik(i) {
     .example-items {
       flex: 1;
       display: flex;
-      flex-wrap: wrap;
+      max-width: 280px;
+      flex-wrap: nowrap;
       p {
         color: #b2b2b2;
-        border: 1px solid #0d8dff;
-        margin-right: 16px;
+        // border: 1px solid #0d8dff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 4px;
         border-radius: 8px;
-        background: rgba(13, 141, 255, 0.3);
-        padding: 7px 12px;
-        font-size: 14px;
-        font-size: 14px;
+        background: #f5f5f5;
+        padding: 3px 8px;
+        font-size: 12px;
+        margin: 4px 2px;
         cursor: pointer;
         @media screen and (max-width: 820px) {
           margin-bottom: 8px;
@@ -1624,24 +2569,55 @@ function handleResultClcik(i) {
       align-items: center;
       .o-icon {
         margin-right: 4px;
+        font-size: 16px;
       }
     }
   }
   .wk-experience-styles {
-    margin-top: 48px;
-    display: flex;
+    margin-top: 30px;
+    // display: flex;
+    .title {
+      text-align: left;
+      margin-left: 24px;
+      display: flex;
+      justify-content: space-between;
+    }
     @media screen and (max-width: 820px) {
       flex-direction: column;
       margin-top: 16px;
     }
     .content {
       flex: 1;
+      height: 380px;
+      padding-bottom: 67px;
+      overflow: auto;
+      margin-top: 16px;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background-color: #d8d8d8;
+        background-clip: content-box;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 3px;
+        box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+        background: #ffffff;
+        // background:transparent;
+      }
       @media screen and (max-width: 820px) {
         margin-top: 24px;
       }
       .style-tag {
         display: flex;
         cursor: pointer;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 0 24px;
       }
       .sort-tag {
         display: flex;
@@ -1699,32 +2675,44 @@ function handleResultClcik(i) {
       }
     }
     .style-item {
-      display: flex;
       justify-content: center;
-      width: 129px;
-      height: 80px;
-      // background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
-      margin-right: 16px;
+      width: 65px;
+      margin-bottom: 16px;
       border-radius: 5px;
-      color: #fff;
+      color: #555555;
       position: relative;
       overflow: hidden;
       img {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
+        width: 65px;
+        height: 65px;
       }
       &-name {
-        position: absolute;
-        left: 0;
-        top: 0;
         width: 100%;
-        height: 100%;
-        padding: 40px 0 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-top: 7px;
         text-align: center;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        font-size: 14px;
+      }
+    }
+    .all-kind {
+      text-align: center;
+      color: #555555;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 4px 14px;
+      background: #e1effd;
+      width: 52px;
+      margin: 10px auto 0;
+      border-radius: 14px;
+      .o-icon {
+        margin-left: 8px;
+      }
+    }
+    .retract {
+      .o-icon svg {
+        transform: rotate(180deg);
       }
     }
   }
@@ -1739,10 +2727,44 @@ function handleResultClcik(i) {
     color: #fff;
     font-size: 14px;
     font-weight: 500;
-    margin: 48px auto 0px;
+    margin: 25px auto 40px;
     cursor: pointer;
     @media screen and (max-width: 820px) {
       margin: 24px auto 0px;
+    }
+  }
+  .experience-btn {
+    padding-top: 24px;
+    background: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+  }
+  .o-button {
+    padding: 9px 28px;
+    border-radius: 22px;
+  }
+}
+:deep(.confirm-dlg) {
+  @media screen and (max-width: 768px) {
+    // --el-dialog-width: 80vw !important;
+    max-width: 335px;
+    .confirm-title {
+      font-size: 16px;
+    }
+    .confirm-desc {
+      font-size: 14px;
+      line-height: 18px;
+      margin-top: 4px;
+    }
+  }
+  .el-dialog__footer {
+    text-align: center;
+  }
+  .confirm-desc {
+    a {
+      color: #008eff;
     }
   }
 }

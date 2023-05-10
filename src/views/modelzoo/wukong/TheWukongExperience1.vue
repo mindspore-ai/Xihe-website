@@ -549,7 +549,7 @@ function handleInput() {
     }
   });
 }
-//
+// 当前点击风格下标
 const activeIndex = ref(null);
 // 选择风格类别
 function choseStyleSort(val, item) {

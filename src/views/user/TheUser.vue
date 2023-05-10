@@ -590,6 +590,7 @@ function handleDomChange(val) {
   color: #000;
   background-image: url('@/assets/imgs/user-banner-head.png');
   background-size: cover;
+  background-position: 50% 50%;
   background-repeat: no-repeat;
 
   .wrap {
@@ -683,7 +684,7 @@ function handleDomChange(val) {
       .user-info-extends {
         display: flex;
         flex-direction: column;
-        margin-top: 40px;
+        margin-top: 24px;
         margin-left: 40px;
 
         .info-extends-box {

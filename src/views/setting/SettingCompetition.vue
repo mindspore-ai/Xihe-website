@@ -287,7 +287,7 @@ function toTop() {
               font-weight: 400;
               line-height: 32px;
               display: flex;
-              align-items: baseline;
+              align-items: center;
               .state {
                 display: inline-block;
                 padding-left: 8px;

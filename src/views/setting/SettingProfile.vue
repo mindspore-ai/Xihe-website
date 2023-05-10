@@ -262,9 +262,11 @@ watch([userDescription, avatar], () => {
     background: #f7f8fa;
     border: 1px solid #dfe1e8;
     overflow: hidden;
+    border-radius: 8px;
     &:hover {
       .avatar-uploader-box {
         display: flex;
+        border-radius: 0px 0px 8px 8px;
       }
     }
     .avatar {

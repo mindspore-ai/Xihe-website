@@ -67,6 +67,7 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
@@ -261,67 +262,72 @@ function getHeaderConfig() {
 let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['private-token']
   : null;
-let socket = new WebSocket(
-  'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
-  [token]
-);
-socket.onmessage = function (event) {
-  try {
-    isLine.value = JSON.parse(event.data).data.rank;
-    if (JSON.parse(event.data).data.rank === 0) {
-      getPic()
-        .then((res) => {
-          styleBackground.value = res.data;
-          styleBackground.value.forEach((item, index) => {
-            inferList.value[index].isCollected = item.is_like;
-            inferList.value[index].id = item.like_id;
-            inferList.value[index].publicId = item.public_id;
-          });
-          // res.data.pictures.forEach((item, index) => {
-          //   addWatermark(item, index);
-          // });
+let socket;
+if (isLogined.value) {
+  socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`, [
+    token,
+  ]);
+  socket.onmessage = function (event) {
+    try {
+      isLine.value = JSON.parse(event.data).data.rank;
+      if (JSON.parse(event.data).data.rank === 0) {
+        getPic()
+          .then((res) => {
+            styleBackground.value = res.data;
+            styleBackground.value.forEach((item, index) => {
+              inferList.value[index].isCollected = item.is_like;
+              inferList.value[index].id = item.like_id;
+              inferList.value[index].publicId = item.public_id;
+            });
+            // res.data.pictures.forEach((item, index) => {
+            //   addWatermark(item, index);
+            // });
 
-          const index1 = styleBackground.value[0].link.indexOf('=');
-          const index2 = styleBackground.value[0].link.indexOf('=', index1 + 1);
-
-          const i1 = styleBackground.value[0].link.indexOf('&');
-          const i2 = styleBackground.value[0].link.indexOf('&', i1 + 1);
-
-          const deadTime = styleBackground.value[0].link.substring(
-            index2 + 1,
-            i2
-          );
-          const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-          if ((deadTime - currentTime) / 60 < 60) {
-            temporaryLink({ link: styleBackground.value[0].link }).then(
-              (res) => {
-                styleBackground1.value[0] = res.data.data.link;
-                addWatermark(res.data.data.link, 0);
-                temporaryLink({ link: styleBackground.value[1].link }).then(
-                  (res) => {
-                    styleBackground1.value[1] = res.data.data.link;
-                    addWatermark(res.data.data.link, 1);
-                  }
-                );
-              }
+            const index1 = styleBackground.value[0].link.indexOf('=');
+            const index2 = styleBackground.value[0].link.indexOf(
+              '=',
+              index1 + 1
             );
-          }
-        })
-        .catch((err) => {
-          isWaiting.value = false;
-          isLine.value = null;
-          if (err.response.data.code === 'bigmodel_no_wukong_picture') {
-            errorMsg.value = '';
-          } else if (err.response.data.code === 'bigmodel_sensitive_info') {
-            errorMsg.value = '内容不合规，请重新输入描述词';
-          }
-          isInferred.value = true;
-          isError.value = true;
-        });
-    }
-  } catch {}
-};
+
+            const i1 = styleBackground.value[0].link.indexOf('&');
+            const i2 = styleBackground.value[0].link.indexOf('&', i1 + 1);
+
+            const deadTime = styleBackground.value[0].link.substring(
+              index2 + 1,
+              i2
+            );
+            const currentTime = (new Date().getTime() + '').substring(0, 10);
+
+            if ((deadTime - currentTime) / 60 < 60) {
+              temporaryLink({ link: styleBackground.value[0].link }).then(
+                (res) => {
+                  styleBackground1.value[0] = res.data.data.link;
+                  addWatermark(res.data.data.link, 0);
+                  temporaryLink({ link: styleBackground.value[1].link }).then(
+                    (res) => {
+                      styleBackground1.value[1] = res.data.data.link;
+                      addWatermark(res.data.data.link, 1);
+                    }
+                  );
+                }
+              );
+            }
+          })
+          .catch((err) => {
+            isWaiting.value = false;
+            isLine.value = null;
+            if (err.response.data.code === 'bigmodel_no_wukong_picture') {
+              errorMsg.value = '';
+            } else if (err.response.data.code === 'bigmodel_sensitive_info') {
+              errorMsg.value = '内容不合规，请重新输入描述词';
+            }
+            isInferred.value = true;
+            isError.value = true;
+          });
+      }
+    } catch {}
+  };
+}
 
 function imgErr() {}
 watch(
@@ -664,7 +670,7 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              'wss://xihe2.test.osinfra.cn/server/bigmodel/wukong/rank/wukong',
+              `wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`,
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {

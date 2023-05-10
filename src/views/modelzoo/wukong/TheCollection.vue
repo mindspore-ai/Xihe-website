@@ -7,7 +7,7 @@ import IconEyeopen from '~icons/app/eye-open';
 import IconCollected from '~icons/app/wk-collecte';
 import IconShare from '~icons/app/share';
 import IconSharegray from '~icons/app/share-gray';
-import IconHeart from '~icons/app/heart-gray';
+import IconHeart from '~icons/app/heart-white';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
 import useClipboard from 'vue-clipboard3';

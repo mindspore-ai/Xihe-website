@@ -11,6 +11,13 @@ export default [
   },
   // 紫东.太初
   {
+    path: '/modelzoo/taichu/introduce',
+    name: 'taichuIntroduction',
+    component: () => {
+      return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
+    },
+  },
+  {
     path: '/modelzoo/taichu',
     name: 'taichu',
     component: () => {
@@ -24,13 +31,13 @@ export default [
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-      {
+      /*  {
         path: 'introduce',
         name: 'taichuIntroduction',
         component: () => {
           return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
         },
-      },
+      }, */
       {
         path: 'text',
         name: 'textToImage',
@@ -142,39 +149,55 @@ export default [
   // },
   // 鹏程.神农
   {
-    path: '/modelzoo/shennong',
+    path: '/modelzoo/shennong/introduce',
     name: 'shennong',
     component: () => {
       return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');
     },
   },
   // 悟空
+  // {
+  //   path: '/modelzoo/wukong',
+  //   name: 'wukong',
+  //   component: () => {
+  //     return import('@/views/modelzoo/wukong/TheWukong.vue');
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'wukongExperience',
+  //       component: () => {
+  //         return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'introduce',
+  //       name: 'wukongIntroduce',
+  //       component: () => {
+  //         return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+  //       },
+  //     },
+  //     {
+  //       path: 'experience',
+  //       redirect: '/modelzoo/wukong',
+  //     },
+  //   ],
+  // },
+
+  //新视觉改版后-悟空路由
+  {
+    path: '/modelzoo/wukong/introduce',
+    name: 'wukongIntroduce',
+    component: () => {
+      return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
+    },
+  },
   {
     path: '/modelzoo/wukong',
-    name: 'wukong',
+    name: 'wukongExperience',
     component: () => {
-      return import('@/views/modelzoo/wukong/TheWukong.vue');
+      return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
     },
-    children: [
-      {
-        path: '',
-        name: 'wukongExperience',
-        component: () => {
-          return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
-        },
-      },
-      {
-        path: 'introduce',
-        name: 'wukongIntroduce',
-        component: () => {
-          return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
-        },
-      },
-      {
-        path: 'experience',
-        redirect: '/modelzoo/wukong',
-      },
-    ],
   },
 
   {

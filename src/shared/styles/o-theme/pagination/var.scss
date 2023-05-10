@@ -1,0 +1,20 @@
+.el-pagination {
+  --o-pagination-font_size: 14px;
+  --o-pagination-color: #000;
+  --o-pagination-bg: #f5f7fc;
+  
+  // button
+  --o-pagination-button-font_size: 16fpx;
+
+  //page
+  --o-pagination-page-bg-active: rgba(13, 141, 255, 0.1);
+  --o-pagination-page-font_color-active: #0d8dff;
+  --o-pagination-page-line_height: 36px;
+  --o-pagination-page-font_color-hover: #0d8dff;
+  
+  //pagesize
+  --o-pagination-pagesizes-bg: #e5e5e5;
+
+  // jump
+  --o-pagination-jump-color: #999;
+}

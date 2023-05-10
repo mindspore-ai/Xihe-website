@@ -279,18 +279,20 @@ function toTop() {
       height: calc(100% - 21px);
       // height: calc(100% - 123px);
       overflow: hidden;
+      border-radius: 16px;
       .watched-list-item {
         width: 100%;
         height: 140px;
         background-color: #fff;
         margin-top: 20px;
         padding: 30px 40px;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 16px;
+        transition: all 0.3s ease;
         &:hover {
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         }
         .list-item-left {
           width: 70%;

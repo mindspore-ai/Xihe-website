@@ -364,7 +364,7 @@ function handleDomChange(val) {
       >
         <div class="user-info-basic">
           <div class="user-avatar">
-            <el-avatar :size="160" :src="userInfo.avatar" fit="fill" />
+            <el-avatar :size="120" :src="userInfo.avatar" fit="fill" />
           </div>
           <p class="user-name">{{ userInfo.userName }}</p>
           <div class="user-social">
@@ -539,7 +539,7 @@ function handleDomChange(val) {
 <style lang="scss" scoped>
 .setting-menu-list {
   width: 100%;
-  margin-top: 56px;
+  margin-top: 24px;
 
   li {
     position: relative;
@@ -548,10 +548,12 @@ function handleDomChange(val) {
     font-weight: normal;
     color: #555555;
     line-height: 56px;
-    padding: 0 48px;
+    padding: 0 24px;
+    margin: 0 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    border-radius: 28px;
 
     .o-icon {
       margin-right: 12px;
@@ -575,9 +577,9 @@ function handleDomChange(val) {
       background-color: #f7f8fa;
     }
 
-    &.active::after {
-      background-color: #3d8df7;
-    }
+    // &.active::after {
+    //   background-color: #3d8df7;
+    // }
   }
 }
 
@@ -586,8 +588,9 @@ function handleDomChange(val) {
   padding-top: 80px;
   background-color: #f5f6f8;
   color: #000;
-  background-image: url('@/assets/imgs/banner-head.png');
+  background-image: url('@/assets/imgs/user-banner-head.png');
   background-size: cover;
+  background-position: 50% 50%;
   background-repeat: no-repeat;
 
   .wrap {
@@ -616,14 +619,19 @@ function handleDomChange(val) {
     padding: 40px 16px 64px 16px;
 
     .content-sidebar {
+      min-width: 360px;
       width: 25%;
       background: #ffffff;
       padding: 40px 0 64px;
       // margin-bottom: 36px;
+      border-radius: 16px;
       .user-info-basic {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin: 0 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #f5f6f8;
         .user-avatar {
           border-radius: 50%;
           border: 3px solid #bfddff;
@@ -676,7 +684,7 @@ function handleDomChange(val) {
       .user-info-extends {
         display: flex;
         flex-direction: column;
-        margin-top: 40px;
+        margin-top: 24px;
         margin-left: 40px;
 
         .info-extends-box {
@@ -730,6 +738,7 @@ function handleDomChange(val) {
           padding: 0 40px;
           background: #ffffff;
           // box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+          border-radius: 24px;
           .moderl-head-right {
             .el-input {
               width: 200px;

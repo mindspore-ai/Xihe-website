@@ -1,6 +1,10 @@
 // 筛选组件样式
 .el-popper.filter {
   border: 1px solid #555555 !important;
+  border-radius: 8px;
+  .el-scrollbar{
+    border-radius: 8px;
+  }
 
   .el-dropdown-menu {
     padding: 0;

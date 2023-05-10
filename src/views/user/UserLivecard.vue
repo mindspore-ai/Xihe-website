@@ -75,7 +75,7 @@ const i18n = {
   transition: all 0.3s;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  border-radius: 16px;
   .o-icon {
     margin-right: 4px;
   }

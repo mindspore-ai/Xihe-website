@@ -13,7 +13,6 @@ import IconStart from '~icons/app/luojia-start';
 import IconHistory from '~icons/app/luojia-history';
 import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
-// import IconLeft from '~icons/app/left.svg';
 
 import gif from '@/assets/gifs/loading.gif';
 
@@ -34,6 +33,7 @@ const historyInfo = ref({
   origin: '高德地图',
   status: '已完成',
   create_at: '',
+  id: '',
 });
 
 const cesiumContainer = ref('');
@@ -158,6 +158,7 @@ function handleInferClick(mobile) {
                 if (res.data) {
                   gridData.value = [];
                   historyInfo.value.create_at = res.data[0].created_at;
+                  historyInfo.value.id = res.data[0].id;
                   gridData.value.push(historyInfo.value);
                 } else {
                   gridData.value = [];
@@ -205,6 +206,8 @@ function handleOriImgDownload() {
       a.href = URL.createObjectURL(blob);
       a.download = 'input.png';
       a.click();
+      URL.revokeObjectURL(a.href);
+      a.remove();
     });
 }
 
@@ -228,6 +231,7 @@ function handleHistoryClick() {
       gridData.value = [];
       historyInfo.value.create_at = res.data[0].created_at;
       gridData.value.push(historyInfo.value);
+      historyInfo.value.id = res.data[0].id;
     } else {
       gridData.value = [];
     }
@@ -278,13 +282,6 @@ const imgLists = [
 const fileList = ref([]);
 function handleChange(val) {
   activeIndex1.value = 5;
-  // if (val.size > 204800) {
-  //   fileList.value.pop();
-  //   return ElMessage({
-  //     type: 'warning',
-  //     message: '图片大小不应超过200K',
-  //   });
-  // } else {
   analysis.value = '';
   formData.delete('file');
   formData = new FormData();
@@ -292,7 +289,6 @@ function handleChange(val) {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
-  // }
 }
 function selectImage(item, index) {
   activeIndex.value = index;
@@ -341,18 +337,6 @@ function enlarge(url) {
       <p class="desc">
         指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。<br />
       </p>
-
-      <div class="process">
-        <span class="title">操作流程：</span>
-        <span>①&nbsp;选择区域-></span>
-        <span>②&nbsp;点击左上角开始选区按钮-></span>
-        <span>③&nbsp;左键选择区域角点-></span>
-        <span>④&nbsp;再次左键选择区域另一角点-></span>
-        <span>⑤&nbsp;右键取消选区操作-></span>
-        <span>⑥&nbsp;点击左上角取消选区，获取选区图片-></span>
-        <span>⑦&nbsp;点击右上角开始识别按钮-></span>
-        <span>⑧&nbsp;请耐心等待约1分钟，可在历史记录中查看最近的一条数据</span>
-      </div>
     </div>
     <div class="luojia-bottom">
       <div ref="cesiumContainer" class="map-container">
@@ -363,7 +347,7 @@ function enlarge(url) {
           <o-icon><icon-select></icon-select></o-icon>
           <span>{{ isSelected ? '结束选区' : '开始选区' }}</span>
           <div v-if="isSelected" class="select-tip">
-            左键选点，右键确定矩形
+            左键两次选点，右键确定选框，结束框选可开始识别
             <div class="triangle"></div>
           </div>
         </div>
@@ -385,25 +369,45 @@ function enlarge(url) {
           <p>{{ loadingText }}</p>
         </div>
       </div>
-      <div class="tip">温馨提示：加载较慢，请耐心等待，或刷新重试。</div>
+
+      <div class="process">
+        <span>①&nbsp;选择区域-></span>
+        <span>②&nbsp;点击左上角开始选区按钮-></span>
+        <span>③&nbsp;左键选择区域角点-></span>
+        <span>④&nbsp;再次左键选择区域另一角点-></span>
+        <span>⑤&nbsp;右键取消选区操作-></span>
+        <span>⑥&nbsp;点击左上角取消选区，获取选区图片-></span>
+        <span>⑦&nbsp;点击右上角开始识别按钮-></span>
+        <span>⑧&nbsp;请耐心等待约1分钟，可在历史记录中查看最近的一条数据</span>
+      </div>
+
+      <div class="tip">
+        温馨提示：第一次加载较慢，注意不要长时间停留在本界面，可能会导致电脑卡顿。
+      </div>
     </div>
     <!-- 列表 -->
     <el-dialog v-model="dialogTableVisible">
       <template #header>
         <p>历史记录</p>
       </template>
-      <el-table :data="gridData">
+      <el-table :data="gridData" table-layout="auto">
+        <el-table-column property="id" label="任务ID" />
         <el-table-column property="name" label="任务类型" />
         <el-table-column property="origin" label="地图源数据" />
-        <el-table-column property="status" label="状态" />
-        <el-table-column property="create_at" label="创建时间" width="220" />
+        <el-table-column property="status" label="状态" width="92" />
+        <el-table-column property="create_at" label="创建时间" />
         <el-table-column label="操作">
           <span class="detail" @click="handleDetailClick">查看详情</span>
         </el-table-column>
       </el-table>
+      <p class="history-tip">仅展示最近一条记录</p>
     </el-dialog>
     <!-- 详情 -->
-    <el-dialog v-model="dialogTableVisibleDetail" title="详情">
+    <el-dialog
+      v-model="dialogTableVisibleDetail"
+      class="result-dlg"
+      title="详情"
+    >
       <div class="compare-box">
         <div class="original">
           <img :src="inputImg + '?' + Math.random()" alt="" />
@@ -547,6 +551,7 @@ function enlarge(url) {
   img {
     width: 315px;
     height: 315px;
+    border-radius: 16px;
   }
   .original,
   .result {
@@ -626,7 +631,9 @@ function enlarge(url) {
     line-height: 22px;
   }
 }
-
+:deep(.result-dlg) {
+  width: 750px;
+}
 :deep(.el-dialog) {
   --el-dialog-margin-top: 30vh;
   z-index: 1000;
@@ -641,6 +648,7 @@ function enlarge(url) {
   }
   .el-dialog__header {
     padding: 24px 40px;
+    justify-content: flex-start;
     .el-dialog__title {
       font-size: 18px;
       font-weight: 400;
@@ -649,7 +657,13 @@ function enlarge(url) {
     }
   }
   .el-dialog__body {
-    padding: 0px 40px 40px !important;
+    padding: 0px 40px 24px !important;
+    .history-tip {
+      font-size: 14px;
+      color: #555555;
+      line-height: 22px;
+      margin-top: 24px;
+    }
   }
 }
 .map-container {
@@ -697,6 +711,11 @@ function enlarge(url) {
   }
   :deep(.cesium-infoBox) {
     display: none !important;
+  }
+  :deep(.cesium-widget) {
+    canvas {
+      border-radius: 16px;
+    }
   }
 }
 .loading-box {
@@ -778,7 +797,7 @@ function enlarge(url) {
   position: absolute;
   top: 52px;
   left: 0px;
-  width: 152px;
+  width: 296px;
   z-index: 100;
   font-size: 12px;
   color: #ffffff;
@@ -829,32 +848,12 @@ function enlarge(url) {
   background-color: #d3d3d3;
 }
 .luojia {
-  &-top {
-    .process {
-      margin-top: 8px;
-      font-size: 14px;
-      line-height: 28px;
-      font-weight: 400;
-      color: #555555;
-      .title {
-        color: #000000;
-        font-weight: 600;
-      }
-      span {
-        margin-left: 4px;
-      }
-      @media screen and (max-width: 768px) {
-        display: none;
-      }
-      @media screen and (max-width: 820px) {
-        display: none;
-      }
-    }
+  .luojia-top {
     .type {
-      font-size: 20px;
-      font-weight: normal;
+      font-size: 36px;
       color: #000000;
-      line-height: 28px;
+      text-align: center;
+      line-height: 48px;
       margin-top: 40px;
       @media screen and (max-width: 768px) {
         font-size: 14px;
@@ -868,8 +867,9 @@ function enlarge(url) {
       font-size: 14px;
       font-weight: 400;
       color: #555555;
+      text-align: center;
       line-height: 22px;
-      margin-top: 10px;
+      margin-top: 16px;
       @media screen and (max-width: 768px) {
         height: auto;
         font-size: 12px;
@@ -886,12 +886,28 @@ function enlarge(url) {
     @media screen and (max-width: 820px) {
       display: none;
     }
+    .process {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 28px;
+      font-weight: 400;
+      color: #555555;
+      span {
+        margin-left: 4px;
+      }
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
+    }
     .tip {
       font-size: 14px;
       font-weight: 400;
       color: #555555;
       line-height: 22px;
-      margin-top: 16px;
+      margin-top: 24px;
     }
   }
 }

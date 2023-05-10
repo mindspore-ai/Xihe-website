@@ -295,9 +295,7 @@ onUnmounted(() => {
 <template>
   <div class="vision">
     <div class="vision-box">
-      <div class="title">
-        <span>视觉问答（Visual Question Answer, VQA）</span>
-      </div>
+      <div class="title">视觉问答（Visual Question Answer, VQA）</div>
 
       <p class="description">
         视觉问答是给定一幅图片和一个相关的问题，算法输出相应的答案，是多模态理解中的基础任务之一。
@@ -368,7 +366,7 @@ onUnmounted(() => {
 
         <div class="img-list-item custom" @click="customUpload">
           <o-icon><icon-upload></icon-upload></o-icon>
-          <p>自定义</p>
+          <p>自定义图片</p>
 
           <input
             ref="inp"
@@ -430,6 +428,9 @@ onUnmounted(() => {
     &:hover {
       box-shadow: none;
     }
+    .el-input__inner {
+      font-size: 16px;
+    }
     @media screen and (max-width: 1080px) {
       padding: 6px 16px;
       height: 29px;
@@ -445,29 +446,27 @@ onUnmounted(() => {
 .vision {
   background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
   background-position: 0% 0%;
-  background-size: 100%;
+  background-size: cover;
   width: 100%;
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
-    padding: 16px 16px 40px;
-    // background-image: none;
-    // background: #f5f6f8;
+    padding: 0px 0px 0px;
   }
-  &-box {
+  .vision-box {
     margin: 0 auto;
     width: 918px;
     background-color: #fff;
-    box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-    padding: 40px 8px 40px 40px;
+    padding: 40px;
+    border-radius: 16px;
     @media screen and (max-width: 1080px) {
       padding: 16px 16px 24px;
       width: 100%;
     }
     .title {
       font-size: 36px;
-      font-weight: 300;
       color: #000000;
       line-height: 48px;
+      font-weight: 300;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -480,13 +479,11 @@ onUnmounted(() => {
 
     .description {
       font-size: 18px;
-      font-weight: 300;
       color: #000000;
       line-height: 24px;
       margin-top: 16px;
       @media screen and (max-width: 1080px) {
         font-size: 12px;
-        font-weight: 400;
         color: #555555;
         line-height: 18px;
         margin-top: 8px;
@@ -540,7 +537,6 @@ onUnmounted(() => {
           border-radius: 16px 0px 16px 16px;
           margin-left: 56px;
           font-size: 16px;
-          font-weight: 400;
           color: #000000;
           line-height: 22px;
           position: relative;
@@ -548,7 +544,6 @@ onUnmounted(() => {
             padding: 8px;
             margin-left: 28px;
             font-size: 12px;
-            font-weight: 400;
             color: #000000;
             line-height: 17px;
             border-radius: 8px 0px 8px 8px;
@@ -609,14 +604,12 @@ onUnmounted(() => {
           border-radius: 0px 16px 16px 16px;
           margin-right: 82px;
           font-size: 16px;
-          font-weight: 400;
           color: #000000;
           line-height: 22px;
           @media screen and (max-width: 1080px) {
             padding: 8px;
             margin-right: 28px;
             font-size: 12px;
-            font-weight: 400;
             color: #000000;
             line-height: 17px;
             border-radius: 0px 8px 8px 8px;
@@ -650,7 +643,6 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-right: 40px;
       @media screen and (max-width: 1080px) {
         padding-right: 0px;
         margin-top: 16px;
@@ -678,7 +670,7 @@ onUnmounted(() => {
     }
 
     .img-list {
-      padding: 24px 32px 0 0;
+      padding: 24px 0 0;
       display: flex;
       background-color: #fff;
       justify-content: space-between;
@@ -693,7 +685,6 @@ onUnmounted(() => {
         align-items: center;
         color: #0d8dff;
         border: 2px dashed #d1e9ff;
-        // background-color: #e7f4ff;
 
         .o-icon {
           font-size: 48px;
@@ -704,14 +695,14 @@ onUnmounted(() => {
 
         p {
           font-size: 14px;
-          font-weight: 400;
           line-height: 20px;
           margin-top: 8px;
           @media screen and (max-width: 1080px) {
+            width: 60px;
             font-size: 9px;
-            font-weight: 400;
             line-height: 13px;
             margin-top: 2px;
+            transform: scale(0.7);
           }
         }
       }
@@ -732,6 +723,7 @@ onUnmounted(() => {
         img {
           width: 100%;
           height: 100%;
+          border-radius: 8px;
         }
 
         &:hover {

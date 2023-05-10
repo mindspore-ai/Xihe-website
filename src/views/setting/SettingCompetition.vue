@@ -267,15 +267,17 @@ function toTop() {
     .competition-tabs {
       .el-tab-pane {
         .competition-card {
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+          border: 1px solid #d8d8d8;
+          border-radius: 16px;
           padding: 22px 52px 22px 40px;
           margin: 1px;
           margin-bottom: 24px;
           cursor: pointer;
           display: flex;
           justify-content: space-between;
+          transition: all 0.3s ease;
           &:hover {
-            box-shadow: 0 6px 18px rgba(13, 141, 255, 0.1411764706);
+            box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           }
           .left {
             .title {
@@ -294,6 +296,7 @@ function toTop() {
                 font-size: 12px;
                 margin-left: 6px;
                 white-space: nowrap;
+                border-radius: 100px;
               }
               .doing {
                 color: #ffffff;
@@ -331,6 +334,7 @@ function toTop() {
               margin-top: 24px;
               background-color: #f4faff;
               white-space: nowrap;
+              border-radius: 24px;
             }
           }
         }
@@ -427,7 +431,7 @@ function toTop() {
         }
       }
       .is-active {
-        box-shadow: 0 0 0 1px #0d8dff inset;
+        // box-shadow: 0 0 0 1px #0d8dff inset;
         color: #0d8dff;
       }
     }
@@ -437,18 +441,14 @@ function toTop() {
   }
 }
 :deep(.el-pagination) {
-  --el-pagination-bg-color: none !important;
+  .el-pager {
+    li {
+      background-color: #fff;
+    }
+  }
   .btn-next,
   .btn-prev {
-    width: 36px;
-    height: 36px;
-    color: #000;
-  }
-  .el-pager {
-    .number {
-      width: 36px;
-      height: 36px;
-    }
+    background-color: #fff;
   }
 }
 </style>

@@ -2,8 +2,9 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import IconArrow from '~icons/app/arrow-top';
+import IconOpen from '~icons/app/eye-open';
 import IconLike from '~icons/app/like';
+import { ArrowRight } from '@element-plus/icons-vue';
 
 import { useUserInfoStore } from '@/stores';
 
@@ -20,7 +21,7 @@ const navItems = [
   },
   {
     id: 2,
-    icon: IconArrow,
+    icon: IconOpen,
     tag: '我的公开',
     path: '/modelzoo/wukong/admin/public',
   },
@@ -33,15 +34,8 @@ function handleNavClick(item) {
   router.push(item.path);
 }
 
-function goToBigmodel() {
-  router.push('/modelzoo');
-}
-function goToWukong() {
-  router.push('/modelzoo/wukong');
-}
-
 const screenWidth = ref(
-  window.innerWidth ||
+  window.innerWiscreenWidthdth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth
 );
@@ -63,23 +57,61 @@ watch(
 onMounted(() => {
   window.addEventListener('resize', onResize);
 });
+// 跳转粉丝页
+function goFollow() {
+  router.push({ path: `/${userInfoStore.userName}/follows` });
+}
+// 跳转关注页
+function goWatched() {
+  router.push({ path: `/${userInfoStore.userName}/watched` });
+}
 </script>
 <template>
   <div class="wrapper">
-    <div v-if="screenWidth > 820" class="painting-management">
-      <div class="painting-management-bread">
-        <p @click="goToBigmodel">大模型</p>
-        <span>></span>
-        <p @click="goToWukong">悟空</p>
-        <span>></span>
-        <p class="current">画作管理</p>
-      </div>
+    <div class="painting-management">
+      <el-breadcrumb :separator-icon="ArrowRight">
+        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
+          >大模型</el-breadcrumb-item
+        >
+        <el-breadcrumb-item
+          :to="{ path: '/modelzoo/wukong' }"
+          class="breadcrumb-item"
+          >悟空</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>画作管理</el-breadcrumb-item>
+      </el-breadcrumb>
 
-      <div class="painting-management-main">
+      <div v-if="screenWidth > 820" class="painting-management-main">
         <div class="left">
           <div class="user-info">
             <img :src="userInfoStore.avatar" alt="" />
             <p>{{ userInfoStore.userName }}</p>
+            <div class="user-social">
+              <p class="user-social-item" @click="goFollow()">
+                <span>粉丝</span>
+                <span class="social-item-fans">{{
+                  userInfoStore.fansCount > 10000
+                    ? (userInfoStore.fansCount -
+                        (userInfoStore.fansCount % 1000)) /
+                        10000 +
+                      'W'
+                    : userInfoStore.fansCount
+                }}</span>
+              </p>
+              <p class="user-social-item" @click="goWatched()">
+                <span>关注</span>
+                <span class="social-item-follow">
+                  {{
+                    userInfoStore.followingCount > 10000
+                      ? (userInfoStore.followingCount -
+                          (userInfoStore.followingCount % 1000)) /
+                          10000 +
+                        'W'
+                      : userInfoStore.followingCount
+                  }}
+                </span>
+              </p>
+            </div>
           </div>
 
           <div class="nav">
@@ -97,29 +129,28 @@ onMounted(() => {
         </div>
         <div class="content"><router-view></router-view></div>
       </div>
-    </div>
-
-    <div v-else class="mobile-management">
-      <div class="user-info">
-        <div class="avatar">
-          <img :src="userInfoStore.avatar" alt="" />
+      <div v-else class="mobile-management">
+        <div class="user-info">
+          <div class="avatar">
+            <img :src="userInfoStore.avatar" alt="" />
+          </div>
+          <div class="user-name">{{ userInfoStore.userName }}</div>
         </div>
-        <div class="user-name">{{ userInfoStore.userName }}</div>
-      </div>
 
-      <div class="manage-tabs">
-        <div
-          v-for="item in navItems"
-          :key="item.id"
-          class="tab-item"
-          :class="currentNav === item.id ? 'active-mo' : ''"
-          @click="handleNavClick(item)"
-        >
-          {{ item.tag }}
+        <div class="manage-tabs">
+          <div
+            v-for="item in navItems"
+            :key="item.id"
+            class="tab-item"
+            :class="currentNav === item.id ? 'active-mo' : ''"
+            @click="handleNavClick(item)"
+          >
+            {{ item.tag }}
+          </div>
         </div>
-      </div>
-      <div class="mobile-content">
-        <router-view></router-view>
+        <div class="mobile-content">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -127,37 +158,30 @@ onMounted(() => {
 <style lang="scss" scoped>
 .wrapper {
   background-color: #f5f6f8;
+  background-image: url(@/assets/imgs/wukong/wukong-banner.png);
+  background-size: 100% 246px;
+  background-repeat: no-repeat;
+  @media screen and (max-width: 821px) {
+    background-image: unset;
+    .painting-management {
+      padding-top: 64px;
+    }
+    .mobile-management {
+      padding-top: 0px;
+    }
+  }
 }
 .painting-management {
   padding: 120px 16px 64px;
   margin: 0 auto;
   max-width: 1472px;
-  .painting-management-bread {
-    display: flex;
-    height: 18px;
-    p {
-      font-size: 12px;
-      line-height: 18px;
-      color: #555550;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    span {
-      margin: 0 4px;
-      color: #555550;
-    }
-    .current {
-      color: #000;
-      font-weight: bold;
-      cursor: auto;
-    }
-  }
   .painting-management-main {
-    margin-top: 40px;
+    margin-top: 146px;
     display: flex;
     .left {
       min-width: 438px;
       margin-right: 24px;
+      border-radius: 16px;
       min-height: calc(100vh - 442px);
       background-color: #fff;
       .user-info {
@@ -176,26 +200,66 @@ onMounted(() => {
           line-height: 24px;
           margin-top: 16px;
         }
+        .user-social {
+          margin-top: 16px;
+          display: grid;
+          grid-gap: 20px 20px;
+          grid-template-columns: 1fr 1fr;
+
+          &-item {
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: normal;
+            color: #000000;
+            line-height: 22px;
+            color: #555555;
+            cursor: pointer;
+            &:hover {
+              color: #0d8dff;
+              .social-item-fans {
+                color: #0d8dff;
+              }
+              .social-item-follow {
+                color: #0d8dff;
+              }
+            }
+
+            span:nth-child(2) {
+              color: #000000;
+              margin-left: 8px;
+            }
+          }
+        }
       }
       .nav {
         margin-top: 48px;
+        padding: 0 24px;
+        font-size: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .nav-item {
           width: 100%;
           height: 56px;
+          color: #555;
           background: #fff;
           display: flex;
-          padding-left: 48px;
+          padding-left: 24px;
           align-items: center;
           cursor: pointer;
+          border-radius: 28px;
+          backdrop-filter: blur(0px);
           .o-icon {
             margin-right: 12px;
-            font-size: 22px;
+            font-size: 24px;
           }
         }
         .active {
+          color: #000;
           background: #f7f8fa;
           backdrop-filter: blur(0px);
-          border-right: 2px solid #0d8dff;
         }
       }
     }
@@ -215,9 +279,10 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   .user-info {
-    margin: 16px 16px 0;
+    margin-top: 16px;
     padding: 16px 12px;
     background-color: #fff;
+    border-radius: 16px;
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
     display: flex;
     align-items: center;

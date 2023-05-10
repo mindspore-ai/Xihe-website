@@ -149,12 +149,15 @@ watch(
 
 <style lang="scss">
 .course-desc {
+  border-radius: 16px;
   &-tab {
     font-size: 90px;
-    height: 48px;
+    height: 69px;
     background-color: #fbfbfb;
     display: flex;
     justify-content: center;
+    border-radius: 16px 16px 0 0;
+
     .o-nav {
       width: 100%;
       display: flex;

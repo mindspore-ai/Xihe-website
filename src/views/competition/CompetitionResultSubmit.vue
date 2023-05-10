@@ -333,10 +333,12 @@ function handelCancel() {
     <el-progress v-if="Progress" :percentage="Progress" />
     <template #footer>
       <div class="dlg-foot">
-        <o-button style="margin-right: 16px" @click="handelCancel">
+        <o-button size="small" style="margin-right: 16px" @click="handelCancel">
           取消
         </o-button>
-        <o-button type="primary" @click="submitUpload">确定</o-button>
+        <o-button size="small" type="primary" @click="submitUpload"
+          >确定</o-button
+        >
       </div>
     </template>
   </el-dialog>
@@ -345,7 +347,6 @@ function handelCancel() {
 <style lang="scss" scoped>
 .submit-page {
   max-width: 1472px;
-  width: 100%;
   padding: 36px 40px 40px;
   min-height: 319px;
   display: flex;
@@ -354,7 +355,7 @@ function handelCancel() {
     padding-top: 24px;
     padding-bottom: 24px;
     max-width: 916px;
-    width: 100%;
+    width: 65%;
     padding-left: 40px;
     .header {
       display: flex;
@@ -373,19 +374,10 @@ function handelCancel() {
     }
     .table {
       margin-top: 24px;
-      border: 1px solid #ebeef5;
-      border-bottom: none;
-      border-top: none;
-      .el-table {
-        --el-table-header-bg-color: #e5e8f0;
-        --el-table-header-text-color: #555;
-      }
     }
     :deep(.el-table__inner-wrapper) {
       .el-table__cell {
-        padding: 0;
         .cell {
-          text-align: center;
           .o-icon {
             font-size: 24px;
             line-height: 24px;
@@ -395,17 +387,6 @@ function handelCancel() {
           }
         }
       }
-      .el-table__header {
-        color: #000000;
-        .cell {
-          padding: 13px 24px;
-        }
-      }
-      .el-table__body {
-        .cell {
-          padding: 16px 24px;
-        }
-      }
     }
   }
   .right {
@@ -413,7 +394,7 @@ function handelCancel() {
     padding-right: 56px;
     border-right: 1px solid #d8d8d8;
     max-width: 456px;
-    width: 100%;
+    width: 35%;
     .header {
       font-size: 24px;
     }
@@ -475,12 +456,17 @@ function handelCancel() {
     .el-upload-dragger {
       width: 100%;
       height: 210px;
-      border: 1px solid #000000;
-      border-radius: 0;
+      border: 1px solid #999;
+      border-radius: 16px;
     }
   }
   .el-upload__text {
-    color: #999999;
+    color: #999;
+  }
+}
+:deep(.el-input) {
+  .el-input__wrapper {
+    border-radius: 16px;
   }
 }
 </style>

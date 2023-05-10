@@ -207,9 +207,21 @@ watch(
 
   .pro-card {
     cursor: pointer;
+    border-radius: 16px;
     box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
     &:hover {
       box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+    }
+    .card-top {
+      border-radius: 16px;
+      img {
+        border-top-right-radius: 16px;
+        border-top-left-radius: 16px;
+      }
+    }
+    .card-bottom {
+      border-bottom-right-radius: 16px;
+      border-bottom-left-radius: 16px;
     }
     .o-icon {
       margin-right: 2px;
@@ -258,6 +270,7 @@ watch(
         position: absolute;
         top: 0;
         left: 0;
+        border-radius: 16px;
       }
     }
     .card-bottom {

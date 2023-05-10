@@ -56,7 +56,10 @@ const i18n = {
 <style lang="scss" scoped>
 .project-card {
   cursor: pointer;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  }
   .o-icon {
     margin-right: 2px;
   }

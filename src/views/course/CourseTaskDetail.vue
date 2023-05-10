@@ -68,39 +68,18 @@ getTask();
     height: 100%;
     padding: 40px 0px 64px;
     margin: 0 auto;
-    .task-bread {
-      .el-breadcrumb {
-        height: 21px;
-        line-height: 21px;
-        font-size: 12px;
-        .el-breadcrumb__item {
-          :deep(.el-breadcrumb__inner.is-link) {
-            color: #555;
-            font-weight: 400;
-            &:hover {
-              color: #0d8dff;
-            }
-          }
-          :deep(.el-breadcrumb__separator.el-icon) {
-            color: #555;
-          }
-        }
-        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-          color: #000;
-        }
-      }
-    }
     .task-content {
       .task-name {
         line-height: 48px;
         font-size: 36px;
         color: #000000;
         margin: 40px 0;
+        font-weight: 300;
       }
       .markdown-file {
         padding: 40px;
         background: #ffffff;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+        border-radius: 16px;
       }
     }
   }

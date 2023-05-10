@@ -306,7 +306,7 @@ function toTop() {
             .task-name {
               font-size: 16px;
               color: #000000;
-              font-weight: 550;
+              font-weight: 500;
               margin-left: 8px;
             }
           }
@@ -317,7 +317,7 @@ function toTop() {
           color: #555555;
           .grade {
             display: inline-block;
-            min-width: 50px;
+            min-width: 65px;
             margin-right: 64px;
           }
         }
@@ -422,72 +422,30 @@ function toTop() {
       align-items: center;
       position: absolute;
       top: 0;
-      .el-tabs__nav {
-        border: none;
-      }
       .el-tabs__item {
-        border: none;
-        line-height: 28px;
-        height: 28px;
-        margin: 14px 6px;
-        padding: 0 12px;
         &:first-child {
           color: #000;
-          font-weight: 550;
+          font-weight: 500;
           margin-left: 0px;
           padding-left: 0px;
           margin-right: 28px;
         }
       }
-      .is-active {
-        box-shadow: 0 0 0 1px #0d8dff inset;
-        color: #0d8dff !important;
+      .el-tabs__item.is-active {
+        color: #0d8dff;
       }
     }
   }
 }
 :deep(.el-pagination) {
-  --el-pagination-bg-color: none !important;
+  .el-pager {
+    li {
+      background-color: #fff;
+    }
+  }
   .btn-next,
   .btn-prev {
-    width: 36px;
-    height: 36px;
-    border: none;
-    color: #000;
-  }
-  button:disabled {
-    background-color: #fff !important;
-  }
-  .el-pager {
-    .number {
-      width: 36px;
-      height: 36px;
-      font-size: 14px;
-    }
-    .is-active {
-      color: #0d8dff;
-      background-color: #e6f3ff;
-    }
-  }
-  .el-pagination__sizes {
-    .el-input {
-      width: 100px;
-
-      background: #e5e5e5;
-      .el-input__wrapper {
-        border: none;
-      }
-    }
-  }
-  .el-pagination__jump {
-    .el-input {
-      width: 40px;
-      background: #e5e5e5;
-      .el-input__wrapper {
-        padding: 6px;
-        box-shadow: none;
-      }
-    }
+    background-color: #fff;
   }
 }
 </style>

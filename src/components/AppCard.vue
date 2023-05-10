@@ -98,9 +98,8 @@ if (props.cardType === 'model') {
   padding: 24px;
   color: #555;
   background-color: #fff;
-  transition: all 0.3s;
+  transition: box-shadow 0.3s;
   overflow: hidden;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   cursor: pointer;
   .o-icon {
     margin-right: 4px;
@@ -145,6 +144,7 @@ if (props.cardType === 'model') {
       text-overflow: ellipsis;
       margin-right: 8px;
       background-color: #efefef;
+      border-radius: 6px;
     }
   }
   .model-introduce {
@@ -186,35 +186,40 @@ if (props.cardType === 'model') {
     right: 24px;
     bottom: 24px;
     border: none;
-    background: url(@/assets/imgs/model-card-bg.png) no-repeat;
+    // background: url(@/assets/imgs/model-card-bg.png) no-repeat;
     display: none;
   }
   &:hover {
-    color: #ccc;
-    background-color: #4d66ca;
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-    .card-bg {
-      display: block;
-    }
-    .card-top {
-      color: #fff;
-    }
-    .label-box {
-      .label-item {
-        color: #555;
-      }
-    }
-    .o-icon {
-      color: #ccc;
-    }
+    // color: #ccc;
+    // background-color: #4d66ca;
+    box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+    // .card-bg {
+    //   display: block;
+    // }
+    // .card-top {
+    //   color: #fff;
+    // }
+    // .label-box {
+    //   .label-item {
+    //     color: #555;
+    //   }
+    // }
+    // .o-icon {
+    //   color: #ccc;
+    // }
   }
 }
 .o-dataset-hover {
-  .card-bg {
-    background: url(@/assets/imgs/dataset-card-bg.png) no-repeat;
-  }
+  // .card-bg {
+  //   background: url(@/assets/imgs/dataset-card-bg.png) no-repeat;
+  // }
   &:hover {
-    background: #7f78c3;
+    background: url(@/assets/imgs/dataset-bg.png) no-repeat center;
+  }
+}
+.o-model-hover {
+  &:hover {
+    background: url(@/assets/imgs/model-bg.png) no-repeat center;
   }
 }
 </style>

@@ -141,21 +141,10 @@ function customUpload() {
     <div class="model-wrap">
       <div class="image-caption">
         <div class="caption-top">
-          <div>
-            <p class="experience-title">以图生文（Image Caption）</p>
-            <p class="experience-text">
-              顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
-            </p>
-          </div>
-          <div class="experience-btn">
-            <o-button
-              v-if="!loading"
-              type="primary"
-              :disabled="loading"
-              @click="submitUpload"
-              >开始推理</o-button
-            >
-          </div>
+          <p class="experience-title">以图生文（Image Caption）</p>
+          <p class="experience-text">
+            顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
+          </p>
         </div>
         <div class="caption-bottom">
           <div class="caption-bottom-left">
@@ -204,6 +193,16 @@ function customUpload() {
             </div>
             <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
             <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
+            <div class="experience-btn">
+              <o-button
+                v-if="!loading"
+                type="primary"
+                size="small"
+                :disabled="loading"
+                @click="submitUpload"
+                >开始推理</o-button
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -291,9 +290,12 @@ function customUpload() {
   }
   .upload-tip {
     font-size: 14px;
-    color: #ccc;
+    color: #999;
     line-height: 22px;
     margin-top: 8px;
+    @media screen and (max-width: 820px) {
+      font-size: 12px;
+    }
   }
 }
 :deep(.el-upload) {
@@ -302,14 +304,15 @@ function customUpload() {
     width: 100%;
     height: 414px;
     border: none;
-    border-radius: 0;
-    padding: 24px 40px 24px 40px;
+    padding: 28px 40px 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 16px 16px 0 0;
     @media screen and (max-width: 820px) {
       height: 346px;
       border: 1px solid #acacac;
+      border-radius: 16px;
     }
     @media screen and (max-width: 767px) {
       height: 196px;
@@ -325,17 +328,18 @@ function customUpload() {
   }
 }
 .img-list {
-  padding: 20px 40px;
+  padding: 0 40px 40px;
   display: flex;
   background-color: #fff;
   justify-content: space-between;
   align-items: center;
+  border-radius: 0 0 16px 16px;
   @media screen and (max-width: 820px) {
     padding: 0;
     margin-top: 16px;
   }
   .active {
-    border: 1px solid #a0d2ff;
+    border: 2px solid #a0d2ff;
     .modal {
       display: block;
     }
@@ -371,14 +375,15 @@ function customUpload() {
     height: 106px;
     position: relative;
     cursor: pointer;
+    border-radius: 8px;
     @media screen and (max-width: 820px) {
       width: 96px;
       height: 96px;
       border: 1px solid transparent;
     }
     @media screen and (max-width: 767px) {
-      width: 62px;
-      height: 62px;
+      width: 54px;
+      height: 54px;
       border: 1px solid transparent;
       &:nth-child(5),
       &:nth-child(6) {
@@ -388,6 +393,7 @@ function customUpload() {
     img {
       width: 100%;
       height: 100%;
+      border-radius: 8px;
     }
     .modal {
       position: absolute;
@@ -407,15 +413,18 @@ function customUpload() {
   }
 }
 .model-page {
-  background-color: #f5f6f8;
+  background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
+  background-position: 0% 0%;
+  background-size: cover;
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
-    padding: 16px 16px 40px;
+    padding-bottom: 40px;
   }
   .model-wrap {
     margin: 0 auto;
     max-width: 1440px;
+    border-radius: 16px;
     @media screen and (max-width: 820px) {
       background-color: #fff;
       padding: 16px 16px 24px;
@@ -427,31 +436,26 @@ function customUpload() {
       display: none;
     }
     .caption-top {
-      display: flex;
-      justify-content: space-between;
-      padding: 40px 0 20px 0;
-      .experience-btn {
-        align-self: flex-end;
-      }
+      text-align: center;
+      padding: 40px 0px;
       .experience-title {
         font-weight: 300;
+        font-size: 36px;
         color: #000000;
-        font-size: 20px;
-        line-height: 28px;
+        line-height: 48px;
       }
       .experience-text {
-        margin-top: 10px;
-        font-size: 14px;
-        font-weight: 400;
-        color: #555555;
-        line-height: 22px;
+        margin-top: 16px;
+        height: 24px;
+        font-size: 18px;
+        color: #000000;
+        line-height: 24px;
       }
     }
     .caption-bottom {
       height: 560px;
       display: flex;
       .caption-bottom-left {
-        background-color: #f5f6f8;
         flex: 1;
         width: 70%;
         margin-right: 24px;
@@ -461,9 +465,13 @@ function customUpload() {
       }
       .caption-bottom-right {
         width: calc(30% - 24px);
-        padding: 16px 24px;
+        padding: 24px 24px 40px;
         background-color: #fff;
         position: relative;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         .result {
           font-size: 18px;
           font-weight: 400;
@@ -481,8 +489,8 @@ function customUpload() {
         }
 
         .result-text {
+          height: 100%;
           font-size: 14px;
-          font-weight: 400;
           color: #555555;
           line-height: 20px;
           .head {
@@ -498,6 +506,9 @@ function customUpload() {
             color: #555555;
             line-height: 20px;
           }
+        }
+        .experience-btn {
+          text-align: center;
         }
       }
     }

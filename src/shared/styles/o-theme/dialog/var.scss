@@ -1,0 +1,22 @@
+.el-dialog {
+    --o-dialog-shadow: 0px 13px 33px 0px rgba(190, 196, 204, 0.2);
+    --o-dialog-color: #555;
+    --o-dialog-bg: #fff;
+    --o-dialog-radius: 16px;
+    --o-dialog-body-color: #555;
+    --o-dialog-closebtn-color: #fff;
+
+    --o-dialog-header-font_size:24px;
+    --o-dialog-headerbtn-font_size:24px;
+    --o-dialog-body-font_size:14px;
+    --o-dialog-footer-font_size:14px;
+    --o-dialog-header-line_height: 32px;
+    --o-dialog-body-line_height: 17px;
+    --o-dialog-footer-line_height: 14px;
+
+    --o-dialog-fullscreen-bg:rgba(0, 0, 0, 0.85);
+    --o-dialog-fullscreen-header-bg:rgba(0, 0, 0, 0.85);
+    --o-dialog-fullscreen-title-color: #fff;
+    --o-dialog-fullscreen-title-font_size: 14px;
+    --o-dialog-fullscreen-title-line_height: 14px;
+  }

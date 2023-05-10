@@ -1,0 +1,52 @@
+@charset 'UFT-8';
+@use './var.scss';
+body{
+    .el-dialog {
+        box-shadow: var(--o-dialog-shadow);
+        border-radius: var(--o-dialog-radius);
+        .el-dialog__header{
+          font-size: var(--o-dialog-header-font_size);
+          line-height:var(--o-dialog-header-line_height);
+          padding: 40px 40px 24px;
+          margin: 0;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .el-dialog__title{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .el-dialog__headerbtn {
+            font-size: var(--o-dialog-headerbtn-font_size);
+          }
+        }
+        .el-dialog__body{
+          color: var(--o-dialog-body-color);
+          font-size: var(--o-dialog-body-font_size);
+          line-height: var(--o-dialog-body-line_height);
+          text-align: center;
+          padding: 0px 40px;
+        }
+        .el-dialog__footer{
+          padding: 40px;
+          font-size: var(--o-dialog-footer-font_size);
+          line-height: var(--o-dialog-footer-line_height);
+        }
+    }
+
+    /* 添加appen-to-body 的样式 */
+    .fullscreen-dialog.is-fullscreen{
+      background: var(--o-dialog-fullscreen-bg);
+      .el-dialog__header{
+         background: var(--o-dialog-fullscreen-header-bg);
+         backdrop-filter: blur(5px);
+         .el-dialog__title{
+           color: var(--o-dialog-fullscreen-title-color);
+           font-size: var(--o-dialog-fullscreen-title-font_size);
+           line-height: var(--o-dialog-fullscreen-title-line_height);
+         }
+      }
+    }
+}

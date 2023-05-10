@@ -275,6 +275,7 @@ function toTop() {
           cursor: pointer;
           display: flex;
           justify-content: space-between;
+          transition: all 0.3s ease;
           &:hover {
             box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           }

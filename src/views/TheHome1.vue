@@ -469,7 +469,6 @@ const logoPic = [
             data-aos="slide-up"
             :data-aos-duration="200 + (index === 1 ? 0 : 2) * 100"
             data-aos-offset="200"
-            @click="router.push(t(`home.MODELZOO.CARDS[${index}].PATH`))"
           >
             <div class="img">
               <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
@@ -479,6 +478,21 @@ const logoPic = [
             </div>
             <div class="modelzoo-introduce">
               {{ t(`home.MODELZOO.CARDS[${index}].MODELZOO_DESC`) }}
+            </div>
+            <div class="btn-box">
+              <OButton
+                size="mini"
+                @click="router.push(t(`home.MODELZOO.CARDS[${index}].INTRO`))"
+              >
+                {{ t('home.MODELZOO.INTRODUCTION') }}
+              </OButton>
+              <OButton
+                size="mini"
+                type="primary"
+                @click="router.push(t(`home.MODELZOO.CARDS[${index}].PATH`))"
+              >
+                {{ t('home.MODELZOO.EXPERENCE') }}
+              </OButton>
             </div>
           </div>
         </div>
@@ -1132,6 +1146,14 @@ p {
       // flex-direction: column;
       flex-wrap: wrap;
     }
+    .btn-box {
+      text-align: right;
+      margin: 12px 0;
+      padding-top: 12px;
+      .o-button + .o-button {
+        margin-left: 16px;
+      }
+    }
     .item + .item {
       margin-left: 24px;
       @media screen and (max-width: 820px) {
@@ -1191,11 +1213,10 @@ p {
     }
     .img {
       width: 100%;
-      border-radius: 20px;
+      border-radius: 8px;
       overflow: hidden;
       img {
         width: 100%;
-        border-radius: 20px;
         @media screen and (max-width: 820px) {
           border-radius: 16px;
         }

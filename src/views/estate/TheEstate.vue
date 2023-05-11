@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import estateBanner from '@/assets/imgs/estate/estate-banner.png';
+import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
 
 import IconElectricity from '~icons/app/electricity';
 import IconHumanity from '~icons/app/humanity';

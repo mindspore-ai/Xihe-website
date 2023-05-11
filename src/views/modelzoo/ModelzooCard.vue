@@ -80,7 +80,7 @@ function goIntroduction() {
   .card-top {
     width: 100%;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 8px;
     .cover {
       width: 100%;
       height: 146px;
@@ -167,7 +167,7 @@ function goIntroduction() {
     .cover {
       width: 100%;
       height: 146px;
-      border-radius: 16px;
+      border-radius: 8px;
       transform: scale(1);
       transition: all 0.2s linear;
     }

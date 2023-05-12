@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import taichubg from '@/assets/imgs/taichu/taichu-bg.png';
 import ONav from '@/components/ONav.vue';
@@ -52,14 +52,17 @@ function handleNavClick(item) {
 
 nextTick(() => {
   let bgImg = document.getElementById('app');
-  console.log('bgImg: ', bgImg);
-
-  bgImg.style.background = `url(${taichubg})`;
-  bgImg.style.backgroundSize = 'contain';
+  bgImg.style.backgroundImage = `url(${taichubg})`;
+  bgImg.style.backgroundRepeat = 'no-repeat ';
+  bgImg.style.backgroundSize = '100% 1200px';
   bgImg.style.backgroundPosition = '0px 254px';
-  console.log('bgImg.children[1]: ', bgImg.children[1]);
   bgImg.children[1].style.background = 'unset';
   bgImg.children[2].style.backgroundColor = 'unset';
+});
+onUnmounted(() => {
+  let bgImg = document.getElementById('app');
+  bgImg.children[1].style.backgroundColor = '#f5f7fc';
+  bgImg.children[2].style.backgroundColor = '#f5f7fc';
 });
 </script>
 
@@ -93,7 +96,6 @@ nextTick(() => {
 <style lang="scss" scoped>
 .taichu {
   min-height: calc(100vh - 200px);
-  // background-color: #f5f6f8;
   background-image: url(@/assets/imgs/wukong/wukong-banner.png);
   background-size: 100% 254px;
   background-repeat: no-repeat;

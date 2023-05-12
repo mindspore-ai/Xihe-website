@@ -166,18 +166,18 @@ function setTransition(swiper, transition) {
 }
 const swiperGally = ref();
 onMounted(() => {
-  if (screenWidth.value > 820) {
-    let a = (screenWidth.value - 32) / 1440;
-    swiperGally.value.children[2].style.zoom = a;
-  }
+  // if (screenWidth.value > 820) {
+  let a = (screenWidth.value - 32) / 1440;
+  swiperGally.value.children[2].style.zoom = a;
+  // }
 });
 watch(
   () => screenWidth.value,
   () => {
-    if (screenWidth.value > 820) {
-      let a = (screenWidth.value - 32) / 1440;
-      swiperGally.value.children[2].style.zoom = a;
-    }
+    // if (screenWidth.value > 820) {
+    let a = (screenWidth.value - 32) / 1440;
+    swiperGally.value.children[2].style.zoom = a;
+    // }
   }
 );
 const picDialog = ref(false);
@@ -918,11 +918,11 @@ p {
     padding: 12px;
     border-radius: 16px;
     max-width: 412px;
-    box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
     cursor: pointer;
     transition: all 0.3s ease;
     &:hover {
-      box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+      box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
     }
     @media screen and (max-width: 820px) {
       flex-direction: column;
@@ -1148,7 +1148,7 @@ p {
     }
     .btn-box {
       text-align: right;
-      margin: 12px 0;
+      margin: 12px 0 8px;
       padding-top: 12px;
       .o-button + .o-button {
         margin-left: 16px;
@@ -1166,18 +1166,18 @@ p {
       background: #fff;
       background-size: cover;
       // background-position: 50%;
-      padding: 12px;
+      padding: 16px;
       position: relative;
       border-radius: 20px;
       transition: all 0.3s ease;
       cursor: pointer;
       @media screen and (max-width: 820px) {
         padding: 6px;
-        border-radius: 16px;
+        border-radius: 8px;
       }
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
       &:hover {
-        box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
         img {
           transform: scale(1.1);
           transition: all 0.3s ease;
@@ -1218,10 +1218,10 @@ p {
       img {
         width: 100%;
         @media screen and (max-width: 820px) {
-          border-radius: 16px;
+          border-radius: 8px;
         }
         @media screen and (max-width: 767px) {
-          border-radius: 16px;
+          border-radius: 8px;
         }
       }
     }
@@ -1269,10 +1269,10 @@ p {
       @media screen and (max-width: 820px) {
         padding: 16px;
       }
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
       cursor: pointer;
       &:hover {
-        box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
       }
       &:nth-child(3) {
         .models-tag {
@@ -1355,13 +1355,17 @@ p {
   }
   .introduce1 {
     margin-bottom: 0;
+    @media screen and (max-width: 820px) {
+      padding: 0 16px;
+    }
   }
   :deep(.swiper-gallery) {
     perspective: 1200px;
     max-width: 1440px;
     @media screen and (max-width: 820px) {
-      width: 980px;
+      // width: 980px;
       // transform: translateX(-160px);
+      max-width: none;
     }
     .swiper-wrapper {
       transform-style: preserve-3d;
@@ -1540,9 +1544,9 @@ p {
       position: relative;
       margin-bottom: 64px;
       transition: all 0.3s ease;
-      box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
       &:hover {
-        box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+        box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
       }
       @media screen and (max-width: 820px) {
         margin-bottom: 0;
@@ -1698,7 +1702,7 @@ p {
       }
       &:first-child {
         cursor: pointer;
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+
         .intro {
           color: #555;
         }
@@ -1706,7 +1710,7 @@ p {
           color: #000;
         }
         &:hover {
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           background: url(@/assets/imgs/home1/industy/hover-bg1.png);
           background-size: cover;
           background-position: 50%;
@@ -1719,7 +1723,6 @@ p {
         }
       }
       &:nth-child(2) {
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         cursor: pointer;
         .intro {
           color: #555;
@@ -1728,7 +1731,7 @@ p {
           color: #000;
         }
         &:hover {
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           background: url(@/assets/imgs/home1/industy/hover-bg2.png);
           background-size: cover;
           background-position: 50%;
@@ -1741,7 +1744,6 @@ p {
         }
       }
       &:nth-child(3) {
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         cursor: pointer;
         .intro {
           color: #555;
@@ -1752,7 +1754,7 @@ p {
         &:hover {
           background: url(@/assets/imgs/home1/industy/hover-bg3.png);
           background-size: cover;
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           .name,
           .intro {
             color: #ffffff;
@@ -1760,7 +1762,6 @@ p {
         }
       }
       &:last-child {
-        box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
         cursor: pointer;
         .intro {
           color: #555;
@@ -1771,7 +1772,7 @@ p {
         &:hover {
           background: url(@/assets/imgs/home1/industy/hover-bg4.png);
           background-size: cover;
-          box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+          box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           .name,
           .intro {
             color: #ffffff;

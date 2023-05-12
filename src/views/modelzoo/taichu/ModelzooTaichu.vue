@@ -5,8 +5,11 @@ import taichubg from '@/assets/imgs/taichu/taichu-bg.png';
 import ONav from '@/components/ONav.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
 const router = useRouter();
 const route = useRoute();
+const screenWidth = useWindowResize();
 
 const activeNavItem = ref('');
 const navItems = [
@@ -53,16 +56,18 @@ function handleNavClick(item) {
 nextTick(() => {
   let bgImg = document.getElementById('app');
   bgImg.style.backgroundImage = `url(${taichubg})`;
-  bgImg.style.backgroundRepeat = 'no-repeat ';
   bgImg.style.backgroundSize = '100% 1200px';
   bgImg.style.backgroundPosition = '0px 254px';
   bgImg.children[1].style.background = 'unset';
   bgImg.children[2].style.backgroundColor = 'unset';
+  if (screenWidth.value < 820) {
+    bgImg.children[2].style.backgroundColor = '#F5F6F8';
+  }
 });
 onUnmounted(() => {
   let bgImg = document.getElementById('app');
-  bgImg.children[1].style.backgroundColor = '#f5f7fc';
-  bgImg.children[2].style.backgroundColor = '#f5f7fc';
+  bgImg.children[1].style.backgroundColor = '#F5F6F8';
+  bgImg.children[2].style.backgroundColor = '#F5F6F8';
 });
 </script>
 
@@ -105,6 +110,7 @@ onUnmounted(() => {
     padding-top: 0;
     background-size: 100% 108px;
     background-position: 0 48px;
+    background-color: #f5f6f8;
     .taichu-wrapper {
       padding: 16px 16px 0px;
     }

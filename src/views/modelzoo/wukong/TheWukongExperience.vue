@@ -230,8 +230,8 @@ nextTick(() => {
 });
 onUnmounted(() => {
   let bgImg = document.getElementById('app');
-  bgImg.children[1].style.backgroundColor = '#f5f7fc';
-  bgImg.children[2].style.backgroundColor = '#f5f7fc';
+  bgImg.children[1].style.backgroundColor = '#F5F6F8';
+  bgImg.children[2].style.backgroundColor = '#F5F6F8';
 });
 const routeList = [
   {

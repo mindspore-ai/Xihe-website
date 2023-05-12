@@ -659,7 +659,7 @@ body.el-popup-parent--hidden {
 .app-footer {
   min-width: 1280px;
   // background-color: #18191d;
-  background-color: #f5f7fc;
+  background-color: #f5f6f8;
   background-image: url(@/assets/imgs/footer-bg1.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;

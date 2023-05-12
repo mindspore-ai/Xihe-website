@@ -444,14 +444,10 @@ onUnmounted(() => {
   }
 }
 .vision {
-  background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
-  background-position: 0% 0%;
-  background-size: cover;
   width: 100%;
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
     padding: 0px 0px 0px;
-    background-image: none;
   }
   .vision-box {
     margin: 0 auto;

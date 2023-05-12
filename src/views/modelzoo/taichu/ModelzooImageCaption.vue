@@ -413,14 +413,10 @@ function customUpload() {
   }
 }
 .model-page {
-  background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
-  background-position: 0% 0%;
-  background-size: cover;
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
     padding-bottom: 0px;
-    background-image: none;
   }
   .model-wrap {
     margin: 0 auto;

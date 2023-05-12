@@ -197,13 +197,7 @@ function startJupyter() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    ElMessage({
-      message:
-        '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
-      type: 'warning',
-      duration: 4000,
-    });
-    /* if (!cloudId.value) {
+    if (!cloudId.value) {
       ElMessage({
         type: 'warning',
         message: '请选择资源',
@@ -223,7 +217,7 @@ function startJupyter() {
           }
         }
       });
-    } */
+    }
   }
 }
 

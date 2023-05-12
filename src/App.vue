@@ -400,7 +400,7 @@ const handleCommand = () => {
           class="user-info"
           popper-class="header-nav"
         >
-          <el-avatar :size="40" :src="userInfoStore.avatar" fit="fill" />
+          <el-avatar :size="30" :src="userInfoStore.avatar" fit="fill" />
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item

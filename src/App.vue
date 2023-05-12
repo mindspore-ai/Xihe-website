@@ -324,6 +324,8 @@ function toPage(path) {
   // } else
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
+  } else if (path === '/' && route.path === '/') {
+    meauActive.value = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;

@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import OButton from '@/components/OButton.vue';
+import taichubg from '@/assets/imgs/taichu/taichu-bg.png';
 import ONav from '@/components/ONav.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -49,6 +49,18 @@ watch(
 function handleNavClick(item) {
   router.push({ path: item.href });
 }
+
+nextTick(() => {
+  let bgImg = document.getElementById('app');
+  console.log('bgImg: ', bgImg);
+
+  bgImg.style.background = `url(${taichubg})`;
+  bgImg.style.backgroundSize = 'contain';
+  bgImg.style.backgroundPosition = '0px 254px';
+  console.log('bgImg.children[1]: ', bgImg.children[1]);
+  bgImg.children[1].style.background = 'unset';
+  bgImg.children[2].style.backgroundColor = 'unset';
+});
 </script>
 
 <template>
@@ -81,7 +93,7 @@ function handleNavClick(item) {
 <style lang="scss" scoped>
 .taichu {
   min-height: calc(100vh - 200px);
-  background-color: #f5f6f8;
+  // background-color: #f5f6f8;
   background-image: url(@/assets/imgs/wukong/wukong-banner.png);
   background-size: 100% 254px;
   background-repeat: no-repeat;
@@ -133,7 +145,7 @@ function handleNavClick(item) {
     }
   }
   .taichu-info {
-    background-color: #f5f6f8;
+    // background-color: #f5f6f8;
     border-radius: 16px;
   }
 }

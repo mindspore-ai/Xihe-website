@@ -322,11 +322,6 @@ function toPage(path) {
   //   mobilNav[3].isactive = false;
   //   router.push(path);
   // } else
-  console.log(
-    isMobileFit.value,
-    screenWidth.value,
-    isMobileFit.value && screenWidth.value <= 820
-  );
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (path) {

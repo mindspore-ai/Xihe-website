@@ -300,7 +300,7 @@ $theme: #0d8dff;
   .course-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/user-banner-head.png');
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -309,10 +309,12 @@ $theme: #0d8dff;
       .title {
         padding-bottom: 8px;
         font-size: 36px;
+        line-height: 48px;
       }
       .introduce {
         padding-right: 24px;
         font-size: 18px;
+        line-height: 24px;
         .reference {
           color: #4dcdff;
         }
@@ -420,7 +422,7 @@ $theme: #0d8dff;
           .course-cover {
             img {
               width: 300px;
-              border-radius: 16px;
+              border-radius: 8px;
             }
           }
           .course-info {

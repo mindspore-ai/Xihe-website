@@ -297,46 +297,6 @@ async function cancelImgCollected(item) {
 </template>
 
 <style lang="scss" scoped>
-/* :deep(.el-dialog) {
-  .el-dialog__header {
-    @media screen and (max-width: 820px) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 0;
-    }
-    .el-dialog__title {
-      color: #fff;
-      padding-top: 27px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      @media screen and (max-width: 820px) {
-        font-size: 14px;
-        line-height: 24px;
-        padding: 0 40px;
-      }
-    }
-  }
-
-  .el-dialog__headerbtn {
-    position: fixed;
-    top: 6px;
-    right: 15px;
-    z-index: 201;
-    @media screen and (max-width: 820px) {
-      top: 12px;
-      right: 12px;
-    }
-    .el-dialog__close {
-      color: #fff;
-      font-size: 40px;
-      @media screen and (max-width: 820px) {
-        font-size: 24px;
-      }
-    }
-  }
-} */
 /* 移动端点击图片dlg */
 :deep(.fullscreen-dialog) {
   border-radius: 0;
@@ -413,7 +373,7 @@ async function cancelImgCollected(item) {
         }
       }
       @media screen and (max-width: 820px) {
-        font-size: 12px;
+        font-size: 14px;
       }
     }
     .collect-img {
@@ -433,6 +393,7 @@ async function cancelImgCollected(item) {
         background-color: #fff;
         border-radius: 22px;
         padding: 8px;
+        color: #b2b2b2;
         .cancel-public {
           margin-right: 12px;
           @media screen and (max-width: 767px) {
@@ -560,6 +521,9 @@ async function cancelImgCollected(item) {
         flex: 1;
         display: flex;
         min-height: 232px;
+        @media screen and (max-width: 820px) {
+          min-height: 0px;
+        }
         &:hover {
           .handles {
             opacity: 1;

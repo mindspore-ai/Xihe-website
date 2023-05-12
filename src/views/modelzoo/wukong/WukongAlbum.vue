@@ -721,7 +721,7 @@ function toNextPic() {
           width: 226px;
         }
         @media screen and (max-width: 768px) {
-          width: 166px;
+          width: 167px;
         }
         .box-top {
           height: 342px;
@@ -1017,8 +1017,9 @@ function toNextPic() {
                 line-height: 18px;
                 @media screen and (max-width: 768px) {
                   display: inline-block;
-                  font-size: 12px;
+                  font-size: 16px;
                   line-height: 12px;
+                  vertical-align: middle;
                 }
               }
               .o-like {
@@ -1028,8 +1029,9 @@ function toNextPic() {
                 line-height: 10px;
                 height: 18px;
                 @media screen and (max-width: 768px) {
-                  font-size: 10px;
+                  font-size: 14px;
                   line-height: 12px;
+                  vertical-align: middle;
                 }
               }
             }
@@ -1213,10 +1215,10 @@ function toNextPic() {
           font-size: 12px;
           z-index: 2;
           @media screen and (max-width: 768px) {
-          bottom: 48px;
-          right: 8px;
-          font-size: 8px;
-        }
+            bottom: 48px;
+            right: 8px;
+            font-size: 8px;
+          }
         }
         .logo {
           position: absolute;

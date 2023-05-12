@@ -47,7 +47,7 @@ export default {
   PRIVACY_POLICY: '隐私政策',
   LEGAL_NOTICE: '法律声明',
   COPYRIGHT: '版权所有',
-  OWNERSHIP: '保留一切权力',
+  OWNERSHIP: '保留一切权利',
   LANG: 'En',
   BANNER_BUTTON_1: '昇思大模型平台',
   BANNER_BUTTON_2: 'AI画家大赛',
@@ -104,25 +104,29 @@ export default {
     TITLE: '大模型',
     INTRODUCE:
       '覆盖NLP和CV等场景。面向语言理解、语言生成，具有超强语言理解能力以及对话生成；可实现跨模态检索、图文生成、图片文档的信息提取等应用；可实现对遥感数据的目标检测等',
-    // QUCIK_START: '立即体验',
+    EXPERENCE: '在线体验',
+    INTRODUCTION: '查看介绍',
     CARDS: [
       {
         MODELZOO_NAME: '悟空.画画',
         MODELZOO_DESC: '业界首个基于扩散模型的中文文生图大模型',
         IMAGE: modelzoo_wukong,
         PATH: '/modelzoo/wukong',
+        INTRO: '/modelzoo/wukong/introduce',
       },
       {
         MODELZOO_NAME: '紫东.太初',
         MODELZOO_DESC: '全球首个三模态千亿参数大模型',
         IMAGE: modelzoo_taichu,
         PATH: '/modelzoo/taichu',
+        INTRO: '/modelzoo/taichu/introduce',
       },
       {
         MODELZOO_NAME: '武大.LuoJia',
         MODELZOO_DESC: '全球首个遥感专用框架及最大遥感样本库',
         IMAGE: modelzoo_luojia,
         PATH: '/modelzoo/luojia',
+        INTRO: '/modelzoo/luojia/introduce',
       },
       // {
       //   MODELZOO_NAME: '鹏程.盘古',

@@ -11,8 +11,70 @@ import logoImg from '@/assets/imgs/logo1.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 
 import { useI18n } from 'vue-i18n';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+import IconUser from '~icons/app/user.svg';
+import { goAuthorize, logout } from '@/shared/login';
 
 const { t, locale } = useI18n();
+const loginStore = useLoginStore();
+const userInfoStore = useUserInfoStore();
+
+const loginedDropdownItems = reactive([
+  {
+    id: 'user',
+    label: computed(() => {
+      return locale.value === 'zh' ? '个人中心' : 'Personal Center';
+    }),
+    action: () => {
+      router.push(`/${userInfoStore.userName}`);
+    },
+  },
+  {
+    id: 'projects',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建项目' : 'New Project';
+    }),
+    action: () => {
+      router.push('/new/projects');
+    },
+  },
+  {
+    id: 'models',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建模型' : 'New Model';
+    }),
+    action: () => {
+      router.push('/new/models');
+    },
+  },
+  {
+    id: 'datasets',
+    label: computed(() => {
+      return locale.value === 'zh' ? '新建数据集' : 'New Dataset';
+    }),
+    action: () => {
+      router.push('/new/datasets');
+    },
+  },
+  // {
+  //   id: 'settings',
+  //   label: computed(() => {
+  //     return locale.value === 'zh' ? '设置' : 'Settings';
+  //   }),
+  //   action: () => {
+  //     router.push('/settings');
+  //   },
+  // },
+  {
+    id: 'logout',
+    label: computed(() => {
+      return locale.value === 'zh' ? '退出' : 'Logout';
+    }),
+    action: () => {
+      logout();
+    },
+  },
+]);
 
 const route = useRoute();
 const router = useRouter();
@@ -315,6 +377,43 @@ const handleCommand = () => {
       @click="toPage('/')"
     />
     <span v-else>{{ currentPage }}</span>
+
+    <div class="header-tool">
+      <loading-arc v-if="loginStore.isLoggingIn" class="loading"></loading-arc>
+      <div v-else class="user">
+        <el-dropdown
+          v-if="!userInfoStore.id"
+          class="user-login"
+          popper-class="header-nav"
+        >
+          <icon-user class="user-login-icon"></icon-user>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="goAuthorize">{{
+                locale === 'zh' ? '登录' : 'Login'
+              }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <el-dropdown
+          v-if="userInfoStore.id"
+          class="user-info"
+          popper-class="header-nav"
+        >
+          <el-avatar :size="30" :src="userInfoStore.avatar" fit="fill" />
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item
+                v-for="item in loginedDropdownItems"
+                :key="item.id"
+                @click="item.action"
+                >{{ item.label }}</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
   </header>
 
   <header
@@ -336,6 +435,7 @@ const handleCommand = () => {
     <app-footer></app-footer>
   </footer>
   <div class="mobile-menu" :class="{ 'menu-active': meauActive }">
+    <div class="menu-mask" @click="meauActive = false"></div>
     <div class="menu-side" :class="{ 'menu-active': meauActive }">
       <div class="nav">
         <div
@@ -418,6 +518,46 @@ const handleCommand = () => {
     .en-logo {
       width: auto;
       height: 40px;
+    }
+
+    .header-tool {
+      position: absolute;
+      right: 16px;
+
+      .loading {
+        font-size: 18px;
+        color: #ffffff;
+        background-color: #0f1927;
+      }
+
+      .user {
+        color: #ffffff;
+        height: 100%;
+
+        &-login {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+
+          &-icon {
+            color: #000;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        &-info {
+          height: 100%;
+          cursor: pointer;
+
+          &-avatar {
+            display: flex;
+            align-items: center;
+            height: 100%;
+          }
+        }
+      }
     }
   }
   .wukong-header-bg {
@@ -651,6 +791,14 @@ body.el-popup-parent--hidden {
     font-weight: 600;
   }
 }
+.menu-mask {
+  width: 100%;
+  height: calc(100vh - 48px);
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 48px;
+  // z-index: 1;
+}
 .mobile-menu {
   background: rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -680,6 +828,7 @@ body.el-popup-parent--hidden {
       line-height: 18px;
       padding-left: 16px;
       min-width: 164px;
+      z-index: 20;
       span {
         border-bottom: 2px solid rgba(0, 0, 0, 0);
       }

@@ -1,12 +1,15 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import OButton from '@/components/OButton.vue';
+import taichubg from '@/assets/imgs/taichu/taichu-bg.png';
 import ONav from '@/components/ONav.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
 const router = useRouter();
 const route = useRoute();
+const screenWidth = useWindowResize();
 
 const activeNavItem = ref('');
 const navItems = [
@@ -49,6 +52,23 @@ watch(
 function handleNavClick(item) {
   router.push({ path: item.href });
 }
+
+nextTick(() => {
+  let bgImg = document.getElementById('app');
+  bgImg.style.backgroundImage = `url(${taichubg})`;
+  bgImg.style.backgroundSize = '100% 1200px';
+  bgImg.style.backgroundPosition = '0px 254px';
+  bgImg.children[1].style.background = 'unset';
+  bgImg.children[2].style.backgroundColor = 'unset';
+  if (screenWidth.value < 820) {
+    bgImg.children[2].style.backgroundColor = '#F5F6F8';
+  }
+});
+onUnmounted(() => {
+  let bgImg = document.getElementById('app');
+  bgImg.children[1].style.backgroundColor = '#F5F6F8';
+  bgImg.children[2].style.backgroundColor = '#F5F6F8';
+});
 </script>
 
 <template>
@@ -81,14 +101,16 @@ function handleNavClick(item) {
 <style lang="scss" scoped>
 .taichu {
   min-height: calc(100vh - 200px);
-  background-color: #f5f6f8;
   background-image: url(@/assets/imgs/wukong/wukong-banner.png);
   background-size: 100% 254px;
   background-repeat: no-repeat;
   @media screen and (max-width: 1080px) {
+    background-image: url(@/assets/imgs/taichu/taichu-mobile-banner.png);
     padding-top: 80px;
     padding-top: 0;
-    background-size: 100% 172px;
+    background-size: 100% 108px;
+    background-position: 0 48px;
+    background-color: #f5f6f8;
     .taichu-wrapper {
       padding: 16px 16px 0px;
     }
@@ -102,7 +124,7 @@ function handleNavClick(item) {
     .taichu-bread {
       padding-top: 120px;
       @media screen and (max-width: 1080px) {
-        padding-top: 64px;
+        padding-top: 48px;
       }
     }
     .taichu-content-desc {
@@ -131,7 +153,7 @@ function handleNavClick(item) {
     }
   }
   .taichu-info {
-    background-color: #f5f6f8;
+    // background-color: #f5f6f8;
     border-radius: 16px;
   }
 }

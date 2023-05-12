@@ -557,7 +557,13 @@ function toTop() {
               display: flex;
               align-items: center;
               &-title {
+                // max-width: 700px;
                 font-size: 24px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
               }
               &-state {
                 font-size: 12px;
@@ -586,6 +592,11 @@ function toTop() {
               margin-top: 16px;
               color: #555555;
               line-height: 22px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
             }
             .card-footer {
               color: #555555;

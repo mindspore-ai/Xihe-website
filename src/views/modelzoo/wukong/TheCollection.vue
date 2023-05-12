@@ -354,7 +354,11 @@ function handleImageClick(img) {
 
       <div class="mobile-dlg-handles">
         <div class="img-handles">
-          <div class="icon-item" @click="publicImage(imageInfo.id)">
+          <div
+            v-if="imageInfo.owner === userInfoStore.userName"
+            class="icon-item"
+            @click="publicImage(imageInfo.id)"
+          >
             <o-icon><icon-eyeopen></icon-eyeopen></o-icon>
           </div>
           <div
@@ -549,8 +553,8 @@ function handleImageClick(img) {
       background-color: #fff;
       border-radius: 22px;
       .icon-item {
-        width: 24px;
-        height: 24px;
+        width: 16px;
+        height: 16px;
         margin-right: 8px;
         border-radius: 50%;
         color: #b2b2b2;

@@ -86,9 +86,11 @@ function handleNavClick(item) {
   background-size: 100% 254px;
   background-repeat: no-repeat;
   @media screen and (max-width: 1080px) {
+    background-image: url(@/assets/imgs/taichu/taichu-mobile-banner.png);
     padding-top: 80px;
     padding-top: 0;
-    background-size: 100% 172px;
+    background-size: 100% 108px;
+    background-position: 0 48px;
     .taichu-wrapper {
       padding: 16px 16px 0px;
     }
@@ -102,7 +104,7 @@ function handleNavClick(item) {
     .taichu-bread {
       padding-top: 120px;
       @media screen and (max-width: 1080px) {
-        padding-top: 64px;
+        padding-top: 48px;
       }
     }
     .taichu-content-desc {

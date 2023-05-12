@@ -16,7 +16,6 @@ const userInfoStore = useUserInfoStore();
 const userComData = useCompetitionData();
 
 const queryRef = ref(null);
-// const role = ref('student');
 const areaData = ref([]);
 const agree = ref(false);
 let province = ref([]);
@@ -577,10 +576,10 @@ function saveInfo(formEl) {
           .teacher,
           .developer,
           .other {
-            // height: 137px;
             background: #f5f6f8;
-            margin-top: 25px;
+            margin-top: 10px;
             padding: 24px;
+            border-radius: 8px;
             .el-form-item {
               margin-bottom: 0px;
               .organization {
@@ -589,7 +588,6 @@ function saveInfo(formEl) {
                 justify-content: space-between;
               }
               .specialty {
-                // margin-bottom: 20px;
                 display: flex;
                 justify-content: space-between;
               }

@@ -550,7 +550,8 @@ onUnmounted(() => {
   width: 100%;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
-    padding-bottom: 40px;
+    background-image: none;
+    padding-bottom: 0px;
   }
   .model-wrap {
     margin: 0 auto;

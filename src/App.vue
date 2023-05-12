@@ -25,10 +25,7 @@ const header = ref(null);
 const isHeaderTransparent = ref(false);
 
 const setHeader = () => {
-  const scrollTop = document.documentElement.scrollTop;
   const scrollLeft = document.documentElement.scrollLeft;
-
-  isHeaderTransparent.value = scrollTop > 0 ? true : false;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
 
@@ -137,6 +134,15 @@ watch(
   }
 );
 
+//比赛页面头部不透明
+watch(
+  () => route.path,
+  (newValue) => {
+    isHeaderTransparent.value = newValue.includes('competition/')
+      ? true
+      : false;
+  }
+);
 onMounted(() => {
   window.addEventListener('resize', onResize);
 });
@@ -490,12 +496,8 @@ body.el-popup-parent--hidden {
   left: 0;
   top: 0;
   right: 0;
-  // background-color: rgba(6, 11, 41, 0.85);
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
   min-width: 1280px;
   transition: all 0.5s;
 }
@@ -505,8 +507,7 @@ body.el-popup-parent--hidden {
 
 .opaque {
   z-index: 100;
-  // background-color: rgba(6, 11, 41, 1);
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 1);
 }
 
 .app-body {

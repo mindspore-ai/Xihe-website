@@ -444,9 +444,6 @@ onUnmounted(() => {
   }
 }
 .vision {
-  background-image: url(../../../assets/imgs/taichu/vqa-background-image.png);
-  background-position: 0% 0%;
-  background-size: cover;
   width: 100%;
   padding: 40px 64px 64px;
   @media screen and (max-width: 1080px) {
@@ -467,10 +464,10 @@ onUnmounted(() => {
       color: #000000;
       line-height: 48px;
       font-weight: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
       @media screen and (max-width: 1080px) {
+        text-align: left;
+        font-weight: normal;
         font-size: 14px;
         color: #000000;
         line-height: 28px;

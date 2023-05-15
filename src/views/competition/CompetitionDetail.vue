@@ -333,6 +333,11 @@ provide('getDetailData', getDetailData);
             align-items: center;
             &-title {
               font-size: 24px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
             &-state {
               font-size: 12px;
@@ -372,7 +377,7 @@ provide('getDetailData', getDetailData);
           display: flex;
           padding-right: 48px;
           &-bonus {
-            margin: 40px 90px 24px 88px;
+            margin: 40px 48px 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;

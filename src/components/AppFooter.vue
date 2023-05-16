@@ -39,7 +39,7 @@ const route = useRoute();
       </div>
       <div class="below">
         <span>{{ t('home.COPYRIGHT') }}</span>
-        <span>©&nbsp;2022&nbsp;MindSpore</span>
+        <span>©&nbsp;2023&nbsp;MindSpore</span>
         <span>&nbsp;{{ t('home.OWNERSHIP') }}</span>
       </div>
     </div>

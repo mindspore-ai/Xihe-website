@@ -26,6 +26,7 @@ const loginedDropdownItems = reactive([
       return locale.value === 'zh' ? '个人中心' : 'Personal Center';
     }),
     action: () => {
+      meauActive.value = false;
       router.push(`/${userInfoStore.userName}`);
     },
   },
@@ -35,6 +36,7 @@ const loginedDropdownItems = reactive([
       return locale.value === 'zh' ? '新建项目' : 'New Project';
     }),
     action: () => {
+      meauActive.value = false;
       router.push('/new/projects');
     },
   },
@@ -44,6 +46,7 @@ const loginedDropdownItems = reactive([
       return locale.value === 'zh' ? '新建模型' : 'New Model';
     }),
     action: () => {
+      meauActive.value = false;
       router.push('/new/models');
     },
   },
@@ -53,6 +56,7 @@ const loginedDropdownItems = reactive([
       return locale.value === 'zh' ? '新建数据集' : 'New Dataset';
     }),
     action: () => {
+      meauActive.value = false;
       router.push('/new/datasets');
     },
   },
@@ -71,6 +75,7 @@ const loginedDropdownItems = reactive([
       return locale.value === 'zh' ? '退出' : 'Logout';
     }),
     action: () => {
+      meauActive.value = false;
       logout();
     },
   },
@@ -330,7 +335,7 @@ function toPage(path) {
   // } else
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
-  } else if (path === '/' && route.path === '/') {
+  } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
   } else if (path) {
     isMobileFit.value = false;

@@ -57,7 +57,7 @@ watch(
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
+          <el-breadcrumb-item :to="{ path: '/medicine' }">
             医疗专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">

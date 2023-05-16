@@ -115,10 +115,40 @@ const navItems = reactive([
   {
     id: 'estate',
     label: computed(() => {
-      return t('home.APP_HEADER.INDUSTRY');
+      return t('home.APP_HEADER.INDUSTRIES');
     }),
-    href: '/estate/electricity',
+    href: '',
     isActive: false,
+    menuList: [
+      {
+        id: 'electricity',
+        label: computed(() => {
+          return t('home.APP_HEADER.Electric_Power');
+        }),
+        href: '/electricity',
+      },
+      {
+        id: 'healthcare',
+        label: computed(() => {
+          return t('home.APP_HEADER.HEALTHCARE');
+        }),
+        href: '/medicine',
+      },
+      {
+        id: 'industry',
+        label: computed(() => {
+          return t('home.APP_HEADER.INDUSTRY');
+        }),
+        href: '/industry',
+      },
+      {
+        id: 'human_culture',
+        label: computed(() => {
+          return t('home.APP_HEADER.HUMAN_CULTURE');
+        }),
+        href: '/humanity',
+      },
+    ],
   },
   {
     id: 'course',
@@ -257,6 +287,7 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(path) {
+  // console.log('path: ', path);
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (!path) {
@@ -273,8 +304,15 @@ watch(route, (val) => {
       item.isActive = false;
     }
   });
-  if (val.path === '/modelzoo' || val.path === '/finetune') {
+  if (val.name === 'modelzoo' || val.name === 'finetune') {
     navItems[2].isActive = true;
+  } else if (
+    val.name === 'electricity' ||
+    val.name === 'industry' ||
+    val.name === 'medicine' ||
+    val.name === 'humanity'
+  ) {
+    navItems[4].isActive = true;
   }
 });
 
@@ -918,6 +956,11 @@ const handleCommand = (command) => {
         &:hover {
           color: #0d8dff;
         }
+        &:nth-child(5) {
+          .children-box {
+            left: -30px;
+          }
+        }
       }
       .is-active {
         color: #0d8dff;
@@ -934,10 +977,13 @@ const handleCommand = (command) => {
         top: 80px;
         left: -22px;
         width: 86px;
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.9);
         transform-origin: top;
         transform: scaleY(0);
         transition: all 0.3s ease-in-out;
+        box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        backdrop-filter: blur(5px);
         .item-children {
           height: 36px;
           line-height: 36px;
@@ -951,6 +997,13 @@ const handleCommand = (command) => {
         }
       }
       .menu-item:nth-child(3) {
+        &:hover {
+          .children-box {
+            transform: scaleY(1);
+          }
+        }
+      }
+      .menu-item:nth-child(5) {
         &:hover {
           .children-box {
             transform: scaleY(1);

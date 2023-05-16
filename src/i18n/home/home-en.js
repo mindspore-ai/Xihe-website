@@ -41,7 +41,11 @@ export default {
     COMPETITION: 'Competitions',
     ACTIVITY: 'Activities',
     DOCUMENT: 'Docs',
-    INDUSTRY: 'Industries',
+    INDUSTRIES: 'Industries',
+    Electric_Power: 'Electric Power',
+    HEALTHCARE: 'Healthcare',
+    INDUSTRY: 'Industry',
+    HUMAN_CULTURE: 'Human Culture',
   },
   SCANNING_CODE: 'Public Account',
   PRIVACY_POLICY: 'Privacy Policy',
@@ -104,8 +108,7 @@ export default {
     TITLE: 'Foundation Model Inference',
     INTRODUCE:
       'Use powerful language understanding and dialog generation capabilities in NLP and CV scenarios. You can implement applications such as cross-modal retrieval, text-to-image generation, and image information extraction. You can also detect targets in remote sensing data.',
-    EXPERENCE: 'Experence Live',
-    INTRODUCTION: 'Introduction',
+    // QUCIK_START: '立即体验',
     CARDS: [
       {
         MODELZOO_NAME: 'Wukong-Huahua',
@@ -113,7 +116,6 @@ export default {
           "Industry's first Chinese text-to-image foundation model based on the diffusion model",
         IMAGE: modelzoo_wukong,
         PATH: '/modelzoo/wukong',
-        INTRO: '/modelzoo/wukong/introduce',
       },
       {
         MODELZOO_NAME: 'Zidong.Taichu',
@@ -121,7 +123,6 @@ export default {
           "The world's first three-modal 100-billion-parameter model",
         IMAGE: modelzoo_taichu,
         PATH: '/modelzoo/taichu',
-        INTRO: '/modelzoo/taichu/introduce',
       },
       {
         MODELZOO_NAME: 'LuoJia.NET',
@@ -129,7 +130,6 @@ export default {
           "The world's first dedicated remote sensing framework and the largest remote sensing sample library",
         IMAGE: modelzoo_luojia,
         PATH: '/modelzoo/luojia',
-        INTRO: '/modelzoo/luojia/introduce',
       },
       // {
       //   MODELZOO_NAME: 'PCL-L',
@@ -327,6 +327,6 @@ export default {
     ],
   },
   PARTNER: {
-    TITLE: 'Partners',
+    TITLE: 'Partner',
   },
 };

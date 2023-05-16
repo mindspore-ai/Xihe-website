@@ -101,6 +101,7 @@ if (props.cardType === 'model') {
   transition: box-shadow 0.3s;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 16px;
   .o-icon {
     margin-right: 4px;
     font-size: 16px;

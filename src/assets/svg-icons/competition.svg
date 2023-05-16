@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>比赛</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="48" height="48"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#D0E1FF" offset="0%"></stop>
+            <stop stop-color="#A9C5FB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#D0E1FF" offset="0%"></stop>
+            <stop stop-color="#A9C5FB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-5">
+            <stop stop-color="#90C3FF" offset="0%"></stop>
+            <stop stop-color="#5790FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#90C3FF" offset="0%"></stop>
+            <stop stop-color="#5790FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#D0E1FF" offset="0%"></stop>
+            <stop stop-color="#A9C5FB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-8">
+            <stop stop-color="#D0D2FA" offset="0%"></stop>
+            <stop stop-color="#A898FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-9">
+            <stop stop-color="#ABE9FF" offset="0%"></stop>
+            <stop stop-color="#6CD9FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="产业/产业首页-电力专区" transform="translate(-910.000000, -2516.000000)">
+            <g id="编组" transform="translate(252.000000, 2500.000000)">
+                <g id="比赛" transform="translate(658.000000, 16.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="矩形"></g>
+                    <g id="编组" mask="url(#mask-2)">
+                        <g transform="translate(1.000000, 6.000000)">
+                            <path d="M0.000685517402,2.52054106 L0.000685517402,3.03964625 L0,3.03964625 L0,7.7772662 L0,11.4910119 L2.93812758,14.4170885 L5.57613565,17.043881 L9.30521321,17.043881 L36.5820877,17.043881 L40.3113024,17.043881 L42.9490363,14.4170885 L45.2756823,12.099957 L46,11.3790534 L46,7.66530769 L46,5.14706041 L46,5.14706041 L46,2.52054106 L0.000685517402,2.52054106 Z M2.63800807,10.4041952 L2.63800807,5.14706041 L43.3632259,5.14706041 L43.3632259,10.2908713 L39.2199587,14.4170885 L6.66734225,14.4170885 L2.63800807,10.4041952 Z" id="Fill-1" fill="url(#linearGradient-3)"></path>
+                            <polygon id="Fill-2" fill="url(#linearGradient-4)" points="21.565075 26.4327568 24.2029459 26.4327568 24.2029459 18.4660895 21.565075 18.4660895"></polygon>
+                            <polygon id="Fill-3" fill="url(#linearGradient-5)" points="7.13712732 0 7.13712732 6.15130094 14.5438686 19.5263834 31.2240152 19.5263834 38.6307565 6.15130094 38.6307565 0"></polygon>
+                            <g id="编组" stroke-width="1" fill="none" transform="translate(6.051158, 4.762756)">
+                                <path d="M21.8718303,7.54040568 L21.0859532,7.54040568 C20.8704265,7.54040568 20.6841029,7.46776918 20.5268452,7.3229058 C20.3697246,7.17804241 20.2852688,6.99535888 20.2737521,6.7751283 L20.0553463,2.44397236 L17.3567385,7.54040568 L16.4833893,7.54040568 L15.1297667,2.3047069 L13.5926995,7.00122988 C13.4298206,7.36058939 13.1764534,7.54040568 12.8330092,7.54040568 L11.7937648,7.54040568 L14.160445,0.321948985 C14.2535383,0.107452863 14.4020214,0 14.6058943,0 L16.0294397,0 L17.2519914,4.74867926 L19.6186717,0.347890591 C19.7641385,0.116191088 19.9593739,0 20.2038294,0 L21.5138531,0 L21.8718303,7.54040568 Z" id="Fill-4" fill="#7FDDFE"></path>
+                                <polygon id="Fill-6" fill="url(#linearGradient-6)" points="32.5796258 27.237244 0 27.237244 2.94772483 21.2891068 29.631901 21.2891068"></polygon>
+                            </g>
+                            <rect id="矩形" fill="url(#linearGradient-7)" x="24" y="26" width="6" height="9"></rect>
+                            <rect id="矩形备份-27" fill="url(#linearGradient-8)" x="30" y="21" width="6" height="14"></rect>
+                            <rect id="矩形备份-28" fill="url(#linearGradient-9)" x="36" y="14" width="6" height="21"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

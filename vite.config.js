@@ -69,6 +69,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/obs-xihe-avatar/, ''),
       },
+      '/oneid': {
+        target: 'https://xiheapi.test.osinfra.cn/',
+        changeOrigin: true,
+      },
     },
   },
 });

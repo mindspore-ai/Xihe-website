@@ -157,16 +157,14 @@ export function getUserEmail(id) {
     return res.data;
   });
 }
-export function setUserEmail(reopt) {
-  const url = `/api/users/send_email_code/${reopt.scene.value}`;
-  return request
-    .post(url, { email: reopt.email }, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    });
+export function sendCode(reopt) {
+  const url = `/server/user/email/sendbind`;
+  return request.post(url, reopt, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
-export function keepUserEmail(params) {
-  const url = `/api/users/set_email/`;
+export function bindUserEmail(params) {
+  const url = `/server/user/email/bind`;
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -305,4 +303,19 @@ export function getUserFollow(name) {
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });
+}
+/**
+ * 获取验证图片  以及token
+ */
+export function reqGet(data) {
+  const url = '/oneid/captcha/get';
+  return request.post(url, data).then((res) => res.data);
+}
+
+/**
+ * 滑动或者点选验证
+ */
+export function reqCheck(data) {
+  const url = '/oneid/captcha/check';
+  return request.post(url, data).then((res) => res.data);
 }

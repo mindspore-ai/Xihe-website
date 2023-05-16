@@ -355,7 +355,7 @@ export default {
             tipWords.value = `${(
               (endMovetime.value - startMoveTime.value) /
               1000
-            ).toFixed(2)}s成功`;
+            ).toFixed(2)}s验证成功`;
             const captchaVerification = secretKey.value
               ? aesEncrypt(
                   backToken.value +

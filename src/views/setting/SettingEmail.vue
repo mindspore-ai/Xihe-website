@@ -42,13 +42,13 @@ const ruleForm = reactive({
   email_code2: '',
 });
 
-getUserEmail(userInfoStore.id).then((res) => {
-  // if (res.data[0].email) {
-  //   userInfoStore.email = res.data[0].email;
-  //   userInfoStore.emailStatus = res.data[0].is_active;
-  //   scene.value = 'change_email';
-  // }
-});
+// getUserEmail(userInfoStore.id).then((res) => {
+// if (res.data[0].email) {
+//   userInfoStore.email = res.data[0].email;
+//   userInfoStore.emailStatus = res.data[0].is_active;
+//   scene.value = 'change_email';
+// }
+// });
 
 function setEmail(formEl) {
   if (!formEl) return;

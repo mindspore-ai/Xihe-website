@@ -5,7 +5,7 @@
       :style="{ 'max-width': parseInt(imgSize.width) + 30 + 'px' }"
     >
       <div v-if="mode == 'pop'" class="verifybox-top">
-        这里是什么
+        请拖动滑块完成人机校验
         <span class="verifybox-close" @click="closeBox">
           <i class="iconfont icon-close"></i>
         </span>

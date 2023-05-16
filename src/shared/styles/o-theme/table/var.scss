@@ -1,13 +1,10 @@
 .el-table {
   --o-table-font_size: 14px;
-  --o-table-line_height: 22px;
   --o-table-color: #555;
+  --o-table-cell-line_height: 22px;
 
+  --o-table-header-height: 48px;
+  --o-table-body-row-height: 56px;
   --o-table-header-color: #000;
   --o-table-header-bg: #e5e8f0;
-
-  // --o-table-shadow: var(--o-shadow-1);
-
-  // --o-table-border-color: var(--o-color-border2);
-  // --o-table-row-bg-hover: var(--o-color-bg3);
 }

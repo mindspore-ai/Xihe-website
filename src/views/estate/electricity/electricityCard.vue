@@ -13,7 +13,6 @@ const prop = defineProps({
     },
   },
 });
-console.log('cardData: ', prop.cardData);
 function goExperience() {
   router.push(`${prop.path}`);
 }

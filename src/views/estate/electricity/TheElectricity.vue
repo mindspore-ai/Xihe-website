@@ -14,11 +14,36 @@ import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNatur
 import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
 
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Autoplay, FreeMode } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
+// 合作伙伴图片
+import logo1 from '@/assets/imgs/home1/logo/logo1.png';
+import logo2 from '@/assets/imgs/home1/logo/logo2.png';
+import logo3 from '@/assets/imgs/home1/logo/logo3.png';
+import logo4 from '@/assets/imgs/home1/logo/logo4.png';
+import logo5 from '@/assets/imgs/home1/logo/logo5.png';
+import logo6 from '@/assets/imgs/home1/logo/logo6.png';
+import logo7 from '@/assets/imgs/home1/logo/logo7.png';
+import logo8 from '@/assets/imgs/home1/logo/logo8.png';
+import logo9 from '@/assets/imgs/home1/logo/logo9.png';
+import logo10 from '@/assets/imgs/home1/logo/logo10.png';
+import logo11 from '@/assets/imgs/home1/logo/logo11.png';
+import logo12 from '@/assets/imgs/home1/logo/logo12.png';
+import logo13 from '@/assets/imgs/home1/logo/logo13.png';
+import logo14 from '@/assets/imgs/home1/logo/logo14.png';
+import logo15 from '@/assets/imgs/home1/logo/logo15.png';
+import logo16 from '@/assets/imgs/home1/logo/logo16.png';
+import logo17 from '@/assets/imgs/home1/logo/logo17.png';
+
+const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉');
 
 const electricityClassify = [
   {
-    id: 0,
+    id: 1,
     name: '计算机视觉',
     path: '/estate/electricity',
     // path: '/estate/industrial-zone',
@@ -26,26 +51,28 @@ const electricityClassify = [
     icon: IconElectricity,
   },
   {
-    id: 1,
+    id: 2,
     name: '自然语言处理',
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
     icon: IconMedicine,
+    disabled: true,
   },
   {
-    id: 2,
+    id: 3,
     name: '语音',
     path: '/estate/industry',
     currentComponent: voice,
     icon: IconIndustry,
+    disabled: true,
   },
   {
-    id: 3,
+    id: 4,
     name: '图神经网络',
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
     icon: IconHumanity,
-    disabled: false,
+    disabled: true,
   },
 ];
 
@@ -54,6 +81,27 @@ const handleClick = (tab) => {
   // activeName.value = tab.paneName;
   // router.push(electricityClassify[tab.index].path);
 };
+
+// 合作伙伴
+const logoPic = [
+  logo1,
+  logo2,
+  logo3,
+  logo4,
+  logo5,
+  logo6,
+  logo7,
+  logo8,
+  logo9,
+  logo10,
+  logo11,
+  logo12,
+  logo13,
+  logo14,
+  logo15,
+  logo16,
+  logo17,
+];
 </script>
 <template>
   <div class="electricity">
@@ -95,6 +143,45 @@ const handleClick = (tab) => {
         </el-tab-pane>
       </el-tabs>
     </div>
+    <div class="logo">
+      <p class="title">合作伙伴</p>
+      <swiper
+        :speed="8000"
+        :free-mode="true"
+        :modules="logoModules"
+        slides-per-view="auto"
+        :autoplay="{ autoplay: true, delay: 0 }"
+        loop
+        :no-swiping="true"
+        class="logo-swiper"
+      >
+        <swiper-slide
+          v-for="item in logoPic.slice(0, 9)"
+          :key="item"
+          class="swiper-no-swiping"
+        >
+          <img :src="item" />
+        </swiper-slide>
+      </swiper>
+      <swiper
+        :speed="8000"
+        :free-mode="true"
+        slides-per-view="auto"
+        :modules="logoModules"
+        :autoplay="{ autoplay: true, delay: 0, reverseDirection: true }"
+        loop
+        :no-swiping="true"
+        class="logo-swiper"
+      >
+        <swiper-slide
+          v-for="item in logoPic.slice(9, 18)"
+          :key="item"
+          class="swiper-no-swiping"
+        >
+          <img :src="item" />
+        </swiper-slide>
+      </swiper>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -134,11 +221,50 @@ const handleClick = (tab) => {
   .electricity-wrap {
     margin: 0 auto;
     max-width: 1472px;
+    position: relative;
+    top: -64px;
+  }
+  .logo {
+    padding: 0 0 52px;
+    @media screen and (max-width: 820px) {
+      padding: 0 0 36px;
+    }
+    .title {
+      height: 48px;
+      line-height: 48px;
+      font-size: 36px;
+      color: #000000;
+      margin-bottom: 26px;
+      text-align: center;
+      @media screen and (max-width: 820px) {
+        margin-bottom: 12px;
+      }
+    }
+    :deep(.logo-swiper) {
+      .swiper-slide {
+        height: 120px;
+        width: auto !important;
+        background-color: #fff;
+        margin: 12px 12px;
+        border-radius: 16px;
+        @media screen and (max-width: 820px) {
+          height: 60px;
+          margin: 4px 4px;
+          border-radius: 10px;
+        }
+      }
+      img {
+        height: 120px;
+        @media screen and (max-width: 820px) {
+          height: 60px;
+        }
+      }
+    }
   }
 }
 :deep(.estate-tabs) {
-  position: relative;
-  top: -64px;
+  // position: relative;
+  // top: -64px;
   .el-tabs__header {
     margin: 0px;
     padding: 0px 16px;

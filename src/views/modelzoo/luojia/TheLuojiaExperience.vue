@@ -493,6 +493,7 @@ function enlarge(url) {
           <el-table-column property="origin" label="地图源" />
           <el-table-column property="status" label="状态" />
           <el-table-column property="create_at" label="创建时间" width="120" />
+          <!-- <el-table-column property="create_at" label="创建时间" width="120" /> -->
           <!-- <el-table-column label="操作">
             <span class="detail" @click="handleDetailClick">查看详情</span>
           </el-table-column> -->
@@ -1071,19 +1072,30 @@ function enlarge(url) {
     }
   }
   .table {
-    overflow: auto;
-    :deep(.el-table__cell) {
-      padding: 8px 0;
-      font-size: 12px;
-      color: #555555;
-      line-height: 18px;
-      .cell {
-        white-space: nowrap;
+    :deep(.el-table) {
+      overflow: auto;
+      box-shadow: none;
+      .el-table__header {
+        .el-table__cell {
+          height: 36px;
+          font-size: 12px;
+          line-height: 22px;
+          .cell {
+            padding: 0 10px;
+            // white-space: nowrap;
+          }
+        }
       }
-    }
-    :deep(.el-table__empty-block) {
-      min-height: 52px;
-      width: 100% !important;
+      .el-table__body-wrapper {
+        .el-table__cell {
+          height: 52px;
+          font-size: 12px;
+          line-height: 22px;
+          .cell {
+            padding: 0 10px;
+          }
+        }
+      }
     }
   }
   .img-detail {

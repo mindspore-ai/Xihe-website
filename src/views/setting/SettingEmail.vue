@@ -72,28 +72,26 @@ function keepEmail(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      if (userInfoStore.email) {
-        let qurey = {
-          email: ruleForm.email,
-          code: ruleForm.email_code,
-        };
-        bindUserEmail(qurey)
-          .then(() => {
-            ElMessage({
-              type: 'success',
-              message: '绑定成功',
-            });
-            userInfoStore.email = ruleForm.email;
-          })
-          .catch((err) => {
-            if (err?.response?.data?.code === 'user_no_userid') {
-              ElMessage({
-                type: 'error',
-                message: '绑定失败，请重新登录后再试',
-              });
-            }
+      let qurey = {
+        email: ruleForm.email,
+        code: ruleForm.email_code,
+      };
+      bindUserEmail(qurey)
+        .then(() => {
+          ElMessage({
+            type: 'success',
+            message: '绑定成功',
           });
-      }
+          userInfoStore.email = ruleForm.email;
+        })
+        .catch((err) => {
+          if (err?.response?.data?.code === 'user_no_userid') {
+            ElMessage({
+              type: 'error',
+              message: '绑定失败，请重新登录后再试',
+            });
+          }
+        });
     } else {
       console.error('error submit!');
       return false;

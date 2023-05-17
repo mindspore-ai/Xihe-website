@@ -1282,7 +1282,7 @@ const showConfirmDlg = ref(false);
         <template v-else> </template>
       </div>
 
-      <div v-if="styleBackground.length && !isError" class="infer-dlg-result">
+      <div v-if="styleBackground.length" class="infer-dlg-result">
         <!-- mobile -->
         <div
           v-for="(value, key) in styleBackground"

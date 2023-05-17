@@ -23,7 +23,7 @@ function onClick(e) {
 }
 </script>
 <template>
-  <div class="digg-content">
+  <div class="digg">
     <div
       :class="[
         { 'un-digged': isDigged === false },
@@ -34,16 +34,21 @@ function onClick(e) {
       <div v-if="!userInfoStore.id">
         <o-icon><icon-heart></icon-heart></o-icon>
       </div>
-      <div v-else>
+      <div v-else class="digg-content">
         <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
         <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
+        <span>Like</span>
+
+        <div class="digg-counts">
+          {{ props.digCount }}
+        </div>
       </div>
-      <span>{{ props.digCount }}</span>
+      <!-- <span>{{ props.digCount }}</span> -->
     </div>
   </div>
 </template>
 <style lang="scss">
-.digg-content {
+.digg {
   cursor: pointer;
   .un-digged {
     display: flex;
@@ -85,6 +90,46 @@ function onClick(e) {
     span {
       font-size: 18px;
     }
+  }
+}
+.digg-content {
+  display: flex;
+  align-items: center;
+  padding: 6px 20px;
+  border: 1px solid #000000;
+  border-radius: 19px;
+  position: relative;
+  &:hover {
+    .digg-counts {
+      opacity: 1;
+      transition: all 0.5s;
+    }
+  }
+}
+.digg-counts {
+  font-size: 12px;
+  color: #555555;
+  line-height: 20px;
+  position: absolute;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: 8px;
+  bottom: -64px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+  opacity: 0;
+  &::before {
+    content: '';
+    width: 0px;
+    height: 0px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 </style>

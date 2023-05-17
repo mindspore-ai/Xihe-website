@@ -180,7 +180,7 @@ async function downloadZip() {
         <el-dropdown v-if="repoDetailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}
-            <template #prefix>
+            <template #suffix>
               <o-icon><icon-plus></icon-plus></o-icon>
             </template>
           </o-button>

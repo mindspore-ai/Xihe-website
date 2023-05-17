@@ -795,6 +795,7 @@ $theme: #0d8dff;
       margin: 0 24px 0 0;
       padding: 40px;
       background-color: #fff;
+      border-radius: 16px;
       .getback {
         font-size: 16px;
         color: #555;
@@ -968,6 +969,7 @@ $theme: #0d8dff;
         padding: 12px 24px;
         width: 100%;
         background-color: #fff;
+        border-radius: 30px;
         .moderl-head-right {
           display: flex;
           align-items: center;

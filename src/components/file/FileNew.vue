@@ -317,6 +317,7 @@ function handleClick() {
   .upload-body {
     width: 100%;
     margin-bottom: 24px;
+
     .main-editor {
       padding: 8px 10px;
       width: 100%;

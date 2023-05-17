@@ -95,6 +95,7 @@ if (props.cardType === 'model') {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-radius: 16px;
   padding: 24px;
   color: #555;
   background-color: #fff;

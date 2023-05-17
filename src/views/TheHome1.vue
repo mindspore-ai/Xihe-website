@@ -736,10 +736,6 @@ const logoPic = [
       </swiper>
     </div>
   </div>
-
-  <footer v-if="route.path === '/'" class="app-footer">
-    <app-footer></app-footer>
-  </footer>
 </template>
 <style lang="scss" scoped>
 .wrapper {

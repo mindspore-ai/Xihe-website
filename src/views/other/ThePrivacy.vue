@@ -67,6 +67,9 @@ const activeName = ref('first');
       .el-tabs__item.is-active {
         color: #0d8dff;
       }
+      .el-tabs__active-bar {
+        display: none;
+      }
     }
   }
   .el-tabs__content {

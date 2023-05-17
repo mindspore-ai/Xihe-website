@@ -3,7 +3,9 @@ import logoImg from '@/assets/imgs/footer-logo1.png';
 import logoImg1 from '@/assets/imgs/footer-logo.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
+import IconClose from '~icons/app/close';
 
+import { toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useI18n } from 'vue-i18n';
@@ -11,6 +13,19 @@ import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 
 const route = useRoute();
+
+const props = defineProps({
+  isCookieTip: {
+    type: Boolean,
+    default: false,
+  },
+});
+// 点击关闭cookies使用提示
+const { isCookieTip } = toRefs(props);
+const emits = defineEmits(['click-cookie']);
+function onCookieClick() {
+  emits('click-cookie');
+}
 </script>
 
 <template>
@@ -46,6 +61,20 @@ const route = useRoute();
     <div class="footer-code">
       <img :src="qrCodeImg" />
       <p>{{ t('home.SCANNING_CODE') }}</p>
+    </div>
+    <!-- 隐私政策 -->
+    <div v-if="isCookieTip" class="cookie-privacy">
+      <!-- <template>
+        <span>{{ i18n.common.COOKIE_LEGAL_TEXT }} </span>
+        <a :href="'/' + lang + '/other/privacy/'">{{
+          i18n.common.COOKIE_LEGAL_LINK_TEXT
+        }}</a>
+      </template> -->
+      <span> 本站点使用Cookies，继续浏览表示您同意我们使用Cookies。</span>
+      <a href="/privacy">Cookies和隐私政策。</a>
+      <o-icon class="icon" @click="onCookieClick">
+        <icon-close></icon-close>
+      </o-icon>
     </div>
   </footer>
 </template>
@@ -133,6 +162,58 @@ const route = useRoute();
       // color: #ffffff;
       opacity: 0.8;
       line-height: 12px;
+    }
+  }
+  .cookie-privacy {
+    line-height: 48px;
+    width: 100%;
+    height: 48px;
+    background-color: #f5f6f8;
+    color: #3f3f3f;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    box-shadow: 0 1px 5px rgba(45, 47, 51, 0.1);
+    text-align: center;
+    @media screen and (max-width: 820px) {
+      font-size: 12px;
+      line-height: 20px;
+      display: inline-block;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    a {
+      cursor: pointer;
+      text-decoration: solid;
+      white-space: pre;
+      color: #0d8dff;
+    }
+    .icon {
+      cursor: pointer;
+      vertical-align: middle;
+      margin-left: 16px;
+      width: 24px;
+      height: 24px;
+      background: #2e2e2e;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      svg {
+        font-size: 20px;
+        color: var(--el-color-white);
+      }
+      @media screen and (max-width: 820px) {
+        width: 20px;
+        height: 20px;
+        margin-left: 12px;
+      }
     }
   }
 }

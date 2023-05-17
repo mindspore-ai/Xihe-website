@@ -84,10 +84,6 @@ const loginedDropdownItems = reactive([
 const route = useRoute();
 const router = useRouter();
 
-const showFooter = computed(() => {
-  return !(route.path === '/' || route.path === '/home');
-});
-
 const header = ref(null);
 const isHeaderTransparent = ref(false);
 
@@ -356,6 +352,31 @@ const handleCommand = () => {
     window.location.href = '/en';
   }
 };
+
+// cookies使用提示
+const isCookieTip = ref(false);
+function onCookieClick() {
+  isCookieTip.value = false;
+  document.cookie = 'xihe-cookie=false; expires=' + getCookieExpirationDate(6);
+}
+// 设置cookie过期时间
+function getCookieExpirationDate(months) {
+  const date = new Date();
+  date.setMonth(date.getMonth() + months);
+  return date.toUTCString();
+}
+onMounted(() => {
+  const cookies = document.cookie;
+  const cookiesArray = cookies.split('; ');
+  let showCookieTip = true;
+  cookiesArray.forEach((cookie) => {
+    const [name, val] = cookie.split('=');
+    if (name.trim() === 'xihe-cookie' && val.trim() === 'false') {
+      showCookieTip = false;
+    }
+  });
+  isCookieTip.value = showCookieTip;
+});
 </script>
 
 <template>
@@ -438,8 +459,11 @@ const handleCommand = () => {
   <main class="app-body">
     <router-view></router-view>
   </main>
-  <footer v-if="showFooter" class="app-footer">
-    <app-footer></app-footer>
+  <footer class="app-footer">
+    <app-footer
+      :is-cookie-tip="isCookieTip"
+      @click-cookie="onCookieClick"
+    ></app-footer>
   </footer>
   <div class="mobile-menu" :class="{ 'menu-active': meauActive }">
     <div class="menu-mask" @click="meauActive = false"></div>

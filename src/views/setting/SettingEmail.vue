@@ -59,13 +59,20 @@ function setEmail(formEl) {
   });
 }
 function verifySuccess(data) {
-  sendCode({ email: ruleForm.email, capt: data.captchaVerification }).then(
-    () => {
+  sendCode({ email: ruleForm.email, capt: data.captchaVerification })
+    .then(() => {
       isDisposed.value = true;
       handleTimeChange();
       regular.value = false;
-    }
-  );
+    })
+    .catch((err) => {
+      if (err?.response?.data?.code === 'email_code_error') {
+        ElMessage({
+          type: 'error',
+          message: '发送验证码失败',
+        });
+      }
+    });
 }
 
 function keepEmail(formEl) {
@@ -89,6 +96,25 @@ function keepEmail(formEl) {
             ElMessage({
               type: 'error',
               message: '绑定失败，请重新登录后再试',
+            });
+          } else if (
+            err?.response?.data?.code === 'email_email_duplicate_bind'
+          ) {
+            ElMessage({
+              type: 'error',
+              message: '该邮箱已被绑定，请换一个邮箱重试',
+            });
+          } else if (err?.response?.data?.code === 'email_code_error') {
+            ElMessage({
+              type: 'error',
+              message: '验证码错误',
+            });
+          } else if (
+            err?.response?.data?.code === 'email_user_duplicate_bind'
+          ) {
+            ElMessage({
+              type: 'error',
+              message: '您已绑定过邮箱',
             });
           }
         });

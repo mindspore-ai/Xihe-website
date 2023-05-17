@@ -6,6 +6,8 @@ import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
 import IconClear from '~icons/app/clear';
 import IconPlus from '~icons/app/plus';
+// import IconTag from '~icons/app/icon-tag';
+import IconTime from '~icons/app/time';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
@@ -388,22 +390,12 @@ watch(
   <div v-if="detailData?.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="card-head wrap">
-      <div class="card-head-top">
-        <div class="portrait">
-          <img :src="detailData.avatar_id" alt="" />
-        </div>
-        <router-link :to="{ path: `/${route.params.user}` }">
-          {{ detailData.owner }} </router-link
-        >/
-        <span>{{ detailData.name }}</span>
-        <div
-          class="card-head-copy"
-          @click="copyText(`${detailData.owner}/${detailData.name}`)"
-        >
-          <o-icon><icon-copy></icon-copy></o-icon>
-        </div>
-        <div v-if="userInfoStore.userName !== detailData.owner">
+      <div class="card-head-info">
+        <p class="head-info-desc">{{ detailData.desc }}</p>
+
+        <div class="head-info-likes">
           <train-likes
+            v-if="userInfoStore.userName !== detailData.owner"
             :is-digged="isDigged"
             :dig-count="detailData.like_count"
             class="loves"
@@ -411,21 +403,52 @@ watch(
           ></train-likes>
         </div>
       </div>
-      <div class="label-box">
-        <div
-          v-for="(label, index) in modelTags"
-          :key="index"
-          class="label-item"
-        >
-          {{ label.name }}
+      <div class="card-head-top">
+        <div class="head-top-left">
+          <div class="portrait">
+            <img :src="detailData.avatar_id" alt="" />
+          </div>
+
+          <router-link :to="{ path: `/${route.params.user}` }">
+            {{ detailData.owner }} </router-link
+          >/
+          <span>{{ detailData.name }}</span>
+          <div
+            class="card-head-copy"
+            @click="copyText(`${detailData.owner}/${detailData.name}`)"
+          >
+            <o-icon><icon-copy></icon-copy></o-icon>
+          </div>
+
+          <div class="card-head-time">
+            <o-icon>
+              <icon-time> </icon-time>
+            </o-icon>
+            <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+          </div>
         </div>
-        <div
-          v-if="detailData.is_owner"
-          class="label-add-item"
-          @click="addTagClick"
-        >
-          <o-icon><icon-plus></icon-plus></o-icon>
-          添加标签
+
+        <div class="label-box">
+          <!-- <p class="tag-icon">
+            <o-icon>
+              <icon-tag></icon-tag>
+            </o-icon>
+          </p> -->
+          <div
+            v-for="(label, index) in modelTags"
+            :key="index"
+            class="label-item"
+          >
+            {{ label.name }}
+          </div>
+          <div
+            v-if="detailData.is_owner"
+            class="label-add-item"
+            @click="addTagClick"
+          >
+            <o-icon><icon-plus></icon-plus></o-icon>
+            添加标签
+          </div>
         </div>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
@@ -674,14 +697,21 @@ $theme: #0d8dff;
   background-color: #fff;
   .card-head-top {
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: #555;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 8px;
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000;
+    .head-top-left {
+      display: flex;
+    }
     .portrait {
       margin-right: 8px;
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
       background-color: #4d66ca;
       border-radius: 50%;
       border: 1px solid #b7ddff;
@@ -704,6 +734,7 @@ $theme: #0d8dff;
     display: flex;
     align-items: center;
     margin-left: 8px;
+    margin-right: 24px;
     .o-icon:hover {
       color: #0d8dff;
     }
@@ -733,9 +764,30 @@ $theme: #0d8dff;
         line-height: 27px;
       }
     }
+
+    .card-head-time {
+      display: flex;
+      margin-right: 24px;
+      align-items: center;
+      .o-icon {
+        margin-right: 8px;
+        svg {
+          color: #555;
+          font-size: 16px;
+        }
+      }
+    }
+    // .tag-icon {
+    //   margin-right: 8px;
+    //   display: flex;
+    //   align-items: center;
+    //   .o-icon {
+    //     font-size: 16px;
+    //   }
+    // }
     .label-box {
       display: flex;
-      margin: 8px 0;
+      margin-top: 12px;
       font-size: 12px;
       flex-wrap: wrap;
       .label-item {
@@ -746,11 +798,11 @@ $theme: #0d8dff;
         margin-right: 8px;
         margin-bottom: 8px;
         padding: 0px 12px;
-        font-size: 14px;
+        font-size: 12px;
         color: #555;
         border: 1px solid #dbedff;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
       }
       .label-add-item {
         display: flex;
@@ -758,7 +810,7 @@ $theme: #0d8dff;
         height: 28px;
         padding: 0px 12px;
         background: #f7f8fa;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #999999;
         cursor: pointer;
         .o-icon {
@@ -766,6 +818,22 @@ $theme: #0d8dff;
         }
       }
     }
+  }
+  .card-head-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  .head-info-desc {
+    flex: 1;
+    font-size: 24px;
+    color: #555555;
+    line-height: 38px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .head-info-likes {
+    width: 280px;
   }
   .model-detail-body {
     min-height: calc(100vh - 455px);

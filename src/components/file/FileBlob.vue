@@ -384,6 +384,8 @@ watch(
   .editing-card {
     margin: 0 auto;
     background-color: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
     .file {
       display: flex;
       padding: 0 12px;

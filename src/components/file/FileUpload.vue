@@ -189,6 +189,7 @@ onMounted(() => {
 .upload-file {
   padding: 30px 24px 50px;
   background-color: #fff;
+  border-radius: 16px;
   .tip-text {
     display: flex;
     align-items: center;
@@ -224,6 +225,7 @@ onMounted(() => {
         border-radius: 0;
         border: 1px solid #999;
         transition: all 0.3s;
+        border-radius: 16px;
         &:hover {
           border-color: #0d8dff;
         }

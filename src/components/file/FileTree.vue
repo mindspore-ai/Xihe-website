@@ -295,10 +295,10 @@ watch(
 <template>
   <div v-if="!repoDetailData.is_empty" class="tree">
     <table class="tree-table">
-      <col width="330px" />
-      <col width="250px" />
-      <col width="540px" />
-      <col width="200px" />
+      <col width="350px" />
+      <col width="290px" />
+      <col width="580px" />
+      <col width="220px" />
       <tbody style="100%">
         <tr class="tree-head">
           <td colspan="3">
@@ -514,7 +514,6 @@ watch(
 }
 .tree {
   &-head {
-    // display: block;
     padding: 12px 24px;
     width: 100%;
     font-size: 14px;
@@ -540,17 +539,20 @@ watch(
   &-table {
     padding: 0 24px;
     width: 100%;
-    border: 1px solid #e5e5e5;
     background-color: #fff;
     table-layout: fixed;
     word-break: break-all;
     border-collapse: collapse;
+    border-radius: 16px;
+    overflow: hidden;
     @media screen and (max-width: 1280px) {
       width: inherit;
     }
+
     tr {
       height: 56px;
       transition: all 0.3s;
+
       &:hover {
         background: #f7f8fa;
         .delete-folder {
@@ -591,7 +593,6 @@ watch(
         overflow: hidden;
         flex-shrink: 0;
         word-wrap: break-word;
-        border-bottom: 1px solid #e5e5e5;
         .inner-box {
           display: flex;
           align-items: center;
@@ -615,6 +616,17 @@ watch(
       }
     }
     &-item {
+      position: relative;
+      &:not(:last-child)::after {
+        content: '';
+        width: calc(100% - 72px);
+        height: 1px;
+        background-color: #e5e5e5;
+        position: absolute;
+        left: 36px;
+        bottom: 0px;
+      }
+
       &-name {
         cursor: pointer;
         .inner-box {
@@ -684,9 +696,6 @@ watch(
       }
     }
     &-item-inner {
-      // display: flex;
-      // align-items: center;
-      // justify-content: space-between;
       padding: 16px 0;
       border-bottom: 1px solid #e5e5e5;
       & > div {
@@ -703,8 +712,8 @@ watch(
     padding: 30px 0;
     justify-content: center;
     align-items: center;
-    // border: 1px solid ;
     border: 1px solid #e5e5e5;
+    border-radius: 0 0 16px 16px;
   }
 }
 .empty-own {

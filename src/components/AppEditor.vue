@@ -73,5 +73,7 @@ onUnmounted(() => {
 .editor {
   height: 560px;
   border: 1px solid #999;
+  border-radius: 16px;
+  overflow: hidden;
 }
 </style>

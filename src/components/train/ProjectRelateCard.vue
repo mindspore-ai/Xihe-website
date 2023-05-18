@@ -87,6 +87,7 @@ function goDetailClick(item) {
   position: relative;
   margin-bottom: 16px;
   border-radius: 16px;
+  overflow: hidden;
   &:hover {
     box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
     .remove-item {

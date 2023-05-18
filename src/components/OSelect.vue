@@ -63,7 +63,7 @@ function onPoint(keys) {
     width: 400px;
     height: 36px;
     .el-input__wrapper {
-      border-radius: 0;
+      border-radius: 16px;
       // box-shadow: 0 0 0 1px #999;
       .el-input__inner {
         height: 36px;

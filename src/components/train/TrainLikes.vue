@@ -99,6 +99,7 @@ function onClick(e) {
   border: 1px solid #000000;
   border-radius: 19px;
   position: relative;
+  color: #555550;
   &:hover {
     .digg-counts {
       opacity: 1;
@@ -127,7 +128,7 @@ function onClick(e) {
     border-right: 8px solid transparent;
     border-bottom: 8px solid #fff;
     position: absolute;
-    top: -8px;
+    top: -6px;
     left: 50%;
     transform: translateX(-50%);
   }

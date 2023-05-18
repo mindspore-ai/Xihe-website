@@ -294,10 +294,13 @@ watch(
 </script>
 <template>
   <div v-if="!repoDetailData.is_empty" class="tree">
-    <table class="tree-table">
-      <col width="350px" />
-      <col width="290px" />
-      <col width="580px" />
+    <table
+      class="tree-table"
+      :class="filesList.length ? 'has-data' : 'no-data'"
+    >
+      <col width="340px" />
+      <col width="260px" />
+      <col width="564px" />
       <col width="220px" />
       <tbody style="100%">
         <tr class="tree-head">
@@ -512,6 +515,12 @@ watch(
     }
   }
 }
+.has-data {
+  border-radius: 16px;
+}
+.no-data {
+  border-radius: 16px 16px 0 0;
+}
 .tree {
   &-head {
     padding: 12px 24px;
@@ -543,7 +552,6 @@ watch(
     table-layout: fixed;
     word-break: break-all;
     border-collapse: collapse;
-    border-radius: 16px;
     overflow: hidden;
     @media screen and (max-width: 1280px) {
       width: inherit;

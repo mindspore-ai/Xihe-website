@@ -6,24 +6,23 @@ const route = useRoute();
 const i18n = {
   models: {
     new: '新建模型',
-    introduce:
-      '新建一个模型仓库，你可以将预训练模型文件上传到此仓库，详细操作参考文档。',
+    introduce: '新建一个模型仓库，你可以将预训练模型文件上传到此仓库，详细操作',
+    reference: '参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
   },
   datasets: {
     new: '新建数据集',
-    introduce:
-      '新建一个数据集仓库，你可以将合规的数据集上传到此仓库，详细操作参考文档。',
-
+    introduce: '新建一个数据集仓库，你可以将合规的数据集上传到此仓库，详细操作',
+    reference: '参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
   },
   projects: {
     new: '新建项目',
-    introduce:
-      '新建一个项目仓库，你可以将训练或推理代码上传到此仓库，详细操作参考文档。',
+    introduce: '新建一个项目仓库，你可以将训练或推理代码上传到此仓库，详细操作',
 
+    reference: '参考文档',
     progress1: '创建一个项目仓库',
     progress2: '上传文件',
   },
@@ -39,7 +38,10 @@ const bannerLabel = computed(() => {
     <div class="wrap">
       <div>
         <div class="title">{{ i18n[bannerLabel].new }}</div>
-        <div class="introduce">{{ i18n[bannerLabel].introduce }}</div>
+        <div class="introduce">
+          {{ i18n[bannerLabel].introduce }}
+          <span>{{ i18n[bannerLabel].reference }}</span>
+        </div>
       </div>
       <!-- <div class="step">
         <span class="step-step1">1</span>
@@ -63,7 +65,7 @@ const bannerLabel = computed(() => {
   // padding: 0 16px;
   padding-top: 80px;
   background-size: cover;
-  background-image: url('@/assets/imgs/banner-head.png');
+  background-image: url('@/assets/imgs/banner-model.png');
 
   .wrap {
     display: flex;
@@ -78,6 +80,9 @@ const bannerLabel = computed(() => {
     }
     .introduce {
       font-size: 18px;
+      span {
+        color: #fff;
+      }
     }
     // .step {
     //   margin-top: 22px;

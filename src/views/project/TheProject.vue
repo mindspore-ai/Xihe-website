@@ -950,7 +950,7 @@ $theme: #0d8dff;
         color: #555;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
 
         .icon-x {
@@ -992,7 +992,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
 
           .icon-x {

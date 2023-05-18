@@ -192,6 +192,7 @@ function handleClick(index) {
   .file-inner {
     padding: 30px 24px 50px;
     background-color: #fff;
+    border-radius: 16px;
     .tip-text {
       display: flex;
       align-items: center;

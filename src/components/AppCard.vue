@@ -114,6 +114,7 @@ if (props.cardType === 'model') {
     font-size: 18px;
     line-height: 24px;
     border-bottom: 1px solid #def1e8;
+    position: relative;
     .portrait {
       margin-right: 8px;
       width: 24px;
@@ -138,6 +139,7 @@ if (props.cardType === 'model') {
     margin: 8px 0 16px;
     font-size: 12px;
     overflow: hidden;
+    position: relative;
     .label-item {
       padding: 3px 8px;
       line-height: 14px;
@@ -159,11 +161,13 @@ if (props.cardType === 'model') {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    position: relative;
   }
   .card-bottom {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+    position: relative;
     .update-time,
     .download {
       display: flex;
@@ -198,13 +202,33 @@ if (props.cardType === 'model') {
   }
 }
 .o-dataset-hover {
-  &:hover {
-    background: url(@/assets/imgs/dataset-bg.png) no-repeat center;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url(@/assets/imgs/dataset-bg.png);
+    background-size: 100% 100%;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  &:hover::before {
+    opacity: 1;
   }
 }
 .o-model-hover {
-  &:hover {
-    background: url(@/assets/imgs/model-bg.png) no-repeat center;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url(@/assets/imgs/model-bg.png);
+    background-size: 100% 100%;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  &:hover::before {
+    opacity: 1;
   }
 }
 </style>

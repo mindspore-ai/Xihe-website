@@ -518,7 +518,7 @@ onUnmounted(() => {
 .mindcon {
   margin: 0 auto;
   padding: 120px 16px 64px 16px;
-  max-width: 1472px;
+  max-width: 1448px;
   &-back {
     font-size: 12px;
     color: #555555;

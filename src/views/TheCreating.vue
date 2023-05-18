@@ -56,7 +56,7 @@ const bannerLabel = computed(() => {
 
 <style lang="scss" scoped>
 .wrap {
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .creating-banner {
   // width: 100%;

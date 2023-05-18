@@ -420,7 +420,7 @@ function customUpload() {
   }
   .model-wrap {
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1416px;
     border-radius: 16px;
     @media screen and (max-width: 820px) {
       background-color: #fff;

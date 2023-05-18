@@ -28,7 +28,7 @@ const mobilePaddingTop = computed(() => {
   padding-bottom: 64px;
   padding-left: 16px;
   padding-right: 16px;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   @media (max-width: 1080px) {
     padding-top: v-bind('mobilePaddingTop');

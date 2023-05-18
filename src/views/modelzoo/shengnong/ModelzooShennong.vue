@@ -111,7 +111,7 @@ function closeShennongVideo() {
   .shennong-wrap {
     padding: 42px 16px 64px;
     margin: 0 auto;
-    max-width: 1472px;
+    max-width: 1448px;
     padding-bottom: 40px;
     .shennong-bread {
       margin-bottom: 40px;

@@ -283,7 +283,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .course-page {
   //   background-color: #f5f6f8;

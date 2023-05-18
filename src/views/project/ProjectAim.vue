@@ -49,7 +49,7 @@ function getBack() {
   min-height: calc(100vh - 280px);
   margin-top: 80px;
   &-wrap {
-    max-width: 1440px;
+    max-width: 1416px;
     height: 100%;
     padding: 50px 130px 0px;
     margin: 0 auto;

@@ -643,7 +643,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .model-detail {
   background-color: #fff;

@@ -369,7 +369,7 @@ watch(
 }
 .file-editing {
   background-color: #f5f6f8;
-  max-width: 1472px;
+  max-width: 1448px;
   .file-path {
     display: flex;
     font-size: 18px;

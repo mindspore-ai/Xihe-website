@@ -334,7 +334,7 @@ onMounted(() => {});
   padding: 24px 0;
   font-size: 12px;
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: 1416px;
   :deep .el-breadcrumb {
     font-size: 12px;
     color: #555555;
@@ -356,7 +356,7 @@ onMounted(() => {});
 .newpro-body {
   position: relative;
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: 1416px;
   min-height: 972px;
   // margin-bottom: 64px;
   background: #ffffff;

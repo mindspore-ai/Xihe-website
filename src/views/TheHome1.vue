@@ -167,7 +167,7 @@ function setTransition(swiper, transition) {
 const swiperGally = ref();
 onMounted(() => {
   // if (screenWidth.value > 820) {
-  let a = (screenWidth.value - 32) / 1440;
+  let a = (screenWidth.value - 32) / 1416;
   swiperGally.value.children[2].style.zoom = a;
   // }
 });
@@ -175,7 +175,7 @@ watch(
   () => screenWidth.value,
   () => {
     // if (screenWidth.value > 820) {
-    let a = (screenWidth.value - 32) / 1440;
+    let a = (screenWidth.value - 32) / 1416;
     swiperGally.value.children[2].style.zoom = a;
     // }
   }
@@ -753,7 +753,7 @@ const logoPic = [
       display: flex;
       align-items: center;
       .info {
-        max-width: 1440px;
+        max-width: 1416px;
         padding: 0 16px;
         margin: 0 auto;
         width: 100%;
@@ -905,7 +905,7 @@ p {
   opacity: 1;
 }
 .project-wrapper {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 41px 16px 86px;
   position: relative;
@@ -1140,7 +1140,7 @@ p {
   }
   .modelzoo-contant {
     display: flex;
-    max-width: 1440px;
+    max-width: 1416px;
     margin: 0 auto;
     @media screen and (max-width: 820px) {
       // flex-direction: column;
@@ -1228,7 +1228,7 @@ p {
   }
 }
 .home-model {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 64px 16px 0;
   @media screen and (max-width: 820px) {
@@ -1361,7 +1361,7 @@ p {
   }
   :deep(.swiper-gallery) {
     perspective: 1200px;
-    max-width: 1440px;
+    max-width: 1416px;
     @media screen and (max-width: 820px) {
       // width: 980px;
       // transform: translateX(-160px);
@@ -1441,7 +1441,7 @@ p {
 }
 
 .more {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 0 16px;
   position: relative;
@@ -1454,7 +1454,7 @@ p {
     .el-tabs__header {
       margin: 0px;
       position: absolute;
-      max-width: 1440px;
+      max-width: 1416px;
       width: calc(100% - 32px);
       top: -50px;
       z-index: 99;
@@ -1666,7 +1666,7 @@ p {
   height: auto;
 }
 .industy {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 0 16px 64px;
   @media screen and (max-width: 820px) {

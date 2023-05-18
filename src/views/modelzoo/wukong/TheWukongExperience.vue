@@ -1472,7 +1472,7 @@ const showConfirmDlg = ref(false);
 .wukong-bread {
   padding-top: 104px;
   padding-left: 16px;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   @media screen and (max-width: 820px) {
     padding-top: 64px;
@@ -2247,7 +2247,7 @@ const showConfirmDlg = ref(false);
 .wk-experience {
   display: flex;
   width: 100%;
-  max-width: 1472px;
+  max-width: 1448px;
   padding: 24px 16px 64px;
   margin: 0 auto;
 

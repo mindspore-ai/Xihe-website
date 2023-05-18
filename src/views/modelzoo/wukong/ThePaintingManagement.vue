@@ -174,7 +174,7 @@ function goWatched() {
 .painting-management {
   padding: 120px 16px 64px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   .painting-management-main {
     margin-top: 146px;
     display: flex;

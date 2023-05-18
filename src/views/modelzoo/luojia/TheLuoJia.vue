@@ -100,7 +100,7 @@ watch(
   background-color: #f5f6f8;
 }
 .luojia-main {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 80px 0 64px 0;
   @media screen and (max-width: 820px) {

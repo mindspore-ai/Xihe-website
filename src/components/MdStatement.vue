@@ -20,7 +20,7 @@ const statementHtml = mkit.render(props.statement);
 
 <style lang="scss" scoped>
 .statement {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding-top: 80px;
   padding-left: 16px;

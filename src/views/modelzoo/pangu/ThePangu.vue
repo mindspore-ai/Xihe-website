@@ -121,7 +121,7 @@ watch(
     @media screen and (max-width: 820px) {
       margin: 16px auto 0;
     }
-    max-width: 1472px;
+    max-width: 1448px;
     .pangu-bread {
       margin-bottom: 40px;
       .el-breadcrumb {
@@ -215,7 +215,7 @@ watch(
       background: #fff;
     }
     .taichu-tab {
-      max-width: 1440px;
+      max-width: 1416px;
       margin: 0 auto;
       height: 48px;
       background-color: #fbfbfb;

@@ -64,7 +64,7 @@ getTask();
   margin-top: 80px;
   background-color: #f5f6f8;
   .task-detail-wrap {
-    max-width: 1440px;
+    max-width: 1416px;
     height: 100%;
     padding: 40px 0px 64px;
     margin: 0 auto;

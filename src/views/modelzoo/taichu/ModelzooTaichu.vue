@@ -120,7 +120,7 @@ onUnmounted(() => {
   }
   .taichu-wrapper {
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1416px;
     .taichu-bread {
       padding-top: 120px;
       @media screen and (max-width: 1080px) {

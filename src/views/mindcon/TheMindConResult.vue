@@ -85,7 +85,7 @@ function handleContinueChallenge() {
 }
 
 .container {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   overflow: hidden;
   .test-back {

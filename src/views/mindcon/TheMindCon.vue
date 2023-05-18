@@ -690,7 +690,7 @@ function goRule() {
   }
   .wrap {
     // padding: 0px 16px 136px 16px;
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     overflow: hidden;
     .activity-intro {

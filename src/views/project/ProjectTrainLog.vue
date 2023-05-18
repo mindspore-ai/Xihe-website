@@ -748,7 +748,7 @@ watch(
   }
 }
 .train-log {
-  max-width: 1440px;
+  max-width: 1416px;
   margin: 0 auto;
   display: flex;
   padding: 40px 24px 48px !important;

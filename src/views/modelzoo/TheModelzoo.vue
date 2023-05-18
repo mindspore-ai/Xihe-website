@@ -122,7 +122,7 @@ function goModelzoo() {
     background-size: cover;
     background-image: url('@/assets/imgs/modelzoo/modelzoo-banner.png');
     .wrap {
-      max-width: 1472px;
+      max-width: 1448px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -167,7 +167,7 @@ function goModelzoo() {
     justify-content: center;
     margin: 0 auto;
     margin-top: 64px;
-    max-width: 1472px;
+    max-width: 1448px;
     text-align: center;
     cursor: pointer;
     @media screen and (max-width: 1080px) {

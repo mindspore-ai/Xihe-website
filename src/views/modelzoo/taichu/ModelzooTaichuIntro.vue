@@ -405,7 +405,7 @@ function goTaichuMore() {
 <style lang="scss" scoped>
 .wrapper {
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: 1416px;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
     padding: 16px 16px 40px;
@@ -415,7 +415,7 @@ function goTaichuMore() {
 .taichu-wrap {
   padding-top: 120px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   @media screen and (max-width: 1080px) {
     padding: 0;
   }

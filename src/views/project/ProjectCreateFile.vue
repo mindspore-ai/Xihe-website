@@ -937,7 +937,7 @@ function selectFile(item) {
   margin-top: 80px;
   background-color: #f5f6f8;
   .createfile-wrap {
-    max-width: 1440px;
+    max-width: 1416px;
     height: 100%;
     padding: 50px 90px 64px;
     margin: 0 auto;

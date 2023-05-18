@@ -56,7 +56,7 @@ const route = useRoute();
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   height: 200px;
   padding: 141px 16px 87px;

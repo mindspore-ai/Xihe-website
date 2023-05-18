@@ -122,7 +122,7 @@ $theme: #0d8dff;
       height: 100%;
     }
     .estate-banner {
-      max-width: 1472px;
+      max-width: 1448px;
       margin: 0 auto;
       padding: 0px 16px;
       position: relative;
@@ -145,7 +145,7 @@ $theme: #0d8dff;
   .estate-wrap {
     margin: 0 auto;
     // padding: 0px 16px;
-    max-width: 1472px;
+    max-width: 1448px;
     .region-content {
       .application-case {
         .case-title {

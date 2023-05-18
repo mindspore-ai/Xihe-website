@@ -77,7 +77,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
   .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
-    max-width: 1472px;
+    max-width: 1448px;
     overflow: hidden;
     .bread-wrap {
       // height: 94px;
@@ -155,7 +155,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
         //   background: #fff;
         // }
         .industry-tab {
-          max-width: 1440px;
+          max-width: 1416px;
           margin: 0 auto;
           height: 48px;
           box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);

@@ -267,7 +267,7 @@ function confirmBtn() {
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
-      isWrap.value = containerWidth.value > sumWidth.value - 64 ? false : true;
+      isWrap.value = sumWidth.value - containerWidth.value > 28 ? true : false;
 
       sumWidth.value = 0;
     });
@@ -422,7 +422,7 @@ watch(
         });
         containerWidth.value = containerRef.value.offsetWidth;
         isWrap.value =
-          containerWidth.value > sumWidth.value - 64 ? false : true;
+          sumWidth.value - containerWidth.value > 28 ? true : false;
 
         sumWidth.value = 0;
       });
@@ -499,11 +499,6 @@ watch(
                 :key="index"
                 ref="tagRef"
                 class="label-item"
-                :class="
-                  modelTags.length === 9 && index === 8
-                    ? 'handle-overlength'
-                    : ''
-                "
               >
                 {{ label.name }}
               </div>

@@ -505,7 +505,12 @@ onUnmounted(() => {
       </template>
       <div
         class="dlg-body"
-        style="color: #555; font-size: 14px; line-height: 24px; padding: 0 24px"
+        style="
+          color: #555;
+          font-size: 14px;
+          line-height: 24px;
+          text-align: start;
+        "
       >
         <div>
           <span> 1. 点击 </span>
@@ -520,7 +525,7 @@ onUnmounted(() => {
         <div class="send-email">
           <span> 2. 附上申请表发送申请信息至官方邮箱：</span>
           <span style="color: #0d8dff" class="email">
-            public@xihe.mindspore.cn
+            xihe-contact.mindspore.cn
           </span>
           <span>。</span>
         </div>

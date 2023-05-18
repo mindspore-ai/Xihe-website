@@ -1691,7 +1691,6 @@ p {
     .item {
       padding: 34px 40px 40px;
       background: url(@/assets/imgs/home1/industry-card-bg.png);
-      // background-position: 50%;
       background-color: #fff;
       border-radius: 16px;
       background-size: cover;
@@ -1700,9 +1699,22 @@ p {
       @media screen and (max-width: 820px) {
         padding: 16px;
       }
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        transition: opacity 0.3s;
+      }
       &:first-child {
         cursor: pointer;
-
+        &::before {
+          background: url(@/assets/imgs/home1/industy/hover-bg1.png);
+          background-size: cover;
+          background-position: 50%;
+          opacity: 0;
+        }
         .intro {
           color: #555;
         }
@@ -1711,9 +1723,9 @@ p {
         }
         &:hover {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-          background: url(@/assets/imgs/home1/industy/hover-bg1.png);
-          background-size: cover;
-          background-position: 50%;
+          &::before {
+            opacity: 1;
+          }
           .name {
             color: #ffffff;
           }
@@ -1724,6 +1736,12 @@ p {
       }
       &:nth-child(2) {
         cursor: pointer;
+        &::before {
+          background: url(@/assets/imgs/home1/industy/hover-bg2.png);
+          background-size: cover;
+          background-position: 50%;
+          opacity: 0;
+        }
         .intro {
           color: #555;
         }
@@ -1732,9 +1750,9 @@ p {
         }
         &:hover {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-          background: url(@/assets/imgs/home1/industy/hover-bg2.png);
-          background-size: cover;
-          background-position: 50%;
+          &::before {
+            opacity: 1;
+          }
           .name {
             color: #ffffff;
           }
@@ -1745,6 +1763,12 @@ p {
       }
       &:nth-child(3) {
         cursor: pointer;
+        &::before {
+          background: url(@/assets/imgs/home1/industy/hover-bg3.png);
+          background-size: cover;
+          background-position: 50%;
+          opacity: 0;
+        }
         .intro {
           color: #555;
         }
@@ -1752,9 +1776,10 @@ p {
           color: #000;
         }
         &:hover {
-          background: url(@/assets/imgs/home1/industy/hover-bg3.png);
-          background-size: cover;
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+          &::before {
+            opacity: 1;
+          }
           .name,
           .intro {
             color: #ffffff;
@@ -1763,6 +1788,12 @@ p {
       }
       &:last-child {
         cursor: pointer;
+        &::before {
+          background: url(@/assets/imgs/home1/industy/hover-bg4.png);
+          background-size: cover;
+          background-position: 50%;
+          opacity: 0;
+        }
         .intro {
           color: #555;
         }
@@ -1770,9 +1801,10 @@ p {
           color: #000;
         }
         &:hover {
-          background: url(@/assets/imgs/home1/industy/hover-bg4.png);
-          background-size: cover;
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+          &::before {
+            opacity: 1;
+          }
           .name,
           .intro {
             color: #ffffff;
@@ -1819,6 +1851,7 @@ p {
         font-size: 12px;
         margin-left: 32px;
       }
+      position: relative;
     }
   }
 }

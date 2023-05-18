@@ -389,77 +389,82 @@ watch(
 <template>
   <div v-if="detailData?.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head wrap">
-      <div class="card-head-info">
-        <p class="head-info-desc">{{ detailData.desc }}</p>
+    <div class="card-head">
+      <div class="card-head-content">
+        <div class="card-head-info wrap">
+          <p class="head-info-desc">{{ detailData.desc }}</p>
 
-        <div class="head-info-likes">
-          <train-likes
-            v-if="userInfoStore.userName !== detailData.owner"
-            :is-digged="isDigged"
-            :dig-count="detailData.like_count"
-            class="loves"
-            @click="handleModelLike"
-          ></train-likes>
+          <div class="head-info-likes">
+            <train-likes
+              v-if="userInfoStore.userName !== detailData.owner"
+              :is-digged="isDigged"
+              :dig-count="detailData.like_count"
+              class="loves"
+              @click="handleModelLike"
+            ></train-likes>
+          </div>
+        </div>
+        <div class="card-head-top wrap">
+          <div class="head-top-left">
+            <div class="portrait">
+              <img :src="detailData.avatar_id" alt="" />
+            </div>
+
+            <router-link :to="{ path: `/${route.params.user}` }">
+              {{ detailData.owner }} </router-link
+            >/
+            <span>{{ detailData.name }}</span>
+            <div
+              class="card-head-copy"
+              @click="copyText(`${detailData.owner}/${detailData.name}`)"
+            >
+              <o-icon><icon-copy></icon-copy></o-icon>
+            </div>
+
+            <div class="card-head-time">
+              <o-icon>
+                <icon-time> </icon-time>
+              </o-icon>
+              <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+            </div>
+          </div>
+
+          <div class="label-box">
+            <!-- <p class="tag-icon">
+              <o-icon>
+                <icon-tag></icon-tag>
+              </o-icon>
+            </p> -->
+            <div
+              v-for="(label, index) in modelTags"
+              :key="index"
+              class="label-item"
+            >
+              {{ label.name }}
+            </div>
+            <div
+              v-if="detailData.is_owner"
+              class="label-add-item"
+              @click="addTagClick"
+            >
+              <o-icon><icon-plus></icon-plus></o-icon>
+              添加标签
+            </div>
+          </div>
         </div>
       </div>
-      <div class="card-head-top">
-        <div class="head-top-left">
-          <div class="portrait">
-            <img :src="detailData.avatar_id" alt="" />
-          </div>
 
-          <router-link :to="{ path: `/${route.params.user}` }">
-            {{ detailData.owner }} </router-link
-          >/
-          <span>{{ detailData.name }}</span>
-          <div
-            class="card-head-copy"
-            @click="copyText(`${detailData.owner}/${detailData.name}`)"
+      <div class="card-head-tabs">
+        <el-tabs v-model="activeName" class="wrap" @tab-click="handleTabClick">
+          <el-tab-pane
+            v-for="item in renderNav"
+            :key="item.id"
+            :label="item.label"
+            :name="item.label"
           >
-            <o-icon><icon-copy></icon-copy></o-icon>
-          </div>
-
-          <div class="card-head-time">
-            <o-icon>
-              <icon-time> </icon-time>
-            </o-icon>
-            <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
-          </div>
-        </div>
-
-        <div class="label-box">
-          <!-- <p class="tag-icon">
-            <o-icon>
-              <icon-tag></icon-tag>
-            </o-icon>
-          </p> -->
-          <div
-            v-for="(label, index) in modelTags"
-            :key="index"
-            class="label-item"
-          >
-            {{ label.name }}
-          </div>
-          <div
-            v-if="detailData.is_owner"
-            class="label-add-item"
-            @click="addTagClick"
-          >
-            <o-icon><icon-plus></icon-plus></o-icon>
-            添加标签
-          </div>
-        </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane
-          v-for="item in renderNav"
-          :key="item.id"
-          :label="item.label"
-          :name="item.label"
-        >
-        </el-tab-pane>
-      </el-tabs>
     </div>
     <div v-if="detailData.id" class="model-detail-body">
       <router-view class="wrap" @on-click="getDetailData()"></router-view>
@@ -819,6 +824,14 @@ $theme: #0d8dff;
       }
     }
   }
+  .card-head-tabs {
+    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
+  }
+  .card-head-content {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+  }
   .card-head-info {
     display: flex;
     justify-content: space-between;
@@ -845,7 +858,7 @@ $theme: #0d8dff;
   .el-tabs__header {
     background-color: #ffffff;
     margin-bottom: 0;
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
   }
 
   .el-tabs__item {

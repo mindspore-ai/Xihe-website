@@ -153,6 +153,7 @@ if (props.cardType === 'model') {
   .model-introduce {
     min-height: 44px;
     margin-bottom: 24px;
+    font-size: 14px;
     line-height: 22px;
     overflow: hidden;
     word-wrap: break-word;
@@ -172,6 +173,9 @@ if (props.cardType === 'model') {
       display: flex;
       align-items: center;
       text-align: center;
+      .text {
+        line-height: 16px;
+      }
     }
     .card-bottom-right {
       display: flex;
@@ -191,27 +195,10 @@ if (props.cardType === 'model') {
     right: 24px;
     bottom: 24px;
     border: none;
-    // background: url(@/assets/imgs/model-card-bg.png) no-repeat;
-    display: none;
+    // display: none;
   }
   &:hover {
-    // color: #ccc;
-    // background-color: #4d66ca;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-    // .card-bg {
-    //   display: block;
-    // }
-    // .card-top {
-    //   color: #fff;
-    // }
-    // .label-box {
-    //   .label-item {
-    //     color: #555;
-    //   }
-    // }
-    // .o-icon {
-    //   color: #ccc;
-    // }
   }
 }
 .o-dataset-hover {

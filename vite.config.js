@@ -48,6 +48,7 @@ export default defineConfig({
     proxy: {
       '/api/v1/': {
         target: 'https://xihe-dev.test.osinfra.cn/',
+        // target: 'https://xihe2.test.osinfra.cn/',
         changeOrigin: true,
       },
       '/server': {

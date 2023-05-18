@@ -12,6 +12,8 @@ import {
   cloudSubscribe,
 } from '@/api/api-project';
 
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -79,10 +81,9 @@ async function getPodInfo(id) {
       });
 
       // 如果没有建立ws，建立ws链接
-      socket = new WebSocket(
-        `wss://xihe.mindspore.cn/server/cloud/${cloudId.value}`,
-        [getHeaderConfig().headers['private-token']]
-      );
+      socket = new WebSocket(`wss://${DOMAIN}/server/cloud/${cloudId.value}`, [
+        getHeaderConfig().headers['private-token'],
+      ]);
 
       socket.onmessage = function (event) {
         if (JSON.parse(event.data).data.access_url) {
@@ -173,10 +174,9 @@ async function orderCloudSbuscrible(id) {
       isDisabled.value = true;
 
       // 资源订阅成功，连接websocket
-      socket = new WebSocket(
-        `wss://xihe.mindspore.cn/server/cloud/${cloudId.value}`,
-        [getHeaderConfig().headers['private-token']]
-      );
+      socket = new WebSocket(`wss://${DOMAIN}/server/cloud/${cloudId.value}`, [
+        getHeaderConfig().headers['private-token'],
+      ]);
 
       socket.onmessage = function (event) {
         if (JSON.parse(event.data).data.access_url) {

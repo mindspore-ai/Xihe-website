@@ -457,7 +457,8 @@ async function getModelTag() {
 }
 // getModelTag();
 
-const layout = ref('sizes, prev, pager, next, jumper');
+const layout = ref(' prev, pager, next,sizes, jumper');
+
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -762,7 +763,7 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-model.png');
     .wrap {
       display: flex;
       justify-content: space-between;

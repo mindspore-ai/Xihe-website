@@ -135,6 +135,7 @@ watch(
       border-radius: 50%;
       margin-right: 8px;
       border: 1px solid #b7ddff;
+      overflow: hidden;
       img {
         width: 100%;
       }

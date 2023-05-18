@@ -410,7 +410,7 @@ onUnmounted(() => {
 }
 .jupyter {
   padding: 80px 16px 64px;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   .bread {
     margin-top: 49px;

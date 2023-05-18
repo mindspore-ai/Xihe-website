@@ -650,7 +650,7 @@ function toNextPic() {
     }
   }
   .picture-album {
-    max-width: 1440px;
+    max-width: 1416px;
     margin: 0 auto;
     width: 100%;
     overflow: hidden;

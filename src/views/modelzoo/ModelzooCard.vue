@@ -93,28 +93,25 @@ function goIntroduction() {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .card-desc {
-      margin-top: 24px;
-      .card-bottom-title {
-        font-size: 20px;
-        color: #000000;
-        line-height: 28px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        .closed {
-          font-size: 16px;
-          color: #999999;
-          line-height: 24px;
-        }
+    .card-bottom-title {
+      font-size: 20px;
+      color: #000000;
+      line-height: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0 8px;
+      .closed {
+        font-size: 16px;
+        color: #999999;
+        line-height: 24px;
       }
-      .card-bottom-text {
-        margin-bottom: 24px;
-        font-size: 14px;
-        color: #555;
-        line-height: 22px;
-      }
+    }
+    .card-bottom-text {
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #555;
+      line-height: 22px;
     }
     .card-btn {
       font-size: 14px;

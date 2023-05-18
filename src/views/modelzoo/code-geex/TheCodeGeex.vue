@@ -115,7 +115,7 @@ watch(
 .codegeex {
   padding: 120px 16px 64px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
 
   .bread {
     margin-bottom: 40px;

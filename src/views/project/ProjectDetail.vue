@@ -1055,7 +1055,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1440px;
+  max-width: 1416px;
 }
 .input-dom {
   position: absolute;

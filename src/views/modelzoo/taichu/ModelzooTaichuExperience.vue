@@ -1223,7 +1223,7 @@ onUnmounted(() => {
 }
 .model-page {
   background-color: #f5f6f8;
-  max-width: 1440px;
+  max-width: 1416px;
 }
 .caption-bottom {
   height: 560px;

@@ -272,7 +272,7 @@ function changeTab(index) {
   }
 }
 .rank-page {
-  max-width: 1472px;
+  max-width: 1448px;
   img {
     width: 59px;
   }

@@ -551,7 +551,7 @@ onUnmounted(() => {
   }
   .model-wrap {
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1416px;
     .text-to-img {
       padding-top: 40px;
       @media screen and (max-width: 1080px) {

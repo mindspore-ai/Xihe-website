@@ -870,7 +870,7 @@ const handleCommand = (command) => {
 .header {
   display: flex;
   align-items: center;
-  max-width: 1416px;
+  max-width: 1448px;
   margin: 0 auto;
   height: 100%;
   padding: 0 16px;

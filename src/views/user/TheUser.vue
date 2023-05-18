@@ -594,7 +594,7 @@ function handleDomChange(val) {
   background-repeat: no-repeat;
 
   .wrap {
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     // height: 100%;
     height: 177px;
@@ -612,7 +612,7 @@ function handleDomChange(val) {
 
   .wrap {
     display: flex;
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     // min-height: calc(100vh - 296px);
     min-height: calc(100vh - 450px);

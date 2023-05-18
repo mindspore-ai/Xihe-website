@@ -443,7 +443,7 @@ watch(
 .wukong {
   padding: 120px 16px 64px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   height: 100%;
   @media screen and (max-width: 820px) {
     padding: 48px 0px 40px;

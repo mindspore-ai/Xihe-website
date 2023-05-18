@@ -484,7 +484,7 @@ function toTop() {
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .el-tab-pane {
   min-height: calc(100vh - 785px);

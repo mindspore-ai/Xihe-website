@@ -272,7 +272,7 @@ function checkName(rule, value, callback) {
     padding: 24px 0;
     font-size: 12px;
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1416px;
     color: #555555;
     :deep .el-breadcrumb {
       font-size: 12px;
@@ -291,7 +291,7 @@ function checkName(rule, value, callback) {
   .creating-box {
     padding-top: 48px;
     margin: 0 auto;
-    max-width: 1440px;
+    max-width: 1416px;
     background: #ffffff;
     display: flex;
     flex-direction: column;

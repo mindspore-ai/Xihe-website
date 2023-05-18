@@ -574,7 +574,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 48px 16px 120px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .modelzoo-tune {
   background-color: #f5f6f8;
@@ -654,7 +654,7 @@ $theme: #0d8dff;
   }
   .apply-page {
     min-height: calc(100vh - 434px);
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     .apply-wrap {
       width: 90%;

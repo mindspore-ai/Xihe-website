@@ -1,12 +1,12 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
 import IconClear from '~icons/app/clear';
 import IconPlus from '~icons/app/plus';
-// import IconTag from '~icons/app/icon-tag';
+import IconTag from '~icons/app/icon-tag';
 import IconTime from '~icons/app/time';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
@@ -259,6 +259,19 @@ function confirmBtn() {
     }
   );
   isTagShow.value = false;
+
+  if (detailData.value?.id) {
+    nextTick(() => {
+      tagRef.value.forEach((item) => {
+        sumWidth.value += item.offsetWidth + 8;
+      });
+      containerWidth.value = containerRef.value.offsetWidth;
+
+      isWrap.value = containerWidth.value > sumWidth.value - 64 ? false : true;
+
+      sumWidth.value = 0;
+    });
+  }
 }
 
 // 取消
@@ -384,6 +397,38 @@ watch(
     }
   }
 );
+const isExpand = ref(false);
+
+function checkAllTags(val) {
+  isExpand.value = val;
+}
+function retractAlltags(val) {
+  isExpand.value = val;
+}
+
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
+watch(
+  () => detailData.value,
+  () => {
+    if (detailData.value?.id) {
+      nextTick(() => {
+        tagRef.value.forEach((item) => {
+          sumWidth.value += item.offsetWidth + 8;
+        });
+        containerWidth.value = containerRef.value.offsetWidth;
+        isWrap.value =
+          containerWidth.value > sumWidth.value - 64 ? false : true;
+
+        sumWidth.value = 0;
+      });
+    }
+  }
+);
 </script>
 
 <template>
@@ -392,7 +437,7 @@ watch(
     <div class="card-head">
       <div class="card-head-content">
         <div class="card-head-info wrap">
-          <p class="head-info-desc">{{ detailData.desc }}</p>
+          <p class="head-info-desc">{{ detailData.name }}</p>
 
           <div class="head-info-likes">
             <train-likes
@@ -420,28 +465,21 @@ watch(
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
+          </div>
 
-            <div class="card-head-time">
-              <o-icon>
-                <icon-time> </icon-time>
-              </o-icon>
-              <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
-            </div>
+          <div class="card-head-time">
+            <o-icon>
+              <icon-time> </icon-time>
+            </o-icon>
+            <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
           </div>
 
           <div class="label-box">
-            <!-- <p class="tag-icon">
+            <p class="tag-icon">
               <o-icon>
                 <icon-tag></icon-tag>
               </o-icon>
-            </p> -->
-            <div
-              v-for="(label, index) in modelTags"
-              :key="index"
-              class="label-item"
-            >
-              {{ label.name }}
-            </div>
+            </p>
             <div
               v-if="detailData.is_owner"
               class="label-add-item"
@@ -449,6 +487,42 @@ watch(
             >
               <o-icon><icon-plus></icon-plus></o-icon>
               添加标签
+            </div>
+
+            <div
+              ref="containerRef"
+              class="label-box-left"
+              :class="isExpand ? 'tags-expand' : 'tags-retract'"
+            >
+              <div
+                v-for="(label, index) in modelTags"
+                :key="index"
+                ref="tagRef"
+                class="label-item"
+                :class="
+                  modelTags.length === 9 && index === 8
+                    ? 'handle-overlength'
+                    : ''
+                "
+              >
+                {{ label.name }}
+              </div>
+
+              <template v-if="isWrap">
+                <div
+                  v-if="!isExpand"
+                  class="check-tags"
+                  @click="checkAllTags(true)"
+                >
+                  查看全部
+                  <div class="tags-mask"></div>
+                </div>
+
+                <div v-else class="retract-tags" @click="retractAlltags(false)">
+                  收起
+                  <div class="tags-mask"></div>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -696,21 +770,24 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1472px;
+  max-width: 1416px;
 }
 .model-detail {
   background-color: #fff;
   .card-head-top {
     display: flex;
     align-items: flex-start;
-    flex-direction: column;
     margin-bottom: 8px;
     margin-top: 24px;
     font-size: 14px;
     line-height: 22px;
     color: #000;
     .head-top-left {
+      align-self: flex-start;
+      align-items: center;
       display: flex;
+      line-height: 28px;
+      height: 28px;
     }
     .portrait {
       margin-right: 8px;
@@ -751,6 +828,7 @@ $theme: #0d8dff;
     line-height: 18px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     .o-icon {
       font-size: 18px;
     }
@@ -771,9 +849,11 @@ $theme: #0d8dff;
     }
 
     .card-head-time {
+      align-self: flex-start;
       display: flex;
-      margin-right: 24px;
       align-items: center;
+      height: 28px;
+      margin-right: 24px;
       .o-icon {
         margin-right: 8px;
         svg {
@@ -782,45 +862,93 @@ $theme: #0d8dff;
         }
       }
     }
-    // .tag-icon {
-    //   margin-right: 8px;
-    //   display: flex;
-    //   align-items: center;
-    //   .o-icon {
-    //     font-size: 16px;
-    //   }
-    // }
+    .tag-icon {
+      align-self: flex-start;
+      margin-top: 6px;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      .o-icon {
+        font-size: 16px;
+      }
+    }
+    .handle-overlength {
+      margin-right: 50px !important;
+    }
+    .tags-retract {
+      height: 28px;
+      overflow-y: hidden;
+    }
+    .tags-expand {
+      height: auto;
+      overflow: unset;
+    }
     .label-box {
       display: flex;
-      margin-top: 12px;
       font-size: 12px;
-      flex-wrap: wrap;
-      .label-item {
-        cursor: pointer;
+      flex-wrap: nowrap;
+      .label-box-left {
         display: flex;
-        align-items: center;
-        height: 28px;
-        margin-right: 8px;
-        margin-bottom: 8px;
-        padding: 0px 12px;
-        font-size: 12px;
-        color: #555;
-        border: 1px solid #dbedff;
-        background-color: #f3f9ff;
-        border-radius: 14px;
-      }
-      .label-add-item {
-        display: flex;
-        align-items: center;
-        height: 28px;
-        padding: 0px 12px;
-        background: #f7f8fa;
-        border-radius: 14px;
-        border: 1px solid #999999;
-        cursor: pointer;
-        .o-icon {
-          margin-right: 4px;
+        flex-wrap: wrap;
+        position: relative;
+        .check-tags,
+        .retract-tags {
+          position: absolute;
+          right: 0;
+          bottom: 0px;
+          font-size: 14px;
+          color: #555555;
+          line-height: 18px;
+          padding: 6px 4px;
+          background: #fff;
+          cursor: pointer;
+
+          .tags-mask {
+            position: absolute;
+            left: -49px;
+            top: 0;
+            width: 49px;
+            height: 28px;
+            background: linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0) 0%,
+              #ffffff 100%
+            );
+          }
         }
+        .retract-tags {
+          bottom: 6px;
+        }
+      }
+    }
+    .label-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      height: 28px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      padding: 0px 12px;
+      font-size: 12px;
+      color: #555;
+      border: 1px solid #dbedff;
+      background-color: #f3f9ff;
+      border-radius: 14px;
+      white-space: nowrap;
+    }
+    .label-add-item {
+      display: flex;
+      align-items: center;
+      height: 28px;
+      padding: 2px 8px 2px 4px;
+      background: #f7f8fa;
+      border-radius: 14px;
+      border: 1px solid #999999;
+      white-space: nowrap;
+      cursor: pointer;
+      margin-right: 4px;
+      .o-icon {
+        margin-right: 4px;
       }
     }
   }

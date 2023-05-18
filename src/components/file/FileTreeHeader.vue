@@ -208,6 +208,7 @@ $theme: #0d8dff;
 :deep(.el-popover) {
   inset: 0 auto auto -70px !important;
   --el-popover-padding: 16px;
+  border-radius: 16px;
   .el-popper__arrow {
     display: block;
     left: 70px !important;

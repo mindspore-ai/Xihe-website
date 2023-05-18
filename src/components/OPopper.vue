@@ -34,7 +34,6 @@ import IconPoppver from '~icons/app/popover.svg';
     </el-popover>
   </div>
 </template>
-
 <style lang="scss" scoped>
 .o-popper {
   position: absolute;
@@ -44,7 +43,6 @@ import IconPoppver from '~icons/app/popover.svg';
     font-size: 24px;
   }
   :deep(.el-popover.el-popper) {
-    // box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
     padding: 16px 16px 16px 16px;
     font-size: 12px;
     line-height: 16px;

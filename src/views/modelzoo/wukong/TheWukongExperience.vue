@@ -208,6 +208,20 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
+function handlePreEnlage() {
+  if (largeIndex.value > 0) {
+    largeImg.value = {};
+    largeIndex.value--;
+    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
+  }
+}
+function handleNextEnlage() {
+  if (largeIndex.value < styleBackground.value.length - 1) {
+    largeImg.value = {};
+    largeIndex.value++;
+    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
+  }
+}
 function handleReturn() {
   isLarge.value = false;
   largeImg.value = {};
@@ -264,7 +278,7 @@ let token = getHeaderConfig().headers
   : null;
 let socket;
 if (isLogined.value) {
-  socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`, [
+  socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank`, [
     token,
   ]);
   socket.onmessage = function (event) {
@@ -307,6 +321,20 @@ if (isLogined.value) {
                     (res) => {
                       styleBackground1.value[1] = res.data.data.link;
                       addWatermark(res.data.data.link, 1);
+                      if (styleBackground.value.length === 4) {
+                        temporaryLink({
+                          link: styleBackground.value[2].link,
+                        }).then((res) => {
+                          styleBackground1.value[2] = res.data.data.link;
+                          addWatermark(res.data.data.link, 2);
+                          temporaryLink({
+                            link: styleBackground.value[3].link,
+                          }).then((res) => {
+                            styleBackground1.value[3] = res.data.data.link;
+                            addWatermark(res.data.data.link, 3);
+                          });
+                        });
+                      }
                     }
                   );
                 }
@@ -663,6 +691,7 @@ async function handleInfer() {
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
+          img_quantity: imgQuantity.value,
         });
         isInferred.value = true;
         // isWaiting.value = false;
@@ -670,7 +699,7 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              `wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`,
+              `wss://${DOMAIN}/server/bigmodel/wukong/rank`,
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {
@@ -682,6 +711,8 @@ async function handleInfer() {
                     styleBackground1.value = [
                       res.data[0].link,
                       res.data[1].link,
+                      res?.data[2].link,
+                      res?.data[3].link,
                     ];
                     res.data.forEach((item, index) => {
                       addWatermark(item.link, index);
@@ -859,6 +890,21 @@ function handleResultClcik(i) {
   resultIndex.value = i;
 }
 const showConfirmDlg = ref(false);
+const imgQuantity = ref(4);
+const numOptions = ref([
+  { id: 4, active: true },
+  { id: 2, active: false },
+]);
+function handleNum(index) {
+  numOptions.value.forEach((item, option) => {
+    if (index === option) {
+      item.active = true;
+      imgQuantity.value = item.id;
+    } else {
+      item.active = false;
+    }
+  });
+}
 </script>
 <template>
   <div class="wukong-bread">
@@ -953,11 +999,34 @@ const showConfirmDlg = ref(false);
 
             <div class="triangle" :class="`triangle${styleIndex}`"></div>
           </div> -->
+
+          <div class="title num-title">生成数量</div>
+          <div class="option-box">
+            <div
+              class="option"
+              :class="{ 'active-option': numOptions[0].active }"
+              @click="handleNum(0)"
+            >
+              <span></span>生成4张
+            </div>
+            <div
+              class="option"
+              :class="{ 'active-option': numOptions[1].active }"
+              @click="handleNum(1)"
+            >
+              <span></span>生成2张
+            </div>
+          </div>
         </div>
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
-        <o-button type="primary" @click="handleInfer">立即生成</o-button>
+        <o-button
+          type="primary"
+          :disabled="isWaiting || isLine === null"
+          @click="handleInfer"
+          >立即生成</o-button
+        >
       </div>
     </div>
     <div class="wrap-right">
@@ -997,7 +1066,14 @@ const showConfirmDlg = ref(false);
           <p>在左侧选择样例风格开始画画</p>
         </div>
       </div>
-      <div v-else class="img-box">
+      <div
+        v-else
+        class="img-box"
+        :class="{
+          'img-box4': styleBackground.length > 2,
+          'img-large4': isLarge,
+        }"
+      >
         <template v-if="!isLarge">
           <div
             v-for="(value, key, index) in styleBackground"
@@ -1014,27 +1090,11 @@ const showConfirmDlg = ref(false);
         </template>
         <template v-else>
           <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
-            <o-icon
-              class="turn"
-              @click="
-                handleEnlage(
-                  Object.values(styleBackground)[0],
-                  Object.keys(styleBackground)[0],
-                  0
-                )
-              "
+            <o-icon class="turn" @click="handlePreEnlage"
               ><icon-left></icon-left
             ></o-icon>
             <img :src="value" alt="" />
-            <o-icon
-              class="turn"
-              @click="
-                handleEnlage(
-                  Object.values(styleBackground)[1],
-                  Object.keys(styleBackground)[1],
-                  1
-                )
-              "
+            <o-icon class="turn" @click="handleNextEnlage"
               ><icon-right2></icon-right2
             ></o-icon>
             <div class="handles">
@@ -1212,6 +1272,24 @@ const showConfirmDlg = ref(false);
           收起
         </div>
 
+        <div class="title num-title">生成数量</div>
+        <div class="option-box">
+          <div
+            class="option"
+            :class="{ 'active-option': numOptions[0].active }"
+            @click="handleNum(0)"
+          >
+            <span></span>生成4张
+          </div>
+          <div
+            class="option"
+            :class="{ 'active-option': numOptions[1].active }"
+            @click="handleNum(1)"
+          >
+            <span></span>生成2张
+          </div>
+        </div>
+
         <!-- <div class="style-tag">
           <div
             v-for="(item, index) in mobileRandomData"
@@ -1282,7 +1360,11 @@ const showConfirmDlg = ref(false);
         <template v-else> </template>
       </div>
 
-      <div v-if="styleBackground.length" class="infer-dlg-result">
+      <div
+        v-if="styleBackground.length"
+        class="infer-dlg-result"
+        :class="{ 'infer-dlg-result4': styleBackground.length > 2 }"
+      >
         <!-- mobile -->
         <div
           v-for="(value, key) in styleBackground"
@@ -1611,6 +1693,9 @@ const showConfirmDlg = ref(false);
       }
     }
   }
+}
+.infer-dlg-result4 {
+  grid-template-columns: repeat(2, 1fr);
 }
 .infer-dlg-loading {
   display: flex;
@@ -1954,6 +2039,7 @@ const showConfirmDlg = ref(false);
     background: rgba(255, 255, 255, 0.95);
     border-top-right-radius: 16px;
     border-top-left-radius: 16px;
+    padding: 0 16px;
   }
   .mobile-result-item {
     .handles {
@@ -2124,14 +2210,15 @@ const showConfirmDlg = ref(false);
         height: 6px;
       }
       @media screen and (max-width: 476px) {
-        height: 365px;
+        height: 455px;
         padding-bottom: 55px;
       }
       .style-tag {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        justify-content: space-around;
         column-gap: 50px;
+        justify-items: center;
         @media screen and (max-width: 476px) {
           gap: 12px;
         }
@@ -2212,6 +2299,46 @@ const showConfirmDlg = ref(false);
           margin-top: 8px;
           font-size: 12px;
           color: #b2b2b2;
+        }
+      }
+
+      .option-box {
+        display: flex;
+        margin: 16px 0 0;
+        font-size: 14px;
+        height: 36px;
+        line-height: 36px;
+        color: #555;
+        .option {
+          display: flex;
+          align-items: center;
+          padding: 0 16px;
+          background-color: rgba(13, 141, 255, 0.1);
+          border-radius: 8px;
+          cursor: pointer;
+          &:last-child {
+            span {
+              height: 12px;
+            }
+          }
+        }
+        .active-option {
+          color: #008eff;
+          span {
+            border: 1px solid #008eff;
+          }
+        }
+        span {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #555;
+          line-height: 36px;
+          border-radius: 2px;
+          margin-right: 8px;
+        }
+        .option + .option {
+          margin-left: 16px;
         }
       }
     }
@@ -2353,6 +2480,30 @@ const showConfirmDlg = ref(false);
         max-width: 500px;
         border-radius: 18px;
         cursor: pointer;
+      }
+    }
+    .img-box4 {
+      justify-content: center;
+      flex-wrap: wrap;
+      display: grid;
+      max-width: 624px;
+      max-height: 624px;
+      margin: 0 auto;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      img {
+        max-height: 300px;
+        width: auto;
+      }
+    }
+    .img-large4 {
+      display: flex;
+      max-width: unset;
+      .result-item1 {
+        img {
+          max-height: 580px;
+          max-width: 580px;
+        }
       }
     }
     /* pc生成图片 */
@@ -2521,7 +2672,7 @@ const showConfirmDlg = ref(false);
   .title {
     font-size: 16px;
     font-weight: 400;
-    color: #555;
+    color: #000;
     line-height: 25px;
     margin-right: 24px;
   }
@@ -2588,13 +2739,16 @@ const showConfirmDlg = ref(false);
       display: flex;
       justify-content: space-between;
     }
+    .num-title {
+      padding-top: 8px;
+    }
     @media screen and (max-width: 820px) {
       flex-direction: column;
       margin-top: 16px;
     }
     .content {
       flex: 1;
-      height: 380px;
+      height: 465px;
       padding-bottom: 67px;
       overflow: auto;
       margin-top: 16px;
@@ -2719,6 +2873,45 @@ const showConfirmDlg = ref(false);
     .retract {
       .o-icon svg {
         transform: rotate(180deg);
+      }
+    }
+    .option-box {
+      display: flex;
+      margin: 16px 24px 0;
+      font-size: 14px;
+      height: 36px;
+      line-height: 36px;
+      color: #555;
+      .option {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        background-color: rgba(13, 141, 255, 0.1);
+        border-radius: 8px;
+        cursor: pointer;
+        &:last-child {
+          span {
+            height: 12px;
+          }
+        }
+      }
+      .active-option {
+        color: #008eff;
+        span {
+          border: 1px solid #008eff;
+        }
+      }
+      span {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #555;
+        line-height: 36px;
+        border-radius: 2px;
+        margin-right: 8px;
+      }
+      .option + .option {
+        margin-left: 16px;
       }
     }
   }

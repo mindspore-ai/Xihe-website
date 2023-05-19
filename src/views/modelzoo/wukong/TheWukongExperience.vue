@@ -374,7 +374,7 @@ async function publicImage(val, index) {
 // 取消公开
 async function cancelPublicImage(i) {
   try {
-    const res = await cancelPublic(inferList.value[i].publicId);
+    await cancelPublic(inferList.value[i].publicId);
     inferList.value[i].publicId = '';
     ElMessage({
       offset: 64,
@@ -939,7 +939,9 @@ function handleNum(index) {
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
-        <o-button type="primary" @click="handleInfer">立即生成</o-button>
+        <o-button type="primary" :disabled="isWaiting" @click="handleInfer"
+          >立即生成</o-button
+        >
       </div>
     </div>
     <div class="wrap-right">

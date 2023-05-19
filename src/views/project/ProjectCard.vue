@@ -80,14 +80,14 @@ const i18n = {
   emptystart: '暂未启动项目',
 };
 
-const isShow = ref(false);
-const isShow1 = ref(false);
+const isShowDatasetDlg = ref(false);
+const isShowModelDlg = ref(false);
 const addSearch = ref('');
 
 route.hash ? getReadMeFile() : '';
 
 function addRelateClick() {
-  isShow.value = true;
+  isShowDatasetDlg.value = true;
 }
 const emit = defineEmits(['on-click']);
 
@@ -143,12 +143,12 @@ function confirmAdd() {
             message: '添加成功',
           });
           emit('on-click');
-          isShow.value = false;
+          isShowDatasetDlg.value = false;
           addSearch.value = '';
         }
       })
       .catch(() => {
-        isShow.value = false;
+        isShowDatasetDlg.value = false;
         addSearch.value = '';
         ElMessage({
           type: 'error',
@@ -200,11 +200,11 @@ function confirmClick() {
           message: '添加成功',
         });
         emit('on-click');
-        isShow1.value = false;
+        isShowModelDlg.value = false;
         addSearch.value = '';
       })
       .catch(() => {
-        isShow1.value = false;
+        isShowModelDlg.value = false;
         addSearch.value = '';
         ElMessage({
           type: 'error',
@@ -244,7 +244,7 @@ function deleteClick(item) {
 }
 
 function addModeClick() {
-  isShow1.value = true;
+  isShowModelDlg.value = true;
 }
 // 获取README文件
 function getReadMeFile() {
@@ -630,7 +630,7 @@ onUnmounted(() => {
 
     <!-- 添加数据集弹窗 -->
     <el-dialog
-      v-model="isShow"
+      v-model="isShowDatasetDlg"
       width="640px"
       :show-close="false"
       center
@@ -652,16 +652,22 @@ onUnmounted(() => {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShow = false"
-            >取消</o-button
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="isShowDatasetDlg = false"
           >
-          <o-button type="primary" @click="confirmAdd">确定</o-button>
+            取消
+          </o-button>
+          <o-button size="small" type="primary" @click="confirmAdd">
+            确定
+          </o-button>
         </span>
       </template>
     </el-dialog>
     <!-- 添加模型 -->
     <el-dialog
-      v-model="isShow1"
+      v-model="isShowModelDlg"
       width="640px"
       :show-close="false"
       center
@@ -683,10 +689,16 @@ onUnmounted(() => {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShow1 = false"
-            >取消</o-button
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="isShowModelDlg = false"
           >
-          <o-button type="primary" @click="confirmClick">确定</o-button>
+            取消
+          </o-button>
+          <o-button size="small" type="primary" @click="confirmClick">
+            确定
+          </o-button>
         </span>
       </template>
     </el-dialog>
@@ -811,6 +823,7 @@ onUnmounted(() => {
         font-size: 14px;
         color: #555555;
         line-height: 24px;
+        font-weight: normal;
       }
       .download-count {
         font-size: 18px;
@@ -851,42 +864,6 @@ onUnmounted(() => {
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        .dataset-item {
-          width: 100%;
-          padding: 24px;
-          background-color: #fff;
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-          position: relative;
-          &:hover {
-            box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-            .remove-item {
-              display: block;
-            }
-          }
-          .remove-item {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            display: none;
-          }
-          .dataset-top {
-            margin-bottom: 14px;
-          }
-          .dataset-bottom {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            & > div {
-              display: flex;
-              align-items: center;
-              margin-right: 24px;
-              span {
-                font-size: 20px;
-                padding-right: 4px;
-              }
-            }
-          }
-        }
       }
     }
     .add-title {
@@ -898,6 +875,7 @@ onUnmounted(() => {
       margin: 48px 0 24px;
       font-size: 18px;
       line-height: 24px;
+      font-weight: normal;
     }
     .add {
       margin: 48px 0 24px;

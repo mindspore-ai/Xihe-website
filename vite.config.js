@@ -47,8 +47,8 @@ export default defineConfig({
     port: '9999',
     proxy: {
       '/api/v1/': {
-        target: 'https://xihe-dev.test.osinfra.cn/',
-        // target: 'https://xihe2.test.osinfra.cn/',
+        // target: 'https://xihe-dev.test.osinfra.cn/',
+        target: 'https://xihe2.test.osinfra.cn/',
         changeOrigin: true,
       },
       '/server': {

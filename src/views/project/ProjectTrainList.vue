@@ -25,9 +25,6 @@ import IconInstance from '~icons/app/train-instance';
 
 import warningImg from '@/assets/icons/warning.png';
 
-import DeleteTrain from '@/components/TaskDelete.vue';
-import StopTrain from '@/components/TaskStop.vue';
-import ResetTrain from '@/components/train/ResetTrain.vue';
 import { ElMessage } from 'element-plus';
 import { ElDialog } from 'element-plus';
 
@@ -66,20 +63,22 @@ const userInfoStore = useUserInfoStore();
 
 const projectId = detailData.value.id;
 const trainData = ref([]);
-const listId = ref(null);
-const trainId = ref(null);
-const resetedId = ref(null);
+const trainId = ref('');
 const tips = ref(false);
 const btnShow = ref(false);
 const description = ref('');
-const displayType = ref('train');
 
 const i18n = {
   description1:
     '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
   description2:
     '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
+  rebuildDesc:
+    '确认是否重建此训练实例，此操作会在原来的配置基础上再创建一份训练实例。',
+  deleteDesc: '确认是否将此训练实例删除，注意此操作不可逆',
+  terminateDesc: '确认是否将此训练实例终止，终止后将无法复原。',
   confirm: '确定',
+  cancel: '取消',
 };
 
 // 进入页面判断是否是自己的项目，不是则返回首页
@@ -98,15 +97,14 @@ function goSelectFile() {
   window.open(routerData.href, '_blank');
 }
 
+// 删除训练
 const showDel = ref(false);
 function showDelClick(val) {
-  listId.value = val;
+  trainId.value = val;
   showDel.value = true;
 }
-
-// 删除
-function deleteTrainList(id) {
-  deleteTainList(projectId, id).then((res) => {
+function delClick() {
+  deleteTainList(projectId, trainId.value).then((res) => {
     if (res.status === 204) {
       getTrainList();
       showDel.value = false;
@@ -114,39 +112,23 @@ function deleteTrainList(id) {
   });
 }
 
-function delClick(val) {
-  if (val === 2) {
-    showDel.value = false;
-  } else {
-    deleteTrainList(val);
-  }
-}
-
 // 终止训练
 const showStop = ref(false);
-function stopTrainList(id) {
-  stopTrain(projectId, id).then((res) => {
+function quitClick() {
+  stopTrain(projectId, trainId.value).then((res) => {
     if (res.status === 202) {
       getTrainList();
       showStop.value = false;
     }
   });
 }
-
-function quitClick(val) {
-  if (val === 1) {
-    showStop.value = false;
-  } else {
-    stopTrainList(trainId.value);
-  }
-}
-
 function showStopClick(val, id) {
   trainId.value = id;
   if (val === 'Terminated') {
     ElMessage({
       type: 'error',
       message: '该训练已停止',
+      offset: 64,
     });
     return;
   } else {
@@ -154,39 +136,41 @@ function showStopClick(val, id) {
   }
 }
 
-// 重建
+// 重建训练
 const showReset = ref(false);
 function showResetClick(val) {
   let bool = trainData.value.some(
-    (item) => item.status === 'scheduling' || item.status === 'Running'
+    (item) =>
+      item.status === 'scheduling' ||
+      item.status === 'Running' ||
+      item.status === 'Pending' ||
+      item.status === 'Running' ||
+      item.status === 'Creating'
   );
   if (bool) {
     ElMessage({
       type: 'warning',
       message: '只能有一个运行中的训练',
+      offset: 64,
     });
   } else if (trainData.value.length >= 5) {
     ElMessage({
       type: 'warning',
-      message: '最多创建5条训练',
+      message: '最多可创建5条训练',
+      offset: 64,
     });
   } else {
-    resetedId.value = val;
+    trainId.value = val;
     showReset.value = true;
   }
 }
-
-function resetClick(val) {
-  if (val === 1) {
-    showReset.value = false;
-  } else {
-    rebuildTrain(projectId, val).then((res) => {
-      if (res.status === 201) {
-        showReset.value = false;
-        getTrainList();
-      }
-    });
-  }
+function resetClick() {
+  rebuildTrain(projectId, trainId.value).then((res) => {
+    if (res.status === 201) {
+      showReset.value = false;
+      getTrainList();
+    }
+  });
 }
 
 function goTrainLog(trainId) {
@@ -374,27 +358,8 @@ onUnmounted(() => {
         </template>
       </el-table-column>
 
-      <el-table-column label="描述" width="618">
+      <el-table-column label="描述" width="617">
         <template #default="scope">
-          <DeleteTrain
-            :list-id="listId"
-            :show-del="showDel"
-            :display-type="displayType"
-            @click="delClick"
-          />
-
-          <StopTrain
-            :train-id="trainId"
-            :show-stop="showStop"
-            :display-type="displayType"
-            @click="quitClick"
-          />
-
-          <ResetTrain
-            :reset-id="resetedId"
-            :show-reset="showReset"
-            @click="resetClick"
-          />
           <div class="description">
             <div class="description-content">
               {{ scope.row.desc }}
@@ -463,6 +428,130 @@ onUnmounted(() => {
         </div>
       </template>
     </el-dialog>
+
+    <!-- 重建训练任务弹窗 -->
+    <el-dialog
+      v-model="showReset"
+      width="640px"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
+      append-to-body
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
+      >
+        {{ i18n.rebuildDesc }}
+      </div>
+      <template #footer>
+        <div class="dlg-btn">
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="showReset = false"
+          >
+            {{ i18n.cancel }}
+          </o-button>
+          <o-button size="small" type="primary" @click="resetClick">
+            {{ i18n.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 删除训练任务弹窗 -->
+    <el-dialog
+      v-model="showDel"
+      width="640px"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
+      append-to-body
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
+      >
+        {{ i18n.deleteDesc }}
+      </div>
+      <template #footer>
+        <div class="dlg-btn">
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="showDel = false"
+          >
+            {{ i18n.cancel }}
+          </o-button>
+          <o-button size="small" type="primary" @click="delClick">
+            {{ i18n.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 终止训练任务弹窗 -->
+    <el-dialog
+      v-model="showStop"
+      width="640px"
+      center
+      align-center
+      class="apply-dlg"
+      :show-close="false"
+      append-to-body
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
+      >
+        {{ i18n.terminateDesc }}
+      </div>
+      <template #footer>
+        <div class="dlg-btn">
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="showStop = false"
+          >
+            {{ i18n.cancel }}
+          </o-button>
+          <o-button size="small" type="primary" @click="quitClick">
+            {{ i18n.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -508,17 +597,9 @@ onUnmounted(() => {
     }
   }
 
-  :deep .el-table {
-    margin-top: 16px;
-    --el-table-header-bg-color: #e5e8f0;
-    --el-table-header-text-color: #555;
-    .el-table__header {
-      height: 48px;
-      background: #e5e8f0;
-    }
+  .el-table {
+    margin-top: 22px;
     .el-table__row {
-      height: 56px;
-
       .description {
         display: flex;
         justify-content: space-between;

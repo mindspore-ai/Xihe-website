@@ -7,6 +7,7 @@ import AppFooter from '@/components/AppFooter.vue';
 
 import IconBack from '~icons/app/left.svg';
 import IconMenu from '~icons/app/meau-header.svg';
+import IconClose from '~icons/app/x.svg';
 import logoImg from '@/assets/imgs/logo1.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 
@@ -237,7 +238,7 @@ const mobilNav = reactive([
     name: computed(() => {
       return t('home.APP_HEADER.HOME');
     }),
-    isactive: true,
+    isactive: false,
     path: '/',
   },
   {
@@ -333,6 +334,7 @@ function toPage(path) {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
+    mobilNav[3].isactive = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
@@ -390,7 +392,8 @@ onMounted(() => {
     "
   >
     <div class="back" @click="toggleMenu(!meauActive)">
-      <OIcon><icon-menu></icon-menu></OIcon>
+      <OIcon v-if="!meauActive"><icon-menu></icon-menu></OIcon>
+      <OIcon v-else><icon-close></icon-close></OIcon>
     </div>
     <!-- <div v-else class="back" @click="goBack">
       <OIcon><icon-back></icon-back></OIcon>

@@ -298,8 +298,8 @@ watch(
       class="tree-table"
       :class="filesList.length ? 'has-data' : 'no-data'"
     >
-      <col width="340px" />
-      <col width="260px" />
+      <col width="350px" />
+      <col width="282px" />
       <col width="564px" />
       <col width="220px" />
       <tbody style="100%">

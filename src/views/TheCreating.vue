@@ -81,7 +81,12 @@ const bannerLabel = computed(() => {
     .introduce {
       font-size: 18px;
       span {
-        color: #fff;
+        color: #000;
+        cursor: pointer;
+        text-decoration: underline;
+        &:hover {
+          color: #0d8dff;
+        }
       }
     }
     // .step {

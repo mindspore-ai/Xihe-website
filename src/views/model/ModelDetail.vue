@@ -263,7 +263,7 @@ function confirmBtn() {
   if (detailData.value?.id) {
     nextTick(() => {
       tagRef.value.forEach((item) => {
-        sumWidth.value += item.offsetWidth + 8;
+        sumWidth.value += item.offsetWidth + 4;
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
@@ -418,7 +418,7 @@ watch(
     if (detailData.value?.id) {
       nextTick(() => {
         tagRef.value.forEach((item) => {
-          sumWidth.value += item.offsetWidth + 8;
+          sumWidth.value += item.offsetWidth + 4;
         });
         containerWidth.value = containerRef.value.offsetWidth;
         isWrap.value =
@@ -664,7 +664,7 @@ $theme: #0d8dff;
         align-items: center;
         padding: 0 12px;
         margin: 10px 16px 0 0;
-        height: 28px;
+        height: 20px;
         font-size: 14px;
         color: $theme;
         user-select: none;
@@ -721,7 +721,7 @@ $theme: #0d8dff;
       align-items: center;
       padding: 0 12px;
       margin: 0 16px 16px 0;
-      height: 28px;
+      height: 20px;
       font-size: 14px;
       color: #555;
       user-select: none;
@@ -781,8 +781,8 @@ $theme: #0d8dff;
       align-self: flex-start;
       align-items: center;
       display: flex;
-      line-height: 28px;
-      height: 28px;
+      line-height: 20px;
+      height: 20px;
     }
     .portrait {
       margin-right: 8px;
@@ -847,7 +847,7 @@ $theme: #0d8dff;
       align-self: flex-start;
       display: flex;
       align-items: center;
-      height: 28px;
+      height: 20px;
       margin-right: 24px;
       .o-icon {
         margin-right: 8px;
@@ -871,7 +871,7 @@ $theme: #0d8dff;
       margin-right: 50px !important;
     }
     .tags-retract {
-      height: 28px;
+      height: 20px;
       overflow-y: hidden;
     }
     .tags-expand {
@@ -894,7 +894,7 @@ $theme: #0d8dff;
           font-size: 14px;
           color: #555555;
           line-height: 18px;
-          padding: 6px 4px;
+          padding: 2px 4px;
           background: #fff;
           cursor: pointer;
 
@@ -903,7 +903,7 @@ $theme: #0d8dff;
             left: -49px;
             top: 0;
             width: 49px;
-            height: 28px;
+            height: 20px;
             background: linear-gradient(
               90deg,
               rgba(255, 255, 255, 0) 0%,
@@ -912,7 +912,7 @@ $theme: #0d8dff;
           }
         }
         .retract-tags {
-          bottom: 6px;
+          bottom: 16px;
         }
       }
     }
@@ -920,8 +920,8 @@ $theme: #0d8dff;
       cursor: pointer;
       display: flex;
       align-items: center;
-      height: 28px;
-      margin-right: 8px;
+      height: 20px;
+      margin-right: 4px;
       margin-bottom: 8px;
       padding: 0px 12px;
       font-size: 12px;
@@ -934,7 +934,7 @@ $theme: #0d8dff;
     .label-add-item {
       display: flex;
       align-items: center;
-      height: 28px;
+      height: 20px;
       padding: 2px 8px 2px 4px;
       background: #f7f8fa;
       border-radius: 14px;

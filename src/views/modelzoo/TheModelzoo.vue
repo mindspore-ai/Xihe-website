@@ -12,6 +12,10 @@ import wukong from '@/assets/imgs/modelzoo/wukong.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
+
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n();
+
 let i18n = {
   head: {
     title: '大模型',
@@ -86,9 +90,9 @@ function goModelzoo() {
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
-          <div class="title">{{ i18n.head.title }}</div>
+          <div class="title">{{ t('modelzoo.MODELZOO_TITLE') }}</div>
           <div class="introduce">
-            {{ i18n.head.introduce }}
+            {{ t('modelzoo.MODELZOO_DESC') }}
           </div>
         </div>
       </div>
@@ -108,7 +112,9 @@ function goModelzoo() {
       </div>
 
       <div class="watch-more" @click="goModelzoo">
-        <span class="text">点击去往ModelZoo查看更多大模型</span>
+        <span class="text">{{
+          t('modelzoo.点击去往ModelZoo查看更多大模型')
+        }}</span>
         <o-icon><icon-arrow></icon-arrow></o-icon>
       </div>
     </AppContent>

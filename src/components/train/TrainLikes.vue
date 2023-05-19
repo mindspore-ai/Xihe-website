@@ -119,6 +119,7 @@ function onClick(e) {
   left: 50%;
   transform: translateX(-50%);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+  z-index: 2;
   opacity: 0;
   &::before {
     content: '';

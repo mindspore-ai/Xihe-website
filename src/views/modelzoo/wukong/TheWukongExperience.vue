@@ -67,6 +67,9 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+// import { useI18n } from 'vue-i18n';
+// const { t } = useI18n();
+
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);

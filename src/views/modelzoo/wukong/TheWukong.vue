@@ -18,6 +18,9 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
 
 const screenWidth = useWindowResize();
 

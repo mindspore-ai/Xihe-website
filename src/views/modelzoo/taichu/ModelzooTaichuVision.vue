@@ -10,8 +10,11 @@ import { handleVqaInference, uploadVqaPicture } from '@/api/api-modelzoo';
 import IconSend from '~icons/app/vqa-send';
 import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const userInfoStore = useUserInfoStore();
+
 const isLogined = computed(() => useLoginStore().isLogined);
 
 const inp = ref(null);
@@ -49,8 +52,7 @@ const imgLists = [
 
 const msgList = ref([
   {
-    message:
-      '您好，欢迎体验视觉问答！请选择例图片或自定义图片，再用简体中文输入一个相关问题进行问答。',
+    message: t('taichu.VISION.QUESTION_TIP'),
     type: 0,
     url: '',
     isPicture: false,
@@ -122,7 +124,7 @@ function handleUploadImg(url) {
           if (srcList.value.length === 1) {
             setTimeout(() => {
               msgList.value.push({
-                message: '请输入一个与图片的相关问题。',
+                message: t('taichu.VISION.MESSAGE_TIP'),
                 type: 0,
                 url: '',
                 isPicture: false,
@@ -131,7 +133,7 @@ function handleUploadImg(url) {
           } else if (srcList.value.length > 1) {
             setTimeout(() => {
               msgList.value.push({
-                message: '请输入一个最新图片的相关问题。',
+                message: t('taichu.VISION.MESSAGE_TIP_1'),
                 type: 0,
                 url: '',
                 isPicture: false,
@@ -142,7 +144,7 @@ function handleUploadImg(url) {
           if (msgList.value[msgList.value.length - 1].isPicture) {
             setTimeout(() => {
               msgList.value.push({
-                message: '请输入一个与图片的相关问题。',
+                message: t('taichu.VISION.MESSAGE_TIP'),
                 type: 0,
                 url: '',
                 isPicture: false,
@@ -210,7 +212,7 @@ function sendMessage() {
       if (!srcList.value.length) {
         setTimeout(() => {
           msgList.value.push({
-            message: '请选择一张图片。',
+            message: t('taichu.VISION.MESSAGE_TIP_2'),
             type: 0,
             url: '',
             isPicture: false,
@@ -295,10 +297,10 @@ onUnmounted(() => {
 <template>
   <div class="vision">
     <div class="vision-box">
-      <div class="title">视觉问答（Visual Question Answer, VQA）</div>
+      <div class="title">{{ t('taichu.VISION.TITLE') }}</div>
 
       <p class="description">
-        视觉问答是给定一幅图片和一个相关的问题，算法输出相应的答案，是多模态理解中的基础任务之一。
+        {{ t('taichu.VISION.VISION_DESC') }}
       </p>
 
       <div id="txt" class="chat-box">
@@ -342,7 +344,7 @@ onUnmounted(() => {
           <el-input
             ref="inputContent"
             v-model="inputMsg"
-            placeholder="请先选择图片再输入问题，不超过30个字"
+            :placeholder="t('taichu.VISION.PLACEHOLDER')"
             style="width: 100%"
             maxlength="30"
           />
@@ -366,7 +368,7 @@ onUnmounted(() => {
 
         <div class="img-list-item custom" @click="customUpload">
           <o-icon><icon-upload></icon-upload></o-icon>
-          <p>自定义图片</p>
+          <p>{{ t('taichu.VISION.CUSTOM') }}</p>
 
           <input
             ref="inp"

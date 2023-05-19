@@ -211,15 +211,15 @@ onMounted(() => {
   window.addEventListener('resize', onResize);
 });
 
-function goBack() {
-  Object.keys(routeLists).forEach((key) => {
-    if (routeLists[key].name === currentPage.value) {
-      backUrl.value = routeLists[key].back;
-    }
-  });
+// function goBack() {
+//   Object.keys(routeLists).forEach((key) => {
+//     if (routeLists[key].name === currentPage.value) {
+//       backUrl.value = routeLists[key].back;
+//     }
+//   });
 
-  router.push(backUrl.value);
-}
+//   router.push(backUrl.value);
+// }
 const noHeader = ref(false);
 function Scroll(e) {
   e = e || window.event;

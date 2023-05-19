@@ -10,7 +10,9 @@ import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
 
 import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
 
 const screenWidth = ref(
@@ -30,21 +32,21 @@ window.addEventListener('resize', onResize);
 const inferUrlList = ref([]);
 
 const lists = [
-  { name: '一只狗在骑摩托车', isSelected: false },
-  { name: '宇宙中扭曲的空间与黑洞', isSelected: false },
-  { name: '赛博朋克的汽车在飞', isSelected: false },
-  { name: '清晨的湖面倒映着天空', isSelected: false },
-  { name: '两个女生在沙滩上', isSelected: false },
-  { name: '小孩踢足球', isSelected: false },
-  { name: '夜晚的星空', isSelected: false },
-  { name: '梵高的星空', isSelected: false },
-  { name: '蓝天白云', isSelected: false },
-  { name: '一只可爱的猫坐在草坪上', isSelected: false },
-  { name: '摩天大楼', isSelected: false },
-  { name: '一架飞机', isSelected: false },
-  { name: '日落湖边', isSelected: false },
-  { name: '汉堡和薯条', isSelected: false },
-  { name: '一只橘猫在阳台跳舞', isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[0]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[1]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[2]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[3]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[4]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[5]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[6]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[7]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[8]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[9]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[10]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[11]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[12]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[13]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[14]'), isSelected: false },
 ];
 
 // 随机选取五个样例
@@ -64,11 +66,11 @@ function getRandom(arr, count) {
 }
 
 const exampleList = ref([
-  { name: '蓝天白云', isSelected: false },
-  { name: '一只狗在骑摩托车', isSelected: false },
-  { name: '两个女生在沙滩上', isSelected: false },
-  { name: '日落湖边', isSelected: false },
-  { name: '一辆火车行驶在铁路上日落湖边', isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[8]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[0]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[4]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[12]'), isSelected: false },
+  { name: t('taichu.IMG_GENERATE.LISTS[9]'), isSelected: false },
 ]);
 const loading1 = ref(false);
 const inferenceText = ref('');
@@ -100,7 +102,7 @@ function startRatiocnate() {
   } else {
     ElMessage({
       type: 'warning',
-      message: '请输入中文描述',
+      message: t('taichu.INPUT_CHINESE'),
     });
   }
 }
@@ -126,7 +128,7 @@ function startRatiocnateMo() {
   } else {
     ElMessage({
       type: 'warning',
-      message: '请输入中文描述',
+      message: t('taichu.INPUT_CHINESE'),
     });
   }
 }
@@ -150,7 +152,7 @@ function startRatiocnate1(num) {
             if (res.code === 'bigmodel_sensitive_info') {
               ElMessage({
                 type: 'error',
-                message: '内容审核不通过，请重新输入',
+                message: t('taichu.INVALID_TEXT'),
               });
             }
           }
@@ -169,7 +171,7 @@ function startRatiocnate1(num) {
               if (res.code === 'bigmodel_sensitive_info') {
                 ElMessage({
                   type: 'error',
-                  message: '内容审核不通过，请重新输入',
+                  message: t('taichu.INVALID_TEXT'),
                 });
               }
             }
@@ -181,7 +183,7 @@ function startRatiocnate1(num) {
     } else {
       ElMessage({
         type: 'warning',
-        message: '请输入中文描述',
+        message: t('taichu.INPUT_CHINESE'),
       });
     }
   }
@@ -236,9 +238,9 @@ onUnmounted(() => {
     <div class="model-wrap">
       <!-- 以文生图 -->
       <div class="text-to-img">
-        <p class="text-title">以文生图（Text-To-Image）</p>
+        <p class="text-title">{{ t('taichu.IMG_GENERATE.TITLE') }}</p>
         <p class="experience-text">
-          以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+          {{ t('taichu.IMG_GENERATE.MODEL_DESC') }}
         </p>
         <div class="content">
           <div class="content-top">
@@ -247,14 +249,14 @@ onUnmounted(() => {
               v-model="inferenceText"
               maxlength="30"
               :show-word-limit="true"
-              placeholder="请输入简体中文或选择下方样例"
+              :placeholder="t('taichu.IMG_GENERATE.PLACEHOLDER')"
               class="text-input"
               @input="handleTextChange"
             >
             </el-input>
 
             <div class="example">
-              <div class="title">选择样例</div>
+              <div class="title">{{ t('taichu.IMG_GENERATE.SAMPLES') }}</div>
               <div class="tags-box">
                 <p
                   v-for="item in exampleList"
@@ -266,26 +268,28 @@ onUnmounted(() => {
                 </p>
                 <div class="refresh-btn" @click="refreshTags">
                   <o-icon><icon-refresh></icon-refresh></o-icon>
-                  <span>换一批</span>
+                  <span>{{ t('taichu.IMG_GENERATE.CHANGE') }}</span>
                 </div>
               </div>
               <div class="btn-box">
-                <o-button size="small" @click="startRatiocnate1"
-                  >生成一张</o-button
-                >
+                <o-button size="small" @click="startRatiocnate1">{{
+                  t('taichu.IMG_GENERATE.GENERATE_ONE')
+                }}</o-button>
                 <o-button
                   size="small"
                   type="primary"
                   class="infer-button"
                   :disabled="loading1"
                   @click="startRatiocnate1('three')"
-                  >生成三张</o-button
+                  >{{ t('taichu.IMG_GENERATE.GENERATE_THREE1') }}</o-button
                 >
               </div>
             </div>
           </div>
           <div class="content-bottom">
-            <p class="content-bottom-title">图片结果</p>
+            <p class="content-bottom-title">
+              {{ t('taichu.IMG_GENERATE.IMG_RESULT') }}
+            </p>
             <div class="result">
               <div v-for="item in inferUrlList" :key="item" class="img-item">
                 <img
@@ -305,11 +309,11 @@ onUnmounted(() => {
       </div>
 
       <div class="mobile">
-        <p class="model-name">以文生图（Text-To-Image）</p>
+        <p class="model-name">{{ t('taichu.IMG_GENERATE.TITLE') }}</p>
         <div class="model-desc">
-          以文生图任务是条件图像生成任务中重要的任务之一，要求模型理解输入文本的语义信息并生成与输入文本描述内容一致的逼真图像。
+          {{ t('taichu.IMG_GENERATE.MODEL_DESC') }}
         </div>
-        <p class="input-desc">描述</p>
+        <p class="input-desc">{{ t('taichu.IMG_GENERATE.INPUT_1') }}</p>
         <el-input
           ref="inputValue"
           v-model="inferenceText"
@@ -317,16 +321,16 @@ onUnmounted(() => {
           type="textarea"
           maxlength="30"
           :show-word-limit="true"
-          placeholder="请输入简体中文或选择下方样例"
+          :placeholder="t('taichu.IMG_GENERATE.PLACEHOLDER')"
           @input="handleTextChange"
         >
         </el-input>
         <div class="example">
           <div class="example-top">
-            <p class="title">选择样例</p>
+            <p class="title">{{ t('taichu.IMG_GENERATE.SAMPLES') }}</p>
             <div class="refresh-btn" @click="refreshTags">
               <OIcon><icon-refresh></icon-refresh></OIcon>
-              <p>换一批</p>
+              <p>{{ t('taichu.IMG_GENERATE.CHANGE') }}</p>
             </div>
           </div>
           <div class="tags-box">
@@ -340,7 +344,7 @@ onUnmounted(() => {
             </p>
           </div>
         </div>
-        <p class="result">图片结果</p>
+        <p class="result">{{ t('taichu.IMG_GENERATE.IMG_RESULT') }}</p>
         <div v-if="inferUrlList.length > 1" class="result-image">
           <el-image
             class="image-modal"
@@ -380,12 +384,12 @@ onUnmounted(() => {
         </div>
 
         <div class="mobile-button">
-          <o-button size="mini" :disabled="loading1" @click="startRatiocnate"
-            >生成一张</o-button
-          >
-          <o-button type="primary" size="mini" @click="startRatiocnateMo"
-            >生成三张</o-button
-          >
+          <o-button size="mini" :disabled="loading1" @click="startRatiocnate">{{
+            t('taichu.IMG_GENERATE.GENERATE_ONE')
+          }}</o-button>
+          <o-button type="primary" size="mini" @click="startRatiocnateMo">{{
+            t('taichu.IMG_GENERATE.GENERATE_THREE1')
+          }}</o-button>
         </div>
       </div>
     </div>
@@ -697,6 +701,7 @@ onUnmounted(() => {
               height: 100%;
               cursor: pointer;
               border-radius: 16px;
+              overflow: hidden;
               img {
                 height: 100%;
                 border-radius: 16px;

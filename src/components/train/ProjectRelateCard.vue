@@ -83,13 +83,13 @@ function goDetailClick(item) {
   cursor: pointer;
   width: 100%;
   background-color: #fff;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   position: relative;
   margin-bottom: 16px;
   border-radius: 16px;
   overflow: hidden;
   &:hover {
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+    transition: all 0.5s;
+    box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
     .remove-item {
       display: block;
       color: #fff;

@@ -492,8 +492,7 @@ function enlarge(url) {
           <el-table-column property="name" label="任务类型" />
           <el-table-column property="origin" label="地图源" />
           <el-table-column property="status" label="状态" />
-          <el-table-column property="create_at" label="创建时间" width="120" />
-          <!-- <el-table-column property="create_at" label="创建时间" width="120" /> -->
+          <el-table-column property="create_at" label="创建时间" width="90" />
           <!-- <el-table-column label="操作">
             <span class="detail" @click="handleDetailClick">查看详情</span>
           </el-table-column> -->
@@ -1068,7 +1067,12 @@ function enlarge(url) {
     display: flex;
     justify-content: space-between;
     span:last-child {
-      color: #b2b2b3;
+      color: #999;
+    }
+    @media screen and (max-width: 820px) {
+      span:last-child {
+        font-size: 12px;
+      }
     }
   }
   .table {
@@ -1082,7 +1086,6 @@ function enlarge(url) {
           line-height: 22px;
           .cell {
             padding: 0 10px;
-            // white-space: nowrap;
           }
         }
       }

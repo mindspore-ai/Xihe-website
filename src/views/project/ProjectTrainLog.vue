@@ -908,6 +908,7 @@ watch(
           .el-form-item__label {
             width: 110px;
             text-align: left;
+            justify-content: flex-start;
           }
           .el-form-item__content {
             .el-form-item__error {

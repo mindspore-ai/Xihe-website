@@ -51,10 +51,6 @@ watch(
 </script>
 <template>
   <div v-if="detailData[name].length">
-    <!-- <delete-relate
-      :del-relate="delRelate"
-      @cancel="cancelClick"
-    ></delete-relate> -->
     <div
       v-for="item in detailData[name]"
       :key="item"
@@ -93,28 +89,21 @@ watch(
 </template>
 <style lang="scss" scoped>
 .dataset-item {
-  // max-width: 424px;
   cursor: pointer;
   width: 100%;
   padding: 24px;
   background-color: #fff;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
   position: relative;
   margin-bottom: 16px;
   border-radius: 16px;
   &:hover {
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+    box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s linear;
     .remove-item {
       display: block;
       color: #0d8dffff;
     }
   }
-  .nick-name {
-    font-size: 18px;
-    line-height: 24px;
-    color: #000;
-  }
-
   .remove-item {
     position: absolute;
     right: 8px;
@@ -129,6 +118,7 @@ watch(
     align-items: center;
     font-size: 18px;
     margin-bottom: 16px;
+
     .avatar {
       width: 24px;
       height: 24px;
@@ -140,10 +130,15 @@ watch(
         width: 100%;
       }
     }
-  }
-
-  .dataset-top {
-    margin-bottom: 14px;
+    .nick-name {
+      width: 100%;
+      font-size: 18px;
+      line-height: 24px;
+      color: #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .dataset-bottom {
     display: flex;

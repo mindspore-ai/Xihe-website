@@ -85,75 +85,6 @@ const isError = ref(false);
 const styleBackground = ref([]);
 const styleBackground1 = ref([]);
 
-const styleData = ref([
-  {
-    style: '动漫',
-    options: [
-      { tag: '宫崎骏', isSelected: false },
-      { tag: '新海诚', isSelected: false },
-    ],
-  },
-  {
-    style: '经典',
-    options: [
-      { tag: '达芬奇', isSelected: false },
-      { tag: '毕加索', isSelected: false },
-      { tag: '梵高', isSelected: false },
-      { tag: '莫奈', isSelected: false },
-      { tag: '温斯洛.霍默', isSelected: false },
-      { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
-    ],
-  },
-  {
-    style: '幻想艺术',
-    options: [
-      { tag: '韦恩.巴洛', isSelected: false },
-      { tag: '格雷格.鲁特科夫斯基', isSelected: false },
-    ],
-  },
-  {
-    style: '更多风格',
-    options: [
-      { tag: '动漫', isSelected: false },
-      { tag: '国风', isSelected: false },
-      { tag: '田园', isSelected: false },
-      { tag: '涂鸦', isSelected: false },
-      { tag: '立体', isSelected: false },
-      { tag: '浮雕', isSelected: false },
-      { tag: '水彩', isSelected: false },
-      { tag: '油画', isSelected: false },
-      { tag: '暗黑', isSelected: false },
-      { tag: '写实', isSelected: false },
-      { tag: '高清', isSelected: false },
-      { tag: '蜡笔画', isSelected: false },
-      { tag: '专业CG艺术', isSelected: false },
-      { tag: '彩色国风水墨', isSelected: false },
-      { tag: '生动色彩', isSelected: false },
-      { tag: '星际漫游', isSelected: false },
-      { tag: '赛博朋克', isSelected: false },
-      { tag: '印象主义', isSelected: false },
-      { tag: '现代主义', isSelected: false },
-      { tag: '巴洛克风格', isSelected: false },
-      { tag: '像素风格', isSelected: false },
-      { tag: '浮世绘', isSelected: false },
-      { tag: '蒸汽波', isSelected: false },
-    ],
-  },
-  {
-    style: '随机风格',
-    options: [],
-  },
-]);
-
-const mobileStyleData = ref([]);
-mobileStyleData.value = [...styleData.value].splice(0, 4);
-const mobileRandomData = ref([
-  {
-    style: '随机风格',
-    options: [],
-  },
-]);
-
 const randomList = ref([
   { tag: '巴洛克', isSelected: false, img: style1 },
   { tag: '毕加索', isSelected: false, img: style2 },
@@ -598,33 +529,12 @@ function choseStyleSort(val, item) {
     // newStyleData.value[0].isSelected = true;
   }
 }
-// 选择风格标签
-// function choseSortTag(val) {
-//   val.isSelected = !val.isSelected;
-// }
-// 随机风格
-function getRandomStyle(index) {
-  if (index === 0) {
-    const i = Math.floor(Math.random() * randomList.value.length);
-    styleData.value[index].options = mobileRandomData.value.options = [
-      randomList.value[i],
-    ];
-  } else {
-    return;
-  }
-}
 
 // 初始化推理数据
 function initData() {
   sortTag.value = '';
 
   styleBackground.value = [];
-
-  styleData.value.forEach((item) => {
-    item.options.forEach((tag) => {
-      tag.isSelected = false;
-    });
-  });
 
   exampleData.value.forEach((item) => {
     item.isSelected = false;
@@ -661,6 +571,14 @@ async function handleInfer() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
+    if (isWaiting.value || isLine.value !== 0) {
+      ElMessage({
+        offset: 64,
+        type: 'warning',
+        message: '正在生成中，请等待',
+      });
+      return;
+    }
     if (inputText.value) {
       if (screenWidth.value < 821) {
         showInferDlg.value = true;
@@ -974,7 +892,7 @@ function handleNum(index) {
                 :class="item.isSelected ? 'active-1' : ''"
               />
 
-              <div class="style-item-name" @click="getRandomStyle(index)">
+              <div class="style-item-name">
                 {{ index === 0 ? item.tag1 : item.tag }}
               </div>
             </div>
@@ -1021,12 +939,7 @@ function handleNum(index) {
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
-        <o-button
-          type="primary"
-          :disabled="isWaiting || isLine === null"
-          @click="handleInfer"
-          >立即生成</o-button
-        >
+        <o-button type="primary" @click="handleInfer">立即生成</o-button>
       </div>
     </div>
     <div class="wrap-right">
@@ -1246,7 +1159,7 @@ function handleNum(index) {
               :class="item.isSelected ? 'active-1' : ''"
             />
 
-            <div class="style-item-name" @click="getRandomStyle(index)">
+            <div class="style-item-name">
               {{ index === 0 ? item.tag1 : item.tag }}
             </div>
 

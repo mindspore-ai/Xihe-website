@@ -7,7 +7,9 @@ import IconLike from '~icons/app/like';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import { useUserInfoStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const userInfoStore = useUserInfoStore();
@@ -16,13 +18,13 @@ const navItems = [
   {
     id: 1,
     icon: IconLike,
-    tag: '我的收藏',
+    tag: t('wukong.MY_COLLECTION'),
     path: '/modelzoo/wukong/admin/collection',
   },
   {
     id: 2,
     icon: IconOpen,
-    tag: '我的公开',
+    tag: t('wukong.MY_PUBLIC'),
     path: '/modelzoo/wukong/admin/public',
   },
 ];
@@ -70,15 +72,17 @@ function goWatched() {
   <div class="wrapper">
     <div class="painting-management">
       <el-breadcrumb :separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-          >大模型</el-breadcrumb-item
-        >
+        <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+          t('wukong.BIG_MODEL')
+        }}</el-breadcrumb-item>
         <el-breadcrumb-item
           :to="{ path: '/modelzoo/wukong' }"
           class="breadcrumb-item"
-          >悟空</el-breadcrumb-item
+          >{{ t('wukong.TITLE_2') }}</el-breadcrumb-item
         >
-        <el-breadcrumb-item>画作管理</el-breadcrumb-item>
+        <el-breadcrumb-item>{{
+          t('wukong.PAINT_MANAGEMENT')
+        }}</el-breadcrumb-item>
       </el-breadcrumb>
 
       <div v-if="screenWidth > 820" class="painting-management-main">
@@ -88,7 +92,7 @@ function goWatched() {
             <p>{{ userInfoStore.userName }}</p>
             <div class="user-social">
               <p class="user-social-item" @click="goFollow()">
-                <span>粉丝</span>
+                <span>{{ t('wukong.FANS') }}</span>
                 <span class="social-item-fans">{{
                   userInfoStore.fansCount > 10000
                     ? (userInfoStore.fansCount -
@@ -99,7 +103,7 @@ function goWatched() {
                 }}</span>
               </p>
               <p class="user-social-item" @click="goWatched()">
-                <span>关注</span>
+                <span>{{ t('wukong.FOCUS') }}</span>
                 <span class="social-item-follow">
                   {{
                     userInfoStore.followingCount > 10000

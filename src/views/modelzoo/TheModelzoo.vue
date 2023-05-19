@@ -37,26 +37,25 @@ let i18n = {
     //   openness: true,
     // },
     {
-      title: '悟空画画',
-      introduce:
-        '华为诺亚方舟实验室与MindSpore社区联合打造的中文图像生成大模型',
+      title: t(`modelzoo.MODELZOO_CARDS[${0}].TITLE`),
+      introduce: t(`modelzoo.MODELZOO_CARDS[${0}].INTRODUCE`),
       url: wukong,
-      path: '/modelzoo/wukong',
+      path: t(`modelzoo.MODELZOO_CARDS[${0}].PATH`),
       openness: true,
     },
     {
-      title: '紫东.太初',
-      introduce: '全球首个三模态千亿参数大模型',
+      title: t(`modelzoo.MODELZOO_CARDS[${1}].TITLE`),
+      introduce: t(`modelzoo.MODELZOO_CARDS[${1}].INTRODUCE`),
       url: taichu,
-      path: '/modelzoo/taichu',
+      path: t(`modelzoo.MODELZOO_CARDS[${1}].PATH`),
       openness: true,
     },
 
     {
-      title: '武大.LuoJia',
-      introduce: '全球首个遥感专用框架及最大遥感样本库',
+      title: t(`modelzoo.MODELZOO_CARDS[${2}].TITLE`),
+      introduce: t(`modelzoo.MODELZOO_CARDS[${2}].INTRODUCE`),
       url: luojia,
-      path: '/modelzoo/luojia',
+      path: t(`modelzoo.MODELZOO_CARDS[${2}].PATH`),
       openness: true,
     },
     // {
@@ -67,15 +66,15 @@ let i18n = {
     //   openness: true,
     // },
     {
-      title: '鹏程.神农',
-      introduce: '面向生物医学领域的人工智能平台',
+      title: t(`modelzoo.MODELZOO_CARDS[${4}].TITLE`),
+      introduce: t(`modelzoo.MODELZOO_CARDS[${4}].INTRODUCE`),
       url: shenlong,
-      path: '/modelzoo/shennong',
+      path: t(`modelzoo.MODELZOO_CARDS[${4}].PATH`),
       openness: true,
     },
     {
-      title: '鹏程.大圣',
-      introduce: '业界首个千亿参数规模机器视觉分析领域大模',
+      title: t(`modelzoo.MODELZOO_CARDS[${5}].TITLE`),
+      introduce: t(`modelzoo.MODELZOO_CARDS[${5}].INTRODUCE`),
       url: dasheng,
       openness: false,
     },
@@ -112,9 +111,7 @@ function goModelzoo() {
       </div>
 
       <div class="watch-more" @click="goModelzoo">
-        <span class="text">{{
-          t('modelzoo.点击去往ModelZoo查看更多大模型')
-        }}</span>
+        <span class="text">{{ t('modelzoo.VIEW_MORE') }}</span>
         <o-icon><icon-arrow></icon-arrow></o-icon>
       </div>
     </AppContent>

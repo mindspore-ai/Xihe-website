@@ -13,6 +13,10 @@ import { uploadModelzooPic } from '@/api/api-modelzoo';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const screenWidth = useWindowResize();
 
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -94,7 +98,7 @@ function handleChange(val) {
     // fileList.value.pop();
     return ElMessage({
       type: 'warning',
-      message: '图片大小不应超过2M',
+      message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
     });
   } else {
     analysis.value = '';
@@ -141,9 +145,9 @@ function customUpload() {
     <div class="model-wrap">
       <div class="image-caption">
         <div class="caption-top">
-          <p class="experience-title">以图生文（Image Caption）</p>
+          <p class="experience-title">{{ t('taichu.IMAGE_CAPTION.NAME') }}</p>
           <p class="experience-text">
-            顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
+            {{ t('taichu.IMAGE_CAPTION.DESCRIPTION') }}
           </p>
         </div>
         <div class="caption-bottom">
@@ -163,7 +167,9 @@ function customUpload() {
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <div v-else class="empty-status">
                   <o-icon><icon-upload></icon-upload></o-icon>
-                  <p class="upload-tip">拖拽图片(jpg/jepg/png)到此处上传</p>
+                  <p class="upload-tip">
+                    {{ t('taichu.IMAGE_CAPTION.ACTION') }}
+                  </p>
                 </div>
               </el-upload>
             </div>
@@ -180,13 +186,13 @@ function customUpload() {
               </div>
               <div class="img-list-item custom" @click="customUpload">
                 <o-icon><icon-upload></icon-upload></o-icon>
-                <p>自定义图片</p>
+                <p>{{ t('taichu.IMAGE_CAPTION.CUSTOM_IMG') }}</p>
               </div>
             </div>
           </div>
 
           <div class="caption-bottom-right">
-            <p class="result">分析结果</p>
+            <p class="result">{{ t('taichu.IMAGE_CAPTION.ANALYSE_RESULT') }}</p>
             <div v-if="analysis" class="result-text">
               <span class="head">Caption:</span>
               <span class="main">&nbsp;{{ analysis }}</span>
@@ -200,7 +206,7 @@ function customUpload() {
                 size="small"
                 :disabled="loading"
                 @click="submitUpload"
-                >开始推理</o-button
+                >{{ t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button
               >
             </div>
           </div>
@@ -208,9 +214,9 @@ function customUpload() {
       </div>
 
       <div class="mobile">
-        <p class="model-name">以图生文（Image Caption）</p>
+        <p class="model-name">{{ t('taichu.IMAGE_CAPTION.NAME') }}</p>
         <div class="model-desc">
-          顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。
+          {{ t('taichu.IMAGE_CAPTION.DESCRIPTION') }}
         </div>
         <div class="image-upload">
           <el-upload
@@ -228,9 +234,11 @@ function customUpload() {
             <div v-else class="empty-status">
               <o-icon><icon-upload></icon-upload></o-icon>
               <p v-if="screenWidth > 820" class="upload-tip">
-                拖拽图片(jpg/jepg/png)到此处上传
+                {{ t('taichu.IMAGE_CAPTION.ACTION') }}
               </p>
-              <p v-else class="upload-tip">选择图片(jpg/jepg/png)到此处上传</p>
+              <p v-else class="upload-tip">
+                {{ t('taichu.IMAGE_CAPTION.MOBIlE_ACTION') }}
+              </p>
             </div>
           </el-upload>
         </div>
@@ -247,10 +255,10 @@ function customUpload() {
           </div>
           <div class="img-list-item custom" @click="customUpload">
             <o-icon><icon-upload></icon-upload></o-icon>
-            <p>自定义</p>
+            <p>{{ t('taichu.IMAGE_CAPTION.MOBIlE_CUSTOM') }}</p>
           </div>
         </div>
-        <p class="analyse">分析结果</p>
+        <p class="analyse">{{ t('taichu.IMAGE_CAPTION.ANALYSE_RESULT') }}</p>
 
         <div class="analyse-result">
           <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
@@ -266,7 +274,7 @@ function customUpload() {
             size="mini"
             :disabled="loading"
             @click="submitUpload"
-            >开始推理</o-button
+            >{{ t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button
           >
         </div>
       </div>

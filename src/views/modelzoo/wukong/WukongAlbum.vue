@@ -33,6 +33,11 @@ import IconCopy from '~icons/app/copy-nickname';
 import arrow from '@/assets/imgs/wukong/arrow.png';
 
 import useClipboard from 'vue-clipboard3';
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const { toClipboard } = useClipboard();
 
 const router = useRouter();
@@ -54,6 +59,8 @@ const params = ref({
   level: 'official',
 });
 
+const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
+
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
   const img = new Image();
@@ -70,7 +77,7 @@ function addWatermark(imgUrl, index) {
 
     ctx.font = '24px 微软雅黑';
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+    ctx.fillText(t('wukong.BY_AI'), img.width - 182, img.height - 24);
 
     imgs.value[index].waterImg = canvas.toDataURL('image/png');
 
@@ -191,7 +198,7 @@ function giveLike(num) {
           imgs.value[num].digg_count = res.data.digg_count;
           ElMessage({
             type: 'success',
-            message: '取消点赞成功',
+            message: t('wukong.CANCEL_DIG'),
             offset: 64,
             center: true,
           });
@@ -204,7 +211,7 @@ function giveLike(num) {
           imgs.value[num].digg_count = res.data.digg_count;
           ElMessage({
             type: 'success',
-            message: '点赞成功',
+            message: t('wukong.DIGGED'),
             offset: 64,
             center: true,
           });
@@ -274,7 +281,7 @@ function collectPic(index) {
         dialogData.value.is_like = false;
         ElMessage({
           type: 'success',
-          message: '取消收藏成功',
+          message: t('wukong.CANCEL_COLLECT'),
           offset: 64,
         });
       });
@@ -287,7 +294,7 @@ function collectPic(index) {
         dialogData.value.like_id = res.data.id;
         ElMessage({
           type: 'success',
-          message: '收藏成功，可在画作管理中查看',
+          message: t('wukong.COLLECT'),
           offset: 64,
         });
       });
@@ -300,7 +307,7 @@ async function copyText(textValue) {
   await toClipboard(textValue);
   ElMessage({
     type: 'success',
-    message: '复制成功',
+    message: t('wukong.COPY'),
     offset: 64,
     center: true,
   });
@@ -376,7 +383,7 @@ function toPrePic() {
   } else {
     ElMessage({
       type: 'warning',
-      message: '已是第一张',
+      message: t('wukong.FIRST_IMG'),
       offset: 64,
       center: true,
     });
@@ -393,7 +400,7 @@ function toNextPic() {
   } else {
     ElMessage({
       type: 'error',
-      message: '已是最后一张',
+      message: t('wukong.LAST_IMG'),
       offset: 64,
       center: true,
     });
@@ -405,15 +412,17 @@ function toNextPic() {
     <div class="picture-album">
       <div class="album-top">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-            >大模型</el-breadcrumb-item
-          >
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+            t('wukong.BIG_MODEL')
+          }}</el-breadcrumb-item>
           <el-breadcrumb-item
             :to="{ path: '/modelzoo/wukong' }"
             class="breadcrumb-item"
-            >悟空</el-breadcrumb-item
+            >{{ t('wukong.TITLE_2') }}</el-breadcrumb-item
           >
-          <el-breadcrumb-item>AI画集</el-breadcrumb-item>
+          <el-breadcrumb-item>{{
+            t('wukong.AI_PAINTINGS')
+          }}</el-breadcrumb-item>
         </el-breadcrumb>
         <!-- tab栏 -->
         <el-tabs
@@ -423,12 +432,15 @@ function toNextPic() {
         >
           <el-tab-pane
             v-if="screenWidth <= 820"
-            label="筛选"
+            :label="t('wukong.FILTER')"
             name="0"
             disabled
           ></el-tab-pane>
-          <el-tab-pane label="官方" name="official"></el-tab-pane>
-          <el-tab-pane label="全部" name=""></el-tab-pane>
+          <el-tab-pane
+            :label="t('wukong.AUTHORITY')"
+            name="official"
+          ></el-tab-pane>
+          <el-tab-pane :label="t('wukong.ALL')" name=""></el-tab-pane>
           <!-- <el-tab-pane label="最热" name="3"></el-tab-pane>
           <el-tab-pane label="最新" name="4"></el-tab-pane> -->
         </el-tabs>
@@ -464,8 +476,10 @@ function toNextPic() {
           </div>
           <div class="box-bottom">
             <div class="style">
-              来自{{ items.desc }}
-              <p v-if="items.style">#风格：{{ items.style }}</p>
+              {{ t('wukong.FROM') }}{{ items.desc }}
+              <p v-if="items.style">
+                #{{ t('wukong.STYLE') }}：{{ items.style }}
+              </p>
             </div>
             <div class="imgs-info">
               <div class="user" @click.stop="goUser(items.owner)">
@@ -496,8 +510,10 @@ function toNextPic() {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          来自{{ dialogData.desc }}&nbsp;&nbsp;
-          <span v-if="dialogData.style"> #风格：{{ dialogData.style }} </span>
+          {{ t('wukong.FROM') }}{{ dialogData.desc }}&nbsp;&nbsp;
+          <span v-if="dialogData.style">
+            #{{ t('wukong.STYLE') }}：{{ dialogData.style }}
+          </span>
         </p>
       </template>
       <div class="album-wrapper">
@@ -528,14 +544,14 @@ function toNextPic() {
                   <icon-downloadgray></icon-downloadgray>
                 </o-icon>
                 <img class="arrow" :src="arrow" alt="" />
-                <div class="icon-name">下载</div>
+                <div class="icon-name">{{ t('wukong.DOWNLOAD') }}</div>
               </div>
               <div class="func-item">
                 <o-icon class="share" @click="sharePic">
                   <icon-sharegray></icon-sharegray>
                 </o-icon>
                 <img class="arrow" :src="arrow" alt="" />
-                <div class="icon-name">分享</div>
+                <div class="icon-name">{{ t('wukong.SHARE') }}</div>
               </div>
               <div class="func-item">
                 <div v-if="!dialogData.is_like">
@@ -543,14 +559,16 @@ function toNextPic() {
                     <icon-heartgray></icon-heartgray>
                   </o-icon>
                   <img class="arrow" :src="arrow" alt="" />
-                  <div class="icon-name">收藏</div>
+                  <div class="icon-name">{{ t('wukong.ICON_COLLECT') }}</div>
                 </div>
                 <div v-else>
                   <o-icon class="heart" @click="collectPic">
                     <icon-heart></icon-heart>
                   </o-icon>
                   <img class="arrow" :src="arrow" alt="" />
-                  <div class="icon-name">取消收藏</div>
+                  <div class="icon-name">
+                    {{ t('wukong.ICON_CANCEL_COLLECT') }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -588,7 +606,7 @@ function toNextPic() {
             src="@/assets/imgs/logo.png"
             alt=""
           />
-          <p class="water-mark">由AI模型生成</p>
+          <p class="water-mark">{{ t('wukong.BY_AI') }}</p>
 
           <div class="mask"></div>
 
@@ -603,27 +621,21 @@ function toNextPic() {
         <img v-else class="shared-image" :src="shareImg" alt="" />
         <div class="poster-download">
           <div class="link">
-            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
+            <p>{{ copyContent }}</p>
 
-            <o-icon
-              class="pc-copy"
-              @click.stop="
-                copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)
-              "
+            <o-icon class="pc-copy" @click.stop="copyText(`${copyContent}`)"
               ><icon-copy></icon-copy
             ></o-icon>
 
-            <o-icon
-              class="mobile-copy"
-              @click.stop="
-                copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)
-              "
+            <o-icon class="mobile-copy" @click.stop="copyText(`${copyContent}`)"
               ><icon-copy></icon-copy
             ></o-icon>
           </div>
-          <div class="button" @click.stop="downloadPoster">下载海报</div>
+          <div class="button" @click.stop="downloadPoster">
+            {{ t('wukong.DOWNLOAD_POSTER') }}
+          </div>
         </div>
-        <div class="poster-tip">长按保存海报</div>
+        <div class="poster-tip">{{ t('wukong.SAVE_POSTER') }}</div>
       </div>
     </el-dialog>
   </div>
@@ -688,7 +700,7 @@ function toNextPic() {
 
     .album-item {
       display: grid;
-      grid-template-columns: repeat(4, 342px);
+      grid-template-columns: repeat(4, 336px);
       column-gap: 24px;
       row-gap: 24px;
       padding-bottom: 64px;

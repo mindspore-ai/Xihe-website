@@ -7,6 +7,9 @@ import ONav from '@/components/ONav.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const router = useRouter();
 const route = useRoute();
 const screenWidth = useWindowResize();
@@ -15,17 +18,17 @@ const activeNavItem = ref('');
 const navItems = [
   {
     id: 'imageCaption',
-    label: '以图生文',
+    label: t('taichu.NAV_ITEMS[0]'),
     href: '/modelzoo/taichu',
   },
   {
     id: 'textToImage',
-    label: '以文生图',
+    label: t('taichu.NAV_ITEMS[1]'),
     href: '/modelzoo/taichu/text',
   },
   {
     id: 'taichuVision',
-    label: '视觉问答',
+    label: t('taichu.NAV_ITEMS[2]'),
     href: '/modelzoo/taichu/vision',
   },
 ];
@@ -76,10 +79,10 @@ onUnmounted(() => {
     <div class="taichu-wrapper">
       <div class="taichu-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-            >大模型</el-breadcrumb-item
-          >
-          <el-breadcrumb-item>紫东.太初</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+            t('taichu.BIG_MODEL')
+          }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ t('taichu.TITLE') }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="taichu-content-desc">

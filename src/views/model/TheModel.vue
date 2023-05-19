@@ -694,7 +694,7 @@ onUnmounted(() => {
         <div class="card-box-top">
           <div class="card-head">
             <div class="model-number">
-              {{ i18n.head.count }} {{ modelCount }}
+              {{ i18n.head.count }} <span>{{ modelCount }}</span>
             </div>
             <div class="moderl-head-right">
               <el-input
@@ -777,7 +777,7 @@ $theme: #0d8dff;
         padding-right: 24px;
         font-size: 18px;
         .reference {
-          color: #4dcdff;
+          color: #fff;
         }
       }
       .banner-right {
@@ -791,10 +791,10 @@ $theme: #0d8dff;
     .condition {
       position: relative;
       width: 100%;
-      max-width: 464px;
+      max-width: 424px;
       min-height: calc(100vh - 300px);
-      margin: 0 24px 0 0;
-      padding: 40px;
+      margin: 0 40px 0 0;
+      padding: 24px;
       background-color: #fff;
       border-radius: 16px;
       .getback {
@@ -896,7 +896,7 @@ $theme: #0d8dff;
         color: #555;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
 
         .icon-x {
@@ -938,7 +938,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
 
           .icon-x {
@@ -967,10 +967,18 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 24px;
+        padding: 8px 24px;
         width: 100%;
         background-color: #fff;
         border-radius: 30px;
+        .model-number {
+          font-size: 14px;
+          line-height: 22px;
+          span {
+            color: #555;
+            margin-left: 8px;
+          }
+        }
         .moderl-head-right {
           display: flex;
           align-items: center;

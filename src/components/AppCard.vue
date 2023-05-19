@@ -141,13 +141,13 @@ if (props.cardType === 'model') {
     overflow: hidden;
     position: relative;
     .label-item {
-      padding: 3px 8px;
+      padding: 2px 8px;
       line-height: 14px;
       white-space: nowrap;
       text-overflow: ellipsis;
       margin-right: 8px;
       background-color: #efefef;
-      border-radius: 6px;
+      border-radius: 10px;
     }
   }
   .model-introduce {

@@ -298,6 +298,7 @@ function checkName(rule, value, callback) {
     align-items: center;
     padding-bottom: 48px;
     min-height: calc(100vh - 558px);
+    border-radius: 16px;
 
     .des {
       align-items: center;

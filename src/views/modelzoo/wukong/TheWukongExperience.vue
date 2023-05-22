@@ -127,7 +127,7 @@ function viewAll() {
   newStyleData.value = newStyleData.value.concat(randomList.value.slice(10));
 }
 const isWaiting = ref(false);
-const isLine = ref(null);
+const isLine = ref(0);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
@@ -221,6 +221,7 @@ if (isLogined.value) {
       if (JSON.parse(event.data).data.rank === 0) {
         getPic()
           .then((res) => {
+            isLine.value = null;
             styleBackground.value = res.data;
             styleBackground.value.forEach((item, index) => {
               inferList.value[index].isCollected = item.is_like;
@@ -570,18 +571,11 @@ function addWatermark(imgUrl, index) {
 
 const errorMsg = ref('');
 // wk推理
+const inferDisabled = ref(false);
 async function handleInfer() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    if (isWaiting.value || isLine.value !== 0) {
-      ElMessage({
-        offset: 64,
-        type: 'warning',
-        message: '正在生成中，请等待',
-      });
-      return;
-    }
     if (inputText.value) {
       if (screenWidth.value < 821) {
         showInferDlg.value = true;
@@ -609,6 +603,8 @@ async function handleInfer() {
       ];
 
       try {
+        isLine.value = null;
+        inferDisabled.value = true;
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
@@ -627,14 +623,23 @@ async function handleInfer() {
               isWaiting.value = false;
               isLine.value = JSON.parse(event.data).data.rank;
               if (JSON.parse(event.data).data.rank === 0) {
+                inferDisabled.value = false;
                 getPic()
                   .then((res) => {
-                    styleBackground1.value = [
-                      res.data[0].link,
-                      res.data[1].link,
-                      res?.data[2].link,
-                      res?.data[3].link,
-                    ];
+                    inferDisabled.value = false;
+                    if (res.data.length > 2) {
+                      styleBackground1.value = [
+                        res.data[0].link,
+                        res.data[1].link,
+                        res.data[2].link,
+                        res.data[3].link,
+                      ];
+                    } else {
+                      styleBackground1.value = [
+                        res.data[0].link,
+                        res.data[1].link,
+                      ];
+                    }
                     res.data.forEach((item, index) => {
                       addWatermark(item.link, index);
                     });
@@ -644,6 +649,7 @@ async function handleInfer() {
                   .catch((err) => {
                     isWaiting.value = false;
                     isLine.value = null;
+                    inferDisabled.value = false;
                     if (
                       err.response.data.code === 'bigmodel_no_wukong_picture'
                     ) {
@@ -663,6 +669,7 @@ async function handleInfer() {
       } catch (err) {
         isWaiting.value = false;
         isLine.value = null;
+        inferDisabled.value = false;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -928,21 +935,21 @@ function handleNum(index) {
               :class="{ 'active-option': numOptions[0].active }"
               @click="handleNum(0)"
             >
-              <span></span>生成4张
+              生成4张
             </div>
             <div
               class="option"
               :class="{ 'active-option': numOptions[1].active }"
               @click="handleNum(1)"
             >
-              <span></span>生成2张
+              生成2张
             </div>
           </div>
         </div>
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
-        <o-button type="primary" :disabled="isWaiting" @click="handleInfer"
+        <o-button type="primary" :disabled="inferDisabled" @click="handleInfer"
           >立即生成</o-button
         >
       </div>
@@ -1197,14 +1204,14 @@ function handleNum(index) {
             :class="{ 'active-option': numOptions[0].active }"
             @click="handleNum(0)"
           >
-            <span></span>生成4张
+            生成4张
           </div>
           <div
             class="option"
             :class="{ 'active-option': numOptions[1].active }"
             @click="handleNum(1)"
           >
-            <span></span>生成2张
+            生成2张
           </div>
         </div>
 

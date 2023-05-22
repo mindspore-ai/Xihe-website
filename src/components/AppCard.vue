@@ -134,7 +134,7 @@ if (props.cardType === 'model') {
   }
   .label-box {
     display: flex;
-    height: 20px;
+    height: 18px;
     flex-wrap: wrap;
     margin: 8px 0 16px;
     font-size: 12px;

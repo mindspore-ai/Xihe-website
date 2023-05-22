@@ -21,7 +21,9 @@ import {
   handleLuoJiaHistory,
   handleLuojiaUploadPic,
 } from '@/api/api-modelzoo';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -29,9 +31,9 @@ const dialogTableVisible = ref(false);
 const dialogTableVisibleDetail = ref(false);
 const gridData = ref([]);
 const historyInfo = ref({
-  name: '目标识别',
-  origin: '高德地图',
-  status: '已完成',
+  name: t('luojia.EXPERIENCE.HISTORY_INFO.NAME'),
+  origin: t('luojia.EXPERIENCE.HISTORY_INFO.ORIGIN'),
+  status: t('luojia.EXPERIENCE.HISTORY_INFO.STATUS'),
   create_at: '',
   id: '',
 });
@@ -72,7 +74,7 @@ async function handleDrawClick() {
         const rbpoint = [location.value.east, location.value.south];
 
         isShow.value = true;
-        loadingText.value = '获取图片中';
+        loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT');
 
         tblob.value = await rectToImg(
           ltpoint,
@@ -87,7 +89,7 @@ async function handleDrawClick() {
       } catch (err) {
         ElMessage({
           type: 'warning',
-          message: '请选择区域',
+          message: t('luojia.EXPERIENCE.WARNING_MSG1'),
         });
       }
     }
@@ -96,10 +98,10 @@ async function handleDrawClick() {
 // 1. 未选区域，点击识别提示，不发请求
 // 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
 function handleInferClick(mobile) {
-  if (loadingText.value === '获取图片中') {
+  if (loadingText.value === t('luojia.EXPERIENCE.LOADING_TEXT')) {
     ElMessage({
       type: 'warning',
-      message: '获取图片中，请稍等...',
+      message: t('luojia.EXPERIENCE.WARNING_MSG2'),
     });
     return;
   }
@@ -113,7 +115,7 @@ function handleInferClick(mobile) {
       } else {
         ElMessage({
           type: 'warning',
-          message: '请先选择图片',
+          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
         });
         return;
       }
@@ -121,7 +123,7 @@ function handleInferClick(mobile) {
   }
   if (isInfer.value) {
     isShow.value = true;
-    loadingText.value = '上传图片中，请耐心等待';
+    loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
     if (mobile !== 'mobile') {
       formData = new FormData();
       formData.append('picture', tblob.value);
@@ -131,7 +133,7 @@ function handleInferClick(mobile) {
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
       if (res.data.data) {
-        loadingText.value = '推理中，请耐心等待';
+        loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT2');
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
           if (res.data?.data) {
@@ -183,12 +185,12 @@ function handleInferClick(mobile) {
   } else if (!isInfer.value && mobile !== 'mobile') {
     ElMessage({
       type: 'warning',
-      message: '请先框选，再开始识别',
+      message: t('luojia.EXPERIENCE.WARNING_MSG4'),
     });
   } else if (isSelected.value && !isInfer.value && mobile !== 'mobile') {
     ElMessage({
       type: 'warning',
-      message: '请先结束框选，再开始识别',
+      message: t('luojia.EXPERIENCE.WARNING_MSG5'),
     });
   }
 }
@@ -333,9 +335,9 @@ function enlarge(url) {
 <template>
   <div class="luojia">
     <div class="luojia-top">
-      <p class="type">目标检测（Object Detection）</p>
+      <p class="type">{{ t('luojia.EXPERIENCE.MODEL_TYPE') }}</p>
       <p class="desc">
-        指一个特殊目标（或一种类型的目标）从其它目标（或其它类型的目标）中被区分出来的过程。它既包括俩个非常相似目标的识别，也包括一种类型的目标同其他类型目标的识别。<br />
+        {{ t('luojia.EXPERIENCE.MODEL_DESC') }}
       </p>
     </div>
     <div class="luojia-bottom">
@@ -345,9 +347,13 @@ function enlarge(url) {
 
         <div v-if="!isShow" class="select-button" @click="handleDrawClick">
           <o-icon><icon-select></icon-select></o-icon>
-          <span>{{ isSelected ? '结束选区' : '开始选区' }}</span>
+          <span>{{
+            isSelected
+              ? t('luojia.EXPERIENCE.END_SELECT')
+              : t('luojia.EXPERIENCE.START_SELECT')
+          }}</span>
           <div v-if="isSelected" class="select-tip">
-            左键两次选点，右键确定选框，结束框选可开始识别
+            {{ t('luojia.EXPERIENCE.SELECT_RULE') }}
             <div class="triangle"></div>
           </div>
         </div>
@@ -355,13 +361,15 @@ function enlarge(url) {
         <div class="result-button button-wrap">
           <div @click="handleHistoryClick">
             <o-icon><icon-history></icon-history></o-icon>
-            <span>历史记录</span>
+            <span>{{ t('luojia.EXPERIENCE.HISTORY') }}</span>
           </div>
         </div>
 
         <div class="start-button button-wrap">
           <o-icon><icon-start></icon-start></o-icon>
-          <span @click="handleInferClick">开始识别</span>
+          <span @click="handleInferClick">{{
+            t('luojia.EXPERIENCE.DISCRIMINATE')
+          }}</span>
         </div>
 
         <div v-if="isShow" class="loading-box">
@@ -371,51 +379,69 @@ function enlarge(url) {
       </div>
 
       <div class="process">
-        <span>①&nbsp;选择区域-></span>
-        <span>②&nbsp;点击左上角开始选区按钮-></span>
-        <span>③&nbsp;左键选择区域角点-></span>
-        <span>④&nbsp;再次左键选择区域另一角点-></span>
-        <span>⑤&nbsp;右键取消选区操作-></span>
-        <span>⑥&nbsp;点击左上角取消选区，获取选区图片-></span>
-        <span>⑦&nbsp;点击右上角开始识别按钮-></span>
-        <span>⑧&nbsp;请耐心等待约1分钟，可在历史记录中查看最近的一条数据</span>
+        <span>①&nbsp;{{ t('luojia.EXPERIENCE.STEP_1') }}</span>
+        <span>②&nbsp;{{ t('luojia.EXPERIENCE.STEP_2') }}</span>
+        <span>③&nbsp;{{ t('luojia.EXPERIENCE.STEP_3') }}</span>
+        <span>④&nbsp;{{ t('luojia.EXPERIENCE.STEP_4') }}</span>
+        <span>⑤&nbsp;{{ t('luojia.EXPERIENCE.STEP_5') }}</span>
+        <span>⑥&nbsp;{{ t('luojia.EXPERIENCE.STEP_6') }}</span>
+        <span>⑦&nbsp;{{ t('luojia.EXPERIENCE.STEP_7') }}</span>
+        <span>⑧&nbsp;{{ t('luojia.EXPERIENCE.STEP_8') }}</span>
       </div>
 
       <div class="tip">
-        温馨提示：第一次加载较慢，注意不要长时间停留在本界面，可能会导致电脑卡顿。
+        {{ t('luojia.EXPERIENCE.LOADING_TIP') }}
       </div>
     </div>
     <!-- 列表 -->
     <el-dialog v-model="dialogTableVisible">
       <template #header>
-        <p>历史记录</p>
+        <p>{{ t('luojia.EXPERIENCE.HISTORY') }}</p>
       </template>
       <el-table :data="gridData" table-layout="auto">
-        <el-table-column property="id" label="任务ID" />
-        <el-table-column property="name" label="任务类型" />
-        <el-table-column property="origin" label="地图源数据" />
-        <el-table-column property="status" label="状态" width="92" />
-        <el-table-column property="create_at" label="创建时间" />
-        <el-table-column label="操作">
-          <span class="detail" @click="handleDetailClick">查看详情</span>
+        <el-table-column
+          property="id"
+          :label="t('luojia.EXPERIENCE.TAB_ITEM_7')"
+        />
+        <el-table-column
+          property="name"
+          :label="t('luojia.EXPERIENCE.TAB_ITEM_1')"
+        />
+        <el-table-column
+          property="origin"
+          :label="t('luojia.EXPERIENCE.TAB_ITEM_2')"
+        />
+        <el-table-column
+          property="status"
+          :label="t('luojia.EXPERIENCE.TAB_ITEM_3')"
+          width="92"
+        />
+        <el-table-column
+          property="create_at"
+          :label="t('luojia.EXPERIENCE.TAB_ITEM_4')"
+        />
+        <el-table-column :label="t('luojia.EXPERIENCE.TAB_ITEM_5')">
+          <span class="detail" @click="handleDetailClick">{{
+            t('luojia.EXPERIENCE.VIEW_DETAIL')
+          }}</span>
         </el-table-column>
       </el-table>
-      <p class="history-tip">仅展示最近一条记录</p>
+      <p class="history-tip">{{ t('luojia.EXPERIENCE.HISTORY_TIP') }}</p>
     </el-dialog>
     <!-- 详情 -->
     <el-dialog
       v-model="dialogTableVisibleDetail"
       class="result-dlg"
-      title="详情"
+      :title="t('luojia.EXPERIENCE.DETAIL')"
     >
       <div class="compare-box">
         <div class="original">
           <img :src="inputImg + '?' + Math.random()" alt="" />
           <div class="botoom">
-            <p>原图</p>
+            <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
             <div class="download" @click="handleOriImgDownload">
               <o-icon><icon-download></icon-download></o-icon>
-              <span>下载</span>
+              <span>{{ t('luojia.EXPERIENCE.DOWNLOAD') }}</span>
             </div>
           </div>
         </div>
@@ -423,10 +449,10 @@ function enlarge(url) {
         <div class="result">
           <img :src="outputImg + '?' + Math.random()" alt="" />
           <div class="botoom">
-            <p>结果图</p>
+            <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
             <div class="download" @click="handleResImgDownload">
               <o-icon><icon-download></icon-download></o-icon>
-              <span>下载</span>
+              <span>{{ t('luojia.EXPERIENCE.DOWNLOAD') }}</span>
             </div>
           </div>
         </div>
@@ -449,7 +475,7 @@ function enlarge(url) {
           <div v-else class="empty-status">
             <o-icon><icon-upload></icon-upload></o-icon>
             <p class="upload-tip">
-              点击上传图片(jpg/jepg/png)或选择下方案例图片
+              {{ t('luojia.EXPERIENCE.MOBILD_UPLOAD') }}
             </p>
           </div>
         </el-upload>
@@ -481,25 +507,38 @@ function enlarge(url) {
         type="primary"
         size="mini"
         @click="handleInferClick('mobile')"
-        >开始识别</o-button
+        >{{ t('luojia.EXPERIENCE.DISCRIMINATE') }}</o-button
       >
       <div class="history">
-        <span>历史记录</span>
-        <span>仅展示最近一条记录</span>
+        <span>{{ t('luojia.EXPERIENCE.HISTORY') }}</span>
+        <span>{{ t('luojia.EXPERIENCE.HISTORY_TIP') }}</span>
       </div>
       <div class="table">
         <el-table :data="gridData">
-          <el-table-column property="name" label="任务类型" />
-          <el-table-column property="origin" label="地图源" />
-          <el-table-column property="status" label="状态" />
-          <el-table-column property="create_at" label="创建时间" width="90" />
+          <el-table-column
+            property="name"
+            :label="t('luojia.EXPERIENCE.TAB_ITEM_1')"
+          />
+          <el-table-column
+            property="origin"
+            :label="t('luojia.EXPERIENCE.TAB_ITEM_6')"
+          />
+          <el-table-column
+            property="status"
+            :label="t('luojia.EXPERIENCE.TAB_ITEM_3')"
+          />
+          <el-table-column
+            property="create_at"
+            :label="t('luojia.EXPERIENCE.TAB_ITEM_4')"
+            width="90"
+          />
           <!-- <el-table-column label="操作">
             <span class="detail" @click="handleDetailClick">查看详情</span>
           </el-table-column> -->
         </el-table>
       </div>
       <div v-if="gridData.length">
-        <div class="img-detail">图片详情</div>
+        <div class="img-detail">{{ t('luojia.EXPERIENCE.DETAIL') }}</div>
         <div class="compare-box">
           <div class="original">
             <img
@@ -508,7 +547,7 @@ function enlarge(url) {
               @click="enlarge(inputImg + '?' + Math.random())"
             />
             <div class="botoom">
-              <p>原图</p>
+              <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
               <!-- <div class="download" @click="handleOriImgDownload">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span>下载</span>
@@ -522,7 +561,7 @@ function enlarge(url) {
               @click="enlarge(outputImg + '?' + Math.random())"
             />
             <div class="botoom">
-              <p>结果图</p>
+              <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
               <!-- <div class="download" @click="handleResImgDownload">
                 <o-icon><icon-download></icon-download></o-icon>
                 <span>下载</span>

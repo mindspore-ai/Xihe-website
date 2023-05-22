@@ -1,7 +1,7 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+// import { ref, watch } from 'vue';
+// import { useRoute } from 'vue-router';
 import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';

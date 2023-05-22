@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
 

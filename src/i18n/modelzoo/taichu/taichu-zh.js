@@ -57,7 +57,7 @@ export default {
     CHALLENGE3_DESC: '方言差异',
     CHALLENGE3_DESC_1: '语法差异',
     CHALLENGE3_DESC_2: '认知差异',
-    AI_EMPOWERMENT: ' AI赋能，让手语学习更简单、可持续',
+    AI_EMPOWERMENT: 'AI赋能，让手语学习更简单、可持续',
     THREE_CHALLENGES: ' 听障人士长期手语学习过程中的三大挑战',
     CHALLENGE_1: '持续丰富手语词汇库',
     CHALLENGE_2: '推动融合手语国家标准制定',
@@ -104,7 +104,7 @@ export default {
       '您好，欢迎体验视觉问答！请选择例图片或自定义图片，再用简体中文输入一个相关问题进行问答。',
     TITLE: '视觉问答（Visual Question Answer, VQA）',
     VISION_DESC:
-      ' 视觉问答是给定一幅图片和一个相关的问题，算法输出相应的答案，是多模态理解中的基础任务之一。',
+      '视觉问答是给定一幅图片和一个相关的问题，算法输出相应的答案，是多模态理解中的基础任务之一。',
     MESSAGE_TIP: '请输入一个与图片的相关问题。',
     MESSAGE_TIP_1: '请输入一个最新图片的相关问题。',
     MESSAGE_TIP_2: '请选择一张图片。',

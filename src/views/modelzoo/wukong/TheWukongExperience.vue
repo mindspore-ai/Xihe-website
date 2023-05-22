@@ -127,7 +127,7 @@ function viewAll() {
   newStyleData.value = newStyleData.value.concat(randomList.value.slice(10));
 }
 const isWaiting = ref(false);
-const isLine = ref(0);
+const isLine = ref(null);
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
@@ -2865,7 +2865,7 @@ function handleNum(index) {
     padding-top: 24px;
     background: rgba(255, 255, 255, 0.8);
     position: absolute;
-    bottom: 40px;
+    bottom: 39px;
     width: 100%;
     backdrop-filter: blur(10px);
   }

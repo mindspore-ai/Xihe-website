@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -267,7 +267,7 @@ function confirmBtn() {
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
-      isWrap.value = sumWidth.value - containerWidth.value > 28 ? true : false;
+      isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
 
       sumWidth.value = 0;
     });
@@ -421,8 +421,7 @@ watch(
           sumWidth.value += item.offsetWidth + 4;
         });
         containerWidth.value = containerRef.value.offsetWidth;
-        isWrap.value =
-          sumWidth.value - containerWidth.value > 28 ? true : false;
+        isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
 
         sumWidth.value = 0;
       });
@@ -864,7 +863,7 @@ $theme: #0d8dff;
     }
     .tag-icon {
       align-self: flex-start;
-      margin-top: 6px;
+      margin-top: 2px;
       margin-right: 8px;
       display: flex;
       align-items: center;

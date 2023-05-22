@@ -17,7 +17,9 @@ import {
   cancelLikePicture,
 } from '@/api/api-modelzoo.js';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const userInfoStore = useUserInfoStore();
 const screenWidth = useWindowResize();
 const publicList = ref([]);
@@ -38,7 +40,7 @@ function addWatermark(imgUrl, index) {
 
     ctx.font = '24px 微软雅黑';
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+    ctx.fillText(t('wukong.BY_AI'), img.width - 182, img.height - 24);
 
     publicList.value[index].waterImg = canvas.toDataURL('image/png');
 
@@ -89,7 +91,7 @@ async function confirmQuitPublic() {
       imgInfoDlg.value = false;
       ElMessage({
         type: 'success',
-        message: '取消公开成功',
+        message: t('wukong.CANCEL_PUBLIC_SUCCESS'),
       });
     }
     publicList.value.splice(deleteIndex.value, 1);
@@ -118,7 +120,7 @@ function collectPublickImage(item) {
       item.is_like = true;
       ElMessage({
         type: 'success',
-        message: '收藏成功，可在画作管理中查看',
+        message: t('wukong.COLLECT'),
       });
     }
   });
@@ -131,7 +133,7 @@ async function cancelImgCollected(item) {
     if (res.status === 204) {
       ElMessage({
         type: 'success',
-        message: '取消收藏成功',
+        message: t('wukong.CANCEL_COLLECT'),
       });
       item.is_like = false;
     }
@@ -182,8 +184,10 @@ async function cancelImgCollected(item) {
         </div>
         <div class="img-desc">
           <p>
-            来自{{ item.desc }}&nbsp;&nbsp;
-            <span v-if="item.style"> #风格：{{ item.style }}</span>
+            {{ t('wukong.FROM') }}{{ item.desc }}&nbsp;&nbsp;
+            <span v-if="item.style">
+              #{{ t('wukong.STYLE') }}：{{ item.style }}</span
+            >
           </p>
           <div class="img-owner">
             <div class="info-left">
@@ -202,7 +206,7 @@ async function cancelImgCollected(item) {
     </div>
     <div v-else class="no-public">
       <o-icon><icon-public></icon-public></o-icon>
-      <p>暂无公开画作</p>
+      <p>{{ t('wukong.NO_PUBLIC') }}</p>
     </div>
     <!-- 移动端大图弹窗 -->
     <el-dialog
@@ -215,8 +219,10 @@ async function cancelImgCollected(item) {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          来自{{ imageInfo.desc }}&nbsp;&nbsp;
-          <span v-if="imageInfo.style">#风格：{{ imageInfo.style }}</span>
+          {{ t('wukong.FROM') }}{{ imageInfo.desc }}&nbsp;&nbsp;
+          <span v-if="imageInfo.style"
+            >#{{ t('wukong.STYLE') }}：{{ imageInfo.style }}</span
+          >
         </p>
       </template>
 
@@ -273,23 +279,23 @@ async function cancelImgCollected(item) {
       :close-on-press-escape="false"
     >
       <template #header>
-        <p class="confirm-title">取消公开画作</p>
+        <p class="confirm-title">{{ t('wukong.TIP_TITLE') }}</p>
       </template>
       <div class="confirm-desc">
-        若该作品未收藏，取消公开后将无法找回，是否确定取消公开画作？
+        {{ t('wukong.TIP_TEXT') }}
       </div>
       <template #footer>
         <OButton
           :size="screenWidth < 820 ? 'mini' : 'small'"
           style="margin-right: 16px"
           @click="cancelQuitPublic(false)"
-          >取消</OButton
+          >{{ t('wukong.BUTTON_CANCEL') }}</OButton
         >
         <OButton
           type="primary"
           :size="screenWidth < 820 ? 'mini' : 'small'"
           @click="confirmQuitPublic"
-          >确认</OButton
+          >{{ t('wukong.BUTTON_CONFIRM') }}</OButton
         >
       </template>
     </el-dialog>

@@ -777,7 +777,11 @@ $theme: #0d8dff;
         padding-right: 24px;
         font-size: 18px;
         .reference {
-          color: #fff;
+          color: #000;
+          text-decoration: underline;
+          &:hover {
+            color: #0d8dff;
+          }
         }
       }
       .banner-right {

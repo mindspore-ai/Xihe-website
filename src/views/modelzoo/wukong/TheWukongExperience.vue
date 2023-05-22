@@ -2141,7 +2141,7 @@ function handleNum(index) {
       .style-tag {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        justify-content: space-around;
+        justify-content: space-between;
         column-gap: 50px;
         justify-items: center;
         @media screen and (max-width: 476px) {
@@ -2535,6 +2535,10 @@ function handleNum(index) {
                 top: 4px;
                 left: 30px;
               }
+            }
+            p{
+              position: relative;
+              z-index: 11;
             }
             .arrow {
               position: absolute;

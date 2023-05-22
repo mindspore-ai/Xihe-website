@@ -2536,7 +2536,7 @@ function handleNum(index) {
                 left: 30px;
               }
             }
-            p{
+            p {
               position: relative;
               z-index: 11;
             }

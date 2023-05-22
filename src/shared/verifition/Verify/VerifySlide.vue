@@ -114,6 +114,7 @@ export default {
   props: {
     captchaType: {
       type: String,
+      // default: '',
     },
     type: {
       type: String,

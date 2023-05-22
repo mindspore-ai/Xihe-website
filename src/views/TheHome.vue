@@ -31,7 +31,7 @@ import models4 from '@/assets/imgs/home/models4.png';
 import modelzoo1 from '@/assets/imgs/home/modelzoo1.jpg';
 import modelzoo2 from '@/assets/imgs/home/modelzoo2.jpg';
 // import modelzoo3 from '@/assets/imgs/home/modelzoo4.png';
-import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
+// import modelzoo_pangu from '@/assets/imgs/home/modelzoo_pangu.jpg';
 import datasetPageImg from '@/assets/imgs/home/dataset-page.png';
 // import gallery from '@/assets/imgs/wukong/ceshi1.png';
 // import slideImg from '@/assets/gifs/slide.gif';

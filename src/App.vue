@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-import IconBack from '~icons/app/left.svg';
 import IconMenu from '~icons/app/meau-header.svg';
 import IconClose from '~icons/app/x.svg';
 import logoImg from '@/assets/imgs/logo1.png';
@@ -159,7 +158,6 @@ const routeLists = {
 };
 
 const isMobileFit = ref(false);
-const backUrl = ref('');
 watch(
   () => route,
   () => {

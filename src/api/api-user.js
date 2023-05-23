@@ -305,6 +305,15 @@ export function getUserFollow(name) {
   });
 }
 /**
+ * 检查邮箱是否存在
+ */
+export function checkEmail() {
+  const url = `/server/user/check_email`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
  * 获取验证图片  以及token
  */
 export function reqGet(data) {

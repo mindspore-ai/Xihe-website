@@ -264,9 +264,10 @@ function checkName(rule, value, callback) {
     align-items: center;
     padding-bottom: 48px;
     min-height: calc(100vh - 558px);
-
+    border-radius: 16px;
     .des {
       align-items: center;
+      padding-left: 12px;
     }
     .item {
       :deep(.el-popover.el-popper) {
@@ -305,7 +306,6 @@ function checkName(rule, value, callback) {
       }
       .radio {
         width: 400px;
-        // height: 96px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -334,6 +334,9 @@ function checkName(rule, value, callback) {
       margin: 0;
       .requirement {
         line-height: 34px;
+        span {
+          margin-left: 4px;
+        }
       }
       margin-top: 24px;
       width: 520px;

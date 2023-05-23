@@ -420,7 +420,8 @@ function toggleDelDlg(flag) {
       :deep .el-divider {
         position: absolute;
         top: -65px;
-        left: -40px;
+        left: -88px;
+        width: 832px;
       }
       &:first-child {
         margin-top: 40px;

@@ -273,7 +273,7 @@ function confirmBtn() {
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
-      isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
+      isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
       sumWidth.value = 0;
     });
@@ -421,7 +421,9 @@ watch(
           sumWidth.value += item.offsetWidth + 4;
         });
         containerWidth.value = containerRef.value.offsetWidth;
-        isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
+
+        console.log(sumWidth.value - containerWidth.value);
+        isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
         sumWidth.value = 0;
       });
@@ -561,7 +563,11 @@ watch(
                 </div>
               </div>
               <div class="head-tags">
-                <div v-for="it in headTags" :key="it" class="condition-detail">
+                <div
+                  v-for="it in headTags"
+                  :key="it"
+                  class="dlg-condition-detail"
+                >
                   {{ it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
@@ -634,7 +640,7 @@ $theme: #0d8dff;
   }
   .dialog-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     .head-left {
       width: 188px;
       display: flex;
@@ -666,18 +672,18 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
-      .condition-detail {
+      .dlg-condition-detail {
         cursor: pointer;
         display: flex;
         align-items: center;
-        padding: 0 12px;
+        padding: 0px 12px;
         margin: 10px 16px 0 0;
-        height: 20px;
+        height: 28px;
         font-size: 14px;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
@@ -692,7 +698,7 @@ $theme: #0d8dff;
   .dialog-body {
     border-top: 1px solid #d8d8d8;
     padding-top: 7px;
-    :deep .el-tabs__item {
+    :deep(.el-tabs__item) {
       width: 188px;
       height: 56px;
       text-align: left;
@@ -700,15 +706,20 @@ $theme: #0d8dff;
       font-size: 18px;
       padding-left: 24px;
     }
-    :deep .el-tabs .el-tabs__header {
+    :deep(.el-tabs .el-tabs__header) {
       box-shadow: none;
     }
+    :deep(.el-tabs__nav) {
+      background: #fff;
+    }
+
     .el-tabs--left,
     .el-tabs--right {
       border-bottom: 1px solid #d8d8d8;
     }
     :deep .el-tabs__item.is-active {
       background: #f7f8fa;
+      border-radius: 28px;
     }
     .tan-title {
       margin: 14px 0;
@@ -729,12 +740,12 @@ $theme: #0d8dff;
       align-items: center;
       padding: 0 12px;
       margin: 0 16px 16px 0;
-      height: 20px;
+      height: 28px;
       font-size: 14px;
       color: #555;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
     }
     .condition-active {
@@ -819,6 +830,9 @@ $theme: #0d8dff;
     align-items: center;
     margin-left: 8px;
     margin-right: 24px;
+    .o-icon {
+      font-size: 20px;
+    }
     .o-icon:hover {
       color: #0d8dff;
     }
@@ -853,22 +867,24 @@ $theme: #0d8dff;
       align-items: center;
       height: 20px;
       margin-right: 24px;
+      p {
+        color: #555;
+      }
       .o-icon {
         margin-right: 8px;
         svg {
           color: #555;
-          font-size: 16px;
+          font-size: 20px;
         }
       }
     }
     .tag-icon {
       align-self: flex-start;
-      margin-top: 2px;
       margin-right: 8px;
       display: flex;
       align-items: center;
       .o-icon {
-        font-size: 16px;
+        font-size: 20px;
       }
     }
     .handle-overlength {
@@ -943,6 +959,7 @@ $theme: #0d8dff;
       background: #f7f8fa;
       border-radius: 14px;
       border: 1px solid #999999;
+      color: #555;
       white-space: nowrap;
       cursor: pointer;
       margin-right: 4px;

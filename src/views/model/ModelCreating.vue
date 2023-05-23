@@ -94,7 +94,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 500);
+  }, 2000);
 }
 </script>
 

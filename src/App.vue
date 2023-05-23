@@ -514,6 +514,7 @@ function confirmDialog() {
       :show-close="false"
       center
       align-center
+      destroy-on-close
       class="use-dialog"
     >
       <template #header>

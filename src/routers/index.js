@@ -61,7 +61,7 @@ export const routes = [
         await checkEmail();
         next();
       } catch {
-        return;
+        next(false);
       }
     },
     children: [

@@ -12,14 +12,14 @@ import logoImg2 from '@/assets/imgs/logo2.png';
 import warningImg from '@/assets/icons/warning.png';
 
 import { useI18n } from 'vue-i18n';
-import { useLoginStore, useUserInfoStore, useDialogState } from '@/stores';
+import { useLoginStore, useUserInfoStore, useEmailDialogState } from '@/stores';
 import IconUser from '~icons/app/user.svg';
 import { goAuthorize, logout } from '@/shared/login';
 
 const { t, locale } = useI18n();
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
-const useDialog = useDialogState();
+const useDialog = useEmailDialogState();
 
 const loginedDropdownItems = reactive([
   {
@@ -221,7 +221,8 @@ onMounted(() => {
 //   router.push(backUrl.value);
 // }
 const noHeader = ref(false);
-function Scroll(e) {
+// 监听向下滚动
+function scroll(e) {
   e = e || window.event;
   if (e.wheelDelta) {
     if (e.wheelDelta > 0) {
@@ -231,35 +232,35 @@ function Scroll(e) {
     }
   }
 }
-window.onmousewheel = document.onmousewheel = Scroll;
+window.onmousewheel = document.onmousewheel = scroll;
 
-const mobilNav = reactive([
+const mobileNav = reactive([
   {
     name: computed(() => {
       return t('home.APP_HEADER.HOME');
     }),
-    isactive: false,
+    isActive: false,
     path: '/',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.PROJECT');
     }),
-    isactive: false,
+    isActive: false,
     path: '/projects',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.MODEL');
     }),
-    isactive: false,
+    isActive: false,
     path: '/models',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.MODELZOO');
     }),
-    isactive: false,
+    isActive: false,
     children: [
       {
         name: computed(() => {
@@ -279,42 +280,42 @@ const mobilNav = reactive([
     name: computed(() => {
       return t('home.APP_HEADER.DATASET');
     }),
-    isactive: false,
+    isActive: false,
     path: '/datasets',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.INDUSTRY');
     }),
-    isactive: false,
+    isActive: false,
     path: '/estate/electricity',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.COURSE');
     }),
-    isactive: false,
+    isActive: false,
     path: '/course',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.COMPETITION');
     }),
-    isactive: false,
+    isActive: false,
     path: '/competition',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.ACTIVITY');
     }),
-    isactive: false,
+    isActive: false,
     path: '/activity',
   },
   {
     name: computed(() => {
       return t('home.APP_HEADER.DOCUMENT');
     }),
-    isactive: false,
+    isActive: false,
     path: '/docs',
   },
 ]);
@@ -322,27 +323,27 @@ const mobilNav = reactive([
 const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
-  mobilNav[3].isactive = false;
+  mobileNav[3].isActive = false;
 }
 function toPage(path) {
   // if (path === '/') {
-  //   mobilNav[0].isactive = true;
-  //   mobilNav[3].isactive = false;
+  //   mobileNav[0].isActive = true;
+  //   mobileNav[3].isActive = false;
   //   router.push(path);
   // } else
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
-    mobilNav[3].isactive = false;
+    mobileNav[3].isActive = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
-    mobilNav[3].isactive = false;
+    mobileNav[3].isActive = false;
     router.push(path);
   } else {
-    mobilNav[0].isactive = false;
-    mobilNav[3].isactive = true;
+    mobileNav[0].isActive = false;
+    mobileNav[3].isActive = true;
   }
 }
 const handleCommand = () => {
@@ -480,19 +481,19 @@ function confirmDialog() {
     <div class="menu-side" :class="{ 'menu-active': meauActive }">
       <div class="nav">
         <div
-          v-for="item in mobilNav"
+          v-for="item in mobileNav"
           :key="item"
           class="nav-item"
-          :class="{ active: item.isactive }"
+          :class="{ active: item.isActive }"
         >
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
       <div
         class="item-children"
-        :class="{ 'children-active': mobilNav[3].isactive }"
+        :class="{ 'children-active': mobileNav[3].isActive }"
       >
-        <div v-for="item in mobilNav[3].children" :key="item" class="nav-item">
+        <div v-for="item in mobileNav[3].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
@@ -936,6 +937,7 @@ body.el-popup-parent--hidden {
 .use-dialog {
   p {
     font-size: 18px;
+    line-height: 22px;
     color: #555;
   }
   .o-button {

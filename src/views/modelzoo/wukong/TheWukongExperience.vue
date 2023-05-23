@@ -288,7 +288,9 @@ if (isLogined.value) {
             isError.value = true;
           });
       }
-    } catch {}
+    } catch (err) {
+      console.error(err);
+    }
   };
 }
 
@@ -621,47 +623,51 @@ async function handleInfer() {
             );
             socket.onmessage = function (event) {
               isWaiting.value = false;
-              isLine.value = JSON.parse(event.data).data.rank;
-              if (JSON.parse(event.data).data.rank === 0) {
-                inferDisabled.value = false;
-                getPic()
-                  .then((res) => {
-                    inferDisabled.value = false;
-                    if (res.data.length > 2) {
-                      styleBackground1.value = [
-                        res.data[0].link,
-                        res.data[1].link,
-                        res.data[2].link,
-                        res.data[3].link,
-                      ];
-                    } else {
-                      styleBackground1.value = [
-                        res.data[0].link,
-                        res.data[1].link,
-                      ];
-                    }
-                    res.data.forEach((item, index) => {
-                      addWatermark(item.link, index);
-                    });
+              try {
+                isLine.value = JSON.parse(event.data).data.rank;
+                if (JSON.parse(event.data).data.rank === 0) {
+                  inferDisabled.value = false;
+                  getPic()
+                    .then((res) => {
+                      inferDisabled.value = false;
+                      if (res.data.length > 2) {
+                        styleBackground1.value = [
+                          res.data[0].link,
+                          res.data[1].link,
+                          res.data[2].link,
+                          res.data[3].link,
+                        ];
+                      } else {
+                        styleBackground1.value = [
+                          res.data[0].link,
+                          res.data[1].link,
+                        ];
+                      }
+                      res.data.forEach((item, index) => {
+                        addWatermark(item.link, index);
+                      });
 
-                    isLarge.value = false;
-                  })
-                  .catch((err) => {
-                    isWaiting.value = false;
-                    isLine.value = null;
-                    inferDisabled.value = false;
-                    if (
-                      err.response.data.code === 'bigmodel_no_wukong_picture'
-                    ) {
-                      errorMsg.value = '';
-                    } else if (
-                      err.response.data.code === 'bigmodel_sensitive_info'
-                    ) {
-                      errorMsg.value = '内容不合规，请重新输入描述词';
-                    }
-                    isInferred.value = true;
-                    isError.value = true;
-                  });
+                      isLarge.value = false;
+                    })
+                    .catch((err) => {
+                      isWaiting.value = false;
+                      isLine.value = null;
+                      inferDisabled.value = false;
+                      if (
+                        err.response.data.code === 'bigmodel_no_wukong_picture'
+                      ) {
+                        errorMsg.value = '';
+                      } else if (
+                        err.response.data.code === 'bigmodel_sensitive_info'
+                      ) {
+                        errorMsg.value = '内容不合规，请重新输入描述词';
+                      }
+                      isInferred.value = true;
+                      isError.value = true;
+                    });
+                }
+              } catch (err) {
+                console.error(err);
               }
             };
           }, 2000);

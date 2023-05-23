@@ -1398,7 +1398,7 @@ $theme: #0d8dff;
             color: #555;
             border: 1px solid #dbedff;
             background-color: #dbedff;
-            border-radius: 8px;
+            border-radius: 12px;
           }
           .label-add-item {
             height: 20px;

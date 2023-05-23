@@ -492,9 +492,9 @@ function selectFile(item) {
         <span> 返回训练 </span>
       </div>
       <div class="createfile-content">
-        <div class="createfile-content-title">
-          <div class="createfile-content-title-left">创建训练实例</div>
-          <div class="createfile-content-title-right">
+        <div class="createfile-title">
+          <div class="title-left">创建训练实例</div>
+          <div class="title-right">
             <div class="createfile-option">创建配置文件</div>
           </div>
         </div>
@@ -958,20 +958,21 @@ function selectFile(item) {
     .createfile-content {
       padding: 16px 32px;
       background-color: #fff;
+      border-radius: 16px;
 
-      &-title {
+      .createfile-title {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: 48px;
         line-height: 48px;
         margin-bottom: 16px;
-        &-left {
+        .title-left {
           font-size: 18px;
           color: #000;
           cursor: pointer;
         }
-        &-right {
+        .title-right {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -1118,6 +1119,9 @@ function selectFile(item) {
           height: 100%;
         }
       }
+    }
+    .el-form-item__label {
+      margin-left: 4px;
     }
     .el-form-item__label::before {
       width: 18px;

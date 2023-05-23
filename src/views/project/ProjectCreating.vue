@@ -36,7 +36,7 @@ const i18n = {
 const proList = reactive({
   owner: '',
   cover_id: '1',
-  englishName: '',
+  name: '',
   chineseName: '',
   desc: '',
   protocol: '',
@@ -126,13 +126,18 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  if (newList.repo_type === 'Public') {
+  console.log('newList.repo_type: ', newList.repo_type);
+  if (newList.repo_type === '完全公开') {
     newList.repo_type = 'public';
+  } else if (newList.repo_type === '部分公开') {
+    newList.repo_type = 'private'; //TODO:待修改
   } else {
     newList.repo_type = 'private';
   }
+  console.log('newList: ', newList);
   setNewProject(newList)
     .then((res) => {
+      console.log('res: ', res);
       ElMessage({
         type: 'success',
         message: '创建成功',
@@ -207,7 +212,7 @@ onMounted(() => {});
           </div>
           <el-form-item class="pro-name" :label="i18n.storage_name" prop="name">
             <el-input
-              v-model="proList.englishName"
+              v-model="proList.name"
               :placeholder="i18n.input_proName1"
             ></el-input>
             <o-popper></o-popper>
@@ -376,6 +381,7 @@ onMounted(() => {});
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
   padding-bottom: 40px;
+  border-radius: 16px;
   // height: calc(100vh - 558px);
 
   .el-form {
@@ -388,6 +394,7 @@ onMounted(() => {});
       line-height: 22px;
       height: 22px;
       margin-left: 4px;
+      color: #000;
     }
 
     .form-item {
@@ -419,11 +426,13 @@ onMounted(() => {});
       :deep(.item-desc) {
         .el-form-item__label {
           margin-right: 8px;
+          margin-left: 12px;
         }
       }
       :deep(.project-name) {
         .el-form-item__label {
           margin-right: 8px;
+          margin-left: 12px;
         }
       }
     }

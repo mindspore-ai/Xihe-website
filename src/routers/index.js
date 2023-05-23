@@ -57,8 +57,12 @@ export const routes = [
       return import('@/views/TheCreating.vue');
     },
     beforeEnter: async (to, from, next) => {
-      checkEmail();
-      next();
+      try {
+        await checkEmail();
+        next();
+      } catch {
+        return;
+      }
     },
     children: [
       {

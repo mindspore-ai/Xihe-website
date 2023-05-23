@@ -804,6 +804,7 @@ const logoPic = [
         );
         position: absolute;
         bottom: 0;
+        top: unset;
         z-index: 1;
         @media screen and (max-width: 820px) {
           display: none;

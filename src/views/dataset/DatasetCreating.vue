@@ -63,11 +63,6 @@ function create(formEl) {
               type: 'error',
               message: '暂不支持该协议',
             });
-          } else {
-            ElMessage({
-              type: 'error',
-              message: '文件名重复，或文件名不合规',
-            });
           }
         });
     } else {
@@ -89,7 +84,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 500);
+  }, 2000);
 }
 </script>
 
@@ -136,7 +131,7 @@ function checkName(rule, value, callback) {
           {
             pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
             message: '暂不支持中文字符，且长度为3-35个字符',
-            trigger: 'blur',
+            trigger: 'change',
           },
           {
             pattern: /^[^\*/?\\<>|:;]*$/g,

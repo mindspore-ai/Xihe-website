@@ -67,6 +67,9 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+// import { useI18n } from 'vue-i18n';
+// const { t } = useI18n();
+
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -84,75 +87,6 @@ const isError = ref(false);
 
 const styleBackground = ref([]);
 const styleBackground1 = ref([]);
-
-const styleData = ref([
-  {
-    style: '动漫',
-    options: [
-      { tag: '宫崎骏', isSelected: false },
-      { tag: '新海诚', isSelected: false },
-    ],
-  },
-  {
-    style: '经典',
-    options: [
-      { tag: '达芬奇', isSelected: false },
-      { tag: '毕加索', isSelected: false },
-      { tag: '梵高', isSelected: false },
-      { tag: '莫奈', isSelected: false },
-      { tag: '温斯洛.霍默', isSelected: false },
-      { tag: '莫里茨.科内利斯.埃舍尔', isSelected: false },
-    ],
-  },
-  {
-    style: '幻想艺术',
-    options: [
-      { tag: '韦恩.巴洛', isSelected: false },
-      { tag: '格雷格.鲁特科夫斯基', isSelected: false },
-    ],
-  },
-  {
-    style: '更多风格',
-    options: [
-      { tag: '动漫', isSelected: false },
-      { tag: '国风', isSelected: false },
-      { tag: '田园', isSelected: false },
-      { tag: '涂鸦', isSelected: false },
-      { tag: '立体', isSelected: false },
-      { tag: '浮雕', isSelected: false },
-      { tag: '水彩', isSelected: false },
-      { tag: '油画', isSelected: false },
-      { tag: '暗黑', isSelected: false },
-      { tag: '写实', isSelected: false },
-      { tag: '高清', isSelected: false },
-      { tag: '蜡笔画', isSelected: false },
-      { tag: '专业CG艺术', isSelected: false },
-      { tag: '彩色国风水墨', isSelected: false },
-      { tag: '生动色彩', isSelected: false },
-      { tag: '星际漫游', isSelected: false },
-      { tag: '赛博朋克', isSelected: false },
-      { tag: '印象主义', isSelected: false },
-      { tag: '现代主义', isSelected: false },
-      { tag: '巴洛克风格', isSelected: false },
-      { tag: '像素风格', isSelected: false },
-      { tag: '浮世绘', isSelected: false },
-      { tag: '蒸汽波', isSelected: false },
-    ],
-  },
-  {
-    style: '随机风格',
-    options: [],
-  },
-]);
-
-const mobileStyleData = ref([]);
-mobileStyleData.value = [...styleData.value].splice(0, 4);
-const mobileRandomData = ref([
-  {
-    style: '随机风格',
-    options: [],
-  },
-]);
 
 const randomList = ref([
   { tag: '巴洛克', isSelected: false, img: style1 },
@@ -207,6 +141,20 @@ function handleEnlage(value, key) {
   largeImg.value[key] = value;
   largeIndex.value = key;
   isLarge.value = true;
+}
+function handlePreEnlage() {
+  if (largeIndex.value > 0) {
+    largeImg.value = {};
+    largeIndex.value--;
+    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
+  }
+}
+function handleNextEnlage() {
+  if (largeIndex.value < styleBackground.value.length - 1) {
+    largeImg.value = {};
+    largeIndex.value++;
+    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
+  }
 }
 function handleReturn() {
   isLarge.value = false;
@@ -264,7 +212,7 @@ let token = getHeaderConfig().headers
   : null;
 let socket;
 if (isLogined.value) {
-  socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`, [
+  socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank`, [
     token,
   ]);
   socket.onmessage = function (event) {
@@ -273,6 +221,7 @@ if (isLogined.value) {
       if (JSON.parse(event.data).data.rank === 0) {
         getPic()
           .then((res) => {
+            isLine.value = null;
             styleBackground.value = res.data;
             styleBackground.value.forEach((item, index) => {
               inferList.value[index].isCollected = item.is_like;
@@ -307,6 +256,20 @@ if (isLogined.value) {
                     (res) => {
                       styleBackground1.value[1] = res.data.data.link;
                       addWatermark(res.data.data.link, 1);
+                      if (styleBackground.value.length === 4) {
+                        temporaryLink({
+                          link: styleBackground.value[2].link,
+                        }).then((res) => {
+                          styleBackground1.value[2] = res.data.data.link;
+                          addWatermark(res.data.data.link, 2);
+                          temporaryLink({
+                            link: styleBackground.value[3].link,
+                          }).then((res) => {
+                            styleBackground1.value[3] = res.data.data.link;
+                            addWatermark(res.data.data.link, 3);
+                          });
+                        });
+                      }
                     }
                   );
                 }
@@ -415,7 +378,7 @@ async function publicImage(val, index) {
 // 取消公开
 async function cancelPublicImage(i) {
   try {
-    const res = await cancelPublic(inferList.value[i].publicId);
+    await cancelPublic(inferList.value[i].publicId);
     inferList.value[i].publicId = '';
     ElMessage({
       offset: 64,
@@ -570,33 +533,12 @@ function choseStyleSort(val, item) {
     // newStyleData.value[0].isSelected = true;
   }
 }
-// 选择风格标签
-// function choseSortTag(val) {
-//   val.isSelected = !val.isSelected;
-// }
-// 随机风格
-function getRandomStyle(index) {
-  if (index === 0) {
-    const i = Math.floor(Math.random() * randomList.value.length);
-    styleData.value[index].options = mobileRandomData.value.options = [
-      randomList.value[i],
-    ];
-  } else {
-    return;
-  }
-}
 
 // 初始化推理数据
 function initData() {
   sortTag.value = '';
 
   styleBackground.value = [];
-
-  styleData.value.forEach((item) => {
-    item.options.forEach((tag) => {
-      tag.isSelected = false;
-    });
-  });
 
   exampleData.value.forEach((item) => {
     item.isSelected = false;
@@ -629,6 +571,7 @@ function addWatermark(imgUrl, index) {
 
 const errorMsg = ref('');
 // wk推理
+const inferDisabled = ref(false);
 async function handleInfer() {
   if (!isLogined.value) {
     goAuthorize();
@@ -660,9 +603,12 @@ async function handleInfer() {
       ];
 
       try {
+        isLine.value = null;
+        inferDisabled.value = true;
         const res = await wuKongInfer({
           desc: inputText.value,
           style: sortTag.value,
+          img_quantity: imgQuantity.value,
         });
         isInferred.value = true;
         // isWaiting.value = false;
@@ -670,19 +616,30 @@ async function handleInfer() {
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
-              `wss://${DOMAIN}/server/bigmodel/wukong/rank/wukong`,
+              `wss://${DOMAIN}/server/bigmodel/wukong/rank`,
               [getHeaderConfig().headers['private-token']]
             );
             socket.onmessage = function (event) {
               isWaiting.value = false;
               isLine.value = JSON.parse(event.data).data.rank;
               if (JSON.parse(event.data).data.rank === 0) {
+                inferDisabled.value = false;
                 getPic()
                   .then((res) => {
-                    styleBackground1.value = [
-                      res.data[0].link,
-                      res.data[1].link,
-                    ];
+                    inferDisabled.value = false;
+                    if (res.data.length > 2) {
+                      styleBackground1.value = [
+                        res.data[0].link,
+                        res.data[1].link,
+                        res.data[2].link,
+                        res.data[3].link,
+                      ];
+                    } else {
+                      styleBackground1.value = [
+                        res.data[0].link,
+                        res.data[1].link,
+                      ];
+                    }
                     res.data.forEach((item, index) => {
                       addWatermark(item.link, index);
                     });
@@ -692,6 +649,7 @@ async function handleInfer() {
                   .catch((err) => {
                     isWaiting.value = false;
                     isLine.value = null;
+                    inferDisabled.value = false;
                     if (
                       err.response.data.code === 'bigmodel_no_wukong_picture'
                     ) {
@@ -711,6 +669,7 @@ async function handleInfer() {
       } catch (err) {
         isWaiting.value = false;
         isLine.value = null;
+        inferDisabled.value = false;
         if (err.code === 'bigmodel_sensitive_info') {
           errorMsg.value = '内容不合规，请重新输入描述词';
         } else if (err.code === 'bigmodel_resource_busy') {
@@ -859,6 +818,21 @@ function handleResultClcik(i) {
   resultIndex.value = i;
 }
 const showConfirmDlg = ref(false);
+const imgQuantity = ref(4);
+const numOptions = ref([
+  { id: 4, active: true },
+  { id: 2, active: false },
+]);
+function handleNum(index) {
+  numOptions.value.forEach((item, option) => {
+    if (index === option) {
+      item.active = true;
+      imgQuantity.value = item.id;
+    } else {
+      item.active = false;
+    }
+  });
+}
 </script>
 <template>
   <div class="wukong-bread">
@@ -928,7 +902,7 @@ const showConfirmDlg = ref(false);
                 :class="item.isSelected ? 'active-1' : ''"
               />
 
-              <div class="style-item-name" @click="getRandomStyle(index)">
+              <div class="style-item-name">
                 {{ index === 0 ? item.tag1 : item.tag }}
               </div>
             </div>
@@ -953,11 +927,31 @@ const showConfirmDlg = ref(false);
 
             <div class="triangle" :class="`triangle${styleIndex}`"></div>
           </div> -->
+
+          <div class="title num-title">生成数量</div>
+          <div class="option-box">
+            <div
+              class="option"
+              :class="{ 'active-option': numOptions[0].active }"
+              @click="handleNum(0)"
+            >
+              生成4张
+            </div>
+            <div
+              class="option"
+              :class="{ 'active-option': numOptions[1].active }"
+              @click="handleNum(1)"
+            >
+              生成2张
+            </div>
+          </div>
         </div>
       </div>
       <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
-        <o-button type="primary" @click="handleInfer">立即生成</o-button>
+        <o-button type="primary" :disabled="inferDisabled" @click="handleInfer"
+          >立即生成</o-button
+        >
       </div>
     </div>
     <div class="wrap-right">
@@ -997,7 +991,14 @@ const showConfirmDlg = ref(false);
           <p>在左侧选择样例风格开始画画</p>
         </div>
       </div>
-      <div v-else class="img-box">
+      <div
+        v-else
+        class="img-box"
+        :class="{
+          'img-box4': styleBackground.length > 2,
+          'img-large4': isLarge,
+        }"
+      >
         <template v-if="!isLarge">
           <div
             v-for="(value, key, index) in styleBackground"
@@ -1014,27 +1015,11 @@ const showConfirmDlg = ref(false);
         </template>
         <template v-else>
           <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
-            <o-icon
-              class="turn"
-              @click="
-                handleEnlage(
-                  Object.values(styleBackground)[0],
-                  Object.keys(styleBackground)[0],
-                  0
-                )
-              "
+            <o-icon class="turn" @click="handlePreEnlage"
               ><icon-left></icon-left
             ></o-icon>
             <img :src="value" alt="" />
-            <o-icon
-              class="turn"
-              @click="
-                handleEnlage(
-                  Object.values(styleBackground)[1],
-                  Object.keys(styleBackground)[1],
-                  1
-                )
-              "
+            <o-icon class="turn" @click="handleNextEnlage"
               ><icon-right2></icon-right2
             ></o-icon>
             <div class="handles">
@@ -1186,7 +1171,7 @@ const showConfirmDlg = ref(false);
               :class="item.isSelected ? 'active-1' : ''"
             />
 
-            <div class="style-item-name" @click="getRandomStyle(index)">
+            <div class="style-item-name">
               {{ index === 0 ? item.tag1 : item.tag }}
             </div>
 
@@ -1210,6 +1195,24 @@ const showConfirmDlg = ref(false);
         </div>
         <div v-if="isAllStyle" class="all-kind retract" @click="retract">
           收起
+        </div>
+
+        <div class="title num-title">生成数量</div>
+        <div class="option-box">
+          <div
+            class="option"
+            :class="{ 'active-option': numOptions[0].active }"
+            @click="handleNum(0)"
+          >
+            生成4张
+          </div>
+          <div
+            class="option"
+            :class="{ 'active-option': numOptions[1].active }"
+            @click="handleNum(1)"
+          >
+            生成2张
+          </div>
         </div>
 
         <!-- <div class="style-tag">
@@ -1282,7 +1285,11 @@ const showConfirmDlg = ref(false);
         <template v-else> </template>
       </div>
 
-      <div v-if="styleBackground.length" class="infer-dlg-result">
+      <div
+        v-if="styleBackground.length"
+        class="infer-dlg-result"
+        :class="{ 'infer-dlg-result4': styleBackground.length > 2 }"
+      >
         <!-- mobile -->
         <div
           v-for="(value, key) in styleBackground"
@@ -1472,7 +1479,7 @@ const showConfirmDlg = ref(false);
 .wukong-bread {
   padding-top: 104px;
   padding-left: 16px;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   @media screen and (max-width: 820px) {
     padding-top: 64px;
@@ -1611,6 +1618,9 @@ const showConfirmDlg = ref(false);
       }
     }
   }
+}
+.infer-dlg-result4 {
+  grid-template-columns: repeat(2, 1fr);
 }
 .infer-dlg-loading {
   display: flex;
@@ -1954,6 +1964,7 @@ const showConfirmDlg = ref(false);
     background: rgba(255, 255, 255, 0.95);
     border-top-right-radius: 16px;
     border-top-left-radius: 16px;
+    padding: 0 16px;
   }
   .mobile-result-item {
     .handles {
@@ -2124,14 +2135,15 @@ const showConfirmDlg = ref(false);
         height: 6px;
       }
       @media screen and (max-width: 476px) {
-        height: 365px;
+        height: 455px;
         padding-bottom: 55px;
       }
       .style-tag {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-content: space-between;
         column-gap: 50px;
+        justify-items: center;
         @media screen and (max-width: 476px) {
           gap: 12px;
         }
@@ -2214,6 +2226,46 @@ const showConfirmDlg = ref(false);
           color: #b2b2b2;
         }
       }
+
+      .option-box {
+        display: flex;
+        margin: 16px 0 0;
+        font-size: 14px;
+        height: 36px;
+        line-height: 36px;
+        color: #555;
+        .option {
+          display: flex;
+          align-items: center;
+          padding: 0 16px;
+          background-color: rgba(13, 141, 255, 0.1);
+          border-radius: 8px;
+          cursor: pointer;
+          &:last-child {
+            span {
+              height: 12px;
+            }
+          }
+        }
+        .active-option {
+          color: #008eff;
+          span {
+            border: 1px solid #008eff;
+          }
+        }
+        span {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #555;
+          line-height: 36px;
+          border-radius: 2px;
+          margin-right: 8px;
+        }
+        .option + .option {
+          margin-left: 16px;
+        }
+      }
     }
   }
   .experience-btn {
@@ -2247,7 +2299,7 @@ const showConfirmDlg = ref(false);
 .wk-experience {
   display: flex;
   width: 100%;
-  max-width: 1472px;
+  max-width: 1448px;
   padding: 24px 16px 64px;
   margin: 0 auto;
 
@@ -2355,6 +2407,30 @@ const showConfirmDlg = ref(false);
         cursor: pointer;
       }
     }
+    .img-box4 {
+      justify-content: center;
+      flex-wrap: wrap;
+      display: grid;
+      max-width: 624px;
+      max-height: 624px;
+      margin: 0 auto;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      img {
+        max-height: 300px;
+        width: auto;
+      }
+    }
+    .img-large4 {
+      display: flex;
+      max-width: unset;
+      .result-item1 {
+        img {
+          max-height: 580px;
+          max-width: 580px;
+        }
+      }
+    }
     /* pc生成图片 */
     .result-item1 {
       position: relative;
@@ -2460,6 +2536,10 @@ const showConfirmDlg = ref(false);
                 left: 30px;
               }
             }
+            p {
+              position: relative;
+              z-index: 11;
+            }
             .arrow {
               position: absolute;
               left: 25px;
@@ -2521,7 +2601,7 @@ const showConfirmDlg = ref(false);
   .title {
     font-size: 16px;
     font-weight: 400;
-    color: #555;
+    color: #000;
     line-height: 25px;
     margin-right: 24px;
   }
@@ -2588,13 +2668,16 @@ const showConfirmDlg = ref(false);
       display: flex;
       justify-content: space-between;
     }
+    .num-title {
+      padding-top: 8px;
+    }
     @media screen and (max-width: 820px) {
       flex-direction: column;
       margin-top: 16px;
     }
     .content {
       flex: 1;
-      height: 380px;
+      height: 465px;
       padding-bottom: 67px;
       overflow: auto;
       margin-top: 16px;
@@ -2721,6 +2804,45 @@ const showConfirmDlg = ref(false);
         transform: rotate(180deg);
       }
     }
+    .option-box {
+      display: flex;
+      margin: 16px 24px 0;
+      font-size: 14px;
+      height: 36px;
+      line-height: 36px;
+      color: #555;
+      .option {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        background-color: rgba(13, 141, 255, 0.1);
+        border-radius: 8px;
+        cursor: pointer;
+        &:last-child {
+          span {
+            height: 12px;
+          }
+        }
+      }
+      .active-option {
+        color: #008eff;
+        span {
+          border: 1px solid #008eff;
+        }
+      }
+      span {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #555;
+        line-height: 36px;
+        border-radius: 2px;
+        margin-right: 8px;
+      }
+      .option + .option {
+        margin-left: 16px;
+      }
+    }
   }
   .wk-experience-btn {
     background-image: url('@/assets/imgs/wukong/button-bg.png');
@@ -2743,7 +2865,7 @@ const showConfirmDlg = ref(false);
     padding-top: 24px;
     background: rgba(255, 255, 255, 0.8);
     position: absolute;
-    bottom: 40px;
+    bottom: 39px;
     width: 100%;
     backdrop-filter: blur(10px);
   }

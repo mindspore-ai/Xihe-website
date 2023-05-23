@@ -3,7 +3,7 @@ import handleResponse from './handleResponse';
 import handleError from './handleError';
 import setConfig from './setConfig';
 
-import { useLoadingState } from '@/stores/index';
+import { useLoadingState, useDialogState } from '@/stores/index';
 
 import { ElLoading } from 'element-plus';
 import { goAuthorize, saveUserAuth } from '@/shared/login';
@@ -93,6 +93,9 @@ const responseInterceptorId = request.interceptors.response.use(
         saveUserAuth();
         goAuthorize();
       }
+      if (err.response.data.code === 'user_no_email') {
+        useDialogState().dialogState = true;
+      }
     } else {
       // 没有response(没有状态码)的情况
       // eg: 超时；断网；请求重复被取消；主动取消请求；
@@ -105,7 +108,11 @@ const responseInterceptorId = request.interceptors.response.use(
         err.msg = '连接服务器失败!';
       }
     }
-    if (!config.$doException) {
+    if (
+      !config.$doException &&
+      err.response &&
+      err.response.data.code !== 'user_no_email'
+    ) {
       ElMessage({
         type: 'error',
         message: err.msg,

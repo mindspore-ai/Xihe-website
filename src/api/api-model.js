@@ -144,9 +144,11 @@ export function createModelStore(params) {
 }
 export function checkNames(params) {
   const url = `/server/model/${params.owner}/${params.name}/check`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 /**
  * 添加相关数据集（查询数据集信息）

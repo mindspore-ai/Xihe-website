@@ -17,8 +17,11 @@ const router = useRouter();
 const i18n = {
   create: '新建项目',
   owner: '拥有者',
+
+  storage_name: '仓库名称',
   pro_name: '项目名称',
-  input_proName: '请填写项目名称',
+  input_proName1: '请填写项目英文名称',
+  input_proName2: '请填写项目中文名称',
   pro_img: '项目封面',
   desc: '描述',
   input_text: '请输入内容',
@@ -33,7 +36,8 @@ const i18n = {
 const proList = reactive({
   owner: '',
   cover_id: '1',
-  name: '',
+  englishName: '',
+  chineseName: '',
   desc: '',
   protocol: '',
   training: '',
@@ -196,17 +200,26 @@ onMounted(() => {});
             </el-select>
           </el-form-item>
         </div>
-        <!-- 项目名称 -->
+        <!-- 仓库名称 -->
         <div class="form-item">
           <div class="warning">
             <o-icon><icon-necessary></icon-necessary></o-icon>
           </div>
-          <el-form-item class="pro-name" :label="i18n.pro_name" prop="name">
+          <el-form-item class="pro-name" :label="i18n.storage_name" prop="name">
             <el-input
-              v-model="proList.name"
-              :placeholder="i18n.input_proName"
+              v-model="proList.englishName"
+              :placeholder="i18n.input_proName1"
             ></el-input>
             <o-popper></o-popper>
+          </el-form-item>
+        </div>
+        <!-- 项目名称 -->
+        <div class="form-item">
+          <el-form-item class="project-name" :label="i18n.pro_name">
+            <el-input
+              v-model="proList.chineseName"
+              :placeholder="i18n.input_proName2"
+            ></el-input>
           </el-form-item>
         </div>
         <!-- 项目封面 -->
@@ -297,22 +310,28 @@ onMounted(() => {});
           <el-form-item class="view" :label="i18n.view">
             <div class="visual">
               <el-radio-group v-model="proList.repo_type">
-                <el-radio label="Public" />
+                <el-radio label="完全公开" />
               </el-radio-group>
-              <div class="visual-desc">所有人可见</div>
+              <div class="visual-desc">
+                其他用户可浏览、收藏、下载你的项目，但仅有你及你的团队成员才可编辑此项目
+              </div>
               <el-radio-group v-model="proList.repo_type">
-                <el-radio label="Private" />
+                <el-radio label="部分公开" />
               </el-radio-group>
-              <div class="visual-desc">仅自己可见</div>
+              <div class="visual-desc">
+                其他用户可浏览、收藏你的项目，但仅有你及你的团队可以下载文件和编辑项目
+              </div>
+              <el-radio-group v-model="proList.repo_type">
+                <el-radio label="私有" />
+              </el-radio-group>
+              <div class="visual-desc">
+                其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目
+              </div>
             </div>
           </el-form-item>
         </div>
-        <div class="obuton">
-          <!-- <el-form-item> -->
-          <o-button style="margin-top: 48px" type="primary" @click="submitClick"
-            >保存</o-button
-          >
-          <!-- </el-form-item> -->
+        <div class="save-btn">
+          <o-button type="primary" @click="submitClick">保存</o-button>
         </div>
       </el-form>
     </div>
@@ -352,13 +371,12 @@ onMounted(() => {});
   position: relative;
   margin: 0 auto;
   max-width: 1416px;
-  min-height: 972px;
-  // margin-bottom: 64px;
+  min-height: 1165px;
   background: #ffffff;
   box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
-  padding-bottom: 48px;
-  height: calc(100vh - 558px);
+  padding-bottom: 40px;
+  // height: calc(100vh - 558px);
 
   .el-form {
     width: 520px;
@@ -369,6 +387,7 @@ onMounted(() => {});
       padding-right: 22px;
       line-height: 22px;
       height: 22px;
+      margin-left: 4px;
     }
 
     .form-item {
@@ -397,9 +416,14 @@ onMounted(() => {});
         display: flex;
         align-items: center;
       }
-      :deep .item-desc {
+      :deep(.item-desc) {
         .el-form-item__label {
-          margin-right: 8px !important;
+          margin-right: 8px;
+        }
+      }
+      :deep(.project-name) {
+        .el-form-item__label {
+          margin-right: 8px;
         }
       }
     }
@@ -413,6 +437,7 @@ onMounted(() => {});
           width: 152px;
           height: 85px;
           cursor: pointer;
+          border-radius: 16px;
         }
         .img-modal {
           position: absolute;
@@ -421,6 +446,7 @@ onMounted(() => {});
           width: 157px;
           height: 90px;
           z-index: 100;
+          border-radius: 16px;
           background-color: rgba(165, 213, 255, 0.5);
           display: none;
         }
@@ -457,12 +483,14 @@ onMounted(() => {});
       }
     }
 
-    .obuton {
+    .save-btn {
       display: flex;
       justify-content: center;
+      margin-top: 40px;
     }
-    .view {
+    .view.el-form-item {
       display: flex;
+      align-items: flex-start;
       margin-bottom: 0px;
       :deep .el-form-item__label {
         height: 128px !important;
@@ -477,10 +505,20 @@ onMounted(() => {});
         padding-left: 22px;
         color: #999999;
         font-size: 14px;
+        line-height: 22px;
       }
-      .el-radio {
-        margin-right: 12px;
-        width: 72px;
+      .el-radio-group {
+        margin-bottom: 5px;
+        .el-radio {
+          line-height: 22px;
+          margin-right: 12px;
+          width: 72px;
+          color: #000000;
+          font-weight: 400;
+        }
+        &:not(:first-child) {
+          margin-top: 17px;
+        }
       }
     }
   }

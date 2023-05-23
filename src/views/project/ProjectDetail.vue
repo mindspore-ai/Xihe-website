@@ -7,6 +7,8 @@ import IconClear from '~icons/app/clear';
 import IconCopy from '~icons/app/copy-nickname';
 import IconPlus from '~icons/app/plus';
 import IconFork from '~icons/app/fork';
+import IconTag from '~icons/app/icon-tag';
+import IconTime from '~icons/app/time';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -180,6 +182,7 @@ const forkForm = reactive({
   owner: null,
   storeName: null,
   describe: null,
+  projectName: null,
 });
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
@@ -412,6 +415,17 @@ function confirmBtn() {
     }
   );
   isTagShow.value = false;
+  if (detailData.value?.id) {
+    nextTick(() => {
+      tagRef.value.forEach((item) => {
+        sumWidth.value += item.offsetWidth + 4;
+      });
+      containerWidth.value = containerRef.value.offsetWidth;
+
+      isWrap.value = sumWidth.value - containerWidth.value > 28 ? true : false;
+      sumWidth.value = 0;
+    });
+  }
 }
 
 // 取消
@@ -499,6 +513,10 @@ function forkCreateClick() {
   });
 }
 
+const nameList = ref([]);
+nameList.value.push(userInfoStore.userName);
+forkForm.owner = nameList.value[0];
+
 function forkClick() {
   checkEmail().then(() => {
     forkShow.value = true;
@@ -550,6 +568,15 @@ watch(
   }
 );
 
+const isExpand = ref(false);
+
+function checkAllTags(val) {
+  isExpand.value = val;
+}
+function retractAlltags(val) {
+  isExpand.value = val;
+}
+
 let time = null;
 function checkName(rule, value, callback) {
   if (time !== null) {
@@ -572,6 +599,29 @@ function openJupyter() {
     `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
   );
 }
+
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
+watch(
+  () => detailData.value,
+  () => {
+    if (detailData.value?.id) {
+      nextTick(() => {
+        tagRef.value.forEach((item) => {
+          sumWidth.value += item.offsetWidth + 4;
+        });
+        containerWidth.value = containerRef.value.offsetWidth;
+        isWrap.value =
+          sumWidth.value - containerWidth.value > 28 ? true : false;
+        sumWidth.value = 0;
+      });
+    }
+  }
+);
 </script>
 
 <template>
@@ -579,8 +629,51 @@ function openJupyter() {
     <textarea ref="inputDom" class="input-dom"></textarea>
     <div class="card-head wrap">
       <div class="head-top">
-        <div>
-          <div class="card-head-1">
+        <div class="card-head-info">
+          <p class="head-info-desc">
+            项目中文名项目中文名项目中文名项目中文名…
+          </p>
+          <div class="project-handle">
+            <div class="head-info-likes">
+              <train-likes
+                v-if="userInfoStore.userName !== detailData.owner"
+                :is-digged="isDigged"
+                :dig-count="detailData.like_count"
+                class="loves"
+                @click="handleProjectLike"
+              ></train-likes>
+            </div>
+            <div class="fork-btn">
+              <o-button
+                v-if="userInfoStore.userName !== detailData.owner"
+                size="small"
+                @click="forkClick"
+              >
+                <div class="fork-icon">
+                  <o-icon><icon-fork></icon-fork></o-icon> Fork
+                </div>
+              </o-button>
+            </div>
+            <div
+              v-if="
+                loginStore.isLogined &&
+                userInfoStore.userName === detailData.owner
+              "
+              class="jupyter-btn"
+            >
+              <o-button type="primary" @click="openJupyter">
+                打开Jupyter
+              </o-button>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          ResNet50-plain derived by resiudal distillation method, and is used to
+          classify 10 classes of classify 10 classes ofclassify 10 classes
+          ofclassify 10 classes ofclassify 10 cl …
+        </div>
+        <div class="card-detail">
+          <div class="detail-left">
             <div class="avatar">
               <img :src="detailData.avatar_id" alt="" />
             </div>
@@ -595,41 +688,54 @@ function openJupyter() {
             >
               <o-icon><icon-copy></icon-copy></o-icon>
             </div>
-            <div v-if="userInfoStore.userName !== detailData.owner">
-              <train-likes
-                :is-digged="isDigged"
-                :dig-count="detailData.like_count"
-                class="loves"
-                @click="handleProjectLike"
-              ></train-likes>
+            <div class="card-head-time">
+              <o-icon>
+                <icon-time> </icon-time>
+              </o-icon>
+              <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
             </div>
           </div>
           <div class="label-box">
-            <div v-for="label in modelTags" :key="label" class="label-item">
-              {{ label.name }}
-            </div>
+            <p class="tag-icon">
+              <o-icon>
+                <icon-tag></icon-tag>
+              </o-icon>
+            </p>
             <div v-if="isShow" class="label-add-item" @click="addTagClick">
               <o-icon><icon-plus></icon-plus></o-icon>
               添加标签
             </div>
-          </div>
-        </div>
-        <div>
-          <o-button
-            v-if="userInfoStore.userName !== detailData.owner"
-            @click="forkClick"
-          >
-            <div class="fork-btn">
-              <o-icon><icon-fork></icon-fork></o-icon> Fork
+            <div
+              ref="containerRef"
+              class="label-box-left"
+              :class="isExpand ? 'tags-expand' : 'tags-retract'"
+            >
+              <div
+                v-for="(label, index) in modelTags"
+                :key="index"
+                ref="tagRef"
+                class="label-item"
+              >
+                {{ label.name }}
+              </div>
+
+              <template v-if="isWrap">
+                <div
+                  v-if="!isExpand"
+                  class="check-tags"
+                  @click="checkAllTags(true)"
+                >
+                  查看全部
+                  <div class="tags-mask"></div>
+                </div>
+
+                <div v-else class="retract-tags" @click="retractAlltags(false)">
+                  收起
+                  <div class="tags-mask"></div>
+                </div>
+              </template>
             </div>
-          </o-button>
-        </div>
-        <div
-          v-if="
-            loginStore.isLogined && userInfoStore.userName === detailData.owner
-          "
-        >
-          <o-button type="primary" @click="openJupyter">打开Jupyter</o-button>
+          </div>
         </div>
       </div>
       <div class="head-tabs">
@@ -786,6 +892,14 @@ function openJupyter() {
         center
         align-center
       >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
+            <div class="fork-title">创建Fork</div>
+            <div class="fork-intro">
+              允许用户使用自定义数据集和模型进行实践而不会对原有的项目做改动
+            </div>
+          </div>
+        </template>
         <el-form
           ref="ruleFormRef"
           :model="forkForm"
@@ -793,12 +907,30 @@ function openJupyter() {
           :label-position="tabPosition"
           hide-required-asterisk
         >
+          <el-form-item label="拥有者" prop="owner">
+            <el-select v-model="forkForm.owner">
+              <el-option v-for="item in nameList" :key="item" :value="item">
+                {{ item }}
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="仓库名称" class="store-name" prop="storeName">
             <el-input
               v-model="forkForm.storeName"
               placeholder="请输入仓库名称"
             ></el-input>
             <o-popper></o-popper>
+          </el-form-item>
+          <el-form-item
+            label="项目名称"
+            class="project-name"
+            prop="projectName"
+          >
+            <el-input
+              v-model="forkForm.projectName"
+              placeholder="请输入项目中文名称"
+            ></el-input>
+            <!-- <o-popper></o-popper> -->
           </el-form-item>
           <el-form-item label="描述" prop="describe" class="fork-desc">
             <el-input
@@ -868,11 +1000,20 @@ $theme: #0d8dff;
 }
 .fork-dialog {
   :deep .el-dialog {
-    // min-height: 502px;
-    --el-dialog-margin-top: 24vh;
-    .el-dialog__title {
-      font-size: 24px;
-      line-height: 32px;
+    .el-dialog__header {
+      .fork-title {
+        line-height: 32px;
+        font-size: 24px;
+        font-weight: normal;
+        color: #000000;
+        margin-bottom: 16px;
+      }
+      .fork-intro {
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: normal;
+        color: #999999;
+      }
     }
     .el-form {
       display: flex;
@@ -1070,114 +1211,214 @@ $theme: #0d8dff;
 }
 .model-detail {
   background-color: #fff;
-  .card-head-top {
-    display: flex;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: #555;
-    & > span:hover {
-      cursor: pointer;
-      color: #0d8dff;
-    }
-  }
-
   .card-head {
     padding-top: 105px;
     .head-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .fork-btn {
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      .o-icon {
-        font-size: 24px;
-        margin-right: 8px;
-      }
-    }
-    .card-head-1 {
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
-      font-size: 24px;
-      color: #555;
-      a {
-        color: inherit;
-      }
-      & > span:hover,
-      & > a:hover {
-        cursor: pointer;
-        color: #0d8dff;
-      }
-      .avatar img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 8px;
-        background-color: #3d8df7;
-      }
-      .card-head-copy {
-        cursor: pointer;
+      .card-head-info {
         display: flex;
-        align-items: center;
-        margin-left: 8px;
-        font-size: 24px;
-        .o-icon:hover {
-          color: #0d8dff;
+        justify-content: space-between;
+        .head-info-desc {
+          flex: 1;
+          font-size: 24px;
+          color: #555555;
+          line-height: 38px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .project-handle {
+          display: flex;
+          align-items: center;
+          .head-info-likes {
+            margin-right: 8px;
+          }
+          .fork-btn {
+            font-size: 14px;
+            .o-button {
+              min-width: 97px;
+              max-height: 36px;
+              padding: 10px 16px !important;
+              display: flex;
+              align-items: center;
+            }
+            .fork-icon {
+              font-size: 14px;
+              display: flex;
+              align-items: center;
+              .o-icon {
+                font-size: 16px;
+                margin-right: 8px;
+              }
+            }
+          }
+          .jupyter-btn {
+            .o-button {
+              height: 36px;
+              font-size: 14px;
+              padding: 6px 16px !important;
+            }
+          }
         }
       }
-      .loves {
-        cursor: pointer;
-        margin-left: 40px;
+      .card-desc {
+        max-width: 80%;
+        margin: 10px 0 25px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 14px;
-        line-height: 18px;
+      }
+      .card-detail {
         display: flex;
         align-items: center;
-        span {
-          margin-left: 6px;
+        margin-bottom: 25px;
+        align-items: flex-start;
+        .detail-left {
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          color: #555;
+          a {
+            color: inherit;
+          }
+          & > span:hover,
+          & > a:hover {
+            cursor: pointer;
+            color: #0d8dff;
+          }
+          .avatar img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: #3d8df7;
+          }
+          .card-head-copy {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+            font-size: 16px;
+            .o-icon:hover {
+              color: #0d8dff;
+            }
+          }
+          .card-head-time {
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            height: 20px;
+            margin: 0 24px;
+            .o-icon {
+              margin-right: 8px;
+              svg {
+                color: #555;
+                font-size: 16px;
+              }
+            }
+          }
+          .loves {
+            cursor: pointer;
+            margin-left: 40px;
+            font-size: 14px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+            span {
+              margin-left: 6px;
+            }
+            .o-icon:hover {
+              svg {
+                fill: rgba(13, 141, 255, 1);
+              }
+            }
+          }
         }
-        .o-icon:hover {
-          svg {
-            fill: rgba(13, 141, 255, 1);
+        .label-box {
+          display: flex;
+          align-items: flex-start;
+          flex-wrap: nowrap;
+          font-size: 12px;
+          .tags-retract {
+            height: 20px;
+            overflow-y: hidden;
+          }
+          .tags-expand {
+            height: auto;
+            overflow: unset;
+          }
+          .label-box-left {
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            .check-tags,
+            .retract-tags {
+              position: absolute;
+              right: 0;
+              bottom: 0px;
+              font-size: 14px;
+              color: #555555;
+              line-height: 18px;
+              padding: 2px 4px;
+              background: #fff;
+              cursor: pointer;
+
+              .tags-mask {
+                position: absolute;
+                left: -49px;
+                top: 0;
+                width: 49px;
+                height: 20px;
+                background: linear-gradient(
+                  90deg,
+                  rgba(255, 255, 255, 0) 0%,
+                  #ffffff 100%
+                );
+              }
+            }
+            .retract-tags {
+              bottom: 16px;
+            }
+          }
+          .tag-icon {
+            margin-right: 8px;
+            .o-icon svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+          .label-item {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0px 8px;
+            height: 20px;
+            margin-right: 4px;
+            margin-bottom: 8px;
+            color: #555;
+            border: 1px solid #dbedff;
+            background-color: #dbedff;
+            border-radius: 8px;
+          }
+          .label-add-item {
+            height: 20px;
+            padding: 0px 8px;
+            background: #f7f8fa;
+            border-radius: 8px;
+            border: 1px solid #999999;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-right: 4px;
+            white-space: nowrap;
+            .o-icon {
+              margin-right: 4px;
+            }
           }
         }
       }
     }
-    .label-box {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 8px 0;
-      font-size: 14px;
-      .label-item {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 0px 12px;
-        height: 28px;
-        margin-right: 8px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: #555;
-        border: 1px solid #dbedff;
-        background-color: #f3f9ff;
-        border-radius: 8px;
-      }
-      .label-add-item {
-        height: 28px;
-        padding: 0px 12px;
-        background: #f7f8fa;
-        border-radius: 8px;
-        border: 1px solid #999999;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        .o-icon {
-          margin-right: 4px;
-        }
-      }
-    }
+
     .head-tabs {
       .status {
         display: inline-block;
@@ -1201,6 +1442,7 @@ $theme: #0d8dff;
         display: none;
       }
       .el-tabs {
+        --o-tabs-header-font_size: 16px;
         :deep(.el-tabs__nav) {
           display: flex;
           .el-tabs__item {

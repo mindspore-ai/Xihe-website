@@ -23,6 +23,9 @@ const userInfoStore = useUserInfoStore();
 const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
+  newName: {
+    title: '新项目名',
+  },
   visible: {
     title: '仓库属性',
     description: '更改描述',
@@ -39,7 +42,7 @@ const i18n = {
         label: 'Public',
         id: 2,
         describe:
-          '其他用户将无法搜索、查看你的模项目，仅你及你的团队成员可查看和编辑此项目。',
+          '其他用户可浏览、收藏、下载你的项目，但仅有你及你的团队成员才可编辑此项目。',
       },
     ],
     btnText: '保存更改',
@@ -47,10 +50,11 @@ const i18n = {
   rename: {
     title: '重命名和转移',
     newOwn: '新拥有者',
-    newName: '新项目名',
+    newName: '新仓库名',
     placeholder: '请输入项目名',
-    describe: '你可重命名项目，并转移你的项目至组织。',
-    btnText: '保存更改',
+    placeholder2: '请输入新项目中文名',
+    describe: '你可重命名项目仓库，并转移你的项目仓库至组织。',
+    btnText: '确定',
   },
   covers: {
     title: '项目封面',
@@ -214,66 +218,88 @@ function toggleDelDlg(flag) {
   <div class="setting-wrap">
     <div class="setting-inner">
       <div class="setting-main">
-        <div class="setting-title">{{ i18n.visible.title }}</div>
-        <o-select
-          :select-data="visibleOptions"
-          keys="value"
-          value="value"
-          :default-value="i18n.visible.options[visibleIndex].value"
-          @click="getIndex"
-          @change="getVisiableSelect"
-        ></o-select>
-        <p class="setting-tip">
-          {{ i18n.visible.options[visibleIndex].describe }}
-        </p>
-        <!-- 封面 -->
-        <h4 class="setting-title">{{ i18n.covers.title }}</h4>
-        <div class="photo_container">
-          <div v-for="item in photos" :key="item.id" class="container-single">
-            <div
-              class="img-modal"
-              :class="item.is_active ? 'select_active' : ''"
-              @click="selectImgClick(item)"
-            ></div>
-            <img :src="item.url" alt="" />
+        <!-- 新项目名 -->
+        <div class="setting-item">
+          <div class="setting-title">{{ i18n.newName.title }}</div>
+          <div class="attribute-option">
+            <el-input :placeholder="i18n.rename.placeholder2"> </el-input>
           </div>
         </div>
-        <!-- <o-button @click="confirmAmend">{{ i18n.visible.btnText }}</o-button> -->
+        <!-- 仓库属性 -->
+        <div class="setting-item">
+          <div class="setting-title">{{ i18n.visible.title }}</div>
+          <div class="attribute-option">
+            <o-select
+              :select-data="visibleOptions"
+              keys="value"
+              value="value"
+              :default-value="i18n.visible.options[visibleIndex].value"
+              @click="getIndex"
+              @change="getVisiableSelect"
+            ></o-select>
+            <p v-if="visibleIndex === '0'" class="setting-tip">
+              {{ i18n.visible.options[visibleIndex].describe }}
+            </p>
+            <p v-else class="setting-tip">
+              {{ i18n.visible.options[visibleIndex].describe }}
+            </p>
+          </div>
+        </div>
         <!-- 新增更改描述 -->
-        <div class="setting-title description">
-          {{ i18n.visible.description }}
+        <div class="setting-item">
+          <div class="setting-title description">
+            {{ i18n.visible.description }}
+          </div>
+          <el-input
+            v-model="description"
+            :rows="2"
+            type="textarea"
+            maxlength="100"
+            show-word-limit
+          />
         </div>
-        <el-input
-          v-model="description"
-          :rows="2"
-          type="textarea"
-          maxlength="100"
-          show-word-limit
-        />
-        <o-button style="margin-bottom: 40px" @click="confirmPrivate">{{
-          i18n.visible.btnText
-        }}</o-button>
 
-        <div class="setting-title">
-          {{ i18n.rename.title }}
-          <el-divider />
+        <!-- 封面 -->
+        <div class="setting-item">
+          <h4 class="setting-title">{{ i18n.covers.title }}</h4>
+          <div class="photo_container">
+            <div v-for="item in photos" :key="item.id" class="container-single">
+              <div
+                class="img-modal"
+                :class="item.is_active ? 'select_active' : ''"
+                @click="selectImgClick(item)"
+              ></div>
+              <img :src="item.url" alt="" />
+            </div>
+          </div>
         </div>
-        <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
-        <o-select
-          :select-data="organizationAdminList"
-          :placeholder="detailData.owner"
-          keys="id"
-          value="detailData.name"
-          @change="getOwnSelect"
-        ></o-select>
+        <o-button style="margin-left: 112px" @click="confirmPrivate">
+          {{ i18n.visible.btnText }}
+        </o-button>
+      </div>
+      <el-divider />
+      <div class="setting-main">
+        <div class="rename-title">
+          {{ i18n.rename.title }}
+        </div>
+        <div class="setting-item">
+          <p class="setting-title">{{ i18n.rename.newOwn }}</p>
+          <o-select
+            :select-data="organizationAdminList"
+            :placeholder="detailData.owner"
+            keys="id"
+            value="detailData.name"
+            @change="getOwnSelect"
+          ></o-select>
+        </div>
         <el-form
           ref="queryRef"
-          class="creating-box"
+          class="setting-item"
           :model="query"
           prop="region"
           @submit.prevent
         >
-          <p class="setting-tip">{{ i18n.rename.newName }}</p>
+          <p class="setting-title">{{ i18n.rename.newName }}</p>
           <el-form-item
             class="item"
             prop="name"
@@ -326,22 +352,24 @@ function toggleDelDlg(flag) {
             </el-popover>
           </el-form-item>
         </el-form>
-
         <p class="setting-tip">{{ i18n.rename.describe }}</p>
-        <o-button
-          style="margin-bottom: 40px"
-          @click="confirmRename(queryRef)"
-          >{{ i18n.rename.btnText }}</o-button
-        >
-
+        <o-button style="margin-left: 112px" @click="confirmRename(queryRef)">
+          {{ i18n.rename.btnText }}
+        </o-button>
+      </div>
+      <el-divider />
+      <div class="setting-main">
         <h4 class="setting-title">
           {{ i18n.delete.title }}
-          <el-divider />
         </h4>
-        <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button status="error" class="delete-btn" @click="showDel = true">{{
-          i18n.delete.btnText
-        }}</o-button>
+        <p class="setting-tip describe">{{ i18n.delete.describe }}</p>
+        <o-button
+          style="margin-left: 112px"
+          status="error"
+          class="delete-btn"
+          @click="showDel = true"
+          >{{ i18n.delete.btnText }}</o-button
+        >
       </div>
       <el-dialog
         v-model="showDel"
@@ -425,22 +453,32 @@ function toggleDelDlg(flag) {
 }
 .setting-inner {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   background-color: #fff;
-  // min-height: 100vh;
   min-height: calc(100vh - 554px);
   .setting-main {
     max-width: 756px;
-    margin-bottom: 40px;
+    padding: 40px 0px;
     width: 100%;
+    .rename-title {
+      line-height: 24px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #000000;
+      margin-bottom: 24px;
+    }
     .photo_container {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 152px);
+      grid-template-rows: repeat(2, 86px);
+      grid-gap: 17px;
       .container-single {
         position: relative;
         img {
           width: 152px;
           height: 86px;
-          margin: 0 16px 24px 0;
+          border-radius: 16px;
         }
         .img-modal {
           position: absolute;
@@ -449,6 +487,7 @@ function toggleDelDlg(flag) {
           width: 157px;
           height: 90px;
           z-index: 5;
+          border-radius: 16px;
           background-color: rgba(165, 213, 255, 0.5);
           display: none;
         }
@@ -483,8 +522,8 @@ function toggleDelDlg(flag) {
       .requirement {
         line-height: 34px;
       }
-      margin-top: 24px;
-      width: 400px;
+      // margin-top: 24px;
+      width: 580px;
       display: flex;
       :deep(.el-form-item__content) {
         display: flex;
@@ -508,36 +547,52 @@ function toggleDelDlg(flag) {
         }
       }
     }
-
+    .setting-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      .el-input,
+      .el-textarea {
+        width: 580px;
+      }
+      .o-select {
+        :deep(.el-select) {
+          width: 580px;
+        }
+      }
+    }
     .setting-title {
-      margin: 40px 0 16px;
-      font-size: 18px;
+      min-width: 80px;
+      margin-right: 32px;
+      font-size: 16px;
       font-weight: normal;
       color: #000000;
       line-height: 24px;
       position: relative;
-      :deep .el-divider {
-        position: absolute;
-        top: -65px;
-        left: -40px;
-      }
     }
-    .description {
-      margin-top: 24px;
+    .attribute-option {
+      width: 580px;
     }
     .el-textarea {
       display: block;
-      margin-bottom: 24px;
-      width: 656px !important;
+      width: 400px;
       :deep(.el-textarea__inner) {
         height: 89px;
       }
     }
     .setting-tip {
       font-size: 14px;
-      margin: 8px 0 16px;
-      color: #999999;
+      margin-top: 8px;
+      margin-bottom: 24px;
+      color: #999;
+    }
+    .describe {
+      color: #555;
     }
   }
+}
+.el-divider {
+  width: 94%;
+  margin: 0;
 }
 </style>

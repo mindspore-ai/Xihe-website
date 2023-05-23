@@ -557,7 +557,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .train-list {
-  min-height: calc(100vh - 400px);
+  // min-height: calc(100vh - 400px);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
   .list-top {
     display: flex;
     align-items: center;
@@ -668,5 +671,8 @@ onUnmounted(() => {
       }
     }
   }
+}
+:deep(.el-scrollbar__bar) {
+  display: none;
 }
 </style>

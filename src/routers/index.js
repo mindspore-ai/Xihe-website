@@ -60,8 +60,12 @@ export const routes = [
       try {
         await checkEmail();
         next();
-      } catch {
-        next(false);
+      } catch (err) {
+        if (err.response && err.response.data.code === 'user_no_email') {
+          next(false);
+        } else {
+          next({ name: '404' });
+        }
       }
     },
     children: [

@@ -418,7 +418,7 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref('sizes, prev, pager, next, jumper');
+const layout = ref(' prev, pager, next,sizes, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -650,7 +650,7 @@ onUnmounted(() => {
         <div class="card-box-top">
           <div class="card-head">
             <div class="model-number">
-              {{ i18n.head.count }} {{ modelCount }}
+              {{ i18n.head.count }} <span>{{ modelCount }}</span>
             </div>
             <div class="moderl-head-right">
               <el-input
@@ -709,7 +709,7 @@ onUnmounted(() => {
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
+  padding: 40px 16px 136px 16px;
   max-width: 1448px;
 }
 .model-page {
@@ -717,7 +717,7 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-dataset.png');
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -730,7 +730,11 @@ $theme: #0d8dff;
       .introduce {
         font-size: 18px;
         .reference {
-          color: #4dcdff;
+          color: #000;
+          text-decoration: underline;
+          &:hover {
+            color: #0d8dff;
+          }
         }
       }
       .banner-right {
@@ -745,11 +749,12 @@ $theme: #0d8dff;
     .condition {
       position: relative;
       width: 100%;
-      max-width: 464px;
+      max-width: 424px;
       min-height: calc(100vh - 300px);
-      margin: 0 24px 0 0;
-      padding: 40px;
+      margin: 0 40px 0 0;
+      padding: 24px;
       background-color: #fff;
+      border-radius: 16px;
       .getback {
         font-size: 16px;
         color: #555;
@@ -967,9 +972,18 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 24px;
+        padding: 8px 24px;
         width: 100%;
         background-color: #fff;
+        border-radius: 30px;
+        .model-number {
+          font-size: 14px;
+          line-height: 22px;
+          span {
+            color: #555;
+            margin-left: 8px;
+          }
+        }
         .moderl-head-right {
           display: flex;
           align-items: center;

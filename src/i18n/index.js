@@ -6,6 +6,7 @@ import wukong from './modelzoo/wukong';
 import taichu from './modelzoo/taichu';
 import luojia from './modelzoo/luojia';
 import shennong from './modelzoo/shennong';
+import mindcon from './activity/mindcon';
 
 const messages = {
   zh: {
@@ -15,6 +16,7 @@ const messages = {
     taichu: taichu.zh,
     luojia: luojia.zh,
     shennong: shennong.zh,
+    mindcon: mindcon.zh,
   },
   en: {
     home: home.en,
@@ -23,6 +25,7 @@ const messages = {
     taichu: taichu.en,
     luojia: luojia.en,
     shennong: shennong.en,
+    mindcon: mindcon.en,
   },
 };
 

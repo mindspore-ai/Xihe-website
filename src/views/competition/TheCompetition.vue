@@ -289,7 +289,9 @@ function toTop() {
               <div class="right1">
                 <div class="right1-bonus">
                   <div class="number">
-                    奖池：{{ item.bonus ? `￥${item.bonus}` : '特别礼品' }}
+                    奖池：{{
+                      item.bonus ? `￥${formatBonus(item.bonus)}` : '特别礼品'
+                    }}
                   </div>
                   <div class="time">赛期：{{ item.duration }}</div>
                 </div>

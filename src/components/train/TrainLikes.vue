@@ -62,10 +62,10 @@ function onClick(e) {
     }
     .o-icon {
       margin-right: 8px;
-      font-size: 20px;
+      font-size: 16px;
     }
     span {
-      font-size: 18px;
+      font-size: 14px;
     }
   }
   .is-digged {
@@ -85,14 +85,16 @@ function onClick(e) {
     }
     .o-icon {
       margin-right: 8px;
-      font-size: 20px;
+      font-size: 16px;
     }
     span {
-      font-size: 18px;
+      font-size: 14px;
     }
   }
 }
 .digg-content {
+  width: 97px;
+  height: 36px;
   display: flex;
   align-items: center;
   padding: 6px 20px;

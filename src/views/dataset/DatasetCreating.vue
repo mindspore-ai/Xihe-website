@@ -131,7 +131,7 @@ function checkName(rule, value, callback) {
           {
             pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
             message: '暂不支持中文字符，且长度为3-35个字符',
-            trigger: 'blur',
+            trigger: 'change',
           },
           {
             pattern: /^[^\*/?\\<>|:;]*$/g,

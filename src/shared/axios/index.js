@@ -95,7 +95,6 @@ const responseInterceptorId = request.interceptors.response.use(
       }
       if (err.response.data.code === 'user_no_email') {
         useDialogState().dialogState = true;
-        config.$doException = true;
       }
     } else {
       // 没有response(没有状态码)的情况
@@ -109,7 +108,11 @@ const responseInterceptorId = request.interceptors.response.use(
         err.msg = '连接服务器失败!';
       }
     }
-    if (!config.$doException) {
+    if (
+      !config.$doException &&
+      err.response &&
+      err.response.data.code !== 'user_no_email'
+    ) {
       ElMessage({
         type: 'error',
         message: err.msg,

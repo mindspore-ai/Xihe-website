@@ -189,7 +189,7 @@ watch(
           <div class="dataset-box">
             <relate-card
               v-if="detailData.related_models"
-              :detail-data="detailData.related_models"
+              :detail-data="detailData"
               :name="'related_models'"
               @jump="handleDetailClick"
             ></relate-card>

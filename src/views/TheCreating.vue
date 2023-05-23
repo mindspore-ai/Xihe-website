@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const i18n = {
   models: {
     new: '新建模型',
@@ -10,6 +11,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
+    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/model_ui/',
   },
   datasets: {
     new: '新建数据集',
@@ -17,6 +19,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
+    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/dataset_ui/',
   },
   projects: {
     new: '新建项目',
@@ -25,6 +28,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个项目仓库',
     progress2: '上传文件',
+    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/project_ui/',
   },
 };
 
@@ -40,7 +44,9 @@ const bannerLabel = computed(() => {
         <div class="title">{{ i18n[bannerLabel].new }}</div>
         <div class="introduce">
           {{ i18n[bannerLabel].introduce }}
-          <span>{{ i18n[bannerLabel].reference }}</span>
+          <a :href="i18n[bannerLabel].docUrl" target="blank">{{
+            i18n[bannerLabel].reference
+          }}</a>
         </div>
       </div>
       <!-- <div class="step">
@@ -80,7 +86,7 @@ const bannerLabel = computed(() => {
     }
     .introduce {
       font-size: 18px;
-      span {
+      a {
         color: #000;
         cursor: pointer;
         text-decoration: underline;

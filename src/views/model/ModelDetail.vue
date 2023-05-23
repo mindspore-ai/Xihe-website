@@ -30,6 +30,12 @@ const route = useRoute();
 const headTags = ref([]);
 const inputDom = ref();
 
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -405,12 +411,6 @@ function checkAllTags(val) {
 function retractAlltags(val) {
   isExpand.value = val;
 }
-
-const containerRef = ref(null);
-const tagRef = ref(null);
-const sumWidth = ref(0);
-const containerWidth = ref(0);
-const isWrap = ref(false);
 
 watch(
   () => detailData.value,

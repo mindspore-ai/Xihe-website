@@ -755,7 +755,7 @@ onUnmounted(() => {
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
+  padding: 40px 16px 136px 16px;
   max-width: 1448px;
 }
 .model-page {

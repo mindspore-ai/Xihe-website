@@ -232,7 +232,8 @@ function scroll(e) {
     }
   }
 }
-window.onmousewheel = document.onmousewheel = scroll;
+window.onmousewheel = scroll;
+document.onmousewheel = scroll;
 
 const mobileNav = reactive([
   {

@@ -418,7 +418,7 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref('sizes, prev, pager, next, jumper');
+const layout = ref(' prev, pager, next,sizes, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { doLogin, goAuthorize } from '@/shared/login';
 import { queryUserInfo, checkEmail } from '@/api/api-user';
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import { LOGIN_STATUS } from '@/shared/login';
 import whiteList from '@/whitelist/whitelist-router';
 import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
 
@@ -57,14 +58,18 @@ export const routes = [
       return import('@/views/TheCreating.vue');
     },
     beforeEnter: async (to, from, next) => {
+      const logingStore = useLoginStore();
+      if (logingStore.loginStatus !== LOGIN_STATUS.DONE) {
+        return {
+          name: '404',
+        };
+      }
       try {
         await checkEmail();
         next();
       } catch (err) {
         if (err.response && err.response.data.code === 'user_no_email') {
           next(false);
-        } else {
-          next({ name: '404' });
         }
       }
     },

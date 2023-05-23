@@ -113,6 +113,14 @@ export const useLoadingState = defineStore('loading', {
     },
   },
 });
+// 绑定邮箱弹窗
+export const useDialogState = defineStore('dialog', {
+  state: () => {
+    return {
+      dialogState: false,
+    };
+  },
+});
 
 // 基础信息
 export const useBaseData = defineStore('baseInfo', {

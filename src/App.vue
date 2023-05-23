@@ -5,19 +5,21 @@ import { useRoute, useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
-import IconBack from '~icons/app/left.svg';
 import IconMenu from '~icons/app/meau-header.svg';
+import IconClose from '~icons/app/x.svg';
 import logoImg from '@/assets/imgs/logo1.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
+import warningImg from '@/assets/icons/warning.png';
 
 import { useI18n } from 'vue-i18n';
-import { useLoginStore, useUserInfoStore } from '@/stores';
+import { useLoginStore, useUserInfoStore, useDialogState } from '@/stores';
 import IconUser from '~icons/app/user.svg';
 import { goAuthorize, logout } from '@/shared/login';
 
 const { t, locale } = useI18n();
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
+const useDialog = useDialogState();
 
 const loginedDropdownItems = reactive([
   {
@@ -156,7 +158,6 @@ const routeLists = {
 };
 
 const isMobileFit = ref(false);
-const backUrl = ref('');
 watch(
   () => route,
   () => {
@@ -210,15 +211,15 @@ onMounted(() => {
   window.addEventListener('resize', onResize);
 });
 
-function goBack() {
-  Object.keys(routeLists).forEach((key) => {
-    if (routeLists[key].name === currentPage.value) {
-      backUrl.value = routeLists[key].back;
-    }
-  });
+// function goBack() {
+//   Object.keys(routeLists).forEach((key) => {
+//     if (routeLists[key].name === currentPage.value) {
+//       backUrl.value = routeLists[key].back;
+//     }
+//   });
 
-  router.push(backUrl.value);
-}
+//   router.push(backUrl.value);
+// }
 const noHeader = ref(false);
 function Scroll(e) {
   e = e || window.event;
@@ -237,7 +238,7 @@ const mobilNav = reactive([
     name: computed(() => {
       return t('home.APP_HEADER.HOME');
     }),
-    isactive: true,
+    isactive: false,
     path: '/',
   },
   {
@@ -333,6 +334,7 @@ function toPage(path) {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
+    mobilNav[3].isactive = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
@@ -377,6 +379,13 @@ onMounted(() => {
   });
   isCookieTip.value = showCookieTip;
 });
+function closeDialog() {
+  useDialog.dialogState = false;
+}
+function confirmDialog() {
+  useDialog.dialogState = false;
+  router.push('/settings/email');
+}
 </script>
 
 <template>
@@ -390,7 +399,8 @@ onMounted(() => {
     "
   >
     <div class="back" @click="toggleMenu(!meauActive)">
-      <OIcon><icon-menu></icon-menu></OIcon>
+      <OIcon v-if="!meauActive"><icon-menu></icon-menu></OIcon>
+      <OIcon v-else><icon-close></icon-close></OIcon>
     </div>
     <!-- <div v-else class="back" @click="goBack">
       <OIcon><icon-back></icon-back></OIcon>
@@ -494,6 +504,26 @@ onMounted(() => {
         中文 ｜ EN
       </div>
     </div>
+  </div>
+
+  <div>
+    <el-dialog
+      v-model="useDialog.dialogState"
+      :show-close="false"
+      center
+      align-center
+      destroy-on-close
+      class="use-dialog"
+    >
+      <template #header>
+        <img :src="warningImg" alt="" />
+      </template>
+      <p>绑定邮箱后才能进行该操作，请确认是否绑定邮箱</p>
+      <template #footer>
+        <o-button @click="closeDialog">取消</o-button>
+        <o-button type="primary" @click="confirmDialog">确认</o-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -901,6 +931,15 @@ body.el-popup-parent--hidden {
   width: 0;
   .menu-side {
     left: 0;
+  }
+}
+.use-dialog {
+  p {
+    font-size: 18px;
+    color: #555;
+  }
+  .o-button {
+    margin: 0 8px;
   }
 }
 </style>

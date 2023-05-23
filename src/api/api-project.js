@@ -63,9 +63,11 @@ export function setNewProject(params) {
 }
 export function checkNames(params) {
   const url = `/server/project/${params.owner}/${params.name}/check`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .get(url, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 
 /**

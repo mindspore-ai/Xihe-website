@@ -47,7 +47,8 @@ export default defineConfig({
     port: '9999',
     proxy: {
       '/api/v1/': {
-        target: 'https://xihe-dev.test.osinfra.cn/',
+        // target: 'https://xihe-dev.test.osinfra.cn/',
+        target: 'https://xihe2.test.osinfra.cn/',
         changeOrigin: true,
       },
       '/server': {
@@ -68,6 +69,10 @@ export default defineConfig({
         target: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/obs-xihe-avatar/, ''),
+      },
+      '/oneid': {
+        target: 'https://xiheapi.test.osinfra.cn/',
+        changeOrigin: true,
       },
     },
   },

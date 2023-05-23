@@ -87,7 +87,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 500);
+  }, 2000);
 }
 
 const nameList = ref([]);
@@ -140,11 +140,6 @@ function setProject() {
         ElMessage({
           type: 'error',
           message: '暂不支持该协议',
-        });
-      } else {
-        ElMessage({
-          type: 'error',
-          message: '文件名重复，或文件名不合规',
         });
       }
     });

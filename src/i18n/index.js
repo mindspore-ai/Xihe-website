@@ -4,6 +4,8 @@ import home from './home';
 import modelzoo from './modelzoo';
 import wukong from './modelzoo/wukong';
 import taichu from './modelzoo/taichu';
+import luojia from './modelzoo/luojia';
+import shennong from './modelzoo/shennong';
 
 const messages = {
   zh: {
@@ -11,12 +13,16 @@ const messages = {
     modelzoo: modelzoo.zh,
     wukong: wukong.zh,
     taichu: taichu.zh,
+    luojia: luojia.zh,
+    shennong: shennong.zh,
   },
   en: {
     home: home.en,
     modelzoo: modelzoo.en,
     wukong: wukong.en,
     taichu: taichu.en,
+    luojia: luojia.en,
+    shennong: shennong.en,
   },
 };
 

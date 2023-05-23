@@ -24,6 +24,7 @@ import {
   projectFork,
   checkNames,
 } from '@/api/api-project';
+import { checkEmail } from '@/api/api-user';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
@@ -499,9 +500,11 @@ function forkCreateClick() {
 }
 
 function forkClick() {
-  forkShow.value = true;
-  nextTick(() => {
-    document.querySelector('.el-input__inner').focus();
+  checkEmail().then(() => {
+    forkShow.value = true;
+    nextTick(() => {
+      document.querySelector('.el-input__inner').focus();
+    });
   });
 }
 

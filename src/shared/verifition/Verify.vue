@@ -145,7 +145,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .verifybox {
   position: relative;
   box-sizing: border-box;

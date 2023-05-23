@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo1.png';
-import logoImg1 from '@/assets/imgs/logo.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
@@ -14,11 +13,9 @@ import userImg from '@/assets/icons/user.png';
 import { goAuthorize, logout } from '@/shared/login';
 import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
-// import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
-import IconDown from '~icons/app/down.svg';
 
-import { useLoginStore, useUserInfoStore, useLangStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import IconSearch from '~icons/app/search';
 import IconUser from '~icons/app/user.svg';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -30,10 +27,6 @@ import translateWhitelist from '@/whitelist/whitelist-translate';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
-
-const lang = computed(() => {
-  return useLangStore().lang;
-});
 
 const router = useRouter();
 const route = useRoute();
@@ -537,11 +530,11 @@ function handleBlur() {
   }
 }
 
-// 选择语言;
-const options = ref([
-  { value: 'zh', label: '中文' },
-  { value: 'en', label: 'En' },
-]);
+// // 选择语言;
+// const options = ref([
+//   { value: 'zh', label: '中文' },
+//   { value: 'en', label: 'En' },
+// ]);
 // 选择语言
 const handleCommand = (command) => {
   // locale.value = command.value;

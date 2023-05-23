@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
@@ -267,7 +267,7 @@ function confirmBtn() {
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
-      isWrap.value = sumWidth.value - containerWidth.value > 28 ? true : false;
+      isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
 
       sumWidth.value = 0;
     });
@@ -421,8 +421,7 @@ watch(
           sumWidth.value += item.offsetWidth + 4;
         });
         containerWidth.value = containerRef.value.offsetWidth;
-        isWrap.value =
-          sumWidth.value - containerWidth.value > 28 ? true : false;
+        isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
 
         sumWidth.value = 0;
       });
@@ -437,9 +436,8 @@ watch(
     <div class="card-head">
       <div class="card-head-content">
         <div class="card-head-info wrap">
-          <p class="head-info-desc">{{ detailData.name }}</p>
-
-          <div class="head-info-likes">
+          <div class="head-info-title">
+            <p>{{ detailData.name }}</p>
             <train-likes
               v-if="userInfoStore.userName !== detailData.owner"
               :is-digged="isDigged"
@@ -449,6 +447,11 @@ watch(
             ></train-likes>
           </div>
         </div>
+
+        <div v-if="detailData.desc" class="head-info-desc wrap">
+          <p>{{ detailData.desc }}</p>
+        </div>
+
         <div class="card-head-top wrap">
           <div class="head-top-left">
             <div class="portrait">
@@ -777,7 +780,6 @@ $theme: #0d8dff;
   .card-head-top {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 8px;
     margin-top: 24px;
     font-size: 14px;
     line-height: 22px;
@@ -826,9 +828,6 @@ $theme: #0d8dff;
     margin-left: 40px;
     font-size: 14px;
     line-height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
     .o-icon {
       font-size: 18px;
     }
@@ -837,7 +836,7 @@ $theme: #0d8dff;
     }
   }
   .card-head {
-    padding-top: 105px;
+    padding-top: 80px;
     .card-head-1 {
       display: flex;
       margin-bottom: 16px;
@@ -864,7 +863,7 @@ $theme: #0d8dff;
     }
     .tag-icon {
       align-self: flex-start;
-      margin-top: 6px;
+      margin-top: 2px;
       margin-right: 8px;
       display: flex;
       align-items: center;
@@ -957,6 +956,7 @@ $theme: #0d8dff;
     background: rgba(251, 251, 251, 0.85);
   }
   .card-head-content {
+    padding: 24px 0;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(5px);
   }
@@ -964,18 +964,34 @@ $theme: #0d8dff;
     display: flex;
     justify-content: space-between;
   }
-  .head-info-desc {
+  .head-info-title {
     flex: 1;
     font-size: 24px;
     color: #555555;
     line-height: 38px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
-  .head-info-likes {
-    width: 280px;
+  .head-info-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 22px;
+    margin-top: 10px;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
+
   .model-detail-body {
     min-height: calc(100vh - 455px);
     background-color: #f5f6f8;

@@ -1,5 +1,5 @@
 <script setup>
-import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-advantage.png';
+// import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-advantage.png';
 </script>
 <template>
   <div class="project-explain">

@@ -14,7 +14,7 @@ import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
 
 import { useI18n } from 'vue-i18n';
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 let i18n = {
   head: {

@@ -44,7 +44,7 @@ import logo27 from '@/assets/imgs/home1/logo/logo27.png';
 import IconUser from '~icons/app/user';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import OButton from '@/components/OButton.vue';
-import AppFooter from '@/components/AppFooter.vue';
+// import AppFooter from '@/components/AppFooter.vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -52,7 +52,7 @@ import { Pagination, Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import { getHomeInfo } from '@/api/api-shared';
 
@@ -197,7 +197,7 @@ function toIndusty(path) {
   }
 }
 
-const route = useRoute();
+// const route = useRoute();
 const router = useRouter();
 
 const homeInfo = ref([
@@ -804,6 +804,7 @@ const logoPic = [
         );
         position: absolute;
         bottom: 0;
+        top: unset;
         z-index: 1;
         @media screen and (max-width: 820px) {
           display: none;

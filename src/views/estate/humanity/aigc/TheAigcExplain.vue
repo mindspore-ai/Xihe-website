@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 <template>
   <div class="explain">
     <p class="title-1">项目说明</p>

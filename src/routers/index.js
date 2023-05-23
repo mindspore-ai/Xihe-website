@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { doLogin, goAuthorize } from '@/shared/login';
-import { queryUserInfo } from '@/api/api-user';
+import { queryUserInfo, checkEmail } from '@/api/api-user';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import whiteList from '@/whitelist/whitelist-router';
 import mobileFitWhiteList from '@/whitelist/whitelist-mobilefit';
@@ -55,6 +55,10 @@ export const routes = [
     name: 'new',
     component: () => {
       return import('@/views/TheCreating.vue');
+    },
+    beforeEnter: async (to, from, next) => {
+      checkEmail();
+      next();
     },
     children: [
       {

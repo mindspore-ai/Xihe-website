@@ -233,7 +233,7 @@ function scroll(e) {
   }
 }
 window.onmousewheel = scroll;
-document.onmousewheel = scroll;
+// document.onmousewheel = scroll;
 
 const mobileNav = reactive([
   {

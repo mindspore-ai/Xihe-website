@@ -16,7 +16,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
     <div class="industry-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/industry' }">
+          <el-breadcrumb-item :to="{ path: '/industry' }">
             工业专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">

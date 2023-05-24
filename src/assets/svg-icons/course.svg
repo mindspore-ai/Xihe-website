@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>课程</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="48" height="48"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#90C3FF" offset="0%"></stop>
+            <stop stop-color="#5790FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#BFEEFF" offset="0%"></stop>
+            <stop stop-color="#94DFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-5">
+            <stop stop-color="#58D3FF" offset="0%"></stop>
+            <stop stop-color="#80DEFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#ABE9FF" offset="0%"></stop>
+            <stop stop-color="#6CD9FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#58D3FF" offset="0%"></stop>
+            <stop stop-color="#80DEFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-8">
+            <stop stop-color="#90C3FF" offset="0%"></stop>
+            <stop stop-color="#5790FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-9">
+            <stop stop-color="#D0E1FF" offset="0%"></stop>
+            <stop stop-color="#A9C5FB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-10">
+            <stop stop-color="#D0D2FA" offset="0%"></stop>
+            <stop stop-color="#A898FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="产业/产业首页-电力专区" transform="translate(-438.000000, -2516.000000)">
+            <g id="编组" transform="translate(252.000000, 2500.000000)">
+                <g id="课程" transform="translate(186.000000, 16.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="矩形"></g>
+                    <g id="编组-10" mask="url(#mask-2)">
+                        <g transform="translate(1.000000, 4.000000)">
+                            <rect id="矩形" fill="url(#linearGradient-3)" x="1.54690265" y="0" width="30.6938053" height="3.2"></rect>
+                            <rect id="矩形备份-18" fill="url(#linearGradient-4)" x="37.5327434" y="0" width="8.46725664" height="4.26666667"></rect>
+                            <rect id="矩形备份-19" fill="url(#linearGradient-5)" x="37.5327434" y="4.26666667" width="8.46725664" height="3.2"></rect>
+                            <rect id="矩形备份-21" fill="url(#linearGradient-6)" x="37.5327434" y="7.46666667" width="8.46725664" height="25.6"></rect>
+                            <polygon id="三角形" fill="url(#linearGradient-7)" transform="translate(41.766372, 36.533333) rotate(-180.000000) translate(-41.766372, -36.533333) " points="41.7663717 33.0666667 46 40 37.5327434 40"></polygon>
+                            <polygon id="三角形备份" fill="#5C94FF" transform="translate(2.605310, 16.800000) scale(1, -1) rotate(-180.000000) translate(-2.605310, -16.800000) " points="2.60530973 13.6 5.21061947 20 0 20"></polygon>
+                            <rect id="矩形备份-20" fill-opacity="0.401087194" fill="#E8F1FF" x="40.1787611" y="7.46666667" width="3.17522124" height="25.6"></rect>
+                            <rect id="矩形备份-22" fill="#5C94FF" x="1.54690265" y="3.2" width="2.11681416" height="11.2"></rect>
+                            <ellipse id="椭圆形" fill="#5C94FF" cx="2.60530973" cy="14.4" rx="2.11681416" ry="2.13333333"></ellipse>
+                            <rect id="矩形备份-11" fill="url(#linearGradient-8)" x="6.83893805" y="0" width="20.1097345" height="14.9333333"></rect>
+                            <rect id="矩形备份-12" fill="url(#linearGradient-9)" x="6.83893805" y="14.9333333" width="30.6938053" height="9.06666667"></rect>
+                            <rect id="矩形备份-15" fill="url(#linearGradient-10)" x="6.83893805" y="24" width="30.6938053" height="9.06666667"></rect>
+                            <rect id="矩形备份-13" fill="#96B8F9" x="11.0725664" y="14.9333333" width="4.23362832" height="9.06666667"></rect>
+                            <rect id="矩形备份-16" fill="#A08FFF" x="11.0725664" y="24" width="4.23362832" height="9.06666667"></rect>
+                            <rect id="矩形备份-14" fill="#96B8F9" x="34.3575221" y="14.9333333" width="3.17522124" height="9.06666667"></rect>
+                            <rect id="矩形备份-17" fill="#A08FFF" x="34.3575221" y="24" width="3.17522124" height="9.06666667"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -165,9 +165,11 @@ export function sendCode(reopt) {
 }
 export function bindUserEmail(params) {
   const url = `/server/user/email/bind`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .post(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 export function changeUserEmail(params) {
   const url = `/api/users/change_email/`;

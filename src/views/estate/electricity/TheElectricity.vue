@@ -188,6 +188,10 @@ const logoPic = [
 .electricity {
   background-color: #f5f6f8;
   // padding-bottom: 64px;
+  background-image: url('@/assets/imgs/estate/electricity/electric-travel.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 642px;
+  background-position: 0 2288px;
   .electricity-head {
     padding-top: 80px;
     position: relative;

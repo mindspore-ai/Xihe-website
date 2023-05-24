@@ -387,7 +387,6 @@ function goCasePath(item) {
   .electric-travel {
     margin-top: 64px;
     padding: 64px 0;
-    background-image: url('@/assets/imgs/estate/electricity/electric-travel.jpg');
     :deep(.electricity-tabs) {
       .el-tabs__header {
         padding: 0;

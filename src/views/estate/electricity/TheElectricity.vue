@@ -4,10 +4,10 @@ import { ref } from 'vue';
 
 import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
 
-import IconElectricity from '~icons/app/electricity';
-import IconHumanity from '~icons/app/humanity';
-import IconMedicine from '~icons/app/medicine';
-import IconIndustry from '~icons/app/industry';
+import IconCV from '~icons/app/CV';
+import IconNLP from '~icons/app/NLP';
+import IconAudio from '~icons/app/Audio';
+import IconGNN from '~icons/app/GNN';
 
 import computerVision from '@/views/estate/electricity/computerVision/TheComputerVision.vue';
 import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNaturalLanguage.vue';
@@ -39,39 +39,39 @@ import logo16 from '@/assets/imgs/home1/logo/logo16.png';
 import logo17 from '@/assets/imgs/home1/logo/logo17.png';
 
 const logoModules = [FreeMode, Autoplay];
-const activeName = ref('计算机视觉');
+const activeName = ref('计算机视觉CV');
 
 const electricityClassify = [
   {
     id: 1,
-    name: '计算机视觉',
+    name: '计算机视觉CV',
     path: '/estate/electricity',
     // path: '/estate/industrial-zone',
     currentComponent: computerVision,
-    icon: IconElectricity,
+    icon: IconCV,
   },
   {
     id: 2,
-    name: '自然语言处理',
+    name: '自然语言处理NLP',
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
-    icon: IconMedicine,
+    icon: IconNLP,
     disabled: true,
   },
   {
     id: 3,
-    name: '语音',
+    name: '语音Audio',
     path: '/estate/industry',
     currentComponent: voice,
-    icon: IconIndustry,
+    icon: IconAudio,
     disabled: true,
   },
   {
     id: 4,
-    name: '图神经网络',
+    name: '图神经网络GNN',
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
-    icon: IconHumanity,
+    icon: IconGNN,
     disabled: true,
   },
 ];

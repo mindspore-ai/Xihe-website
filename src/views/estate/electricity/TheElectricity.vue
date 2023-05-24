@@ -106,7 +106,7 @@ const logoPic = [
 <template>
   <div class="electricity">
     <div class="electricity-head">
-      <img :src="estateBanner" alt="" />
+      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
         <div class="banner-title">AI+电力行业生产力平台</div>
         <div class="banner-desc">
@@ -189,9 +189,11 @@ const logoPic = [
   background-color: #f5f6f8;
   // padding-bottom: 64px;
   .electricity-head {
-    width: 100%;
-    height: 560px;
+    padding-top: 80px;
     position: relative;
+    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-size: cover;
+    background-position: 50% 50%;
     img {
       width: 100%;
       height: 100%;
@@ -199,7 +201,7 @@ const logoPic = [
     .electricity-banner {
       max-width: 1472px;
       margin: 0 auto;
-      padding: 0px 16px;
+      padding: 160px 16px;
       position: relative;
       top: -55%;
       .banner-title {

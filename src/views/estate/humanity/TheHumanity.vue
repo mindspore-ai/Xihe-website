@@ -37,7 +37,7 @@ function goCasePath(item) {
 <template>
   <div class="humanity">
     <div class="humanity-head">
-      <img :src="estateBanner" alt="" />
+      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="humanity-banner">
         <div class="banner-title">昇思大模型平台助力产业发展</div>
         <div class="banner-desc">
@@ -71,9 +71,11 @@ function goCasePath(item) {
   background-color: #f5f6f8;
   padding-bottom: 64px;
   .humanity-head {
-    width: 100%;
-    height: 560px;
+    padding-top: 80px;
     position: relative;
+    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-size: cover;
+    background-position: 50% 50%;
     img {
       width: 100%;
       height: 100%;
@@ -81,7 +83,7 @@ function goCasePath(item) {
     .humanity-banner {
       max-width: 1472px;
       margin: 0 auto;
-      padding: 0px 16px;
+      padding: 160px 16px;
       position: relative;
       top: -55%;
       .banner-title {

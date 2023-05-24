@@ -149,6 +149,7 @@ const i18n = {
         }
         span {
           font-size: 12px;
+          line-height: 16px;
         }
       }
       .download {
@@ -159,6 +160,7 @@ const i18n = {
         }
         span {
           font-size: 12px;
+          line-height: 16px;
         }
       }
     }

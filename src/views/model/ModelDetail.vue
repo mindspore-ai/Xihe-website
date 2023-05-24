@@ -8,6 +8,7 @@ import IconClear from '~icons/app/clear';
 import IconPlus from '~icons/app/plus';
 import IconTag from '~icons/app/icon-tag';
 import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
@@ -422,7 +423,6 @@ watch(
         });
         containerWidth.value = containerRef.value.offsetWidth;
 
-        console.log(sumWidth.value - containerWidth.value);
         isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
         sumWidth.value = 0;
@@ -515,12 +515,12 @@ watch(
                   @click="checkAllTags(true)"
                 >
                   查看全部
-                  <div class="tags-mask"></div>
+                  <o-icon><icon-right></icon-right></o-icon>
                 </div>
 
                 <div v-else class="retract-tags" @click="retractAlltags(false)">
                   收起
-                  <div class="tags-mask"></div>
+                  <o-icon><icon-right></icon-right></o-icon>
                 </div>
               </template>
             </div>
@@ -915,24 +915,14 @@ $theme: #0d8dff;
           color: #555555;
           line-height: 18px;
           padding: 2px 4px;
-          background: #fff;
+          color: #0d8dff;
           cursor: pointer;
-
-          .tags-mask {
-            position: absolute;
-            left: -49px;
-            top: 0;
-            width: 49px;
-            height: 20px;
-            background: linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0) 0%,
-              #ffffff 100%
-            );
+          .o-icon {
+            font-size: 16px;
           }
         }
         .retract-tags {
-          bottom: 16px;
+          bottom: 14px;
         }
       }
     }
@@ -974,8 +964,9 @@ $theme: #0d8dff;
   }
   .card-head-content {
     padding: 24px 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   .card-head-info {
     display: flex;

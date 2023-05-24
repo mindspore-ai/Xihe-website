@@ -2,13 +2,18 @@
 import { defineEmits } from 'vue';
 
 import IconTime from '~icons/app/time';
-
+import IconDownload from '~icons/app/download';
+import IconRemove from '~icons/app/remove';
 import IconHeart from '~icons/app/heart';
 
-const i18n = {
-  download: '下载量',
-  uploadTime: '上传时间',
-};
+import { useUserInfoStore } from '@/stores';
+
+const userInfo = useUserInfoStore();
+
+// const i18n = {
+//   download: '下载量',
+//   uploadTime: '上传时间',
+// };
 
 defineProps({
   // 相关项目的详情信息
@@ -38,13 +43,38 @@ function goDetailClick(item) {
       class="project-item"
       @click="goDetailClick(item)"
     >
-      <!-- <o-icon
-        v-if="userInfo.userName === detailData.owner_name.name"
+      <div class="card-top">
+        <div class="card-top-left">
+          <img class="avatar" :src="item.owner.avatar_id" alt="" />
+        </div>
+
+        <div class="card-top-right">
+          {{ item.owner.name }}
+          /
+          {{ item.name }}
+        </div>
+      </div>
+
+      <div class="card-bottom">
+        <div class="update-time">
+          <o-icon> <icon-time></icon-time></o-icon> {{ item.update_at }}
+        </div>
+        <div class="likes">
+          <o-icon><icon-heart></icon-heart></o-icon> {{ item.like_count }}
+        </div>
+        <div class="downloads">
+          <o-icon><icon-download></icon-download></o-icon>
+          {{ item.download_count }}
+        </div>
+      </div>
+
+      <o-icon
+        v-if="userInfo.userName === detailData.owner"
         class="remove-item"
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove
-      ></o-icon> -->
-      <div
+      ></o-icon>
+      <!-- <div
         class="card-top"
         :style="{
           backgroundImage:
@@ -74,7 +104,7 @@ function goDetailClick(item) {
             {{ item.update_at }}
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -82,23 +112,63 @@ function goDetailClick(item) {
 .project-item {
   cursor: pointer;
   width: 100%;
-  background-color: #fff;
-  position: relative;
+  padding: 24px;
+  background-image: url('@/assets/imgs/relate-project-card-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
   margin-bottom: 16px;
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
+  position: relative;
+  border: 1px solid #e5e5e5;
   &:hover {
     transition: all 0.5s;
     box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
     .remove-item {
       display: block;
-      color: #fff;
+      color: #0d8dff;
     }
   }
-  .nick-name {
-    font-size: 14px;
-    line-height: 22px;
-    color: #000;
+  .card-top {
+    display: flex;
+    align-items: center;
+    .card-top-left {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 8px;
+      .avatar {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .card-top-right {
+      flex: 1;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 400;
+      color: #000000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .card-bottom {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #555;
+    line-height: 14px;
+    .update-time,
+    .likes {
+      margin-right: 16px;
+    }
+    .o-icon {
+      margin-right: 6px;
+    }
   }
 
   .remove-item {
@@ -106,60 +176,6 @@ function goDetailClick(item) {
     right: 8px;
     top: 8px;
     display: none;
-  }
-  .o-icon.normal {
-    font-size: 16px;
-  }
-  .card-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    height: 87px;
-    word-break: break-all;
-    overflow: hidden;
-    padding: 8px 24px;
-    font-size: 18px;
-    background-position: center;
-    object-fit: scale-down;
-    background-size: 100% 100%;
-    // background-repeat: no-repeat;
-  }
-
-  .project-bottom {
-    display: flex;
-    font-size: 12px;
-    padding: 16px 24px 24px;
-    justify-content: space-between;
-    align-items: center;
-    .avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      margin-right: 8px;
-      border: 1px solid #b7ddff;
-      img {
-        width: 100%;
-      }
-    }
-    &-left,
-    &-right {
-      display: flex;
-      align-items: center;
-      vertical-align: bottom;
-      line-height: 18px;
-      color: #555;
-      .o-icon {
-        font-size: 16px;
-        margin-right: 4px;
-        color: #555;
-      }
-    }
-    .update-time {
-      display: flex;
-      align-items: center;
-      margin-left: 16px;
-    }
   }
 }
 </style>

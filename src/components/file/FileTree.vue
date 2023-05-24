@@ -301,7 +301,7 @@ watch(
       <col width="350px" />
       <col width="282px" />
       <col width="564px" />
-      <col width="220px" />
+      <col width="218px" />
       <tbody style="100%">
         <tr class="tree-head">
           <td colspan="3">
@@ -522,16 +522,18 @@ watch(
   border-radius: 16px 16px 0 0;
 }
 .tree {
-  &-head {
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+  .tree-head {
     padding: 12px 24px;
     width: 100%;
     font-size: 14px;
     background-color: #e5e8f0 !important;
-    &-left {
+    .tree-head-left {
       display: flex;
       align-items: center;
       height: 56px;
-      &-describe {
+      .tree-head-left-describe {
         padding-left: 6px;
         color: #555;
         line-height: 20px;
@@ -540,12 +542,12 @@ watch(
         text-overflow: ellipsis;
       }
     }
-    &-right {
+    .tree-head-right {
       padding-right: 70px;
       height: 56px;
     }
   }
-  &-table {
+  .tree-table {
     padding: 0 24px;
     width: 100%;
     background-color: #fff;

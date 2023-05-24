@@ -71,17 +71,17 @@ watch(
         <p class="nick-name">{{ item.owner.name }}/{{ item.name }}</p>
       </div>
       <div class="dataset-bottom">
-        <div class="download" :title="i18n.download">
-          <o-icon><icon-download></icon-download></o-icon>
-          {{ item.download_count }}
+        <div class="update-time" :title="i18n.uploadTime">
+          <o-icon> <icon-time></icon-time></o-icon>
+          {{ item.update_at }}
         </div>
         <div class="heart" title="👍">
           <o-icon><icon-heart></icon-heart></o-icon>
           {{ item.like_count }}
         </div>
-        <div class="update-time" :title="i18n.uploadTime">
-          <o-icon> <icon-time></icon-time></o-icon>
-          {{ item.update_at }}
+        <div class="download" :title="i18n.download">
+          <o-icon><icon-download></icon-download></o-icon>
+          {{ item.download_count }}
         </div>
       </div>
     </div>
@@ -92,10 +92,11 @@ watch(
   cursor: pointer;
   width: 100%;
   padding: 24px;
-  background-color: #fff;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
   position: relative;
   margin-bottom: 16px;
-  border-radius: 16px;
   &:hover {
     box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
     transition: all 0.2s linear;
@@ -117,27 +118,27 @@ watch(
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin-bottom: 16px;
 
     .avatar {
       width: 24px;
+      min-width: 24px;
       height: 24px;
       border-radius: 50%;
-      margin-right: 8px;
       border: 1px solid #b7ddff;
       overflow: hidden;
       img {
         width: 100%;
+        height: 100%;
       }
     }
     .nick-name {
-      width: 100%;
       font-size: 18px;
       line-height: 24px;
       color: #000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-left: 8px;
     }
   }
   .dataset-bottom {
@@ -145,6 +146,9 @@ watch(
     justify-content: start;
     align-items: center;
     color: #555;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 16px;
 
     & > div {
       display: flex;

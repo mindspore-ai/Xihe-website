@@ -93,7 +93,7 @@ const responseInterceptorId = request.interceptors.response.use(
         saveUserAuth();
         goAuthorize();
       }
-      if (err.response.data.code === 'user_no_email') {
+      if (err.code === 'user_no_email') {
         useEmailDialogState().dialogState = true;
       }
     } else {

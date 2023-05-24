@@ -96,6 +96,7 @@ const setHeader = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
+  window.addEventListener('wheel', scroll);
 });
 
 onUnmounted(() => {
@@ -223,16 +224,12 @@ onMounted(() => {
 const noHeader = ref(false);
 // 监听向下滚动
 function scroll(e) {
-  e = e || window.event;
-  if (e.wheelDelta) {
-    if (e.wheelDelta > 0) {
-      noHeader.value = false;
-    } else if (route.name === 'home') {
-      noHeader.value = true;
-    }
+  if (e.deltaY < 0) {
+    noHeader.value = false;
+  } else if (route.name === 'home') {
+    noHeader.value = true;
   }
 }
-window.onmousewheel = document.onmousewheel = scroll;
 
 const mobileNav = reactive([
   {

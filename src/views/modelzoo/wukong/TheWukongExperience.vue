@@ -1509,6 +1509,7 @@ function handleNum(index) {
   display: flex;
   justify-content: center;
   width: 100%;
+  padding: 0 24px;
   @media screen and (max-width: 820px) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1627,6 +1628,7 @@ function handleNum(index) {
 }
 .infer-dlg-result4 {
   grid-template-columns: repeat(2, 1fr);
+  padding: 0;
 }
 .infer-dlg-loading {
   display: flex;

@@ -1,46 +1,35 @@
 export default [
   {
-    path: '/estate',
-    name: 'estate',
+    path: '/electricity',
+    name: 'electricity',
     component: () => {
-      return import('@/views/estate/TheEstate.vue');
+      return import('@/views/estate/electricity/TheElectricity.vue');
     },
-    redirect: '/estate/electricity',
-    // 四个专区
-    children: [
-      {
-        path: 'electricity',
-        name: 'electricity',
-        component: () => {
-          return import('@/views/estate/electricity/TheElectricity.vue');
-        },
-      },
-      {
-        path: 'industry',
-        name: 'industry',
-        component: () => {
-          return import('@/views/estate/industry/TheIndustry.vue');
-        },
-      },
-      {
-        path: 'humanity',
-        name: 'humanity',
-        component: () => {
-          return import('@/views/estate/humanity/TheHumanity.vue');
-        },
-      },
-      {
-        path: 'medicine',
-        name: 'medicine',
-        component: () => {
-          return import('@/views/estate/medicine/TheMedicine.vue');
-        },
-      },
-    ],
+  },
+  {
+    path: '/industry',
+    name: 'industry',
+    component: () => {
+      return import('@/views/estate/industry/TheIndustry.vue');
+    },
+  },
+  {
+    path: '/humanity',
+    name: 'humanity',
+    component: () => {
+      return import('@/views/estate/humanity/TheHumanity.vue');
+    },
+  },
+  {
+    path: '/medicine',
+    name: 'medicine',
+    component: () => {
+      return import('@/views/estate/medicine/TheMedicine.vue');
+    },
   },
   // 电力--变电站AI分析主机
   {
-    path: '/estate/electricity/substation-host',
+    path: '/electricity/substation-host',
     name: 'substationhost',
     component: () => {
       return import(
@@ -82,7 +71,7 @@ export default [
   },
   // 电力--变电站运维图像识别分析解决方案
   {
-    path: '/estate/electricity/substation-ops',
+    path: '/electricity/substation-ops',
     name: 'substationops',
     component: () => {
       return import(
@@ -104,7 +93,7 @@ export default [
   },
   // 电力--变电站运维图像识别分析解决方案
   {
-    path: '/estate/electricity/substation-ops',
+    path: '/electricity/substation-ops',
     name: 'substationops',
     component: () => {
       return import(
@@ -126,7 +115,7 @@ export default [
   },
   // 电力--智能在线决策系统
   {
-    path: '/estate/electricity/intelligent-system',
+    path: '/electricity/intelligent-system',
     name: 'intelligentsystem',
     component: () => {
       return import(
@@ -148,7 +137,7 @@ export default [
   },
   // 工业--金属零部件
   {
-    path: '/estate/industry/metal-part',
+    path: '/industry/metal-part',
     name: 'metalPart',
     component: () => {
       return import('@/views/estate/industry/metalpart/MetalpartDetail.vue');
@@ -168,7 +157,7 @@ export default [
   },
   // 工业--工业AI算法库READ
   {
-    path: '/estate/industry/algorithm',
+    path: '/industry/algorithm',
     name: 'algorithm',
     component: () => {
       return import('@/views/estate/industry/algorithm/AlgorithmDetail.vue');
@@ -188,7 +177,7 @@ export default [
   },
   // 工业--低码智能视频使能平台
   {
-    path: '/estate/industry/intelligence',
+    path: '/industry/intelligence',
     name: 'IntelligenceExplain',
     component: () => {
       return import(
@@ -210,7 +199,7 @@ export default [
   },
   // 医疗--子宫内膜癌
   {
-    path: '/estate/medicine/endometrial-cancer',
+    path: '/medicine/metrocarcinoma',
     name: 'endometrialCancer',
     component: () => {
       return import(
@@ -232,7 +221,7 @@ export default [
   },
   // 医疗--临床外科手术
   {
-    path: '/estate/medicine/truesight',
+    path: '/medicine/truesight',
     name: 'truesight',
     component: () => {
       return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
@@ -241,7 +230,7 @@ export default [
 
   // 医疗--智慧病理诊断系统
   {
-    path: '/estate/medicine/diagnosis',
+    path: '/medicine/diagnosis',
     name: 'pathologicalDiagnosis',
     component: () => {
       return import('@/views/estate/medicine/diagnosis/DiagnosisDetail.vue');
@@ -262,7 +251,7 @@ export default [
 
   // 人文--AIGC生态系统
   {
-    path: '/estate/humanity/AIGC',
+    path: '/humanity/AIGC',
     name: 'aigcEcosystem',
     component: () => {
       return import('@/views/estate/humanity/aigc/TheAigcEcosystem.vue');
@@ -280,7 +269,7 @@ export default [
   },
   // 人文--玉知多模态大模型
   {
-    path: '/estate/humanity/yuzhi',
+    path: '/humanity/yuzhi',
     name: 'yuzhi',
     component: () => {
       return import('@/views/estate/humanity/yuzhi/TheYuzhiModelzoo.vue');
@@ -298,7 +287,7 @@ export default [
   },
   // 人文--手语教考一体机
   {
-    path: '/estate/humanity/sign-language',
+    path: '/humanity/sign-language',
     name: 'signLanguage',
     component: () => {
       return import(

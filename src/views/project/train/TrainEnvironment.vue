@@ -18,6 +18,9 @@ defineExpose({ environmentData });
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  background-color: #f5f6f8;
+  padding: 16px 48px 16px 16px;
+  border-radius: 16px;
   span {
     margin-left: 8px;
     margin-right: 8px;

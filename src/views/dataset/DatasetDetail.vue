@@ -100,7 +100,7 @@ watch(
           sumWidth.value += item.offsetWidth + 4;
         });
         containerWidth.value = containerRef.value.offsetWidth;
-        isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
+        isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
         sumWidth.value = 0;
       });
@@ -325,7 +325,7 @@ function confirmBtn() {
       });
       containerWidth.value = containerRef.value.offsetWidth;
 
-      isWrap.value = sumWidth.value - containerWidth.value > 0 ? true : false;
+      isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
       sumWidth.value = 0;
     });
@@ -705,7 +705,7 @@ $theme: #0d8dff;
       color: $theme;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
       .icon-x {
         padding: 2px;
@@ -717,7 +717,7 @@ $theme: #0d8dff;
 .dialog-body {
   border-top: 1px solid #d8d8d8;
   padding-top: 7px;
-  :deep .el-tabs__item {
+  :deep(.el-tabs__item) {
     width: 188px;
     height: 56px;
     text-align: left;
@@ -725,15 +725,19 @@ $theme: #0d8dff;
     font-size: 18px;
     padding-left: 24px;
   }
-  :deep .el-tabs .el-tabs__header {
+  :deep(.el-tabs .el-tabs__header) {
     box-shadow: none;
   }
   .el-tabs--left,
   .el-tabs--right {
     border-bottom: 1px solid #d8d8d8;
   }
-  :deep .el-tabs__item.is-active {
+  :deep(.el-tabs__item.is-active) {
     background: #f7f8fa;
+    border-radius: 28px;
+  }
+  :deep(.el-tabs__nav) {
+    background: #fff;
   }
   .tan-title {
     margin: 14px 0;
@@ -759,7 +763,7 @@ $theme: #0d8dff;
     color: #555;
     user-select: none;
     background-color: #f3f9ff;
-    border-radius: 8px;
+    border-radius: 14px;
     border: 1px solid #e5e5e5;
   }
   .condition-active {

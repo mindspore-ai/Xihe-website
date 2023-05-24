@@ -65,7 +65,7 @@ export const routes = [
         await checkEmail();
         next();
       } catch (err) {
-        if (err.response && err.response.data.code === 'user_no_email') {
+        if (err.code === 'user_no_email') {
           next(false);
         }
       }

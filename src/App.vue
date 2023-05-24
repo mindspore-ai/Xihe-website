@@ -96,6 +96,7 @@ const setHeader = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
+  window.addEventListener('mousewheel', scroll);
 });
 
 onUnmounted(() => {
@@ -232,8 +233,6 @@ function scroll(e) {
     }
   }
 }
-window.onmousewheel = scroll;
-// document.onmousewheel = scroll;
 
 const mobileNav = reactive([
   {

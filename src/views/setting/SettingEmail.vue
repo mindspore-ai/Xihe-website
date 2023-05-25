@@ -56,6 +56,11 @@ function verifySuccess(data) {
           type: 'error',
           message: '重复发送验证码',
         });
+      } else if (err.code === 'email_user_duplicate_send') {
+        ElMessage({
+          type: 'error',
+          message: '重复发送验证码',
+        });
       }
     });
 }

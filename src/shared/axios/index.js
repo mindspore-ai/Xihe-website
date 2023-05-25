@@ -108,11 +108,7 @@ const responseInterceptorId = request.interceptors.response.use(
         err.msg = '连接服务器失败!';
       }
     }
-    if (
-      !config.$doException &&
-      err.response &&
-      err.response.data.code !== 'user_no_email'
-    ) {
+    if (!config.$doException && err.code !== 'user_no_email') {
       ElMessage({
         type: 'error',
         message: err.msg,

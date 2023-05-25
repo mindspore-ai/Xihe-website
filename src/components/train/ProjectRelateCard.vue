@@ -31,7 +31,7 @@ defineProps({
 
 const emit = defineEmits(['delete', 'jump']);
 
-function goDetailClick(item) {
+function viewRelateProject(item) {
   emit('jump', item);
 }
 </script>
@@ -41,7 +41,7 @@ function goDetailClick(item) {
       v-for="item in detailData[name]"
       :key="item"
       class="project-item"
-      @click="goDetailClick(item)"
+      @click="viewRelateProject(item)"
     >
       <div class="card-top">
         <div class="card-top-left">
@@ -74,37 +74,6 @@ function goDetailClick(item) {
         @click.stop="removeItemClick(item)"
         ><icon-remove></icon-remove
       ></o-icon>
-      <!-- <div
-        class="card-top"
-        :style="{
-          backgroundImage:
-            'url(' +
-            `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png` +
-            ')',
-        }"
-      >
-        {{ item.name }}
-      </div>
-      <div class="project-bottom">
-        <div class="project-bottom-left">
-          <div v-if="item.owner" class="avatar">
-            <img :src="item.owner.avatar_id" />
-          </div>
-
-          <p v-if="item.owner" class="nick-name">
-            {{ item.owner.name }}
-          </p>
-        </div>
-        <div class="project-bottom-right">
-          <o-icon><icon-heart></icon-heart></o-icon>
-          {{ item.like_count }}
-
-          <div class="update-time" :title="i18n.uploadTime">
-            <o-icon> <icon-time></icon-time></o-icon>
-            {{ item.update_at }}
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

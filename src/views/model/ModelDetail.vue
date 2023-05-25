@@ -49,7 +49,7 @@ let renderList = ref([]);
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '清除',
+    delete: '清除全部',
   },
   tags: [],
 
@@ -555,13 +555,14 @@ watch(
         <template #header="{ titleId, title }">
           <div :id="titleId" :class="title">
             <div class="dialog-head">
-              <div class="head-left">
+              <div class="dialog-head-top">
                 <div class="head-title">{{ dialogList.head.title }}</div>
                 <div class="head-delete" @click="deleteModelTags">
                   <o-icon><icon-clear></icon-clear></o-icon>
                   {{ dialogList.head.delete }}
                 </div>
               </div>
+
               <div class="head-tags">
                 <div
                   v-for="it in headTags"
@@ -636,14 +637,15 @@ $theme: #0d8dff;
   :deep(.el-dialog) {
     .el-dialog__header {
       justify-content: flex-start;
+      padding-bottom: 16px;
     }
   }
   .dialog-head {
     display: flex;
-    align-items: flex-start;
-    .head-left {
-      width: 188px;
+    flex-direction: column;
+    .dialog-head-top {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-top: 10px;
       .head-title {
@@ -655,10 +657,12 @@ $theme: #0d8dff;
       .head-delete {
         font-size: 12px;
         line-height: 18px;
+        color: #555;
         display: flex;
         align-items: center;
         cursor: pointer;
         .o-icon {
+          font-size: 16px;
           margin-right: 6px;
           align-self: center;
         }
@@ -672,13 +676,14 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 6px;
       .dlg-condition-detail {
         cursor: pointer;
         display: flex;
         align-items: center;
-        padding: 0px 12px;
+        padding: 0px 10px 0 12px;
         margin: 10px 16px 0 0;
-        height: 28px;
+        height: 24px;
         font-size: 14px;
         color: $theme;
         user-select: none;

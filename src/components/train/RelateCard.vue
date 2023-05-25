@@ -71,15 +71,15 @@ watch(
         <p class="nick-name">{{ item.owner.name }}/{{ item.name }}</p>
       </div>
       <div class="dataset-bottom">
-        <div class="update-time" :title="i18n.uploadTime">
+        <div class="update-time">
           <o-icon> <icon-time></icon-time></o-icon>
           {{ item.update_at }}
         </div>
-        <div class="heart" title="👍">
+        <div class="heart">
           <o-icon><icon-heart></icon-heart></o-icon>
           {{ item.like_count }}
         </div>
-        <div class="download" :title="i18n.download">
+        <div class="download">
           <o-icon><icon-download></icon-download></o-icon>
           {{ item.download_count }}
         </div>

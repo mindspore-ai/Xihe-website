@@ -51,10 +51,10 @@ function verifySuccess(data) {
       regular.value = false;
     })
     .catch((err) => {
-      if (err?.response?.data?.code === 'email_code_error') {
+      if (err.code === 'email_email_duplicate_send') {
         ElMessage({
           type: 'error',
-          message: '发送验证码失败',
+          message: '重复发送验证码',
         });
       }
     });

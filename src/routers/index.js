@@ -57,8 +57,18 @@ export const routes = [
       return import('@/views/TheCreating.vue');
     },
     beforeEnter: async (to, from, next) => {
-      checkEmail();
-      next();
+      const logingStore = useLoginStore();
+      if (logingStore.isLoginNot) {
+        next({ name: '404' });
+      }
+      try {
+        await checkEmail();
+        next();
+      } catch (err) {
+        if (err.code === 'user_no_email') {
+          next(false);
+        }
+      }
     },
     children: [
       {

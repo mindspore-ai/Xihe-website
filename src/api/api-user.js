@@ -159,15 +159,19 @@ export function getUserEmail(id) {
 }
 export function sendCode(reopt) {
   const url = `/server/user/email/sendbind`;
-  return request.post(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .post(url, reopt, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 export function bindUserEmail(params) {
   const url = `/server/user/email/bind`;
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .post(url, params, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 export function changeUserEmail(params) {
   const url = `/api/users/change_email/`;

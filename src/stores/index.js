@@ -114,7 +114,7 @@ export const useLoadingState = defineStore('loading', {
   },
 });
 // 绑定邮箱弹窗
-export const useDialogState = defineStore('dialog', {
+export const useEmailDialogState = defineStore('dialog', {
   state: () => {
     return {
       dialogState: false,

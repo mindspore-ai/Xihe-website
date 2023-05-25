@@ -10,10 +10,10 @@ import { useUserInfoStore } from '@/stores';
 
 const userInfo = useUserInfoStore();
 
-const i18n = {
-  download: '下载量',
-  uploadTime: '上传时间',
-};
+// const i18n = {
+//   download: '下载量',
+//   uploadTime: '上传时间',
+// };
 
 const props = defineProps({
   // 数据集、模型的详情信息

@@ -412,7 +412,6 @@ function checkAllTags(val) {
 function retractAlltags(val) {
   isExpand.value = val;
 }
-
 watch(
   () => detailData.value,
   () => {
@@ -493,7 +492,6 @@ watch(
               <o-icon><icon-plus></icon-plus></o-icon>
               添加标签
             </div>
-
             <div
               ref="containerRef"
               class="label-box-left"
@@ -932,7 +930,6 @@ $theme: #0d8dff;
       }
     }
     .label-item {
-      cursor: pointer;
       display: flex;
       align-items: center;
       height: 20px;

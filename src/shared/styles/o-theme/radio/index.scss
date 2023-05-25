@@ -1,0 +1,29 @@
+@charset 'UFT-8';
+@use './var.scss';
+
+body {
+    .el-radio {
+        &.el-radio--large .el-radio__inner {
+            width: 16px;
+            height: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+
+            &::after {
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        &.el-radio--large .el-radio__label {
+            font-size: var(--o-radio-font_size);
+            line-height: var(--o-radio-line_height);
+            color: var(--o-radio-color);
+            font-weight: 400;
+        }
+
+        &.el-radio--large {
+            height: 24px;
+            margin: 0;
+        }
+    }
+}

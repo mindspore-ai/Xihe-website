@@ -8,6 +8,7 @@ import IconClear from '~icons/app/clear';
 import IconPlus from '~icons/app/plus';
 import IconTag from '~icons/app/icon-tag';
 import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
@@ -48,7 +49,7 @@ let renderList = ref([]);
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '清除',
+    delete: '清除全部',
   },
   tags: [],
 
@@ -422,7 +423,6 @@ watch(
         });
         containerWidth.value = containerRef.value.offsetWidth;
 
-        console.log(sumWidth.value - containerWidth.value);
         isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
 
         sumWidth.value = 0;
@@ -515,12 +515,12 @@ watch(
                   @click="checkAllTags(true)"
                 >
                   查看全部
-                  <div class="tags-mask"></div>
+                  <o-icon><icon-right></icon-right></o-icon>
                 </div>
 
                 <div v-else class="retract-tags" @click="retractAlltags(false)">
                   收起
-                  <div class="tags-mask"></div>
+                  <o-icon><icon-right></icon-right></o-icon>
                 </div>
               </template>
             </div>
@@ -555,13 +555,14 @@ watch(
         <template #header="{ titleId, title }">
           <div :id="titleId" :class="title">
             <div class="dialog-head">
-              <div class="head-left">
+              <div class="dialog-head-top">
                 <div class="head-title">{{ dialogList.head.title }}</div>
                 <div class="head-delete" @click="deleteModelTags">
                   <o-icon><icon-clear></icon-clear></o-icon>
                   {{ dialogList.head.delete }}
                 </div>
               </div>
+
               <div class="head-tags">
                 <div
                   v-for="it in headTags"
@@ -636,14 +637,15 @@ $theme: #0d8dff;
   :deep(.el-dialog) {
     .el-dialog__header {
       justify-content: flex-start;
+      padding-bottom: 16px;
     }
   }
   .dialog-head {
     display: flex;
-    align-items: flex-start;
-    .head-left {
-      width: 188px;
+    flex-direction: column;
+    .dialog-head-top {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-top: 10px;
       .head-title {
@@ -655,10 +657,12 @@ $theme: #0d8dff;
       .head-delete {
         font-size: 12px;
         line-height: 18px;
+        color: #555;
         display: flex;
         align-items: center;
         cursor: pointer;
         .o-icon {
+          font-size: 16px;
           margin-right: 6px;
           align-self: center;
         }
@@ -672,13 +676,14 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 6px;
       .dlg-condition-detail {
         cursor: pointer;
         display: flex;
         align-items: center;
-        padding: 0px 12px;
+        padding: 0px 10px 0 12px;
         margin: 10px 16px 0 0;
-        height: 28px;
+        height: 24px;
         font-size: 14px;
         color: $theme;
         user-select: none;
@@ -915,24 +920,14 @@ $theme: #0d8dff;
           color: #555555;
           line-height: 18px;
           padding: 2px 4px;
-          background: #fff;
+          color: #0d8dff;
           cursor: pointer;
-
-          .tags-mask {
-            position: absolute;
-            left: -49px;
-            top: 0;
-            width: 49px;
-            height: 20px;
-            background: linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0) 0%,
-              #ffffff 100%
-            );
+          .o-icon {
+            font-size: 16px;
           }
         }
         .retract-tags {
-          bottom: 16px;
+          bottom: 14px;
         }
       }
     }
@@ -974,8 +969,9 @@ $theme: #0d8dff;
   }
   .card-head-content {
     padding: 24px 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   .card-head-info {
     display: flex;

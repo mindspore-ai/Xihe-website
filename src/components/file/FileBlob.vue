@@ -386,6 +386,7 @@ watch(
     background-color: #ffffff;
     border-radius: 16px;
     overflow: hidden;
+    border: 1px solid #e5e5e5;
     .file {
       display: flex;
       padding: 0 12px;

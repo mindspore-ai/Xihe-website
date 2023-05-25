@@ -93,13 +93,13 @@ function onClick(e) {
   }
 }
 .digg-content {
-  width: 97px;
-  height: 36px;
+  // width: 97px;
+  height: 32px;
   display: flex;
   align-items: center;
-  padding: 6px 20px;
-  border: 1px solid #000000;
-  border-radius: 19px;
+  padding: 6px 16px;
+  background: #fff;
+  border-radius: 16px;
   position: relative;
   color: #555550;
   &:hover {

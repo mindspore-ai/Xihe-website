@@ -7,6 +7,7 @@ export default [
       return import('@/views/mindcon/TheMindCon.vue');
     },
   },
+  // mindCon
   {
     path: '/activity-1',
     name: 'activityTest',

@@ -492,9 +492,9 @@ function selectFile(item) {
         <span> 返回训练 </span>
       </div>
       <div class="createfile-content">
-        <div class="createfile-content-title">
-          <div class="createfile-content-title-left">创建训练实例</div>
-          <div class="createfile-content-title-right">
+        <div class="createfile-title">
+          <div class="title-left">创建训练实例</div>
+          <div class="title-right">
             <div class="createfile-option">创建配置文件</div>
           </div>
         </div>
@@ -632,30 +632,6 @@ function selectFile(item) {
             <div class="form-wrap-bottom">
               <div class="form-bottom">
                 <div class="createfile-form-item">
-                  <div class="item-icon">
-                    <el-popover
-                      placement="bottom-start"
-                      :width="372"
-                      trigger="hover"
-                      :teleported="true"
-                    >
-                      <template #reference>
-                        <o-icon style="font-size: 20px"
-                          ><icon-poppver></icon-poppver
-                        ></o-icon>
-                      </template>
-                      <div>
-                        <span style="color: red">引用参数: </span>
-                        用户要引用这个模型的参数。<br />
-                        <span style="color: red">用户名: </span>
-                        模型仓库的拥有者。<br />
-                        <span style="color: red">模型名: </span>
-                        模型仓库的名称。<br />
-                        <span style="color: red">文件路径: </span>
-                        模型仓库的文件路径。<br />
-                      </div>
-                    </el-popover>
-                  </div>
                   <el-form-item class="model" label="输入模型">
                     <div
                       v-for="item in modelList"
@@ -669,37 +645,37 @@ function selectFile(item) {
                         ></o-icon>
                       </div>
                     </div>
-                    <div class="addModel" @click="addModel">
+                    <div class="add-model" @click="addModel">
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加训练输入模型</span>
+                    </div>
+                    <div class="item-icon">
+                      <el-popover
+                        placement="bottom-start"
+                        :width="372"
+                        trigger="hover"
+                        :teleported="true"
+                      >
+                        <template #reference>
+                          <o-icon style="font-size: 20px"
+                            ><icon-poppver></icon-poppver
+                          ></o-icon>
+                        </template>
+                        <div>
+                          <span style="color: red">引用参数: </span>
+                          用户要引用这个模型的参数。<br />
+                          <span style="color: red">用户名: </span>
+                          模型仓库的拥有者。<br />
+                          <span style="color: red">模型名: </span>
+                          模型仓库的名称。<br />
+                          <span style="color: red">文件路径: </span>
+                          模型仓库的文件路径。<br />
+                        </div>
+                      </el-popover>
                     </div>
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <div class="item-icon">
-                    <el-popover
-                      placement="bottom-start"
-                      :width="372"
-                      trigger="hover"
-                      :teleported="true"
-                    >
-                      <template #reference>
-                        <o-icon style="font-size: 20px"
-                          ><icon-poppver></icon-poppver
-                        ></o-icon>
-                      </template>
-                      <div>
-                        <span style="color: red">引用参数: </span>
-                        用户要引用这个数据集的参数。<br />
-                        <span style="color: red">用户名: </span>
-                        数据集仓库的拥有者。<br />
-                        <span style="color: red">数据集名: </span>
-                        数据集仓库的名称。<br />
-                        <span style="color: red">文件路径: </span>
-                        数据集仓库的文件路径。<br />
-                      </div>
-                    </el-popover>
-                  </div>
                   <el-form-item class="dataset" label="输入数据集">
                     <div
                       v-for="item in datasetList"
@@ -713,11 +689,35 @@ function selectFile(item) {
                         ></o-icon>
                       </div>
                     </div>
-                    <div class="addModel" @click="addDataset">
+                    <div class="add-model" @click="addDataset">
                       <o-icon>
                         <icon-add-list></icon-add-list>
                       </o-icon>
                       <span>添加训练输入数据集</span>
+                    </div>
+                    <div class="item-icon">
+                      <el-popover
+                        placement="bottom-start"
+                        :width="372"
+                        trigger="hover"
+                        :teleported="true"
+                      >
+                        <template #reference>
+                          <o-icon style="font-size: 20px"
+                            ><icon-poppver></icon-poppver
+                          ></o-icon>
+                        </template>
+                        <div>
+                          <span style="color: red">引用参数: </span>
+                          用户要引用这个数据集的参数。<br />
+                          <span style="color: red">用户名: </span>
+                          数据集仓库的拥有者。<br />
+                          <span style="color: red">数据集名: </span>
+                          数据集仓库的名称。<br />
+                          <span style="color: red">文件路径: </span>
+                          数据集仓库的文件路径。<br />
+                        </div>
+                      </el-popover>
                     </div>
                   </el-form-item>
                 </div>
@@ -742,24 +742,6 @@ function selectFile(item) {
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <div class="item-icon">
-                    <el-popover
-                      placement="bottom-start"
-                      :width="372"
-                      trigger="hover"
-                      :teleported="true"
-                    >
-                      <template #reference>
-                        <o-icon style="font-size: 20px"
-                          ><icon-poppver></icon-poppver
-                        ></o-icon>
-                      </template>
-                      <div>
-                        在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
-                        <br />
-                      </div>
-                    </el-popover>
-                  </div>
                   <el-form-item label="超参" class="hyperparams">
                     <div
                       v-for="item in hyperparamsList"
@@ -773,38 +755,31 @@ function selectFile(item) {
                         </o-icon>
                       </div>
                     </div>
-                    <div class="addModel" @click="addHyperparams">
+                    <div class="add-model" @click="addHyperparams">
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加超参</span>
+                    </div>
+                    <div class="item-icon">
+                      <el-popover
+                        placement="bottom-start"
+                        :width="372"
+                        trigger="hover"
+                        :teleported="true"
+                      >
+                        <template #reference>
+                          <o-icon style="font-size: 20px"
+                            ><icon-poppver></icon-poppver
+                          ></o-icon>
+                        </template>
+                        <div>
+                          在您的算法代码中除了模型、数据集等参数，其它需传入的参数，比如学习率、迭代次数等，此参数将会用于自动评估中上下文信息的显示。
+                          <br />
+                        </div>
+                      </el-popover>
                     </div>
                   </el-form-item>
                 </div>
                 <div class="createfile-form-item">
-                  <div class="item-icon">
-                    <el-popover
-                      placement="bottom-start"
-                      :width="372"
-                      trigger="hover"
-                      :teleported="true"
-                    >
-                      <template #reference>
-                        <o-icon style="font-size: 20px"
-                          ><icon-poppver></icon-poppver
-                        ></o-icon>
-                      </template>
-                      <div>
-                        格式为：
-                        <div style="color: red">
-                          { <br />&nbsp;&nbsp;&nbsp;&nbsp;"环境变量1":
-                          &lt;"环境变量值1"&gt;, <br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;...<br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;"环境变量n":&lt;"环境变量值n"&gt;
-                          <br />&nbsp;&nbsp;}
-                        </div>
-                        注意{}末尾不能有逗号,且只能是双引号
-                      </div>
-                    </el-popover>
-                  </div>
                   <el-form-item label="环境变量" class="environment">
                     <div
                       v-for="item in environmentList"
@@ -818,9 +793,34 @@ function selectFile(item) {
                         </o-icon>
                       </div>
                     </div>
-                    <div class="addModel" @click="addEnvironment">
+                    <div class="add-model" @click="addEnvironment">
                       <o-icon> <icon-add-list></icon-add-list> </o-icon>
                       <span>添加环境变量</span>
+                    </div>
+                    <div class="item-icon">
+                      <el-popover
+                        placement="bottom-start"
+                        :width="372"
+                        trigger="hover"
+                        :teleported="true"
+                      >
+                        <template #reference>
+                          <o-icon style="font-size: 20px"
+                            ><icon-poppver></icon-poppver
+                          ></o-icon>
+                        </template>
+                        <div>
+                          格式为：
+                          <div style="color: red">
+                            { <br />&nbsp;&nbsp;&nbsp;&nbsp;"环境变量1":
+                            &lt;"环境变量值1"&gt;, <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;"环境变量n":&lt;"环境变量值n"&gt;
+                            <br />&nbsp;&nbsp;}
+                          </div>
+                          注意{}末尾不能有逗号,且只能是双引号
+                        </div>
+                      </el-popover>
                     </div>
                   </el-form-item>
                 </div>
@@ -958,20 +958,21 @@ function selectFile(item) {
     .createfile-content {
       padding: 16px 32px;
       background-color: #fff;
+      border-radius: 16px;
 
-      &-title {
+      .createfile-title {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: 48px;
         line-height: 48px;
         margin-bottom: 16px;
-        &-left {
+        .title-left {
           font-size: 18px;
           color: #000;
           cursor: pointer;
         }
-        &-right {
+        .title-right {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -1062,9 +1063,9 @@ function selectFile(item) {
               margin-top: 27px;
               .item-icon {
                 position: absolute;
-                top: 5px;
-                left: 85px;
-                // transform: translateY(-50%);
+                right: -28px;
+                bottom: -6px;
+                vertical-align: middle;
               }
             }
           }
@@ -1119,6 +1120,9 @@ function selectFile(item) {
         }
       }
     }
+    .el-form-item__label {
+      margin-left: 4px;
+    }
     .el-form-item__label::before {
       width: 18px;
       height: 18px;
@@ -1143,12 +1147,15 @@ function selectFile(item) {
       display: flex;
       align-items: flex-start;
       flex-direction: column;
-      .addModel {
+      .add-model {
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        color: #000;
+        color: #0d8dff;
         cursor: pointer;
+        border: 1px dashed #0d8dff;
+        border-radius: 16px;
         &:hover {
           color: #0d8dff;
         }
@@ -1159,12 +1166,11 @@ function selectFile(item) {
       .model-list {
         width: 100%;
         position: relative;
+        // background-color: red;
         .delete-btn {
           position: absolute;
-          top: 50%;
-          transform: translateY(-80%);
-          right: -30px;
-          display: flex;
+          top: 8px;
+          right: 8px;
           cursor: pointer;
           .o-icon {
             font-size: 24px;
@@ -1174,14 +1180,4 @@ function selectFile(item) {
     }
   }
 }
-
-/* :deep(.el-dialog) {
-  .el-dialog__header{
-    padding-bottom: 24px !important;
-  }
-  .el-dialog__body{
-    background-color: red;
-
-  }
-} */
 </style>

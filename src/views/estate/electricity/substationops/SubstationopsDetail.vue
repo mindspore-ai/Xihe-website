@@ -16,7 +16,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/electricity' }">
+          <el-breadcrumb-item :to="{ path: '/electricity' }">
             电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">

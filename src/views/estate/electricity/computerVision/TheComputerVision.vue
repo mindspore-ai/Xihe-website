@@ -188,7 +188,7 @@ function goCasePath(item) {
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-datasets">
-          <span> 更多模型 </span>
+          <span> 更多数据集 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
       </div>

@@ -414,7 +414,9 @@ function getModel() {
   getModelData(queryData).then((res) => {
     modelCount.value = res.data.total;
     if (modelCount.value / queryData.count_per_page < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+      layout.value = 'total, sizes, prev, pager, next';
+    } else {
+      layout.value = 'total, sizes, prev, pager, next, jumper';
     }
     modelData.value = res.data;
   });
@@ -457,14 +459,17 @@ async function getModelTag() {
     });
   });
 }
-// getModelTag();
+// getModelTag();prev, pager, next, jumper, ->, total
 
-const layout = ref(' prev, pager, next,sizes, jumper');
+const layout = ref('total, sizes, prev, pager, next, jumper');
 
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
-    layout.value = layout.value.split(',').splice(0, 4).join(',');
+    layout.value = 'total, sizes, prev, pager, next';
+  } else {
+    layout.value = 'total, sizes, prev, pager, next, jumper';
   }
+
   queryData.count_per_page = val;
 }
 

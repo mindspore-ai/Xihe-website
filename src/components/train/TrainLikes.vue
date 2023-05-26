@@ -104,8 +104,7 @@ function onClick(e) {
   color: #555550;
   &:hover {
     .digg-counts {
-      opacity: 1;
-      transition: all 0.5s;
+      display: block;
     }
   }
 }
@@ -122,7 +121,7 @@ function onClick(e) {
   transform: translateX(-50%);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
   z-index: 2;
-  opacity: 0;
+  display: none;
   &::before {
     content: '';
     width: 0px;

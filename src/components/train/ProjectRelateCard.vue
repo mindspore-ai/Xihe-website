@@ -48,11 +48,7 @@ function viewRelateProject(item) {
           <img class="avatar" :src="item.owner.avatar_id" alt="" />
         </div>
 
-        <div class="card-top-right">
-          {{ item.owner.name }}
-          /
-          {{ item.name }}
-        </div>
+        <div class="card-top-right">{{ item.owner.name }}/{{ item.name }}</div>
       </div>
 
       <div class="card-bottom">
@@ -90,6 +86,9 @@ function viewRelateProject(item) {
   overflow: hidden;
   position: relative;
   border: 1px solid #e5e5e5;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &:hover {
     transition: all 0.5s;
     box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
@@ -136,6 +135,7 @@ function viewRelateProject(item) {
       margin-right: 16px;
     }
     .o-icon {
+      font-size: 14px;
       margin-right: 6px;
     }
   }

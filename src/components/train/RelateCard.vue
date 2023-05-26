@@ -97,6 +97,9 @@ watch(
   border: 1px solid #e5e5e5;
   position: relative;
   margin-bottom: 16px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &:hover {
     box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
     transition: all 0.2s linear;
@@ -155,7 +158,7 @@ watch(
       align-items: center;
       margin-right: 24px;
       .o-icon {
-        font-size: 16px;
+        font-size: 14px;
         margin-right: 4px;
         fill: #555;
       }

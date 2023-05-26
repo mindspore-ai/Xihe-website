@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import cancerImg from '@/assets/imgs/estate/medicine/endometrial-cancer.png';
 import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
 import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
+import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 const cases = [
   {
@@ -75,7 +75,7 @@ function goCasePath(item) {
   .medicine-head {
     padding-top: 80px;
     position: relative;
-    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-image: url('@/assets/imgs/estate/estate-banner.png');
     background-size: cover;
     background-position: 50% 50%;
     img {

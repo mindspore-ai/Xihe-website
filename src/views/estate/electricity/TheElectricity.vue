@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 // import { useRouter } from 'vue-router';
 
-import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
+import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import IconCV from '~icons/app/CV';
 import IconNLP from '~icons/app/NLP';
@@ -195,7 +195,7 @@ const logoPic = [
   .electricity-head {
     padding-top: 80px;
     position: relative;
-    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-image: url('@/assets/imgs/estate/estate-banner.png');
     background-size: cover;
     background-position: 50% 50%;
     img {

@@ -2,7 +2,7 @@
 import case1 from '@/assets/imgs/estate/humanity/case-aigc.png';
 import case2 from '@/assets/imgs/estate/humanity/case-yuzhi.png';
 import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
+import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -73,7 +73,7 @@ function goCasePath(item) {
   .humanity-head {
     padding-top: 80px;
     position: relative;
-    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-image: url('@/assets/imgs/estate/estate-banner.png');
     background-size: cover;
     background-position: 50% 50%;
     img {

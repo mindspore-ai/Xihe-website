@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/industry/metal-part.png';
 import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
 import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.jpg';
+import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 const router = useRouter();
 const cases = [
@@ -74,7 +74,7 @@ function goCasePath(item) {
   .industry-head {
     padding-top: 80px;
     position: relative;
-    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
+    background-image: url('@/assets/imgs/estate/estate-banner.png');
     background-size: cover;
     background-position: 50% 50%;
     img {

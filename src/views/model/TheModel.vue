@@ -17,6 +17,8 @@ import { useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
 
+import AppContent from '@/components/AppContent.vue';
+
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
 
@@ -562,118 +564,68 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="model-body wrap">
-      <!-- 应用分类查看全部-->
-      <div v-show="showDetail" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">{{ i18n.taskSort }}</p>
-        <div
-          v-for="(item, index) in radioList.condition"
-          :key="item.id"
-          class="condition-item"
-        >
-          <div v-if="radioList.title.text === '应用分类'">
-            <div class="condition-title">
-              <span>{{ item.kind }}</span>
-              <div
-                v-if="item.haveActive"
-                class="clear"
-                @click="clearSortItem(index)"
-              >
-                <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-                <span>{{ i18n.clear }}</span>
-              </div>
-            </div>
-            <!-- 应用分类二级标签 -->
-            <div class="condition-box-all">
-              <div
-                v-for="(detail, index2) in item.items"
-                :key="detail"
-                class="condition-detail"
-                :class="{
-                  'condition-active1': detail.isActive === true,
-                  'condition-active': detail.isSelected === true,
-                }"
-                @click="sortTagClick(index, index2)"
-              >
-                {{ detail.name }}
-                <o-icon class="icon-x">
-                  <icon-x></icon-x>
-                </o-icon>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 处理器-文件格式...二级标签 -->
-      <div v-show="showTags" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">{{ modalName }}</p>
-        <div class="condition-radio">
+    <AppContent :pc-top="40">
+      <div class="model-body">
+        <!-- 应用分类查看全部-->
+        <div v-show="showDetail" class="condition">
+          <p class="getback" @click="backCondition">
+            <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
+          </p>
+          <p class="sort-title">{{ i18n.taskSort }}</p>
           <div
-            v-for="detail in radioList2.items"
-            :key="detail"
-            class="condition-detail"
-            :class="{
-              'condition-active1': detail.isActive === true,
-              'condition-active': detail.isSelected === true,
-            }"
-            @click="radioClick(detail, radioItem)"
+            v-for="(item, index) in radioList.condition"
+            :key="item.id"
+            class="condition-item"
           >
-            {{ detail.name }}
-            <o-icon class="icon-x">
-              <icon-x></icon-x>
-            </o-icon>
+            <div v-if="radioList.title.text === '应用分类'">
+              <div class="condition-title">
+                <span>{{ item.kind }}</span>
+                <div
+                  v-if="item.haveActive"
+                  class="clear"
+                  @click="clearSortItem(index)"
+                >
+                  <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
+                  <span>{{ i18n.clear }}</span>
+                </div>
+              </div>
+              <!-- 应用分类二级标签 -->
+              <div class="condition-box-all">
+                <div
+                  v-for="(detail, index2) in item.items"
+                  :key="detail"
+                  class="condition-detail"
+                  :class="{
+                    'condition-active1': detail.isActive === true,
+                    'condition-active': detail.isSelected === true,
+                  }"
+                  @click="sortTagClick(index, index2)"
+                >
+                  {{ detail.name }}
+                  <o-icon class="icon-x">
+                    <icon-x></icon-x>
+                  </o-icon>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- 一级标签 -->
-      <div v-show="showCondition" class="condition">
-        <div
-          v-for="(item, index) in renderCondition"
-          :key="item"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.title.text }}</span>
-            <div v-if="item.haveActive" class="clear" @click="clearItem(index)">
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-          <!-- 应用分类一级标签 -->
-          <div v-if="item.title.text === '应用分类'" class="condition-box">
+        <!-- 处理器-文件格式...二级标签 -->
+        <div v-show="showTags" class="condition">
+          <p class="getback" @click="backCondition">
+            <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
+          </p>
+          <p class="sort-title">{{ modalName }}</p>
+          <div class="condition-radio">
             <div
-              v-for="(detail, index2) in item.condition"
+              v-for="detail in radioList2.items"
               :key="detail"
               class="condition-detail"
               :class="{
                 'condition-active1': detail.isActive === true,
                 'condition-active': detail.isSelected === true,
               }"
-              @click="conditionClick(index, index2, detail)"
-            >
-              {{ detail.kind }}
-              <o-icon class="icon-x">
-                <icon-x></icon-x>
-              </o-icon>
-            </div>
-          </div>
-          <!-- 其他标签、协议一级标签 -->
-          <div v-else class="condition-box">
-            <div
-              v-for="(detail, index2) in item.condition[0].items"
-              :key="detail"
-              class="condition-detail"
-              :class="{
-                'condition-active1': detail.isActive === true,
-                'condition-active': detail.isSelected === true,
-              }"
-              @click="conditionClick(index, index2, detail)"
+              @click="radioClick(detail, radioItem)"
             >
               {{ detail.name }}
               <o-icon class="icon-x">
@@ -681,73 +633,129 @@ onUnmounted(() => {
               </o-icon>
             </div>
           </div>
+        </div>
+        <!-- 一级标签 -->
+        <div v-show="showCondition" class="condition">
           <div
-            v-if="renderCondition[index].condition[0].items.length >= 5"
-            class="radio-all"
+            v-for="(item, index) in renderCondition"
+            :key="item"
+            class="condition-item"
           >
-            <div class="check-all-modal"></div>
-            <span @click="checkAllClick(item, index)">查看全部</span>
+            <div class="condition-title">
+              <span>{{ item.title.text }}</span>
+              <div
+                v-if="item.haveActive"
+                class="clear"
+                @click="clearItem(index)"
+              >
+                <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
+                <span>{{ i18n.clear }}</span>
+              </div>
+            </div>
+            <!-- 应用分类一级标签 -->
+            <div v-if="item.title.text === '应用分类'" class="condition-box">
+              <div
+                v-for="(detail, index2) in item.condition"
+                :key="detail"
+                class="condition-detail"
+                :class="{
+                  'condition-active1': detail.isActive === true,
+                  'condition-active': detail.isSelected === true,
+                }"
+                @click="conditionClick(index, index2, detail)"
+              >
+                {{ detail.kind }}
+                <o-icon class="icon-x">
+                  <icon-x></icon-x>
+                </o-icon>
+              </div>
+            </div>
+            <!-- 其他标签、协议一级标签 -->
+            <div v-else class="condition-box">
+              <div
+                v-for="(detail, index2) in item.condition[0].items"
+                :key="detail"
+                class="condition-detail"
+                :class="{
+                  'condition-active1': detail.isActive === true,
+                  'condition-active': detail.isSelected === true,
+                }"
+                @click="conditionClick(index, index2, detail)"
+              >
+                {{ detail.name }}
+                <o-icon class="icon-x">
+                  <icon-x></icon-x>
+                </o-icon>
+              </div>
+            </div>
+            <div
+              v-if="renderCondition[index].condition[0].items.length >= 5"
+              class="radio-all"
+            >
+              <div class="check-all-modal"></div>
+              <span @click="checkAllClick(item, index)">查看全部</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="card-box">
-        <div class="card-box-top">
-          <div class="card-head">
-            <div class="model-number">
-              {{ i18n.head.count }} <span>{{ modelCount }}</span>
+        <div class="card-box">
+          <div class="card-box-top">
+            <div class="card-head">
+              <div class="model-number">
+                {{ i18n.head.count }} <span>{{ modelCount }}</span>
+              </div>
+              <div class="moderl-head-right">
+                <el-input
+                  v-model="keyWord"
+                  :prefix-icon="Search"
+                  class="w-50 m-2"
+                  placeholder="请输入模型名称"
+                  @change="getKeyWord"
+                />
+                <el-dropdown popper-class="filter">
+                  <span class="el-dropdown-link">
+                    <o-icon>
+                      <icon-menu></icon-menu>
+                    </o-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item
+                        v-for="item in i18n.sortCondition"
+                        :key="item"
+                        @click="dropdownClick(item)"
+                        >{{ item.text }}</el-dropdown-item
+                      >
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
             </div>
-            <div class="moderl-head-right">
-              <el-input
-                v-model="keyWord"
-                :prefix-icon="Search"
-                class="w-50 m-2"
-                placeholder="请输入模型名称"
-                @change="getKeyWord"
-              />
-              <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon>
-                    <icon-menu></icon-menu>
-                  </o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </div>
-          </div>
 
-          <div v-if="modelData.projects" class="card-list">
-            <app-card
-              v-for="item in modelData.projects"
-              :key="item.id"
-              :card-data="item"
-              :avatar-img="item.avatar_id"
-              @click="goDetail(item.owner, item.name)"
-            ></app-card>
-            <div v-if="modelCount > 10" class="pagination">
-              <el-pagination
-                :page-sizes="[10, 20, 50]"
-                :current-page="queryData.page_num"
-                :page-size="queryData.count_per_page"
-                :total="modelCount"
-                :layout="layout"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-              ></el-pagination>
+            <div v-if="modelData.projects" class="card-list">
+              <app-card
+                v-for="item in modelData.projects"
+                :key="item.id"
+                :card-data="item"
+                :avatar-img="item.avatar_id"
+                @click="goDetail(item.owner, item.name)"
+              ></app-card>
+              <div v-if="modelCount > 10" class="pagination">
+                <el-pagination
+                  :page-sizes="[10, 20, 50]"
+                  :current-page="queryData.page_num"
+                  :page-size="queryData.count_per_page"
+                  :total="modelCount"
+                  :layout="layout"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                ></el-pagination>
+              </div>
             </div>
+            <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
           </div>
-          <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
         </div>
       </div>
-    </div>
+    </AppContent>
   </div>
 </template>
 
@@ -792,6 +800,7 @@ $theme: #0d8dff;
   }
   .model-body {
     display: flex;
+    padding-bottom: 72px;
     .condition {
       position: relative;
       width: 100%;
@@ -1004,7 +1013,7 @@ $theme: #0d8dff;
           display: flex;
           justify-content: center;
           position: absolute;
-          bottom: -76px;
+          bottom: -72px;
           left: 50%;
           transform: translateX(-50%);
         }

@@ -68,18 +68,21 @@ let tabTitle = reactive([
     id: 0,
     path: '',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '文件',
     id: 1,
     path: 'tree',
     isPrivate: false,
+    isOnline: 'online',
   },
   {
     label: '设置',
     id: 2,
     path: 'settings',
     isPrivate: true,
+    isOnline: '',
   },
 ]);
 const activeName = ref(tabTitle[route.meta.index].label);
@@ -113,7 +116,7 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
+        return !item.isPrivate && item.isOnline !== detailData.value.repo_type;
       });
 });
 onBeforeRouteLeave(() => {

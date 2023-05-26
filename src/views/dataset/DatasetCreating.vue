@@ -20,8 +20,12 @@ const i18n = {
   license: '协议',
   visualization: '仓库属性',
   preserve: '保存',
-  public: '所有人可见',
-  private: '仅自己可见',
+  public:
+    '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型',
+  online:
+    '其他用户可浏览、收藏你的目模型，但仅有你及你的团队可以下载文件和编辑模型',
+  private:
+    '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型',
   placeholder: {
     name: '请输入数据集名称',
     describe: '请输入内容',
@@ -210,11 +214,15 @@ function checkName(rule, value, callback) {
           <el-radio v-model="query.repo_type" label="public" size="large"
             >Public</el-radio
           >
-          <div class="explain1">{{ i18n.public }}</div>
+          <div class="explain">{{ i18n.public }}</div>
+          <el-radio v-model="query.repo_type" label="online" size="large"
+            >Online</el-radio
+          >
+          <div class="explain">{{ i18n.private }}</div>
           <el-radio v-model="query.repo_type" label="private" size="large"
             >Private</el-radio
           >
-          <div class="explain2">{{ i18n.private }}</div>
+          <div class="explain">{{ i18n.private }}</div>
         </div>
       </el-form-item>
       <o-button type="primary" @click="create(queryRef)">{{
@@ -313,12 +321,13 @@ function checkName(rule, value, callback) {
           height: 32px;
         }
 
-        .explain1 {
+        .explain {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;
+          white-space: pre;
         }
-        .explain2 {
+        .explain {
           color: #999999;
           font-size: 14px;
           padding-left: 22px;

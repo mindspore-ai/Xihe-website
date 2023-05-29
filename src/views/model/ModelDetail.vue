@@ -86,13 +86,27 @@ let tabTitle = reactive([
 const activeName = ref(tabTitle[route.meta.index].label);
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
-  return detailData.value.is_owner
-    ? tabTitle
-    : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+  return getRenderNav();
 });
 
+function getRenderNav() {
+  if (detailData.value.is_owner) {
+    return tabTitle;
+  } else {
+    if (detailData.value.repo_type === 'online') {
+      return [...tabTitle].splice(0, 1);
+    } else if (detailData.value.repo_type === 'public') {
+      return [...tabTitle].splice(0, 2);
+    }
+  }
+}
+
+// console.log(detailData.value);
+// return detailData.value.is_owner
+//   ? tabTitle
+//   : tabTitle.filter((item) => {
+//       return !item.isPrivate;
+//     });
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -700,7 +714,6 @@ $theme: #0d8dff;
   }
   .dialog-body {
     border-top: 1px solid #d8d8d8;
-    padding-top: 7px;
     :deep(.el-tabs__item) {
       width: 188px;
       height: 56px;
@@ -711,9 +724,11 @@ $theme: #0d8dff;
     }
     :deep(.el-tabs .el-tabs__header) {
       box-shadow: none;
+      min-height: 320px;
+      background: #f7f8fa;
     }
     :deep(.el-tabs__nav) {
-      background: #fff;
+      background: #f7f8fa;
     }
 
     .el-tabs--left,
@@ -721,8 +736,7 @@ $theme: #0d8dff;
       border-bottom: 1px solid #d8d8d8;
     }
     :deep .el-tabs__item.is-active {
-      background: #f7f8fa;
-      border-radius: 28px;
+      background: #fff;
     }
     .tan-title {
       margin: 14px 0;
@@ -948,10 +962,9 @@ $theme: #0d8dff;
       align-items: center;
       height: 20px;
       padding: 2px 8px 2px 4px;
-      background: #f7f8fa;
+      background: rgba(5, 142, 240, 0.15);
       border-radius: 14px;
-      border: 1px solid #999999;
-      color: #555;
+      color: #0d8dff;
       white-space: nowrap;
       cursor: pointer;
       margin-right: 4px;

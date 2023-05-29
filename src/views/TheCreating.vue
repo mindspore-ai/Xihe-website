@@ -76,7 +76,7 @@ const bannerLabel = computed(() => {
   .wrap {
     display: flex;
     justify-content: space-between;
-    padding: 80px 16px;
+    padding: 40px 16px;
     color: #000;
     margin: 0 auto;
 

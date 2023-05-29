@@ -132,6 +132,18 @@ export function addDownloadRecord(id) {
     return res.data;
   });
 }
+
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getReadmeInfo(ownerName, modelName) {
+  const url = `/server/repo/model/${ownerName}/${modelName}/readme`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
 /**
  * 创建模型集仓库
  * @returns

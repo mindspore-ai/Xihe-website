@@ -301,7 +301,7 @@ watch(
       <col width="350px" />
       <col width="282px" />
       <col width="564px" />
-      <col width="218px" />
+      <col width="202px" />
       <tbody style="100%">
         <tr class="tree-head">
           <td colspan="3">

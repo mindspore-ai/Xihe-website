@@ -215,6 +215,9 @@ $theme: #0d8dff;
   }
 }
 .model-file {
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
   .file-top {
     display: flex;
     align-items: center;
@@ -223,7 +226,8 @@ $theme: #0d8dff;
     &-left {
       .file-path {
         display: flex;
-        font-size: 18px;
+        font-size: 14px;
+        color: #555;
         .item-path {
           cursor: pointer;
           &:hover {

@@ -12,6 +12,7 @@ import IconEditing from '~icons/app/editing';
 import IconDelete from '~icons/app/delete';
 import IconDownload from '~icons/app/download';
 import warningImg from '@/assets/icons/warning.png';
+import IconRight from '~icons/app/arrow-right2';
 
 import { changeByte } from '@/shared/utils';
 import { useLoadingState } from '@/stores/index';
@@ -225,13 +226,14 @@ watch(
       <div class="item-path" @click="handleClick(null)">
         {{ routerParams.name }}
       </div>
+      <o-icon><IconRight></IconRight></o-icon>
       <div
         v-for="(item, index) in routerParams.contents"
         :key="item"
         class="item-path"
         @click="handleClick(index + 1)"
       >
-        /{{ item }}
+        {{ item }}
       </div>
     </div>
     <div class="editing-card">
@@ -367,17 +369,32 @@ watch(
     }
   }
 }
+
 .file-editing {
   background-color: #f5f6f8;
   max-width: 1448px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
   .file-path {
     display: flex;
-    font-size: 18px;
-    margin-bottom: 12px;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 24px;
+    .o-icon {
+      font-size: 24px;
+      margin: 0 4px 0 10px;
+    }
     .item-path {
       cursor: pointer;
+      height: 24px;
+      line-height: 24px;
       &:hover {
         text-decoration: underline;
+      }
+      .o-icon {
+        font-size: 24px;
+        margin: 0 4px 0 10px;
       }
     }
   }

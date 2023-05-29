@@ -45,7 +45,7 @@ const pushParams = {
 
 const i18n = {
   recentDownload: '近期下载量',
-  dataset: '训练数据集',
+  dataset: '相关数据集',
   addDataset: '添加相关数据集',
   addProject: '添加相关项目',
   download: '下载量',
@@ -136,6 +136,7 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
+  console.log(item);
   if (item.type === 'dataset') {
     deleteDataset(
       { id: item.id, owner: item.owner.name },
@@ -359,24 +360,26 @@ watch(
   background-color: #f5f6f8;
   .markdown-body {
     position: relative;
-    margin-right: 40px;
+    margin-right: 24px;
     width: 100%;
-    border-right: 1px solid #d8d8d8;
+    // border-right: 1px solid #d8d8d8;
     .markdown-file {
       // max-width: 800px;
-      padding-right: 40px;
+      // padding-right: 40px;
+      padding: 24px;
+      background: #fff;
+      border-radius: 16px;
     }
     .o-button {
       position: absolute;
-      top: 0px;
-      right: 40px;
+      top: 24px;
+      right: 24px;
     }
   }
   .upload-readme {
     display: flex;
     flex-direction: column;
     align-items: center;
-    // justify-content: center;
     font-size: 14px;
     max-height: 700px;
     .upload-readme-img {
@@ -402,9 +405,13 @@ watch(
   }
   .right-data {
     flex-shrink: 0;
-    max-width: 425px;
+    max-width: 463px;
     width: 100%;
     color: #000;
+    background: #fff;
+    padding: 40px 24px;
+    border-radius: 16px;
+
     h1,
     h2,
     h3,
@@ -459,9 +466,7 @@ watch(
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        // margin-top: 24px;
         .dataset-item {
-          // max-width: 424px;
           width: 100%;
           padding: 24px;
           background-color: #fff;
@@ -505,7 +510,7 @@ watch(
       align-items: center;
     }
     .title {
-      margin: 48px 0 24px;
+      margin: 40px 0 24px;
       font-size: 18px;
       line-height: 24px;
     }

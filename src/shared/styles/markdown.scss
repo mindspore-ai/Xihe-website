@@ -58,15 +58,15 @@
     }
   }
 
-  // h1:first-child {
-  //   &::before {
-  //     content: '';
-  //     display: block;
-  //     height: 80px;
-  //     margin-top: -130px;
-  //     visibility: hidden;
-  //   }
-  // }
+  h1:first-child {
+    &::before {
+      content: '';
+      display: block;
+      height: 80px;
+      margin-top: -124px;
+      visibility: hidden;
+    }
+  }
 
   // h1,
   // h2,

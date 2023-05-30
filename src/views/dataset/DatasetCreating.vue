@@ -212,15 +212,15 @@ function checkName(rule, value, callback) {
         <div></div>
         <div class="radio">
           <el-radio v-model="query.repo_type" label="public" size="large"
-            >Public</el-radio
+            >完全公开</el-radio
           >
           <div class="explain">{{ i18n.public }}</div>
           <el-radio v-model="query.repo_type" label="online" size="large"
-            >Online</el-radio
+            >部分公开</el-radio
           >
-          <div class="explain">{{ i18n.private }}</div>
+          <div class="explain">{{ i18n.online }}</div>
           <el-radio v-model="query.repo_type" label="private" size="large"
-            >Private</el-radio
+            >私有</el-radio
           >
           <div class="explain">{{ i18n.private }}</div>
         </div>
@@ -263,7 +263,7 @@ function checkName(rule, value, callback) {
   }
 
   .creating-box {
-    padding-top: 48px;
+    padding-top: 16px;
     margin: 0 auto;
     max-width: 1416px;
     background: #ffffff;
@@ -300,7 +300,7 @@ function checkName(rule, value, callback) {
         line-height: 34px;
       }
       margin-top: 24px;
-      width: 520px;
+      width: 700px;
       display: flex;
       justify-content: space-between;
       :deep(.el-select__popper) {
@@ -318,7 +318,7 @@ function checkName(rule, value, callback) {
         flex-direction: column;
         justify-content: space-between;
         .el-radio.el-radio--large {
-          height: 32px;
+          height: 24px;
         }
 
         .explain {
@@ -348,27 +348,38 @@ function checkName(rule, value, callback) {
         }
       }
       margin-top: 24px;
-      width: 520px;
+      width: 700px;
       display: flex;
       :deep(.el-form-item__content) {
         justify-content: space-between;
+        font-size: 16px;
       }
       justify-content: space-between;
       :deep(.el-select__popper) {
         top: 390px;
       }
       .text {
-        height: 40px;
-        line-height: 40px;
+        // height: 40px;
+        line-height: 24px;
       }
       .radio {
-        width: 400px;
+        width: 580px;
         display: flex;
         flex-direction: column;
         .explain {
           color: #999999;
           font-size: 14px;
+          margin-bottom: 8px;
         }
+      }
+      .el-input {
+        width: 580px;
+      }
+      .el-textarea {
+        width: 580px;
+      }
+      .el-select {
+        width: 580px;
       }
     }
   }

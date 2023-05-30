@@ -8,7 +8,12 @@ import { setNewProject, checkNames } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';
 
+import OTag from '@/components/OTag.vue';
+import OButton from '@/components/OButton.vue';
+import OIcon from '@/components/OIcon.vue';
+
 import IconNecessary from '~icons/app/necessary.svg';
+import IconPlus from '~icons/app/plus.svg';
 import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -26,10 +31,17 @@ const i18n = {
   desc: '描述',
   input_text: '请输入内容',
   licenses: '协议',
+  tags: '标签',
   train_sdk: '训练平台',
   infer_sdk: '项目类型',
   view: '仓库属性',
   submit: '提交',
+  public:
+    '其他用户可浏览、收藏、下载你的项目，但仅有你及你的团队成员才可编辑此项目',
+  public_some:
+    '其他用户可浏览、收藏你的项目，但仅有你及你的团队可以下载文件和编辑项目',
+  private:
+    '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目',
 };
 
 // 表单信息
@@ -42,7 +54,7 @@ const proList = reactive({
   protocol: '',
   training: '',
   type: '',
-  repo_type: '',
+  repo_type: '完全公开',
 });
 
 const ruleFormRef = ref(null);
@@ -159,7 +171,7 @@ projectPhotos.value[0].is_active = true;
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
 proList.protocol = protocol[0].name;
-proList.repo_type = 'Public';
+// proList.repo_type = 'Public';
 onMounted(() => {});
 </script>
 
@@ -220,7 +232,7 @@ onMounted(() => {});
         </div>
         <!-- 项目名称 -->
         <div class="form-item">
-          <el-form-item class="project-name" :label="i18n.pro_name">
+          <el-form-item class="item-title" :label="i18n.pro_name">
             <el-input
               v-model="proList.chineseName"
               :placeholder="i18n.input_proName2"
@@ -248,7 +260,7 @@ onMounted(() => {});
           <div class="warning">
             <!-- <o-icon><icon-necessary></icon-necessary></o-icon> -->
           </div>
-          <el-form-item :label="i18n.desc" prop="desc" class="item-desc">
+          <el-form-item :label="i18n.desc" prop="desc" class="item-title">
             <el-input
               v-model="proList.desc"
               type="textarea"
@@ -257,6 +269,25 @@ onMounted(() => {});
               maxlength="200"
               show-word-limit
             ></el-input>
+          </el-form-item>
+        </div>
+        <!-- 标签 -->
+        <div class="form-item">
+          <el-form-item :label="i18n.tags" class="item-title">
+            <div class="create-item-right">
+              <div class="tags-contain">
+                <OTag class="tag-item" round>标签1</OTag>
+                <OTag class="tag-item" round>标签2</OTag>
+                <OTag class="tag-item" round>标签3</OTag>
+
+                <OTag round>
+                  <div class="add-tags">
+                    <OIcon class="add-icon"><icon-plus></icon-plus></OIcon>
+                    <span class="add-text">添加标签</span>
+                  </div>
+                </OTag>
+              </div>
+            </div>
           </el-form-item>
         </div>
         <!-- 协议 -->
@@ -314,29 +345,29 @@ onMounted(() => {});
           </div>
           <el-form-item class="view" :label="i18n.view">
             <div class="visual">
-              <el-radio-group v-model="proList.repo_type">
-                <el-radio label="完全公开" />
-              </el-radio-group>
-              <div class="visual-desc">
-                其他用户可浏览、收藏、下载你的项目，但仅有你及你的团队成员才可编辑此项目
-              </div>
-              <el-radio-group v-model="proList.repo_type">
-                <el-radio label="部分公开" />
-              </el-radio-group>
-              <div class="visual-desc">
-                其他用户可浏览、收藏你的项目，但仅有你及你的团队可以下载文件和编辑项目
-              </div>
-              <el-radio-group v-model="proList.repo_type">
-                <el-radio label="私有" />
-              </el-radio-group>
-              <div class="visual-desc">
-                其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目
-              </div>
+              <el-radio
+                v-model="proList.repo_type"
+                label="完全公开"
+                size="large"
+                >完全公开</el-radio
+              >
+              <div class="explain">{{ i18n.public }}</div>
+              <el-radio
+                v-model="proList.repo_type"
+                label="部分公开"
+                size="large"
+                >部分公开</el-radio
+              >
+              <div class="explain">{{ i18n.public_some }}</div>
+              <el-radio v-model="proList.repo_type" label="私有" size="large"
+                >私有</el-radio
+              >
+              <div class="explain">{{ i18n.private }}</div>
             </div>
           </el-form-item>
         </div>
         <div class="save-btn">
-          <o-button type="primary" @click="submitClick">保存</o-button>
+          <o-button type="primary" @click="submitClick">确定</o-button>
         </div>
       </el-form>
     </div>
@@ -354,17 +385,8 @@ onMounted(() => {});
   font-size: 12px;
   margin: 0 auto;
   max-width: 1416px;
-  :deep .el-breadcrumb {
-    font-size: 12px;
-    color: #555555;
-    .el-breadcrumb__inner.is-link {
-      font-weight: normal;
-      color: #555;
-    }
-    .set-new span {
-      color: #000;
-      font-weight: 400;
-    }
+  :deep(.el-breadcrumb) {
+    font-size: 14px;
   }
 }
 
@@ -376,19 +398,18 @@ onMounted(() => {});
   position: relative;
   margin: 0 auto;
   max-width: 1416px;
-  min-height: 1165px;
+  min-height: 1128px;
   background: #ffffff;
-  box-shadow: 0px 12px 32px 0px rgba(190, 196, 204, 0.2);
   padding-top: 48px;
   padding-bottom: 40px;
   border-radius: 16px;
-  // height: calc(100vh - 558px);
 
   .el-form {
     width: 520px;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    --el-form-label-font-size: 16px;
     :deep .el-form-item__label {
       padding-right: 22px;
       line-height: 22px;
@@ -416,29 +437,46 @@ onMounted(() => {});
         padding-top: 14px;
       }
       .store-item {
-        align-self: start;
-        padding-top: 14px;
+        align-self: flex-start;
+        padding-top: 6px;
       }
       .el-form-item {
         display: flex;
         align-items: center;
       }
-      :deep(.item-desc) {
+      :deep(.item-title) {
         .el-form-item__label {
-          margin-right: 8px;
           margin-left: 12px;
         }
       }
-      :deep(.project-name) {
-        .el-form-item__label {
-          margin-right: 8px;
-          margin-left: 12px;
+      .create-item-right {
+        .tags-contain {
+          display: flex;
+          flex-wrap: wrap;
         }
+        .tag-item {
+          margin-right: 8px;
+        }
+        .add-tags {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          .add-text {
+            line-height: 18px;
+          }
+        }
+        .add-icon {
+          font-size: 14px;
+          margin-right: 4px;
+        }
+      }
+      .item-img {
+        align-items: flex-start;
+        // margin-bottom: 8px !important;
       }
     }
     .item-img {
       cursor: pointer;
-      margin-bottom: 8px !important;
       .image {
         position: relative;
         .el-image {
@@ -501,32 +539,21 @@ onMounted(() => {});
       display: flex;
       align-items: flex-start;
       margin-bottom: 0px;
-      :deep .el-form-item__label {
-        height: 128px !important;
-        padding-top: 6px;
-      }
     }
     .visual {
       display: flex;
-      align-self: flex-start !important;
       flex-direction: column;
-      .visual-desc {
-        padding-left: 22px;
+      .explain {
+        width: 580px;
+        line-height: 22px;
+        height: 22px;
         color: #999999;
         font-size: 14px;
-        line-height: 22px;
-      }
-      .el-radio-group {
-        margin-bottom: 5px;
-        .el-radio {
-          line-height: 22px;
-          margin-right: 12px;
-          width: 72px;
-          color: #000000;
-          font-weight: 400;
-        }
-        &:not(:first-child) {
-          margin-top: 17px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+        padding-left: 24px;
+        &:last-child {
+          margin-bottom: 0;
         }
       }
     }

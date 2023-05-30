@@ -740,16 +740,12 @@ onUnmounted(() => {
       padding-top: 64px; //内容在按钮下16px
       height: 666px;
     }
-    .markdown-file {
-      padding-right: 48px;
-    }
     position: relative;
     height: 100%;
     .o-button {
       position: absolute;
       top: 0;
       right: 0;
-      margin-right: 48px;
     }
     .loading {
       display: flex;
@@ -796,19 +792,25 @@ onUnmounted(() => {
     }
   }
   .left-data1 {
-    margin-right: 40px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    width: 66%;
+    margin-right: 24px;
+    padding: 24px 24px 40px;
+    background-color: red;
+    border-radius: 16px;
   }
   .left-data2 {
-    margin-right: 40px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    width: 66%;
+    background-color: #fff;
+    margin-right: 24px;
+    padding: 24px 24px 40px;
+    border-radius: 16px;
   }
   .right-data {
-    max-width: 425px;
-    width: 100%;
     color: #000;
+    width: calc(34% - 24px);
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px 24px;
     .download-data {
       display: flex;
       &-left {

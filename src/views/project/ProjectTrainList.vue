@@ -585,7 +585,7 @@ onUnmounted(() => {
   }
   .instance-box {
     width: 100%;
-    min-height: calc(100vh - 450px);
+    min-height: 297px;
     display: flex;
     flex-direction: column;
     justify-content: center;

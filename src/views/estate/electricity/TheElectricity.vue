@@ -77,7 +77,7 @@ const electricityClassify = [
 ];
 
 const handleClick = (tab) => {
-  console.log('tab: ', tab);
+  // console.log('tab: ', tab);
   // activeName.value = tab.paneName;
   // router.push(electricityClassify[tab.index].path);
 };

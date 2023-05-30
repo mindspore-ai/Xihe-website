@@ -37,7 +37,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
               </div>
             </div>
             <div class="banner-btn">
-              <OButton disabled type="primary" animation class="home-btn">
+              <OButton disabled type="primary" class="home-btn">
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>

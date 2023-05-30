@@ -39,11 +39,8 @@ function onClick(e) {
         <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
         <span>Like</span>
 
-        <div class="digg-counts">
-          {{ props.digCount }}
-        </div>
+        <div class="digg-counts">共有&nbsp;{{ props.digCount }}&nbsp;喜欢</div>
       </div>
-      <!-- <span>{{ props.digCount }}</span> -->
     </div>
   </div>
 </template>
@@ -112,6 +109,7 @@ function onClick(e) {
   font-size: 12px;
   color: #555555;
   line-height: 20px;
+  white-space: nowrap;
   position: absolute;
   padding: 16px 20px;
   background: #fff;

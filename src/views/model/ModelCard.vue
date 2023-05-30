@@ -12,7 +12,7 @@ import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
 import { ElDialog } from 'element-plus';
 
-import { addDataset, deleteDataset } from '@/api/api-model';
+import { addDataset, deleteDataset, getReadmeInfo } from '@/api/api-model';
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
 import { useFileData, useUserInfoStore } from '@/stores';
 import { handleMarkdown } from '@/shared/markdown';
@@ -26,7 +26,7 @@ const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();
-let README = '';
+// let README = '';
 
 const isShow = ref(false);
 const addSearch = ref('');
@@ -60,21 +60,31 @@ const i18n = {
   ],
   emptyVisited: '无模型卡片',
 };
+
+// 判断是否含有readme文件
+// getReadmeInfo(detailData.value.owner, detailData.value.name).then((res) => {
+//   console.log(res);
+//   if (res.data.has_readme) {
+//     //
+//   }
+// });
+
 // 获取README文件
 function getReadMeFile() {
   try {
-    getGitlabTree({
-      type: 'model',
-      user: routerParams.user,
-      path: '',
-      id: detailData.value.id,
-      name: routerParams.name,
-    })
+    getReadmeInfo(
+      detailData.value.owner,
+      detailData.value.name
+      //   {
+      //   type: 'model',
+      //   user: routerParams.user,
+      //   path: '',
+      //   id: detailData.value.id,
+      //   name: routerParams.name,
+      // }
+    )
       .then((tree) => {
-        README = tree?.data?.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README && README.length) {
+        if (tree.data.has_readme) {
           getGitlabFileRaw({
             type: 'model',
             user: routerParams.user,
@@ -85,9 +95,24 @@ function getReadMeFile() {
             res ? (codeString.value = res) : '';
             result.value = mkit.render(codeString.value);
           });
-        } else {
-          codeString.value = '';
         }
+        // README = tree?.data?.filter((item) => {
+        //   return item.name === 'README.md';
+        // });
+        // if (README && README.length) {
+        //   getGitlabFileRaw({
+        //     type: 'model',
+        //     user: routerParams.user,
+        //     path: 'README.md',
+        //     id: detailData.value.id,
+        //     name: routerParams.name,
+        //   }).then((res) => {
+        //     res ? (codeString.value = res) : '';
+        //     result.value = mkit.render(codeString.value);
+        //   });
+        // } else {
+        //   codeString.value = '';
+        // }
       })
       .catch((err) => {
         console.error(err);

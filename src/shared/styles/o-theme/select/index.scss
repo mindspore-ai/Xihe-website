@@ -1,0 +1,13 @@
+@charset 'UFT-8';
+@use './var.scss';
+body {
+    .el-select-dropdown{
+        border-radius: var(--o-select_dropdown-border_radius);
+        box-shadow:var(--o-select_dropdown-box_shadow);
+        overflow: hidden;
+        .el-select-dropdown__item{
+            margin: var(--o-select_dropdown_item-margin);
+            border-radius: var(--o-select_dropdown_item-border_radius);
+        }
+    }
+}

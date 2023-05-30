@@ -708,8 +708,8 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  padding-bottom: 40px;
-  min-height: calc(100vh - 340px);
+  // padding-bottom: 40px;
+  // min-height: calc(100vh - 508px);
   background-color: #f5f6f8;
   .markdown-body {
     .fail {

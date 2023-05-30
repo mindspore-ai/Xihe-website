@@ -419,7 +419,7 @@ watch(
         v-show="userInfo.userName === detailData.owner"
         class="createtrain-btn"
         :style="{
-          right: codeString ? '192px' : '48px',
+          right: codeString ? '160px' : '24px',
         }"
       >
         <o-button type="primary" loading @click="goSelectFile">
@@ -628,15 +628,16 @@ watch(
 .project-train {
   display: flex;
   padding-bottom: 40px;
-  min-height: calc(100vh - 340px);
+  // min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   &-file {
     font-size: 14px;
-    margin-right: 40px;
-    padding-right: 48px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    margin-right: 24px;
+    padding: 24px 24px 40px;
+    width: 66%;
     position: relative;
+    background: #ffffff;
+    border-radius: 16px;
     .createtrain-btn {
       position: absolute;
       right: 192px;
@@ -698,9 +699,12 @@ watch(
     }
   }
   .right-data {
-    max-width: 425px;
-    width: 100%;
+    // max-width: 425px;
+    width: calc(34% - 24px);
     color: #000;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px 24px;
     .download-data {
       display: flex;
       &-left {

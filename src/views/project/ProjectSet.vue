@@ -45,7 +45,7 @@ const i18n = {
           '其他用户可浏览、收藏、下载你的项目，但仅有你及你的团队成员才可编辑此项目。',
       },
     ],
-    btnText: '保存更改',
+    btnText: '确定',
   },
   rename: {
     title: '重命名和转移',
@@ -65,7 +65,7 @@ const i18n = {
       '此操作将会删除与项目相关的所有资源，且此操作不可逆，请谨慎确认是否要删除此项目。',
     describe1: '此删除不可逆，确认删除吗？',
     describe2: '删除成功，你可再次创建新项目，点击确定回到个人主页。',
-    btnText: '删除',
+    btnText: '确定',
     cancel: '取消',
     confirm: '确认',
   },
@@ -457,6 +457,7 @@ function toggleDelDlg(flag) {
   align-items: center;
   background-color: #fff;
   min-height: calc(100vh - 554px);
+  border-radius: 16px;
   .setting-main {
     max-width: 756px;
     padding: 40px 0px;

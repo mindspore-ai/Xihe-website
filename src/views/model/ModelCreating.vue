@@ -42,16 +42,23 @@ const i18n = {
   },
 };
 const owner = ref([]);
-// const protocol = ref([]);
+
+const isTagShow = ref(false);
+const headTags = ref([]);
+
+let renderList = ref([]);
+const tabPosition = ref('left');
 
 let queryRef = ref(null);
 
 let query = reactive({
   owner: userInfo.userName,
   name: '',
+  title: '',
   desc: '',
   protocol: protocol[0].name,
-  repo_type: '完全公开',
+  repo_type: 'public',
+  tags: [],
 });
 
 try {
@@ -62,6 +69,11 @@ try {
 
 function createModel(formEl) {
   if (!formEl) return;
+
+  headTags.value.forEach((item) => {
+    query.tags.push(item.name);
+  });
+
   formEl.validate((valid) => {
     if (valid) {
       createModelStore(query)
@@ -102,12 +114,6 @@ function checkName(rule, value, callback) {
     });
   }, 2000);
 }
-
-const isTagShow = ref(false);
-const headTags = ref([]);
-
-let renderList = ref([]);
-const tabPosition = ref('left');
 
 let dialogList = {
   head: {
@@ -282,7 +288,6 @@ function deleteAllTags() {
                   <el-input
                     v-model="query.name"
                     :placeholder="i18n.placeholder.warehouse_name"
-                    size=""
                   ></el-input>
                   <el-popover
                     placement="bottom-start"
@@ -319,43 +324,10 @@ function deleteAllTags() {
             <div class="create-item">
               <div class="create-title-unnecessary">模型名称</div>
               <div class="create-item-right">
-                <el-form-item
-                  class="item"
-                  prop="name"
-                  :rules="[
-                    { required: true, message: '必填项', trigger: 'blur' },
-                    {
-                      pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
-                      message: '暂不支持中文字符，且长度为3-35个字符',
-                      trigger: 'change',
-                    },
-                    {
-                      pattern: /^[^\*/?\\<>|:;]*$/g,
-                      message: '不能含有:/\\*;?<>|等特殊字符',
-                      trigger: 'blur',
-                    },
-                    {
-                      pattern: /^[^.].*[^.]$/,
-                      message: '不能以.开头或结尾',
-                      trigger: 'blur',
-                    },
-                    {
-                      pattern: /^(?!.*(-)\1+).*$/,
-                      message: '不能连续两个及以上中划线',
-                      trigger: 'blur',
-                    },
-                    {
-                      pattern: /^(?!.*(_)\1+).*$/,
-                      message: '不能连续两个及以上下划线',
-                      trigger: 'blur',
-                    },
-                    { validator: checkName, trigger: 'change' },
-                  ]"
-                >
+                <el-form-item class="item" prop="name">
                   <el-input
-                    v-model="query.name"
+                    v-model="query.title"
                     :placeholder="i18n.placeholder.model_name"
-                    size=""
                   ></el-input>
                   <el-popover
                     placement="bottom-start"
@@ -732,6 +704,7 @@ $theme: #0d8dff;
   display: flex;
   align-items: center;
   margin-top: 8px;
+  border: 1px dashed #0d8dff;
   cursor: pointer;
   .add-text {
     line-height: 16px;

@@ -389,6 +389,9 @@ watch(
       cursor: pointer;
       height: 24px;
       line-height: 24px;
+      &:first-child {
+        color: #555;
+      }
       &:hover {
         text-decoration: underline;
       }

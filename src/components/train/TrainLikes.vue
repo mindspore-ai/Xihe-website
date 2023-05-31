@@ -69,7 +69,6 @@ function onClick(e) {
     display: flex;
     align-items: center;
     line-height: 24px;
-    // color: rgba(13, 141, 255, 1);
     color: #555;
     svg {
       fill: rgba(13, 141, 255, 1);
@@ -90,7 +89,6 @@ function onClick(e) {
   }
 }
 .digg-content {
-  // width: 97px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -111,13 +109,13 @@ function onClick(e) {
   line-height: 20px;
   white-space: nowrap;
   position: absolute;
-  padding: 16px 20px;
+  padding: 16px;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 4px;
   bottom: -64px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+  box-shadow: 0px 10px 40px 0px rgba(18, 20, 23, 0.08);
   z-index: 2;
   display: none;
   &::before {

@@ -910,10 +910,12 @@ $theme: #0d8dff;
     .tags-retract {
       height: 20px;
       overflow-y: hidden;
+      padding-right: 92px;
     }
     .tags-expand {
       height: auto;
       overflow: unset;
+      padding-right: 64px;
     }
     .label-box {
       display: flex;
@@ -962,12 +964,13 @@ $theme: #0d8dff;
       align-items: center;
       height: 20px;
       padding: 2px 8px 2px 4px;
-      background: rgba(5, 142, 240, 0.15);
+      background: rgba(13, 141, 255, 0.15);
       border-radius: 14px;
       color: #0d8dff;
+      border: 1px dashed #0d8dff;
       white-space: nowrap;
-      cursor: pointer;
       margin-right: 4px;
+      cursor: pointer;
       .o-icon {
         margin-right: 4px;
       }

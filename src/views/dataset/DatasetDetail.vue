@@ -1042,7 +1042,6 @@ $theme: #0d8dff;
     background-color: #ffffff;
     margin-bottom: 0;
     background: rgba(251, 251, 251, 0.85);
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
   }
 
   .el-tabs__item {

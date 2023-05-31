@@ -36,7 +36,6 @@ const i18n = {
   },
 };
 const owner = ref([]);
-// const protocol = ref([]);
 
 let queryRef = ref(null);
 

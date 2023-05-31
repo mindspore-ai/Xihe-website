@@ -23,9 +23,14 @@ const userInfoStore = useUserInfoStore();
 const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
+  new_dataset_name: {
+    title: '新数据集名',
+    placeholder: '请输入新数据集中文名',
+  },
   visible: {
     title: '仓库属性',
     description: '更改描述',
+    tip: '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目仓库',
     options: [
       {
         value: 'Private',
@@ -42,14 +47,14 @@ const i18n = {
           '其他用户可浏览、收藏、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集仓库。',
       },
     ],
-    btnText: '保存更改',
+    btnText: '确定',
   },
   rename: {
     title: '重命名和转移',
     newOwn: '新拥有者',
-    newName: '新数据集名',
-    placeholder: '请输入数据集名',
-    describe: '你可重命名数据集，并转移你的数据集仓库至组织。',
+    newName: '新仓库名',
+    placeholder: '请输入仓库名',
+    describe: '你可重命名数据集仓库，并转移你的数据集仓库至组织。',
     btnText: '确定',
   },
   delete: {
@@ -63,8 +68,9 @@ const i18n = {
     confirm: '确认',
   },
 };
+
 const visibleOptions = reactive(i18n.visible.options);
-const visibleValue = ref(detailData.is_private);
+const visibleValue = ref(detailData.repo_type);
 const description = ref(detailData.desc);
 const newOwn = ref('');
 const visibleIndex = ref(0);
@@ -91,6 +97,7 @@ function getVisiableSelect(value) {
     ? (visibleValue.value = 'private')
     : (visibleValue.value = 'public');
 }
+
 async function confirmRename(formEl) {
   if (!formEl) return;
   if (!query.name.trim()) {
@@ -100,6 +107,7 @@ async function confirmRename(formEl) {
     if (valid) {
       try {
         modifyDataset(query, detailData.owner, detailData.id).then((res) => {
+          // 改名成功更新pinia数据
           detailData.name = res.data.name;
           ElMessage({
             type: 'success',
@@ -112,7 +120,7 @@ async function confirmRename(formEl) {
               name: detailData.name,
             },
           });
-          routerParams.name = detailData.name;
+          detailData.name = query.name;
         });
       } catch (error) {
         ElMessage({
@@ -169,78 +177,147 @@ function toggleDelDlg(flag) {
 }
 </script>
 <template>
-  <div class="setting-wrap">
-    <div class="setting-inner">
-      <div class="setting-main">
-        <div class="setting-title">{{ i18n.visible.title }}</div>
-        <o-select
-          :select-data="visibleOptions"
-          keys="value"
-          value="value"
-          :default-value="i18n.visible.options[visibleIndex].value"
-          @click="getIndex"
-          @change="getVisiableSelect"
-        ></o-select>
-        <p class="setting-tip">
-          {{ i18n.visible.options[visibleIndex].describe }}
-        </p>
-        <!-- 新增更改描述 -->
-        <div class="setting-title description">
-          {{ i18n.visible.description }}
-        </div>
-        <el-input
-          v-model="description"
-          :rows="2"
-          type="textarea"
-          maxlength="100"
-          show-word-limit
-        />
-        <o-button @click="confirmPrivate">{{ i18n.visible.btnText }}</o-button>
-        <div class="setting-title">{{ i18n.rename.title }} <el-divider /></div>
-        <p class="setting-tip">{{ i18n.rename.newOwn }}</p>
-        <o-select
-          :select-data="organizationAdminList"
-          :placeholder="detailData.owner"
-          keys="id"
-          value="name"
-          @change="getOwnSelect"
-        ></o-select>
-        <el-form
-          ref="queryRef"
-          class="creating-box"
-          :model="query"
-          prop="region"
-          @submit.prevent
-        >
-          <p class="setting-tip">{{ i18n.rename.newName }}</p>
-          <el-form-item
-            class="item"
-            prop="name"
-            :rules="[
-              { required: true, message: '必填项', trigger: 'blur' },
-              {
-                pattern: /^[^\*/?\\<>|:;]*$/g,
-                message: '不能含有:/\\*;?<>|等特殊字符',
-                trigger: 'blur',
-              },
-              {
-                pattern: /^[^.].*[^.]$/,
-                message: '不能以.开头或结尾',
-                trigger: 'blur',
-              },
-              {
-                pattern: /^(?!.*(-)\1+).*$/,
-                message: '不能连续两个及以上中划线',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input
-              v-model="query.name"
-              :placeholder="i18n.rename.placeholder"
+  <div class="dataset-set">
+    <div class="dataset-set-top">
+      <div class="wrap">
+        <!-- 新数据集名 -->
+        <div class="set-item">
+          <div class="set-title">
+            {{ i18n.new_dataset_name.title }}
+          </div>
+
+          <el-form ref="queryRef" :model="query" prop="region" @submit.prevent>
+            <el-form-item
+              class="item"
+              prop="name"
+              :rules="[
+                { required: true, message: '必填项', trigger: 'blur' },
+                {
+                  pattern: /^[^\*/?\\<>|:;]*$/g,
+                  message: '不能含有:/\\*;?<>|等特殊字符',
+                  trigger: 'blur',
+                },
+                {
+                  pattern: /^[^.].*[^.]$/,
+                  message: '不能以.开头或结尾',
+                  trigger: 'blur',
+                },
+                {
+                  pattern: /^(?!.*(-)\1+).*$/,
+                  message: '不能连续两个及以上中划线',
+                  trigger: 'blur',
+                },
+              ]"
             >
-            </el-input>
+              <el-input
+                v-model="query.name"
+                :placeholder="i18n.rename.placeholder"
+              >
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- 仓库属性 -->
+        <div class="set-item">
+          <div class="set-title set-title-1">{{ i18n.visible.title }}</div>
+
+          <div class="set-item-right">
+            <o-select
+              :select-data="visibleOptions"
+              keys="value"
+              value="value"
+              :default-value="i18n.visible.options[visibleIndex].value"
+              @click="getIndex"
+              @change="getVisiableSelect"
+            ></o-select>
+
+            <div class="set-tip">{{ i18n.visible.tip }}</div>
+          </div>
+        </div>
+        <!-- 更改描述 -->
+        <div class="set-item">
+          <div class="set-title set-title-1">
+            {{ i18n.visible.description }}
+          </div>
+
+          <div class="set-item-right">
+            <el-input
+              v-model="description"
+              :rows="2"
+              type="textarea"
+              maxlength="100"
+              show-word-limit
+            />
+          </div>
+        </div>
+        <div class="confirm-box">
+          <o-button size="small" @click="confirmPrivate">{{
+            i18n.visible.btnText
+          }}</o-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dataset-set-middle">
+      <div class="wrap">
+        <p class="middle-title">{{ i18n.rename.title }}</p>
+        <!-- 新拥有者 -->
+        <div class="set-item">
+          <div class="set-title">{{ i18n.rename.newOwn }}</div>
+
+          <div class="set-item-right">
+            <o-select
+              :select-data="organizationAdminList"
+              :placeholder="detailData.owner"
+              keys="id"
+              value="name"
+              @change="getOwnSelect"
+            ></o-select>
+          </div>
+        </div>
+        <!-- 新仓库名 -->
+        <div class="set-item">
+          <div class="set-title set-title-1">{{ i18n.rename.newName }}</div>
+
+          <div class="set-item-right">
+            <el-form
+              ref="queryRef"
+              :model="query"
+              prop="region"
+              @submit.prevent
+            >
+              <el-form-item
+                class="item"
+                prop="name"
+                :rules="[
+                  { required: true, message: '必填项', trigger: 'blur' },
+                  {
+                    pattern: /^[^\*/?\\<>|:;]*$/g,
+                    message: '不能含有:/\\*;?<>|等特殊字符',
+                    trigger: 'blur',
+                  },
+                  {
+                    pattern: /^[^.].*[^.]$/,
+                    message: '不能以.开头或结尾',
+                    trigger: 'blur',
+                  },
+                  {
+                    pattern: /^(?!.*(-)\1+).*$/,
+                    message: '不能连续两个及以上中划线',
+                    trigger: 'blur',
+                  },
+                ]"
+              >
+                <el-input
+                  v-model="query.name"
+                  :placeholder="i18n.rename.placeholder"
+                >
+                </el-input>
+              </el-form-item>
+            </el-form>
+
             <el-popover
+              class="popover-tip"
               placement="bottom-start"
               :width="372"
               trigger="hover"
@@ -263,186 +340,186 @@ function toggleDelDlg(flag) {
                 >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算的
               </div>
             </el-popover>
-          </el-form-item>
-        </el-form>
-        <p class="setting-tip">{{ i18n.rename.describe }}</p>
-        <o-button @click="confirmRename(queryRef)">{{
-          i18n.rename.btnText
-        }}</o-button>
-        <div class="setting-title">{{ i18n.delete.title }} <el-divider /></div>
-        <p class="setting-tip">{{ i18n.delete.describe }}</p>
-        <o-button class="delete-btn" status="error" @click="showDel = true">{{
-          i18n.delete.btnText
-        }}</o-button>
-      </div>
-      <el-dialog
-        v-model="showDel"
-        width="640px"
-        :show-close="false"
-        center
-        align-center
-      >
-        <template #header="{ titleId, title }">
-          <div :id="titleId" :class="title">
-            <img :src="warningImg" alt="" />
-          </div>
-        </template>
-        <div
-          class="dlg-body"
-          style="
-            color: #555;
-            font-size: 18px;
-            text-align: center;
-            line-height: 28px;
-          "
-        >
-          {{ i18n.delete.describe1 }}
-        </div>
-        <template #footer>
-          <div
-            class="dlg-actions"
-            style="display: flex; justify-content: center"
-          >
-            <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">
-              {{ i18n.delete.cancel }}
-            </o-button>
-            <o-button type="primary" @click="confirmDel">
-              {{ i18n.delete.confirm }}
-            </o-button>
-          </div>
-        </template>
-      </el-dialog>
 
-      <el-dialog
-        v-model="showConfirm"
-        width="640px"
-        :show-close="false"
-        center
-        align-center
-      >
-        <template #header="{ titleId, title }">
-          <div :id="titleId" :class="title">
-            <img :src="successImg" alt="" />
+            <div class="set-tip">{{ i18n.rename.describe }}</div>
           </div>
-        </template>
-        <div
-          class="dlg-body"
-          style="
-            color: #555;
-            font-size: 18px;
-            text-align: center;
-            line-height: 28px;
-          "
-        >
-          {{ i18n.delete.describe2 }}
         </div>
-        <template #footer>
-          <div
-            class="dlg-actions"
-            style="display: flex; justify-content: center"
-          >
-            <router-link :to="{ path: `/${userInfoStore.userName}` }">
-              <o-button type="primary">{{ i18n.delete.confirm }}</o-button>
-            </router-link>
-          </div>
-        </template>
-      </el-dialog>
+        <div class="confirm-box">
+          <o-button size="small" @click="confirmRename(queryRef)">{{
+            i18n.rename.btnText
+          }}</o-button>
+        </div>
+      </div>
     </div>
+    <div class="dataset-set-bottom">
+      <div class="wrap">
+        <div class="set-item">
+          <div class="set-title">{{ i18n.delete.title }}</div>
+
+          <div class="set-content">{{ i18n.delete.describe }}</div>
+        </div>
+        <div class="confirm-box">
+          <o-button size="small" status="error" @click="showDel = true">{{
+            i18n.delete.btnText
+          }}</o-button>
+        </div>
+      </div>
+    </div>
+
+    <el-dialog
+      v-model="showDel"
+      :show-close="false"
+      center
+      width="640px"
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          <img :src="warningImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
+      >
+        {{ i18n.delete.describe1 }}
+      </div>
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <o-button style="margin-right: 16px" @click="toggleDelDlg(false)">
+            {{ i18n.delete.cancel }}
+          </o-button>
+          <o-button type="primary" @click="confirmDel">
+            {{ i18n.delete.confirm }}
+          </o-button>
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog
+      v-model="showConfirm"
+      :show-close="false"
+      center
+      width="640px"
+      align-center
+    >
+      <template #header="{ titleId, title }">
+        <div :id="titleId" :class="title">
+          <img :src="successImg" alt="" />
+        </div>
+      </template>
+      <div
+        class="dlg-body"
+        style="
+          color: #555;
+          font-size: 18px;
+          text-align: center;
+          line-height: 28px;
+        "
+      >
+        {{ i18n.delete.describe2 }}
+      </div>
+      <template #footer>
+        <div class="dlg-actions" style="display: flex; justify-content: center">
+          <router-link :to="{ path: `/${userInfoStore.userName}` }">
+            <o-button type="primary">{{ i18n.delete.confirm }}</o-button>
+          </router-link>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.setting-inner {
-  display: flex;
-  justify-content: center;
-  background-color: #fff;
-  min-height: calc(100vh - 554px);
+.el-input,
+.el-textarea {
+  width: 580px;
+}
+
+:deep(.el-select) {
+  width: 580px !important;
+}
+.el-form-item {
+  margin-bottom: 0;
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.dataset-set {
+  background: #fff;
   border-radius: 16px;
-  .setting-main {
-    max-width: 600px;
-    margin-bottom: 40px;
-    width: 100%;
-    .el-form-item {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      .el-popover.el-popper {
-        padding: 24px 16px 16px 16px;
-        font-size: 12px;
-        line-height: 16px;
-        color: #656565;
-        .remind {
-          color: #f13b35;
-        }
-      }
-      position: relative;
-      .el-tooltip__trigger {
-        cursor: pointer;
-        position: absolute;
-        right: -32px;
-        top: 5px;
-        font-size: 24px;
-      }
-      .requirement {
-        line-height: 34px;
-      }
-      margin-top: 24px;
-      width: 400px;
-      display: flex;
-      :deep(.el-form-item__content) {
-        display: flex;
-        justify-content: start;
-      }
-      justify-content: space-between;
-      :deep(.el-select__popper) {
-        top: 390px;
-      }
-      .text {
-        height: 40px;
-        line-height: 40px;
-      }
-      .radio {
-        width: 400px;
-        display: flex;
-        flex-direction: column;
-        .explain {
-          color: #999999;
-          font-size: 14px;
-        }
-      }
-    }
-    .setting-title {
-      margin: 80px 0 16px;
-      font-size: 18px;
-      color: #000000;
-      line-height: 24px;
-      position: relative;
-      :deep .el-divider {
-        position: absolute;
-        top: -65px;
-        left: -88px;
-        width: 832px;
-      }
-      &:first-child {
-        margin-top: 40px;
-      }
-    }
-    .description {
-      margin-top: 24px;
-    }
-    .el-textarea {
-      display: block;
-      margin-bottom: 24px;
-      width: 532px !important;
-      :deep(.el-textarea__inner) {
-        height: 89px;
-      }
-    }
-    .setting-tip {
-      font-size: 14px;
-      margin: 8px 0 16px;
-      color: #999999;
-    }
+  max-width: 1416px;
+  padding: 16px 40px 40px 40px;
+}
+.dataset-set-top {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 40px;
+}
+.set-item {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+}
+.set-title {
+  width: 80px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  margin-right: 28px;
+}
+.set-title-1 {
+  align-self: start;
+  margin-top: 6px;
+}
+.set-item-right {
+  position: relative;
+}
+.el-popover.el-popper {
+  padding: 24px 16px 16px 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #656565;
+  .remind {
+    color: #f13b35;
   }
+}
+.el-tooltip__trigger {
+  cursor: pointer;
+  position: absolute;
+  right: -32px;
+  top: 5px;
+  font-size: 24px;
+}
+.set-tip {
+  font-size: 14px;
+  font-weight: 400;
+  color: #999999;
+  line-height: 22px;
+  margin-top: 8px;
+}
+.confirm-box {
+  padding-left: 108px;
+  margin-top: 24px;
+}
+.dataset-set-middle {
+  padding: 40px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.middle-title {
+  font-size: 18px;
+  color: #000000;
+  line-height: 24px;
+}
+.set-content {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555555;
+  line-height: 22px;
 }
 </style>

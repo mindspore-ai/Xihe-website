@@ -225,19 +225,21 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  dialogTableVisible.value = true;
-  gridData.value = [];
-  gridData.value.push(historyInfo.value);
-  handleLuoJiaHistory().then((res) => {
-    if (res.data) {
-      gridData.value = [];
-      historyInfo.value.create_at = res.data[0].created_at;
-      gridData.value.push(historyInfo.value);
-      historyInfo.value.id = res.data[0].id;
-    } else {
-      gridData.value = [];
-    }
-  });
+  if (isLogined.value) {
+    dialogTableVisible.value = true;
+    gridData.value = [];
+    gridData.value.push(historyInfo.value);
+    handleLuoJiaHistory().then((res) => {
+      if (res.data) {
+        gridData.value = [];
+        historyInfo.value.create_at = res.data[0].created_at;
+        gridData.value.push(historyInfo.value);
+        historyInfo.value.id = res.data[0].id;
+      } else {
+        gridData.value = [];
+      }
+    });
+  }
 }
 if (isLogined.value) {
   handleLuoJiaHistory().then((res) => {

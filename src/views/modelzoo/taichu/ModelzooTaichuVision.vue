@@ -223,6 +223,7 @@ function sendMessage() {
           picture: uploadPictureUrl.value,
           question: inputMsg.value,
         }).then((res) => {
+          console.log(res);
           msgList.value[latestIndex.value - 1].isLoading = false;
 
           if (res.data) {

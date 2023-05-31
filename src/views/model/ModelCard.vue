@@ -380,13 +380,15 @@ watch(
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  padding-bottom: 40px;
-  min-height: calc(100vh - 340px);
+  // min-height: calc(100vh - 340px);
+  min-height: calc(100vh - 516px);
   background-color: #f5f6f8;
   .markdown-body {
     position: relative;
     margin-right: 24px;
     width: 100%;
+    border-radius: 16px;
+    background: #fff;
     // border-right: 1px solid #d8d8d8;
     .markdown-file {
       // max-width: 800px;
@@ -406,7 +408,7 @@ watch(
     flex-direction: column;
     align-items: center;
     font-size: 14px;
-    max-height: 700px;
+    // max-height: 700px;
     .upload-readme-img {
       margin-top: 205px;
       .o-icon {

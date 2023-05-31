@@ -163,7 +163,6 @@ function selectImgClick(item) {
 // 新建项目
 function setProject() {
   let newList = JSON.parse(JSON.stringify(proList));
-  console.log('newList.repo_type: ', newList.repo_type);
   if (newList.repo_type === '完全公开') {
     newList.repo_type = 'public';
   } else if (newList.repo_type === '部分公开') {
@@ -171,10 +170,8 @@ function setProject() {
   } else {
     newList.repo_type = 'private';
   }
-  console.log('newList: ', newList);
   setNewProject(newList)
     .then((res) => {
-      console.log('res: ', res);
       ElMessage({
         type: 'success',
         message: '创建成功',
@@ -203,7 +200,6 @@ onMounted(() => {});
 function getModelTags(type) {
   try {
     getTags(type).then((res) => {
-      console.log('res: ', res);
       renderList.value = res.data;
 
       renderList.value.forEach((value1, index1) => {
@@ -649,6 +645,7 @@ $theme: #0d8dff;
           display: flex;
           align-items: center;
           margin-top: 8px;
+          border: 1px dashed #0d8dff;
           cursor: pointer;
           .add-text {
             line-height: 16px;

@@ -44,13 +44,14 @@ body {
       background-color: var(--o-pagination-bg);
       border: 1px solid #d1d6db;
       .el-icon {
-        color: rgba(0,0,0,0.4);
+        color: rgba(0, 0, 0, 0.4);
       }
     }
     .el-pagination__sizes {
       .el-select {
         .el-input__wrapper {
-          box-shadow: none;
+          box-shadow: 0 0 0 1px #0d8dff inset;
+          // border: 1px solid #0d8dff;
           background-color: var(--o-pagination-pagesizes-bg);
         }
         .el-select__caret {

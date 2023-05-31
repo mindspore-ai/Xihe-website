@@ -795,7 +795,6 @@ onUnmounted(() => {
     width: 66%;
     margin-right: 24px;
     padding: 24px 24px 40px;
-    background-color: red;
     border-radius: 16px;
   }
   .left-data2 {

@@ -65,7 +65,7 @@ const i18n = {
       '此操作将会删除与项目相关的所有资源，且此操作不可逆，请谨慎确认是否要删除此项目。',
     describe1: '此删除不可逆，确认删除吗？',
     describe2: '删除成功，你可再次创建新项目，点击确定回到个人主页。',
-    btnText: '确定',
+    btnText: '删除',
     cancel: '取消',
     confirm: '确认',
   },
@@ -227,7 +227,9 @@ function toggleDelDlg(flag) {
         </div>
         <!-- 仓库属性 -->
         <div class="setting-item">
-          <div class="setting-title">{{ i18n.visible.title }}</div>
+          <div class="setting-title repo-attributes">
+            {{ i18n.visible.title }}
+          </div>
           <div class="attribute-option">
             <o-select
               :select-data="visibleOptions"
@@ -261,7 +263,7 @@ function toggleDelDlg(flag) {
 
         <!-- 封面 -->
         <div class="setting-item">
-          <h4 class="setting-title">{{ i18n.covers.title }}</h4>
+          <h4 class="setting-title cover">{{ i18n.covers.title }}</h4>
           <div class="photo_container">
             <div v-for="item in photos" :key="item.id" class="container-single">
               <div
@@ -352,17 +354,19 @@ function toggleDelDlg(flag) {
             </el-popover>
           </el-form-item>
         </el-form>
-        <p class="setting-tip">{{ i18n.rename.describe }}</p>
+        <p class="setting-tip new-project">{{ i18n.rename.describe }}</p>
         <o-button style="margin-left: 112px" @click="confirmRename(queryRef)">
           {{ i18n.rename.btnText }}
         </o-button>
       </div>
       <el-divider />
       <div class="setting-main">
-        <h4 class="setting-title">
-          {{ i18n.delete.title }}
-        </h4>
-        <p class="setting-tip describe">{{ i18n.delete.describe }}</p>
+        <div class="delete-project">
+          <span class="setting-title">
+            {{ i18n.delete.title }}
+          </span>
+          <span class="describe">{{ i18n.delete.describe }}</span>
+        </div>
         <o-button
           style="margin-left: 112px"
           status="error"
@@ -499,58 +503,10 @@ function toggleDelDlg(flag) {
         }
       }
     }
-    .el-form-item {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      .el-popover.el-popper {
-        padding: 24px 16px 16px 16px;
-        font-size: 12px;
-        line-height: 16px;
-        color: #656565;
-        .remind {
-          color: #f13b35;
-        }
-      }
-      position: relative;
-      .el-tooltip__trigger {
-        cursor: pointer;
-        position: absolute;
-        right: -32px;
-        top: 5px;
-        font-size: 24px;
-      }
-      .requirement {
-        line-height: 34px;
-      }
-      // margin-top: 24px;
-      width: 580px;
-      display: flex;
-      :deep(.el-form-item__content) {
-        display: flex;
-        justify-content: start;
-      }
-      justify-content: space-between;
-      :deep(.el-select__popper) {
-        top: 390px;
-      }
-      .text {
-        height: 40px;
-        line-height: 40px;
-      }
-      .radio {
-        width: 400px;
-        display: flex;
-        flex-direction: column;
-        .explain {
-          color: #999999;
-          font-size: 14px;
-        }
-      }
-    }
+
     .setting-item {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 24px;
       .el-input,
       .el-textarea {
@@ -559,6 +515,66 @@ function toggleDelDlg(flag) {
       .o-select {
         :deep(.el-select) {
           width: 580px;
+        }
+      }
+      .repo-attributes,
+      .description,
+      .cover {
+        align-self: flex-start;
+      }
+      .repo-attributes {
+        margin-top: 6px;
+      }
+    }
+    .el-form {
+      margin-bottom: 0px;
+      .el-form-item {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        .el-popover.el-popper {
+          padding: 24px 16px 16px 16px;
+          font-size: 12px;
+          line-height: 16px;
+          color: #656565;
+          .remind {
+            color: #f13b35;
+          }
+        }
+        position: relative;
+        .el-tooltip__trigger {
+          cursor: pointer;
+          position: absolute;
+          right: -32px;
+          top: 5px;
+          font-size: 24px;
+        }
+        .requirement {
+          line-height: 34px;
+        }
+        // margin-top: 24px;
+        width: 580px;
+        display: flex;
+        :deep(.el-form-item__content) {
+          display: flex;
+          justify-content: start;
+        }
+        justify-content: space-between;
+        :deep(.el-select__popper) {
+          top: 390px;
+        }
+        .text {
+          height: 40px;
+          line-height: 40px;
+        }
+        .radio {
+          width: 400px;
+          display: flex;
+          flex-direction: column;
+          .explain {
+            color: #999999;
+            font-size: 14px;
+          }
         }
       }
     }
@@ -571,8 +587,24 @@ function toggleDelDlg(flag) {
       line-height: 24px;
       position: relative;
     }
+    .delete-project {
+      margin-bottom: 24px;
+      .setting-title {
+        display: inline-block;
+        min-width: 80px;
+      }
+      .describe {
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #555555;
+      }
+    }
     .attribute-option {
       width: 580px;
+      .setting-tip {
+        margin-bottom: 0px;
+      }
     }
     .el-textarea {
       display: block;
@@ -586,6 +618,9 @@ function toggleDelDlg(flag) {
       margin-top: 8px;
       margin-bottom: 24px;
       color: #999;
+    }
+    .new-project {
+      margin-left: 112px;
     }
     .describe {
       color: #555;

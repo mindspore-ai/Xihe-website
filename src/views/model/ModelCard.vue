@@ -536,6 +536,7 @@ watch(
       justify-content: space-between;
       align-items: center;
     }
+
     .title {
       margin: 40px 0 24px;
       font-size: 18px;
@@ -551,6 +552,11 @@ watch(
       cursor: pointer;
       .o-icon {
         margin-left: 4px;
+      }
+    }
+    .related-project {
+      :deep(.remove-item) {
+        display: none;
       }
     }
   }

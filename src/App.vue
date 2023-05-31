@@ -711,7 +711,7 @@ body.el-popup-parent--hidden {
 
 .app-body {
   min-width: 1280px;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 228px);
   background: #f5f6f8;
 }
 

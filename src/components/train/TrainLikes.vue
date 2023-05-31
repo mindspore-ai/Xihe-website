@@ -31,10 +31,10 @@ function onClick(e) {
       ]"
       @click="onClick"
     >
-      <div v-if="!userInfoStore.id">
+      <!-- <div v-if="!userInfoStore.id">
         <o-icon><icon-heart></icon-heart></o-icon>
-      </div>
-      <div v-else class="digg-content">
+      </div> -->
+      <div class="digg-content">
         <o-icon v-show="isDigged === false"><icon-heart></icon-heart></o-icon>
         <o-icon v-show="isDigged === true"><icon-digged></icon-digged></o-icon>
         <span>Like</span>

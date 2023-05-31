@@ -488,7 +488,9 @@ function deleteAllTags() {
                 <div class="head-title">{{ dialogList.head.title }}</div>
                 <div class="head-delete" @click="deleteAllTags">
                   <o-icon><icon-clear></icon-clear></o-icon>
-                  {{ dialogList.head.delete }}
+                  <span>
+                    {{ dialogList.head.delete }}
+                  </span>
                 </div>
               </div>
 
@@ -820,6 +822,7 @@ $theme: #0d8dff;
     }
   }
   .dialog-body {
+    text-align: left;
     border-top: 1px solid #d8d8d8;
     :deep(.el-tabs__item) {
       width: 188px;

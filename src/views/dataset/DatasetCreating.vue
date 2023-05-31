@@ -612,6 +612,7 @@ function deleteAllTags() {
         align-items: center;
         margin-top: 8px;
         cursor: pointer;
+        border: 1px dashed #0d8dff;
         .add-text {
           line-height: 16px;
         }
@@ -688,6 +689,7 @@ $theme: #0d8dff;
   }
 }
 .dialog-body {
+  text-align: left;
   border-top: 1px solid #d8d8d8;
   :deep(.el-tabs__item) {
     width: 188px;

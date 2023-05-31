@@ -518,7 +518,7 @@ function tagClick(it, key, index) {
   } else {
     ElMessage({
       type: 'warning',
-      message: '最多支持刷选5个标签',
+      message: '最多支持选择5个标签',
       offset: 64,
     });
   }
@@ -580,7 +580,9 @@ function cancelBtn() {
       <div class="head-wrap">
         <div class="wrap-top">
           <div class="banner-left">
-            <div class="title">{{ i18n.head.title }}</div>
+            <div class="title">
+              {{ i18n.head.title }}
+            </div>
             <div class="introduce">
               {{ i18n.head.introduce }}
               <a
@@ -639,7 +641,10 @@ function cancelBtn() {
                     <div class="dialog-head">
                       <div class="head-top">
                         <div class="head-title">
-                          {{ dialogList.head.title }}
+                          <span>
+                            {{ dialogList.head.title }}
+                          </span>
+                          <span class="tags-limit">(最多可选择5个标签)</span>
                         </div>
                         <div class="head-delete" @click="deleteModelTags">
                           <o-icon><icon-clear></icon-clear></o-icon>
@@ -869,24 +874,28 @@ function cancelBtn() {
 <style lang="scss" scoped>
 $theme: #0d8dff;
 .tags-wrap {
-  // margin-top: 10px;
-  // margin-left: 200px !important;
   width: 800px;
-  overflow: hidden;
+  // overflow: hidden;
   padding: 40px;
   background: #fff;
-  box-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
+  // box-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
   border-radius: 16px;
   .dialog-head {
     .head-top {
       display: flex;
       justify-content: space-between;
       .head-title {
-        // margin-right: 16px;
         line-height: 24px;
         font-size: 18px;
         line-height: 24px;
         color: #000000;
+        display: flex;
+        align-items: center;
+        .tags-limit {
+          margin-left: 8px;
+          font-size: 12px;
+          color: #555;
+        }
       }
       .head-delete {
         font-size: 12px;
@@ -916,7 +925,7 @@ $theme: #0d8dff;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
@@ -961,12 +970,8 @@ $theme: #0d8dff;
     .tan-title {
       margin: 14px 0;
     }
-    .noTask-box {
-      display: flex;
-      flex-wrap: wrap;
-    }
     .detail-box {
-      .tag-box {
+      .noTask-box {
         display: flex;
         flex-wrap: wrap;
       }
@@ -982,7 +987,7 @@ $theme: #0d8dff;
       color: #555;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
     }
     .condition-active {

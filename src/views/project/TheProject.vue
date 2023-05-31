@@ -470,49 +470,57 @@ onUnmounted(() => {
 });
 // 点击标签
 function tagClick(it, key, index) {
-  if (key === '应用分类' || key === '协议') {
-    renderList.value.forEach((a) => {
-      if (a.domain === key) {
-        if (it.isActive) {
-          it.isActive = false;
-          a.items[index].items.forEach((item) => {
-            item.isSelected = false;
-          });
-          headTags.value.forEach((item, index) => {
-            if (item.name === it.name) {
-              headTags.value.splice(index, 1);
-            }
-          });
-        } else {
-          a.items[index].items.forEach((item) => {
-            if (item.isActive) {
-              headTags.value.forEach((tag, index) => {
-                if (item.name === tag.name) {
-                  headTags.value.splice(index, 1);
-                }
-              });
-              item.isActive = false;
-            }
-            item.isSelected = true;
-          });
-          it.isActive = true;
-          it.isSelected = false;
-          headTags.value.push(it);
-        }
-      }
-    });
-  } else {
-    it.isActive = !it.isActive;
-    if (it.isActive) {
-      if (!headTags.value[0]) headTags.value[0] = it;
-      else headTags.value.push(it);
-    } else {
-      headTags.value.forEach((item, index) => {
-        if (item.name === it.name) {
-          headTags.value.splice(index, 1);
+  if (headTags.value.length < 5) {
+    if (key === '应用分类' || key === '协议') {
+      renderList.value.forEach((a) => {
+        if (a.domain === key) {
+          if (it.isActive) {
+            it.isActive = false;
+            a.items[index].items.forEach((item) => {
+              item.isSelected = false;
+            });
+            headTags.value.forEach((item, index) => {
+              if (item.name === it.name) {
+                headTags.value.splice(index, 1);
+              }
+            });
+          } else {
+            a.items[index].items.forEach((item) => {
+              if (item.isActive) {
+                headTags.value.forEach((tag, index) => {
+                  if (item.name === tag.name) {
+                    headTags.value.splice(index, 1);
+                  }
+                });
+                item.isActive = false;
+              }
+              item.isSelected = true;
+            });
+            it.isActive = true;
+            it.isSelected = false;
+            headTags.value.push(it);
+          }
         }
       });
+    } else {
+      it.isActive = !it.isActive;
+      if (it.isActive) {
+        if (!headTags.value[0]) headTags.value[0] = it;
+        else headTags.value.push(it);
+      } else {
+        headTags.value.forEach((item, index) => {
+          if (item.name === it.name) {
+            headTags.value.splice(index, 1);
+          }
+        });
+      }
     }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '最多支持刷选5个标签',
+      offset: 64,
+    });
   }
 }
 // 删除
@@ -683,7 +691,7 @@ function cancelBtn() {
                                       ]"
                                       @click="tagClick(it, menu.tab, index)"
                                     >
-                                      {{ it.name }}111
+                                      {{ it.name }}
                                     </div>
                                   </div>
                                 </div>
@@ -728,7 +736,7 @@ function cancelBtn() {
                 @change="getKeyWord"
               />
               <div class="sort-select">
-                <el-select v-model="selectValue" placeholder="请选择">
+                <el-select v-model="selectValue" placeholder="排序">
                   <el-option
                     v-for="item in options"
                     :key="item.id"
@@ -788,7 +796,7 @@ function cancelBtn() {
                   <span
                     v-for="(val, index) in item.tags"
                     :key="index"
-                    :style="{ display: index < 2 ? 'inline-block' : 'none' }"
+                    :style="{ display: index < 3 ? 'inline-block' : 'none' }"
                     class="tag"
                   >
                     {{ val }}
@@ -1017,7 +1025,7 @@ $theme: #0d8dff;
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
+  padding: 40px 16px 136px 16px;
   max-width: 1448px;
 }
 
@@ -1300,6 +1308,7 @@ $theme: #0d8dff;
 
               .o-icon {
                 margin-right: 4px;
+                color: #ccc;
                 svg {
                   vertical-align: middle;
                   font-size: 16px;
@@ -1313,6 +1322,9 @@ $theme: #0d8dff;
               color: #0d8dff;
               background: #ffffff;
               border: 1px solid #0d8dff;
+              .o-icon {
+                color: #0d8dff;
+              }
             }
           }
         }
@@ -1344,11 +1356,15 @@ $theme: #0d8dff;
         grid-template-columns: repeat(3, 456px);
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         position: relative;
         .pro-card {
           background-color: #fff;
           position: relative;
+          &:hover {
+            box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+          }
           .mark-tag {
             position: absolute;
             top: 16px;
@@ -1358,7 +1374,7 @@ $theme: #0d8dff;
             background: linear-gradient(45deg, #ffd866 0%, #ff7f0d 100%);
             font-size: 12px;
             color: #ffffff;
-            border-radius: 8px;
+            border-radius: 10px;
           }
           .mark-tag1 {
             position: absolute;
@@ -1407,7 +1423,7 @@ $theme: #0d8dff;
             img {
               width: 100%;
               height: 100%;
-              border-radius: 16px;
+              border-radius: 8px;
             }
           }
           .card-desc {

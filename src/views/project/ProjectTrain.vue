@@ -627,7 +627,7 @@ watch(
 <style lang="scss" scoped>
 .project-train {
   display: flex;
-  padding-bottom: 40px;
+  // padding-bottom: 40px;
   // min-height: calc(100vh - 340px);
   background-color: #f5f6f8;
   &-file {

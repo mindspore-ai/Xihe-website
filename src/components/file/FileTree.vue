@@ -397,7 +397,7 @@ watch(
               <div v-show="!item.is_dir" class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <!-- <span class="size">{{ changeByte(item.size) }}</span> -->
-                <span class="size">download</span>
+                <span class="size">下载</span>
                 <img
                   v-if="item.is_lfs_file"
                   :src="LfsImg"

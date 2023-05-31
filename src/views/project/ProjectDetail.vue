@@ -9,6 +9,7 @@ import IconPlus from '~icons/app/plus';
 import IconFork from '~icons/app/fork';
 import IconTag from '~icons/app/icon-tag';
 import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -727,7 +728,7 @@ watch(
                     @click="checkAllTags(true)"
                   >
                     查看全部
-                    <div class="tags-mask"></div>
+                    <o-icon><icon-right></icon-right></o-icon>
                   </div>
 
                   <div
@@ -736,7 +737,7 @@ watch(
                     @click="retractAlltags(false)"
                   >
                     收起
-                    <div class="tags-mask"></div>
+                    <o-icon><icon-right></icon-right></o-icon>
                   </div>
                 </template>
               </div>
@@ -1218,11 +1219,11 @@ $theme: #0d8dff;
   background-color: #fff;
   .card-head {
     padding-top: 80px;
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
     .head-top {
       padding: 24px 0;
-      background-image: url('@/assets/imgs/model-detail-banner.png');
-      background-size: cover;
-      background-repeat: no-repeat;
       .head-wrap {
         margin: 0 auto;
         padding: 0 16px;
@@ -1348,7 +1349,6 @@ $theme: #0d8dff;
           }
           .label-box {
             display: flex;
-            align-items: flex-start;
             flex-wrap: nowrap;
             font-size: 12px;
             .tags-retract {
@@ -1372,24 +1372,14 @@ $theme: #0d8dff;
                 color: #555555;
                 line-height: 18px;
                 padding: 2px 4px;
-                background: #fff;
+                color: #0d8dff;
                 cursor: pointer;
-
-                .tags-mask {
-                  position: absolute;
-                  left: -49px;
-                  top: 0;
-                  width: 49px;
-                  height: 20px;
-                  background: linear-gradient(
-                    90deg,
-                    rgba(255, 255, 255, 0) 0%,
-                    #ffffff 100%
-                  );
+                .o-icon {
+                  font-size: 16px;
                 }
               }
               .retract-tags {
-                bottom: 16px;
+                bottom: 14px;
               }
             }
             .tag-icon {
@@ -1400,29 +1390,31 @@ $theme: #0d8dff;
               }
             }
             .label-item {
-              cursor: pointer;
               display: flex;
               align-items: center;
-              padding: 0px 8px;
               height: 20px;
               margin-right: 4px;
               margin-bottom: 8px;
+              padding: 0px 12px;
+              font-size: 12px;
               color: #555;
               border: 1px solid #dbedff;
-              background-color: #dbedff;
-              border-radius: 12px;
+              background-color: #f3f9ff;
+              border-radius: 14px;
+              white-space: nowrap;
             }
             .label-add-item {
-              height: 20px;
-              padding: 0px 8px;
-              background: #f7f8fa;
-              border-radius: 8px;
-              border: 1px solid #999999;
               display: flex;
               align-items: center;
+              height: 20px;
+              padding: 2px 8px 2px 4px;
+              background: rgba(5, 142, 240, 0.15);
+              border-radius: 14px;
+              color: #0d8dff;
+              white-space: nowrap;
               cursor: pointer;
               margin-right: 4px;
-              white-space: nowrap;
+              border: 1px dashed #0d8dff;
               .o-icon {
                 margin-right: 4px;
               }
@@ -1433,6 +1425,8 @@ $theme: #0d8dff;
     }
 
     .head-tabs {
+      box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+      background: rgba(251, 251, 251, 0.85);
       .status {
         display: inline-block;
         width: 8px;
@@ -1456,6 +1450,7 @@ $theme: #0d8dff;
       }
       .el-tabs {
         --o-tabs-header-font_size: 16px;
+        background: rgba(251, 251, 251, 0.85);
         :deep(.el-tabs__nav) {
           display: flex;
           .el-tabs__item {
@@ -1489,9 +1484,9 @@ $theme: #0d8dff;
 }
 :deep(.el-tabs) {
   .el-tabs__header {
-    background-color: #ffffff;
+    // background-color: #ffffff;
     margin-bottom: 0;
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    // box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
   }
 
   .el-tabs__item {

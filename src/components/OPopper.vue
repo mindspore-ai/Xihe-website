@@ -37,7 +37,7 @@ import IconPoppver from '~icons/app/popover.svg';
 <style lang="scss" scoped>
 .o-popper {
   position: absolute;
-  right: -40px;
+  right: -32px;
   top: 5px;
   .o-icon {
     font-size: 24px;

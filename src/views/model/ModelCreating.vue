@@ -780,6 +780,7 @@ $theme: #0d8dff;
   }
 }
 .dialog-body {
+  text-align: left;
   border-top: 1px solid #d8d8d8;
   :deep(.el-tabs__item) {
     width: 188px;

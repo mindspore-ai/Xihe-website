@@ -23,7 +23,7 @@ const userInfoStore = useUserInfoStore();
 const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
-  new_model_name: {
+  new_dataset_name: {
     title: '新数据集名',
     placeholder: '请输入新数据集中文名',
   },
@@ -114,7 +114,7 @@ async function confirmRename(formEl) {
             message: '仓库信息更新成功',
           });
           router.push({
-            name: 'modelSet',
+            name: 'datasetSet',
             params: {
               user: routerParams.user,
               name: detailData.name,
@@ -177,13 +177,13 @@ function toggleDelDlg(flag) {
 }
 </script>
 <template>
-  <div class="model-set">
-    <div class="model-set-top">
+  <div class="dataset-set">
+    <div class="dataset-set-top">
       <div class="wrap">
         <!-- 新数据集名 -->
         <div class="set-item">
           <div class="set-title">
-            {{ i18n.new_model_name.title }}
+            {{ i18n.new_dataset_name.title }}
           </div>
 
           <el-form ref="queryRef" :model="query" prop="region" @submit.prevent>
@@ -258,7 +258,7 @@ function toggleDelDlg(flag) {
       </div>
     </div>
 
-    <div class="model-set-middle">
+    <div class="dataset-set-middle">
       <div class="wrap">
         <p class="middle-title">{{ i18n.rename.title }}</p>
         <!-- 新拥有者 -->
@@ -351,7 +351,7 @@ function toggleDelDlg(flag) {
         </div>
       </div>
     </div>
-    <div class="model-set-bottom">
+    <div class="dataset-set-bottom">
       <div class="wrap">
         <div class="set-item">
           <div class="set-title">{{ i18n.delete.title }}</div>
@@ -451,13 +451,13 @@ function toggleDelDlg(flag) {
   max-width: 700px;
   margin: 0 auto;
 }
-.model-set {
+.dataset-set {
   background: #fff;
   border-radius: 16px;
   max-width: 1416px;
   padding: 16px 40px 40px 40px;
 }
-.model-set-top {
+.dataset-set-top {
   border-bottom: 1px solid #e5e5e5;
   padding-bottom: 40px;
 }
@@ -507,7 +507,7 @@ function toggleDelDlg(flag) {
   padding-left: 108px;
   margin-top: 24px;
 }
-.model-set-middle {
+.dataset-set-middle {
   padding: 40px 0;
   border-bottom: 1px solid #e5e5e5;
 }

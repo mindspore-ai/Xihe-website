@@ -225,7 +225,9 @@ function handleResImgDownload() {
 }
 
 function handleHistoryClick() {
-  if (isLogined.value) {
+  if (!isLogined.value) {
+    goAuthorize();
+  } else {
     dialogTableVisible.value = true;
     gridData.value = [];
     gridData.value.push(historyInfo.value);

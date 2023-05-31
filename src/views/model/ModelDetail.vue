@@ -867,7 +867,7 @@ $theme: #0d8dff;
     }
   }
   .card-head {
-    padding-top: 80px;
+    // padding-top: 80px;
     .card-head-1 {
       display: flex;
       margin-bottom: 16px;
@@ -981,7 +981,7 @@ $theme: #0d8dff;
     background: rgba(251, 251, 251, 0.85);
   }
   .card-head-content {
-    padding: 24px 0;
+    padding: 108px 0 24px 0;
     background-image: url('@/assets/imgs/model-detail-banner.png');
     background-size: cover;
     background-repeat: no-repeat;

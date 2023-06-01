@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/industry/metal-part.png';
 import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
 import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.png';
+// import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 const router = useRouter();
 const cases = [

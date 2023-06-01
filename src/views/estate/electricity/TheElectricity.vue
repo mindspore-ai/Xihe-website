@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 // import { useRouter } from 'vue-router';
 
-import estateBanner from '@/assets/imgs/estate/electricity-banner.png';
+// import estateBanner from '@/assets/imgs/estate/electricity-banner.png';
 
 import IconCV from '~icons/app/CV';
 import IconNLP from '~icons/app/NLP';
@@ -15,7 +15,7 @@ import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, FreeMode } from 'swiper';
+import { Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
@@ -76,7 +76,7 @@ const electricityClassify = [
   },
 ];
 
-const handleClick = (tab) => {
+const handleClick = () => {
   // console.log('tab: ', tab);
   // activeName.value = tab.paneName;
   // router.push(electricityClassify[tab.index].path);

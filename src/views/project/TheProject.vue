@@ -1,15 +1,14 @@
 <script setup>
-import { ref, onUnmounted, reactive, watch, shallowRef, markRaw } from 'vue';
+import { ref, onUnmounted, reactive, watch, markRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
-import { Search, ArrowDown, Bottom } from '@element-plus/icons-vue';
-import IconMenu from '~icons/app/menu';
+import { Search, ArrowDown } from '@element-plus/icons-vue';
 import IconX from '~icons/app/x';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
-import IconBack from '~icons/app/back';
+// import IconBack from '~icons/app/back';
 import IconDownload from '~icons/app/download';
 import IconFork from '~icons/app/fork-gray';
 
@@ -107,21 +106,21 @@ let i18n = {
   ],
 };
 
-const projectType = reactive([
-  { type: '精选', isActive: false, num: 3 },
-  { type: '官方', isActive: false, num: 2 },
-]);
+// const projectType = reactive([
+//   { type: '精选', isActive: false, num: 3 },
+//   { type: '官方', isActive: false, num: 2 },
+// ]);
 
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
 const renderSorts = ref([]); //应用分类标签
 const otherCondition = ref([]); //训练平台、协议、项目类型标签
-const showDetail = ref(false);
 const moreSortTags = ref([]);
-const showCondition = ref(true);
-const showTags = ref(false);
-const radioList = ref({});
+// const showDetail = ref(false);
+// const showCondition = ref(true);
+// const showTags = ref(false);
+// const radioList = ref({});
 const keyWord = ref('');
 const activeNavItem = ref('all');
 const selectValue = ref('');
@@ -214,46 +213,46 @@ function handleNavClick(item) {
 function highlightTag(tag) {
   tag.active = !tag.active;
 }
-function projectTypeClick(val) {
-  if (val.isActive) {
-    val.isActive = !val.isActive;
-    delete queryData['level'];
-  } else {
-    projectType.forEach((item) => {
-      item.isActive = false;
-    });
-    val.isActive = true;
-    if (val.type === '官方') {
-      queryData.level = 'official';
-    } else {
-      queryData.level = 'good';
-    }
-  }
-}
+// function projectTypeClick(val) {
+//   if (val.isActive) {
+//     val.isActive = !val.isActive;
+//     delete queryData['level'];
+//   } else {
+//     projectType.forEach((item) => {
+//       item.isActive = false;
+//     });
+//     val.isActive = true;
+//     if (val.type === '官方') {
+//       queryData.level = 'official';
+//     } else {
+//       queryData.level = 'good';
+//     }
+//   }
+// }
 
 // 单选(sdk,状态，协议)
-function conditionClick(index, index2) {
-  renderCondition.value[index].haveActive = true;
-  renderCondition.value[index].condition[0].items.forEach((item) => {
-    item.isSelected = true;
-  });
-  renderCondition.value[index].condition[0].items[index2].isSelected = false;
-  if (
-    renderCondition.value[index].condition[0].items[index2].isActive === true
-  ) {
-    renderCondition.value[index].condition[0].items[index2].isActive =
-      !renderCondition.value[index].condition[0].items[index2].isActive;
-    renderCondition.value[index].condition[0].items.forEach((item) => {
-      item.isSelected = false;
-    });
-  } else {
-    renderCondition.value[index].condition[0].items.forEach((single) => {
-      single.isActive = false;
-      renderCondition.value[index].condition[0].items[index2].isActive = true;
-    });
-  }
-  goSearch(renderCondition.value);
-}
+// function conditionClick(index, index2) {
+//   renderCondition.value[index].haveActive = true;
+//   renderCondition.value[index].condition[0].items.forEach((item) => {
+//     item.isSelected = true;
+//   });
+//   renderCondition.value[index].condition[0].items[index2].isSelected = false;
+//   if (
+//     renderCondition.value[index].condition[0].items[index2].isActive === true
+//   ) {
+//     renderCondition.value[index].condition[0].items[index2].isActive =
+//       !renderCondition.value[index].condition[0].items[index2].isActive;
+//     renderCondition.value[index].condition[0].items.forEach((item) => {
+//       item.isSelected = false;
+//     });
+//   } else {
+//     renderCondition.value[index].condition[0].items.forEach((single) => {
+//       single.isActive = false;
+//       renderCondition.value[index].condition[0].items[index2].isActive = true;
+//     });
+//   }
+//   goSearch(renderCondition.value);
+// }
 
 //查询
 /* function goSearch(render) {
@@ -321,15 +320,15 @@ function conditionClick(index, index2) {
   });
 } */
 
-function dropdownClick(item) {
-  if (item.value === 'download') {
-    queryData.sort_by = 'download_count';
-  } else if (item.value === 'name') {
-    queryData.sort_by = 'first_letter';
-  } else if (item.value === '-update_time') {
-    queryData.sort_by = 'update_time';
-  }
-}
+// function dropdownClick(item) {
+//   if (item.value === 'download') {
+//     queryData.sort_by = 'download_count';
+//   } else if (item.value === 'name') {
+//     queryData.sort_by = 'first_letter';
+//   } else if (item.value === '-update_time') {
+//     queryData.sort_by = 'update_time';
+//   }
+// }
 
 function getProject() {
   // console.log('获取项目接口的queryData: ', queryData);

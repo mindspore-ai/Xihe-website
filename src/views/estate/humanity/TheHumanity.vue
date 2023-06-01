@@ -2,7 +2,7 @@
 import case1 from '@/assets/imgs/estate/humanity/case-aigc.png';
 import case2 from '@/assets/imgs/estate/humanity/case-yuzhi.png';
 import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.png';
+// import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();

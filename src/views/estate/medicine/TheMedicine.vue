@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import cancerImg from '@/assets/imgs/estate/medicine/endometrial-cancer.png';
 import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
 import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
-import estateBanner from '@/assets/imgs/estate/estate-banner.png';
+// import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 const cases = [
   {

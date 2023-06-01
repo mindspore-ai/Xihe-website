@@ -16,9 +16,9 @@ const prop = defineProps({
 function goExperience() {
   router.push(`${prop.path}`);
 }
-function goIntroduction() {
-  router.push(`${prop.path}/introduce`);
-}
+// function goIntroduction() {
+//   router.push(`${prop.path}/introduce`);
+// }
 </script>
 <template>
   <div class="electricity-card">

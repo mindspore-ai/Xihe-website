@@ -480,6 +480,7 @@ function handleCurrentChange(val) {
   document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
+  console.log('user, name: ', user, name);
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/models/${user}/${name}`,

@@ -167,6 +167,16 @@ function goCourseDetail(id) {
             </div>
           </template>
         </el-tab-pane>
+        <el-tab-pane label="电力" name="electricity">
+          <template #label>
+            <div class="category-tabs-label">
+              <span>电力</span>
+              <o-icon>
+                <icon-selected></icon-selected>
+              </o-icon>
+            </div>
+          </template>
+        </el-tab-pane>
       </el-tabs>
       <el-divider />
       <el-tabs
@@ -265,19 +275,26 @@ function goCourseDetail(id) {
           ></el-pagination>
         </div>
       </div>
-      <div v-if="(activeName === 'over') & !currentCourse.length" class="empty">
+      <div
+        v-if="activeName === 'allStatus' && !currentCourse.length"
+        class="empty"
+      >
+        <img :src="emptyImg" alt="" />
+        <p>暂无相关课程</p>
+      </div>
+      <div v-if="activeName === 'over' && !currentCourse.length" class="empty">
         <img :src="emptyImg" alt="" />
         <p>暂无已结束课程</p>
       </div>
       <div
-        v-if="(activeName === 'preparing') & !currentCourse.length"
+        v-if="activeName === 'preparing' && !currentCourse.length"
         class="empty"
       >
         <img :src="emptyImg" alt="" />
         <p>敬请期待</p>
       </div>
       <div
-        v-if="(activeName === 'in-progress') & !currentCourse.length"
+        v-if="activeName === 'in-progress' && !currentCourse.length"
         class="empty"
       >
         <img :src="emptyImg" alt="" />
@@ -291,7 +308,7 @@ function goCourseDetail(id) {
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 64px;
+  padding: 40px 16px 64px;
   max-width: 1448px;
 }
 .course-page {

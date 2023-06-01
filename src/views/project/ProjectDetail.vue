@@ -59,7 +59,7 @@ const tabPosition = ref('left');
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '清除',
+    delete: '清除全部',
   },
   tags: [],
 
@@ -807,7 +807,7 @@ watch(
         destroy-on-close
       >
         <template #header="{ titleId, title }">
-          <div :id="titleId" :class="title">
+          <div :id="titleId" :class="title" style="width: 100%">
             <div class="dialog-head">
               <div class="head-left">
                 <div class="head-title">{{ dialogList.head.title }}</div>
@@ -1068,13 +1068,16 @@ $theme: #0d8dff;
     .el-dialog__header {
       justify-content: flex-start;
     }
+    .el-dialog__body {
+      text-align: left;
+    }
   }
   .dialog-head {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     .head-left {
-      width: 188px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-top: 10px;
       .head-title {
@@ -1103,6 +1106,7 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 6px;
       .condition-detail {
         cursor: pointer;
         display: flex;
@@ -1114,7 +1118,7 @@ $theme: #0d8dff;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
@@ -1125,7 +1129,6 @@ $theme: #0d8dff;
   }
   .dialog-body {
     border-top: 1px solid #d8d8d8;
-    padding-top: 7px;
     :deep .el-tabs__item {
       width: 188px;
       height: 56px;
@@ -1168,7 +1171,7 @@ $theme: #0d8dff;
       color: #555;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
     }
     .condition-active {
@@ -1354,6 +1357,7 @@ $theme: #0d8dff;
             .tags-retract {
               height: 20px;
               overflow-y: hidden;
+              padding-right: 92px;
             }
             .tags-expand {
               height: auto;

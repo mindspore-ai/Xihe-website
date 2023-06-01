@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive, markRaw } from 'vue';
 import { useRouter } from 'vue-router';
 
 import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';
@@ -14,9 +14,10 @@ import IconCount from '~icons/app/count';
 
 import appCard from '@/components/AppCard.vue';
 import electricityCard from '@/views/estate/electricity/electricityCard.vue';
-
 // TODO:替换图片
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
+
+import { getElectricitydata } from '@/api/api-estate';
 
 const router = useRouter();
 
@@ -46,66 +47,155 @@ const cases = [
   },
 ];
 
-const modelData = ref([
-  {
-    avatar_id:
-      'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_avatar/catimg_07.png',
-    desc: 'this is for test',
-    download_count: 0,
-    id: '645dd6ef106e2cd739746264',
-    like_count: 0,
-    name: 'testv2',
-    owner: 'MindSpore',
-    tags: ['apache-2.0'],
-    updated_at: '2023-05-12',
-  },
-  {
-    avatar_id:
-      'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_avatar/catimg_01.png',
-    desc: 'this is for test',
-    download_count: 0,
-    id: '645dd6ef106e2cd739746264',
-    like_count: 0,
-    name: 'testv2',
-    owner: 'MindSpore',
-    tags: ['apache-2.0'],
-    updated_at: '2023-05-12',
-  },
-  {
-    avatar_id:
-      'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_avatar/catimg_06.png',
-    desc: 'this is for test',
-    download_count: 0,
-    id: '645dd6ef106e2cd739746264',
-    like_count: 0,
-    name: 'testv2',
-    owner: 'MindSpore',
-    tags: ['apache-2.0', 'abc'],
-    updated_at: '2023-05-12',
-  },
-]);
+// 开启昇思之旅
+/* const journey = {
+  title: '开启昇思之旅',
+  introduce: '从入门到高阶，从理论到实践，助力开发者快速掌握AI知识',
+  check_detail: '查看详情',
+  check_morE: '查看更多',
+  tablists: [
+    {
+      tab_title: '课程',
+      image: open1,
+      cards: [
+        {
+          name: '',
+          desc: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型。同时，昇思MindSpore推出一站式大模型平台，将大模型能力开放给开发者，让你我皆可触碰大模型的魅力。',
+          image: card1,
+          // type: '免费',
+          detail: '了解详情',
+          path: '/course/c001/introduction',
+        },
+        {
+          name: '',
+          desc: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思MindSpore，采用理论与实践相结合的方法带你轻松入门。',
+          image: card2,
+          // type: '免费',
+          detail: '了解详情',
+          path: '/course/c002/introduction',
+        },
+        {
+          name: '',
+          desc: '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
+          image: card3,
+          // TYPE: '免费',
+          detail: '了解详情',
+          path: '/course/c003/introduction',
+        },
+      ],
+    },
+    {
+      tab_title: '比赛',
+      image: open2,
+      cards: [
+        {
+          name: '',
+          desc: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，赛题与扩散模型（Diffusion Model）紧密结合。大赛旨在为开发者提供一个学习昇思MindSpore和Diffusion Models的机会。',
+          image: competition1,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/ai_painter/0/introduction',
+        },
+        {
+          name: '',
+          desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 图像分类是计算机视觉中最基础的任务,目前图像分类的算法仍然在飞速发展。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像分类预处理、图像分类的能力。',
+          image: competition2,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/3/0/introduction',
+        },
+        {
+          name: '',
+          desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 它研究能实现人与计算机之间用自然语言进行有效通信的各种理论和方法。文本分类在AI领域承担了重要角色。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行NLP的文本处理、文本分类的能力。',
+          image: competition3,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/2/0/introduction',
+        },
+      ],
+    },
+    {
+      tab_title: '活动',
+      image: open3,
+      cards: [
+        {
+          name: '',
+          desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行西安旅游主题图像分类的能力。',
+          image: activity1,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/xian_travel/0/introduction',
+        },
+        {
+          name: '',
+          desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行外卖文本分类的能力。',
+          image: activity2,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/text_classification/0/introduction',
+        },
+        {
+          name: '',
+          desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像口罩检测的能力。',
+          image: activity3,
+          type: '',
+          detail: '了解详情',
+          path: '/competition/mask_detection/0/introduction',
+        },
+      ],
+    },
+  ],
+}; */
 
-const classify = [
+const modelData = ref([]); //应用模型
+const datasetData = ref([]); //应用数据集
+
+const classify = reactive([
   {
-    id: 0,
+    type: 'course',
     name: '课程',
     path: '/estate/electricity',
     // path: '/estate/industrial-zone',
-    icon: IconCourse,
+    icon: markRaw(IconCourse),
+    detail: [],
   },
   {
-    id: 1,
+    type: 'competition',
     name: '比赛',
     path: '/estate/medicine',
-    icon: IconCompetition,
+    icon: markRaw(IconCompetition),
+    detail: [],
   },
   {
-    id: 2,
+    type: 'activity',
     name: '活动',
     path: '/estate/industry',
-    icon: IconMindcon,
+    icon: markRaw(IconMindcon),
+    detail: [
+      {
+        name: '视觉课程',
+        desc: '课程简介---全球首个三模态千亿参数大模型',
+        poster: taichu,
+        path: '/modelzoo/taichu',
+        count: '2K+',
+      },
+      {
+        name: '昇思入门课',
+        desc: '课程简介--个遥感专用框架及最大遥能平台',
+        poster: taichu,
+        path: '/modelzoo/shennong',
+        count: '2K+',
+      },
+      // {
+      //   name: '昇思入门课',
+      //   introduce: '课程简介---全球首个遥感专用框架及最大遥感样本库',
+      //   url: taichu,
+      //   path: '/modelzoo/luojia',
+      //   count: '2K+',
+      // },
+    ],
   },
-];
+]);
 
 // 电力之旅
 const electricityData = ref([
@@ -135,6 +225,32 @@ const electricityData = ref([
 ]);
 function goCasePath(item) {
   router.push(item.url);
+}
+// 获取电力主页数据
+
+async function getElectricityInfor() {
+  const res = await getElectricitydata();
+  modelData.value = res.data.model.projects;
+  datasetData.value = res.data.dataset.projects;
+  classify[0].detail = res.data.course;
+  classify[1].detail = res.data.comp;
+}
+getElectricityInfor();
+
+function goModelDetail(user, name) {
+  // 点击在新页签打开
+  let routerData = router.resolve({
+    path: `/models/${user}/${name}`,
+  });
+  window.open(routerData.href, '_blank');
+}
+
+function goDatasetDetail(user, name) {
+  // 点击在新页签打开
+  let routerData = router.resolve({
+    path: `/datasets/${user}/${name}`,
+  });
+  window.open(routerData.href, '_blank');
 }
 </script>
 <template>
@@ -176,6 +292,7 @@ function goCasePath(item) {
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
+          @click="goModelDetail(item.owner, item.name)"
         ></app-card>
       </div>
     </div>
@@ -194,11 +311,12 @@ function goCasePath(item) {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in modelData"
+          v-for="item in datasetData"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
           card-type="dataset"
+          @click="goDatasetDetail(item.owner, item.name)"
         ></app-card>
       </div>
     </div>
@@ -221,8 +339,9 @@ function goCasePath(item) {
           </template>
           <div class="electricity-content">
             <electricity-card
-              v-for="val in electricityData"
-              :key="val.id"
+              v-for="val in item.detail"
+              :key="val.type"
+              :type="item.type"
               :card-data="val"
             ></electricity-card>
           </div>

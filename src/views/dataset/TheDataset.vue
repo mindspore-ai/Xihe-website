@@ -38,9 +38,9 @@ let i18n = {
   more: '查看全部',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -337,7 +337,9 @@ function handleTagSearch(date) {
   }
 }
 
-function dropdownClick(item) {
+const sortValue = ref('');
+function getSortData(item) {
+  sortValue.value = item.text;
   if (item.value === 'download') {
     query.sort_by = 'download_count';
   } else if (item.value === 'name') {
@@ -660,21 +662,20 @@ onUnmounted(() => {
                 placeholder="请输入数据集名称"
                 @change="getKeyWord"
               />
-              <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon><icon-menu></icon-menu></o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <div class="sort-select">
+                <el-select
+                  v-model="sortValue"
+                  placeholder="排序"
+                  @change="getSortData"
+                >
+                  <el-option
+                    v-for="item in i18n.sortCondition"
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item"
+                  />
+                </el-select>
+              </div>
             </div>
           </div>
           <div v-if="modelData.projects" class="card-list">
@@ -972,10 +973,10 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 24px;
+        padding: 18px 24px;
         width: 100%;
         background-color: #fff;
-        border-radius: 30px;
+        border-radius: 16px;
         .model-number {
           font-size: 14px;
           line-height: 22px;
@@ -992,6 +993,16 @@ $theme: #0d8dff;
             margin-left: 24px;
             font-size: 24px;
           }
+          .el-input {
+            width: 320px;
+          }
+
+          .sort-select {
+            margin-left: 8px;
+            .el-select {
+              width: 114px;
+            }
+          }
         }
       }
       .card-list {
@@ -1000,7 +1011,7 @@ $theme: #0d8dff;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         .pagination {
           display: flex;
           justify-content: center;

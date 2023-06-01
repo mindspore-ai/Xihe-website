@@ -9,6 +9,7 @@ import IconPlus from '~icons/app/plus';
 import IconTag from '~icons/app/icon-tag';
 import IconTime from '~icons/app/time';
 import IconRight from '~icons/app/arrow-right2';
+import IconUp from '~icons/app/up';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
@@ -532,7 +533,7 @@ watch(
 
                 <div v-else class="retract-tags" @click="retractAlltags(false)">
                   收起
-                  <o-icon><icon-right></icon-right></o-icon>
+                  <o-icon><icon-up></icon-up></o-icon>
                 </div>
               </template>
             </div>
@@ -849,6 +850,7 @@ $theme: #0d8dff;
     margin-right: 24px;
     .o-icon {
       font-size: 20px;
+      color: #555;
     }
     .o-icon:hover {
       color: #0d8dff;

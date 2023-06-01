@@ -981,10 +981,10 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 24px;
+        padding: 18px 24px;
         width: 100%;
         background-color: #fff;
-        border-radius: 30px;
+        border-radius: 16px;
         .model-number {
           font-size: 14px;
           line-height: 22px;
@@ -1009,7 +1009,6 @@ $theme: #0d8dff;
             margin-left: 8px;
             .el-select {
               width: 114px;
-              margin-left: 8px;
             }
           }
         }
@@ -1020,7 +1019,7 @@ $theme: #0d8dff;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         .pagination {
           display: flex;
           justify-content: center;

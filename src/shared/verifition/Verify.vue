@@ -55,9 +55,11 @@ export default {
     },
     figure: {
       type: Number,
+      default: undefined,
     },
     arith: {
       type: Number,
+      default: undefined,
     },
     mode: {
       type: String,
@@ -65,9 +67,11 @@ export default {
     },
     vSpace: {
       type: Number,
+      default: undefined,
     },
     explain: {
       type: String,
+      default: undefined,
     },
     imgSize: {
       type: Object,
@@ -80,9 +84,11 @@ export default {
     },
     blockSize: {
       type: Object,
+      default: undefined,
     },
     barSize: {
       type: Object,
+      default: undefined,
     },
   },
   setup(props) {

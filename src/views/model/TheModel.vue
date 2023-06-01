@@ -6,7 +6,6 @@ import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import OEmpty from '@/components/OEmpty.vue';
 
-import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
@@ -41,9 +40,9 @@ let i18n = {
   more: '更多',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -401,7 +400,10 @@ function goSearch(render) {
   });
 }
 
-function dropdownClick(item) {
+const sortValue = ref('');
+// 排序
+function getSortData(item) {
+  sortValue.value = item.text;
   if (item.value === 'download') {
     queryData.sort_by = 'download_count';
   } else if (item.value === 'name') {
@@ -410,6 +412,7 @@ function dropdownClick(item) {
     queryData.sort_by = 'update_time';
   }
 }
+
 function getModel() {
   getModelData(queryData).then((res) => {
     modelCount.value = res.data.total;
@@ -459,7 +462,6 @@ async function getModelTag() {
     });
   });
 }
-// getModelTag();prev, pager, next, jumper, ->, total
 
 const layout = ref('total, sizes, prev, pager, next, jumper');
 
@@ -522,12 +524,8 @@ watch(
   () => {
     getModelTag().then(() => {
       if (route.params.modelType === '1') {
-        // checkAllClick(renderCondition.value[0], 0);
-        // sortTagClick(0, 3);
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
       } else if (route.params.modelType === '2') {
-        // checkAllClick(renderCondition.value[0], 0);
-        // sortTagClick(0, 4);
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
       } else if (route.params.modelType === '3') {
         conditionClick(0, 1, renderCondition.value[0].condition[1]);
@@ -716,23 +714,21 @@ onUnmounted(() => {
                   placeholder="请输入模型名称"
                   @change="getKeyWord"
                 />
-                <el-dropdown popper-class="filter">
-                  <span class="el-dropdown-link">
-                    <o-icon>
-                      <icon-menu></icon-menu>
-                    </o-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu>
-                      <el-dropdown-item
-                        v-for="item in i18n.sortCondition"
-                        :key="item"
-                        @click="dropdownClick(item)"
-                        >{{ item.text }}</el-dropdown-item
-                      >
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
+
+                <div class="sort-select">
+                  <el-select
+                    v-model="sortValue"
+                    placeholder="排序"
+                    @change="getSortData"
+                  >
+                    <el-option
+                      v-for="item in i18n.sortCondition"
+                      :key="item.id"
+                      :label="item.text"
+                      :value="item"
+                    />
+                  </el-select>
+                </div>
               </div>
             </div>
 
@@ -1004,6 +1000,17 @@ $theme: #0d8dff;
             cursor: pointer;
             margin-left: 24px;
             font-size: 24px;
+          }
+          .el-input {
+            width: 320px;
+          }
+
+          .sort-select {
+            margin-left: 8px;
+            .el-select {
+              width: 114px;
+              margin-left: 8px;
+            }
           }
         }
       }

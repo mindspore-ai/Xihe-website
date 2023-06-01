@@ -13,7 +13,7 @@ import IconFile from '~icons/app/model-card-empty';
 import { ElDialog } from 'element-plus';
 
 import { addDataset, deleteDataset, getReadmeInfo } from '@/api/api-model';
-import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getGitlabFileRaw } from '@/api/api-gitlab';
 import { useFileData, useUserInfoStore } from '@/stores';
 import { handleMarkdown } from '@/shared/markdown';
 

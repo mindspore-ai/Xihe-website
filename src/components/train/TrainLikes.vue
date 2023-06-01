@@ -2,7 +2,7 @@
 // import { watch } from 'vue';
 import IconHeart from '~icons/app/heart';
 import IconDigged from '~icons/app/digged';
-import { useUserInfoStore } from '@/stores';
+// import { useUserInfoStore } from '@/stores';
 
 const props = defineProps({
   isDigged: {
@@ -16,7 +16,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['click']);
-const userInfoStore = useUserInfoStore();
+// const userInfoStore = useUserInfoStore();
 
 function onClick(e) {
   emit('click', e);

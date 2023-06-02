@@ -987,7 +987,7 @@ function handleNum(index) {
         </div>
         <div v-else-if="errorMsg" class="waiting">
           <img :src="warning" alt="" />
-          <p>敏感信息，请重新输入关键词</p>
+          <p>{{ errorMsg }}</p>
         </div>
         <div v-else class="tip">
           <img :src="tip" alt="" />
@@ -1283,7 +1283,7 @@ function handleNum(index) {
         >
         <template v-else-if="errorMsg">
           <img :src="warning" alt="" />
-          <p>敏感信息，请重新输入关键词</p></template
+          <p>{{ errorMsg }}</p></template
         >
         <template v-else> </template>
       </div>

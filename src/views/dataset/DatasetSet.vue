@@ -80,6 +80,7 @@ const queryRef = ref(null);
 
 let query = reactive({
   name: detailData.name,
+  title: detailData.title,
 });
 
 detailData.repo_type === 'private'
@@ -138,11 +139,13 @@ function confirmPrivate() {
   let query = {
     type: visibleValue.value,
     desc: description.value,
+    title: detailData.title,
   };
   modifyDataset(query, detailData.owner, detailData.id)
     .then((res) => {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
+      detailData.title = res.data.title;
       ElMessage({
         type: 'success',
         message: '修改成功',
@@ -210,7 +213,7 @@ function toggleDelDlg(flag) {
               ]"
             >
               <el-input
-                v-model="query.name"
+                v-model="detailData.title"
                 :placeholder="i18n.rename.placeholder"
               >
               </el-input>

@@ -8,7 +8,6 @@ import IconX from '~icons/app/x';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
-// import IconBack from '~icons/app/back';
 import IconDownload from '~icons/app/download';
 import IconFork from '~icons/app/fork-gray';
 
@@ -106,21 +105,12 @@ let i18n = {
   ],
 };
 
-// const projectType = reactive([
-//   { type: '精选', isActive: false, num: 3 },
-//   { type: '官方', isActive: false, num: 2 },
-// ]);
-
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
 const renderSorts = ref([]); //应用分类标签
 const otherCondition = ref([]); //训练平台、协议、项目类型标签
 const moreSortTags = ref([]);
-// const showDetail = ref(false);
-// const showCondition = ref(true);
-// const showTags = ref(false);
-// const radioList = ref({});
 const keyWord = ref('');
 const activeNavItem = ref('all');
 const selectValue = ref('');
@@ -191,16 +181,20 @@ let dialogList = {
   tags: [],
 };
 
-// 点击导航
+// TODO:点击导航
 function handleNavClick(item) {
   if (item.id === 'all') {
     queryData.level = null;
+    queryData.tags = null;
   } else if (item.id === 'official') {
+    queryData.tags = null;
     queryData.level = 'official';
   } else if (item.id === 'good') {
+    queryData.tags = null;
     queryData.level = 'good';
   } else if (item.id === 'electricity') {
-    return;
+    queryData.level = null;
+    queryData.tags = 'electricity';
   }
   if (/^all|official|good|electricity/g.test(item.id)) {
     activeNavItem.value = item.id;
@@ -213,122 +207,6 @@ function handleNavClick(item) {
 function highlightTag(tag) {
   tag.active = !tag.active;
 }
-// function projectTypeClick(val) {
-//   if (val.isActive) {
-//     val.isActive = !val.isActive;
-//     delete queryData['level'];
-//   } else {
-//     projectType.forEach((item) => {
-//       item.isActive = false;
-//     });
-//     val.isActive = true;
-//     if (val.type === '官方') {
-//       queryData.level = 'official';
-//     } else {
-//       queryData.level = 'good';
-//     }
-//   }
-// }
-
-// 单选(sdk,状态，协议)
-// function conditionClick(index, index2) {
-//   renderCondition.value[index].haveActive = true;
-//   renderCondition.value[index].condition[0].items.forEach((item) => {
-//     item.isSelected = true;
-//   });
-//   renderCondition.value[index].condition[0].items[index2].isSelected = false;
-//   if (
-//     renderCondition.value[index].condition[0].items[index2].isActive === true
-//   ) {
-//     renderCondition.value[index].condition[0].items[index2].isActive =
-//       !renderCondition.value[index].condition[0].items[index2].isActive;
-//     renderCondition.value[index].condition[0].items.forEach((item) => {
-//       item.isSelected = false;
-//     });
-//   } else {
-//     renderCondition.value[index].condition[0].items.forEach((single) => {
-//       single.isActive = false;
-//       renderCondition.value[index].condition[0].items[index2].isActive = true;
-//     });
-//   }
-//   goSearch(renderCondition.value);
-// }
-
-//查询
-/* function goSearch(render) {
-  let time1 = 0;
-  let time2 = 0;
-  queryData.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
-  render.forEach((item) => {
-    time1 = 0;
-    time2 = 0;
-    // 应用分类
-    if (item.title.text === '应用分类') {
-      item.condition.forEach((value) => {
-        if (value.isActive) {
-          tag_kinds.push(value.kind);
-          if (tag_kinds.length < 6) {
-            queryData.tag_kinds = tag_kinds.join(',');
-          } else {
-            ElMessage({
-              message: '最多支持刷选5个标签 !',
-              type: 'warning',
-            });
-            return;
-          }
-        } else {
-          time1 += 1;
-        }
-      });
-      if (time1 === item.condition.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
-        item.haveActive = false;
-        if (item.title.key === 0) {
-          queryData.tag_kinds = null;
-        }
-      }
-      // 协议(单选)
-    } else {
-      item.condition.forEach((value) => {
-        value.items.forEach((val) => {
-          if (val.isActive) {
-            tagList.push(val.name);
-            if (tagList.length < 6) {
-              queryData.tags = tagList.join(',');
-            } else {
-              ElMessage({
-                message: '最多支持刷选5个标签 !',
-                type: 'warning',
-              });
-              return;
-            }
-          } else {
-            time2 += 1;
-          }
-        });
-      });
-      if (time2 === item.condition[0].items.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
-        item.haveActive = false;
-        if (item.title.key === 1) {
-          queryData.tags = null;
-        }
-      }
-    }
-  });
-} */
-
-// function dropdownClick(item) {
-//   if (item.value === 'download') {
-//     queryData.sort_by = 'download_count';
-//   } else if (item.value === 'name') {
-//     queryData.sort_by = 'first_letter';
-//   } else if (item.value === '-update_time') {
-//     queryData.sort_by = 'update_time';
-//   }
-// }
 
 function getProject() {
   // console.log('获取项目接口的queryData: ', queryData);
@@ -364,8 +242,6 @@ function getModelTag() {
         it.isActive = false;
         it.isSelected = false;
         it.items = it.items.map((child) => {
-          // child.isSelected = false;
-          // child.isActive = false;
           return {
             name: child,
             isSelected: false,
@@ -656,7 +532,7 @@ function cancelBtn() {
                           :key="it"
                           class="condition-detail"
                         >
-                          {{ it.name }}
+                          {{ it.name === 'electricity' ? '电力' : it.name }}
                           <o-icon class="icon-x" @click="deleteClick(it)"
                             ><icon-x></icon-x
                           ></o-icon>
@@ -695,7 +571,11 @@ function cancelBtn() {
                                       ]"
                                       @click="tagClick(it, menu.tab, index)"
                                     >
-                                      {{ it.name }}
+                                      {{
+                                        it.name === 'electricity'
+                                          ? '电力'
+                                          : it.name
+                                      }}
                                     </div>
                                   </div>
                                 </div>
@@ -1085,7 +965,6 @@ $theme: #0d8dff;
   }
   .model-body {
     display: flex;
-    // padding: 50px 0 100px 0;
     .condition {
       position: relative;
       width: 100%;
@@ -1368,6 +1247,7 @@ $theme: #0d8dff;
           &:hover {
             box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
             border-radius: 16px;
+            transition: all 0.2s linear;
           }
           .mark-tag {
             position: absolute;
@@ -1410,7 +1290,6 @@ $theme: #0d8dff;
         .pro-card {
           cursor: pointer;
           border-radius: 16px;
-          // box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
           .o-icon {
             margin-right: 2px;
           }
@@ -1419,11 +1298,6 @@ $theme: #0d8dff;
             position: relative;
             color: #fff;
             padding: 8px 8px 0px;
-            /*  &:hover {
-              .description {
-                display: block;
-              }
-            } */
             img {
               width: 100%;
               height: 100%;

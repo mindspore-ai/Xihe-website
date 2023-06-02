@@ -210,6 +210,7 @@ const homeInfo = ref([
   [{ count: 320 }, { count: 320 }, { count: 320 }],
 ]);
 getHomeInfo().then((res) => {
+  console.log('res: ', res);
   res.data.comp.forEach((item) => {
     if (item.id === 'ai_painter') {
       homeInfo.value[1][0].count = item.count;

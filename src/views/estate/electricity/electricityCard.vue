@@ -12,18 +12,20 @@ const prop = defineProps({
       return {};
     },
   },
+  type: {
+    type: String,
+    default: '',
+  },
 });
+
 function goExperience() {
-  router.push(`${prop.path}`);
+  router.push(`/${prop.type}/${prop.cardData.id}`);
 }
-// function goIntroduction() {
-//   router.push(`${prop.path}/introduce`);
-// }
 </script>
 <template>
   <div class="electricity-card">
     <div class="card-top">
-      <img class="cover" :src="cardData.url" alt="" />
+      <img class="cover" :src="cardData.poster" alt="" />
       <div class="card-title">
         <span class="card-name">
           {{ cardData.name }}
@@ -33,7 +35,7 @@ function goExperience() {
     </div>
     <div class="card-bottom">
       <div class="card-desc">
-        {{ cardData.introduce }}
+        {{ cardData.desc }}
       </div>
       <div class="card-btn">
         <div class="left">
@@ -101,6 +103,12 @@ function goExperience() {
       font-weight: 400;
       color: #2c2c2c;
       padding: 0 12px;
+      min-height: 43px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .card-btn {
       margin-top: 20px;

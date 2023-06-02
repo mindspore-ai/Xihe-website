@@ -252,6 +252,7 @@ function deleteModelTags() {
       });
     });
   });
+  console.log('menu: ', menu);
 }
 
 // 确认
@@ -722,6 +723,9 @@ $theme: #0d8dff;
       line-height: 56px;
       font-size: 18px;
       padding-left: 24px;
+    }
+    :deep(.el-tabs__content) {
+      text-align: left;
     }
     :deep(.el-tabs .el-tabs__header) {
       box-shadow: none;

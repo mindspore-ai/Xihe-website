@@ -972,12 +972,13 @@ $theme: #0d8dff;
       align-items: center;
       height: 20px;
       padding: 2px 8px 2px 4px;
-      background: #f7f8fa;
+      background: rgba(13, 141, 255, 0.15);
       border-radius: 14px;
-      border: 1px solid #999999;
+      color: #0d8dff;
+      border: 1px dashed #0d8dff;
       white-space: nowrap;
-      cursor: pointer;
       margin-right: 4px;
+      cursor: pointer;
       .o-icon {
         margin-right: 4px;
       }

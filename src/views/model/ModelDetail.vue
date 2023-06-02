@@ -519,7 +519,7 @@ watch(
                 ref="tagRef"
                 class="label-item"
               >
-                {{ label.name }}
+                {{ label.name === 'electricity' ? '电力' : label.name }}
               </div>
 
               <template v-if="isWrap">
@@ -583,7 +583,7 @@ watch(
                   :key="it"
                   class="dlg-condition-detail"
                 >
-                  {{ it.name }}
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -617,7 +617,7 @@ watch(
                         :class="{ 'condition-active': it.isActive }"
                         @click="tagClick(it, menu.key)"
                       >
-                        {{ it.name }}
+                        {{ it.name === 'electricity' ? '电力' : it.name }}
                       </div>
                     </div>
                   </div>

@@ -534,7 +534,7 @@ function deleteAllTags() {
                           :class="{ 'condition-active': it.isActive }"
                           @click="selectTags(it)"
                         >
-                          {{ it.name }}
+                          {{ it.name === 'electricity' ? '电力' : it.name }}
                         </div>
                       </div>
                     </div>

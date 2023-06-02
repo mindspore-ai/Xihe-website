@@ -173,14 +173,14 @@ const classify = reactive([
     icon: markRaw(IconMindcon),
     detail: [
       {
-        name: '视觉课程',
+        name: '视觉课程11111',
         desc: '课程简介---全球首个三模态千亿参数大模型',
         poster: taichu,
         path: '/modelzoo/taichu',
         count: '2K+',
       },
       {
-        name: '昇思入门课',
+        name: '昇思入门课22222',
         desc: '课程简介--个遥感专用框架及最大遥能平台',
         poster: taichu,
         path: '/modelzoo/shennong',
@@ -197,32 +197,6 @@ const classify = reactive([
   },
 ]);
 
-// 电力之旅
-const electricityData = ref([
-  {
-    name: '大模型课程',
-    introduce: '课程简介---全球首个三模态千亿参数大模型',
-    url: taichu,
-    path: '/modelzoo/taichu',
-    count: '2K+',
-  },
-  {
-    name: '视觉课程',
-    introduce: '课程简介---面向生物医学领域的人工智能平台',
-    url: taichu,
-
-    path: '/modelzoo/shennong',
-    count: '2K+',
-  },
-
-  {
-    name: '昇思入门课',
-    introduce: '课程简介---全球首个遥感专用框架及最大遥感样本库',
-    url: taichu,
-    path: '/modelzoo/luojia',
-    count: '2K+',
-  },
-]);
 function goCasePath(item) {
   router.push(item.url);
 }

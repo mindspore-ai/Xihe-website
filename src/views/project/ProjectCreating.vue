@@ -52,12 +52,13 @@ const proList = reactive({
   owner: '',
   cover_id: '1',
   name: '',
-  chineseName: '',
+  title: '',
   desc: '',
-  protocol: '',
+  protocol: protocol[0].name,
   training: '',
   type: '',
-  repo_type: '完全公开',
+  repo_type: 'public',
+  tags: [],
 });
 
 const isTagShow = ref(false);
@@ -113,6 +114,13 @@ const rules = reactive({
     },
     { validator: checkName, trigger: 'change' },
   ],
+  title: [
+    {
+      pattern: /^[\u4e00-\u9fa5]{3,35}$/g,
+      message: '请输入项目中文名称，且长度为3-35个字符',
+      trigger: 'blur',
+    },
+  ],
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
 let time = null;
@@ -162,15 +170,11 @@ function selectImgClick(item) {
 
 // 新建项目
 function setProject() {
-  let newList = JSON.parse(JSON.stringify(proList));
-  if (newList.repo_type === '完全公开') {
-    newList.repo_type = 'public';
-  } else if (newList.repo_type === '部分公开') {
-    newList.repo_type = 'private'; //TODO:待修改
-  } else {
-    newList.repo_type = 'private';
-  }
-  setNewProject(newList)
+  headTags.value.forEach((item) => {
+    proList.tags.push(item.name);
+  });
+  console.log('newList: ', proList);
+  setNewProject(proList)
     .then((res) => {
       ElMessage({
         type: 'success',
@@ -192,7 +196,7 @@ projectPhotos.value[0].is_active = true;
 
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
-proList.protocol = protocol[0].name;
+// proList.protocol = protocol[0].name;
 // proList.repo_type = 'Public';
 onMounted(() => {});
 
@@ -331,9 +335,9 @@ function deleteAllTags() {
         </div>
         <!-- 项目名称 -->
         <div class="form-item">
-          <el-form-item class="item-title" :label="i18n.pro_name">
+          <el-form-item class="item-title" :label="i18n.pro_name" prop="title">
             <el-input
-              v-model="proList.chineseName"
+              v-model="proList.title"
               :placeholder="i18n.input_proName2"
             ></el-input>
           </el-form-item>
@@ -446,21 +450,15 @@ function deleteAllTags() {
           </div>
           <el-form-item class="view" :label="i18n.view">
             <div class="visual">
-              <el-radio
-                v-model="proList.repo_type"
-                label="完全公开"
-                size="large"
+              <el-radio v-model="proList.repo_type" label="public" size="large"
                 >完全公开</el-radio
               >
               <div class="explain">{{ i18n.public }}</div>
-              <el-radio
-                v-model="proList.repo_type"
-                label="部分公开"
-                size="large"
+              <el-radio v-model="proList.repo_type" label="online" size="large"
                 >部分公开</el-radio
               >
               <div class="explain">{{ i18n.public_some }}</div>
-              <el-radio v-model="proList.repo_type" label="私有" size="large"
+              <el-radio v-model="proList.repo_type" label="private" size="large"
                 >私有</el-radio
               >
               <div class="explain">{{ i18n.private }}</div>
@@ -534,7 +532,7 @@ function deleteAllTags() {
                         :class="{ 'condition-active': it.isActive }"
                         @click="selectTags(it)"
                       >
-                        {{ it.name }}
+                        {{ it.name === 'electricity' ? '电力' : it.name }}
                       </div>
                     </div>
                   </div>

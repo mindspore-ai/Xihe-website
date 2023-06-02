@@ -429,7 +429,7 @@ watch(
       <div class="card-head-content">
         <div class="card-head-info wrap">
           <div class="head-info-title">
-            <p>{{ detailData.name }}</p>
+            <p>{{ detailData.title ? detailData.title : detailData.name }}</p>
             <train-likes
               v-if="userInfoStore.userName !== detailData.owner"
               :is-digged="isDigged"
@@ -601,7 +601,7 @@ watch(
 
               <div v-if="headTags[0]" class="head-tags">
                 <div v-for="it in headTags" :key="it" class="condition-detail">
-                  {{ it.name }}
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -635,7 +635,7 @@ watch(
                         :class="{ 'condition-active': it.isActive }"
                         @click="tagClick(it, menu.key)"
                       >
-                        {{ it.name }}
+                        {{ it.name === 'electricity' ? '电力' : it.name }}
                       </div>
                     </div>
                   </div>

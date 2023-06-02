@@ -631,7 +631,7 @@ onUnmounted(() => {
               }"
               @click="conditionClick(index, index2, detail.id)"
             >
-              {{ detail.name }}
+              {{ detail.name === 'electricity' ? '电力' : detail.name }}
               <o-icon class="icon-x">
                 <icon-x></icon-x>
               </o-icon>

@@ -37,6 +37,13 @@ export default {
       OPENNESS: true,
     },
     {
+      TITLE: 'AI文本检测器',
+      INTRODUCE:
+        '根据长短文本的不同特性，华为诺亚方舟实验室提出了一种基于PU学习的多尺度AI生成文本检测器MPU，能够在各种场景下识别由AI生成的文字。',
+      PATH: '',
+      OPENNESS: true,
+    },
+    {
       TITLE: '鹏程.大圣',
       INTRODUCE: '业界首个千亿参数规模机器视觉分析领域大模',
       PATH: '',

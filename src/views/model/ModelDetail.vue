@@ -454,7 +454,8 @@ watch(
       <div class="card-head-content">
         <div class="card-head-info wrap">
           <div class="head-info-title">
-            <p>{{ detailData.name }}</p>
+            <p v-if="detailData.title">{{ detailData.title }}</p>
+            <p v-else>{{ detailData.name }}</p>
             <train-likes
               v-if="userInfoStore.userName !== detailData.owner"
               :is-digged="isDigged"

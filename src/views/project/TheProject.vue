@@ -183,6 +183,16 @@ let dialogList = {
 
 // TODO:点击导航
 function handleNavClick(item) {
+  headTags.value = [];
+  renderList.value.forEach((val) => {
+    val.items.forEach((item) => {
+      // console.log('item: ', item);
+      item.items.forEach((a) => {
+        a.isActive = false;
+        a.isSelected = false;
+      });
+    });
+  });
   if (item.id === 'all') {
     queryData.level = null;
     queryData.tags = null;
@@ -217,6 +227,7 @@ function getProject() {
         layout.value = layout.value.split(',').splice(0, 4).join(',');
       }
       projectData.value = res.data.data;
+      console.log('projectData.value: ', projectData.value);
     }
   });
 }
@@ -671,7 +682,7 @@ function cancelBtn() {
                 <!-- <div class="card-modal"></div> -->
               </div>
               <div class="card-desc">
-                <p class="title">{{ item.name }}</p>
+                <p class="title">{{ item.title }}</p>
 
                 <div class="description">
                   {{ item.desc }}
@@ -1307,6 +1318,7 @@ $theme: #0d8dff;
           .card-desc {
             padding: 24px;
             .title {
+              height: 28px;
               line-height: 28px;
               font-size: 20px;
               font-weight: 500;

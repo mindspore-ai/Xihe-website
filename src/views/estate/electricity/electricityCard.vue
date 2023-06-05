@@ -26,12 +26,12 @@ function goExperience() {
   <div class="electricity-card">
     <div class="card-top">
       <img class="cover" :src="cardData.poster" alt="" />
-      <div class="card-title">
+      <!-- <div class="card-title">
         <span class="card-name">
           {{ cardData.name }}
         </span>
         <span class="card-type">免费</span>
-      </div>
+      </div> -->
     </div>
     <div class="card-bottom">
       <div class="card-desc">

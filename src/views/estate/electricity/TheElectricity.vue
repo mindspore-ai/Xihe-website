@@ -150,11 +150,11 @@ const logoPic = [
         :free-mode="true"
         :modules="logoModules"
         slides-per-view="auto"
-        :autoplay="{ autoplay: true, delay: 0 }"
         loop
         :no-swiping="true"
         class="logo-swiper"
       >
+        <!-- :autoplay="{ autoplay: true, delay: 0 }" -->
         <swiper-slide
           v-for="item in logoPic.slice(0, 9)"
           :key="item"
@@ -163,7 +163,7 @@ const logoPic = [
           <img :src="item" />
         </swiper-slide>
       </swiper>
-      <swiper
+      <!-- <swiper
         :speed="8000"
         :free-mode="true"
         slides-per-view="auto"
@@ -180,7 +180,7 @@ const logoPic = [
         >
           <img :src="item" />
         </swiper-slide>
-      </swiper>
+      </swiper> -->
     </div>
   </div>
 </template>
@@ -191,7 +191,8 @@ const logoPic = [
   background-image: url('@/assets/imgs/estate/electricity/electric-travel.jpg');
   background-repeat: no-repeat;
   background-size: 100% 642px;
-  background-position: 0 2288px;
+  // background-position: 0 2288px;
+  background-position: 0 1960px;
   .electricity-head {
     padding-top: 80px;
     position: relative;

@@ -873,6 +873,7 @@ const handleCommand = (command) => {
               v-if="userInfoStore.id"
               class="user-info"
               popper-class="header-nav"
+              placement="bottom-end"
             >
               <div
                 class="user-info-item"
@@ -1361,6 +1362,7 @@ const handleCommand = (command) => {
       margin-left: 12px;
       font-size: 20px;
       line-height: 28px;
+      min-width: 150px;
     }
     &::after {
       position: absolute;
@@ -1375,7 +1377,7 @@ const handleCommand = (command) => {
 .el-scrollbar__wrap {
   background: #f5f7fc;
   .el-dropdown__list > .el-dropdown-menu {
-    padding-bottom: 4px;
+    padding-bottom: 12px;
     :deep(.el-dropdown-menu__item) {
       font-size: 16px;
       line-height: 24px;

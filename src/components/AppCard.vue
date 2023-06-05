@@ -23,6 +23,10 @@ const props = defineProps({
       return '';
     },
   },
+  showName: {
+    type: Boolean,
+    default: true,
+  },
 });
 const labelList = ref([]);
 const i18n = {
@@ -38,13 +42,16 @@ if (props.cardType === 'model') {
 } else if (props.cardType === 'dataset') {
   const { tags } = JSON.parse(tagList);
   labelList.value = tags;
+} else {
+  const { tags } = JSON.parse(tagList);
+  labelList.value = tags;
 }
 </script>
 <template>
   <div
     class="app-card"
     :class="[
-      { 'o-model-hover': cardType === 'model' },
+      { 'o-model-hover': cardType === 'model' || cardType === 'electricity' },
       { 'o-dataset-hover': cardType === 'dataset' },
     ]"
   >
@@ -52,14 +59,19 @@ if (props.cardType === 'model') {
       <div class="portrait">
         <img :src="avatarImg" alt="" />
       </div>
-      <div v-if="cardData.owner" class="nickname">
-        {{ cardData.owner }}
+      <div v-if="!showName">
+        {{ cardData.title }}
       </div>
-      <div class="model-name">/{{ cardData.name }}</div>
+      <div v-else class="owner-info">
+        <div v-if="cardData.owner" class="nickname">
+          {{ cardData.owner }}
+        </div>
+        <div class="model-name">/{{ cardData.name }}</div>
+      </div>
     </div>
     <div class="label-box">
       <div v-for="label in labelList" :key="label.index" class="label-item">
-        {{ label }}
+        {{ label === 'electricity' ? '电力' : label }}
       </div>
     </div>
     <p class="model-introduce">
@@ -116,6 +128,9 @@ if (props.cardType === 'model') {
     line-height: 24px;
     border-bottom: 1px solid #def1e8;
     position: relative;
+    .owner-info {
+      display: flex;
+    }
     .portrait {
       margin-right: 8px;
       width: 24px;

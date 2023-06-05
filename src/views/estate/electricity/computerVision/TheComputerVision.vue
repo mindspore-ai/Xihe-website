@@ -262,10 +262,12 @@ function goDatasetDetail(user, name) {
       </div>
       <div class="model-list">
         <app-card
-          v-for="item in modelData"
+          v-for="item in modelData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
+          card-type="model"
+          :show-name="false"
           @click="goModelDetail(item.owner, item.name)"
         ></app-card>
       </div>
@@ -285,11 +287,12 @@ function goDatasetDetail(user, name) {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in datasetData"
+          v-for="item in datasetData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
           card-type="dataset"
+          :show-name="false"
           @click="goDatasetDetail(item.owner, item.name)"
         ></app-card>
       </div>
@@ -365,9 +368,9 @@ function goDatasetDetail(user, name) {
     margin-top: 40px;
     .case-cards {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       grid-gap: 24px;
-      grid-template-rows: 320px 320px;
+      grid-template-rows: 320px;
       margin: 40px 0 64px;
       padding: 0px 16px;
       .case-item {

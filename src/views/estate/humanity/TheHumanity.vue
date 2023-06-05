@@ -73,7 +73,7 @@ function goCasePath(item) {
   .humanity-head {
     padding-top: 80px;
     position: relative;
-    background-image: url('@/assets/imgs/estate/estate-banner.png');
+    background-image: url('@/assets/imgs/estate/estate-banner.jpg');
     background-size: cover;
     background-position: 50% 50%;
     img {

@@ -259,6 +259,7 @@ function toggleVisible(val) {
       height: 20px;
       display: inline-block;
       color: #555;
+      cursor: pointer;
     }
   }
   .invisible {

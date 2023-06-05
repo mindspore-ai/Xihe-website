@@ -208,7 +208,7 @@ function goSearch(render) {
         }
       }
       // 协议(单选)
-    } else if (item.title.key === 1) {
+    } else {
       item.condition.forEach((value) => {
         value.items.forEach((val) => {
           if (val.isActive) {

@@ -181,12 +181,11 @@ let dialogList = {
   tags: [],
 };
 
-// TODO:点击导航
+// 点击导航
 function handleNavClick(item) {
   headTags.value = [];
   renderList.value.forEach((val) => {
     val.items.forEach((item) => {
-      // console.log('item: ', item);
       item.items.forEach((a) => {
         a.isActive = false;
         a.isSelected = false;
@@ -227,7 +226,6 @@ function getProject() {
         layout.value = layout.value.split(',').splice(0, 4).join(',');
       }
       projectData.value = res.data.data;
-      console.log('projectData.value: ', projectData.value);
     }
   });
 }

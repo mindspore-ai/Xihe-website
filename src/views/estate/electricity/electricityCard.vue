@@ -17,21 +17,21 @@ const prop = defineProps({
     default: '',
   },
 });
-
 function goExperience() {
-  router.push(`/${prop.type}/${prop.cardData.id}`);
+  // router.push(`/${prop.type}/${prop.cardData.id}`);
+  router.push(prop.cardData.path);
 }
 </script>
 <template>
   <div class="electricity-card">
     <div class="card-top">
-      <img class="cover" :src="cardData.poster" alt="" />
-      <!-- <div class="card-title">
+      <img class="cover" :src="cardData.image" alt="" />
+      <div class="card-title">
         <span class="card-name">
           {{ cardData.name }}
         </span>
-        <span class="card-type">免费</span>
-      </div> -->
+        <!-- <span class="card-type">免费</span> -->
+      </div>
     </div>
     <div class="card-bottom">
       <div class="card-desc">
@@ -63,6 +63,7 @@ function goExperience() {
     .cover {
       width: 100%;
       height: 149px;
+      border-radius: 16px;
     }
     .card-title {
       position: absolute;

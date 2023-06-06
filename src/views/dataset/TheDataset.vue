@@ -230,7 +230,7 @@ function goSearch(render) {
 
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition[index].items.map((item) => {
+  renderCondition.value[index].condition[0].items.map((item) => {
     item.isActive = false;
     item.isSelected = false;
     return item;

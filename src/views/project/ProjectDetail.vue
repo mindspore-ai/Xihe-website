@@ -44,7 +44,6 @@ const route = useRoute();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-console.log('detailData: ', detailData);
 
 const modelTags = ref([]);
 const headTags = ref([]);

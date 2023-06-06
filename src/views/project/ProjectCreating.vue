@@ -115,11 +115,11 @@ const rules = reactive({
     { validator: checkName, trigger: 'change' },
   ],
   title: [
-    {
-      pattern: /^[\u4e00-\u9fa5]{3,35}$/g,
-      message: '请输入项目中文名称，且长度为3-35个字符',
-      trigger: 'blur',
-    },
+    // {
+    //   pattern: /^[\u4e00-\u9fa5]{3,35}$/g,
+    //   message: '请输入项目中文名称，且长度为3-35个字符',
+    //   trigger: 'blur',
+    // },
   ],
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
@@ -173,7 +173,6 @@ function setProject() {
   headTags.value.forEach((item) => {
     proList.tags.push(item.name);
   });
-  console.log('newList: ', proList);
   setNewProject(proList)
     .then((res) => {
       ElMessage({

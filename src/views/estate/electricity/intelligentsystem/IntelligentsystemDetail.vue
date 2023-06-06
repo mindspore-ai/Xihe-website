@@ -1,14 +1,19 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
+import { useRouter } from 'vue-router';
 import systemCover from '@/assets/imgs/estate/electricity/intelligentsystem/system-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+const router = useRouter();
 // 点击导航
 /* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
 } */
+function goDetail() {
+  router.push('/projects/yyj/intelligent-system');
+}
 </script>
 
 <template>
@@ -36,8 +41,8 @@ import { ArrowRight } from '@element-plus/icons-vue';
                 华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
               </div>
             </div>
-            <div class="banner-btn">
-              <OButton disabled type="primary" class="home-btn">
+            <div class="banner-btn" @click="goDetail">
+              <OButton animation type="primary" class="home-btn">
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>

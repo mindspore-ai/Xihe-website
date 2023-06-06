@@ -51,7 +51,7 @@ if (props.cardType === 'model') {
   <div
     class="app-card"
     :class="[
-      { 'o-model-hover': cardType === 'model' || cardType === 'electricity' },
+      { 'o-model-hover': cardType === 'model' },
       { 'o-dataset-hover': cardType === 'dataset' },
     ]"
   >
@@ -60,7 +60,7 @@ if (props.cardType === 'model') {
         <img :src="avatarImg" alt="" />
       </div>
       <div v-if="!showName">
-        {{ cardData.title }}
+        {{ cardData.title ? cardData.title : cardData.name }}
       </div>
       <div v-else class="owner-info">
         <div v-if="cardData.owner" class="nickname">

@@ -6,7 +6,6 @@ import OIcon from '@/components/OIcon.vue';
 import OEmpty from '@/components/OEmpty.vue';
 
 import { Search } from '@element-plus/icons-vue';
-import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
@@ -220,7 +219,6 @@ function goSearch(render) {
         });
       });
       if (time2 === item.condition[0].items.length) {
-        // query[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 1) {
           query.tags = null;
@@ -232,7 +230,7 @@ function goSearch(render) {
 
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition[index].items.map((item) => {
+  renderCondition.value[index].condition[0].items.map((item) => {
     item.isActive = false;
     item.isSelected = false;
     return item;
@@ -372,7 +370,17 @@ function getModelTag() {
     });
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
-        it.isActive = false;
+        if (
+          Object.keys(route.params).length &&
+          (it.kind === 'CV' || it.items[0] === 'electricity')
+        ) {
+          it.isActive = true;
+          it.isSelected = true;
+        } else {
+          it.isActive = false;
+          it.isSelected = false;
+        }
+        // it.isActive = false;
         item.condition.push(it);
       });
     });
@@ -391,6 +399,16 @@ function getModelTag() {
           name: it,
           isSelected: false,
         };
+      });
+      item.condition.forEach((it) => {
+        // 电力跳转过来标签高亮
+        if (
+          Object.keys(route.params).length &&
+          it.items[0].name === 'electricity'
+        ) {
+          it.items[0].isActive = true;
+          it.items[0].isSelected = false;
+        }
       });
       item.num = index;
     });
@@ -463,6 +481,17 @@ watch(
   query,
   () => {
     debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => route.params,
+  () => {
+    // query.tag_kinds = route.params.tag_kinds;
+    query.tags = route.params.tags;
   },
   {
     immediate: true,

@@ -20,6 +20,7 @@ import AppContent from '@/components/AppContent.vue';
 
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
+// import { ResourceType } from 'authing-js-sdk';
 
 const userInfoStore = useUserInfoStore();
 
@@ -363,7 +364,6 @@ function goSearch(render) {
         }
       });
       if (time1 === item.condition.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 0) {
           queryData.tag_kinds = null;
@@ -390,7 +390,6 @@ function goSearch(render) {
         });
       });
       if (time2 === item.condition[0].items.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 1) {
           queryData.tags = null;
@@ -439,9 +438,14 @@ async function getModelTag() {
     });
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
-        // if (item.title.text === '应用分类') {
-        it.isActive = false;
-        it.isSelected = false;
+        // 标签高亮
+        if (Object.keys(route.params).length && it.kind === 'CV') {
+          it.isActive = true;
+          it.isSelected = true;
+        } else {
+          it.isActive = false;
+          it.isSelected = false;
+        }
         it.items = it.items.map((child) => {
           return {
             name: child,
@@ -456,7 +460,16 @@ async function getModelTag() {
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition.forEach((it) => {
-        it.isSelected = false;
+        // 电力跳转过来标签高亮
+        if (
+          Object.keys(route.params).length &&
+          it.items[0].name === 'electricity'
+        ) {
+          it.items[0].isActive = true;
+          it.items[0].isSelected = false;
+        } else {
+          it.isSelected = false;
+        }
       });
       item.num = index;
     });
@@ -480,7 +493,6 @@ function handleCurrentChange(val) {
   document.documentElement.scrollTop = 0;
 }
 function goDetail(user, name) {
-  console.log('user, name: ', user, name);
   // 点击在新页签打开
   let routerData = router.resolve({
     path: `/models/${user}/${name}`,
@@ -539,7 +551,17 @@ watch(
     immediate: true,
   }
 );
-
+// 电力跳转过来筛选标签
+watch(
+  () => route.params,
+  () => {
+    // queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tags = route.params.tags;
+  },
+  {
+    immediate: true,
+  }
+);
 onUnmounted(() => {
   debounceSearch.cancel();
 });
@@ -550,6 +572,7 @@ onUnmounted(() => {
     <div class="model-head">
       <div class="wrap">
         <div class="banner-left">
+          {{ route.params.tags }}
           <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">
             {{ i18n.head.introduce }}

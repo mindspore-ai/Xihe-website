@@ -181,12 +181,11 @@ let dialogList = {
   tags: [],
 };
 
-// TODO:点击导航
+// 点击导航
 function handleNavClick(item) {
   headTags.value = [];
   renderList.value.forEach((val) => {
     val.items.forEach((item) => {
-      // console.log('item: ', item);
       item.items.forEach((a) => {
         a.isActive = false;
         a.isSelected = false;
@@ -227,7 +226,6 @@ function getProject() {
         layout.value = layout.value.split(',').splice(0, 4).join(',');
       }
       projectData.value = res.data.data;
-      console.log('projectData.value: ', projectData.value);
     }
   });
 }
@@ -345,6 +343,18 @@ watch(
   queryData,
   () => {
     debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
+
+// 电力跳转过来筛选标签
+watch(
+  () => route.params,
+  () => {
+    // queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tags = route.params.tags;
   },
   {
     immediate: true,
@@ -679,10 +689,9 @@ function cancelBtn() {
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
-                <!-- <div class="card-modal"></div> -->
               </div>
               <div class="card-desc">
-                <p class="title">{{ item.title }}</p>
+                <p class="title">{{ item.title ? item.title : item.name }}</p>
 
                 <div class="description">
                   {{ item.desc }}
@@ -691,10 +700,10 @@ function cancelBtn() {
                   <span
                     v-for="(val, index) in item.tags"
                     :key="index"
-                    :style="{ display: index < 3 ? 'inline-block' : 'none' }"
+                    :style="{ display: index < 4 ? 'inline-block' : 'none' }"
                     class="tag"
                   >
-                    {{ val }}
+                    {{ val === 'electricity' ? '电力' : val }}
                   </span>
                 </div>
               </div>

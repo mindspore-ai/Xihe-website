@@ -677,10 +677,9 @@ function cancelBtn() {
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
-                <!-- <div class="card-modal"></div> -->
               </div>
               <div class="card-desc">
-                <p class="title">{{ item.title }}</p>
+                <p class="title">{{ item.title ? item.title : item.name }}</p>
 
                 <div class="description">
                   {{ item.desc }}

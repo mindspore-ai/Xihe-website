@@ -264,6 +264,8 @@ const logoPic = [
       // justify-content: space-around;
       .img {
         width: 100%;
+        border-radius: 16px;
+        background: white;
       }
       img {
         width: 100%;

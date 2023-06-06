@@ -14,31 +14,33 @@ import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNatur
 import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
 
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Autoplay, FreeMode } from 'swiper';
+// import { Swiper, SwiperSlide } from 'swiper/vue';
+// import { Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
 // 合作伙伴图片
-import logo1 from '@/assets/imgs/home1/logo/logo1.png';
-import logo2 from '@/assets/imgs/home1/logo/logo2.png';
-import logo3 from '@/assets/imgs/home1/logo/logo3.png';
-import logo4 from '@/assets/imgs/home1/logo/logo4.png';
-import logo5 from '@/assets/imgs/home1/logo/logo5.png';
-import logo6 from '@/assets/imgs/home1/logo/logo6.png';
-import logo7 from '@/assets/imgs/home1/logo/logo7.png';
-import logo8 from '@/assets/imgs/home1/logo/logo8.png';
-import logo9 from '@/assets/imgs/home1/logo/logo9.png';
-import logo10 from '@/assets/imgs/home1/logo/logo10.png';
+// import logo1 from '@/assets/imgs/home1/logo/logo1.png';
+// import logo2 from '@/assets/imgs/home1/logo/logo2.png';
+// import logo3 from '@/assets/imgs/home1/logo/logo3.png';
+// import logo4 from '@/assets/imgs/home1/logo/logo4.png';
+// import logo5 from '@/assets/imgs/home1/logo/logo5.png';
+// import logo6 from '@/assets/imgs/home1/logo/logo6.png';
+// import logo7 from '@/assets/imgs/home1/logo/logo7.png';
+// import logo8 from '@/assets/imgs/home1/logo/logo8.png';
+// import logo9 from '@/assets/imgs/home1/logo/logo9.png';
+// import logo10 from '@/assets/imgs/home1/logo/logo10.png';
 import logo11 from '@/assets/imgs/home1/logo/logo11.png';
-import logo12 from '@/assets/imgs/home1/logo/logo12.png';
-import logo13 from '@/assets/imgs/home1/logo/logo13.png';
-import logo14 from '@/assets/imgs/home1/logo/logo14.png';
-import logo15 from '@/assets/imgs/home1/logo/logo15.png';
+// import logo12 from '@/assets/imgs/home1/logo/logo12.png';
+// import logo13 from '@/assets/imgs/home1/logo/logo13.png';
+// import logo14 from '@/assets/imgs/home1/logo/logo14.png';
+// import logo15 from '@/assets/imgs/home1/logo/logo15.png';
 import logo16 from '@/assets/imgs/home1/logo/logo16.png';
 import logo17 from '@/assets/imgs/home1/logo/logo17.png';
+import logo28 from '@/assets/imgs/home1/logo/logo28.png';
+import logo29 from '@/assets/imgs/home1/logo/logo29.png';
 
-const logoModules = [FreeMode, Autoplay];
+// const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉CV');
 
 const electricityClassify = [
@@ -84,22 +86,24 @@ const handleClick = () => {
 
 // 合作伙伴
 const logoPic = [
-  logo1,
-  logo2,
-  logo3,
-  logo4,
-  logo5,
-  logo6,
-  logo7,
-  logo8,
-  logo9,
-  logo10,
+  // logo1,
+  // logo2,
+  // logo3,
+  // logo4,
+  // logo5,
+  // logo6,
+  // logo7,
+  // logo8,
+  // logo9,
+  // logo10,
+  logo28,
   logo11,
-  logo12,
-  logo13,
-  logo14,
-  logo15,
+  // logo12,
+  // logo13,
+  // logo14,
+  // logo15,
   logo16,
+  logo29,
   logo17,
 ];
 </script>
@@ -145,16 +149,21 @@ const logoPic = [
     </div>
     <div class="logo">
       <p class="title">合作伙伴</p>
-      <swiper
+      <div class="logo-img">
+        <div v-for="(item, index) in logoPic" :key="index" class="img">
+          <img :src="item" alt="" />
+        </div>
+      </div>
+      <!-- <swiper
         :speed="8000"
         :free-mode="true"
         :modules="logoModules"
         slides-per-view="auto"
         loop
+        :autoplay="{ autoplay: true, delay: 0 }"
         :no-swiping="true"
         class="logo-swiper"
       >
-        <!-- :autoplay="{ autoplay: true, delay: 0 }" -->
         <swiper-slide
           v-for="item in logoPic.slice(0, 9)"
           :key="item"
@@ -162,7 +171,7 @@ const logoPic = [
         >
           <img :src="item" />
         </swiper-slide>
-      </swiper>
+      </swiper> -->
       <!-- <swiper
         :speed="8000"
         :free-mode="true"
@@ -245,6 +254,21 @@ const logoPic = [
       text-align: center;
       @media screen and (max-width: 820px) {
         margin-bottom: 12px;
+      }
+    }
+    .logo-img {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: 24px;
+      padding: 0px 24px;
+      // justify-content: space-around;
+      .img {
+        width: 100%;
+      }
+      img {
+        width: 100%;
+        height: 120px;
+        border-radius: 16px;
       }
     }
     :deep(.logo-swiper) {

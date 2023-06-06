@@ -173,7 +173,6 @@ function setProject() {
   headTags.value.forEach((item) => {
     proList.tags.push(item.name);
   });
-  console.log('newList: ', proList);
   setNewProject(proList)
     .then((res) => {
       ElMessage({

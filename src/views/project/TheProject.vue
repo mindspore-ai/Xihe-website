@@ -349,6 +349,18 @@ watch(
   }
 );
 
+// 电力跳转过来筛选标签
+watch(
+  () => route.params,
+  () => {
+    // queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tags = route.params.tags;
+  },
+  {
+    immediate: true,
+  }
+);
+
 onUnmounted(() => {
   debounceSearch.cancel();
 });

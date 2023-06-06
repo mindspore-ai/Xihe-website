@@ -44,6 +44,7 @@ const route = useRoute();
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+console.log('detailData: ', detailData);
 
 const modelTags = ref([]);
 const headTags = ref([]);
@@ -633,7 +634,7 @@ watch(
         <div class="head-wrap">
           <div class="card-head-info">
             <p class="head-info-desc">
-              项目中文名项目中文名项目中文名项目中文名…
+              {{ detailData.title ? detailData.title : detailData.name }}
             </p>
             <div class="project-handle">
               <div class="head-info-likes">
@@ -670,9 +671,7 @@ watch(
             </div>
           </div>
           <div class="card-desc">
-            ResNet50-plain derived by resiudal distillation method, and is used
-            to classify 10 classes of classify 10 classes ofclassify 10 classes
-            ofclassify 10 classes ofclassify 10 cl …
+            {{ detailData.desc }}
           </div>
           <div class="card-detail">
             <div class="detail-left">

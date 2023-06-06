@@ -207,11 +207,31 @@ function goDatasets() {
     },
   });
 }
+// 更多数据集
+function goProjects() {
+  router.push({
+    name: 'projects',
+    params: {
+      tag_kinds: 'CV',
+      tags: 'electricity',
+    },
+  });
+}
 </script>
 <template>
   <div class="computer-vision">
     <div class="application-cases">
       <p class="application-title">应用案例</p>
+      <div class="prefecture">
+        <div class="southern-power">
+          <span> 南网专区 </span>
+          <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
+        </div>
+        <div class="more-models" @click="goProjects">
+          <span> 更多项目 </span>
+          <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
+        </div>
+      </div>
       <div class="case-cards">
         <div
           v-for="item in cases"
@@ -347,6 +367,28 @@ function goDatasets() {
 .computer-vision {
   .application-cases {
     margin-top: 40px;
+    .prefecture {
+      line-height: 22px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #000000;
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      .southern-power,
+      .more-models {
+        .o-icon {
+          margin-left: 8px;
+          svg {
+            vertical-align: middle;
+          }
+        }
+      }
+      .more-models {
+        cursor: pointer;
+        margin-left: 42px;
+      }
+    }
     .case-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);

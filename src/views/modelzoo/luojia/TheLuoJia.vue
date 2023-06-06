@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import IconArrow from '~icons/app/arrow-blue';
@@ -7,8 +7,6 @@ import { ArrowRight } from '@element-plus/icons-vue';
 
 const route = useRoute();
 const router = useRouter();
-
-const activeNavItem = ref('');
 
 function goToExperience() {
   router.push('/modelzoo/luojia');
@@ -29,20 +27,6 @@ const currentPage = computed(() => {
     ? '武汉.LuoJia'
     : '武汉.LuoJia在线体验';
 });
-
-watch(
-  () => {
-    return route.name;
-  },
-  (val) => {
-    if (/^luojiaExperience|luojiaIntroduce/g.test(val)) {
-      activeNavItem.value = val;
-    } else {
-      activeNavItem.value = '';
-    }
-  },
-  { immediate: true }
-);
 </script>
 <template>
   <div class="luojia">

@@ -9,6 +9,7 @@ import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 import wukong from '@/assets/imgs/modelzoo/wukong.png';
+import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
@@ -32,6 +33,14 @@ let i18n = {
     //   path: '/modelzoo/codegeex',
     //   openness: true,
     // },
+    {
+      title: 'AI文本检测器',
+      introduce:
+        '根据长短文本的不同特性，华为诺亚方舟实验室提出了一种基于PU学习的多尺度AI生成文本检测器MPU，能够在各种场景下识别由AI生成的文字。',
+      url: TextDetector,
+      path: '/modelzoo/text-detector',
+      openness: true,
+    },
     {
       title: '悟空画画',
       introduce:

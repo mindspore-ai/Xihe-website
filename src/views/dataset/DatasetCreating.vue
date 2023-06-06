@@ -286,7 +286,6 @@ function deleteAllTags() {
           :placeholder="i18n.placeholder.name"
           size=""
         ></el-input>
-        <o-popper></o-popper>
       </el-form-item>
       <el-form-item class="des item" prop="desc">
         <div>

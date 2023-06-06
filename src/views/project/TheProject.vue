@@ -700,10 +700,10 @@ function cancelBtn() {
                   <span
                     v-for="(val, index) in item.tags"
                     :key="index"
-                    :style="{ display: index < 3 ? 'inline-block' : 'none' }"
+                    :style="{ display: index < 4 ? 'inline-block' : 'none' }"
                     class="tag"
                   >
-                    {{ val }}
+                    {{ val === 'electricity' ? '电力' : val }}
                   </span>
                 </div>
               </div>

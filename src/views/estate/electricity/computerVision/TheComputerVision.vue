@@ -228,7 +228,7 @@ function goProjects() {
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-models" @click="goProjects">
-          <span> 更多项目 </span>
+          <span> 更多案例 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
       </div>

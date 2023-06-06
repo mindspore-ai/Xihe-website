@@ -1,14 +1,19 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
+import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+const router = useRouter();
 // 点击导航
 /* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
 } */
+function goDetail() {
+  router.push('/projects/yyj/substation-host');
+}
 </script>
 
 <template>
@@ -36,8 +41,8 @@ import { ArrowRight } from '@element-plus/icons-vue';
                 变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，保障电网安全稳定运行。
               </div>
             </div>
-            <div class="banner-btn">
-              <OButton disabled type="primary" class="home-btn">
+            <div class="banner-btn" @click="goDetail">
+              <OButton animation type="primary" class="home-btn">
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>

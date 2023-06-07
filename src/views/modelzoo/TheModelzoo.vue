@@ -9,7 +9,6 @@ import luojia from '@/assets/imgs/modelzoo/Luojia.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 import wukong from '@/assets/imgs/modelzoo/wukong.png';
-// import textDetector from '@/assets/imgs/modelzoo/text-detector.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';

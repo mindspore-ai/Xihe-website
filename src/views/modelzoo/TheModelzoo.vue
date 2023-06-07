@@ -37,13 +37,6 @@ let i18n = {
     //   openness: true,
     // },
     {
-      title: t(`modelzoo.MODELZOO_CARDS[${0}].TITLE`),
-      introduce: t(`modelzoo.MODELZOO_CARDS[${0}].INTRODUCE`),
-      url: wukong,
-      path: t(`modelzoo.MODELZOO_CARDS[${0}].PATH`),
-      openness: true,
-    },
-    {
       title: t(`modelzoo.MODELZOO_CARDS[${1}].TITLE`),
       introduce: t(`modelzoo.MODELZOO_CARDS[${1}].INTRODUCE`),
       url: taichu,

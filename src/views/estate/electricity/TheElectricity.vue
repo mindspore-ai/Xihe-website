@@ -78,14 +78,8 @@ const electricityClassify = [
   },
 ];
 const electricityRef = ref(null);
-const handleClick = (tab, event) => {
-  if (tab.props.name === '自然语言处理NLP') {
-    electricityRef.value.style.backgroundImage = 'none';
-  } else {
-    // electricityRef.value.style.backgroundImage =
-    //   "url('/assets/imgs/estate/electricity/electric-travel.jpg')";
-  }
-};
+// const handleClick = (tab, event) => {
+// };
 
 // 合作伙伴
 const logoPic = [
@@ -127,11 +121,7 @@ const logoPic = [
       </div>
     </div>
     <div class="electricity-wrap">
-      <el-tabs
-        v-model="activeName"
-        class="estate-tabs"
-        @tab-click="handleClick"
-      >
+      <el-tabs v-model="activeName" class="estate-tabs">
         <el-tab-pane
           v-for="item in electricityClassify"
           :key="item.id"

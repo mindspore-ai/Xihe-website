@@ -9,7 +9,27 @@ import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';
 import opsImg from '@/assets/imgs/estate/electricity/substation-ops.png';
 import decisionImg from '@/assets/imgs/estate/electricity/substation-decision.png';
 
+import IconCourse from '~icons/app/course';
+import IconCompetition from '~icons/app/competition';
+import IconMindcon from '~icons/app/mindcon';
+import IconCount from '~icons/app/count';
+
+import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
+import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
+import card3 from '@/assets/imgs/home1/more/more_card3.jpg';
+import competition1 from '@/assets/imgs/home1/more/more_card1.png';
+import competition2 from '@/assets/imgs/home1/more/competition2.png';
+import competition3 from '@/assets/imgs/home1/more/competition3.png';
+import activity1 from '@/assets/imgs/home1/more/activity1.png';
+import activity2 from '@/assets/imgs/home1/more/activity2.png';
+import activity3 from '@/assets/imgs/home1/more/activity3.png';
+
+import appCard from '@/components/AppCard.vue';
+import electricityCard from '@/views/estate/electricity/electricityCard.vue';
+
 const router = useRouter();
+
+const activeName = ref('课程');
 const cases = [
   {
     id: 0,
@@ -50,6 +70,106 @@ async function getElectricityInfor() {
   // classify[1].detail = res.data.comp.slice(0, 3);
 }
 getElectricityInfor();
+
+// 开启昇思之旅
+let classify = ref([
+  {
+    type: 'course',
+    name: '课程',
+    path: '/course/c001/introduction',
+    // path: '/estate/industrial-zone',
+    icon: markRaw(IconCourse),
+    detail: [
+      {
+        desc: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型。同时，昇思MindSpore推出一站式大模型平台，将大模型能力开放给开发者，让你我皆可触碰大模型的魅力。',
+        image: card1,
+        count: '7',
+        detail: '了解详情',
+        path: '/course/c001/introduction',
+      },
+      {
+        desc: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思MindSpore，采用理论与实践相结合的方法带你轻松入门。',
+        image: card2,
+        count: '2',
+        detail: '了解详情',
+        path: '/course/c002/introduction',
+      },
+      {
+        desc: '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
+        image: card3,
+        count: '4',
+        detail: '了解详情',
+        path: '/course/c003/introduction',
+      },
+    ],
+  },
+  {
+    type: 'competition',
+    name: '比赛',
+    path: '/estate/medicine',
+    icon: markRaw(IconCompetition),
+    detail: [
+      {
+        name: '2023南方电网人工智能科技有限公司安全生产域算法“赛马”',
+        desc: '2023年南方电网人工智能科技有限公司第一批人工智能应用场景（安全生产域）算法“赛马”项目，对输电线路塔基异常智能识别和输电线路导线异物智能识别2个算法进行算法比拼，比拼结果分别作为“输电线路塔基异常智能识别、配电线路塔基异常智能识别算法‘赛马’项目”和“输电线路导线异物智能识别、配电线路通道异物智能识别‘赛马’项目”技术评分依据，结合综合评估法，择优选取单位，作为合作伙伴进入项目实施，按4个场景分别交付相应的人工智能算法组件。',
+        image: competition1,
+        count: '0',
+        detail: '了解详情',
+        path: '/competition/southern_power/0/introduction',
+      },
+      {
+        desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 图像分类是计算机视觉中最基础的任务,目前图像分类的算法仍然在飞速发展。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像分类预处理、图像分类的能力。',
+        image: competition2,
+        count: '250',
+        detail: '了解详情',
+        path: '/competition/3/0/introduction',
+      },
+      {
+        desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 它研究能实现人与计算机之间用自然语言进行有效通信的各种理论和方法。文本分类在AI领域承担了重要角色。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行NLP的文本处理、文本分类的能力。',
+        image: competition3,
+        count: '152',
+        detail: '了解详情',
+        path: '/competition/2/0/introduction',
+      },
+      // {
+      //   desc: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，赛题与扩散模型（Diffusion Model）紧密结合。大赛旨在为开发者提供一个学习昇思MindSpore和Diffusion Models的机会。',
+      //   image: competition1,
+      //   count: '142',
+      //   detail: '了解详情',
+      //   path: '/competition/ai_painter/0/introduction',
+      // },
+    ],
+  },
+  {
+    type: 'activity',
+    name: '活动',
+    path: '/estate/industry',
+    icon: markRaw(IconMindcon),
+    detail: [
+      {
+        desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行西安旅游主题图像分类的能力。',
+        image: activity1,
+        count: '320',
+        detail: '了解详情',
+        path: '/competition/xian_travel/0/introduction',
+      },
+      {
+        desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行外卖文本分类的能力。',
+        image: activity2,
+        count: '320',
+        detail: '了解详情',
+        path: '/competition/text_classification/0/introduction',
+      },
+      {
+        desc: 'MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会，旨在引领兴趣者们走入AI探索的世界。第四届MindCon极客周以超级挑战赛为主题，发布多领域多级别应用场景的挑战任务，与开发者共同探索AI开源趣味世界。邀请各领域大咖分享前沿技术，感受前沿AI技术。还有丰厚挑战赛礼品与昇思官方证书欢迎你来战！本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像口罩检测的能力。',
+        image: activity3,
+        count: '320',
+        detail: '了解详情',
+        path: '/competition/mask_detection/0/introduction',
+      },
+    ],
+  },
+]);
 const modelData = [
   {
     avatar_id:
@@ -278,6 +398,63 @@ function goProjects() {
         ></app-card>
       </div>
     </div>
+    <div class="electric-travel">
+      <p class="application-title">开启电力之旅</p>
+      <p class="desc">从入门到高阶，从理论到实践，助力开发者快速掌握深度学习</p>
+
+      <el-tabs v-model="activeName" class="electricity-tabs">
+        <el-tab-pane
+          v-for="(item, index) in classify"
+          :key="index"
+          :name="item.name"
+          :disabled="item.disabled"
+        >
+          <template #label>
+            <span class="estate-tabs-title">
+              <o-icon><component :is="item.icon"></component></o-icon>
+              <span class="region-name">{{ item.name }}</span>
+            </span>
+          </template>
+          <div class="electricity-content">
+            <electricity-card
+              v-for="val in item.detail"
+              :key="val.type"
+              :type="item.type"
+              :card-data="val"
+            ></electricity-card>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="platform-data">
+      <div class="platform-desc">
+        <div class="title">最活跃的AI+电力行业生产平台</div>
+        <div class="desc">
+          昇思赋能电力行业，覆盖从AI生产（输出算法模型）到应用（实现算法工程化封装）各环节，有效解决AI+电力研发门槛高、成本高和效率低的问题。
+        </div>
+        <div class="more">
+          <span> 共建AI+电力生态 </span>
+          <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
+        </div>
+      </div>
+      <div class="data-list">
+        <div class="data-item">
+          <o-icon><icon-count></icon-count></o-icon>
+          <div class="count">1.9M+</div>
+          <div class="title">用户访问量</div>
+        </div>
+        <div class="data-item">
+          <o-icon><icon-count></icon-count></o-icon>
+          <div class="count">1.96K+</div>
+          <div class="title">模型使用次数</div>
+        </div>
+        <div class="data-item">
+          <o-icon><icon-count></icon-count></o-icon>
+          <div class="count">20.7K+</div>
+          <div class="title">日活数</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -427,6 +604,124 @@ function goProjects() {
       column-gap: 24px;
       row-gap: 24px;
       margin-top: 40px;
+    }
+  }
+  .electric-travel {
+    margin-top: 64px;
+    padding: 64px 0;
+    :deep(.electricity-tabs) {
+      .el-tabs__header {
+        padding: 0;
+        .el-tabs__nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          .el-tabs__item {
+            height: 80px;
+            .region-name {
+              color: #000;
+            }
+          }
+          .is-active {
+            background: linear-gradient(
+              270deg,
+              #0d8dff 0%,
+              rgba(30, 193, 255, 0.5) 100%
+            );
+            .region-name {
+              color: #fff;
+            }
+          }
+        }
+      }
+      .el-tabs__content {
+        .electricity-content {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-column-gap: 24px;
+        }
+      }
+    }
+    .title {
+      height: 48px;
+      line-height: 48px;
+      font-size: 36px;
+      color: #000000;
+    }
+    .desc {
+      margin: 24px 0 40px;
+      text-align: center;
+    }
+    .electricity-content {
+      margin-top: 24px;
+    }
+  }
+  .platform-data {
+    margin-top: 64px;
+    display: flex;
+    .platform-desc {
+      background-image: url('@/assets/imgs/estate/electricity/platform-cover.png');
+      background-size: 100% 100%;
+      width: 37%;
+      margin-right: 40px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .title {
+        height: 32px;
+        line-height: 32px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #000000;
+      }
+      .desc {
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        margin: 16px 0 37px;
+      }
+      .more {
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
+        svg {
+          vertical-align: middle;
+        }
+      }
+    }
+    .data-list {
+      width: calc(63% - 40px);
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 50px 100px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .data-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .o-icon {
+          font-size: 48px;
+        }
+        .count {
+          height: 32px;
+          line-height: 32px;
+          font-size: 24px;
+          font-weight: 500;
+          color: #0d8dff;
+          margin: 14px 0 8px;
+        }
+        .title {
+          height: 24px;
+          font-size: 18px;
+          font-weight: 400;
+          color: #000000;
+          line-height: 26px;
+        }
+      }
     }
   }
 }

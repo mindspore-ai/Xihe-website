@@ -371,8 +371,14 @@ function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         if (
-          Object.keys(route.params).length &&
+          route.params.tag_kinds === 'CV' &&
           (it.kind === 'CV' || it.items[0] === 'electricity')
+        ) {
+          it.isActive = true;
+          it.isSelected = true;
+        } else if (
+          route.params.tag_kinds === 'NLP' &&
+          (it.kind === 'NLP' || it.items[0] === 'electricity')
         ) {
           it.isActive = true;
           it.isSelected = true;

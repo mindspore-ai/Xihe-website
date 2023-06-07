@@ -3,6 +3,7 @@ import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
 import { useRouter } from 'vue-router';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
 const i18n = {
   TITLE: '简述',
   TEXT_1:
@@ -63,7 +64,9 @@ function learnMore() {
       <p class="main-text">{{ i18n.TEXT_1 }}</p>
       <p class="main-text">{{ i18n.TEXT_2 }}</p>
 
-      <div class="container"></div>
+      <div class="container">
+        <img src="@/assets/imgs/modelzoo/text-detector-intro.png" alt="" />
+      </div>
       <p class="main-text">{{ i18n.TEXT_3 }}</p>
       <p class="main-text">{{ i18n.TEXT_4 }}</p>
 
@@ -154,9 +157,12 @@ function learnMore() {
   margin-top: 24px;
 }
 .container {
-  padding: 24px 0;
   background: #f5f9fb;
   margin-top: 24px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 .reference_link {
   color: #0d8dff;

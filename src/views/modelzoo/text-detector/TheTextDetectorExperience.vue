@@ -47,7 +47,7 @@ const i18n = {
       NAME: '人工生成',
       NAME_EN: 'Human-written',
       CONTENT:
-        'ChatGPT，全称聊天生成预训练转换器（英语：Chat Generative Pre-trained Transformer），是OpenAI开发的人工智能聊天机器人程序，于2022年11月推出。该程序使用基于GPT-3.5架构的大型语言模型并以强化学习训练。ChatGPT目前仍以文字方式交互，而除了可以用人类自然对话方式来交互，还可以用于甚为复杂的语言工作，包括自动生成文本、自动问答、自动摘要等多种任务。如：在自动文本生成方面，ChatGPT可以根据输入的文本自动生成类似的文本（剧本、歌曲、企划等），在自动问答方面，ChatGPT可以根据输入的问题自动生成答案。还有编写和调试计算机程序的能力。在推广期间，所有人可以免费注册，并在登录后免费使用ChatGPT与AI机器人对话。',
+        'ChatGPT，全称聊天生成预训练转换器（Chat Generative Pre-trained Transformer），是OpenAI开发的人工智能聊天机器人程序，于2022年11月推出。该程序使用基于GPT-3.5架构的大型语言模型并以强化学习训练。ChatGPT目前仍以文字方式交互，而除了可以用人类自然对话方式来交互，还可以用于甚为复杂的语言工作，包括自动生成文本、自动问答、自动摘要等多种任务。如：在自动文本生成方面，ChatGPT可以根据输入的文本自动生成类似的文本（剧本、歌曲、企划等），在自动问答方面，ChatGPT可以根据输入的问题自动生成答案。还有编写和调试计算机程序的能力。',
       CONTENT_EN:
         "We report the development of GPT-4, a large-scale, multimodal model which can accept image and text inputs and produce text outputs. While less capable than humans in many real-world scenarios, GPT-4 exhibits human-level performance on various professional and academic benchmarks, including passing a simulated bar exam with a score around the top 10% of test takers. GPT-4 is a Transformer-based model pre-trained to predict the next token in a document. The post-training alignment process results in improved performance on measures of factuality and adherence to desired behavior. A core component of this project was developing infrastructure and optimization methods that behave predictably across a wide range of scales. This allowed us to accurately predict some aspects of GPT-4's performance based on models trained with no more than 1/1,000th the compute of GPT-4.",
     },
@@ -360,11 +360,27 @@ function feedBackError(item) {
     position: absolute;
     top: 32px;
     right: 40px;
-    width: 156px;
+    width: 164px;
+    @media screen and(max-width:1080px) {
+      width: 140px;
+    }
+    :deep(.el-input) {
+      @media screen and(max-width:1080px) {
+        height: 28px;
+      }
+      .el-input__wrapper {
+        padding: 6px 12px;
+      }
+      .el-input__inner {
+        @media screen and(max-width:1080px) {
+          font-size: 12px;
+        }
+      }
+    }
   }
 }
 .experience-right {
-  width: 474px;
+  width: 34%;
   padding: 24px;
   background: #fff;
   border-radius: 16px;
@@ -375,13 +391,15 @@ function feedBackError(item) {
   line-height: 48px;
   font-weight: 300;
   text-align: center;
-  // @media screen and (max-width: 1080px) {
-  //   text-align: left;
-  //   font-weight: normal;
-  //   font-size: 14px;
-  //   color: #000000;
-  //   line-height: 28px;
-  // }
+  @media screen and (max-width: 1330px) {
+    text-align: left;
+  }
+  @media screen and (max-width: 1080px) {
+    font-weight: normal;
+    font-size: 24px;
+    color: #000000;
+    // line-height: 28px;
+  }
 }
 .description {
   font-size: 18px;
@@ -389,12 +407,15 @@ function feedBackError(item) {
   line-height: 24px;
   margin-top: 16px;
   text-align: center;
-  // @media screen and (max-width: 1080px) {
-  //   font-size: 12px;
-  //   color: #555555;
-  //   line-height: 18px;
-  //   margin-top: 8px;
-  // }
+  @media screen and (max-width: 1330px) {
+    text-align: left;
+  }
+  @media screen and (max-width: 1080px) {
+    font-size: 16px;
+    color: #555555;
+    // line-height: 18px;
+    margin-top: 8px;
+  }
 }
 .chat-box {
   height: 472px;
@@ -492,11 +513,11 @@ function feedBackError(item) {
       line-height: 22px;
       position: relative;
       @media screen and (max-width: 1080px) {
-        padding: 8px;
-        margin-right: 28px;
-        font-size: 12px;
+        padding: 12px;
+        margin-right: 64px;
+        font-size: 14px;
         color: #000000;
-        line-height: 17px;
+        line-height: 18px;
         border-radius: 0px 8px 8px 8px;
       }
       .check-box {
@@ -505,11 +526,21 @@ function feedBackError(item) {
         top: 50%;
         transform: translateY(-50%);
         min-width: 56px;
+        @media screen and (max-width: 1080px) {
+          min-width: 32px;
+          right: -56px;
+        }
         .o-icon {
           font-size: 24px;
           cursor: pointer;
+          @media screen and (max-width: 1080px) {
+            font-size: 18px;
+          }
           &:first-child {
             margin-right: 8px;
+            @media screen and (max-width: 1080px) {
+              margin-right: 4px;
+            }
           }
           &:nth-child(2) {
             color: red;

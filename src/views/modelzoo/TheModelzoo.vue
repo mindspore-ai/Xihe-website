@@ -12,10 +12,6 @@ import wukong from '@/assets/imgs/modelzoo/wukong.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
-
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
-
 let i18n = {
   head: {
     title: '大模型',
@@ -37,18 +33,26 @@ let i18n = {
     //   openness: true,
     // },
     {
-      title: t(`modelzoo.MODELZOO_CARDS[${1}].TITLE`),
-      introduce: t(`modelzoo.MODELZOO_CARDS[${1}].INTRODUCE`),
+      title: '悟空画画',
+      introduce:
+        '华为诺亚方舟实验室与MindSpore社区联合打造的中文图像生成大模型',
+      url: wukong,
+      path: '/modelzoo/wukong',
+      openness: true,
+    },
+    {
+      title: '紫东.太初',
+      introduce: '全球首个三模态千亿参数大模型',
       url: taichu,
-      path: t(`modelzoo.MODELZOO_CARDS[${1}].PATH`),
+      path: '/modelzoo/taichu',
       openness: true,
     },
 
     {
-      title: t(`modelzoo.MODELZOO_CARDS[${2}].TITLE`),
-      introduce: t(`modelzoo.MODELZOO_CARDS[${2}].INTRODUCE`),
+      title: '武大.LuoJia',
+      introduce: '全球首个遥感专用框架及最大遥感样本库',
       url: luojia,
-      path: t(`modelzoo.MODELZOO_CARDS[${2}].PATH`),
+      path: '/modelzoo/luojia',
       openness: true,
     },
     // {
@@ -58,22 +62,16 @@ let i18n = {
     //   path: '/modelzoo/pangu',
     //   openness: true,
     // },
-    // {
-    //   title: t(`modelzoo.MODELZOO_CARDS[${5}].TITLE`),
-    //   introduce: t(`modelzoo.MODELZOO_CARDS[${5}].INTRODUCE`),
-    //   url: textDetector,
-    //   openness: true,
-    // },
     {
-      title: t(`modelzoo.MODELZOO_CARDS[${4}].TITLE`),
-      introduce: t(`modelzoo.MODELZOO_CARDS[${4}].INTRODUCE`),
+      title: '鹏程.神农',
+      introduce: '面向生物医学领域的人工智能平台',
       url: shenlong,
-      path: t(`modelzoo.MODELZOO_CARDS[${4}].PATH`),
+      path: '/modelzoo/shennong',
       openness: true,
     },
     {
-      title: t(`modelzoo.MODELZOO_CARDS[${6}].TITLE`),
-      introduce: t(`modelzoo.MODELZOO_CARDS[${6}].INTRODUCE`),
+      title: '鹏程.大圣',
+      introduce: '业界首个千亿参数规模机器视觉分析领域大模',
       url: dasheng,
       openness: false,
     },
@@ -88,9 +86,9 @@ function goModelzoo() {
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
-          <div class="title">{{ t('modelzoo.MODELZOO_TITLE') }}</div>
+          <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">
-            {{ t('modelzoo.MODELZOO_DESC') }}
+            {{ i18n.head.introduce }}
           </div>
         </div>
       </div>
@@ -110,7 +108,7 @@ function goModelzoo() {
       </div>
 
       <div class="watch-more" @click="goModelzoo">
-        <span class="text">{{ t('modelzoo.VIEW_MORE') }}</span>
+        <span class="text">点击去往ModelZoo查看更多大模型</span>
         <o-icon><icon-arrow></icon-arrow></o-icon>
       </div>
     </AppContent>
@@ -124,7 +122,7 @@ function goModelzoo() {
     background-size: cover;
     background-image: url('@/assets/imgs/modelzoo/modelzoo-banner.png');
     .wrap {
-      max-width: 1448px;
+      max-width: 1472px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -169,7 +167,7 @@ function goModelzoo() {
     justify-content: center;
     margin: 0 auto;
     margin-top: 64px;
-    max-width: 1448px;
+    max-width: 1472px;
     text-align: center;
     cursor: pointer;
     @media screen and (max-width: 1080px) {

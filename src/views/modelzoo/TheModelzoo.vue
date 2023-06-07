@@ -12,10 +12,6 @@ import wukong from '@/assets/imgs/modelzoo/wukong.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
-
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
-
 let i18n = {
   head: {
     title: '大模型',
@@ -90,9 +86,9 @@ function goModelzoo() {
     <div class="modelzoo-head">
       <div class="wrap">
         <div class="banner-left">
-          <div class="title">{{ t('modelzoo.MODELZOO_TITLE') }}</div>
+          <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">
-            {{ t('modelzoo.MODELZOO_DESC') }}
+            {{ i18n.head.introduce }}
           </div>
         </div>
       </div>
@@ -112,7 +108,7 @@ function goModelzoo() {
       </div>
 
       <div class="watch-more" @click="goModelzoo">
-        <span class="text">{{ t('modelzoo.VIEW_MORE') }}</span>
+        <span class="text">点击去往ModelZoo查看更多大模型</span>
         <o-icon><icon-arrow></icon-arrow></o-icon>
       </div>
     </AppContent>
@@ -126,7 +122,7 @@ function goModelzoo() {
     background-size: cover;
     background-image: url('@/assets/imgs/modelzoo/modelzoo-banner.png');
     .wrap {
-      max-width: 1448px;
+      max-width: 1472px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -171,7 +167,7 @@ function goModelzoo() {
     justify-content: center;
     margin: 0 auto;
     margin-top: 64px;
-    max-width: 1448px;
+    max-width: 1472px;
     text-align: center;
     cursor: pointer;
     @media screen and (max-width: 1080px) {

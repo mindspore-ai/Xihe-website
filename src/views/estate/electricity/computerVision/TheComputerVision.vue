@@ -265,7 +265,7 @@ function goProjects() {
       </div>
       <div class="model-list">
         <app-card
-          v-for="item in modelData.slice(3, 6)"
+          v-for="item in modelData.slice(4, 7)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
@@ -290,7 +290,7 @@ function goProjects() {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in datasetData.slice(3, 6)"
+          v-for="item in datasetData.slice(4, 7)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"

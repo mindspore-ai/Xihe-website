@@ -439,7 +439,10 @@ async function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         // 标签高亮
-        if (Object.keys(route.params).length && it.kind === 'CV') {
+        if (route.params.tag_kinds === 'CV' && it.kind === 'CV') {
+          it.isActive = true;
+          it.isSelected = true;
+        } else if (route.params.tag_kinds === 'NLP' && it.kind === 'NLP') {
           it.isActive = true;
           it.isSelected = true;
         } else {

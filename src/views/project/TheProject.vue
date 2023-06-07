@@ -776,7 +776,7 @@ $theme: #0d8dff;
   width: 800px;
   // overflow: hidden;
   padding: 40px;
-  background: #fff;
+  // background: #fff;
   // box-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
   border-radius: 16px;
   .dialog-head {

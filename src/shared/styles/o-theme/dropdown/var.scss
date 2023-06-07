@@ -9,3 +9,6 @@
   --o-dropdown_menu_item-margin: 4px;
   --o-dropdown_menu_item-hover-background: #edeff2;
 }
+.el-dropdown__popper {
+  --o-dropdown__popper_shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
+}

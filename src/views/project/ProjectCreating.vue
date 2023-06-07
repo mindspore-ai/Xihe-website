@@ -383,7 +383,7 @@ function deleteAllTags() {
                   :key="item.name"
                   class="tag-item"
                   round
-                  >{{ item.name }}</OTag
+                  >{{ item.name === 'electricity' ? '电力' : item.name }}</OTag
                 >
 
                 <OTag round class="add-tags" @click="addProjectTags">
@@ -497,7 +497,7 @@ function deleteAllTags() {
                   :key="it"
                   class="dlg-condition-detail"
                 >
-                  {{ it.name }}
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteTag(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -699,10 +699,6 @@ $theme: #0d8dff;
     .pro-name {
       position: relative;
       :deep(.el-popover.el-popper) {
-        padding: 24px 16px 16px 16px;
-        font-size: 12px;
-        line-height: 16px;
-        color: #656565;
         .remind {
           color: #f13b35;
         }

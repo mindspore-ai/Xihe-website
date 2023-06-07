@@ -98,7 +98,7 @@ let classify = ref([
         image: competition1,
         count: '0',
         detail: '了解详情',
-        path: '/competition/southern_power3/0/introduction',
+        path: '/competition/southern_power/0/introduction',
       },
       {
         desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 图像分类是计算机视觉中最基础的任务,目前图像分类的算法仍然在飞速发展。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像分类预处理、图像分类的能力。',
@@ -165,7 +165,9 @@ function goCasePath(item) {
 async function getElectricityInfor() {
   const res = await getElectricitydata();
   modelData.value = res.data.model.projects;
+  console.log('modelData.value: ', modelData.value);
   datasetData.value = res.data.dataset.projects;
+  console.log('datasetData.value: ', datasetData.value);
   // classify[0].detail = res.data.course.slice(0, 3);
   // classify[1].detail = res.data.comp.slice(0, 3);
 }
@@ -207,7 +209,7 @@ function goDatasets() {
     },
   });
 }
-// 更多数据集
+// 更多项目
 function goProjects() {
   router.push({
     name: 'projects',

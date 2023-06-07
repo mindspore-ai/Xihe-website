@@ -58,7 +58,7 @@ const electricityClassify = [
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
     icon: IconNLP,
-    disabled: true,
+    // disabled: true,
   },
   {
     id: 3,
@@ -78,10 +78,12 @@ const electricityClassify = [
   },
 ];
 
-const handleClick = () => {
-  // console.log('tab: ', tab);
-  // activeName.value = tab.paneName;
-  // router.push(electricityClassify[tab.index].path);
+const handleClick = (tab, event) => {
+  console.log('tab,event: ', tab, event);
+  if (tab.props.name === '自然语言处理NLP') {
+    const el = document.getElementsByClassName('electricity');
+    console.log('el: ', el);
+  }
 };
 
 // 合作伙伴
@@ -199,9 +201,8 @@ const logoPic = [
   // padding-bottom: 64px;
   background-image: url('@/assets/imgs/estate/electricity/electric-travel.jpg');
   background-repeat: no-repeat;
-  background-size: 100% 642px;
-  // background-position: 0 2288px;
-  background-position: 0 1960px;
+  background-size: 100% 664px;
+  background-position: 0 1984px;
   .electricity-head {
     padding-top: 80px;
     position: relative;

@@ -91,28 +91,6 @@ export default [
       },
     ],
   },
-  // 电力--变电站运维图像识别分析解决方案
-  {
-    path: '/electricity/substation-ops',
-    name: 'substationops',
-    component: () => {
-      return import(
-        '@/views/estate/electricity/substationops/SubstationopsDetail.vue'
-      );
-    },
-    children: [
-      // 项目说明
-      {
-        path: '',
-        name: 'substationopsExplain',
-        component: () => {
-          return import(
-            '@/views/estate/electricity/substationops/SubstationopsExplain.vue'
-          );
-        },
-      },
-    ],
-  },
   // 电力--智能在线决策系统
   {
     path: '/electricity/intelligent-system',
@@ -135,6 +113,30 @@ export default [
       },
     ],
   },
+
+  // 电力NLPTODO:
+  {
+    path: '/electricity/laborcontract',
+    name: 'laborcontract',
+    component: () => {
+      return import(
+        '@/views/estate/electricity/naturalLanguage/labor-contract/LaborcontractDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'intelligentsystemExplain',
+        component: () => {
+          return import(
+            '@/views/estate/electricity/intelligentsystem/IntelligentsystemExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+
   // 工业--金属零部件
   {
     path: '/industry/metal-part',

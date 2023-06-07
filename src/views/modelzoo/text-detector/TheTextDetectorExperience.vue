@@ -8,6 +8,14 @@ import IconSend from '~icons/app/vqa-send';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
+// import { textDetectorInfer } from '@/api/api-modelzoo';
+
+// textDetectorInfer({
+//   lang: 'zh',
+//   text: '需要注意的是，安全性是一个综合性的问题，不仅仅依赖于框架本身的功能，还取决于开发人员的实施和配置。因此，在使用WSF框架时，开发人员还应该注意其他方面的安全性措施，如输入验证、密码安全、安全的编码实践等',
+// }).then((res) => {
+//   console.log(res);
+// });
 
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -109,6 +117,7 @@ const i18n = {
   PRODUCTION_INTRO_4_EN: 'give feedback',
 };
 
+const feedbackLink = 'https://github.com/YuchuanTian/AIGC_text_detector';
 const btnRef = ref();
 const inputMsg = ref('');
 const detectionLang = ref('zh');
@@ -300,7 +309,7 @@ function feedBackError(item) {
           {{ i18n.PRODUCTION_INTRO_1 }}
           <span class="tip-blod">{{ i18n.PRODUCTION_INTRO_2 }}</span>
           {{ i18n.PRODUCTION_INTRO_3 }}
-          <a class="tip-link" href="#" target="blank">
+          <a class="tip-link" :href="feedbackLink" target="blank">
             {{ i18n.PRODUCTION_INTRO_4 }}
           </a>
         </div>
@@ -330,7 +339,7 @@ function feedBackError(item) {
           {{ i18n.PRODUCTION_INTRO_1_EN }}
           <span class="tip-blod">{{ i18n.PRODUCTION_INTRO_2_EN }}</span>
           {{ i18n.PRODUCTION_INTRO_3_EN }}
-          <a class="tip-link" href="#" target="blank">
+          <a class="tip-link" :href="feedbackLink" target="blank">
             {{ i18n.PRODUCTION_INTRO_4_EN }}
           </a>
         </div>

@@ -439,3 +439,14 @@ export function getPic() {
       return res.data;
     });
 }
+
+/**
+ * 悟空-查询排位
+ * @returns
+ */
+export function textDetectorInfer(params) {
+  const url = '/server/bigmodel/ai_detector';
+  return request.post(url, params, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}

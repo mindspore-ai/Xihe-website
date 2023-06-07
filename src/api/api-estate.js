@@ -18,7 +18,7 @@ function getHeaderConfig() {
  * @returns
  */
 export function getElectricitydata() {
-  const url = '/server/homepage/electricity';
+  const url = `/server/homepage/electricity`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

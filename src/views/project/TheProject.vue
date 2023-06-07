@@ -353,7 +353,7 @@ watch(
 watch(
   () => route.params,
   () => {
-    // queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tag_kinds = route.params.tag_kinds;
     queryData.tags = route.params.tags;
   },
   {

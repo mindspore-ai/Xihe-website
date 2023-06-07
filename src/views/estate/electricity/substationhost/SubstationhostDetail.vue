@@ -12,7 +12,7 @@ const router = useRouter();
   router.push(`/estate/electric/case-1/${item.href}`);
 } */
 function goDetail() {
-  router.push('/projects/yyj/substation-host');
+  // router.push('/projects/yyj/substation-host');
 }
 </script>
 
@@ -42,12 +42,16 @@ function goDetail() {
               </div>
             </div>
             <div class="banner-btn" @click="goDetail">
-              <OButton animation type="primary" class="home-btn">
-                运行模型
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
+              <a
+                href="https://xihe2.test.osinfra.cn/projects/MindSpore/ai_studio_demo/"
+              >
+                <OButton animation type="primary" class="home-btn">
+                  运行模型
+                  <template #suffix>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </template>
+                </OButton>
+              </a>
             </div>
           </div>
         </div>

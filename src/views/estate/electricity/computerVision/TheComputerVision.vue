@@ -164,12 +164,12 @@ function goCasePath(item) {
 
 async function getElectricityInfor() {
   const res = await getElectricitydata();
-  modelData.value = res.data.model.projects;
-  console.log('modelData.value: ', modelData.value);
-  datasetData.value = res.data.dataset.projects;
-  console.log('datasetData.value: ', datasetData.value);
-  // classify[0].detail = res.data.course.slice(0, 3);
-  // classify[1].detail = res.data.comp.slice(0, 3);
+  res.data.model.projects
+    ? (modelData.value = res.data.model.projects)
+    : (modelData.value = []);
+  res.data.dataset.projects
+    ? (datasetData.value = res.data.dataset.projects)
+    : (datasetData.value = []);
 }
 getElectricityInfor();
 
@@ -265,7 +265,7 @@ function goProjects() {
       </div>
       <div class="model-list">
         <app-card
-          v-for="item in modelData.slice(0, 3)"
+          v-for="item in modelData.slice(3, 6)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"
@@ -290,7 +290,7 @@ function goProjects() {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in datasetData.slice(0, 3)"
+          v-for="item in datasetData.slice(3, 6)"
           :key="item.id"
           :card-data="item"
           :avatar-img="item.avatar_id"

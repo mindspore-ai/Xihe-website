@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, watch, nextTick, computed } from 'vue';
 
 import { useUserInfoStore, useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -8,7 +8,7 @@ import IconSend from '~icons/app/vqa-send';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
-// import { textDetectorInfer } from '@/api/api-modelzoo';
+import { textDetectorInfer } from '@/api/api-modelzoo';
 
 // textDetectorInfer({
 //   lang: 'zh',
@@ -63,8 +63,10 @@ const i18n = {
       CLASS: 'ai',
       NAME: 'AI生成',
       NAME_EN: 'AI-Generated',
-      CONTENT: '222',
-      CONTENT_EN: 'AI生成——EN',
+      CONTENT:
+        'ChatGPT(Chat-based Generative Pre-trained Transformer)是一款由OpenAI开发的先进人工智能语言模型，基于GPT-4架构。该模型利用深度学习和自然语言处理技术，通过分析大量文本数据进行训练，从而实现与人类用户进行智能对话和生成自然、流畅的文本回答。截止2021年9月，ChatGPT已经在各种领域取得了广泛的应用，包括自动回复、智能助手、知识问答、创意助手等。然而，尽管ChatGPT具有强大的语言理解和生成能力，它仍然可能受限于数据训练时的知识水平和偏见，并在某些情况下可能产生误导或不准确的回答。',
+      CONTENT_EN:
+        "They are not colored . Just as white paint is usually made from minerals found in clay . The crystals in white paint reflects all light equally making it appear white . Just liek snow . Primarily the eye color is based on the density and distribution of melanin in the eye . It just looks a certain color when light illuminates the eye . It reflects light unqually .Piracy and copyright law can be contentious issues on the internet because they involve complex questions about how to balance the rights of creators and the interests of consumers. Some people argue that artists should have the right to control how their works are distributed and to charge what they feel is appropriate, while others believe that the free exchange of information is important and that artists should not be able to control how their works are used. It's important to remember that copyright law exists to protect the rights of creators and to encourage the creation of new works by ensuring that artists can earn a fair income from their creations. When someone pirates (unauthorized copying) or uses a copyrighted work without permission, they are taking something that belongs to someone else and using it for their own benefit, without paying the person who created it. This can be seen as unfair to the creator and can discourage them from creating new works in the future. At the same time, it's also important to recognize that not everyone has the same access to information and that copyright laws can sometimes make it difficult or impossible for people to access the works they want to use. This is why it's important to have a balance between protecting the rights of creators and ensuring that everyone has access to the information and works they need.",
     },
   ],
   USAGE_INSTRUCTION: '使用指南',
@@ -121,51 +123,59 @@ const feedbackLink = 'https://github.com/YuchuanTian/AIGC_text_detector';
 const btnRef = ref();
 const inputMsg = ref('');
 const detectionLang = ref('zh');
-const isDisabled = ref(false);
+// const isDisabled = ref(false);
 
 const avatarUrl = ref('');
 avatarUrl.value = userInfoStore.avatar;
 
-const msgList = ref([
-  {
-    message: computed(() => {
-      return detectionLang.value === 'zh' ? i18n.PROMPT : i18n.PROMPT_EN;
-    }),
-    type: 'SERVER',
-    status: '0',
-    isChecked1: false,
-    isChecked2: false,
-  },
-  {
-    message: computed(() => {
-      return detectionLang.value === 'zh' ? i18n.PROMPT : i18n.PROMPT_EN;
-    }),
-    type: 'SERVER',
-    status: '1',
-    isChecked1: false,
-    isChecked2: false,
-  },
-]);
+const msgList = ref([]);
 
 function selectExample(val) {
   inputMsg.value = val;
 }
 
-function sendMessage() {
+async function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    if (!isDisabled.value) {
-      // isDisabled.value = true;
-      // 内容审核，通过后发出消息
+    // if (!isDisabled.value) {
+    // isDisabled.value = true;
+    // 内容审核，通过后发出消息
+    try {
       msgList.value.push({
         message: inputMsg.value,
         type: 'USER',
       });
+
+      const res = await textDetectorInfer({
+        lang: detectionLang.value,
+        text: inputMsg.value,
+      });
+
+      if (!res.data.is_machine) {
+        msgList.value.push({
+          message: 'This paragraph is human-written.',
+          type: 'SERVER',
+          status: '0',
+          isChecked1: false,
+          isChecked2: false,
+        });
+      } else {
+        msgList.value.push({
+          message: 'This paragraph is AI-generated.',
+          type: 'SERVER',
+          status: '1',
+          isChecked1: false,
+          isChecked2: false,
+        });
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
+  // }
 }
 
 function feedbackRight(item) {
@@ -175,6 +185,19 @@ function feedbackRight(item) {
 function feedBackError(item) {
   item.isChecked1 = true;
 }
+
+watch(
+  () => msgList.value,
+  () => {
+    const obj = document.querySelector('#txt');
+    nextTick(() => {
+      obj.scrollTop = obj.scrollHeight + 100;
+    });
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 <template>
   <div class="experience">
@@ -195,7 +218,7 @@ function feedBackError(item) {
         {{ detectionLang === 'zh' ? i18n.DESCRIPTION : i18n.DESCRIPTION_EN }}
       </div>
 
-      <div class="chat-box">
+      <div id="txt" class="chat-box">
         <div class="message-box-1">
           <div class="avatar">
             <img :src="avatar" alt="" />
@@ -602,6 +625,22 @@ function feedBackError(item) {
         padding: 16px;
         height: 160px;
         background: #f5f6f8;
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 3px;
+          background-color: #d8d8d8;
+          background-clip: content-box;
+        }
+
+        &::-webkit-scrollbar-track {
+          border-radius: 3px;
+          box-shadow: inset 0 0 2px rgba($color: #000000, $alpha: 0.2);
+          background: #ffffff;
+        }
       }
       .el-input__count {
         background: #f5f6f8;

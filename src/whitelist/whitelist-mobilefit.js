@@ -19,4 +19,7 @@ export default [
   'luojiaExperience',
   'luojiaIntroduce',
   'home',
+  'textDetector',
+  'textDetectorExperience',
+  'textDetectorIntroduce',
 ];

@@ -525,7 +525,7 @@ onUnmounted(() => {
         <div class="send-email">
           <span> 2. 附上申请表发送申请信息至官方邮箱：</span>
           <span style="color: #0d8dff" class="email">
-            xihe-contact.mindspore.cn
+            public@xihe-contact.mindspore.cn
           </span>
           <span>。</span>
         </div>

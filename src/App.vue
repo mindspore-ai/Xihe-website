@@ -121,6 +121,11 @@ const routeLists = {
     child: ['wukongExperience', 'wukongIntroduce', 'wukong', 'AIAlbum'],
     back: '/modelzoo',
   },
+  textDetector: {
+    name: 'AI文本检测器',
+    child: ['textDetectorExperience', 'textDetectorIntroduce', 'textDetector'],
+    back: '/modelzoo',
+  },
   pangu: {
     name: '鹏程.盘古',
     child: ['pangu', 'panguExperience', 'panguIntroduce'],

@@ -77,12 +77,13 @@ const electricityClassify = [
     disabled: true,
   },
 ];
-
+const electricityRef = ref(null);
 const handleClick = (tab, event) => {
-  console.log('tab,event: ', tab, event);
   if (tab.props.name === '自然语言处理NLP') {
-    const el = document.getElementsByClassName('electricity');
-    console.log('el: ', el);
+    electricityRef.value.style.backgroundImage = 'none';
+  } else {
+    // electricityRef.value.style.backgroundImage =
+    //   "url('/assets/imgs/estate/electricity/electric-travel.jpg')";
   }
 };
 
@@ -110,7 +111,7 @@ const logoPic = [
 ];
 </script>
 <template>
-  <div class="electricity">
+  <div ref="electricityRef" class="electricity">
     <div class="electricity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">

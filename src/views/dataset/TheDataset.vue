@@ -496,7 +496,7 @@ watch(
 watch(
   () => route.params,
   () => {
-    // query.tag_kinds = route.params.tag_kinds;
+    query.tag_kinds = route.params.tag_kinds;
     query.tags = route.params.tags;
   },
   {

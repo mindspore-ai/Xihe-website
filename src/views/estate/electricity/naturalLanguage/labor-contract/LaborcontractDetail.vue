@@ -25,7 +25,7 @@ function goDetail() {
             电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            综合服务应用建设小组
+            电力合同风险评估与管理
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -36,9 +36,9 @@ function goDetail() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">综合服务应用建设小组</div>
+              <div class="banner-title">电力合同风险评估与管理</div>
               <div class="banner-desc">
-                基于自然语言处理技术的合同履行信息提取方法及系统与流程，利用合同义务识别模型识别合同条款,可以得到待处理合同中的义务条款，再利用履约信息识别模型可以将义务条款中的对应的履约信息识别出来。
+                识别电力合同的风险控制点，并对合同内容进行情感分析，实现对合同风险的快速识别和及时管控。同时，该工具还提供模板化风险维护建议和全盘风险展示功能，助力电力企业实现更高效、全面的合同风险管理。
               </div>
             </div>
             <div class="banner-btn" @click="goDetail">

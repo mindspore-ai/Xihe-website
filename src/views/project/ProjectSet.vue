@@ -24,7 +24,7 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   newName: {
-    title: '新项目名',
+    title: '新项目标题',
   },
   visible: {
     title: '仓库属性',
@@ -52,7 +52,7 @@ const i18n = {
     newOwn: '新拥有者',
     newName: '新仓库名',
     placeholder: '请输入项目名',
-    placeholder2: '请输入新项目中文名',
+    placeholder2: '请输入新项目标题',
     describe: '你可重命名项目仓库，并转移你的项目仓库至组织。',
     btnText: '确定',
   },
@@ -74,6 +74,8 @@ const i18n = {
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref(detailData.repo_type);
 const description = ref(detailData.desc);
+const modelTitle = ref(detailData.title);
+
 const visibleIndex = ref(0);
 const showDel = ref(false);
 const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
@@ -140,11 +142,13 @@ function confirmPrivate() {
     type: visibleValue.value,
     cover_id: `${photoId.value}`,
     desc: description.value,
+    title: modelTitle.value,
   };
   modifyProject(query, userInfoStore.userName, detailData.id)
     .then((res) => {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
+      detailData.title = res.data.title;
       ElMessage({
         type: 'success',
         message: '项目信息更改成功',
@@ -222,7 +226,11 @@ function toggleDelDlg(flag) {
         <div class="setting-item">
           <div class="setting-title">{{ i18n.newName.title }}</div>
           <div class="attribute-option">
-            <el-input :placeholder="i18n.rename.placeholder2"> </el-input>
+            <el-input
+              v-model="modelTitle"
+              :placeholder="i18n.rename.placeholder2"
+            >
+            </el-input>
           </div>
         </div>
         <!-- 仓库属性 -->

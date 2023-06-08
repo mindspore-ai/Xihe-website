@@ -97,10 +97,10 @@ export function getUserModelData(params, name) {
  * @returns
  */
 export function getUserDatasetData(params, name) {
+  console.log('params: ', params);
   const url = `/server/dataset/${name}`;
   let header = getHeaderConfig();
   // 登录之后携带token
-  // if (getUserInfo().token) {
   return request
     .get(url, {
       params,
@@ -109,11 +109,6 @@ export function getUserDatasetData(params, name) {
     .then((res) => {
       return res.data;
     });
-  /* } else {
-    return request.get(url, { params }).then((res) => {
-      return res.data;
-    });
-  } */
 }
 
 /**

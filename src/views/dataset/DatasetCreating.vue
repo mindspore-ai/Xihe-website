@@ -17,7 +17,7 @@ const i18n = {
   createPlaceholder: '新建数据集',
   datasetOwner: '拥有者',
   repoName: '仓库名称',
-  title: '数据集名称',
+  title: '数据集标题',
   datasetDescribe: '描述',
   tag: '标签',
   license: '协议',

@@ -24,7 +24,7 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   new_model_name: {
-    title: '模型标题',
+    title: '新模型标题',
     placeholder: '请输入新项模型标题',
   },
   visible: {

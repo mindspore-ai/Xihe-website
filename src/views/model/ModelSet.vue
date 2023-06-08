@@ -24,8 +24,8 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   new_model_name: {
-    title: '新模型名',
-    placeholder: '请输入新项模型中文名',
+    title: '模型标题',
+    placeholder: '请输入新项模型标题',
   },
   visible: {
     title: '仓库属性',
@@ -72,6 +72,8 @@ const i18n = {
 const visibleOptions = reactive(i18n.visible.options);
 const visibleValue = ref(detailData.repo_type);
 const description = ref(detailData.desc);
+const modelTitle = ref(detailData.title);
+
 const newOwn = ref('');
 const visibleIndex = ref(0);
 const showDel = ref(false);
@@ -138,6 +140,7 @@ function confirmPrivate() {
   let query = {
     type: visibleValue.value,
     desc: description.value,
+    title: modelTitle.value,
   };
   modifyModel(query, detailData.owner, detailData.id)
     .then((res) => {
@@ -210,8 +213,8 @@ function toggleDelDlg(flag) {
               ]"
             >
               <el-input
-                v-model="query.name"
-                :placeholder="i18n.rename.placeholder"
+                v-model="modelTitle"
+                :placeholder="i18n.new_model_name.placeholder"
               >
               </el-input>
             </el-form-item>

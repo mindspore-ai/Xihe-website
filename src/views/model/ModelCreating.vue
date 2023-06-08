@@ -24,7 +24,7 @@ const i18n = {
   homePage: '个人主页',
   createPlaceholder: '新建模型',
   datasetOwner: '拥有者',
-  datasetName: '模型名称',
+  datasetName: '模型',
   datasetDescribe: '描述',
   license: '协议',
   visualization: '仓库属性',
@@ -36,7 +36,7 @@ const i18n = {
     '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型',
   placeholder: {
     warehouse_name: '请输入模型英文名称',
-    model_name: '请填写模型中文名称',
+    model_name: '请填写模型标题中文名称',
     describe: '请输入内容',
   },
 };
@@ -321,7 +321,7 @@ function deleteAllTags() {
             </div>
             <!-- 模型名称 -->
             <div class="create-item">
-              <div class="create-title-unnecessary">模型名称</div>
+              <div class="create-title-unnecessary">模型标题</div>
               <div class="create-item-right">
                 <el-form-item class="item" prop="name">
                   <el-input

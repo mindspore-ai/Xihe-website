@@ -1325,7 +1325,7 @@ $theme: #0d8dff;
             }
           }
           .card-desc {
-            padding: 24px;
+            padding: 24px 24px 16px;
             .title {
               height: 28px;
               line-height: 28px;
@@ -1360,6 +1360,7 @@ $theme: #0d8dff;
                 border-radius: 12px;
                 padding: 3px 12px;
                 margin-right: 8px;
+                margin-bottom: 8px;
               }
             }
           }

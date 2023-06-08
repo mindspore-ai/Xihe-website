@@ -24,7 +24,7 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 
 const i18n = {
   new_dataset_name: {
-    title: '新数据集名',
+    title: '新数据集标题',
     placeholder: '请输入新数据集中文名',
   },
   visible: {
@@ -136,12 +136,12 @@ async function confirmRename(formEl) {
   });
 }
 function confirmPrivate() {
-  let query = {
+  let query1 = {
     type: visibleValue.value,
     desc: description.value,
-    title: detailData.title,
+    title: query1.title,
   };
-  modifyDataset(query, detailData.owner, detailData.id)
+  modifyDataset(query1, detailData.owner, detailData.id)
     .then((res) => {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
@@ -213,7 +213,7 @@ function toggleDelDlg(flag) {
               ]"
             >
               <el-input
-                v-model="detailData.title"
+                v-model="query.title"
                 :placeholder="i18n.rename.placeholder"
               >
               </el-input>

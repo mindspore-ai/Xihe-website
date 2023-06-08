@@ -25,7 +25,7 @@ function goOnlineExperience() {
   router.push('/modelzoo/text-detector');
 }
 function learnMore() {
-  window.open('');
+  window.open('https://arxiv.org/abs/2305.18149', 'blank');
 }
 </script>
 <template>

@@ -34,15 +34,22 @@ const i18n = {
     options: [
       {
         value: 'Private',
-        label: 'Private',
+        label: '私有',
         id: 1,
         describe:
           '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型仓库。',
       },
       {
-        value: 'Public',
-        label: 'Public',
+        value: 'Online',
+        label: '部分公开',
         id: 2,
+        describe:
+          '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型仓库。',
+      },
+      {
+        value: 'Public',
+        label: '全部公开',
+        id: 3,
         describe:
           '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型仓库。',
       },
@@ -84,9 +91,9 @@ let query = reactive({
   name: detailData.name,
 });
 
-detailData.repo_type === 'private'
-  ? (visibleIndex.value = 0)
-  : (visibleIndex.value = 1);
+if (detailData.repo_type === 'private') visibleIndex.value = 0;
+else if (detailData.repo_type === 'online') visibleIndex.value = 1;
+else visibleIndex.value = 2;
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -95,9 +102,14 @@ function getOwnSelect(value) {
   newOwn.value = value;
 }
 function getVisiableSelect(value) {
-  value === 'Private'
-    ? (visibleValue.value = 'private')
-    : (visibleValue.value = 'public');
+  console.log(value);
+  if (value === 'Private') {
+    visibleValue.value = 'private';
+  } else if (value === 'Public') {
+    visibleValue.value = 'public';
+  } else {
+    visibleValue.value = 'online';
+  }
 }
 
 async function confirmRename(formEl) {

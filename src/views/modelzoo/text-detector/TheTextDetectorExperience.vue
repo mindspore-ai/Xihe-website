@@ -10,13 +10,6 @@ import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
 import { textDetectorInfer } from '@/api/api-modelzoo';
 
-// textDetectorInfer({
-//   lang: 'zh',
-//   text: '需要注意的是，安全性是一个综合性的问题，不仅仅依赖于框架本身的功能，还取决于开发人员的实施和配置。因此，在使用WSF框架时，开发人员还应该注意其他方面的安全性措施，如输入验证、密码安全、安全的编码实践等',
-// }).then((res) => {
-//   console.log(res);
-// });
-
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
 
@@ -137,6 +130,8 @@ function selectExample(val) {
 async function sendMessage() {
   if (inputMsg.value.trim() === '') return;
 
+  console.log(inputMsg.value);
+
   if (!isLogined.value) {
     goAuthorize();
   } else {
@@ -145,13 +140,16 @@ async function sendMessage() {
     // 内容审核，通过后发出消息
     try {
       msgList.value.push({
-        message: inputMsg.value,
+        message: inputMsg.value.replaceAll('\n', '<br/>'),
         type: 'USER',
       });
 
+      let sendMsg = inputMsg.value;
+      inputMsg.value = '';
+
       const res = await textDetectorInfer({
         lang: detectionLang.value,
-        text: inputMsg.value,
+        text: sendMsg,
       });
 
       if (!res.data.is_machine) {
@@ -239,9 +237,11 @@ watch(
             <img :src="item.type === 'SERVER' ? avatar : avatarUrl" alt="" />
           </div>
           <!-- 用户消息 -->
-          <div v-if="item.type === 'USER'" class="message">
-            {{ item.message }}
-          </div>
+          <div
+            v-if="item.type === 'USER'"
+            class="message"
+            v-html="item.message"
+          ></div>
           <!-- 响应消息 -->
           <template v-else>
             <div
@@ -269,10 +269,9 @@ watch(
       <div class="input-area">
         <div class="input-box">
           <el-input
-            ref="inputContent"
             v-model="inputMsg"
             type="textarea"
-            :rows="3"
+            :rows="1"
             :placeholder="
               detectionLang === 'zh' ? i18n.PLACEHOLDER : i18n.PLACEHOLDER_EN
             "
@@ -620,6 +619,8 @@ watch(
   .input-box {
     flex: 1;
     :deep(.el-textarea) {
+      --o-textarea-box_shadow: none;
+      --o-textarea-focus-box_shadow: none;
       .el-textarea__inner {
         border-radius: 8px;
         padding: 16px;

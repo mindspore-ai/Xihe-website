@@ -27,9 +27,9 @@ const i18n = {
   owner: '拥有者',
 
   storage_name: '仓库名称',
-  pro_name: '项目名称',
+  pro_name: '项目标题',
   input_proName1: '请填写项目英文名称',
-  input_proName2: '请填写项目中文名称',
+  input_proName2: '请填写项目标题',
   pro_img: '项目封面',
   desc: '描述',
   input_text: '请输入内容',

@@ -69,7 +69,7 @@ async function getElectricityInfor() {
   // classify[0].detail = res.data.course.slice(0, 3);
   // classify[1].detail = res.data.comp.slice(0, 3);
 }
-getElectricityInfor();
+// getElectricityInfor();
 
 // 开启昇思之旅
 let classify = ref([

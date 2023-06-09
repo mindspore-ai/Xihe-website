@@ -146,6 +146,7 @@ function confirmPrivate() {
     .then((res) => {
       detailData.desc = res.data.desc;
       detailData.repo_type = res.data.repo_type;
+      detailData.title = res.data.title;
       ElMessage({
         type: 'success',
         message: '修改成功',

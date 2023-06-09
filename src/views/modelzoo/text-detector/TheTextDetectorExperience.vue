@@ -276,7 +276,7 @@ watch(
             :placeholder="
               detectionLang === 'zh' ? i18n.PLACEHOLDER : i18n.PLACEHOLDER_EN
             "
-            :maxlength="detectionLang === 'zh' ? 300 : 2000"
+            :maxlength="detectionLang === 'zh' ? 500 : 2000"
             show-word-limit
             style="width: 100%"
           />

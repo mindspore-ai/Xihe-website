@@ -33,18 +33,25 @@ const i18n = {
     tip: '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目仓库',
     options: [
       {
-        value: 'Private',
-        label: 'Private',
+        value: 'private',
+        label: '完全公开',
         id: 1,
         describe:
-          '其他用户将无法搜索、查看你的数据集，仅你及你的团队成员可查看和编辑此数据集仓库。',
+          '其他用户可浏览、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集',
       },
       {
-        value: 'Public',
-        label: 'Public',
+        value: 'online',
+        label: '部分公开',
         id: 2,
         describe:
-          '其他用户可浏览、收藏、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集仓库。',
+          '其他用户可浏览你的数据集，但仅有你及你的团队可以下载数据集和编辑数据集卡片描述',
+      },
+      {
+        value: 'public',
+        label: '私有',
+        id: 3,
+        describe:
+          '其他用户将无法搜索、查看你的数据集，仅你及你的团队成员可查看和编辑此数据集',
       },
     ],
     btnText: '确定',
@@ -83,10 +90,9 @@ let query = reactive({
   title: detailData.title,
 });
 
-detailData.repo_type === 'private'
-  ? (visibleIndex.value = 0)
-  : (visibleIndex.value = 1);
-
+if (detailData.repo_type === 'private') visibleIndex.value = 0;
+else if (detailData.repo_type === 'online') visibleIndex.value = 1;
+else visibleIndex.value = 2;
 function getIndex(value) {
   visibleIndex.value = value;
 }
@@ -94,9 +100,7 @@ function getOwnSelect(value) {
   newOwn.value = value;
 }
 function getVisiableSelect(value) {
-  value === 'Private'
-    ? (visibleValue.value = 'private')
-    : (visibleValue.value = 'public');
+  visibleValue.value = value;
 }
 
 async function confirmRename(formEl) {
@@ -139,7 +143,7 @@ function confirmPrivate() {
   let query1 = {
     type: visibleValue.value,
     desc: description.value,
-    title: query1.title,
+    title: query.title,
   };
   modifyDataset(query1, detailData.owner, detailData.id)
     .then((res) => {
@@ -229,12 +233,14 @@ function toggleDelDlg(flag) {
               :select-data="visibleOptions"
               keys="value"
               value="value"
-              :default-value="i18n.visible.options[visibleIndex].value"
+              :default-value="detailData.repo_type"
               @click="getIndex"
               @change="getVisiableSelect"
             ></o-select>
 
-            <div class="set-tip">{{ i18n.visible.tip }}</div>
+            <div class="set-tip">
+              {{ i18n.visible.options[visibleIndex].describe }}
+            </div>
           </div>
         </div>
         <!-- 更改描述 -->
@@ -475,6 +481,7 @@ function toggleDelDlg(flag) {
   line-height: 24px;
   color: #000000;
   margin-right: 28px;
+  white-space: nowrap;
 }
 .set-title-1 {
   align-self: start;

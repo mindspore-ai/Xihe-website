@@ -4,6 +4,9 @@ import { useUserInfoStore } from '@/stores';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPlus from '~icons/app/plus.svg';
+import IconX from '~icons/app/x';
+import IconClear from '~icons/app/clear';
+
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 

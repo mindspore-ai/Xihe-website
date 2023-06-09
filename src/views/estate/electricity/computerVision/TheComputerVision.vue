@@ -24,11 +24,24 @@ import competition3 from '@/assets/imgs/home1/more/competition3.png';
 import activity1 from '@/assets/imgs/home1/more/activity1.png';
 import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
-import { getElectricitydata } from '@/api/api-estate';
 
 const router = useRouter();
 
 const activeName = ref('课程');
+const props = defineProps({
+  modelData: {
+    type: Array,
+    default: () => {
+      return [];
+    },
+  },
+  datasetData: {
+    type: Array,
+    default: () => {
+      return [];
+    },
+  },
+});
 
 const cases = [
   {
@@ -154,24 +167,9 @@ let classify = ref([
   },
 ]);
 
-const modelData = ref([]); //应用模型
-const datasetData = ref([]); //应用数据集
-
 function goCasePath(item) {
   router.push(item.url);
 }
-// 获取电力主页数据
-
-async function getElectricityInfor() {
-  const res = await getElectricitydata();
-  res.data.model.projects
-    ? (modelData.value = res.data.model.projects)
-    : (modelData.value = []);
-  res.data.dataset.projects
-    ? (datasetData.value = res.data.dataset.projects)
-    : (datasetData.value = []);
-}
-getElectricityInfor();
 
 function goModelDetail(user, name) {
   // 点击在新页签打开
@@ -265,10 +263,9 @@ function goProjects() {
       </div>
       <div class="model-list">
         <app-card
-          v-for="item in modelData.slice(4, 7)"
+          v-for="item in props.modelData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
-          :avatar-img="item.avatar_id"
           card-type="model"
           :show-name="false"
           @click="goModelDetail(item.owner, item.name)"
@@ -290,10 +287,9 @@ function goProjects() {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in datasetData.slice(4, 7)"
+          v-for="item in props.datasetData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
-          :avatar-img="item.avatar_id"
           card-type="dataset"
           :show-name="false"
           @click="goDatasetDetail(item.owner, item.name)"

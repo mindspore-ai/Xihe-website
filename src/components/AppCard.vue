@@ -17,12 +17,6 @@ const props = defineProps({
       return 'model';
     },
   },
-  avatarImg: {
-    type: String,
-    default: () => {
-      return '';
-    },
-  },
   showName: {
     type: Boolean,
     default: true,
@@ -57,7 +51,7 @@ if (props.cardType === 'model') {
   >
     <div class="card-top">
       <div class="portrait">
-        <img :src="avatarImg" alt="" />
+        <img :src="cardData.avatar_id" alt="" />
       </div>
       <div v-if="!showName">
         {{ cardData.title ? cardData.title : cardData.name }}
@@ -79,11 +73,7 @@ if (props.cardType === 'model') {
     </p>
     <div class="card-bottom">
       <div class="card-bottom-left">
-        <div
-          v-if="cardData.updated_at"
-          class="update-time"
-          :title="i18n.uploadTime"
-        >
+        <div v-if="cardData.updated_at" class="update-time">
           <o-icon> <icon-time></icon-time></o-icon>
           <span class="text">{{ cardData.updated_at }}</span>
         </div>

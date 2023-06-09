@@ -30,7 +30,7 @@ export const routes = [
       title: 'MindSpore LLM Platform',
     },
     component: () => {
-      return import('@/views/TheHome1.vue');
+      return import('@/views/TheHome.vue');
     },
   },
   // 隐私政策

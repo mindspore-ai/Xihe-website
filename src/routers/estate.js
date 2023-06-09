@@ -33,7 +33,7 @@ export default [
     name: 'substationhost',
     component: () => {
       return import(
-        '@/views/estate/electricity/substationhost/SubstationhostDetail.vue'
+        '@/views/estate/electricity/computerVision/substationhost/SubstationhostDetail.vue'
       );
     },
     children: [
@@ -43,7 +43,7 @@ export default [
         name: 'substationhostExplain',
         component: () => {
           return import(
-            '@/views/estate/electricity/substationhost/SubstationhostExplain.vue'
+            '@/views/estate/electricity/computerVision/substationhost/SubstationhostExplain.vue'
           );
         },
       },
@@ -75,7 +75,7 @@ export default [
     name: 'substationops',
     component: () => {
       return import(
-        '@/views/estate/electricity/substationops/SubstationopsDetail.vue'
+        '@/views/estate/electricity/computerVision/substationops/SubstationopsDetail.vue'
       );
     },
     children: [
@@ -85,7 +85,7 @@ export default [
         name: 'substationopsExplain',
         component: () => {
           return import(
-            '@/views/estate/electricity/substationops/SubstationopsExplain.vue'
+            '@/views/estate/electricity/computerVision/substationops/SubstationopsExplain.vue'
           );
         },
       },
@@ -97,7 +97,7 @@ export default [
     name: 'intelligentsystem',
     component: () => {
       return import(
-        '@/views/estate/electricity/intelligentsystem/IntelligentsystemDetail.vue'
+        '@/views/estate/electricity/computerVision/intelligentsystem/IntelligentsystemDetail.vue'
       );
     },
     children: [
@@ -107,7 +107,7 @@ export default [
         name: 'intelligentsystemExplain',
         component: () => {
           return import(
-            '@/views/estate/electricity/intelligentsystem/IntelligentsystemExplain.vue'
+            '@/views/estate/electricity/computerVision/intelligentsystem/IntelligentsystemExplain.vue'
           );
         },
       },
@@ -127,10 +127,10 @@ export default [
       // 项目说明
       {
         path: '',
-        name: 'intelligentsystemExplain',
+        name: 'laborcontractExplain',
         component: () => {
           return import(
-            '@/views/estate/electricity/intelligentsystem/IntelligentsystemExplain.vue'
+            '@/views/estate/electricity/computerVision/intelligentsystem/IntelligentsystemExplain.vue'
           );
         },
       },

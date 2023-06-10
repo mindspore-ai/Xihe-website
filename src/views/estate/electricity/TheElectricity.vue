@@ -51,6 +51,7 @@ import logo28 from '@/assets/imgs/estate/logo/logo28.png';
 import logo29 from '@/assets/imgs/estate/logo/logo29.png';
 import logo30 from '@/assets/imgs/estate/logo/logo30.png';
 import logo31 from '@/assets/imgs/estate/logo/logo31.png';
+import logo32 from '@/assets/imgs/estate/logo/logo32.png';
 
 import { getElectricitydata } from '@/api/api-estate';
 
@@ -116,6 +117,7 @@ const logoPic = [
   logo9,
   logo10,
   logo11,
+  logo32,
   logo12,
   logo13,
   logo14,
@@ -158,14 +160,10 @@ watch(tagKinds, (newValue) => {
     <div class="electricity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
-        <div class="banner-title">AI+电力行业生产力平台</div>
+        <div class="banner-title">电力人工智能专区</div>
         <div class="banner-desc">
-          <span>
-            昇思赋能电力行业，覆盖从AI生产（输出算法模型）到应用（实现算法工程化封装）各环节，有效解决AI+电力研发门槛高、成本高和效率低的问题。 </span
-          ><br />
-          <span>
-            提供算法的训练、推理和部署能力；具备算力的共享、调度和分布式能力；拥有全面的数据处理、管理和安全能力。
-          </span>
+          汇集大量电力行业案例，开放特色电力数据集与模型，发布学习实践课程，比赛与活动，用
+          “ AI ” 电亮未来，为 “ 电力 ” 插上数智化双翼。
         </div>
       </div>
     </div>
@@ -218,7 +216,7 @@ watch(tagKinds, (newValue) => {
         class="logo-swiper"
       >
         <swiper-slide
-          v-for="item in logoPic.slice(0, 10)"
+          v-for="item in logoPic.slice(0, 11)"
           :key="item"
           class="swiper-no-swiping"
         >
@@ -236,7 +234,7 @@ watch(tagKinds, (newValue) => {
         class="logo-swiper"
       >
         <swiper-slide
-          v-for="item in logoPic.slice(10, 31)"
+          v-for="item in logoPic.slice(11, 32)"
           :key="item"
           class="swiper-no-swiping"
         >
@@ -266,6 +264,7 @@ watch(tagKinds, (newValue) => {
     }
     .electricity-banner {
       max-width: 1472px;
+      height: 480px;
       margin: 0 auto;
       padding: 160px 16px;
       position: relative;
@@ -322,7 +321,9 @@ watch(tagKinds, (newValue) => {
         }
       }
       img {
+        width: 354px;
         height: 120px;
+        border-radius: 16px;
         @media screen and (max-width: 820px) {
           height: 60px;
         }

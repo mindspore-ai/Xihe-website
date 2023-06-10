@@ -224,7 +224,7 @@ function goProjects() {
       <p class="application-title">应用案例</p>
       <div class="prefecture">
         <div class="southern-power">
-          <span> 南网专区 </span>
+          <span> 更多电力专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-models" @click="goProjects">
@@ -253,7 +253,7 @@ function goProjects() {
 
       <div class="prefecture">
         <div class="southern-power">
-          <span> 南网专区 </span>
+          <span> 更多电力专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-models" @click="goModels">
@@ -277,7 +277,7 @@ function goProjects() {
 
       <div class="prefecture">
         <div class="southern-power">
-          <span> 南网专区 </span>
+          <span> 更多电力专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-datasets" @click="goDatasets">
@@ -376,6 +376,7 @@ function goProjects() {
       justify-content: center;
       .southern-power,
       .more-models {
+        cursor: pointer;
         .o-icon {
           margin-left: 8px;
           svg {
@@ -384,7 +385,6 @@ function goProjects() {
         }
       }
       .more-models {
-        cursor: pointer;
         margin-left: 42px;
       }
     }
@@ -448,6 +448,7 @@ function goProjects() {
       justify-content: center;
       .southern-power,
       .more-models {
+        cursor: pointer;
         .o-icon {
           margin-left: 8px;
           svg {
@@ -456,7 +457,6 @@ function goProjects() {
         }
       }
       .more-models {
-        cursor: pointer;
         margin-left: 42px;
       }
     }
@@ -482,6 +482,7 @@ function goProjects() {
       justify-content: center;
       .southern-power,
       .more-datasets {
+        cursor: pointer;
         .o-icon {
           margin-left: 8px;
           svg {
@@ -490,7 +491,6 @@ function goProjects() {
         }
       }
       .more-datasets {
-        cursor: pointer;
         margin-left: 42px;
       }
     }

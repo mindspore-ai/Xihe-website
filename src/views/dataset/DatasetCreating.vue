@@ -4,6 +4,9 @@ import { useUserInfoStore } from '@/stores';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPlus from '~icons/app/plus.svg';
+import IconX from '~icons/app/x';
+import IconClear from '~icons/app/clear';
+
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
@@ -17,7 +20,7 @@ const i18n = {
   createPlaceholder: '新建数据集',
   datasetOwner: '拥有者',
   repoName: '仓库名称',
-  title: '数据集名称',
+  title: '数据集标题',
   datasetDescribe: '描述',
   tag: '标签',
   license: '协议',

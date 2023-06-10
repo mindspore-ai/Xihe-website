@@ -124,6 +124,7 @@ if (props.cardType === 'model') {
     .portrait {
       margin-right: 8px;
       width: 24px;
+      min-width: 24px;
       height: 24px;
       border-radius: 50%;
       overflow: hidden;

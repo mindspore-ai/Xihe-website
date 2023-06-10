@@ -51,6 +51,7 @@ function onPoint(keys) {
         v-for="(item, index) in selectData"
         :key="item[keys]"
         :value="item[value]"
+        :label="item.label"
         @click="onClick(index), onPoint(item[keys])"
       />
     </el-select>

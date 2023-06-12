@@ -300,7 +300,6 @@ const mobileNav = reactive([
       return t('home.APP_HEADER.INDUSTRY');
     }),
     isActive: false,
-    // path: '/electricity',
     children: [
       {
         name: computed(() => {
@@ -364,7 +363,7 @@ function toggleMenu(menu) {
   meauActive.value = menu;
   mobileNav[3].isActive = false;
 }
-function toPage(path) {
+function toPage(path, index) {
   // if (path === '/') {
   //   mobileNav[0].isActive = true;
   //   mobileNav[3].isActive = false;
@@ -375,14 +374,18 @@ function toPage(path) {
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
     mobileNav[3].isActive = false;
+    mobileNav[5].isActive = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
+    mobileNav[5].isActive = false;
     router.push(path);
   } else {
+    mobileNav[3].isActive = false;
+    mobileNav[5].isActive = false;
     mobileNav[0].isActive = false;
-    mobileNav[3].isActive = true;
+    mobileNav[index].isActive = true;
   }
 }
 const handleCommand = () => {
@@ -520,12 +523,12 @@ function confirmDialog() {
     <div class="menu-side" :class="{ 'menu-active': meauActive }">
       <div class="nav">
         <div
-          v-for="item in mobileNav"
+          v-for="(item, index) in mobileNav"
           :key="item"
           class="nav-item"
           :class="{ active: item.isActive }"
         >
-          <span @click="toPage(item.path)">{{ item.name }}</span>
+          <span @click="toPage(item.path, index)">{{ item.name }}</span>
         </div>
       </div>
       <div
@@ -533,6 +536,14 @@ function confirmDialog() {
         :class="{ 'children-active': mobileNav[3].isActive }"
       >
         <div v-for="item in mobileNav[3].children" :key="item" class="nav-item">
+          <span @click="toPage(item.path)">{{ item.name }}</span>
+        </div>
+      </div>
+      <div
+        class="item-children"
+        :class="{ 'children-active': mobileNav[5].isActive }"
+      >
+        <div v-for="item in mobileNav[5].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>

@@ -441,7 +441,7 @@ export function getPic() {
 }
 
 /**
- * 悟空-查询排位
+ * AI检测器推理
  * @returns
  */
 export function textDetectorInfer(params) {

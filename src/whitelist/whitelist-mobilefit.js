@@ -22,4 +22,5 @@ export default [
   'textDetector',
   'textDetectorExperience',
   'textDetectorIntroduce',
+  'electricity',
 ];

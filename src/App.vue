@@ -297,7 +297,7 @@ const mobileNav = reactive([
   },
   {
     name: computed(() => {
-      return t('home.APP_HEADER.INDUSTRY');
+      return t('home.APP_HEADER.ESTATE');
     }),
     isActive: false,
     children: [
@@ -305,25 +305,25 @@ const mobileNav = reactive([
         name: computed(() => {
           return t('home.APP_HEADER.Electric_Power');
         }),
-        path: '/modelzoo',
+        path: '/electricity',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.HEALTHCARE');
         }),
-        path: '/finetune',
+        path: '/medicine',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.INDUSTRY');
         }),
-        path: '/finetune',
+        path: '/industry',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.HUMAN_CULTURE');
         }),
-        path: '/finetune',
+        path: '/humanity',
       },
     ],
   },
@@ -364,6 +364,7 @@ function toggleMenu(menu) {
   mobileNav[3].isActive = false;
 }
 function toPage(path, index) {
+  console.log('path: ', path,index);
   // if (path === '/') {
   //   mobileNav[0].isActive = true;
   //   mobileNav[3].isActive = false;
@@ -372,16 +373,19 @@ function toPage(path, index) {
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
+    console.log(1111);
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
   } else if (path) {
+    console.log(222);
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
     router.push(path);
   } else {
+    console.log(333);
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
     mobileNav[0].isActive = false;

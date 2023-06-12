@@ -24,7 +24,7 @@ import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
 
 import appCard from '@/components/AppCard.vue';
-import electricityCard from '@/views/estate/electricity/electricityCard.vue';
+import electricityCard from '@/views/estate/electricity/ElectricityCard.vue';
 
 const router = useRouter();
 
@@ -300,7 +300,7 @@ function goProjects() {
       <p class="application-title">开启电力之旅</p>
       <p class="desc">从入门到高阶，从理论到实践，助力开发者快速掌握深度学习</p>
 
-      <el-tabs v-model="activeName" class="electricity-tabs">
+      <el-tabs v-model="activeName" class="travel-tabs">
         <el-tab-pane
           v-for="(item, index) in classify"
           :key="index"
@@ -310,7 +310,7 @@ function goProjects() {
           <template #label>
             <span class="estate-tabs-title">
               <o-icon><component :is="item.icon"></component></o-icon>
-              <span class="region-name">{{ item.name }}</span>
+              <span class="option-name">{{ item.name }}</span>
             </span>
           </template>
           <div class="electricity-content">
@@ -362,18 +362,26 @@ function goProjects() {
   line-height: 48px;
   color: #000000;
   text-align: center;
+  @media screen and (max-width: 820px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+.prefecture {
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  @media screen and (max-width: 820px) {
+    margin-top: 16px;
+  }
 }
 .natural-language {
   .application-cases {
-    margin-top: 40px;
     .prefecture {
-      line-height: 22px;
-      font-size: 14px;
-      font-weight: 400;
-      color: #000000;
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
       .southern-power,
       .more-models {
         cursor: pointer;
@@ -395,6 +403,13 @@ function goProjects() {
       grid-template-rows: 320px;
       margin: 40px 0 64px;
       padding: 0px 16px;
+      @media screen and (max-width: 820px) {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: 230px;
+        grid-gap: 16px;
+        margin: 24px 0 0px;
+      }
       .case-item {
         cursor: pointer;
         border-radius: 16px;
@@ -406,7 +421,7 @@ function goProjects() {
           color: #fff;
           margin: 0 24px;
           position: absolute;
-          top: 206px;
+          bottom: 24px;
           .case-type {
             font-size: 24px;
             line-height: 26px;
@@ -433,19 +448,32 @@ function goProjects() {
           width: 100%;
           height: 100%;
         }
+        @media screen and (max-width: 820px) {
+          height: 230px;
+          .case-info {
+            bottom: 16px;
+            .case-type {
+              font-size: 16px;
+              line-height: 24px;
+            }
+            .case-name {
+              font-size: 12px;
+              line-height: 18px;
+              margin-top: 8px;
+            }
+          }
+        }
       }
     }
   }
   .application-models {
     margin-top: 64px;
+    padding: 0px 16px;
+
+    @media screen and (max-width: 820px) {
+      margin-top: 40px;
+    }
     .prefecture {
-      line-height: 22px;
-      font-size: 14px;
-      font-weight: 400;
-      color: #000000;
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
       .southern-power,
       .more-models {
         cursor: pointer;
@@ -468,18 +496,18 @@ function goProjects() {
       column-gap: 24px;
       row-gap: 24px;
       margin-top: 40px;
+      @media screen and (max-width: 820px) {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 16px;
+        margin: 16px 0 0px;
+      }
     }
   }
   .application-datasets {
     margin-top: 64px;
+    padding: 0px 16px;
     .prefecture {
-      line-height: 22px;
-      font-size: 14px;
-      font-weight: 400;
-      color: #000000;
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
       .southern-power,
       .more-datasets {
         cursor: pointer;
@@ -497,26 +525,57 @@ function goProjects() {
     .dataset-list {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(3, minmax(200px, 1fr));
       grid-template-columns: repeat(3, 1fr);
       column-gap: 24px;
       row-gap: 24px;
       margin-top: 40px;
+      @media screen and (max-width: 820px) {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 16px;
+        margin: 16px 0 0px;
+      }
     }
   }
   .electric-travel {
     margin-top: 64px;
-    padding: 64px 0;
-    :deep(.electricity-tabs) {
+    padding: 64px 16px;
+    @media screen and (max-width: 820px) {
+      margin-top: 24px;
+      padding: 24px 16px;
+    }
+    :deep(.travel-tabs) {
       .el-tabs__header {
         padding: 0;
+        .el-tabs__nav-scroll {
+          width: 100%;
+        }
+        .el-tabs__nav-wrap {
+          border-radius: 20px;
+        }
         .el-tabs__nav {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           .el-tabs__item {
             height: 80px;
-            .region-name {
+            @media screen and (max-width: 820px) {
+              height: 40px;
+            }
+            .estate-tabs-title {
+              @media screen and (max-width: 820px) {
+                height: 22px;
+                line-height: 22px;
+                .o-icon {
+                  font-size: 24px;
+                }
+                .option-name {
+                  margin-left: 8px;
+                }
+              }
+            }
+            .option-name {
               color: #000;
+              margin-left: 16px;
             }
           }
           .is-active {
@@ -525,7 +584,7 @@ function goProjects() {
               #0d8dff 0%,
               rgba(30, 193, 255, 0.5) 100%
             );
-            .region-name {
+            .option-name {
               color: #fff;
             }
           }
@@ -533,29 +592,39 @@ function goProjects() {
       }
       .el-tabs__content {
         .electricity-content {
+          margin-top: 24px;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           grid-column-gap: 24px;
+          @media screen and (max-width: 820px) {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            // grid-template-rows: 230px;
+            grid-gap: 16px;
+            margin: 16px 0 0px;
+          }
         }
       }
     }
-    .title {
-      height: 48px;
-      line-height: 48px;
-      font-size: 36px;
-      color: #000000;
+    .application-title {
+      @media screen and (max-width: 820px) {
+        font-size: 14px;
+      }
     }
     .desc {
       margin: 24px 0 40px;
       text-align: center;
-    }
-    .electricity-content {
-      margin-top: 24px;
+      @media screen and (max-width: 820px) {
+        font-size: 12px;
+        margin: 4px 0 16px;
+      }
     }
   }
   .platform-data {
     margin-top: 64px;
+    padding: 0px 16px;
     display: flex;
+
     .platform-desc {
       background-image: url('@/assets/imgs/estate/electricity/platform-cover.png');
       background-size: 100% 100%;
@@ -566,7 +635,6 @@ function goProjects() {
       flex-direction: column;
       justify-content: space-around;
       .title {
-        height: 32px;
         line-height: 32px;
         font-size: 24px;
         font-weight: 500;
@@ -605,7 +673,6 @@ function goProjects() {
           font-size: 48px;
         }
         .count {
-          height: 32px;
           line-height: 32px;
           font-size: 24px;
           font-weight: 500;
@@ -618,6 +685,48 @@ function goProjects() {
           font-weight: 400;
           color: #000000;
           line-height: 26px;
+        }
+      }
+    }
+    @media screen and (max-width: 820px) {
+      margin-top: 24px;
+      flex-direction: column;
+      .platform-desc {
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 16px;
+        .title {
+          font-size: 14px;
+          line-height: 22px;
+        }
+        .desc {
+          font-size: 12px;
+          line-height: 18px;
+          margin: 8px 0 16px;
+          color: #555;
+        }
+        .more {
+          font-size: 12px;
+          line-height: 18px;
+        }
+      }
+      .data-list {
+        width: 100%;
+        padding: 16px;
+        .data-item {
+          // background-color: red;
+          .o-icon {
+            font-size: 24px;
+          }
+          .count {
+            font-size: 14px;
+            margin: 4px 0px;
+            line-height: 22px;
+          }
+          .title {
+            font-size: 12px;
+            line-height: 15px;
+          }
         }
       }
     }

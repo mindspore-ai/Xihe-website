@@ -108,7 +108,7 @@ const navItems = reactive([
   {
     id: 'estate',
     label: computed(() => {
-      return t('home.APP_HEADER.INDUSTRIES');
+      return t('home.APP_HEADER.ESTATE');
     }),
     href: '',
     isActive: false,

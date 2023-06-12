@@ -1379,7 +1379,7 @@ $theme: #0d8dff;
                 background: rgba(13, 141, 255, 0.15);
                 border-radius: 12px;
                 padding: 3px 12px;
-                margin-right: 8px;
+                margin-right: 4px;
                 margin-bottom: 8px;
               }
             }

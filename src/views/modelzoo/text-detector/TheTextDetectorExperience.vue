@@ -9,6 +9,7 @@ import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
 import { textDetectorInfer } from '@/api/api-modelzoo';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -116,7 +117,7 @@ const feedbackLink = 'https://github.com/YuchuanTian/AIGC_text_detector';
 const btnRef = ref();
 const inputMsg = ref('');
 const detectionLang = ref('zh');
-// const isDisabled = ref(false);
+const inputContent = ref(null);
 
 const avatarUrl = ref('');
 avatarUrl.value = userInfoStore.avatar;
@@ -125,6 +126,7 @@ const msgList = ref([]);
 
 function selectExample(val) {
   inputMsg.value = val;
+  inputContent.value.focus();
 }
 
 async function sendMessage() {
@@ -133,9 +135,6 @@ async function sendMessage() {
   if (!isLogined.value) {
     goAuthorize();
   } else {
-    // if (!isDisabled.value) {
-    // isDisabled.value = true;
-    // 内容审核，通过后发出消息
     try {
       msgList.value.push({
         message: inputMsg.value.replaceAll('\n', '<br/>'),
@@ -168,10 +167,15 @@ async function sendMessage() {
         });
       }
     } catch (e) {
+      if (e.code === 'bigmodel_sensitive_info') {
+        ElMessage({
+          message: '请修改输入内容',
+          type: 'error',
+        });
+      }
       console.error(e);
     }
   }
-  // }
 }
 
 function feedbackRight(item) {
@@ -194,6 +198,17 @@ watch(
     deep: true,
   }
 );
+
+function keyDown(e) {
+  if (e.ctrlKey && e.keyCode === 13) {
+    //用户点击了ctrl+enter触发
+    inputMsg.value += '\n';
+  } else if (e.keyCode === 13) {
+    //用户点击了enter触发
+    btnRef.value.click();
+    e.preventDefault();
+  }
+}
 </script>
 <template>
   <div class="experience">
@@ -267,6 +282,7 @@ watch(
       <div class="input-area">
         <div class="input-box">
           <el-input
+            ref="inputContent"
             v-model="inputMsg"
             type="textarea"
             :rows="1"
@@ -276,12 +292,15 @@ watch(
             :maxlength="detectionLang === 'zh' ? 500 : 2000"
             show-word-limit
             style="width: 100%"
+            @keydown.enter="keyDown"
           />
         </div>
 
-        <p ref="btnRef" class="btn-send" @click="sendMessage">
+        <div ref="btnRef" class="btn-send" @click="sendMessage">
           <o-icon><icon-send></icon-send></o-icon>
-        </p>
+
+          <p class="enter-tip">按Enter键发送，按Ctrl+Enter键换行</p>
+        </div>
       </div>
 
       <div class="examples">
@@ -651,16 +670,33 @@ watch(
     margin-left: 24px;
     width: 48px;
     cursor: pointer;
+    position: relative;
     @media screen and (max-width: 1080px) {
       width: 24px;
       margin-left: 16px;
     }
-
+    &:hover {
+      .enter-tip {
+        transition: all 0.5s;
+        opacity: 1;
+      }
+    }
     .o-icon {
       font-size: 48px;
       @media screen and (max-width: 1080px) {
         font-size: 24px;
       }
+    }
+    .enter-tip {
+      min-width: 216px;
+      font-size: 12px;
+      padding: 8px 12px;
+      background: #f5f6f8;
+      border-radius: 8px;
+      position: absolute;
+      top: 54px;
+      left: 0px;
+      opacity: 0;
     }
   }
 }

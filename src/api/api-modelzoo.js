@@ -446,7 +446,13 @@ export function getPic() {
  */
 export function textDetectorInfer(params) {
   const url = '/server/bigmodel/ai_detector';
-  return request.post(url, params, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .post(url, params, {
+      $doException: true,
+      // $noLoading: true,
+      ...getHeaderConfig(),
+    })
+    .then((res) => {
+      return res.data;
+    });
 }

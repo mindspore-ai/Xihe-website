@@ -13,6 +13,9 @@ import IconFork from '~icons/app/fork-gray';
 
 import IconVoice from '~icons/app/voice';
 import IconVision from '~icons/app/vision';
+import IconCV from '~icons/app/project-cv';
+import IconNLP from '~icons/app/project-nlp';
+import recommendation from '~icons/app/recommendation';
 
 import OEmpty from '@/components/OEmpty.vue';
 import emptyImg from '@/assets/imgs/model-empty.png';
@@ -49,9 +52,9 @@ let i18n = {
   more: '更多',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -168,9 +171,9 @@ const navItems = [
 const hotTagsList = ref([
   { id: 1, name: '语音', active: false, icon: markRaw(IconVoice) },
   { id: 2, name: '图神经网络', active: false, icon: markRaw(IconVision) },
-  { id: 3, name: '计算机视觉', active: false, icon: markRaw(IconVision) },
-  { id: 3, name: '高性能计算', active: false, icon: markRaw(IconVision) },
-  { id: 3, name: '自然语言处理', active: false, icon: markRaw(IconVision) },
+  { id: 3, name: '计算机视觉', active: false, icon: markRaw(IconCV) },
+  { id: 3, name: '推荐', active: false, icon: markRaw(recommendation) },
+  { id: 3, name: '自然语言处理', active: false, icon: markRaw(IconNLP) },
 ]);
 // 标签文字
 let dialogList = {
@@ -468,6 +471,19 @@ function confirmBtn() {
 function cancelBtn() {
   dropdownRef.value.handleClose();
 }
+
+const sortValue = ref('');
+// 排序
+function getSortData(item) {
+  sortValue.value = item.text;
+  if (item.value === 'download') {
+    queryData.sort_by = 'download_count';
+  } else if (item.value === 'name') {
+    queryData.sort_by = 'first_letter';
+  } else if (item.value === '-update_time') {
+    queryData.sort_by = 'update_time';
+  }
+}
 </script>
 
 <template>
@@ -619,7 +635,7 @@ function cancelBtn() {
                 </template>
               </el-dropdown>
               <div class="hot-tags">
-                <span class="title">热门</span>
+                <!-- <span class="title">热门</span> -->
                 <span
                   v-for="tag in hotTagsList"
                   :key="tag.id"
@@ -641,12 +657,16 @@ function cancelBtn() {
                 @change="getKeyWord"
               />
               <div class="sort-select">
-                <el-select v-model="selectValue" placeholder="排序">
+                <el-select
+                  v-model="selectValue"
+                  placeholder="排序"
+                  @change="getSortData"
+                >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in i18n.sortCondition"
                     :key="item.id"
-                    :label="item.label"
-                    :value="item.label"
+                    :label="item.text"
+                    :value="item"
                   />
                 </el-select>
               </div>

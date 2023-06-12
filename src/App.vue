@@ -161,6 +161,16 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
+  home: {
+    name: '首页',
+    child: ['home'],
+    back: '',
+  },
+  electricity: {
+    name: '电力专区',
+    child: ['electricity'],
+    back: '/electricity',
+  },
 };
 
 const isMobileFit = ref(false);
@@ -290,7 +300,33 @@ const mobileNav = reactive([
       return t('home.APP_HEADER.INDUSTRY');
     }),
     isActive: false,
-    path: '/estate/electricity',
+    // path: '/electricity',
+    children: [
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.Electric_Power');
+        }),
+        path: '/modelzoo',
+      },
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.HEALTHCARE');
+        }),
+        path: '/finetune',
+      },
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.INDUSTRY');
+        }),
+        path: '/finetune',
+      },
+      {
+        name: computed(() => {
+          return t('home.APP_HEADER.HUMAN_CULTURE');
+        }),
+        path: '/finetune',
+      },
+    ],
   },
   {
     name: computed(() => {
@@ -324,6 +360,7 @@ const mobileNav = reactive([
 
 const meauActive = ref(false);
 function toggleMenu(menu) {
+  console.log('menu: ', menu);
   meauActive.value = menu;
   mobileNav[3].isActive = false;
 }

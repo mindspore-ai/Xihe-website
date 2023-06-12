@@ -34,7 +34,6 @@ const props = defineProps({
     },
   },
 });
-const avatarImg = ref('');
 const datasetCount = ref(0);
 const datasetData = ref([]);
 let query = reactive({
@@ -58,9 +57,11 @@ function getDatasetData() {
       if (res.data.total > 10) {
         emit('dom-change', 76);
       }
-      avatarImg.value = res.data.avatar_id;
       datasetCount.value = res.data.total;
       datasetData.value = res.data.datasets;
+      datasetData.value.forEach((item) => {
+        item.avatar_id = res.data.avatar_id;
+      });
     } else {
       datasetData.value = [];
     }
@@ -100,7 +101,6 @@ watch(props, () => {
       <app-card
         v-for="item in datasetData"
         :key="item.id"
-        :avatar-img="avatarImg"
         card-type="dataset"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 // import { useRouter } from 'vue-router';
 
 // import estateBanner from '@/assets/imgs/estate/electricity-banner.png';
@@ -14,33 +14,48 @@ import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNatur
 import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
 
-// import { Swiper, SwiperSlide } from 'swiper/vue';
-// import { Autoplay, FreeMode } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
 // 合作伙伴图片
-// import logo1 from '@/assets/imgs/home1/logo/logo1.png';
-// import logo2 from '@/assets/imgs/home1/logo/logo2.png';
-// import logo3 from '@/assets/imgs/home1/logo/logo3.png';
-// import logo4 from '@/assets/imgs/home1/logo/logo4.png';
-// import logo5 from '@/assets/imgs/home1/logo/logo5.png';
-// import logo6 from '@/assets/imgs/home1/logo/logo6.png';
-// import logo7 from '@/assets/imgs/home1/logo/logo7.png';
-// import logo8 from '@/assets/imgs/home1/logo/logo8.png';
-// import logo9 from '@/assets/imgs/home1/logo/logo9.png';
-// import logo10 from '@/assets/imgs/home1/logo/logo10.png';
-import logo11 from '@/assets/imgs/home1/logo/logo11.png';
-// import logo12 from '@/assets/imgs/home1/logo/logo12.png';
-// import logo13 from '@/assets/imgs/home1/logo/logo13.png';
-// import logo14 from '@/assets/imgs/home1/logo/logo14.png';
-// import logo15 from '@/assets/imgs/home1/logo/logo15.png';
-import logo16 from '@/assets/imgs/home1/logo/logo16.png';
-import logo17 from '@/assets/imgs/home1/logo/logo17.png';
-import logo28 from '@/assets/imgs/home1/logo/logo28.png';
-import logo29 from '@/assets/imgs/home1/logo/logo29.png';
+import logo1 from '@/assets/imgs/estate/logo/logo1.png';
+import logo2 from '@/assets/imgs/estate/logo/logo2.png';
+import logo3 from '@/assets/imgs/estate/logo/logo3.png';
+import logo4 from '@/assets/imgs/estate/logo/logo4.png';
+import logo5 from '@/assets/imgs/estate/logo/logo5.png';
+import logo6 from '@/assets/imgs/estate/logo/logo6.png';
+import logo7 from '@/assets/imgs/estate/logo/logo7.png';
+import logo8 from '@/assets/imgs/estate/logo/logo8.png';
+import logo9 from '@/assets/imgs/estate/logo/logo9.png';
+import logo10 from '@/assets/imgs/estate/logo/logo10.png';
+import logo11 from '@/assets/imgs/estate/logo/logo11.png';
+import logo12 from '@/assets/imgs/estate/logo/logo12.png';
+import logo13 from '@/assets/imgs/estate/logo/logo13.png';
+import logo14 from '@/assets/imgs/estate/logo/logo14.png';
+import logo15 from '@/assets/imgs/estate/logo/logo15.png';
+import logo16 from '@/assets/imgs/estate/logo/logo16.png';
+import logo17 from '@/assets/imgs/estate/logo/logo17.png';
+import logo18 from '@/assets/imgs/estate/logo/logo18.png';
+import logo19 from '@/assets/imgs/estate/logo/logo19.png';
+import logo20 from '@/assets/imgs/estate/logo/logo20.png';
+import logo21 from '@/assets/imgs/estate/logo/logo21.png';
+import logo22 from '@/assets/imgs/estate/logo/logo22.png';
+import logo23 from '@/assets/imgs/estate/logo/logo23.png';
+import logo24 from '@/assets/imgs/estate/logo/logo24.png';
+import logo25 from '@/assets/imgs/estate/logo/logo25.png';
+import logo26 from '@/assets/imgs/estate/logo/logo26.png';
+import logo27 from '@/assets/imgs/estate/logo/logo27.png';
+import logo28 from '@/assets/imgs/estate/logo/logo28.png';
+import logo29 from '@/assets/imgs/estate/logo/logo29.png';
+import logo30 from '@/assets/imgs/estate/logo/logo30.png';
+import logo31 from '@/assets/imgs/estate/logo/logo31.png';
+import logo32 from '@/assets/imgs/estate/logo/logo32.png';
 
-// const logoModules = [FreeMode, Autoplay];
+import { getElectricitydata } from '@/api/api-estate';
+
+const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉CV');
 
 const electricityClassify = [
@@ -78,50 +93,86 @@ const electricityClassify = [
   },
 ];
 const electricityRef = ref(null);
-// const handleClick = (tab, event) => {
-// };
+const modelData = ref([]); //应用模型
+const datasetData = ref([]); //应用数据集
+const tagKinds = ref('CV');
+const handleClick = (tab) => {
+  if (tab.paneName === '计算机视觉CV') {
+    tagKinds.value = 'CV';
+  } else if (tab.paneName === '自然语言处理NLP') {
+    tagKinds.value = 'NLP';
+  }
+};
 
 // 合作伙伴
 const logoPic = [
-  // logo1,
-  // logo2,
-  // logo3,
-  // logo4,
-  // logo5,
-  // logo6,
-  // logo7,
-  // logo8,
-  // logo9,
-  // logo10,
-  logo28,
+  logo1,
+  logo2,
+  logo3,
+  logo4,
+  logo5,
+  logo6,
+  logo7,
+  logo8,
+  logo9,
+  logo10,
   logo11,
-  // logo12,
-  // logo13,
-  // logo14,
-  // logo15,
+  logo32,
+  logo12,
+  logo13,
+  logo14,
+  logo15,
   logo16,
-  logo29,
   logo17,
+  logo18,
+  logo19,
+  logo20,
+  logo21,
+  logo22,
+  logo23,
+  logo24,
+  logo25,
+  logo26,
+  logo27,
+  logo28,
+  logo29,
+  logo30,
+  logo31,
 ];
+// 获取电力主页数据
+
+async function getElectricityInfor(kinds) {
+  const res = await getElectricitydata(kinds);
+  res.data.model.projects
+    ? (modelData.value = res.data.model.projects)
+    : (modelData.value = []);
+  res.data.dataset.projects
+    ? (datasetData.value = res.data.dataset.projects)
+    : (datasetData.value = []);
+}
+getElectricityInfor(tagKinds.value);
+watch(tagKinds, (newValue) => {
+  getElectricityInfor(newValue);
+});
 </script>
 <template>
   <div ref="electricityRef" class="electricity">
     <div class="electricity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
-        <div class="banner-title">AI+电力行业生产力平台</div>
+        <div class="banner-title">电力人工智能专区</div>
         <div class="banner-desc">
-          <span>
-            昇思赋能电力行业，覆盖从AI生产（输出算法模型）到应用（实现算法工程化封装）各环节，有效解决AI+电力研发门槛高、成本高和效率低的问题。 </span
-          ><br />
-          <span>
-            提供算法的训练、推理和部署能力；具备算力的共享、调度和分布式能力；拥有全面的数据处理、管理和安全能力。
-          </span>
+          汇集大量电力行业案例，开放特色电力数据集与模型，发布学习实践课程，比赛与活动，用
+          “ AI ” 电亮未来，为 “ 电力 ” 插上数智化双翼。
         </div>
       </div>
     </div>
     <div class="electricity-wrap">
-      <el-tabs v-model="activeName" class="estate-tabs">
+      <el-tabs
+        v-model="activeName"
+        class="estate-tabs"
+        @tab-click="handleClick"
+      >
         <el-tab-pane
           v-for="item in electricityClassify"
           :key="item.id"
@@ -134,20 +185,27 @@ const logoPic = [
               <span class="region-name">{{ item.name }}</span>
             </span>
           </template>
-          <div class="electricity-content">
-            <component :is="item.currentComponent"></component>
+          <div
+            v-if="modelData.length || datasetData.length"
+            class="electricity-content"
+          >
+            <component
+              :is="item.currentComponent"
+              :model-data="modelData"
+              :dataset-data="datasetData"
+            ></component>
           </div>
         </el-tab-pane>
       </el-tabs>
     </div>
     <div class="logo">
       <p class="title">合作伙伴</p>
-      <div class="logo-img">
+      <!-- <div class="logo-img">
         <div v-for="(item, index) in logoPic" :key="index" class="img">
           <img :src="item" alt="" />
         </div>
-      </div>
-      <!-- <swiper
+      </div> -->
+      <swiper
         :speed="8000"
         :free-mode="true"
         :modules="logoModules"
@@ -158,14 +216,14 @@ const logoPic = [
         class="logo-swiper"
       >
         <swiper-slide
-          v-for="item in logoPic.slice(0, 9)"
+          v-for="item in logoPic.slice(0, 11)"
           :key="item"
           class="swiper-no-swiping"
         >
           <img :src="item" />
         </swiper-slide>
-      </swiper> -->
-      <!-- <swiper
+      </swiper>
+      <swiper
         :speed="8000"
         :free-mode="true"
         slides-per-view="auto"
@@ -176,13 +234,13 @@ const logoPic = [
         class="logo-swiper"
       >
         <swiper-slide
-          v-for="item in logoPic.slice(9, 18)"
+          v-for="item in logoPic.slice(11, 32)"
           :key="item"
           class="swiper-no-swiping"
         >
           <img :src="item" />
         </swiper-slide>
-      </swiper> -->
+      </swiper>
     </div>
   </div>
 </template>
@@ -206,6 +264,7 @@ const logoPic = [
     }
     .electricity-banner {
       max-width: 1472px;
+      height: 480px;
       margin: 0 auto;
       padding: 160px 16px;
       position: relative;
@@ -248,23 +307,6 @@ const logoPic = [
         margin-bottom: 12px;
       }
     }
-    .logo-img {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-gap: 24px;
-      padding: 0px 24px;
-      // justify-content: space-around;
-      .img {
-        width: 100%;
-        border-radius: 16px;
-        background: white;
-      }
-      img {
-        width: 100%;
-        height: 120px;
-        border-radius: 16px;
-      }
-    }
     :deep(.logo-swiper) {
       .swiper-slide {
         height: 120px;
@@ -279,7 +321,9 @@ const logoPic = [
         }
       }
       img {
+        width: 354px;
         height: 120px;
+        border-radius: 16px;
         @media screen and (max-width: 820px) {
           height: 60px;
         }

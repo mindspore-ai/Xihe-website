@@ -44,7 +44,7 @@ export default {
     INDUSTRIES: '产业',
     Electric_Power: '电力专区',
     HEALTHCARE: '医疗专区',
-    INDUSTRY: '工业专区',
+    INDUSTRY: '产业',
     HUMAN_CULTURE: '人文专区',
   },
   SCANNING_CODE: '扫码关注公众号',

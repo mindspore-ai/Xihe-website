@@ -332,8 +332,6 @@ watch(tagKinds, (newValue) => {
   }
 }
 :deep(.estate-tabs) {
-  // position: relative;
-  // top: -64px;
   .el-tabs__header {
     margin: 0px;
     padding: 0px 16px;

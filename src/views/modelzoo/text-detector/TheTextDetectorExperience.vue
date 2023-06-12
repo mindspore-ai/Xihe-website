@@ -252,8 +252,8 @@ function keyDown(e) {
           <!-- 用户消息 -->
           <div
             v-if="item.type === 'USER'"
+            v-dompurify-html="item.message"
             class="message"
-            v-html="item.message"
           ></div>
           <!-- 响应消息 -->
           <template v-else>

@@ -29,7 +29,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -369,7 +369,7 @@ function handleStart() {
   if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
-      [getHeaderConfig().headers['private-token']]
+      [getHeaderConfig().headers['csrf-token']]
     );
     socket.value.onmessage = function (event) {
       try {

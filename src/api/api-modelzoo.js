@@ -6,7 +6,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -26,7 +26,7 @@ export function uploadModelzooPic(params) {
     .post(url, params, {
       $noLoading: true,
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
     })
     .then((res) => {
@@ -62,7 +62,7 @@ export function getMultiplePicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })
@@ -131,7 +131,7 @@ export function handlePanguInfer(params) {
   return request
     .post(url, params, {
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })
@@ -217,7 +217,7 @@ export function wuKongInfer(params) {
       $doException: true,
       $noLoading: true,
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })

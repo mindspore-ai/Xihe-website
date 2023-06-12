@@ -24,7 +24,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -83,7 +83,7 @@ async function orderCloudSbuscrible(id) {
 
       // 资源订阅成功，连接websocket
       socket = new WebSocket(`wss://${DOMAIN}/server/cloud/${cloudId.value}`, [
-        getHeaderConfig().headers['private-token'],
+        getHeaderConfig().headers['csrf-token'],
       ]);
 
       socket.onmessage = function (event) {
@@ -177,7 +177,7 @@ async function getPodInfo(id) {
 
       // 如果没有建立ws，建立ws链接
       socket = new WebSocket(`wss://${DOMAIN}/server/cloud/${cloudId.value}`, [
-        getHeaderConfig().headers['private-token'],
+        getHeaderConfig().headers['csrf-token'],
       ]);
 
       socket.onmessage = function (event) {

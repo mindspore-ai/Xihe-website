@@ -598,7 +598,7 @@ watch(
         span:nth-child(1) {
           margin-right: 16px;
         }
-        .o-icon:nth-child(2){
+        .o-icon:nth-child(2) {
           color: #ccc;
         }
       }

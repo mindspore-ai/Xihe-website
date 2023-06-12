@@ -198,15 +198,16 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
   return headersConfig;
 }
 let token = getHeaderConfig().headers
-  ? getHeaderConfig().headers['private-token']
+  ? getHeaderConfig().headers['csrf-token']
   : null;
+
 let socket;
 if (isLogined.value) {
   socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank`, [
@@ -616,7 +617,7 @@ async function handleInfer() {
           setTimeout(() => {
             socket = new WebSocket(
               `wss://${DOMAIN}/server/bigmodel/wukong/rank`,
-              [getHeaderConfig().headers['private-token']]
+              [getHeaderConfig().headers['csrf-token']]
             );
             socket.onmessage = function (event) {
               isWaiting.value = false;

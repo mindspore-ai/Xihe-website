@@ -48,7 +48,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -186,7 +186,7 @@ const isAim = ref(null);
 // 日志
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/train/project/${detailData.value.id}/training/${route.params.trainId}`,
-  [getHeaderConfig().headers['private-token']]
+  [getHeaderConfig().headers['csrf-token']]
 );
 
 // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
@@ -249,7 +249,7 @@ function reloadPage() {
 function setEvaluateWebscoket(id, type) {
   const ws = new WebSocket(
     `wss://${DOMAIN}/server/evaluate/project/${detailData.value.id}/training/${route.params.trainId}/evaluate/${id}`,
-    [getHeaderConfig().headers['private-token']]
+    [getHeaderConfig().headers['csrf-token']]
   );
 
   ws.onmessage = function (event) {

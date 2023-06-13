@@ -80,7 +80,6 @@ import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-adv
       line-height: 22px;
       .case-img {
         margin: 24px auto;
-        // padding: 24px 0;
         background: #f5f9fb;
         display: flex;
         flex-direction: column;

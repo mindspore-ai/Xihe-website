@@ -25,11 +25,10 @@ const router = useRouter();
 const i18n = {
   create: '新建项目',
   owner: '拥有者',
-
   storage_name: '仓库名称',
   pro_name: '项目标题',
   input_proName1: '请填写项目英文名称',
-  input_proName2: '请填写项目标题',
+  input_proName2: '请填写项目中文名称',
   pro_img: '项目封面',
   desc: '描述',
   input_text: '请输入内容',
@@ -114,11 +113,11 @@ const rules = reactive({
     { validator: checkName, trigger: 'change' },
   ],
   title: [
-    // {
-    //   pattern: /^[\u4e00-\u9fa5]{3,35}$/g,
-    //   message: '请输入项目中文名称，且长度为3-35个字符',
-    //   trigger: 'blur',
-    // },
+    {
+      pattern: /^[\u4E00-\u9FA5A-Za-z]{3,35}$/g,
+      message: '项目中文名称长度为3-35个字符',
+      trigger: 'blur',
+    },
   ],
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });

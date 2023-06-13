@@ -170,14 +170,36 @@ const routeLists = {
     name: '电力专区',
     child: [
       'electricity',
-      'industry',
-      'humanity',
-      'medicine',
       'substationhostExplain',
       'substationopsExplain',
       'intelligentsystemExplain',
     ],
     back: '/electricity',
+  },
+  medicine: {
+    name: '医疗专区',
+    child: [
+      'medicine',
+      'endometrialcancerExplain',
+      'diagnosisExplain',
+      'truesight',
+    ],
+    back: '/medicine',
+  },
+  industry: {
+    name: '工业专区',
+    child: [
+      'industry',
+      'industryExplain',
+      'algorithmExplain',
+      'intelligenceExplain',
+    ],
+    back: '/industry',
+  },
+  humanity: {
+    name: '人文专区',
+    child: ['humanity', 'aigcExplain', 'yuzhiExplain', 'languageExplain'],
+    back: '/humanity',
   },
 };
 

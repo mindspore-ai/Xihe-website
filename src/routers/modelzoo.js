@@ -118,6 +118,38 @@ export default [
       },
     ],
   },
+  // AI文本检测器
+  {
+    path: '/modelzoo/text-detector',
+    name: 'textDetector',
+    component: () => {
+      return import('@/views/modelzoo/text-detector/TheTextDetector.vue');
+    },
+    children: [
+      {
+        path: '',
+        name: 'textDetectorExperience',
+        component: () => {
+          return import(
+            '@/views/modelzoo/text-detector/TheTextDetectorExperience.vue'
+          );
+        },
+      },
+      {
+        path: 'introduce',
+        name: 'textDetectorIntroduce',
+        component: () => {
+          return import(
+            '@/views/modelzoo/text-detector/TheTextDetectorIntroduce.vue'
+          );
+        },
+      },
+      {
+        path: 'experience',
+        redirect: '/modelzoo/text-detector',
+      },
+    ],
+  },
   // 鹏程.盘古
   // {
   //   path: '/modelzoo/pangu',

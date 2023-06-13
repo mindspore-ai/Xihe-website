@@ -439,3 +439,20 @@ export function getPic() {
       return res.data;
     });
 }
+
+/**
+ * AI检测器推理
+ * @returns
+ */
+export function textDetectorInfer(params) {
+  const url = '/server/bigmodel/ai_detector';
+  return request
+    .post(url, params, {
+      $doException: true,
+      // $noLoading: true,
+      ...getHeaderConfig(),
+    })
+    .then((res) => {
+      return res.data;
+    });
+}

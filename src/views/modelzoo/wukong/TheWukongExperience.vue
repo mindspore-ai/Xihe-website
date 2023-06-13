@@ -1019,9 +1019,6 @@ function handleNum(index) {
         </template>
         <template v-else>
           <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
-            <o-icon class="turn" @click="handlePreEnlage"
-              ><icon-left></icon-left
-            ></o-icon>
             <img :src="value" alt="" />
             <o-icon class="turn" @click="handleNextEnlage"
               ><icon-right2></icon-right2

@@ -174,6 +174,8 @@ const routeLists = {
       'humanity',
       'medicine',
       'substationhostExplain',
+      'substationopsExplain',
+      'intelligentsystemExplain',
     ],
     back: '/electricity',
   },

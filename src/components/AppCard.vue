@@ -23,8 +23,6 @@ const props = defineProps({
   },
 });
 
-console.log(props.cardData);
-
 const labelList = ref([]);
 const i18n = {
   downloadTitle: '下载量',
@@ -53,16 +51,7 @@ if (props.cardType === 'model') {
     ]"
   >
     <div class="card-top">
-      <!-- <div class="portrait">
-        <img :src="cardData.avatar_id" alt="" />
-      </div> -->
-      <!-- <div v-if="!showName">
-        {{ cardData.title ? cardData.title : cardData.name }}
-      </div> -->
       <div class="owner-info">
-        <!-- <div v-if="cardData.owner" class="nickname">
-          {{ cardData.owner }}
-        </div> -->
         <div v-if="cardData.title" class="model-name">{{ cardData.title }}</div>
         <div v-else class="model-name">{{ cardData.name }}</div>
       </div>
@@ -82,11 +71,6 @@ if (props.cardType === 'model') {
           <img :src="cardData.avatar_id" alt="" />
         </div>
         <div class="model-name">{{ cardData.name }}</div>
-
-        <!-- <div v-if="cardData.updated_at" class="update-time">
-          <o-icon> <icon-time></icon-time></o-icon>
-          <span class="text">{{ cardData.updated_at }}</span>
-        </div> -->
       </div>
       <div class="card-bottom-right">
         <div v-if="cardData.updated_at" class="update-time">
@@ -171,7 +155,6 @@ if (props.cardType === 'model') {
     }
   }
   .model-introduce {
-    // min-height: 44px;
     margin-bottom: 24px;
     font-size: 14px;
     line-height: 22px;
@@ -243,15 +226,6 @@ if (props.cardType === 'model') {
 .o-model-hover,
 .o-dataset-hover {
   position: relative;
-  // .card-bg {
-  //   width: 84px;
-  //   height: 84px;
-  //   position: absolute;
-  //   right: 24px;
-  //   bottom: 24px;
-  //   border: none;
-  //   // display: none;
-  // }
   &:hover {
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
   }

@@ -1404,12 +1404,12 @@ p {
     }
     .o-button {
       margin-top: 24px;
-      color: #fff;
-      border: 1px solid #fff;
-      &:hover {
-        color: #fff;
-        border: 1px solid #fff;
-      }
+      // color: #fff;
+      // border: 1px solid #fff;
+      // &:hover {
+      //   color: #fff;
+      //   border: 1px solid #fff;
+      // }
     }
   }
   .title1 {

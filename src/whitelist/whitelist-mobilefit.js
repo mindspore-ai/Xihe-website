@@ -23,4 +23,5 @@ export default [
   'textDetectorExperience',
   'textDetectorIntroduce',
   'electricity',
+  'substationhostExplain',
 ];

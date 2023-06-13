@@ -106,5 +106,39 @@ import painspotImg from '@/assets/imgs/estate/electricity/substationhost/host-pa
   .case-advantage {
     margin-bottom: 0px;
   }
+  @media screen and (max-width: 820px) {
+    .explain-title {
+      font-size: 16px;
+      line-height: 24px;
+      margin-bottom: 16px;
+    }
+    .case-background,
+    .case-intro,
+    .case-painspot,
+    .case-advantage {
+      margin-bottom: 24px;
+      .title {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 8px;
+      }
+      .description {
+        font-size: 12px;
+        line-height: 18px;
+        .case-img {
+          margin-top: 8px;
+          margin-bottom: 8px;
+        }
+      }
+    }
+    .case-advantage {
+      margin-bottom: 0px;
+    }
+  }
 }
 </style>

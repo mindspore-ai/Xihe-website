@@ -168,7 +168,7 @@ const routeLists = {
   },
   electricity: {
     name: '电力专区',
-    child: ['electricity'],
+    child: ['electricity', 'substationhostExplain'],
     back: '/electricity',
   },
 };

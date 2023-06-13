@@ -12,8 +12,6 @@ import IconCompetition from '~icons/app/competition';
 import IconMindcon from '~icons/app/mindcon';
 import IconCount from '~icons/app/count';
 
-import appCard from '@/components/AppCard.vue';
-import electricityCard from '@/views/estate/electricity/ElectricityCard.vue';
 import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
 import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
 import card3 from '@/assets/imgs/home1/more/more_card3.jpg';
@@ -23,6 +21,9 @@ import competition3 from '@/assets/imgs/home1/more/competition3.png';
 import activity1 from '@/assets/imgs/home1/more/activity1.png';
 import activity2 from '@/assets/imgs/home1/more/activity2.png';
 import activity3 from '@/assets/imgs/home1/more/activity3.png';
+
+import appCard from '@/components/AppCard.vue';
+import electricityCard from '@/views/estate/electricity/ElectricityCard.vue';
 
 const router = useRouter();
 
@@ -323,7 +324,7 @@ function goProjects() {
         </el-tab-pane>
       </el-tabs>
     </div>
-    <div class="platform-data">
+    <!-- <div class="platform-data">
       <div class="platform-desc">
         <div class="title">最活跃的AI+电力行业生产平台</div>
         <div class="desc">
@@ -351,7 +352,7 @@ function goProjects() {
           <div class="title">日活数</div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>

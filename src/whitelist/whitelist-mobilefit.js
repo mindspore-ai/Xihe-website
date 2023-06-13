@@ -23,10 +23,10 @@ export default [
   'textDetectorExperience',
   'textDetectorIntroduce',
   'electricity',
-  'substationhostExplain',
   'industry',
   'humanity',
   'medicine',
+  'substationhostExplain',
   'substationopsExplain',
   'intelligentsystemExplain',
 ];

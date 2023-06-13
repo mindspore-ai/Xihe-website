@@ -369,6 +369,7 @@ const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
   mobileNav[3].isActive = false;
+  mobileNav[5].isActive = false;
 }
 function toPage(path, index) {
   // if (path === '/') {
@@ -940,8 +941,6 @@ body.el-popup-parent--hidden {
     width: 164px;
     position: relative;
     left: -100%;
-    .nav {
-    }
     .nav-item {
       font-size: 12px;
       line-height: 18px;

@@ -102,7 +102,6 @@ function getOwnSelect(value) {
   newOwn.value = value;
 }
 function getVisiableSelect(value) {
-  console.log(value);
   if (value === 'Private') {
     visibleValue.value = 'private';
   } else if (value === 'Public') {

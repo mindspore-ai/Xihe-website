@@ -102,7 +102,6 @@ function getRenderNav() {
   }
 }
 
-// console.log(detailData.value);
 // return detailData.value.is_owner
 //   ? tabTitle
 //   : tabTitle.filter((item) => {
@@ -252,7 +251,6 @@ function deleteModelTags() {
       });
     });
   });
-  console.log('menu: ', menu);
 }
 
 // 确认

@@ -359,12 +359,10 @@ const mobileNav = reactive([
 
 const meauActive = ref(false);
 function toggleMenu(menu) {
-  console.log('menu: ', menu);
   meauActive.value = menu;
   mobileNav[3].isActive = false;
 }
 function toPage(path, index) {
-  console.log('path: ', path,index);
   // if (path === '/') {
   //   mobileNav[0].isActive = true;
   //   mobileNav[3].isActive = false;
@@ -373,19 +371,16 @@ function toPage(path, index) {
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
-    console.log(1111);
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
   } else if (path) {
-    console.log(222);
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
     router.push(path);
   } else {
-    console.log(333);
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
     mobileNav[0].isActive = false;

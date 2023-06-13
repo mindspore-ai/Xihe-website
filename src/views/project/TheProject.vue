@@ -221,7 +221,6 @@ function highlightTag(tag) {
 }
 
 function getProject() {
-  // console.log('获取项目接口的queryData: ', queryData);
   getProjectData(queryData).then((res) => {
     if (res.status === 200) {
       projectCount.value = res.data.data.total;

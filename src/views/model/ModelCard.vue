@@ -63,7 +63,6 @@ const i18n = {
 
 // 判断是否含有readme文件
 // getReadmeInfo(detailData.value.owner, detailData.value.name).then((res) => {
-//   console.log(res);
 //   if (res.data.has_readme) {
 //     //
 //   }
@@ -161,7 +160,6 @@ function confirmAdd() {
 
 // 删除数据集
 function deleteClick(item) {
-  console.log(item);
   if (item.type === 'dataset') {
     deleteDataset(
       { id: item.id, owner: item.owner.name },

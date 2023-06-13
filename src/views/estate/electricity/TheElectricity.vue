@@ -161,7 +161,7 @@ watch(tagKinds, (newValue) => {
 });
 </script>
 <template>
-  <div class="electricity">
+  <div v-if="modelData.length" class="electricity">
     <div class="electricity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">

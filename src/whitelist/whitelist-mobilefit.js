@@ -27,4 +27,6 @@ export default [
   'industry',
   'humanity',
   'medicine',
+  'substationopsExplain',
+  'intelligentsystemExplain',
 ];

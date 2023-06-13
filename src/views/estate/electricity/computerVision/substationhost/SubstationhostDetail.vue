@@ -4,8 +4,8 @@ import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
-
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 const screenWidth = useWindowResize();
@@ -14,13 +14,17 @@ const router = useRouter();
 /* function handleNavClick(item) {
   router.push(`/estate/electric/case-1/${item.href}`);
 } */
-function goDetail() {
-  // router.push('/projects/yyj/substation-host');
+function goBack() {
+  router.push('/electricity');
 }
 </script>
 
 <template>
   <div class="medicine-detail">
+    <div v-if="screenWidth < 820" class="navigation">
+      <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
+      <span class="title">变电站AI分析主机</span>
+    </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -44,7 +48,7 @@ function goDetail() {
                 变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，保障电网安全稳定运行。
               </div>
             </div>
-            <div class="banner-btn" @click="goDetail">
+            <div class="banner-btn">
               <a
                 href="https://xihe2.test.osinfra.cn/projects/MindSpore/ai_studio_demo/"
               >
@@ -87,7 +91,24 @@ function goDetail() {
   padding-top: 80px;
   min-height: calc(100vh - 200px);
   @media screen and (max-width: 820px) {
-    padding: 82px 0px 40px;
+    padding: 48px 0px 40px;
+  }
+  .navigation {
+    font-size: 16px;
+    color: #000;
+    line-height: 48px;
+    padding: 0 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.0509803922);
+    position: relative;
+    .o-icon {
+      position: absolute;
+      left: 16px;
+    }
   }
   .medicine-wrap {
     padding: 0px 16px 64px;
@@ -105,6 +126,7 @@ function goDetail() {
     .bread-wrap {
       padding: 40px 0;
     }
+
     .medicine-content {
       .medicine-content-banner {
         padding: 40px;
@@ -166,6 +188,7 @@ function goDetail() {
           }
         }
       }
+
       .medicine-content-desc {
         background: #fff;
         border-radius: 16px;

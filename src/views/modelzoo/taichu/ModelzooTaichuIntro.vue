@@ -479,7 +479,6 @@ function goTaichuMore() {
     border-radius: 16px;
     @media screen and (max-width: 1080px) {
       padding: 16px;
-      margin: 0 16px;
     }
     .banner-left {
       margin-right: 40px;

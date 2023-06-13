@@ -173,6 +173,7 @@ const routeLists = {
       'substationhostExplain',
       'substationopsExplain',
       'intelligentsystemExplain',
+      'laborcontractExplain',
     ],
     back: '/electricity',
   },

@@ -4,13 +4,16 @@ import { useRouter } from 'vue-router';
 import systemCover from '@/assets/imgs/estate/electricity/intelligentsystem/system-cover.png';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 const router = useRouter();
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
+const screenWidth = useWindowResize();
+
+function goBack() {
+  router.push('/electricity');
+}
 function goDetail() {
   router.push('/projects/MindSpore/ner_bert_base_chinese');
 }
@@ -18,6 +21,10 @@ function goDetail() {
 
 <template>
   <div class="medicine-detail">
+    <div v-if="screenWidth < 820" class="navigation">
+      <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
+      <span class="title">电力合同风险评估与管理</span>
+    </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
@@ -42,7 +49,12 @@ function goDetail() {
               </div>
             </div>
             <div class="banner-btn" @click="goDetail">
-              <OButton animation type="primary" class="home-btn">
+              <OButton
+                :size="screenWidth < 820 ? 'mini' : 'small'"
+                animation
+                type="primary"
+                class="home-btn"
+              >
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
@@ -52,14 +64,6 @@ function goDetail() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
-          <!-- <div class="industry-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div> -->
           <div class="industry-info">
             <router-view />
           </div>
@@ -74,33 +78,41 @@ function goDetail() {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
-
+  @media screen and (max-width: 820px) {
+    padding: 48px 0px 40px;
+  }
+  .navigation {
+    font-size: 16px;
+    color: #000;
+    line-height: 48px;
+    padding: 0 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.0509803922);
+    position: relative;
+    .o-icon {
+      position: absolute;
+      left: 16px;
+    }
+  }
   .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1448px;
     overflow: hidden;
-    .bread-wrap {
-      padding: 40px 0;
-      .el-breadcrumb {
-        font-size: 12px;
-        line-height: 18px;
-        .el-breadcrumb__item {
-          :deep(.el-breadcrumb__inner.is-link) {
-            color: #555;
-            font-weight: 400;
-            &:hover {
-              color: #0d8dff;
-            }
-          }
-          :deep(.el-breadcrumb__separator.el-icon) {
-            color: #555;
-          }
-        }
-        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-          color: #000;
+    @media screen and (max-width: 820px) {
+      padding-bottom: 0px;
+      .bread-wrap {
+        @media screen and (max-width: 820px) {
+          display: none;
         }
       }
+    }
+    .bread-wrap {
+      padding: 40px 0;
     }
     .medicine-content {
       .medicine-content-banner {
@@ -109,9 +121,16 @@ function goDetail() {
         display: flex;
         border-radius: 16px;
         margin-bottom: 37px;
+        @media screen and (max-width: 820px) {
+          padding: 16px;
+          margin-bottom: 16px;
+        }
         .banner-left {
           width: 416px;
           margin-right: 40px;
+          @media screen and (max-width: 820px) {
+            display: none;
+          }
           img {
             width: 100%;
             height: 100%;
@@ -122,17 +141,30 @@ function goDetail() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          @media screen and (max-width: 820px) {
+            width: 100%;
+            display: flex;
+          }
           .banner-content {
             .banner-title {
               line-height: 48px;
               font-size: 36px;
               color: #000000;
               margin-bottom: 16px;
+              @media screen and (max-width: 820px) {
+                font-size: 16px;
+                line-height: 24px;
+                margin-bottom: 8px;
+              }
             }
             .banner-desc {
               font-size: 14px;
               color: #555555;
               line-height: 22px;
+              @media screen and (max-width: 820px) {
+                font-size: 12px;
+                line-height: 18px;
+              }
             }
           }
           .banner-btn {
@@ -146,16 +178,12 @@ function goDetail() {
       .medicine-content-desc {
         background: #fff;
         border-radius: 16px;
-        // .o-nav {
-        //   background: #fff;
-        // }
         .industry-tab {
           max-width: 1416px;
           margin: 0 auto;
           height: 48px;
           box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
           border-radius: 16px 16px 0 0;
-          // background-color: #fbfbfb;
           :deep(.o-nav) {
             width: 100%;
             display: flex;
@@ -168,8 +196,10 @@ function goDetail() {
           }
         }
         .industry-info {
-          // background-color: #f5f6f8;
           padding: 40px 80px;
+          @media screen and (max-width: 820px) {
+            padding: 16px;
+          }
         }
       }
     }

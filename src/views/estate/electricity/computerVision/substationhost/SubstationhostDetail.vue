@@ -6,6 +6,9 @@ import hostImg from '@/assets/imgs/estate/electricity/substationhost/host-cover.
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
+const screenWidth = useWindowResize();
 const router = useRouter();
 // 点击导航
 /* function handleNavClick(item) {
@@ -45,7 +48,12 @@ function goDetail() {
               <a
                 href="https://xihe2.test.osinfra.cn/projects/MindSpore/ai_studio_demo/"
               >
-                <OButton animation type="primary" class="home-btn">
+                <OButton
+                  :size="screenWidth < 820 ? 'mini' : 'small'"
+                  animation
+                  type="primary"
+                  class="home-btn"
+                >
                   运行模型
                   <template #suffix>
                     <OIcon><IconArrowRight /></OIcon>
@@ -78,33 +86,24 @@ function goDetail() {
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
-
+  @media screen and (max-width: 820px) {
+    padding: 82px 0px 40px;
+  }
   .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
     max-width: 1448px;
     overflow: hidden;
-    .bread-wrap {
-      padding: 40px 0;
-      .el-breadcrumb {
-        font-size: 12px;
-        line-height: 18px;
-        .el-breadcrumb__item {
-          :deep(.el-breadcrumb__inner.is-link) {
-            color: #555;
-            font-weight: 400;
-            &:hover {
-              color: #0d8dff;
-            }
-          }
-          :deep(.el-breadcrumb__separator.el-icon) {
-            color: #555;
-          }
-        }
-        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-          color: #000;
+    @media screen and (max-width: 820px) {
+      padding-bottom: 0px;
+      .bread-wrap {
+        @media screen and (max-width: 820px) {
+          display: none;
         }
       }
+    }
+    .bread-wrap {
+      padding: 40px 0;
     }
     .medicine-content {
       .medicine-content-banner {
@@ -113,9 +112,16 @@ function goDetail() {
         display: flex;
         border-radius: 16px;
         margin-bottom: 40px;
+        @media screen and (max-width: 820px) {
+          padding: 16px;
+          margin-bottom: 16px;
+        }
         .banner-left {
           width: 416px;
           margin-right: 40px;
+          @media screen and (max-width: 820px) {
+            display: none;
+          }
           img {
             width: 100%;
             height: 100%;
@@ -126,17 +132,30 @@ function goDetail() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          @media screen and (max-width: 820px) {
+            width: 100%;
+            display: flex;
+          }
           .banner-content {
             .banner-title {
               line-height: 48px;
               font-size: 36px;
               color: #000000;
               margin-bottom: 16px;
+              @media screen and (max-width: 820px) {
+                font-size: 16px;
+                line-height: 24px;
+                margin-bottom: 8px;
+              }
             }
             .banner-desc {
               font-size: 14px;
               color: #555555;
               line-height: 22px;
+              @media screen and (max-width: 820px) {
+                font-size: 12px;
+                line-height: 18px;
+              }
             }
           }
           .banner-btn {
@@ -159,7 +178,6 @@ function goDetail() {
           height: 48px;
           box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
           border-radius: 16px 16px 0 0;
-          // background-color: #fbfbfb;
           :deep(.o-nav) {
             width: 100%;
             display: flex;
@@ -172,8 +190,10 @@ function goDetail() {
           }
         }
         .industry-info {
-          // background-color: #f5f6f8;
           padding: 40px 80px;
+          @media screen and (max-width: 820px) {
+            padding: 16px;
+          }
         }
       }
     }

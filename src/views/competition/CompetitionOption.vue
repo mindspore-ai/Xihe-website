@@ -90,7 +90,10 @@ watch(
     } else {
       if (comInfo.type === '') {
         // 南方电网比赛只显示介绍
-        if (comInfo.id === 'southern_power') {
+        if (
+          comInfo.id === 'southern_power' ||
+          comInfo.id === 'southern_power_2'
+        ) {
           renderNav.value = navItems.filter((item) => {
             return item.id === 'introduction';
           });

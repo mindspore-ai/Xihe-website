@@ -19,14 +19,14 @@ function getHeaderConfig() {
  */
 export function uploadModelzooPic(params) {
   const url = `/server/bigmodel/describe_picture`;
-
-  getHeaderConfig().headers['Content-Type:multipart/form-data'];
+  // getHeaderConfig().headers['Content-Type:multipart/form-data'];
 
   return request
     .post(url, params, {
       $noLoading: true,
       headers: {
         'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
       },
     })
     .then((res) => {
@@ -81,7 +81,12 @@ export function getMultiplePicture(params) {
 export function uploadVqaPicture(params) {
   const url = `/server/bigmodel/vqa_upload_picture`;
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((res) => {
       return res.data;
     })

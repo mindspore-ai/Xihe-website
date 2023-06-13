@@ -70,7 +70,7 @@ if (props.cardType === 'model') {
         <div class="portrait">
           <img :src="cardData.avatar_id" alt="" />
         </div>
-        <div class="model-name">{{ cardData.name }}</div>
+        <div class="model-name">{{ cardData.owner }}</div>
       </div>
       <div class="card-bottom-right">
         <div v-if="cardData.updated_at" class="update-time">

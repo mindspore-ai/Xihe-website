@@ -12,6 +12,7 @@ import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNatur
 import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
 
+import { ElMessage } from 'element-plus';
 import { getElectricitydata } from '@/api/api-estate';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
@@ -79,7 +80,6 @@ const electricityClassify = [
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
     icon: IconNLP,
-    // disabled: true,
   },
   {
     id: 3,
@@ -88,7 +88,6 @@ const electricityClassify = [
     path: '/estate/industry',
     currentComponent: voice,
     icon: IconAudio,
-    disabled: true,
   },
   {
     id: 4,
@@ -97,7 +96,6 @@ const electricityClassify = [
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
     icon: IconGNN,
-    disabled: true,
   },
 ];
 
@@ -106,6 +104,19 @@ const handleClick = (tab) => {
     tagKinds.value = 'CV';
   } else if (tab.paneName === '自然语言处理NLP') {
     tagKinds.value = 'NLP';
+  }
+};
+
+const beforeLeave = (activeTab) => {
+  if (activeTab === '语音Audio' || activeTab === '图神经网络GNN') {
+    ElMessage({
+      type: 'warning',
+      message: '暂未开放，敬请期待！',
+      duration: 3000,
+      offset: 64,
+      center: true,
+    });
+    return false;
   }
 };
 
@@ -176,13 +187,13 @@ watch(tagKinds, (newValue) => {
       <el-tabs
         v-model="activeName"
         class="estate-tabs"
+        :before-leave="beforeLeave"
         @tab-click="handleClick"
       >
         <el-tab-pane
           v-for="item in electricityClassify"
           :key="item.id"
           :name="item.name"
-          :disabled="item.disabled"
         >
           <template v-if="screenWidth > 820" #label>
             <span class="estate-tabs-title">
@@ -279,7 +290,7 @@ watch(tagKinds, (newValue) => {
       padding-top: 48px;
       background-image: url('@/assets/imgs/estate/electricity-mobile.jpg');
       background-size: cover;
-      background-position:center;
+      background-position: center;
     }
     img {
       width: 100%;

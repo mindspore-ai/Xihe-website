@@ -173,7 +173,6 @@ async function sendMessage() {
           type: 'error',
         });
       }
-      console.error(e);
     }
   }
 }

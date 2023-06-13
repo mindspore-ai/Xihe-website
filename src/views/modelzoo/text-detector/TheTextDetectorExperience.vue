@@ -409,18 +409,18 @@ function keyDown(e) {
     top: 32px;
     right: 40px;
     width: 164px;
-    @media screen and(max-width:1080px) {
+    @media screen and (max-width: 1080px) {
       width: 140px;
     }
     :deep(.el-input) {
-      @media screen and(max-width:1080px) {
+      @media screen and (max-width: 1080px) {
         height: 28px;
       }
       .el-input__wrapper {
         padding: 6px 12px;
       }
       .el-input__inner {
-        @media screen and(max-width:1080px) {
+        @media screen and (max-width: 1080px) {
           font-size: 12px;
         }
       }

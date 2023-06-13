@@ -16,7 +16,6 @@ import useClipboard from 'vue-clipboard3';
 import {
   collectedPictures,
   cancelLikePicture,
-  // temporaryLink,
   publicCollectedPicture,
 } from '@/api/api-modelzoo.js';
 
@@ -85,51 +84,13 @@ function cancelCollect(id) {
   });
 }
 
-// function requestImage(item) {
-// const link = item.replace(
-//   'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-//   '/obs-big-model/'
-// );
-// let x = new XMLHttpRequest();
-// x.open('GET', link, true);
-// x.responseType = 'blob';
-// x.onload = function () {
-//   const blobs = new Blob([x.response], { type: 'image/png' });
-//   let url = window.URL.createObjectURL(blobs);
-//   let a = document.createElement('a');
-//   a.href = url;
-//   a.download = 'collection.png';
-//   a.click();
-// };
-// x.send();
-// }
-
 // 下载图片
 function downloadImage(item) {
   let aLink = document.createElement('a');
   aLink.href = item;
   aLink.download = 'collection.png';
   aLink.click();
-  document.body.removeChild(aLink);
-
-  // const j1 = item.indexOf('=');
-  // const j2 = item.indexOf('=', j1 + 1);
-
-  // const i1 = item.indexOf('&');
-  // const i2 = item.indexOf('&', i1 + 1);
-
-  // const deadTime = item.substring(j2 + 1, i2);
-  // const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-  // if ((deadTime - currentTime) / 60 < 1) {
-  //   temporaryLink({ link: item }).then((res) => {
-  //     if (res.data.data) {
-  //       requestImage(res.data.data.link);
-  //     }
-  //   });
-  // } else {
-  //   requestImage(item);
-  // }
+  aLink.remove();
 }
 const posterDlg = ref(false);
 const posterLink = ref('');

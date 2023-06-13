@@ -22,6 +22,9 @@ const props = defineProps({
     default: true,
   },
 });
+
+console.log(props.cardData);
+
 const labelList = ref([]);
 const i18n = {
   downloadTitle: '下载量',
@@ -50,17 +53,18 @@ if (props.cardType === 'model') {
     ]"
   >
     <div class="card-top">
-      <div class="portrait">
+      <!-- <div class="portrait">
         <img :src="cardData.avatar_id" alt="" />
-      </div>
-      <div v-if="!showName">
+      </div> -->
+      <!-- <div v-if="!showName">
         {{ cardData.title ? cardData.title : cardData.name }}
-      </div>
-      <div v-else class="owner-info">
-        <div v-if="cardData.owner" class="nickname">
+      </div> -->
+      <div class="owner-info">
+        <!-- <div v-if="cardData.owner" class="nickname">
           {{ cardData.owner }}
-        </div>
-        <div class="model-name">/{{ cardData.name }}</div>
+        </div> -->
+        <div v-if="cardData.title" class="model-name">{{ cardData.title }}</div>
+        <div v-else class="model-name">{{ cardData.name }}</div>
       </div>
     </div>
     <div class="label-box">
@@ -71,14 +75,25 @@ if (props.cardType === 'model') {
     <p class="model-introduce">
       {{ cardData.desc }}
     </p>
+
     <div class="card-bottom">
       <div class="card-bottom-left">
+        <div class="portrait">
+          <img :src="cardData.avatar_id" alt="" />
+        </div>
+        <div class="model-name">{{ cardData.name }}</div>
+
+        <!-- <div v-if="cardData.updated_at" class="update-time">
+          <o-icon> <icon-time></icon-time></o-icon>
+          <span class="text">{{ cardData.updated_at }}</span>
+        </div> -->
+      </div>
+      <div class="card-bottom-right">
         <div v-if="cardData.updated_at" class="update-time">
           <o-icon> <icon-time></icon-time></o-icon>
           <span class="text">{{ cardData.updated_at }}</span>
         </div>
-      </div>
-      <div class="card-bottom-right">
+
         <div class="download likes" :title="i18n.likesNumber">
           <o-icon><icon-heart></icon-heart></o-icon>{{ cardData.like_count }}
         </div>
@@ -88,7 +103,6 @@ if (props.cardType === 'model') {
         </div>
       </div>
     </div>
-    <!-- <div class="card-bg"></div> -->
   </div>
 </template>
 
@@ -126,7 +140,6 @@ if (props.cardType === 'model') {
     border-bottom: 1px solid #def1e8;
     position: relative;
     @media screen and (max-width: 820px) {
-      // background-color: red;
       font-size: 14px;
       line-height: 22px;
       padding-bottom: 0px;
@@ -135,33 +148,12 @@ if (props.cardType === 'model') {
     .owner-info {
       display: flex;
     }
-    .portrait {
-      margin-right: 8px;
-      width: 24px;
-      // min-width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 1px solid #b7ddff;
-      @media screen and (max-width: 820px) {
-        width: 16px;
-        height: 16px;
-      }
-      img {
-        width: 100%;
-      }
-    }
-    .model-name {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
   }
   .label-box {
     display: flex;
     height: 18px;
     flex-wrap: wrap;
-    margin: 8px 0 16px;
+    margin: 8px 0 24px;
     font-size: 12px;
     overflow: hidden;
     position: relative;
@@ -179,7 +171,7 @@ if (props.cardType === 'model') {
     }
   }
   .model-introduce {
-    min-height: 44px;
+    // min-height: 44px;
     margin-bottom: 24px;
     font-size: 14px;
     line-height: 22px;
@@ -202,6 +194,22 @@ if (props.cardType === 'model') {
     justify-content: space-between;
     font-size: 12px;
     position: relative;
+    .portrait {
+      margin-right: 8px;
+      width: 24px;
+      // min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #b7ddff;
+      @media screen and (max-width: 820px) {
+        width: 16px;
+        height: 16px;
+      }
+      img {
+        width: 100%;
+      }
+    }
     .update-time,
     .download {
       display: flex;
@@ -209,6 +217,19 @@ if (props.cardType === 'model') {
       text-align: center;
       .text {
         line-height: 16px;
+        white-space: nowrap;
+      }
+    }
+    .card-bottom-left {
+      display: flex;
+      align-items: center;
+      .model-name {
+        font-size: 14px;
+        color: #000000;
+        line-height: 22px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
     .card-bottom-right {

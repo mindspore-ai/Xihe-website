@@ -169,7 +169,7 @@ async function sendMessage() {
     } catch (e) {
       if (e.code === 'bigmodel_sensitive_info') {
         ElMessage({
-          message: '请修改输入内容',
+          message: '审核未通过，请修改文字内容',
           type: 'error',
         });
       }

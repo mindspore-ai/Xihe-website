@@ -205,14 +205,17 @@ async function downloadZip() {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
+.o-popper {
+  position: relative;
+}
 :deep(.el-popover) {
-  inset: 418px auto auto 1350px !important;
+  inset: 60px auto auto -180px !important;
   --el-popover-padding: 16px;
   box-shadow: 0px 10px 40px 0px rgba(18, 20, 23, 0.08);
   border: 1px solid #edeff2;
   .el-popper__arrow {
     display: block;
-    left: 234px !important;
+    left: 238px !important;
   }
 }
 :deep(.el-popper.is-light.el-popover) {

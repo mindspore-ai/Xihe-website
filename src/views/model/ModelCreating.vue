@@ -162,6 +162,15 @@ function addModelTags() {
 // 确认
 function confirmBtn() {
   isTagShow.value = false;
+  renderList.value.forEach((value1, index1) => {
+    renderList.value[index1].items.forEach((value2, index2) => {
+      renderList.value[index1].items[index2].items.forEach((value3) => {
+        if (value3.isActive) {
+          headTags.value.push(value3);
+        }
+      });
+    });
+  });
 }
 // 取消
 function cancelBtn() {
@@ -170,15 +179,6 @@ function cancelBtn() {
 // 选择要添加的标签
 function selectTags(it) {
   it.isActive = !it.isActive;
-  if (it.isActive) {
-    headTags.value.push(it);
-  } else {
-    headTags.value.forEach((item, index) => {
-      if (item.name === it.name) {
-        headTags.value.splice(index, 1);
-      }
-    });
-  }
 }
 // 删除头部标签
 function deleteTag(val) {

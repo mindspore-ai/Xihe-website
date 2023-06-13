@@ -221,7 +221,6 @@ function highlightTag(tag) {
 }
 
 function getProject() {
-  // console.log('获取项目接口的queryData: ', queryData);
   getProjectData(queryData).then((res) => {
     if (res.status === 200) {
       projectCount.value = res.data.data.total;
@@ -1379,7 +1378,7 @@ $theme: #0d8dff;
                 background: rgba(13, 141, 255, 0.15);
                 border-radius: 12px;
                 padding: 3px 12px;
-                margin-right: 8px;
+                margin-right: 4px;
                 margin-bottom: 8px;
               }
             }

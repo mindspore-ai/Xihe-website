@@ -2,8 +2,6 @@
 import { ref, watch } from 'vue';
 // import { useRouter } from 'vue-router';
 
-// import estateBanner from '@/assets/imgs/estate/electricity-banner.png';
-
 import IconCV from '~icons/app/CV';
 import IconNLP from '~icons/app/NLP';
 import IconAudio from '~icons/app/Audio';
@@ -13,6 +11,10 @@ import computerVision from '@/views/estate/electricity/computerVision/TheCompute
 import naturalLanguage from '@/views/estate/electricity/naturalLanguage/TheNaturalLanguage.vue';
 import voice from '@/views/estate/electricity/voice/TheVoice.vue';
 import neuralNetwork from '@/views/estate/electricity/neuralNetwork/neuralNetwork.vue';
+
+import { getElectricitydata } from '@/api/api-estate';
+
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, FreeMode } from 'swiper';
@@ -53,15 +55,18 @@ import logo30 from '@/assets/imgs/estate/logo/logo30.png';
 import logo31 from '@/assets/imgs/estate/logo/logo31.png';
 import logo32 from '@/assets/imgs/estate/logo/logo32.png';
 
-import { getElectricitydata } from '@/api/api-estate';
-
 const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉CV');
+const modelData = ref([]); //应用模型
+const datasetData = ref([]); //应用数据集
+const tagKinds = ref('CV');
+const screenWidth = useWindowResize();
 
 const electricityClassify = [
   {
     id: 1,
     name: '计算机视觉CV',
+    mobileName: 'CV',
     path: '/estate/electricity',
     // path: '/estate/industrial-zone',
     currentComponent: computerVision,
@@ -70,6 +75,7 @@ const electricityClassify = [
   {
     id: 2,
     name: '自然语言处理NLP',
+    mobileName: 'NLP',
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
     icon: IconNLP,
@@ -78,6 +84,7 @@ const electricityClassify = [
   {
     id: 3,
     name: '语音Audio',
+    mobileName: 'Audio',
     path: '/estate/industry',
     currentComponent: voice,
     icon: IconAudio,
@@ -86,16 +93,14 @@ const electricityClassify = [
   {
     id: 4,
     name: '图神经网络GNN',
+    mobileName: 'GNN',
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
     icon: IconGNN,
     disabled: true,
   },
 ];
-const electricityRef = ref(null);
-const modelData = ref([]); //应用模型
-const datasetData = ref([]); //应用数据集
-const tagKinds = ref('CV');
+
 const handleClick = (tab) => {
   if (tab.paneName === '计算机视觉CV') {
     tagKinds.value = 'CV';
@@ -156,7 +161,7 @@ watch(tagKinds, (newValue) => {
 });
 </script>
 <template>
-  <div ref="electricityRef" class="electricity">
+  <div v-if="modelData.length" class="electricity">
     <div class="electricity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
@@ -179,10 +184,15 @@ watch(tagKinds, (newValue) => {
           :name="item.name"
           :disabled="item.disabled"
         >
-          <template #label>
+          <template v-if="screenWidth > 820" #label>
             <span class="estate-tabs-title">
               <o-icon><component :is="item.icon"></component></o-icon>
               <span class="region-name">{{ item.name }}</span>
+            </span>
+          </template>
+          <template v-else #label>
+            <span class="estate-tabs-title">
+              <span class="region-name">{{ item.mobileName }}</span>
             </span>
           </template>
           <div
@@ -252,29 +262,49 @@ watch(tagKinds, (newValue) => {
   background-repeat: no-repeat;
   background-size: 100% 664px;
   background-position: 0 1984px;
+  @media screen and (max-width: 820px) {
+    background-image: none;
+    // background-image: url('@/assets/imgs/estate/electricity-mobile.jpg');
+    // background-repeat: no-repeat;
+    // background-size: 100% 664px;TODO:
+    // background-position: 0 1984px;
+  }
   .electricity-head {
     padding-top: 80px;
     position: relative;
     background-image: url('@/assets/imgs/estate/electricity-banner.png');
     background-size: cover;
     background-position: 50% 50%;
+    @media screen and (max-width: 820px) {
+      padding-top: 48px;
+      background-image: url('@/assets/imgs/estate/electricity-mobile.jpg');
+      background-size: cover;
+      background-position:center;
+    }
     img {
       width: 100%;
       height: 100%;
     }
     .electricity-banner {
       max-width: 1472px;
-      height: 480px;
       margin: 0 auto;
       padding: 160px 16px;
       position: relative;
       top: -55%;
+      @media screen and (max-width: 820px) {
+        padding: 44px 24px;
+      }
       .banner-title {
         line-height: 48px;
         font-size: 36px;
         font-weight: 400;
         color: #000000;
         margin-bottom: 10px;
+        @media screen and (max-width: 820px) {
+          height: 28px;
+          font-size: 20px;
+          line-height: 28px;
+        }
       }
       .banner-desc {
         max-width: 58%;
@@ -282,6 +312,11 @@ watch(tagKinds, (newValue) => {
         font-size: 18px;
         font-weight: 400;
         color: #000000;
+        @media screen and (max-width: 820px) {
+          max-width: 80%;
+          line-height: 18px;
+          font-size: 12px;
+        }
       }
     }
   }
@@ -290,11 +325,21 @@ watch(tagKinds, (newValue) => {
     max-width: 1472px;
     position: relative;
     top: -64px;
+    @media screen and (max-width: 820px) {
+      top: 0;
+    }
+    .electricity-content {
+      margin-top: 40px;
+      @media screen and (max-width: 820px) {
+        margin-top: 24px;
+      }
+    }
   }
   .logo {
     padding: 0 0 52px;
     @media screen and (max-width: 820px) {
       padding: 0 0 36px;
+      margin-top: 40px;
     }
     .title {
       height: 48px;
@@ -304,24 +349,28 @@ watch(tagKinds, (newValue) => {
       margin-bottom: 26px;
       text-align: center;
       @media screen and (max-width: 820px) {
+        height: 24px;
+        font-size: 16px;
+        line-height: 24px;
         margin-bottom: 12px;
       }
     }
     :deep(.logo-swiper) {
       .swiper-slide {
+        width: 354px;
         height: 120px;
-        width: auto !important;
         background-color: #fff;
         margin: 12px 12px;
         border-radius: 16px;
         @media screen and (max-width: 820px) {
+          width: 142px;
           height: 60px;
           margin: 4px 4px;
           border-radius: 10px;
         }
       }
       img {
-        width: 354px;
+        width: 100%;
         height: 120px;
         border-radius: 16px;
         @media screen and (max-width: 820px) {
@@ -335,27 +384,50 @@ watch(tagKinds, (newValue) => {
   .el-tabs__header {
     margin: 0px;
     padding: 0px 16px;
+
+    @media screen and (max-width: 820px) {
+      padding: 0px;
+    }
     .el-tabs__nav-wrap {
       border-radius: 16px;
       backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.75);
+      margin: 0 auto;
+      @media screen and (max-width: 820px) {
+        border-radius: 0px;
+        display: flex;
+        justify-content: center;
+      }
       .el-tabs__nav {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
+        @media screen and (max-width: 820px) {
+          display: flex;
+        }
         .el-tabs__active-bar {
           display: none;
         }
         .el-tabs__item {
           height: 128px;
           font-size: 24px;
-          line-height: 33px;
           color: #555;
-          background: rgba(255, 255, 255, 0.75);
           display: flex;
           justify-content: center;
           align-items: center;
           padding: 0;
+
+          @media screen and (max-width: 820px) {
+            box-sizing: border-box;
+            height: 35px;
+            font-size: 14px;
+            padding: 0px 6px;
+            margin: 0px 8px;
+          }
           &:nth-child(2) {
+            @media screen and (max-width: 820px) {
+              margin-left: 0px;
+            }
             .estate-tabs-title {
               border-left: none;
             }
@@ -367,17 +439,32 @@ watch(tagKinds, (newValue) => {
             align-items: center;
             justify-content: center;
             border-left: 1px solid #e1e1e1;
+            @media screen and (max-width: 820px) {
+              height: 34px;
+              line-height: 34px;
+              border-left: none;
+            }
             .o-icon {
               font-size: 48px;
             }
             .region-name {
+              height: 100%;
               margin-left: 24px;
+              @media screen and (max-width: 820px) {
+                margin-left: 0px;
+              }
             }
           }
         }
         .is-active {
           background: rgba(13, 141, 255, 0.65);
           color: #ffffff;
+          @media screen and (max-width: 820px) {
+            background: transparent;
+            color: #0d8dff;
+            border-bottom: 1px solid #0d8dff;
+            border-radius: 0px;
+          }
           .estate-tabs-title {
             border-left: none;
           }
@@ -387,6 +474,16 @@ watch(tagKinds, (newValue) => {
         display: none;
       }
     }
+  }
+}
+:deep(.swiper-free-mode) {
+  .swiper-wrapper {
+    -webkit-transition-timing-function: linear; /*之前是ease-out*/
+    -moz-transition-timing-function: linear;
+    -ms-transition-timing-function: linear;
+    -o-transition-timing-function: linear;
+    transition-timing-function: linear;
+    margin: 0 auto;
   }
 }
 </style>

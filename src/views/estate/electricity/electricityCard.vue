@@ -52,11 +52,13 @@ function goExperience() {
 </template>
 <style lang="scss" scoped>
 .electricity-card {
-  // height: 100%;
   padding: 12px 12px 24px;
   background-color: #fff;
   border-radius: 16px;
   cursor: pointer;
+  @media screen and (max-width: 820px) {
+    padding: 6px 6px 16px;
+  }
   .card-top {
     position: relative;
     border-radius: 8px;
@@ -91,6 +93,17 @@ function goExperience() {
         vertical-align: middle;
       }
     }
+    @media screen and (max-width: 820px) {
+      .cover {
+        height: 109px;
+      }
+      .card-title {
+        .card-name {
+          font-size: 18px;
+          line-height: 16px;
+        }
+      }
+    }
   }
   .card-bottom {
     height: calc(100% - 174px);
@@ -98,11 +111,12 @@ function goExperience() {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
     .card-desc {
       line-height: 22px;
       font-size: 14px;
       font-weight: 400;
-      color: #2c2c2c;
+      color: #555;
       padding: 0 12px;
       min-height: 43px;
       display: -webkit-box;
@@ -111,6 +125,7 @@ function goExperience() {
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .card-btn {
       margin-top: 20px;
       padding: 0 12px;
@@ -126,6 +141,23 @@ function goExperience() {
         }
         .count {
           margin-left: 4px;
+        }
+      }
+    }
+    @media screen and (max-width: 820px) {
+      height: calc(100% - 126px);
+      margin-top: 16px;
+      .card-desc {
+        font-size: 12px;
+        line-height: 18px;
+        min-height: 36px;
+      }
+      .card-btn {
+        font-size: 12px;
+        .left {
+          .count {
+            margin-left: 8px;
+          }
         }
       }
     }

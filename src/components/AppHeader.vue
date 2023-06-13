@@ -108,7 +108,7 @@ const navItems = reactive([
   {
     id: 'estate',
     label: computed(() => {
-      return t('home.APP_HEADER.INDUSTRIES');
+      return t('home.APP_HEADER.ESTATE');
     }),
     href: '',
     isActive: false,
@@ -280,7 +280,6 @@ function handleLogoClick() {
 
 // 点击导航
 function handleSelect(path) {
-  // console.log('path: ', path);
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (!path) {

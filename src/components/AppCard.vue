@@ -88,7 +88,7 @@ if (props.cardType === 'model') {
         </div>
       </div>
     </div>
-    <div class="card-bg"></div>
+    <!-- <div class="card-bg"></div> -->
   </div>
 </template>
 
@@ -105,30 +105,48 @@ if (props.cardType === 'model') {
   overflow: hidden;
   cursor: pointer;
   border-radius: 16px;
+  @media screen and (max-width: 820px) {
+    padding: 16px;
+  }
   .o-icon {
     margin-right: 4px;
     font-size: 16px;
     color: #555;
+    @media screen and (max-width: 820px) {
+      font-size: 13px;
+    }
   }
   .card-top {
     display: flex;
+    align-items: center;
     padding-bottom: 8px;
     color: #000;
     font-size: 18px;
     line-height: 24px;
     border-bottom: 1px solid #def1e8;
     position: relative;
+    @media screen and (max-width: 820px) {
+      // background-color: red;
+      font-size: 14px;
+      line-height: 22px;
+      padding-bottom: 0px;
+      border-bottom: none;
+    }
     .owner-info {
       display: flex;
     }
     .portrait {
       margin-right: 8px;
       width: 24px;
-      min-width: 24px;
+      // min-width: 24px;
       height: 24px;
       border-radius: 50%;
       overflow: hidden;
       border: 1px solid #b7ddff;
+      @media screen and (max-width: 820px) {
+        width: 16px;
+        height: 16px;
+      }
       img {
         width: 100%;
       }
@@ -147,6 +165,9 @@ if (props.cardType === 'model') {
     font-size: 12px;
     overflow: hidden;
     position: relative;
+    @media screen and (max-width: 820px) {
+      margin: 4px 0 12px;
+    }
     .label-item {
       padding: 2px 8px;
       line-height: 14px;
@@ -169,6 +190,12 @@ if (props.cardType === 'model') {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     position: relative;
+    @media screen and (max-width: 820px) {
+      font-size: 12px;
+      line-height: 18px;
+      min-height: 36px;
+      margin-bottom: 12px;
+    }
   }
   .card-bottom {
     display: flex;
@@ -195,15 +222,15 @@ if (props.cardType === 'model') {
 .o-model-hover,
 .o-dataset-hover {
   position: relative;
-  .card-bg {
-    width: 84px;
-    height: 84px;
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    border: none;
-    // display: none;
-  }
+  // .card-bg {
+  //   width: 84px;
+  //   height: 84px;
+  //   position: absolute;
+  //   right: 24px;
+  //   bottom: 24px;
+  //   border: none;
+  //   // display: none;
+  // }
   &:hover {
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
   }

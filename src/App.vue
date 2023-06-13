@@ -297,7 +297,7 @@ const mobileNav = reactive([
   },
   {
     name: computed(() => {
-      return t('home.APP_HEADER.INDUSTRY');
+      return t('home.APP_HEADER.ESTATE');
     }),
     isActive: false,
     children: [
@@ -305,25 +305,25 @@ const mobileNav = reactive([
         name: computed(() => {
           return t('home.APP_HEADER.Electric_Power');
         }),
-        path: '/modelzoo',
+        path: '/electricity',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.HEALTHCARE');
         }),
-        path: '/finetune',
+        path: '/medicine',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.INDUSTRY');
         }),
-        path: '/finetune',
+        path: '/industry',
       },
       {
         name: computed(() => {
           return t('home.APP_HEADER.HUMAN_CULTURE');
         }),
-        path: '/finetune',
+        path: '/humanity',
       },
     ],
   },
@@ -359,7 +359,6 @@ const mobileNav = reactive([
 
 const meauActive = ref(false);
 function toggleMenu(menu) {
-  console.log('menu: ', menu);
   meauActive.value = menu;
   mobileNav[3].isActive = false;
 }

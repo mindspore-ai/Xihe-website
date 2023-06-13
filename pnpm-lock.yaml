@@ -29,7 +29,7 @@ specifiers:
   pinia: ^2.0.13
   prettier: ^2.6.2
   sass: ^1.50.0
-  swiper: ^8.4.4
+  swiper: ^9.1.0
   unplugin-auto-import: ^0.7.1
   unplugin-element-plus: ^0.4.0
   unplugin-icons: ^0.14.1
@@ -64,7 +64,7 @@ dependencies:
   normalize.css: 8.0.1
   pinia: 2.0.13_vue@3.2.33
   sass: 1.50.1
-  swiper: 8.4.4
+  swiper: 9.4.0
   vue: 3.2.33
   vue-clipboard3: registry.npmmirror.com/vue-clipboard3/2.0.0
   vue-dompurify-html: registry.npmmirror.com/vue-dompurify-html/4.0.0_vue@3.2.33
@@ -616,12 +616,6 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
-
-  /dom7/4.0.4:
-    resolution: {integrity: sha512-DSSgBzQ4rJWQp1u6o+3FVwMNnT5bzQbMb+o31TjYYeRi05uAcpF8koxdfzeoe5ElzPmua7W7N28YJhF7iEKqIw==}
-    dependencies:
-      ssr-window: 4.0.2
-    dev: false
 
   /earcut/2.2.4:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
@@ -1878,12 +1872,10 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /swiper/8.4.4:
-    resolution: {integrity: sha512-jA/8BfOZwT8PqPSnMX0TENZYitXEhNa7ZSNj1Diqh5LZyUJoBQaZcqAiPQ/PIg1+IPaRn/V8ZYVb0nxHMh51yw==}
+  /swiper/9.4.0:
+    resolution: {integrity: sha512-AKame5qkFnNKCJ8Bfn3YuOi/LoUuAESVdCv/BJH5fKgdAUFRtImZXV3gdYlYovXbasJDV6hHNWdQvdzPB6aebw==}
     engines: {node: '>= 4.7.0'}
-    requiresBuild: true
     dependencies:
-      dom7: 4.0.4
       ssr-window: 4.0.2
     dev: false
 

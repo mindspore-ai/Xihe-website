@@ -24,4 +24,7 @@ export default [
   'textDetectorIntroduce',
   'electricity',
   'substationhostExplain',
+  'industry',
+  'humanity',
+  'medicine',
 ];

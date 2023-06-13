@@ -70,12 +70,19 @@ function goCasePath(item) {
 .humanity {
   background-color: #f5f6f8;
   padding-bottom: 64px;
+  @media screen and (max-width: 820px) {
+    padding-bottom: 40px;
+  }
   .humanity-head {
     padding-top: 80px;
     position: relative;
     background-image: url('@/assets/imgs/estate/estate-banner.jpg');
     background-size: cover;
     background-position: 50% 50%;
+    @media screen and (max-width: 820px) {
+      padding-top: 48px;
+      background-image: url('@/assets/imgs/estate/mobile-banner.png');
+    }
     img {
       width: 100%;
       height: 100%;
@@ -86,18 +93,30 @@ function goCasePath(item) {
       padding: 160px 16px;
       position: relative;
       top: -55%;
+      @media screen and (max-width: 820px) {
+        padding: 44px 24px 24px;
+      }
       .banner-title {
         line-height: 48px;
         font-size: 36px;
         font-weight: 400;
         color: #000000;
         margin-bottom: 10px;
+        @media screen and (max-width: 820px) {
+          font-size: 20px;
+          line-height: 28px;
+        }
       }
       .banner-desc {
         line-height: 24px;
         font-size: 18px;
         font-weight: 400;
         color: #000000;
+        @media screen and (max-width: 820px) {
+          font-size: 12px;
+          line-height: 18px;
+          max-width: 200px;
+        }
       }
     }
   }
@@ -110,6 +129,11 @@ function goCasePath(item) {
       line-height: 48px;
       color: #000000;
       text-align: center;
+      @media screen and (max-width: 820px) {
+        margin-top: 24px;
+        font-size: 16px;
+        line-height: 24px;
+      }
     }
     .case-cards {
       display: grid;
@@ -118,6 +142,15 @@ function goCasePath(item) {
       grid-template-rows: 320px;
       margin: 40px 0 64px;
       padding: 0px 16px;
+      @media screen and (max-width: 820px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: unset;
+        margin: 24px 0 0;
+        grid-gap: 16px;
+      }
+      @media screen and (max-width: 767px) {
+        grid-template-columns: repeat(1, 1fr);
+      }
       .case-item {
         cursor: pointer;
         border-radius: 16px;
@@ -130,6 +163,9 @@ function goCasePath(item) {
           margin: 0 24px;
           position: absolute;
           top: 206px;
+          @media screen and (max-width: 820px) {
+            top: 146px;
+          }
           .case-type {
             font-size: 24px;
             line-height: 26px;
@@ -139,6 +175,10 @@ function goCasePath(item) {
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: '...';
+            @media screen and (max-width: 820px) {
+              font-size: 16px;
+              line-height: 24px;
+            }
           }
           .case-name {
             font-size: 16px;
@@ -150,6 +190,10 @@ function goCasePath(item) {
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: '...';
+            @media screen and (max-width: 820px) {
+              font-size: 12px;
+              line-height: 18px;
+            }
           }
         }
         img {

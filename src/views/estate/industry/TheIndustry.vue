@@ -194,6 +194,7 @@ function goCasePath(item) {
             @media screen and (max-width: 820px) {
               font-size: 12px;
               line-height: 18px;
+              margin-top: 8px;
             }
           }
         }

@@ -143,22 +143,38 @@ function learnMore() {
   border-radius: 16px;
   background: #ffffff;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    margin: 16px 16px 0;
+    padding: 16px;
+  }
 }
 .main-title {
   font-size: 24px;
   line-height: 32px;
   font-weight: 500;
   color: #000000;
+  @media screen and (max-width: 820px) {
+    font-size: 14px;
+    line-height: 22px;
+  }
 }
 .main-text {
   font-size: 14px;
   line-height: 22px;
   color: #555555;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 8px;
+  }
 }
 .container {
   background: #f5f9fb;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    margin-top: 8px;
+  }
   img {
     width: 100%;
     height: 100%;

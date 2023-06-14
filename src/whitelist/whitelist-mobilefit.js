@@ -38,4 +38,7 @@ export default [
   'aigcExplain',
   'yuzhiExplain',
   'languageExplain',
+  'textDetector',
+  'textDetectorExperience',
+  'textDetectorIntroduce',
 ];

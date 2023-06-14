@@ -17,7 +17,8 @@ import { ElMessage } from 'element-plus';
 import warningImg from '@/assets/icons/warning.png';
 
 import { useUserInfoStore, useFileData } from '@/stores';
-import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getGitlabFileRaw } from '@/api/api-gitlab';
+import { getReadmeInfo } from '@/api/api-project';
 import { trainList } from '@/api/api-project';
 
 import {
@@ -322,18 +323,9 @@ function addModeClick() {
 // 获取README文件
 function getReadMeFile() {
   try {
-    getGitlabTree({
-      type: 'project',
-      user: routerParams.user,
-      path: '',
-      id: detailData.value.id,
-      name: routerParams.name,
-    })
+    getReadmeInfo(detailData.value.owner, detailData.value.name)
       .then((tree) => {
-        README = tree?.data?.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README && README.length) {
+        if (tree.data.has_readme) {
           getGitlabFileRaw({
             type: 'project',
             user: routerParams.user,

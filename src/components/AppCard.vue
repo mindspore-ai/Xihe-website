@@ -17,10 +17,6 @@ const props = defineProps({
       return 'model';
     },
   },
-  showName: {
-    type: Boolean,
-    default: true,
-  },
 });
 
 const labelList = ref([]);

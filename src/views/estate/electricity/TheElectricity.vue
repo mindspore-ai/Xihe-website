@@ -268,7 +268,6 @@ watch(tagKinds, (newValue) => {
 <style lang="scss" scoped>
 .electricity {
   background-color: #f5f6f8;
-  // padding-bottom: 64px;
   background-image: url('@/assets/imgs/estate/electricity/electric-travel.jpg');
   background-repeat: no-repeat;
   background-size: 100% 664px;

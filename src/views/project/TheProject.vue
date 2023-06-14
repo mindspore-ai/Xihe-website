@@ -169,11 +169,41 @@ const navItems = [
 
 // 热门标签列表
 const hotTagsList = ref([
-  { id: 1, name: '语音', active: false, icon: markRaw(IconVoice) },
-  { id: 2, name: '图神经网络', active: false, icon: markRaw(IconVision) },
-  { id: 3, name: '计算机视觉', active: false, icon: markRaw(IconCV) },
-  { id: 3, name: '推荐', active: false, icon: markRaw(recommendation) },
-  { id: 3, name: '自然语言处理', active: false, icon: markRaw(IconNLP) },
+  {
+    id: 1,
+    name: '计算机视觉',
+    value: 'CV',
+    active: false,
+    icon: markRaw(IconCV),
+  },
+  {
+    id: 2,
+    name: '自然语言处理',
+    value: 'NLP',
+    active: false,
+    icon: markRaw(IconNLP),
+  },
+  {
+    id: 3,
+    name: '语音',
+    value: 'Audio',
+    active: false,
+    icon: markRaw(IconVoice),
+  },
+  {
+    id: 4,
+    name: '推荐',
+    value: 'Recommendation',
+    active: false,
+    icon: markRaw(recommendation),
+  },
+  {
+    id: 5,
+    name: '图神经网络',
+    value: 'GNN',
+    active: false,
+    icon: markRaw(IconVision),
+  },
 ]);
 // 标签文字
 let dialogList = {
@@ -217,7 +247,16 @@ function handleNavClick(item) {
 
 // 点击高亮热门标签
 function highlightTag(tag) {
-  tag.active = !tag.active;
+  if (tag.active) {
+    tag.active = false;
+    queryData.tag_kinds = null;
+  } else {
+    hotTagsList.value.forEach((item) => {
+      item.active = false;
+    });
+    tag.active = true;
+    queryData.tag_kinds = tag.value;
+  }
 }
 
 function getProject() {

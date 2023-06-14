@@ -111,6 +111,20 @@ const githubLink2 =
         <div class="intro-concept">
           {{ t('wukong.WUKONG_INFO.DESC') }}
         </div>
+
+        <div class="intro-concept new-vision">
+          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更行内容包括一下3点：
+        </div>
+
+        <div class="intro-concept">
+          <p>
+            1.提升输出分辨率，2.0模型目前可以支持更高分辨率图形输出，从1.0版本的512x512提升到768x768，大图更清晰。
+          </p>
+          <p>
+            2.采用自研Multistep-SDE采样加速推理技术，采样步数从原先的50步采样降到20~30步，加速2~3倍。
+          </p>
+          <p>3.采用自研RLAIF算法，提升生成图片的画质以及艺术性表达。</p>
+        </div>
       </div>
       <div class="model">
         <div class="model-title">{{ t('wukong.WUKONG_INFO.MODEL_TITLE') }}</div>

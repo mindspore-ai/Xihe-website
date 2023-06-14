@@ -182,7 +182,8 @@ provide('getDetailData', getDetailData);
                     <OButton
                       :disabled="
                         competitionData.phase === 'final' ||
-                        userComData.competitionData.id === 'southern_power'
+                        userComData.competitionData.id === 'southern_power' ||
+                        userComData.competitionData.id === 'southern_power_2'
                       "
                       type="primary"
                       animation
@@ -258,7 +259,8 @@ provide('getDetailData', getDetailData);
                     <OButton
                       :disabled="
                         competitionData.phase === 'final' ||
-                        userComData.competitionData.id === 'southern_power'
+                        userComData.competitionData.id === 'southern_power' ||
+                        userComData.competitionData.id === 'southern_power_2'
                       "
                       type="primary"
                       animation

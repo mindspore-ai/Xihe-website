@@ -111,7 +111,7 @@ function learnWukongMore() {
         </div>
 
         <div class="intro-concept new-vision">
-          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更行内容包括一下3点：
+          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更新内容包括以下3点：
         </div>
 
         <div class="intro-concept">

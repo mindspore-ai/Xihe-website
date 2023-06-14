@@ -16,6 +16,7 @@ import IconX from '~icons/app/x';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPlus from '~icons/app/plus.svg';
 import IconClear from '~icons/app/clear';
+import IconPoppver from '~icons/app/popover.svg';
 
 import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -88,7 +89,7 @@ const rules = reactive({
     {
       pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
       message: '暂不支持中文字符，且长度为3-35个字符',
-      trigger: 'change',
+      trigger: 'blur',
     },
     {
       pattern: /^[^\*/?\\<>|:;]*$/g,
@@ -96,7 +97,7 @@ const rules = reactive({
       trigger: 'blur',
     },
     {
-      pattern: /^[^.].*[^.]$/,
+      pattern: /^(?!.*\.|^$).*[^.]$/,
       message: '不能以.开头或结尾',
       trigger: 'blur',
     },
@@ -114,8 +115,13 @@ const rules = reactive({
   ],
   title: [
     {
-      pattern: /^[\u4E00-\u9FA5A-Za-z]{3,35}$/g,
-      message: '项目中文名称长度为3-35个字符',
+      validator: (rule, value, callback) => {
+        if (value && (value.length < 3 || value.length > 35)) {
+          callback(new Error('项目中文名称长度为3-35个字符'));
+        } else {
+          callback();
+        }
+      },
       trigger: 'blur',
     },
   ],
@@ -134,7 +140,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 2000);
+  }, 500);
 }
 
 const nameList = ref([]);
@@ -330,13 +336,25 @@ function deleteAllTags() {
             <o-popper></o-popper>
           </el-form-item>
         </div>
-        <!-- 项目名称 -->
+        <!-- 项目中文名称 -->
         <div class="form-item">
           <el-form-item class="item-title" :label="i18n.pro_name" prop="title">
             <el-input
               v-model="proList.title"
               :placeholder="i18n.input_proName2"
             ></el-input>
+            <el-popover
+              placement="bottom-start"
+              :width="320"
+              trigger="hover"
+              :teleported="false"
+            >
+              <template #reference>
+                <o-icon><icon-poppver></icon-poppver></o-icon>
+              </template>
+              <div>- 项目标题支持中文或者英文</div>
+              <div>- 长度为 <span class="remind">3-35个字符</span></div>
+            </el-popover>
           </el-form-item>
         </div>
         <!-- 项目封面 -->
@@ -703,7 +721,17 @@ $theme: #0d8dff;
       }
       .o-icon {
         position: absolute;
-        right: -40px;
+        right: -28px;
+        font-size: 24px;
+      }
+    }
+    .item-title {
+      .remind {
+        color: #f13b35;
+      }
+      .o-icon {
+        position: absolute;
+        right: -32px;
         font-size: 24px;
       }
     }

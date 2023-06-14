@@ -173,6 +173,7 @@ const routeLists = {
       'substationhostExplain',
       'substationopsExplain',
       'intelligentsystemExplain',
+      'laborcontractExplain',
     ],
     back: '/electricity',
   },
@@ -409,7 +410,7 @@ function toPage(path, index) {
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
-    mobileNav[5].isActive = false;
+    // mobileNav[5].isActive = false;
     router.push(path);
   } else {
     mobileNav[3].isActive = false;
@@ -992,9 +993,11 @@ body.el-popup-parent--hidden {
       top: 48px;
       left: -100%;
       // left: 164px;
+      display: none;
     }
     .children-active {
       left: 164px;
+      display: block;
     }
   }
   .language {

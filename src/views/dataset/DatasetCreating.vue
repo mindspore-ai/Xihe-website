@@ -6,6 +6,7 @@ import IconNecessary from '~icons/app/necessary.svg';
 import IconPlus from '~icons/app/plus.svg';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
+import IconPoppver from '~icons/app/popover.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
@@ -100,7 +101,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 2000);
+  }, 500);
 }
 const isTagShow = ref(false);
 const headTags = ref([]);
@@ -245,7 +246,7 @@ function deleteAllTags() {
           {
             pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
             message: '暂不支持中文字符，且长度为3-35个字符',
-            trigger: 'change',
+            trigger: 'blur',
           },
           {
             pattern: /^[^\*/?\\<>|:;]*$/g,
@@ -280,7 +281,22 @@ function deleteAllTags() {
         ></el-input>
         <o-popper></o-popper>
       </el-form-item>
-      <el-form-item class="des item">
+      <el-form-item
+        class="des item"
+        prop="title"
+        :rules="[
+          {
+            validator: (rule, value, callback) => {
+              if (value && (value.length < 3 || value.length > 35)) {
+                callback('数据集中文名称长度为3-35个字符');
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur',
+          },
+        ]"
+      >
         <div>
           <span>{{ i18n.title }}</span>
         </div>
@@ -289,6 +305,18 @@ function deleteAllTags() {
           :placeholder="i18n.placeholder.name"
           size=""
         ></el-input>
+        <el-popover
+          placement="bottom-start"
+          :width="320"
+          trigger="hover"
+          :teleported="false"
+        >
+          <template #reference>
+            <o-icon><icon-poppver></icon-poppver></o-icon>
+          </template>
+          <div>- 数据集标题支持中文或者英文</div>
+          <div>- 长度为 <span class="remind">3-35个字符</span></div>
+        </el-popover>
       </el-form-item>
       <el-form-item class="des item" prop="desc">
         <div>
@@ -510,7 +538,7 @@ function deleteAllTags() {
       .el-tooltip__trigger {
         cursor: pointer;
         position: absolute;
-        right: -40px;
+        right: -32px;
         top: 5px;
         font-size: 24px;
       }
@@ -553,7 +581,7 @@ function deleteAllTags() {
       }
     }
     .el-form-item {
-      .el-form-item__cotent {
+      .el-form-item__content {
         .el-form-item__error {
           right: 0;
         }

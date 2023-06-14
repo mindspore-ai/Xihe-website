@@ -36,7 +36,7 @@ const i18n = {
     '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型',
   placeholder: {
     warehouse_name: '请输入模型英文名称',
-    model_name: '请填写模型标题中文名称',
+    model_name: '请填写模型中文名称',
     describe: '请输入内容',
   },
 };
@@ -112,7 +112,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 2000);
+  }, 500);
 }
 
 let dialogList = {
@@ -273,7 +273,7 @@ function deleteAllTags() {
                     {
                       pattern: /^[^\u4e00-\u9fa5]{3,35}$/g,
                       message: '暂不支持中文字符，且长度为3-35个字符',
-                      trigger: 'change',
+                      trigger: 'blur',
                     },
                     {
                       pattern: /^[^\*/?\\<>|:;]*$/g,
@@ -302,73 +302,45 @@ function deleteAllTags() {
                     v-model="query.name"
                     :placeholder="i18n.placeholder.warehouse_name"
                   ></el-input>
-                  <el-popover
-                    placement="bottom-start"
-                    :width="372"
-                    trigger="hover"
-                    content="this is content, this is content, this is content"
-                    :teleported="false"
-                  >
-                    <template #reference>
-                      <o-icon><icon-poppver></icon-poppver></o-icon>
-                    </template>
-                    <div>- 仓库名目前只支持英文</div>
-                    <div>
-                      - 仓库名不能以英文句号(<span class="remind">.</span
-                      >)开头或结尾，且不能包含以下字符<span class="remind"
-                        >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
-                      >
-                    </div>
-                    <div>
-                      - 仓库名不能连续两个及以上中划线（-）或下划线（_）
-                    </div>
-                    <div>
-                      -&nbsp;仓库名建议简短<span class="remind"
-                        >(3-35个字符)</span
-                      >，仓库下的文件或文件夹绝对路径长度<span class="remind"
-                        >不能超过1000字符</span
-                      >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算
-                    </div>
-                  </el-popover>
+                  <o-popper></o-popper>
                 </el-form-item>
               </div>
             </div>
-            <!-- 模型名称 -->
+            <!-- 模型标题 -->
             <div class="create-item">
               <div class="create-title-unnecessary">模型标题</div>
               <div class="create-item-right">
-                <el-form-item class="item" prop="name">
+                <el-form-item
+                  class="item"
+                  prop="title"
+                  :rules="[
+                    {
+                      validator: (rule, value, callback) => {
+                        if (value && (value.length < 3 || value.length > 35)) {
+                          callback('模型中文名称长度为3-35个字符');
+                        } else {
+                          callback();
+                        }
+                      },
+                      trigger: 'blur',
+                    },
+                  ]"
+                >
                   <el-input
                     v-model="query.title"
                     :placeholder="i18n.placeholder.model_name"
                   ></el-input>
                   <el-popover
                     placement="bottom-start"
-                    :width="372"
+                    :width="320"
                     trigger="hover"
-                    content="this is content, this is content, this is content"
                     :teleported="false"
                   >
                     <template #reference>
                       <o-icon><icon-poppver></icon-poppver></o-icon>
                     </template>
-                    <div>- 仓库名目前只支持英文</div>
-                    <div>
-                      - 仓库名不能以英文句号(<span class="remind">.</span
-                      >)开头或结尾，且不能包含以下字符<span class="remind"
-                        >>&nbsp;:&nbsp;/&nbsp;\:*?'&lt;&gt;|</span
-                      >
-                    </div>
-                    <div>
-                      - 仓库名不能连续两个及以上中划线（-）或下划线（_）
-                    </div>
-                    <div>
-                      -&nbsp;仓库名建议简短<span class="remind"
-                        >(3-35个字符)</span
-                      >，仓库下的文件或文件夹绝对路径长度<span class="remind"
-                        >不能超过1000字符</span
-                      >，例如：仓库下的文件file_name，文件名长度是按照project_name/folder_name/file_name的字符计算
-                    </div>
+                    <div>- 模型标题支持中文或者英文</div>
+                    <div>- 长度为 <span class="remind">3-35个字符</span></div>
                   </el-popover>
                 </el-form-item>
               </div>
@@ -592,7 +564,7 @@ $theme: #0d8dff;
   .el-tooltip__trigger {
     cursor: pointer;
     position: absolute;
-    right: -40px;
+    right: -32px;
     top: 5px;
     font-size: 24px;
   }

@@ -1,5 +1,8 @@
 <script setup>
 import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-intro.png';
+import introImg2 from '@/assets/imgs/estate/electricity/intelligentsystem/system-intro2.png';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
 </script>
 <template>
   <div class="project-explain">
@@ -22,7 +25,8 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
           该系统基于大量离线仿真数据构建AI决策模型，针对电网当前动态出力和负载状况，实时做出更加经济和安全的调度决策和编排计划。从当前的日前计划调度转变为分钟级甚至秒级的实时调度。可以更好地预测和评估在复杂出力和负载扰动下电网的运行状态，提升电网安全预警能力。
         </div>
         <div class="case-img">
-          <img :src="introImg" alt="" />
+          <img v-if="screenWidth > 820" :src="introImg" alt="" />
+          <img v-else class="intro-img" :src="introImg2" alt="" />
         </div>
       </div>
     </div>
@@ -57,19 +61,12 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
       color: #000;
       margin-bottom: 16px;
     }
-    .subtitle {
-      line-height: 22px;
-      font-size: 16px;
-      color: #000;
-      margin-bottom: 16px;
-    }
     .description {
       font-size: 14px;
       color: #555;
       line-height: 22px;
       .case-img {
         margin: 24px auto;
-        // padding: 24px 0;
         background: #f5f9fb;
         display: flex;
         flex-direction: column;
@@ -77,12 +74,9 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
         img {
           width: 100%;
         }
-        .solution-img {
-          margin-top: 24px;
+        .intro-img {
+          height: 176px;
         }
-      }
-      .summary {
-        margin-top: 24px;
       }
     }
   }
@@ -103,11 +97,6 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
       .title {
         font-size: 14px;
         line-height: 22px;
-        margin-bottom: 8px;
-      }
-      .subtitle {
-        font-size: 12px;
-        line-height: 18px;
         margin-bottom: 8px;
       }
       .description {

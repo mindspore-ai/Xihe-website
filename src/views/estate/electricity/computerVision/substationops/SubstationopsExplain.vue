@@ -1,5 +1,8 @@
 <script setup>
 import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-advantage.png';
+import advantageImg2 from '@/assets/imgs/estate/electricity/substationops/ops-advantage2.png';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
 </script>
 <template>
   <div class="project-explain">
@@ -41,7 +44,8 @@ import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-adv
           2、变电站现场安全智能管理：通过摄像头对变电站运检人员进行实时监测，可快速准确判断出现场作业人员是否存在违章行为，当出现未带安全帽、未穿工装、吸烟等行为时，系统能够对这些违章行为进行捕捉，并立即予以警告，同时生成违章日志文件自动记录，有效提升人员作业安全意识，降低安全风险。
         </p>
         <div class="case-img">
-          <img :src="advantageImg" alt="" />
+          <img v-if="screenWidth > 820" :src="advantageImg" alt="" />
+          <img v-else class="advantage-img" :src="advantageImg2" alt="" />
         </div>
       </div>
     </div>
@@ -68,12 +72,6 @@ import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-adv
       color: #000;
       margin-bottom: 16px;
     }
-    .subtitle {
-      line-height: 22px;
-      font-size: 16px;
-      color: #000;
-      margin-bottom: 16px;
-    }
     .description {
       font-size: 14px;
       color: #555;
@@ -87,12 +85,9 @@ import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-adv
         img {
           width: 100%;
         }
-        .solution-img {
-          margin-top: 24px;
+        .advantage-img {
+          height: 180px;
         }
-      }
-      .summary {
-        margin-top: 24px;
       }
     }
   }
@@ -113,11 +108,6 @@ import advantageImg from '@/assets/imgs/estate/electricity/substationops/ops-adv
       .title {
         font-size: 14px;
         line-height: 22px;
-        margin-bottom: 8px;
-      }
-      .subtitle {
-        font-size: 12px;
-        line-height: 18px;
         margin-bottom: 8px;
       }
       .description {

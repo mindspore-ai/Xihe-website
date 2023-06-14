@@ -26,6 +26,7 @@ export default [
   'substationhostExplain',
   'substationopsExplain',
   'intelligentsystemExplain',
+  'laborcontractExplain',
   'medicine',
   'endometrialcancerExplain',
   'diagnosisExplain',

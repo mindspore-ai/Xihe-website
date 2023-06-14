@@ -411,7 +411,7 @@ function toPage(path, index) {
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
-    // router.push(path);
+    router.push(path);
   } else {
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
@@ -570,14 +570,14 @@ function confirmDialog() {
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
-      <div
+      <!-- <div
         class="item-children"
         :class="{ 'children-active': mobileNav[5].isActive }"
       >
         <div v-for="item in mobileNav[5].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
-      </div>
+      </div> -->
       <div
         v-if="currentPage === '首页'"
         class="language"

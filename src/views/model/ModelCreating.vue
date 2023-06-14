@@ -181,6 +181,7 @@ function cancelBtn() {
 }
 // 选择要添加的标签
 function selectTags(it) {
+  console.log('it: ', it);
   it.isActive = !it.isActive;
 
   if (it.isActive) {

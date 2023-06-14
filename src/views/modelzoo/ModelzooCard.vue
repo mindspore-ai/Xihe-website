@@ -77,7 +77,7 @@ function goIntroduction() {
   padding: 16px 16px 24px;
   background-color: #fff;
   border-radius: 16px;
-  cursor: pointer;
+
   .card-top {
     width: 100%;
     overflow: hidden;

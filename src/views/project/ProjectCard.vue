@@ -15,6 +15,7 @@ import RelateCard from '@/components/train/RelateCard.vue';
 import NoRelate from '@/components/train/NoRelate.vue';
 
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getAppInfo } from '@/api/api-project';
 import {
   addDataset,
   deleteDataset,
@@ -434,17 +435,8 @@ function handleStop() {
 const socket = ref(null);
 
 //拥有者判断是否有app.py，非拥有者判断启动状态
-getGitlabTree({
-  type: 'project',
-  user: routerParams.user,
-  path: 'inference',
-  id: detailData.value.id,
-  name: routerParams.name,
-}).then((res) => {
-  let apppy = res?.data?.filter((item) => {
-    return item.name === 'app.py';
-  });
-  if (apppy) {
+getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
+  if (res.data.has_file) {
     try {
       canStart.value = true;
     } catch {

@@ -35,7 +35,7 @@ const i18n = {
   private:
     '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型',
   placeholder: {
-    warehouse_name: '请输入模型英文名称',
+    warehouse_name: '仓库真实存储名称，具有唯一性',
     model_name: '请填写模型中文名称',
     describe: '请输入内容',
   },

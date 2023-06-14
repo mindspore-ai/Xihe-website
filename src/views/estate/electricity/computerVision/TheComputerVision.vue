@@ -10,7 +10,6 @@ import IconArrowBlue from '~icons/app/arrow-blue';
 import IconCourse from '~icons/app/course';
 import IconCompetition from '~icons/app/competition';
 import IconMindcon from '~icons/app/mindcon';
-import IconCount from '~icons/app/count';
 
 import card1 from '@/assets/imgs/home1/more/more_card1.jpg';
 import card2 from '@/assets/imgs/home1/more/more_card2.jpg';
@@ -217,6 +216,18 @@ function goProjects() {
     },
   });
 }
+const beforeLeave = (activeTab) => {
+  if (activeTab === '活动') {
+    ElMessage({
+      type: 'warning',
+      message: '暂未开放，敬请期待！',
+      duration: 3000,
+      offset: 64,
+      center: true,
+    });
+    return false;
+  }
+};
 </script>
 <template>
   <div class="computer-vision">
@@ -263,11 +274,10 @@ function goProjects() {
       </div>
       <div class="model-list">
         <app-card
-          v-for="item in props.modelData.slice(1, 4)"
+          v-for="item in props.modelData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
           card-type="model"
-          :show-name="false"
           @click="goModelDetail(item.owner, item.name)"
         ></app-card>
       </div>
@@ -287,11 +297,10 @@ function goProjects() {
       </div>
       <div class="dataset-list">
         <app-card
-          v-for="item in props.datasetData.slice(1, 4)"
+          v-for="item in props.datasetData.slice(0, 3)"
           :key="item.id"
           :card-data="item"
           card-type="dataset"
-          :show-name="false"
           @click="goDatasetDetail(item.owner, item.name)"
         ></app-card>
       </div>
@@ -300,7 +309,11 @@ function goProjects() {
       <p class="application-title">开启电力之旅</p>
       <p class="desc">从入门到高阶，从理论到实践，助力开发者快速掌握深度学习</p>
 
-      <el-tabs v-model="activeName" class="travel-tabs">
+      <el-tabs
+        v-model="activeName"
+        :before-leave="beforeLeave"
+        class="travel-tabs"
+      >
         <el-tab-pane
           v-for="(item, index) in classify"
           :key="index"

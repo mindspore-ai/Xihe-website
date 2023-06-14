@@ -224,7 +224,7 @@ function goProjects() {
       <p class="application-title">应用案例</p>
       <div class="prefecture">
         <div class="southern-power">
-          <span> 更多电力专区 </span>
+          <span> 更多电力人工智能专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-models" @click="goProjects">
@@ -253,7 +253,7 @@ function goProjects() {
 
       <div class="prefecture">
         <div class="southern-power">
-          <span> 更多电力专区 </span>
+          <span> 更多电力人工智能专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-models" @click="goModels">
@@ -267,7 +267,6 @@ function goProjects() {
           :key="item.id"
           :card-data="item"
           card-type="model"
-          :show-name="false"
           @click="goModelDetail(item.owner, item.name)"
         ></app-card>
       </div>
@@ -277,7 +276,7 @@ function goProjects() {
 
       <div class="prefecture">
         <div class="southern-power">
-          <span> 更多电力专区 </span>
+          <span> 更多电力人工智能专区 </span>
           <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
         </div>
         <div class="more-datasets" @click="goDatasets">
@@ -291,7 +290,6 @@ function goProjects() {
           :key="item.id"
           :card-data="item"
           card-type="dataset"
-          :show-name="false"
           @click="goDatasetDetail(item.owner, item.name)"
         ></app-card>
       </div>

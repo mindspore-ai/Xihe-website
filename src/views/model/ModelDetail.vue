@@ -1,11 +1,15 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
 import IconClear from '~icons/app/clear';
 import IconPlus from '~icons/app/plus';
+import IconTag from '~icons/app/icon-tag';
+import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
+import IconUp from '~icons/app/up';
 
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
@@ -28,6 +32,12 @@ const route = useRoute();
 const headTags = ref([]);
 const inputDom = ref();
 
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -40,7 +50,7 @@ let renderList = ref([]);
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '清除',
+    delete: '清除全部',
   },
   tags: [],
 
@@ -77,13 +87,26 @@ let tabTitle = reactive([
 const activeName = ref(tabTitle[route.meta.index].label);
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
-  return detailData.value.is_owner
-    ? tabTitle
-    : tabTitle.filter((item) => {
-        return !item.isPrivate;
-      });
+  return getRenderNav();
 });
 
+function getRenderNav() {
+  if (detailData.value.is_owner) {
+    return tabTitle;
+  } else {
+    if (detailData.value.repo_type === 'online') {
+      return [...tabTitle].splice(0, 1);
+    } else if (detailData.value.repo_type === 'public') {
+      return [...tabTitle].splice(0, 2);
+    }
+  }
+}
+
+// return detailData.value.is_owner
+//   ? tabTitle
+//   : tabTitle.filter((item) => {
+//       return !item.isPrivate;
+//     });
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -257,6 +280,19 @@ function confirmBtn() {
     }
   );
   isTagShow.value = false;
+
+  if (detailData.value?.id) {
+    nextTick(() => {
+      tagRef.value.forEach((item) => {
+        sumWidth.value += item.offsetWidth + 4;
+      });
+      containerWidth.value = containerRef.value.offsetWidth;
+
+      isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
+
+      sumWidth.value = 0;
+    });
+  }
 }
 
 // 取消
@@ -382,61 +418,140 @@ watch(
     }
   }
 );
+const isExpand = ref(false);
+
+function checkAllTags(val) {
+  isExpand.value = val;
+}
+function retractAlltags(val) {
+  isExpand.value = val;
+}
+watch(
+  () => detailData.value,
+  () => {
+    if (detailData.value?.id) {
+      nextTick(() => {
+        tagRef.value.forEach((item) => {
+          sumWidth.value += item.offsetWidth + 4;
+        });
+        containerWidth.value = containerRef.value.offsetWidth;
+
+        isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
+
+        sumWidth.value = 0;
+      });
+    }
+  }
+);
 </script>
 
 <template>
   <div v-if="detailData?.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head wrap">
-      <div class="card-head-top">
-        <div class="portrait">
-          <img :src="detailData.avatar_id" alt="" />
+    <div class="card-head">
+      <div class="card-head-content">
+        <div class="card-head-info wrap">
+          <div class="head-info-title">
+            <p v-if="detailData.title">{{ detailData.title }}</p>
+            <p v-else>{{ detailData.name }}</p>
+            <train-likes
+              v-if="userInfoStore.userName !== detailData.owner"
+              :is-digged="isDigged"
+              :dig-count="detailData.like_count"
+              class="loves"
+              @click="handleModelLike"
+            ></train-likes>
+          </div>
         </div>
-        <router-link :to="{ path: `/${route.params.user}` }">
-          {{ detailData.owner }} </router-link
-        >/
-        <span>{{ detailData.name }}</span>
-        <div
-          class="card-head-copy"
-          @click="copyText(`${detailData.owner}/${detailData.name}`)"
-        >
-          <o-icon><icon-copy></icon-copy></o-icon>
+
+        <div v-if="detailData.desc" class="head-info-desc wrap">
+          <p>{{ detailData.desc }}</p>
         </div>
-        <div v-if="userInfoStore.userName !== detailData.owner">
-          <train-likes
-            :is-digged="isDigged"
-            :dig-count="detailData.like_count"
-            class="loves"
-            @click="handleModelLike"
-          ></train-likes>
+
+        <div class="card-head-top wrap">
+          <div class="head-top-left">
+            <div class="portrait">
+              <img :src="detailData.avatar_id" alt="" />
+            </div>
+
+            <router-link :to="{ path: `/${route.params.user}` }">
+              {{ detailData.owner }} </router-link
+            >/
+            <span>{{ detailData.name }}</span>
+            <div
+              class="card-head-copy"
+              @click="copyText(`${detailData.owner}/${detailData.name}`)"
+            >
+              <o-icon><icon-copy></icon-copy></o-icon>
+            </div>
+          </div>
+
+          <div class="card-head-time">
+            <o-icon>
+              <icon-time> </icon-time>
+            </o-icon>
+            <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+          </div>
+
+          <div class="label-box">
+            <p class="tag-icon">
+              <o-icon>
+                <icon-tag></icon-tag>
+              </o-icon>
+            </p>
+            <div
+              v-if="detailData.is_owner"
+              class="label-add-item"
+              @click="addTagClick"
+            >
+              <o-icon><icon-plus></icon-plus></o-icon>
+              添加标签
+            </div>
+            <div
+              ref="containerRef"
+              class="label-box-left"
+              :class="isExpand ? 'tags-expand' : 'tags-retract'"
+            >
+              <div
+                v-for="(label, index) in modelTags"
+                :key="index"
+                ref="tagRef"
+                class="label-item"
+              >
+                {{ label.name === 'electricity' ? '电力' : label.name }}
+              </div>
+
+              <template v-if="isWrap">
+                <div
+                  v-if="!isExpand"
+                  class="check-tags"
+                  @click="checkAllTags(true)"
+                >
+                  查看全部
+                  <o-icon><icon-right></icon-right></o-icon>
+                </div>
+
+                <div v-else class="retract-tags" @click="retractAlltags(false)">
+                  收起
+                  <o-icon><icon-up></icon-up></o-icon>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="label-box">
-        <div
-          v-for="(label, index) in modelTags"
-          :key="index"
-          class="label-item"
-        >
-          {{ label.name }}
-        </div>
-        <div
-          v-if="detailData.is_owner"
-          class="label-add-item"
-          @click="addTagClick"
-        >
-          <o-icon><icon-plus></icon-plus></o-icon>
-          添加标签
-        </div>
+
+      <div class="card-head-tabs">
+        <el-tabs v-model="activeName" class="wrap" @tab-click="handleTabClick">
+          <el-tab-pane
+            v-for="item in renderNav"
+            :key="item.id"
+            :label="item.label"
+            :name="item.label"
+          >
+          </el-tab-pane>
+        </el-tabs>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane
-          v-for="item in renderNav"
-          :key="item.id"
-          :label="item.label"
-          :name="item.label"
-        >
-        </el-tab-pane>
-      </el-tabs>
     </div>
     <div v-if="detailData.id" class="model-detail-body">
       <router-view class="wrap" @on-click="getDetailData()"></router-view>
@@ -453,16 +568,21 @@ watch(
         <template #header="{ titleId, title }">
           <div :id="titleId" :class="title">
             <div class="dialog-head">
-              <div class="head-left">
+              <div class="dialog-head-top">
                 <div class="head-title">{{ dialogList.head.title }}</div>
                 <div class="head-delete" @click="deleteModelTags">
                   <o-icon><icon-clear></icon-clear></o-icon>
                   {{ dialogList.head.delete }}
                 </div>
               </div>
+
               <div class="head-tags">
-                <div v-for="it in headTags" :key="it" class="condition-detail">
-                  {{ it.name }}
+                <div
+                  v-for="it in headTags"
+                  :key="it"
+                  class="dlg-condition-detail"
+                >
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -496,7 +616,7 @@ watch(
                         :class="{ 'condition-active': it.isActive }"
                         @click="tagClick(it, menu.key)"
                       >
-                        {{ it.name }}
+                        {{ it.name === 'electricity' ? '电力' : it.name }}
                       </div>
                     </div>
                   </div>
@@ -527,12 +647,18 @@ $theme: #0d8dff;
   opacity: 0;
 }
 .tags-box {
+  :deep(.el-dialog) {
+    .el-dialog__header {
+      justify-content: flex-start;
+      padding-bottom: 16px;
+    }
+  }
   .dialog-head {
     display: flex;
-    align-items: center;
-    .head-left {
-      width: 188px;
+    flex-direction: column;
+    .dialog-head-top {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-top: 10px;
       .head-title {
@@ -544,10 +670,12 @@ $theme: #0d8dff;
       .head-delete {
         font-size: 12px;
         line-height: 18px;
+        color: #555;
         display: flex;
         align-items: center;
         cursor: pointer;
         .o-icon {
+          font-size: 16px;
           margin-right: 6px;
           align-self: center;
         }
@@ -561,18 +689,19 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
-      .condition-detail {
+      margin-top: 6px;
+      .dlg-condition-detail {
         cursor: pointer;
         display: flex;
         align-items: center;
-        padding: 0 12px;
+        padding: 0px 10px 0 12px;
         margin: 10px 16px 0 0;
-        height: 28px;
+        height: 24px;
         font-size: 14px;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
@@ -586,8 +715,7 @@ $theme: #0d8dff;
   }
   .dialog-body {
     border-top: 1px solid #d8d8d8;
-    padding-top: 7px;
-    :deep .el-tabs__item {
+    :deep(.el-tabs__item) {
       width: 188px;
       height: 56px;
       text-align: left;
@@ -595,15 +723,24 @@ $theme: #0d8dff;
       font-size: 18px;
       padding-left: 24px;
     }
-    :deep .el-tabs .el-tabs__header {
-      box-shadow: none;
+    :deep(.el-tabs__content) {
+      text-align: left;
     }
+    :deep(.el-tabs .el-tabs__header) {
+      box-shadow: none;
+      min-height: 320px;
+      background: #f7f8fa;
+    }
+    :deep(.el-tabs__nav) {
+      background: #f7f8fa;
+    }
+
     .el-tabs--left,
     .el-tabs--right {
       border-bottom: 1px solid #d8d8d8;
     }
     :deep .el-tabs__item.is-active {
-      background: #f7f8fa;
+      background: #fff;
     }
     .tan-title {
       margin: 14px 0;
@@ -629,7 +766,7 @@ $theme: #0d8dff;
       color: #555;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
     }
     .condition-active {
@@ -668,20 +805,29 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .model-detail {
   background-color: #fff;
   .card-head-top {
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: #555;
+    align-items: flex-start;
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000;
+    .head-top-left {
+      align-self: flex-start;
+      align-items: center;
+      display: flex;
+      line-height: 20px;
+      height: 20px;
+    }
     .portrait {
       margin-right: 8px;
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
       background-color: #4d66ca;
       border-radius: 50%;
       border: 1px solid #b7ddff;
@@ -704,6 +850,11 @@ $theme: #0d8dff;
     display: flex;
     align-items: center;
     margin-left: 8px;
+    margin-right: 24px;
+    .o-icon {
+      font-size: 20px;
+      color: #555;
+    }
     .o-icon:hover {
       color: #0d8dff;
     }
@@ -713,8 +864,6 @@ $theme: #0d8dff;
     margin-left: 40px;
     font-size: 14px;
     line-height: 18px;
-    display: flex;
-    align-items: center;
     .o-icon {
       font-size: 18px;
     }
@@ -723,7 +872,7 @@ $theme: #0d8dff;
     }
   }
   .card-head {
-    padding-top: 105px;
+    // padding-top: 80px;
     .card-head-1 {
       display: flex;
       margin-bottom: 16px;
@@ -733,51 +882,158 @@ $theme: #0d8dff;
         line-height: 27px;
       }
     }
-    .label-box {
+
+    .card-head-time {
+      align-self: flex-start;
       display: flex;
-      margin: 8px 0;
-      font-size: 12px;
-      flex-wrap: wrap;
-      .label-item {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        height: 28px;
-        margin-right: 8px;
-        margin-bottom: 8px;
-        padding: 0px 12px;
-        font-size: 14px;
+      align-items: center;
+      height: 20px;
+      margin-right: 24px;
+      p {
         color: #555;
-        border: 1px solid #dbedff;
-        background-color: #f3f9ff;
-        border-radius: 8px;
       }
-      .label-add-item {
-        display: flex;
-        align-items: center;
-        height: 28px;
-        padding: 0px 12px;
-        background: #f7f8fa;
-        border-radius: 8px;
-        border: 1px solid #999999;
-        cursor: pointer;
-        .o-icon {
-          margin-right: 4px;
+      .o-icon {
+        margin-right: 8px;
+        svg {
+          color: #555;
+          font-size: 20px;
         }
       }
     }
+    .tag-icon {
+      align-self: flex-start;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      .o-icon {
+        font-size: 20px;
+      }
+    }
+    .handle-overlength {
+      margin-right: 50px !important;
+    }
+    .tags-retract {
+      height: 20px;
+      overflow-y: hidden;
+      padding-right: 92px;
+    }
+    .tags-expand {
+      height: auto;
+      overflow: unset;
+      padding-right: 64px;
+    }
+    .label-box {
+      display: flex;
+      font-size: 12px;
+      flex-wrap: nowrap;
+      .label-box-left {
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        .check-tags,
+        .retract-tags {
+          position: absolute;
+          right: 0;
+          bottom: 0px;
+          font-size: 14px;
+          color: #555555;
+          line-height: 18px;
+          padding: 2px 4px;
+          color: #0d8dff;
+          cursor: pointer;
+          .o-icon {
+            font-size: 16px;
+          }
+        }
+        .retract-tags {
+          bottom: 14px;
+        }
+      }
+    }
+    .label-item {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 4px;
+      margin-bottom: 8px;
+      padding: 0px 12px;
+      font-size: 12px;
+      color: #555;
+      border: 1px solid #dbedff;
+      background-color: #f3f9ff;
+      border-radius: 14px;
+      white-space: nowrap;
+    }
+    .label-add-item {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      padding: 2px 8px 2px 4px;
+      background: rgba(13, 141, 255, 0.15);
+      border-radius: 14px;
+      color: #0d8dff;
+      border: 1px dashed #0d8dff;
+      white-space: nowrap;
+      margin-right: 4px;
+      cursor: pointer;
+      .o-icon {
+        margin-right: 4px;
+      }
+    }
   }
+  .card-head-tabs {
+    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
+  }
+  .card-head-content {
+    padding: 108px 0 24px 0;
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .card-head-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  .head-info-title {
+    flex: 1;
+    font-size: 24px;
+    color: #555555;
+    line-height: 38px;
+    display: flex;
+    justify-content: space-between;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .head-info-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 22px;
+    margin-top: 10px;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   .model-detail-body {
     min-height: calc(100vh - 455px);
     background-color: #f5f6f8;
-    padding: 35px 0 64px;
+    padding: 40px 0 64px;
   }
 }
 :deep(.el-tabs) {
   .el-tabs__header {
     background-color: #ffffff;
     margin-bottom: 0;
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
   }
 
   .el-tabs__item {

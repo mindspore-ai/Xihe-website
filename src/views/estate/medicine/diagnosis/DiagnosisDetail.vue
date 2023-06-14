@@ -1,26 +1,30 @@
 <!-- 智慧病理诊断系统 -->
 <script setup>
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
+import { useRouter } from 'vue-router';
 
 import IconArrowRight from '~icons/app/arrow-right.svg';
+import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
+import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
-// import estateData from '../../../../../config/estate';
-
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
+const screenWidth = useWindowResize();
+const router = useRouter();
+function goBack() {
+  router.push('/medicine');
+}
 </script>
 
 <template>
   <div class="medicine-detail">
+    <div v-if="screenWidth < 820" class="navigation">
+      <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
+      <span class="title">智慧病理诊断系统</span>
+    </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/estate/medicine' }">
+          <el-breadcrumb-item :to="{ path: '/medicine' }">
             医疗专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
@@ -41,7 +45,13 @@ import { ArrowRight } from '@element-plus/icons-vue';
               </div>
             </div>
             <div class="banner-btn">
-              <OButton disabled type="primary" animation class="home-btn">
+              <OButton
+                :size="screenWidth < 820 ? 'mini' : 'small'"
+                disabled
+                type="primary"
+                animation
+                class="home-btn"
+              >
                 运行模型
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
@@ -51,14 +61,6 @@ import { ArrowRight } from '@element-plus/icons-vue';
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
-          <!-- <div class="industry-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div> -->
           <div class="industry-info">
             <router-view />
           </div>
@@ -73,51 +75,60 @@ import { ArrowRight } from '@element-plus/icons-vue';
   background-color: #f5f6f8;
   padding-top: 80px;
   min-height: calc(100vh - 200px);
-
+  @media screen and (max-width: 820px) {
+    padding: 48px 0px 40px;
+  }
+  .navigation {
+    font-size: 16px;
+    color: #000;
+    line-height: 48px;
+    padding: 0 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.0509803922);
+    position: relative;
+    .o-icon {
+      position: absolute;
+      left: 16px;
+    }
+  }
   .medicine-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
-    max-width: 1472px;
+    max-width: 1448px;
     overflow: hidden;
-    .bread-wrap {
-      // height: 94px;
-      // padding-top: 40px;
-      // padding-bottom: 40px;
-      padding: 40px 0;
-      // background-color: #f5f6f8;
-      .el-breadcrumb {
-        font-size: 12px;
-        line-height: 18px;
-        .el-breadcrumb__item {
-          :deep(.el-breadcrumb__inner.is-link) {
-            color: #555;
-            font-weight: 400;
-            &:hover {
-              color: #0d8dff;
-            }
-          }
-          :deep(.el-breadcrumb__separator.el-icon) {
-            color: #555;
-          }
+    @media screen and (max-width: 820px) {
+      padding-bottom: 0px;
+      .bread-wrap {
+        @media screen and (max-width: 820px) {
+          display: none;
         }
-        :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-          color: #000;
-        }
-        // :deep(.el-breadcrumb__item:nth-child(2) .el-breadcrumb__inner) {
-        //   cursor: pointer;
-        // }
       }
     }
+    .bread-wrap {
+      padding: 40px 0;
+    }
+
     .medicine-content {
       .medicine-content-banner {
         padding: 40px;
         background-color: #fff;
         display: flex;
         border-radius: 16px;
-        margin-bottom: 37px;
+        margin-bottom: 40px;
+        @media screen and (max-width: 820px) {
+          padding: 16px;
+          margin-bottom: 16px;
+        }
         .banner-left {
           width: 416px;
           margin-right: 40px;
+          @media screen and (max-width: 820px) {
+            display: none;
+          }
           img {
             width: 100%;
             height: 100%;
@@ -128,26 +139,41 @@ import { ArrowRight } from '@element-plus/icons-vue';
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          @media screen and (max-width: 820px) {
+            width: 100%;
+            display: flex;
+          }
           .banner-content {
             .banner-title {
               line-height: 48px;
               font-size: 36px;
               color: #000000;
               margin-bottom: 16px;
+              @media screen and (max-width: 820px) {
+                font-size: 16px;
+                line-height: 24px;
+                margin-bottom: 8px;
+              }
             }
             .banner-desc {
               font-size: 14px;
               color: #555555;
               line-height: 22px;
+              @media screen and (max-width: 820px) {
+                font-size: 12px;
+                line-height: 18px;
+              }
             }
           }
           .banner-btn {
+            margin-top: 16px;
             .o-button {
               border-radius: 24px;
             }
           }
         }
       }
+
       .medicine-content-desc {
         background: #fff;
         border-radius: 16px;
@@ -155,12 +181,11 @@ import { ArrowRight } from '@element-plus/icons-vue';
         //   background: #fff;
         // }
         .industry-tab {
-          max-width: 1440px;
+          max-width: 1416px;
           margin: 0 auto;
           height: 48px;
           box-shadow: 0px 1px 5px 0px rgb(45 47 51 / 10%);
           border-radius: 16px 16px 0 0;
-          // background-color: #fbfbfb;
           :deep(.o-nav) {
             width: 100%;
             display: flex;
@@ -173,8 +198,10 @@ import { ArrowRight } from '@element-plus/icons-vue';
           }
         }
         .industry-info {
-          // background-color: #f5f6f8;
-          padding: 40px 80px;
+          padding: 40px;
+          @media screen and (max-width: 820px) {
+            padding: 16px;
+          }
         }
       }
     }

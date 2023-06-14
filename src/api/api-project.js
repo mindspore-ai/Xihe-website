@@ -9,7 +9,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -459,6 +459,26 @@ export function cloudSubscribe(id) {
  */
 export function cloudDisposeTarget(cid) {
   const url = `/server/cloud/pod/${cid}`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getReadmeInfo(ownerName, modelName) {
+  const url = `/server/repo/project/${ownerName}/${modelName}/readme`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getAppInfo(ownerName, modelName) {
+  const url = `/server/repo/project/${ownerName}/${modelName}/app`;
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

@@ -208,7 +208,7 @@ watch(
     display: flex;
     justify-content: center;
     width: 100%;
-    max-width: 1440px;
+    max-width: 1416px;
   }
 }
 </style>

@@ -294,11 +294,14 @@ watch(
 </script>
 <template>
   <div v-if="!repoDetailData.is_empty" class="tree">
-    <table class="tree-table">
-      <col width="330px" />
-      <col width="250px" />
-      <col width="540px" />
-      <col width="200px" />
+    <table
+      class="tree-table"
+      :class="filesList.length ? 'has-data' : 'no-data'"
+    >
+      <col width="350px" />
+      <col width="282px" />
+      <col width="564px" />
+      <col width="202px" />
       <tbody style="100%">
         <tr class="tree-head">
           <td colspan="3">
@@ -394,7 +397,7 @@ watch(
               <div v-show="!item.is_dir" class="inner-box">
                 <o-icon><icon-download></icon-download></o-icon>
                 <!-- <span class="size">{{ changeByte(item.size) }}</span> -->
-                <span class="size">download</span>
+                <span class="size">下载</span>
                 <img
                   v-if="item.is_lfs_file"
                   :src="LfsImg"
@@ -512,18 +515,25 @@ watch(
     }
   }
 }
+.has-data {
+  border-radius: 16px;
+}
+.no-data {
+  border-radius: 16px 16px 0 0;
+}
 .tree {
-  &-head {
-    // display: block;
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+  .tree-head {
     padding: 12px 24px;
     width: 100%;
     font-size: 14px;
     background-color: #e5e8f0 !important;
-    &-left {
+    .tree-head-left {
       display: flex;
       align-items: center;
       height: 56px;
-      &-describe {
+      .tree-head-left-describe {
         padding-left: 6px;
         color: #555;
         line-height: 20px;
@@ -532,25 +542,27 @@ watch(
         text-overflow: ellipsis;
       }
     }
-    &-right {
+    .tree-head-right {
       padding-right: 70px;
       height: 56px;
     }
   }
-  &-table {
+  .tree-table {
     padding: 0 24px;
     width: 100%;
-    border: 1px solid #e5e5e5;
     background-color: #fff;
     table-layout: fixed;
     word-break: break-all;
     border-collapse: collapse;
+    overflow: hidden;
     @media screen and (max-width: 1280px) {
       width: inherit;
     }
+
     tr {
       height: 56px;
       transition: all 0.3s;
+
       &:hover {
         background: #f7f8fa;
         .delete-folder {
@@ -586,7 +598,7 @@ watch(
         span:nth-child(1) {
           margin-right: 16px;
         }
-        .o-icon:nth-child(2){
+        .o-icon:nth-child(2) {
           color: #ccc;
         }
       }
@@ -594,7 +606,6 @@ watch(
         overflow: hidden;
         flex-shrink: 0;
         word-wrap: break-word;
-        border-bottom: 1px solid #e5e5e5;
         .inner-box {
           display: flex;
           align-items: center;
@@ -618,6 +629,17 @@ watch(
       }
     }
     &-item {
+      position: relative;
+      &:not(:last-child)::after {
+        content: '';
+        width: calc(100% - 72px);
+        height: 1px;
+        background-color: #e5e5e5;
+        position: absolute;
+        left: 36px;
+        bottom: 0px;
+      }
+
       &-name {
         cursor: pointer;
         .inner-box {
@@ -687,9 +709,6 @@ watch(
       }
     }
     &-item-inner {
-      // display: flex;
-      // align-items: center;
-      // justify-content: space-between;
       padding: 16px 0;
       border-bottom: 1px solid #e5e5e5;
       & > div {
@@ -706,8 +725,8 @@ watch(
     padding: 30px 0;
     justify-content: center;
     align-items: center;
-    // border: 1px solid ;
     border: 1px solid #e5e5e5;
+    border-radius: 0 0 16px 16px;
   }
 }
 .empty-own {

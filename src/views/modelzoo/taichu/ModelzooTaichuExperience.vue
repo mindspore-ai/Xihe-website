@@ -187,13 +187,11 @@ function startRatiocnate() {
       inferenceText.value
     )
   ) {
-    // loading1.value = true;
     getInferencePicture({
       content: inferenceText.value,
     }).then((res) => {
       if (res.status === 200) {
         inferUrlList.value = [];
-        // inferUrl.value = res.data.output_image_url + '?' + new Date();
         inferUrlList.value.push(res.data.output_image_url + '?' + new Date());
       } else if (res.status === -2) {
         ElMessage({
@@ -336,21 +334,6 @@ function handleTextChange() {
     }
   });
 }
-
-// function downLoadPicture() {
-//   let x = new XMLHttpRequest();
-//   x.open('GET', inferUrl.value, true);
-//   x.responseType = 'blob';
-//   x.onload = function () {
-//     const blobs = new Blob([x.response], { type: 'image/jpg' });
-//     let url = window.URL.createObjectURL(blobs);
-//     let a = document.createElement('a');
-//     a.href = url;
-//     a.download = 'infer.jpg';
-//     a.click();
-//   };
-//   x.send();
-// }
 
 const activeNames = ref(['1']);
 const activeNames1 = ref(['1']);
@@ -1223,7 +1206,7 @@ onUnmounted(() => {
 }
 .model-page {
   background-color: #f5f6f8;
-  max-width: 1440px;
+  max-width: 1416px;
 }
 .caption-bottom {
   height: 560px;

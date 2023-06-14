@@ -302,7 +302,7 @@ provide('getDetailData', getDetailData);
   .competition-wrap {
     padding: 0px 16px 64px;
     margin: 0 auto;
-    max-width: 1472px;
+    max-width: 1448px;
     overflow: hidden;
     .bread-wrap {
       height: 94px;
@@ -455,7 +455,7 @@ provide('getDetailData', getDetailData);
         width: 100%;
         top: 80px;
         overflow: hidden;
-        max-width: 1440px;
+        max-width: 1416px;
         height: 128px;
         .left {
           padding: 0 0 0 40px;

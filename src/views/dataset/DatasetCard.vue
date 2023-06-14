@@ -12,7 +12,8 @@ import NoRelate from '@/components/train/NoRelate.vue';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/dataset';
 
-import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getGitlabFileRaw } from '@/api/api-gitlab';
+import { getReadmeInfo } from '@/api/api-dataset';
 import { useFileData } from '@/stores';
 
 const router = useRouter();
@@ -23,7 +24,7 @@ const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();
-let README = '';
+// let README = '';
 const rightModel = ref(null);
 const licensesHeight = ref(0);
 
@@ -57,18 +58,9 @@ route.hash ? getReadMeFile() : '';
 // 获取README文件
 function getReadMeFile() {
   try {
-    getGitlabTree({
-      type: 'dataset',
-      user: routerParams.user,
-      path: '',
-      id: detailData.value.id,
-      name: routerParams.name,
-    })
+    getReadmeInfo(detailData.value.owner, detailData.value.name)
       .then((tree) => {
-        README = tree?.data?.filter((item) => {
-          return item.name === 'README.md';
-        });
-        if (README && README.length) {
+        if (tree.data.has_readme) {
           getGitlabFileRaw({
             type: 'dataset',
             user: routerParams.user,
@@ -220,10 +212,12 @@ watch(
   background-color: #f5f6f8;
   .markdown-body {
     position: relative;
-    margin-right: 40px;
+    margin-right: 24px;
     width: 100%;
-    border-right: 1px solid #d8d8d8;
+    border-radius: 16px;
+    background: #fff;
     :deep(.markdown-file) {
+      padding: 24px;
       padding-right: 40px;
       .license {
         position: absolute;
@@ -243,8 +237,8 @@ watch(
   }
   .o-button {
     position: absolute;
-    top: 0px;
-    right: 40px;
+    top: 24px;
+    right: 24px;
   }
 }
 .upload-readme {
@@ -278,9 +272,12 @@ watch(
   :deep(.remove-item) {
     visibility: hidden;
   }
-  max-width: 425px;
+  max-width: 463px;
   width: 100%;
   color: #000;
+  background: #fff;
+  padding: 40px 24px;
+  border-radius: 16px;
   .download-data {
     .download-title {
       margin-bottom: 8px;

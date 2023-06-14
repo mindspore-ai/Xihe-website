@@ -346,7 +346,7 @@ function handelCancel() {
 
 <style lang="scss" scoped>
 .submit-page {
-  max-width: 1472px;
+  max-width: 1448px;
   padding: 36px 40px 40px;
   min-height: 319px;
   display: flex;

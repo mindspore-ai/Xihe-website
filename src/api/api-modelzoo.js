@@ -6,7 +6,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -19,14 +19,14 @@ function getHeaderConfig() {
  */
 export function uploadModelzooPic(params) {
   const url = `/server/bigmodel/describe_picture`;
-
-  getHeaderConfig().headers['Content-Type:multipart/form-data'];
+  // getHeaderConfig().headers['Content-Type:multipart/form-data'];
 
   return request
     .post(url, params, {
       $noLoading: true,
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
       },
     })
     .then((res) => {
@@ -62,7 +62,7 @@ export function getMultiplePicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })
@@ -81,7 +81,12 @@ export function getMultiplePicture(params) {
 export function uploadVqaPicture(params) {
   const url = `/server/bigmodel/vqa_upload_picture`;
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((res) => {
       return res.data;
     })
@@ -131,7 +136,7 @@ export function handlePanguInfer(params) {
   return request
     .post(url, params, {
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })
@@ -217,7 +222,7 @@ export function wuKongInfer(params) {
       $doException: true,
       $noLoading: true,
       headers: {
-        'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
       },
       timeout: 60000,
     })

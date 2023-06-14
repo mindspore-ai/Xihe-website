@@ -33,7 +33,7 @@ const activeName = ref('first');
     background-size: cover;
     background-image: url('@/assets/imgs/banner-head.png');
     .wrap {
-      max-width: 1472px;
+      max-width: 1448px;
       margin: 0 auto;
       padding: 42px 16px 70px;
       color: #000;
@@ -42,7 +42,7 @@ const activeName = ref('first');
   }
   &-content {
     // background-color: red;
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     padding-left: 16px;
     padding-right: 16px;

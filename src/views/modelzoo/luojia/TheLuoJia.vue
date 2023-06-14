@@ -5,11 +5,15 @@ import { useRoute, useRouter } from 'vue-router';
 import IconArrow from '~icons/app/arrow-blue';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 
 function goToExperience() {
-  router.push('/modelzoo/luojia');
+  // router.push('/modelzoo/luojia');
+  window.open('/modelzoo/luojia');
 }
 
 function knowMore() {
@@ -33,9 +37,9 @@ const currentPage = computed(() => {
     <div class="luojia-main">
       <div class="bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-            >大模型</el-breadcrumb-item
-          >
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+            t('luojia.BIG_MODEL')
+          }}</el-breadcrumb-item>
           <el-breadcrumb-item>{{ currentPage }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -43,29 +47,34 @@ const currentPage = computed(() => {
         <img src="@/assets/imgs/modelzoo/Luojia.png" alt="" />
         <div class="luojia-title-intro">
           <div class="intro-top">
-            <p class="headline">武汉.LuoJia</p>
+            <p class="headline">{{ t('luojia.MODEL_NAME') }}</p>
             <p class="text">
-              由武汉大学与华为昇腾AI团队联合研发，是遥感领域首个国产化自主可控的遥感专用机器学习框架，针对遥感数据像幅尺寸大、数据通道多、尺度变化大等特性，
-              具备内存可扩展、尺度通道灵活创建、数据通道自主优选、框架与数据协同处理的特点。可兼容已有深度学习框架，
-              并提供用户友好的、可拖拽的交互式网络结构搭建界面的方法。能屏蔽不同硬件设备间差异，同时管理多样化的遥感影像样本库LuoJiaSET，
-              实现遥多源感影像样本的高效存储管理。
+              {{ t('luojia.MODEL_DESC') }}
             </p>
           </div>
           <div class="entrance">
             <p class="entrance-item" @click="goToExperience">
-              <span class="entrance-item-title">在线体验</span>
+              <span class="entrance-item-title">
+                {{ t('luojia.NAV_TAB_2') }}</span
+              >
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </p>
             <p class="entrance-item" @click="enterLuoJiaSet">
-              <span class="entrance-item-title">LuoJiaSET入口</span>
+              <span class="entrance-item-title">{{
+                t('luojia.LUOJIA_SET')
+              }}</span>
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </p>
             <p class="entrance-item" @click="enterLuoJiaNet">
-              <span class="entrance-item-title">LuoJiaNET入口</span>
+              <span class="entrance-item-title">{{
+                t('luojia.LUOJIA_NET')
+              }}</span>
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </p>
             <div class="entrance-item" @click="knowMore">
-              <span class="entrance-item-title">了解更多</span>
+              <span class="entrance-item-title">{{
+                t('luojia.SOURCE_CODE')
+              }}</span>
               <o-icon><icon-arrow></icon-arrow></o-icon>
             </div>
           </div>
@@ -84,7 +93,7 @@ const currentPage = computed(() => {
   background-color: #f5f6f8;
 }
 .luojia-main {
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   padding: 80px 0 64px 0;
   @media screen and (max-width: 820px) {

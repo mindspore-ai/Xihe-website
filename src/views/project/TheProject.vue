@@ -1,15 +1,22 @@
 <script setup>
-import { ref, onUnmounted, reactive, watch } from 'vue';
+import { ref, onUnmounted, reactive, watch, markRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
-import { Search } from '@element-plus/icons-vue';
-import IconMenu from '~icons/app/menu';
+import { Search, ArrowDown } from '@element-plus/icons-vue';
 import IconX from '~icons/app/x';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
-import IconBack from '~icons/app/back';
+import IconDownload from '~icons/app/download';
+import IconFork from '~icons/app/fork-gray';
+
+import IconVoice from '~icons/app/voice';
+import IconVision from '~icons/app/vision';
+import IconCV from '~icons/app/project-cv';
+import IconNLP from '~icons/app/project-nlp';
+import recommendation from '~icons/app/recommendation';
+
 import OEmpty from '@/components/OEmpty.vue';
 import emptyImg from '@/assets/imgs/model-empty.png';
 
@@ -45,9 +52,9 @@ let i18n = {
   more: '更多',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -90,25 +97,29 @@ let i18n = {
       haveActive: false,
       condition: [],
     },
+    {
+      title: {
+        text: '产业类型',
+        key: 'industry',
+      },
+      haveActive: false,
+      condition: [],
+    },
   ],
 };
-
-const projectType = reactive([
-  { type: '精选', isActive: false, num: 3 },
-  { type: '官方', isActive: false, num: 2 },
-]);
 
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
 const renderSorts = ref([]); //应用分类标签
 const otherCondition = ref([]); //训练平台、协议、项目类型标签
-const showDetail = ref(false);
 const moreSortTags = ref([]);
-const showCondition = ref(true);
-const showTags = ref(false);
-const radioList = ref({});
 const keyWord = ref('');
+const activeNavItem = ref('all');
+const selectValue = ref('');
+const renderList = ref([]); //含渲染的一级标签
+const menuList = ref([]); //左侧标签
+const headTags = ref([]);
 
 const queryData = reactive({
   name: null, //项目名
@@ -124,248 +135,116 @@ const debounceSearch = debounce(getProject, 500, {
   trailing: true,
 });
 
-function projectTypeClick(val) {
-  if (val.isActive) {
-    val.isActive = !val.isActive;
-    delete queryData['level'];
-  } else {
-    projectType.forEach((item) => {
-      item.isActive = false;
-    });
-    val.isActive = true;
-    if (val.type === '官方') {
-      queryData.level = 'official';
-    } else {
-      queryData.level = 'good';
-    }
-  }
-}
+// 头部tabs
+const navItems = [
+  {
+    id: 'all',
+    label: '全部项目',
+    // href: '/modelzoo/pangu/introduce',
+  },
+  {
+    id: 'official',
+    label: '官方项目',
+  },
+  {
+    id: 'good',
+    label: '精选项目',
+  },
+  {
+    id: 'electricity',
+    label: '电力专区',
+  },
+];
 
-// 应用分类查看全部
-function moreClick() {
-  showDetail.value = true;
-  showCondition.value = false;
-}
+// 热门标签列表
+const hotTagsList = ref([
+  {
+    id: 1,
+    name: '计算机视觉',
+    value: 'CV',
+    active: false,
+    icon: markRaw(IconCV),
+  },
+  {
+    id: 2,
+    name: '自然语言处理',
+    value: 'NLP',
+    active: false,
+    icon: markRaw(IconNLP),
+  },
+  {
+    id: 3,
+    name: '语音',
+    value: 'Audio',
+    active: false,
+    icon: markRaw(IconVoice),
+  },
+  {
+    id: 4,
+    name: '推荐',
+    value: 'Recommendation',
+    active: false,
+    icon: markRaw(recommendation),
+  },
+  {
+    id: 5,
+    name: '图神经网络',
+    value: 'GNN',
+    active: false,
+    icon: markRaw(IconVision),
+  },
+]);
+// 标签文字
+let dialogList = {
+  head: {
+    title: '已选标签',
+    delete: '清除全部',
+  },
+  tags: [],
+};
 
-function backCondition() {
-  showDetail.value = false;
-  showCondition.value = true;
-  showTags.value = false;
-}
-
-// 多选(应用分类，其他)
-function sortsClick(index, index2) {
-  renderSorts.value[index].haveActive = true;
-  // 高亮
-  renderSorts.value[index].condition[index2].isActive =
-    !renderSorts.value[index].condition[index2].isActive;
-  goSearch(renderSorts.value);
-}
-//清除应用分类所有的标签
-function clearItem1(index) {
-  renderSorts.value[index].haveActive = false;
-  renderSorts.value[index].condition.forEach((item) => {
-    item.isActive = false;
-  });
-  queryData.tag_kinds = null;
-}
-
-// 单选(sdk,状态，协议)
-function conditionClick(index, index2) {
-  renderCondition.value[index].haveActive = true;
-  renderCondition.value[index].condition[0].items.forEach((item) => {
-    item.isSelected = true;
-  });
-  renderCondition.value[index].condition[0].items[index2].isSelected = false;
-  if (
-    renderCondition.value[index].condition[0].items[index2].isActive === true
-  ) {
-    renderCondition.value[index].condition[0].items[index2].isActive =
-      !renderCondition.value[index].condition[0].items[index2].isActive;
-    renderCondition.value[index].condition[0].items.forEach((item) => {
-      item.isSelected = false;
-    });
-  } else {
-    renderCondition.value[index].condition[0].items.forEach((single) => {
-      single.isActive = false;
-      renderCondition.value[index].condition[0].items[index2].isActive = true;
-    });
-  }
-  goSearch(renderCondition.value);
-}
-function clearItem(index) {
-  renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition[0].items.forEach((item) => {
-    item.isActive = false;
-    item.isSelected = false;
-  });
-  goSearch(renderCondition.value);
-}
-
-// 查看全部标签(sdk,状态，协议)
-let radioItem = ref({});
-function checkAllClick(item, index) {
-  showCondition.value = false;
-  item.showTagsAll = true;
-  showTags.value = true;
-  radioList.value = renderCondition.value[index].condition[0].items;
-  radioItem.value = renderCondition.value[index];
-}
-
-function radioClick(detail, list) {
-  list.condition[0].items.forEach((item) => {
-    item.isSelected = true;
-  });
-  detail.isSelected = false;
-
-  if (detail.isActive === true) {
-    detail.isActive = !detail.isActive;
-    renderCondition.value[list.title.key].haveActive = false;
-
-    queryData[list.title.key] = null;
-    list.condition[0].items.forEach((item) => {
-      item.isSelected = false;
-    });
-  } else {
-    list.condition[0].items.forEach((item) => {
-      item.isActive = false;
-    });
-    detail.isActive = !detail.isActive;
-    renderCondition.value[list.title.key].haveActive = true;
-  }
-  goSearch(renderCondition.value);
-}
-
-// 分类二级标签
-function sortTagClick(index, index2) {
-  moreSortTags.value[index].haveActive = true;
-  moreSortTags.value[index].items.forEach((item) => {
-    item.isSelected = true;
-  });
-  moreSortTags.value[index].items[index2].isSelected = false;
-
-  if (moreSortTags.value[index].items[index2].isActive === true) {
-    moreSortTags.value[index].items[index2].isActive =
-      !moreSortTags.value[index].items[index2].isActive;
-    moreSortTags.value[index].haveActive = false;
-    moreSortTags.value[index].items.forEach((item) => {
-      item.isSelected = false;
-    });
-  } else {
-    moreSortTags.value[index].items.forEach((single) => {
-      single.isActive = false;
-      moreSortTags.value[index].items[index2].isActive = true;
-    });
-  }
-  searchTags(moreSortTags.value);
-}
-// 二级目录的清除
-function clearSortItem(index) {
-  moreSortTags.value[index].haveActive = false;
-  moreSortTags.value[index].items.forEach((item) => {
-    item.isActive = false;
-    item.isSelected = false;
-  });
-  searchTags(moreSortTags.value);
-}
-// 二级标签查询
-function searchTags(date) {
-  let tagList = [];
-  date.forEach((item) => {
-    item.items.forEach((val) => {
-      if (val.isActive === true) {
-        tagList.push(val.name);
-      }
-    });
-  });
-  if (tagList.length > 0) {
-    if (tagList.length < 6) {
-      queryData.tags = tagList.join(',');
-    } else {
-      ElMessage({
-        message: '最多支持刷选5个标签 !',
-        type: 'warning',
+// 点击导航
+function handleNavClick(item) {
+  headTags.value = [];
+  renderList.value.forEach((val) => {
+    val.items.forEach((item) => {
+      item.items.forEach((a) => {
+        a.isActive = false;
+        a.isSelected = false;
       });
-      return;
-    }
-  } else {
+    });
+  });
+  if (item.id === 'all') {
+    queryData.level = null;
     queryData.tags = null;
+  } else if (item.id === 'official') {
+    queryData.tags = null;
+    queryData.level = 'official';
+  } else if (item.id === 'good') {
+    queryData.tags = null;
+    queryData.level = 'good';
+  } else if (item.id === 'electricity') {
+    queryData.level = null;
+    queryData.tags = 'electricity';
+  }
+  if (/^all|official|good|electricity/g.test(item.id)) {
+    activeNavItem.value = item.id;
+  } else {
+    activeNavItem.value = '';
   }
 }
 
-//查询
-function goSearch(render) {
-  let time1 = 0;
-  let time2 = 0;
-  queryData.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
-  render.forEach((item) => {
-    time1 = 0;
-    time2 = 0;
-    // 应用分类
-    if (item.title.text === '应用分类') {
-      item.condition.forEach((value) => {
-        if (value.isActive) {
-          tag_kinds.push(value.kind);
-          if (tag_kinds.length < 6) {
-            queryData.tag_kinds = tag_kinds.join(',');
-          } else {
-            ElMessage({
-              message: '最多支持刷选5个标签 !',
-              type: 'warning',
-            });
-            return;
-          }
-        } else {
-          time1 += 1;
-        }
-      });
-      if (time1 === item.condition.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
-        item.haveActive = false;
-        if (item.title.key === 0) {
-          queryData.tag_kinds = null;
-        }
-      }
-      // 协议(单选)
-    } else {
-      item.condition.forEach((value) => {
-        value.items.forEach((val) => {
-          if (val.isActive) {
-            tagList.push(val.name);
-            if (tagList.length < 6) {
-              queryData.tags = tagList.join(',');
-            } else {
-              ElMessage({
-                message: '最多支持刷选5个标签 !',
-                type: 'warning',
-              });
-              return;
-            }
-          } else {
-            time2 += 1;
-          }
-        });
-      });
-      if (time2 === item.condition[0].items.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
-        item.haveActive = false;
-        if (item.title.key === 1) {
-          queryData.tags = null;
-        }
-      }
-    }
-  });
-}
-
-function dropdownClick(item) {
-  if (item.value === 'download') {
-    queryData.sort_by = 'download_count';
-  } else if (item.value === 'name') {
-    queryData.sort_by = 'first_letter';
-  } else if (item.value === '-update_time') {
-    queryData.sort_by = 'update_time';
+// 点击高亮热门标签
+function highlightTag(tag) {
+  if (tag.active) {
+    tag.active = false;
+    queryData.tag_kinds = null;
+  } else {
+    hotTagsList.value.forEach((item) => {
+      item.active = false;
+    });
+    tag.active = true;
+    queryData.tag_kinds = tag.value;
   }
 }
 
@@ -383,6 +262,10 @@ function getProject() {
 
 function getModelTag() {
   getTags('global_project').then((res) => {
+    renderList.value = res.data;
+    menuList.value = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
     i18n.screenCondition = res.data.map((item, index) => {
       return {
         title: {
@@ -398,8 +281,6 @@ function getModelTag() {
         it.isActive = false;
         it.isSelected = false;
         it.items = it.items.map((child) => {
-          // child.isSelected = false;
-          // child.isActive = false;
           return {
             name: child,
             isSelected: false,
@@ -409,7 +290,8 @@ function getModelTag() {
         item.condition.push(it);
       });
     });
-    renderCondition.value = i18n.screenCondition.splice(1, 3); //训练平台、协议、项目类型的一级标签
+
+    renderCondition.value = i18n.screenCondition.splice(1, 4); //训练平台、协议、项目类型的一级标签
     let ind;
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
@@ -469,13 +351,7 @@ function getKeyWord() {
 //打开jupyter useLoginStore
 function openJupyter() {
   if (loginStore.isLogined) {
-    ElMessage({
-      message:
-        '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
-      type: 'warning',
-      duration: 4000,
-    });
-    // router.push('/settings/clouddev', '_blank');
+    router.push('/settings/clouddev', '_blank');
   } else {
     goAuthorize();
   }
@@ -503,212 +379,303 @@ watch(
   }
 );
 
+// 电力跳转过来筛选标签
+watch(
+  () => route.params,
+  () => {
+    queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tags = route.params.tags;
+  },
+  {
+    immediate: true,
+  }
+);
+
 onUnmounted(() => {
   debounceSearch.cancel();
 });
+// 点击标签
+function tagClick(it, key, index) {
+  if (headTags.value.length < 5) {
+    if (key === '应用分类' || key === '协议') {
+      renderList.value.forEach((a) => {
+        if (a.domain === key) {
+          if (it.isActive) {
+            it.isActive = false;
+            a.items[index].items.forEach((item) => {
+              item.isSelected = false;
+            });
+            headTags.value.forEach((item, index) => {
+              if (item.name === it.name) {
+                headTags.value.splice(index, 1);
+              }
+            });
+          } else {
+            a.items[index].items.forEach((item) => {
+              if (item.isActive) {
+                headTags.value.forEach((tag, index) => {
+                  if (item.name === tag.name) {
+                    headTags.value.splice(index, 1);
+                  }
+                });
+                item.isActive = false;
+              }
+              item.isSelected = true;
+            });
+            it.isActive = true;
+            it.isSelected = false;
+            headTags.value.push(it);
+          }
+        }
+      });
+    } else {
+      it.isActive = !it.isActive;
+      if (it.isActive) {
+        if (!headTags.value[0]) headTags.value[0] = it;
+        else headTags.value.push(it);
+      } else {
+        headTags.value.forEach((item, index) => {
+          if (item.name === it.name) {
+            headTags.value.splice(index, 1);
+          }
+        });
+      }
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '最多支持选择5个标签',
+      offset: 64,
+    });
+  }
+}
+// 删除
+function deleteClick(tag) {
+  let i = headTags.value.indexOf(tag);
+  headTags.value.splice(i, 1);
+
+  let menu = menuList.value.map((item) => item.key);
+  menu.forEach((key) => {
+    // if (key === '0') {
+    renderList.value[key].items.forEach((item) => {
+      item.items.forEach((it) => {
+        if (it.name === tag.name) {
+          it.isActive = false;
+        }
+      });
+    });
+  });
+}
+// 编辑标签头部标签删除全部已添加标签
+function deleteModelTags() {
+  headTags.value = [];
+  let menu = menuList.value.map((item) => item.key);
+
+  menu.forEach((menuitem) => {
+    renderList.value[menuitem].items.forEach((it) => {
+      it.items.forEach((item) => {
+        item.isActive = false;
+      });
+    });
+  });
+  hotTagsList.value.forEach((item) => {
+    item.active = false;
+  });
+}
+
+const dropdownRef = ref(null);
+function confirmBtn() {
+  let tagsArray = headTags.value.map((item) => {
+    return item.name;
+  });
+  if (tagsArray.length) {
+    queryData.tags = tagsArray.join(',');
+  } else {
+    queryData.tags = null;
+  }
+  dropdownRef.value.handleClose();
+}
+function cancelBtn() {
+  dropdownRef.value.handleClose();
+}
+
+const sortValue = ref('');
+// 排序
+function getSortData(item) {
+  sortValue.value = item.text;
+  if (item.value === 'download') {
+    queryData.sort_by = 'download_count';
+  } else if (item.value === 'name') {
+    queryData.sort_by = 'first_letter';
+  } else if (item.value === '-update_time') {
+    queryData.sort_by = 'update_time';
+  }
+}
 </script>
 
 <template>
   <div class="model-page">
     <div class="model-head">
-      <div class="wrap">
-        <div class="banner-left">
-          <div class="title">{{ i18n.head.title }}</div>
-          <div class="introduce">
-            {{ i18n.head.introduce }}
-            <a
-              class="reference"
-              href="https://xihe-docs.mindspore.cn/zh/basics/project_ui/"
-              target="_blank"
-              >{{ i18n.head.reference }}</a
+      <div class="head-wrap">
+        <div class="wrap-top">
+          <div class="banner-left">
+            <div class="title">
+              {{ i18n.head.title }}
+            </div>
+            <div class="introduce">
+              {{ i18n.head.introduce }}
+              <a
+                class="reference"
+                href="https://xihe-docs.mindspore.cn/zh/basics/project_ui/"
+                target="_blank"
+              >
+                {{ i18n.head.reference }}
+              </a>
+            </div>
+          </div>
+          <div class="banner-right">
+            <o-button
+              type="primary"
+              style="margin-right: 16px"
+              @click="openJupyter"
+              >打开jupyter</o-button
             >
+
+            <o-button type="primary" @click="goSetNew">{{
+              i18n.head.btn
+            }}</o-button>
           </div>
         </div>
-        <div class="banner-right">
-          <o-button
-            type="primary"
-            style="margin-right: 16px"
-            @click="openJupyter"
-            >打开jupyter</o-button
-          >
-
-          <o-button type="primary" @click="goSetNew">{{
-            i18n.head.btn
-          }}</o-button>
+        <div class="wrap-bottom">
+          <o-nav
+            :nav-items="navItems"
+            :active-item="activeNavItem"
+            @nav-click="handleNavClick"
+          ></o-nav>
         </div>
       </div>
     </div>
     <div class="model-body wrap">
-      <div></div>
-      <!-- 二级标签页面(全部) -->
-      <div v-show="showDetail" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">{{ i18n.taskSort }}</p>
-        <div
-          v-for="(item, index) in moreSortTags"
-          :key="item.id"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.kind }}</span>
-            <!-- 二级标签的清除 -->
-            <div
-              v-if="item.haveActive"
-              class="clear"
-              @click="clearSortItem(index)"
-            >
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-          <!-- 应用分类二级标签 -->
-          <div class="condition-box-all">
-            <div
-              v-for="(detail, index2) in item.items"
-              :key="detail"
-              class="condition-detail"
-              :class="{
-                'condition-active1': detail.isActive === true,
-                'condition-active': detail.isSelected === true,
-              }"
-              @click="sortTagClick(index, index2)"
-            >
-              {{ detail.name }}
-              <o-icon class="icon-x">
-                <icon-x></icon-x>
-              </o-icon>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 单选的显示全部-二级标签 -->
-      <div v-show="showTags" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">协议</p>
-        <div class="condition-radio">
-          <div
-            v-for="detail in radioList"
-            :key="detail"
-            class="condition-detail"
-            :class="{
-              'condition-active1': detail.isActive === true,
-              'condition-active': detail.isSelected === true,
-            }"
-            @click="radioClick(detail, radioItem)"
-          >
-            {{ detail.name }}
-            <o-icon class="icon-x">
-              <icon-x></icon-x>
-            </o-icon>
-          </div>
-        </div>
-      </div>
-
-      <div v-show="showCondition" class="condition">
-        <div class="condition-item">
-          <p class="condition-title">项目类型</p>
-          <div class="condition-box">
-            <div
-              v-for="item in projectType"
-              :key="item.num"
-              class="condition-detail"
-              :class="[{ 'condition-active1': item.isActive }]"
-              @click="projectTypeClick(item)"
-            >
-              {{ item.type }}
-              <o-icon class="icon-x">
-                <icon-x></icon-x>
-              </o-icon>
-            </div>
-          </div>
-        </div>
-        <!-- 应用分类 -->
-        <div
-          v-for="(item, index) in renderSorts"
-          :key="item.title"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.title.text }}</span>
-            <div
-              v-if="item.haveActive"
-              class="clear"
-              @click="clearItem1(index)"
-            >
-              <!-- 清除应用分类所有的标签 -->
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-
-          <div class="condition-box">
-            <div
-              v-for="(tag, index2) in item.condition"
-              :key="tag"
-              class="condition-detail"
-              :class="[{ 'condition-active1': tag.isActive }]"
-              @click="sortsClick(index, index2)"
-            >
-              {{ tag.kind }}
-              <o-icon class="icon-x"><icon-x></icon-x></o-icon>
-            </div>
-          </div>
-          <div class="check-all">
-            <div class="check-all-modal"></div>
-            <span @click="moreClick">查看全部</span>
-          </div>
-        </div>
-        <!-- sdk status 训练平台、协议、项目类型 -->
-        <div
-          v-for="(item, index) in renderCondition"
-          :key="item"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.title.text }}</span>
-            <div v-if="item.haveActive" class="clear" @click="clearItem(index)">
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-          <div class="condition-box">
-            <div
-              v-for="(detail, index2) in item.condition[0].items"
-              :key="detail"
-              class="condition-detail"
-              :class="{
-                'condition-active1': detail.isActive === true,
-                'condition-active': detail.isSelected === true,
-              }"
-              @click="conditionClick(index, index2, detail.id)"
-            >
-              {{ detail.name }}
-              <o-icon class="icon-x">
-                <icon-x></icon-x>
-              </o-icon>
-            </div>
-          </div>
-          <div
-            v-if="renderCondition[index].condition[0].items.length > 7"
-            class="radio-all"
-          >
-            <div class="check-all-modal"></div>
-            <span @click="checkAllClick(item, index)">查看全部</span>
-          </div>
-        </div>
-      </div>
-
       <div class="card-box">
         <div class="card-box-top">
           <div class="card-head">
-            <div class="model-number">
-              {{ i18n.head.count }} {{ projectCount }}
+            <div class="project-tags">
+              <el-dropdown
+                ref="dropdownRef"
+                trigger="click"
+                :hide-on-click="true"
+                placement="bottom-start"
+                popper-class="my-popper"
+                class="my-popper"
+              >
+                <span class="link-text">
+                  所有项目标签
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </span>
+                <template #dropdown>
+                  <div class="tags-wrap">
+                    <!-- 头部 -->
+                    <div class="dialog-head">
+                      <div class="head-top">
+                        <div class="head-title">
+                          <span>
+                            {{ dialogList.head.title }}
+                          </span>
+                          <span class="tags-limit">(最多可选择5个标签)</span>
+                        </div>
+                        <div class="head-delete" @click="deleteModelTags">
+                          <o-icon><icon-clear></icon-clear></o-icon>
+                          {{ dialogList.head.delete }}
+                        </div>
+                      </div>
+                      <div class="head-tags">
+                        <div
+                          v-for="it in headTags"
+                          :key="it"
+                          class="condition-detail"
+                        >
+                          {{ it.name === 'electricity' ? '电力' : it.name }}
+                          <o-icon class="icon-x" @click="deleteClick(it)"
+                            ><icon-x></icon-x
+                          ></o-icon>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 中部 -->
+                    <div v-if="menuList" class="dialog-body">
+                      <el-tabs tab-position="left" style="height: 100%">
+                        <el-tab-pane
+                          v-for="menu in menuList"
+                          :key="menu.key"
+                          :label="menu.tab"
+                        >
+                          <div class="body-right-container">
+                            <div v-if="renderList[menu.key]" class="body-right">
+                              <div
+                                v-for="(item, index) in renderList[menu.key]
+                                  .items"
+                                :key="item"
+                                class="detail-box"
+                              >
+                                <div>
+                                  <p class="tan-title">
+                                    {{ item.kind }}
+                                  </p>
+                                  <!-- 标签管理右侧标签 -->
+                                  <div class="noTask-box">
+                                    <div
+                                      v-for="it in item.items"
+                                      :key="it"
+                                      class="condition-detail"
+                                      :class="[
+                                        { 'condition-active': it.isActive },
+                                        { 'condition-active1': it.isSelected },
+                                      ]"
+                                      @click="tagClick(it, menu.tab, index)"
+                                    >
+                                      {{
+                                        it.name === 'electricity'
+                                          ? '电力'
+                                          : it.name
+                                      }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </el-tab-pane>
+                      </el-tabs>
+                    </div>
+                    <div class="btn-box">
+                      <o-button style="margin-right: 16px" @click="cancelBtn"
+                        >取消</o-button
+                      >
+                      <o-button type="primary" @click="confirmBtn"
+                        >确定</o-button
+                      >
+                      <!-- -->
+                    </div>
+                  </div>
+                </template>
+              </el-dropdown>
+              <div class="hot-tags">
+                <!-- <span class="title">热门</span> -->
+                <span
+                  v-for="tag in hotTagsList"
+                  :key="tag.id"
+                  class="tag-item"
+                  :class="{ 'tag-active': tag.active }"
+                  @click="highlightTag(tag)"
+                >
+                  <o-icon> <component :is="tag.icon"></component> </o-icon>
+                  <span> {{ tag.name }} </span>
+                </span>
+              </div>
             </div>
-            <div class="moderl-head-right">
+            <div class="project-search">
               <el-input
                 v-model="keyWord"
                 :prefix-icon="Search"
@@ -716,7 +683,21 @@ onUnmounted(() => {
                 placeholder="请输入项目名称"
                 @change="getKeyWord"
               />
-              <el-dropdown popper-class="filter">
+              <div class="sort-select">
+                <el-select
+                  v-model="selectValue"
+                  placeholder="排序"
+                  @change="getSortData"
+                >
+                  <el-option
+                    v-for="item in i18n.sortCondition"
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item"
+                  />
+                </el-select>
+              </div>
+              <!-- <el-dropdown popper-class="filter">
                 <span class="el-dropdown-link">
                   <o-icon>
                     <icon-menu></icon-menu>
@@ -732,7 +713,7 @@ onUnmounted(() => {
                     >
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </div>
           </div>
 
@@ -751,22 +732,28 @@ onUnmounted(() => {
                   {{ item.level === 'official' ? '官方' : '精选' }}
                 </div>
 
-                <div class="description">
-                  <p>{{ item.desc }}</p>
-                </div>
-
                 <img
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
-                <p class="title">{{ item.name }}</p>
-                <div class="dig">
-                  <o-icon> <icon-heart></icon-heart> </o-icon
-                  >{{ item.like_count }}
-                </div>
-                <div class="card-modal"></div>
               </div>
+              <div class="card-desc">
+                <p class="title">{{ item.title ? item.title : item.name }}</p>
 
+                <div class="description">
+                  {{ item.desc }}
+                </div>
+                <div class="tag-list">
+                  <span
+                    v-for="(val, index) in item.tags"
+                    :key="index"
+                    :style="{ display: index < 4 ? 'inline-block' : 'none' }"
+                    class="tag"
+                  >
+                    {{ val === 'electricity' ? '电力' : val }}
+                  </span>
+                </div>
+              </div>
               <div class="card-bottom">
                 <div class="info">
                   <div class="info-avata">
@@ -776,17 +763,36 @@ onUnmounted(() => {
                     {{ item.owner }}
                   </div>
                 </div>
-                <div class="time">
-                  <o-icon>
-                    <icon-time></icon-time>
-                  </o-icon>
-                  {{ item.updated_at }}
+                <div class="info-right">
+                  <span class="time">
+                    <o-icon>
+                      <icon-time></icon-time>
+                    </o-icon>
+                    {{ item.updated_at }}
+                  </span>
+                  <span class="dig">
+                    <o-icon> <icon-heart></icon-heart> </o-icon
+                    >{{ item.like_count }}
+                  </span>
+                  <span class="download">
+                    <o-icon><icon-download></icon-download></o-icon>
+                    {{ item.download_count }}
+                  </span>
+                  <span class="fork">
+                    <o-icon><icon-fork></icon-fork></o-icon>
+                    {{ item.download_count }}
+                  </span>
                 </div>
               </div>
             </div>
 
             <!-- 分页 -->
             <div v-if="projectCount > 10" class="pagination">
+              <div class="total">
+                <span> 共 </span>
+                <span>{{ projectData.total }}</span>
+                <span> 条数据 </span>
+              </div>
               <el-pagination
                 :page-sizes="[12, 24, 60]"
                 :current-page="queryData.page_num"
@@ -813,10 +819,164 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
+.tags-wrap {
+  width: 800px;
+  // overflow: hidden;
+  padding: 40px;
+  // background: #fff;
+  // box-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
+  border-radius: 16px;
+  .dialog-head {
+    .head-top {
+      display: flex;
+      justify-content: space-between;
+      .head-title {
+        line-height: 24px;
+        font-size: 18px;
+        line-height: 24px;
+        color: #000000;
+        display: flex;
+        align-items: center;
+        .tags-limit {
+          margin-left: 8px;
+          font-size: 12px;
+          color: #555;
+        }
+      }
+      .head-delete {
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        .o-icon {
+          margin-right: 6px;
+          align-self: center;
+        }
+      }
+    }
+    .head-tags {
+      // min-height: 58px;
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 4px 0 16px;
+      .condition-detail {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        margin: 10px 16px 0 0;
+        height: 28px;
+        font-size: 14px;
+        color: $theme;
+        user-select: none;
+        background-color: #f3f9ff;
+        border-radius: 14px;
+        border: 1px solid #e5e5e5;
+        .icon-x {
+          padding: 2px;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  .dialog-body {
+    border-top: 1px solid #d8d8d8;
+    :deep .el-tabs__item {
+      width: 188px;
+      height: 56px;
+      text-align: left;
+      line-height: 56px;
+      font-size: 18px;
+      padding-left: 24px;
+    }
+    :deep .el-tabs .el-tabs__header {
+      box-shadow: none;
+      background: #f7f8fa;
+    }
+
+    :deep(.el-tabs) {
+      .el-tabs__header {
+        box-shadow: none;
+        background: #f7f8fa;
+        // background-color: blue;
+      }
+      .el-tabs__nav-wrap::after {
+        display: none;
+      }
+      .el-tabs__item.is-active {
+        background: #fff;
+      }
+    }
+    .el-tabs--left,
+    .el-tabs--right {
+      border-bottom: 1px solid #d8d8d8;
+    }
+    .tan-title {
+      margin: 14px 0;
+    }
+    .detail-box {
+      .noTask-box {
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
+    .condition-detail {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      margin: 0 16px 16px 0;
+      height: 28px;
+      font-size: 14px;
+      color: #555;
+      user-select: none;
+      background-color: #f3f9ff;
+      border-radius: 14px;
+      border: 1px solid #e5e5e5;
+    }
+    .condition-active {
+      color: #0d8dff;
+    }
+    .condition-active1 {
+      color: #ccc;
+    }
+    .body-right-container {
+      padding-left: 24px;
+      height: 280px;
+      overflow-y: scroll;
+      .noTask-box {
+        display: flex;
+      }
+      .body-right {
+        .tan-title {
+          font-size: 16px;
+          line-height: 24px;
+        }
+        .el-tag {
+          margin: 13px 16px 29px 0;
+        }
+      }
+    }
+    .body-right-container::-webkit-scrollbar {
+      width: 10px;
+    }
+    .body-right-container::-webkit-scrollbar-thumb {
+      background: #bfbfbf;
+      border-radius: 10px;
+    }
+  }
+  .btn-box {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+  }
+}
+$theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
-  max-width: 1472px;
+  padding: 40px 16px 136px 16px;
+  max-width: 1448px;
 }
 
 .model-page {
@@ -824,31 +984,53 @@ $theme: #0d8dff;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
-    .wrap {
-      display: flex;
-      justify-content: space-between;
-      padding: 42px 16px;
+    background-image: url('@/assets/imgs/banner-project.jpg');
+    .head-wrap {
+      max-width: 1448px;
+      margin: 0 auto;
+      padding: 56px 16px 0px;
       color: #000;
-      .title {
-        padding-bottom: 8px;
-        font-size: 36px;
-      }
-      .introduce {
-        font-size: 18px;
-        .reference {
-          color: #4dcdff;
+      .wrap-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 58px;
+        .title {
+          padding-bottom: 8px;
+          font-size: 36px;
+          line-height: 48px;
+        }
+        .introduce {
+          font-size: 18px;
+          line-height: 24px;
+          .reference {
+            color: #000;
+            text-decoration: underline;
+            &:hover {
+              color: #0d8dff;
+            }
+          }
+        }
+        .banner-right {
+          display: flex;
+          align-items: center;
         }
       }
-      .banner-right {
-        display: flex;
-        align-items: center;
+      .wrap-bottom {
+        height: 46px;
+        :deep(.o-nav) {
+          .nav-item {
+            line-height: 28px;
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.8);
+            align-items: flex-start;
+          }
+        }
       }
     }
   }
   .model-body {
     display: flex;
-    // padding: 50px 0 100px 0;
     .condition {
       position: relative;
       width: 100%;
@@ -956,7 +1138,7 @@ $theme: #0d8dff;
         color: #555;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
 
         .icon-x {
@@ -998,7 +1180,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
 
           .icon-x {
@@ -1033,11 +1215,69 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 24px;
+        padding: 18px 24px;
         width: 100%;
         background-color: #fff;
+        border-radius: 16px;
+        .project-tags {
+          display: flex;
+          align-items: center;
+          .el-dropdown {
+            .link-text {
+              width: 142px;
+              font-size: 14px;
+              color: #000000;
+              font-weight: 400;
+              line-height: 22px;
+              padding: 5px 16px;
+              border: 1px solid #999999;
+              border-radius: 18px;
+              cursor: pointer;
+            }
+          }
+          .hot-tags {
+            margin-left: 24px;
+            font-weight: 400;
+            cursor: pointer;
+            .title {
+              font-size: 14px;
+              color: #000000;
+              line-height: 22px;
+            }
+            .tag-item {
+              display: inline-block;
+              font-size: 12px;
+              color: #555555;
+              line-height: 18px;
+              background: #f4f5f7;
+              border-radius: 16px;
+              padding: 5px 12px;
+              margin-left: 8px;
+              border: 1px solid transparent;
 
-        .moderl-head-right {
+              .o-icon {
+                margin-right: 4px;
+                color: #ccc;
+                svg {
+                  vertical-align: middle;
+                  font-size: 16px;
+                }
+              }
+              span {
+                vertical-align: middle;
+              }
+            }
+            .tag-active {
+              color: #0d8dff;
+              background: #ffffff;
+              border: 1px solid #0d8dff;
+              .o-icon {
+                color: #0d8dff;
+              }
+            }
+          }
+        }
+        .project-search {
           display: flex;
           align-items: center;
 
@@ -1046,6 +1286,15 @@ $theme: #0d8dff;
             margin-left: 24px;
             font-size: 24px;
           }
+          .sort-select {
+            .el-select {
+              width: 114px;
+              margin-left: 8px;
+            }
+          }
+          .el-input {
+            width: 320px;
+          }
         }
       }
       .empty-status {
@@ -1053,141 +1302,120 @@ $theme: #0d8dff;
       }
       .card-list {
         display: grid;
-        grid-template-columns: repeat(3, minmax(200px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         position: relative;
         .pro-card {
+          background-color: #fff;
           position: relative;
+          &:hover {
+            box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            transition: all 0.2s linear;
+          }
           .mark-tag {
             position: absolute;
-            top: 0;
-            left: 16px;
+            top: 16px;
+            right: 16px;
             padding: 3px 8px;
-            background: linear-gradient(326deg, #fba727 0%, #ffe1b3 100%);
             z-index: 10;
+            background: linear-gradient(45deg, #ffd866 0%, #ff7f0d 100%);
             font-size: 12px;
             color: #ffffff;
+            border-radius: 10px;
           }
           .mark-tag1 {
             position: absolute;
-            top: 0;
-            left: 16px;
+            top: 16px;
+            right: 16px;
             padding: 3px 8px;
             background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
             z-index: 10;
             font-size: 12px;
             color: #ffffff;
+            border-radius: 8px;
           }
         }
         .pagination {
           display: flex;
           justify-content: center;
-          // margin-top: 40px;
           position: absolute;
           bottom: -76px;
           left: 50%;
           transform: translateX(-50%);
+          .total {
+            line-height: 36px;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.8);
+            margin-right: 8px;
+          }
         }
         .pro-card {
           cursor: pointer;
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-          &:hover {
-            box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-          }
+          border-radius: 16px;
           .o-icon {
             margin-right: 2px;
           }
           .card-top {
-            height: 169px;
+            height: 128px;
             position: relative;
             color: #fff;
-            &:hover {
-              .description {
-                display: block;
-              }
-            }
+            padding: 8px 8px 0px;
             img {
               width: 100%;
               height: 100%;
+              object-fit: cover;
+              border-radius: 8px;
+            }
+          }
+          .card-desc {
+            padding: 24px 24px 16px;
+            .title {
+              height: 28px;
+              line-height: 28px;
+              font-size: 20px;
+              font-weight: 500;
+              color: #000000;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .description {
-              display: none;
-              position: absolute;
-              left: 50%;
-              bottom: 0;
-              transform: translateX(-50%);
-              width: 100%;
-              padding: 0 16px;
-              z-index: 1;
+              min-height: 44px;
+              line-height: 22px;
+              font-size: 14px;
+              font-weight: 400;
+              color: #555555;
+              margin: 8px 0 16px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              -webkit-line-clamp: 2;
+              word-wrap: break-word;
+            }
+            .tag-list {
+              line-height: 18px;
               font-size: 12px;
-              color: #ffffff;
-              background: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0) 0%,
-                #000000 100%
-              );
-
-              p {
-                line-height: 17px;
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                margin-bottom: 16px;
+              font-weight: 400;
+              color: #0d8dff;
+              .tag {
+                display: inline-block;
+                background: rgba(13, 141, 255, 0.15);
+                border-radius: 12px;
+                padding: 3px 12px;
+                margin-right: 4px;
+                margin-bottom: 8px;
               }
-            }
-            .title {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 84%;
-              // margin: 0 auto;
-              font-size: 18px;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              z-index: 1;
-              span {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-              }
-            }
-            .dig {
-              position: absolute;
-              right: 16px;
-              top: 17px;
-              font-size: 12px;
-              display: flex;
-              align-items: center;
-              z-index: 1;
-              .o-icon {
-                font-size: 16px;
-                svg {
-                  fill: #fff;
-                }
-              }
-            }
-            .card-modal {
-              width: 100%;
-              height: 100%;
-              background: rgba(0, 0, 0, 0.3);
-              position: absolute;
-              top: 0;
-              left: 0;
             }
           }
           .card-bottom {
-            height: 62px;
-            padding: 16px 24px 24px 24px;
+            padding: 0px 24px 24px;
             display: flex;
             justify-content: space-between;
             line-height: 22px;
-            background-color: #fff;
             .info {
               flex: 1;
               display: flex;
@@ -1204,17 +1432,23 @@ $theme: #0d8dff;
                 color: #000;
               }
             }
-            .time {
-              min-width: 76px;
-              font-size: 12px;
+            .info-right {
               display: flex;
               align-items: center;
+              font-size: 12px;
               color: #555;
-              .o-icon {
-                font-size: 16px;
-                margin-right: 4px;
-                svg {
-                  fill: #555;
+              .time,
+              .dig,
+              .download,
+              .fork {
+                margin-right: 9px;
+                .o-icon {
+                  font-size: 13px;
+                  margin-right: 4px;
+                  svg {
+                    fill: #555;
+                    vertical-align: middle;
+                  }
                 }
               }
             }

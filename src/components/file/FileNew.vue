@@ -228,6 +228,7 @@ function handleClick() {
 .upload-file {
   padding: 30px 24px 50px;
   background-color: #fff;
+  border-radius: 16px;
   .el-form-item {
     display: flex;
     flex-direction: column;
@@ -317,6 +318,7 @@ function handleClick() {
   .upload-body {
     width: 100%;
     margin-bottom: 24px;
+
     .main-editor {
       padding: 8px 10px;
       width: 100%;

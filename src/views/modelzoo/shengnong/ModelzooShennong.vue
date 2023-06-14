@@ -1,6 +1,5 @@
 <script setup>
 import { ref, nextTick } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -9,6 +8,10 @@ import shennongInfo1 from '@/assets/imgs/shennong/shennong-info1.png';
 import shennongVideo from '@/assets/imgs/shennong/shennong-video2.png';
 import shennongPlay from '@/assets/imgs/taichu/taichuplay.png';
 import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
+
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const shennongvideo =
   'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E9%B9%8F%E5%9F%8E%E7%A5%9E%E5%86%9C.mp4';
 const showShennongVideo = ref(false);
@@ -35,10 +38,12 @@ function closeShennongVideo() {
     <div class="shennong-wrap">
       <div class="shennong-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-            >大模型</el-breadcrumb-item
-          >
-          <el-breadcrumb-item>鹏程.神农</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+            t('shennong.BIG_MODEL')
+          }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{
+            t('shennong.MODEL_NAME')
+          }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="shennong-content">
@@ -48,30 +53,33 @@ function closeShennongVideo() {
           </div>
           <div class="banner-right">
             <div class="right-wrapper">
-              <div class="banner-right-title">鹏程.神农</div>
+              <div class="banner-right-title">
+                {{ t('shennong.MODEL_NAME') }}
+              </div>
               <div class="banner-right-content">
-                面向生物医学领域的人工智能平台，包含蛋白质结构预测等多个模块，为制药企业和医学研究机构提供平台能力，加速新型药物的筛选与创制。
+                {{ t('shennong.MODEL_DESC') }}
               </div>
             </div>
             <div class="banner-right-btn">
               <OButton type="secondary" size="small" animation class="home-btn">
-                敬请期待
+                {{ t('shennong.WAITING') }}
               </OButton>
             </div>
           </div>
         </div>
         <div class="shennong-detail">
           <div class="shennong-detail-desc">
-            <div class="title">简述</div>
+            <div class="title">{{ t('shennong.RESUME') }}</div>
             <p class="info">
-              以蛋白质研究为起点，基于“鹏城云脑II”超大规模算力集群以及MindSpore
-              AI框架，打造“鹏程.神农”生物信息研究平台，旨在用AI的力量助力生物医药的探索。“鹏程.神农”是一个面向生物医学领域的人工智能平台，包含蛋白质结构预测、小分子生成、靶点与小分子相互作用预测以及新抗菌多肽设计与效果评价等模块。制药企业和医学研究机构可以使用“鹏程.神农”提供的AI能力，加速新型药物的筛选和创制。
+              {{ t('shennong.DESCRIPTION') }}
             </p>
             <div class="info-img">
               <img :src="shennongInfo1" alt="" />
             </div>
             <div class="introduce-video">
-              <div class="introduce-video-title">介绍视频</div>
+              <div class="introduce-video-title">
+                {{ t('shennong.VIDEO_INTRODUCTION') }}
+              </div>
               <div class="introduce-video-content">
                 <img class="content-img" :src="shennongVideo" alt="" />
                 <div class="video-img">
@@ -111,7 +119,7 @@ function closeShennongVideo() {
   .shennong-wrap {
     padding: 42px 16px 64px;
     margin: 0 auto;
-    max-width: 1472px;
+    max-width: 1448px;
     padding-bottom: 40px;
     .shennong-bread {
       margin-bottom: 40px;

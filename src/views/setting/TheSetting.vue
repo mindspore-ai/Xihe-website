@@ -384,7 +384,7 @@ function cancelFollow(name) {
   background-repeat: no-repeat;
 
   .wrap {
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     // height: 100%;
     height: 177px;
@@ -402,7 +402,7 @@ function cancelFollow(name) {
 
   .wrap {
     display: flex;
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     min-height: calc(100vh - 450px);
     padding: 40px 16px 64px 16px;

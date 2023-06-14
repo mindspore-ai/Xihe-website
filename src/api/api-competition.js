@@ -6,7 +6,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -27,18 +27,24 @@ export function getCompetition(params) {
  * 获取所有比赛信息(全部、已完成、进行中、未开始)
  * @returns
  */
-export function getAllCompetition(params) {
-  if (params) {
-    const url = `/server/competition?status=${params.status}`;
-    return request.get(url).then((res) => {
-      return res;
-    });
-  } else {
-    const url = `/server/competition`;
-    return request.get(url).then((res) => {
-      return res;
-    });
+export function getCompetitionList({
+  status = undefined,
+  tag = undefined,
+} = {}) {
+  const queryParams = {};
+  if (status !== undefined) {
+    queryParams.status = status;
   }
+  if (tag !== undefined) {
+    queryParams.tag = tag;
+  }
+  const queryString = Object.keys(queryParams)
+    .map((key) => `${key}=${queryParams[key]}`)
+    .join('&');
+  const url = `/server/competition${queryString ? `?${queryString}` : ''}`;
+  return request.get(url).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 获取排行榜信息

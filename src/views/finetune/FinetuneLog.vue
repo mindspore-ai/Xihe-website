@@ -19,7 +19,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -29,7 +29,7 @@ function getHeaderConfig() {
 // 日志
 const socket = new WebSocket(
   `wss://${DOMAIN}/server/finetune/${route.params.finetuneId}/log/ws`,
-  [getHeaderConfig().headers['private-token']]
+  [getHeaderConfig().headers['csrf-token']]
 );
 
 function getLog() {
@@ -128,7 +128,7 @@ watch(
   margin-top: 80px;
   background-color: #f5f6f8;
   .finetune-log-wrap {
-    max-width: 1440px;
+    max-width: 1416px;
     height: 100%;
     padding: 40px 0px 64px;
     margin: 0 auto;

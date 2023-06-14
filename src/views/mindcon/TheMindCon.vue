@@ -36,6 +36,9 @@ import { useLoginStore, useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import { ElDialog } from 'element-plus';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 
@@ -55,23 +58,23 @@ const userInfo = useUserInfoStore();
 const introdution = reactive([
   {
     imgUrl: challengeImg,
-    title: '实时挑战',
-    text: '多领域多级别应用场景挑战任务，探索AI开源趣味世界',
+    title: t('mindcon.NAVS[0].TITLE'),
+    text: t('mindcon.NAVS[0].DESC'),
   },
   {
     imgUrl: prizeImg,
-    title: '活动激励',
-    text: '丰厚挑战赛礼品与昇思官方证书，惊喜满满',
+    title: t('mindcon.NAVS[1].TITLE'),
+    text: t('mindcon.NAVS[1].DESC'),
   },
   {
     imgUrl: shareImg,
-    title: '大咖分享',
-    text: '各领域大咖分享前沿技术，感受前沿AI技术',
+    title: t('mindcon.NAVS[2].TITLE'),
+    text: t('mindcon.NAVS[2].DESC'),
   },
   {
     imgUrl: experienceImg,
-    title: '体验开源',
-    text: '体验特别学习小组（SIG）运作，与志同道合的开发者共同交流',
+    title: t('mindcon.NAVS[3].TITLE'),
+    text: t('mindcon.NAVS[3].DESC'),
   },
 ]);
 
@@ -114,7 +117,7 @@ function goChallenge(index) {
   if (isOver.value) {
     ElMessage({
       type: 'warning',
-      message: '本次活动已经结束，期待下届MindCon与你相遇',
+      message: t('mindcon.END_TIP'),
     });
   } else {
     if (!isLogined) {
@@ -135,7 +138,7 @@ function goChallenge(index) {
           } else {
             ElMessage({
               type: 'warning',
-              message: '挑战次数已用尽',
+              message: t('mindcon.OVER_TIMES'),
             });
           }
         } else if (index === 1) {
@@ -263,7 +266,7 @@ function showDialog2() {
     if (isOver.value) {
       ElMessage({
         type: 'warning',
-        message: '本次活动已经结束，期待下届MindCon与你相遇',
+        message: t('mindcon.END_TIP'),
       });
     } else {
       showApplication.value = true;
@@ -291,7 +294,7 @@ function goRule() {
           </div>
           <div class="score">
             <div>{{ activityDetail.score }}</div>
-            <span>我的积分</span>
+            <span>{{ t('mindcon.MY_INTEGRAL') }}</span>
           </div>
         </div>
       </div>
@@ -305,7 +308,7 @@ function goRule() {
           <img :src="introductionImg" alt="" />
         </div>
         <div class="tips">
-          MindCon极客周是昇思MindSpore每半年举办一次的开发者狂欢盛会
+          {{ t('mindcon.INTRODUCE') }}
         </div>
         <div class="intro-list">
           <div v-for="item in introdution" :key="item.title" class="intro-item">
@@ -412,7 +415,8 @@ function goRule() {
                 <p class="seniority">{{ perPageData[2].number }}</p>
                 <p class="name">{{ perPageData[2].competitor }}</p>
                 <p class="integral">
-                  {{ perPageData[2].score }}<span>积分</span>
+                  {{ perPageData[2].score
+                  }}<span>{{ t('mindcon.INTEGRAL') }}</span>
                 </p>
                 <img src="@/assets/imgs/activity/rank-top.png" alt="" />
               </div>
@@ -429,7 +433,8 @@ function goRule() {
                   }}<span>{{ perPageData[item + 2].competitor }}</span>
                 </p>
                 <p class="right">
-                  {{ perPageData[item + 2].score }}<span>积分</span>
+                  {{ perPageData[item + 2].score
+                  }}<span>{{ t('mindcon.INTEGRAL') }}</span>
                 </p>
               </div>
             </div>
@@ -447,7 +452,8 @@ function goRule() {
                   <span> {{ perPageData[item - 1].competitor }}</span>
                 </p>
                 <p class="right">
-                  {{ perPageData[item - 1].score }}<span>积分</span>
+                  {{ perPageData[item - 1].score
+                  }}<span>{{ t('mindcon.INTEGRAL') }}</span>
                 </p>
               </div>
             </div>
@@ -464,19 +470,19 @@ function goRule() {
               :class="{ disabled: leftDisabled }"
               @click="prevPage"
             >
-              上一页
+              {{ t('mindcon.PREVIOUS') }}
             </div>
             <div
               class="rightwards"
               :class="{ disabled: rightDisabled }"
               @click="nextPage"
             >
-              下一页
+              {{ t('mindcon.NEXT') }}
             </div>
           </el-pagination>
         </div>
       </div>
-      <div class="explain">本活动最终解释权归昇思MindSpore开源社区所有</div>
+      <div class="explain">{{ t('mindcon.EXPLAIN') }}</div>
     </div>
 
     <div v-if="isShow" class="activity-dlg">
@@ -690,7 +696,7 @@ function goRule() {
   }
   .wrap {
     // padding: 0px 16px 136px 16px;
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     overflow: hidden;
     .activity-intro {

@@ -18,6 +18,8 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+// import { useI18n } from 'vue-i18n';
+// const { t, locale } = useI18n();
 
 const screenWidth = useWindowResize();
 
@@ -443,7 +445,7 @@ watch(
 .wukong {
   padding: 120px 16px 64px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   height: 100%;
   @media screen and (max-width: 820px) {
     padding: 48px 0px 40px;

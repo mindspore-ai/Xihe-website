@@ -16,14 +16,14 @@ import useClipboard from 'vue-clipboard3';
 import {
   collectedPictures,
   cancelLikePicture,
-  // temporaryLink,
   publicCollectedPicture,
 } from '@/api/api-modelzoo.js';
 
 import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
-
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const screenWidth = useWindowResize();
 
 const userInfoStore = useUserInfoStore();
@@ -46,7 +46,7 @@ function addWatermark(imgUrl, index) {
 
     ctx.font = '24px 微软雅黑';
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+    ctx.fillText(t('wukong.BY_AI'), img.width - 182, img.height - 24);
 
     collecteImages.value[index].waterImg = canvas.toDataURL('image/png');
 
@@ -78,30 +78,11 @@ function cancelCollect(id) {
       getCollectedImages();
       ElMessage({
         type: 'success',
-        message: '取消收藏成功',
+        message: t('wukong.CANCEL_COLLECT'),
       });
     }
   });
 }
-
-// function requestImage(item) {
-// const link = item.replace(
-//   'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-//   '/obs-big-model/'
-// );
-// let x = new XMLHttpRequest();
-// x.open('GET', link, true);
-// x.responseType = 'blob';
-// x.onload = function () {
-//   const blobs = new Blob([x.response], { type: 'image/png' });
-//   let url = window.URL.createObjectURL(blobs);
-//   let a = document.createElement('a');
-//   a.href = url;
-//   a.download = 'collection.png';
-//   a.click();
-// };
-// x.send();
-// }
 
 // 下载图片
 function downloadImage(item) {
@@ -109,26 +90,7 @@ function downloadImage(item) {
   aLink.href = item;
   aLink.download = 'collection.png';
   aLink.click();
-  document.body.removeChild(aLink);
-
-  // const j1 = item.indexOf('=');
-  // const j2 = item.indexOf('=', j1 + 1);
-
-  // const i1 = item.indexOf('&');
-  // const i2 = item.indexOf('&', i1 + 1);
-
-  // const deadTime = item.substring(j2 + 1, i2);
-  // const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-  // if ((deadTime - currentTime) / 60 < 1) {
-  //   temporaryLink({ link: item }).then((res) => {
-  //     if (res.data.data) {
-  //       requestImage(res.data.data.link);
-  //     }
-  //   });
-  // } else {
-  //   requestImage(item);
-  // }
+  aLink.remove();
 }
 const posterDlg = ref(false);
 const posterLink = ref('');
@@ -224,7 +186,7 @@ async function copyText(textValue) {
   await toClipboard(textValue);
   ElMessage({
     type: 'success',
-    message: '复制成功',
+    message: t('wukong.COPY'),
     center: true,
   });
 }
@@ -236,23 +198,25 @@ async function publicImage(imgId) {
     if (res.data.data.id) {
       ElMessage({
         type: 'success',
-        message: '公开成功',
+        message: t('wukong.PUBLIC_SUCCESS'),
       });
     }
   } catch (err) {
     if (err.code === 'wukong_no_authorization') {
       ElMessage({
         type: 'warning',
-        message: '公开图片已存在',
+        message: t('wukong.EXISTED'),
       });
     } else if (err.code === 'wukong_duplicate_like') {
       ElMessage({
         type: 'warning',
-        message: '重复公开',
+        message: t('wukong.REPEAT_PUBLIC'),
       });
     }
   }
 }
+
+const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
 
 // 移动端点击收藏图片
 const imgInfoDlg = ref(false);
@@ -305,8 +269,10 @@ function handleImageClick(img) {
         </div>
         <div class="img-desc">
           <p>
-            来自{{ item.desc }}&nbsp;&nbsp;
-            <span v-if="item.style"> #风格：{{ item.style }} </span>
+            {{ t('wukong.FROM') }}{{ item.desc }}&nbsp;&nbsp;
+            <span v-if="item.style">
+              #{{ t('wukong.STYLE') }}{{ item.style }}
+            </span>
           </p>
           <div class="img-owner">
             <div class="info-left">
@@ -322,7 +288,7 @@ function handleImageClick(img) {
 
     <div v-else class="no-collection">
       <o-icon><icon-collected></icon-collected></o-icon>
-      <p>暂无收藏</p>
+      <p>{{ t('wukong.NO_COLLECTION') }}</p>
     </div>
 
     <!-- 移动端大图弹窗 -->
@@ -336,8 +302,10 @@ function handleImageClick(img) {
     >
       <template #header="{ titleClass }">
         <p :class="titleClass">
-          来自{{ imageInfo.desc }}&nbsp;&nbsp;
-          <span v-if="imageInfo.style">#风格：{{ imageInfo.style }}</span>
+          {{ t('wukong.FROM') }}{{ imageInfo.desc }}&nbsp;&nbsp;
+          <span v-if="imageInfo.style">
+            #{{ t('wukong.STYLE') }}{{ imageInfo.style }}</span
+          >
         </p>
       </template>
 
@@ -408,7 +376,7 @@ function handleImageClick(img) {
             alt=""
           />
 
-          <p class="water-mark">由AI模型生成</p>
+          <p class="water-mark">{{ t('wukong.BY_AI') }}</p>
 
           <div class="mask"></div>
 
@@ -424,17 +392,18 @@ function handleImageClick(img) {
 
         <div class="poster-download">
           <div class="link">
-            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
-            <o-icon
-              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+            <p>{{ copyContent }}</p>
+            <o-icon @click="copyText(`${copyContent}`)"
               ><icon-copy></icon-copy
             ></o-icon>
           </div>
           <div v-if="screenWidth > 820" class="button" @click="downloadPoster">
-            下载海报
+            {{ t('wukong.DOWNLOAD_POSTER') }}
           </div>
         </div>
-        <p v-if="screenWidth <= 820" class="poster-tip">长按保存海报</p>
+        <p v-if="screenWidth <= 820" class="poster-tip">
+          {{ t('wukong.SAVE_POSTER') }}
+        </p>
       </div>
     </el-dialog>
     <textarea class="input-dom"></textarea>

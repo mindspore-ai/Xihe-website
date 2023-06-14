@@ -10,10 +10,10 @@ import { useUserInfoStore } from '@/stores';
 
 const userInfo = useUserInfoStore();
 
-const i18n = {
-  download: '下载量',
-  uploadTime: '上传时间',
-};
+// const i18n = {
+//   download: '下载量',
+//   uploadTime: '上传时间',
+// };
 
 const props = defineProps({
   // 数据集、模型的详情信息
@@ -51,10 +51,6 @@ watch(
 </script>
 <template>
   <div v-if="detailData[name].length">
-    <!-- <delete-relate
-      :del-relate="delRelate"
-      @cancel="cancelClick"
-    ></delete-relate> -->
     <div
       v-for="item in detailData[name]"
       :key="item"
@@ -75,17 +71,17 @@ watch(
         <p class="nick-name">{{ item.owner.name }}/{{ item.name }}</p>
       </div>
       <div class="dataset-bottom">
-        <div class="download" :title="i18n.download">
-          <o-icon><icon-download></icon-download></o-icon>
-          {{ item.download_count }}
+        <div class="update-time">
+          <o-icon> <icon-time></icon-time></o-icon>
+          {{ item.update_at }}
         </div>
-        <div class="heart" title="👍">
+        <div class="heart">
           <o-icon><icon-heart></icon-heart></o-icon>
           {{ item.like_count }}
         </div>
-        <div class="update-time" :title="i18n.uploadTime">
-          <o-icon> <icon-time></icon-time></o-icon>
-          {{ item.update_at }}
+        <div class="download">
+          <o-icon><icon-download></icon-download></o-icon>
+          {{ item.download_count }}
         </div>
       </div>
     </div>
@@ -93,27 +89,25 @@ watch(
 </template>
 <style lang="scss" scoped>
 .dataset-item {
-  // max-width: 424px;
   cursor: pointer;
   width: 100%;
   padding: 24px;
-  background-color: #fff;
-  box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
   position: relative;
   margin-bottom: 16px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &:hover {
-    box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
+    box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s linear;
     .remove-item {
       display: block;
       color: #0d8dffff;
     }
   }
-  .nick-name {
-    font-size: 18px;
-    line-height: 24px;
-    color: #000;
-  }
-
   .remove-item {
     position: absolute;
     right: 8px;
@@ -127,34 +121,44 @@ watch(
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin-bottom: 16px;
+
     .avatar {
       width: 24px;
+      min-width: 24px;
       height: 24px;
       border-radius: 50%;
-      margin-right: 8px;
       border: 1px solid #b7ddff;
+      overflow: hidden;
       img {
         width: 100%;
+        height: 100%;
       }
     }
-  }
-
-  .dataset-top {
-    margin-bottom: 14px;
+    .nick-name {
+      font-size: 18px;
+      line-height: 24px;
+      color: #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: 8px;
+    }
   }
   .dataset-bottom {
     display: flex;
     justify-content: start;
     align-items: center;
     color: #555;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 16px;
 
     & > div {
       display: flex;
       align-items: center;
       margin-right: 24px;
       .o-icon {
-        font-size: 16px;
+        font-size: 14px;
         margin-right: 4px;
         fill: #555;
       }

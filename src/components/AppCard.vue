@@ -17,13 +17,8 @@ const props = defineProps({
       return 'model';
     },
   },
-  avatarImg: {
-    type: String,
-    default: () => {
-      return '';
-    },
-  },
 });
+
 const labelList = ref([]);
 const i18n = {
   downloadTitle: '下载量',
@@ -38,6 +33,9 @@ if (props.cardType === 'model') {
 } else if (props.cardType === 'dataset') {
   const { tags } = JSON.parse(tagList);
   labelList.value = tags;
+} else {
+  const { tags } = JSON.parse(tagList);
+  labelList.value = tags;
 }
 </script>
 <template>
@@ -49,34 +47,33 @@ if (props.cardType === 'model') {
     ]"
   >
     <div class="card-top">
-      <div class="portrait">
-        <img :src="avatarImg" alt="" />
+      <div class="owner-info">
+        <div v-if="cardData.title" class="model-name">{{ cardData.title }}</div>
+        <div v-else class="model-name">{{ cardData.name }}</div>
       </div>
-      <div v-if="cardData.owner" class="nickname">
-        {{ cardData.owner }}
-      </div>
-      <div class="model-name">/{{ cardData.name }}</div>
     </div>
     <div class="label-box">
       <div v-for="label in labelList" :key="label.index" class="label-item">
-        {{ label }}
+        {{ label === 'electricity' ? '电力' : label }}
       </div>
     </div>
     <p class="model-introduce">
       {{ cardData.desc }}
     </p>
+
     <div class="card-bottom">
       <div class="card-bottom-left">
-        <div
-          v-if="cardData.updated_at"
-          class="update-time"
-          :title="i18n.uploadTime"
-        >
+        <div class="portrait">
+          <img :src="cardData.avatar_id" alt="" />
+        </div>
+        <div class="model-name">{{ cardData.owner }}</div>
+      </div>
+      <div class="card-bottom-right">
+        <div v-if="cardData.updated_at" class="update-time">
           <o-icon> <icon-time></icon-time></o-icon>
           <span class="text">{{ cardData.updated_at }}</span>
         </div>
-      </div>
-      <div class="card-bottom-right">
+
         <div class="download likes" :title="i18n.likesNumber">
           <o-icon><icon-heart></icon-heart></o-icon>{{ cardData.like_count }}
         </div>
@@ -86,7 +83,6 @@ if (props.cardType === 'model') {
         </div>
       </div>
     </div>
-    <div class="card-bg"></div>
   </div>
 </template>
 
@@ -95,61 +91,68 @@ if (props.cardType === 'model') {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-radius: 16px;
   padding: 24px;
   color: #555;
   background-color: #fff;
   transition: box-shadow 0.3s;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 16px;
+  @media screen and (max-width: 820px) {
+    padding: 16px;
+  }
   .o-icon {
     margin-right: 4px;
     font-size: 16px;
     color: #555;
+    @media screen and (max-width: 820px) {
+      font-size: 13px;
+    }
   }
   .card-top {
     display: flex;
+    align-items: center;
     padding-bottom: 8px;
     color: #000;
     font-size: 18px;
     line-height: 24px;
     border-bottom: 1px solid #def1e8;
-    .portrait {
-      margin-right: 8px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 1px solid #b7ddff;
-      img {
-        width: 100%;
-      }
+    position: relative;
+    @media screen and (max-width: 820px) {
+      font-size: 14px;
+      line-height: 22px;
+      padding-bottom: 0px;
+      border-bottom: none;
     }
-    .model-name {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
+    .owner-info {
+      display: flex;
     }
   }
   .label-box {
     display: flex;
-    height: 20px;
+    height: 18px;
     flex-wrap: wrap;
-    margin: 8px 0 16px;
+    margin: 8px 0 24px;
     font-size: 12px;
     overflow: hidden;
+    position: relative;
+    @media screen and (max-width: 820px) {
+      margin: 4px 0 12px;
+    }
     .label-item {
-      padding: 3px 8px;
+      padding: 2px 8px;
       line-height: 14px;
       white-space: nowrap;
       text-overflow: ellipsis;
       margin-right: 8px;
       background-color: #efefef;
-      border-radius: 6px;
+      border-radius: 10px;
     }
   }
   .model-introduce {
-    min-height: 44px;
     margin-bottom: 24px;
+    font-size: 14px;
     line-height: 22px;
     overflow: hidden;
     word-wrap: break-word;
@@ -157,16 +160,56 @@ if (props.cardType === 'model') {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    position: relative;
+    @media screen and (max-width: 820px) {
+      font-size: 12px;
+      line-height: 18px;
+      min-height: 36px;
+      margin-bottom: 12px;
+    }
   }
   .card-bottom {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+    position: relative;
+    .portrait {
+      margin-right: 8px;
+      width: 24px;
+      // min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #b7ddff;
+      @media screen and (max-width: 820px) {
+        width: 16px;
+        height: 16px;
+      }
+      img {
+        width: 100%;
+      }
+    }
     .update-time,
     .download {
       display: flex;
       align-items: center;
       text-align: center;
+      .text {
+        line-height: 16px;
+        white-space: nowrap;
+      }
+    }
+    .card-bottom-left {
+      display: flex;
+      align-items: center;
+      .model-name {
+        font-size: 14px;
+        color: #000000;
+        line-height: 22px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
     }
     .card-bottom-right {
       display: flex;
@@ -179,47 +222,38 @@ if (props.cardType === 'model') {
 .o-model-hover,
 .o-dataset-hover {
   position: relative;
-  .card-bg {
-    width: 84px;
-    height: 84px;
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    border: none;
-    // background: url(@/assets/imgs/model-card-bg.png) no-repeat;
-    display: none;
-  }
   &:hover {
-    // color: #ccc;
-    // background-color: #4d66ca;
     box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
-    // .card-bg {
-    //   display: block;
-    // }
-    // .card-top {
-    //   color: #fff;
-    // }
-    // .label-box {
-    //   .label-item {
-    //     color: #555;
-    //   }
-    // }
-    // .o-icon {
-    //   color: #ccc;
-    // }
   }
 }
 .o-dataset-hover {
-  // .card-bg {
-  //   background: url(@/assets/imgs/dataset-card-bg.png) no-repeat;
-  // }
-  &:hover {
-    background: url(@/assets/imgs/dataset-bg.png) no-repeat center;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url(@/assets/imgs/dataset-bg.png);
+    background-size: 100% 100%;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  &:hover::before {
+    opacity: 1;
   }
 }
 .o-model-hover {
-  &:hover {
-    background: url(@/assets/imgs/model-bg.png) no-repeat center;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url(@/assets/imgs/model-bg.png);
+    background-size: 100% 100%;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  &:hover::before {
+    opacity: 1;
   }
 }
 </style>

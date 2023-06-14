@@ -8,8 +8,13 @@ import IconSend from '~icons/app/vqa-send';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import IconCircleCheck from '~icons/app/circle-check';
 import IconCircleClose from '~icons/app/circle-close';
+import IconDown from '~icons/app/down';
+
 import { textDetectorInfer } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
+const screenWidth = useWindowResize();
 
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -208,6 +213,15 @@ function keyDown(e) {
     e.preventDefault();
   }
 }
+
+const showDrawer = ref(false);
+function selectMobileLanguage() {
+  showDrawer.value = true;
+}
+
+function handleLanguageSelect(item) {
+  detectionLang.value = item.value;
+}
 </script>
 <template>
   <div class="experience">
@@ -215,7 +229,11 @@ function keyDown(e) {
       <div class="title">
         {{ detectionLang === 'zh' ? i18n.TITLE : i18n.TITLE_EN }}
 
-        <el-select v-model="detectionLang" class="languages">
+        <el-select
+          v-if="screenWidth > 820"
+          v-model="detectionLang"
+          class="languages"
+        >
           <el-option
             v-for="item in i18n.LANGUAGES"
             :key="item.name"
@@ -223,6 +241,31 @@ function keyDown(e) {
             :value="item.value"
           ></el-option>
         </el-select>
+
+        <div v-else class="mobile-languages" @click="selectMobileLanguage">
+          <span>{{ detectionLang === 'zh' ? '中文检测' : '  English' }}</span>
+          <o-icon>
+            <icon-down></icon-down>
+          </o-icon>
+        </div>
+
+        <el-drawer v-model="showDrawer" direction="btt">
+          <template #header>
+            <div class="drawer-title">选择检测文字</div>
+          </template>
+
+          <div>
+            <p
+              v-for="item in i18n.LANGUAGES"
+              :key="item.name"
+              class="select-item"
+              :class="detectionLang === item.value ? 'selected' : ''"
+              @click="handleLanguageSelect(item)"
+            >
+              {{ item.name }}
+            </p>
+          </div>
+        </el-drawer>
       </div>
       <div class="description">
         {{ detectionLang === 'zh' ? i18n.DESCRIPTION : i18n.DESCRIPTION_EN }}
@@ -322,6 +365,7 @@ function keyDown(e) {
         </div>
       </div>
     </div>
+
     <div class="experience-right">
       <div class="experience-right-top">
         <p class="right-top-title">{{ i18n.USAGE_INSTRUCTION }}</p>
@@ -386,11 +430,38 @@ function keyDown(e) {
   </div>
 </template>
 <style lang="scss" scoped>
+:deep(.el-drawer) {
+  border-radius: 16px 16px 0 0;
+  .el-drawer__header {
+    padding: 24px 16px 0;
+    margin-bottom: 0;
+  }
+  .el-drawer__body {
+    padding: 14px 16px 16px;
+  }
+}
+.select-item {
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+.selected {
+  background: #e5e8f0;
+}
+.drawer-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  line-height: 22px;
+  text-align: center;
+}
 .disappear {
   display: none;
 }
 .experience {
   display: flex;
+  @media screen and (max-width: 820px) {
+    flex-direction: column;
+  }
 }
 .experience-left {
   flex: 1;
@@ -398,40 +469,57 @@ function keyDown(e) {
   padding: 24px;
   background: #fff;
   border-radius: 16px;
-  // @media screen and (max-width: 1080px) {
-  //   padding: 16px 16px 24px;
-  //   width: 100%;
-  // }
   position: relative;
+  @media screen and (max-width: 820px) {
+    margin-right: 0;
+    padding: 20px 16px 16px;
+  }
+  .mobile-languages {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    padding: 4px 16px;
+    border-radius: 18px;
+    border: 1px solid #999999;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    .o-icon {
+      font-size: 16px;
+      margin-left: 8px;
+    }
+  }
   .languages {
     position: absolute;
     top: 32px;
     right: 40px;
     width: 164px;
-    @media screen and(max-width:1080px) {
+    @media screen and (max-width: 1080px) {
       width: 140px;
     }
+    @media screen and (max-width: 820px) {
+      top: 20px;
+      right: 16px;
+    }
     :deep(.el-input) {
-      @media screen and(max-width:1080px) {
+      @media screen and (max-width: 1080px) {
         height: 28px;
       }
       .el-input__wrapper {
         padding: 6px 12px;
       }
       .el-input__inner {
-        @media screen and(max-width:1080px) {
+        @media screen and (max-width: 1080px) {
           font-size: 12px;
         }
       }
     }
   }
 }
-.experience-right {
-  width: 34%;
-  padding: 24px;
-  background: #fff;
-  border-radius: 16px;
-}
+
 .title {
   font-size: 36px;
   color: #000000;
@@ -446,6 +534,10 @@ function keyDown(e) {
     font-size: 24px;
     color: #000000;
     // line-height: 28px;
+  }
+  @media screen and (max-width: 820px) {
+    font-size: 16px;
+    line-height: 28px;
   }
 }
 .description {
@@ -463,6 +555,11 @@ function keyDown(e) {
     // line-height: 18px;
     margin-top: 8px;
   }
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 14px;
+  }
 }
 .chat-box {
   height: 472px;
@@ -475,7 +572,7 @@ function keyDown(e) {
     margin-top: 16px;
     height: 460px;
   }
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 768px) {
     height: 360px;
   }
   &::-webkit-scrollbar {
@@ -560,7 +657,7 @@ function keyDown(e) {
       line-height: 22px;
       position: relative;
       @media screen and (max-width: 1080px) {
-        padding: 12px;
+        padding: 8px;
         margin-right: 64px;
         font-size: 14px;
         color: #000000;
@@ -576,6 +673,10 @@ function keyDown(e) {
         @media screen and (max-width: 1080px) {
           min-width: 32px;
           right: -56px;
+        }
+        @media screen and (max-width: 820px) {
+          min-width: 40px;
+          right: -48px;
         }
         .o-icon {
           font-size: 24px;
@@ -642,6 +743,11 @@ function keyDown(e) {
         padding: 16px;
         height: 160px;
         background: #f5f6f8;
+        @media screen and (max-width: 820px) {
+          height: 120px;
+          padding: 8px;
+          font-size: 12px;
+        }
         &::-webkit-scrollbar {
           width: 6px;
           height: 6px;
@@ -674,6 +780,9 @@ function keyDown(e) {
       width: 24px;
       margin-left: 16px;
     }
+    @media screen and (max-width: 820px) {
+      margin-left: 8px;
+    }
     &:hover {
       .enter-tip {
         transition: all 0.5s;
@@ -696,6 +805,9 @@ function keyDown(e) {
       top: 54px;
       left: 0px;
       opacity: 0;
+      @media screen and (max-width: 820px) {
+        display: none;
+      }
     }
   }
 }
@@ -707,6 +819,11 @@ function keyDown(e) {
   line-height: 24px;
   font-weight: 400;
   color: #000000;
+  @media screen and (max-width: 820px) {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 14px;
+  }
 }
 .examples-title {
   margin-right: 16px;
@@ -715,17 +832,33 @@ function keyDown(e) {
   display: flex;
 }
 .examples-tags-item {
-  padding: 4px 16px;
+  padding: 8px 16px;
   background: #f4f5f7;
   margin-right: 8px;
   border-radius: 16px;
   cursor: pointer;
+  @media screen and (max-width: 820px) {
+    background: #e8eaed;
+    padding: 4px 8px;
+  }
 }
 .experience-right {
+  width: 34%;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
+  @media screen and (max-width: 820px) {
+    width: auto;
+    padding: 16px;
+    margin-top: 16px;
+  }
 }
 .experience-right-top {
   padding-bottom: 24px;
   border-bottom: 1px solid #f5f6f8;
+  @media screen and (max-width: 820px) {
+    padding-bottom: 16px;
+  }
 }
 .right-top-title {
   font-size: 18px;
@@ -733,12 +866,25 @@ function keyDown(e) {
   font-weight: 500;
   color: #000000;
   padding-bottom: 16px;
+  @media screen and (max-width: 820px) {
+    font-size: 16px;
+    line-height: 22px;
+    padding-bottom: 8px;
+  }
 }
 .right-top-item,
 .right-bottom-item {
   font-size: 16px;
   line-height: 22px;
   color: #555;
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #000000;
+    line-height: 18px;
+  }
+
   span {
     font-weight: 600;
     color: #000000;
@@ -746,6 +892,9 @@ function keyDown(e) {
 }
 .experience-right-bottom {
   margin-top: 20px;
+  @media screen and (max-width: 820px) {
+    margin-top: 16px;
+  }
 }
 .right-top-tip,
 .right-bottom-tip {
@@ -753,6 +902,11 @@ function keyDown(e) {
   font-size: 16px;
   line-height: 22px;
   color: #555;
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 8px;
+  }
   .tip-blod {
     font-weight: 600;
     color: #000;

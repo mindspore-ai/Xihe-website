@@ -6,6 +6,9 @@ import { useUserInfoStore } from '@/stores';
 import { sendCode, bindUserEmail } from '@/api/api-user';
 import { ElMessage } from 'element-plus';
 
+import IconCancel from '~icons/app/eye-close';
+import IconArrow from '~icons/app/eye-open';
+
 import Verify from '@/shared/verifition/Verify.vue';
 const verify = ref();
 function getVerifyImgSize() {
@@ -40,6 +43,8 @@ function setEmail(formEl) {
   formEl.validateField('email', (vaild) => {
     if (vaild) {
       verify.value.show();
+    } else {
+      return false;
     }
   });
 }
@@ -51,10 +56,15 @@ function verifySuccess(data) {
       regular.value = false;
     })
     .catch((err) => {
-      if (err?.response?.data?.code === 'email_code_error') {
+      if (err.code === 'email_email_duplicate_send') {
         ElMessage({
           type: 'error',
-          message: '发送验证码失败',
+          message: '该邮箱1分钟内已收到过验证码，请稍后再试',
+        });
+      } else if (err.code === 'email_user_duplicate_send') {
+        ElMessage({
+          type: 'error',
+          message: '您1分钟内已发送过验证码，请耐心等待',
         });
       }
     });
@@ -121,14 +131,26 @@ const handleTimeChange = () => {
     }, 1000);
   }
 };
+const isVisibel = ref(false);
+function toggleVisible(val) {
+  isVisibel.value = val;
+}
 </script>
 
 <template>
   <div v-if="userInfoStore.email" class="email-admin">
-    <div class="current-email">{{ userInfoStore.email }}</div>
-    <p class="email-tip">
+    <div class="current-email" :class="{ invisible: !isVisibel }">
+      {{ isVisibel ? userInfoStore.email : '··········' }}
+      <o-icon v-if="isVisibel" @click="toggleVisible(false)"
+        ><icon-arrow></icon-arrow
+      ></o-icon>
+      <o-icon v-else @click="toggleVisible(true)"
+        ><icon-cancel></icon-cancel
+      ></o-icon>
+    </div>
+    <div class="email-tip">
       此邮箱为用户名登录账户，此邮箱将会接收账号相关的通知以及在密码重置中使用
-    </p>
+    </div>
   </div>
   <div v-if="!userInfoStore.email" class="setting-box add">
     <p class="setting-title">添加主要电子邮件地址</p>
@@ -182,6 +204,7 @@ const handleTimeChange = () => {
     </el-form>
   </div>
   <Verify
+    v-if="!userInfoStore.email"
     ref="verify"
     mode="pop"
     captcha-type="blockPuzzle"
@@ -232,6 +255,15 @@ const handleTimeChange = () => {
     font-size: 18px;
     color: #000000;
     margin-bottom: 16px;
+    .o-icon {
+      height: 20px;
+      display: inline-block;
+      color: #555;
+      cursor: pointer;
+    }
+  }
+  .invisible {
+    font-weight: bolder;
   }
   .email-tip {
     height: 22px;

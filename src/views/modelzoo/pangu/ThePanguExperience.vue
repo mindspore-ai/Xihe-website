@@ -7,8 +7,6 @@ import { goAuthorize } from '@/shared/login';
 import IconSend from '~icons/app/vqa-send';
 import IconRefresh from '~icons/app/refresh-taichu';
 
-import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
-
 import { handlePanguInfer } from '@/api/api-modelzoo';
 
 const userInfoStore = useUserInfoStore();

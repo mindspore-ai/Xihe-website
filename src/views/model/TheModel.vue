@@ -6,7 +6,6 @@ import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import OEmpty from '@/components/OEmpty.vue';
 
-import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
@@ -17,8 +16,11 @@ import { useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
 
+import AppContent from '@/components/AppContent.vue';
+
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
+// import { ResourceType } from 'authing-js-sdk';
 
 const userInfoStore = useUserInfoStore();
 
@@ -39,9 +41,9 @@ let i18n = {
   more: '更多',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -362,7 +364,6 @@ function goSearch(render) {
         }
       });
       if (time1 === item.condition.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 0) {
           queryData.tag_kinds = null;
@@ -389,7 +390,6 @@ function goSearch(render) {
         });
       });
       if (time2 === item.condition[0].items.length) {
-        // queryData[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 1) {
           queryData.tags = null;
@@ -399,7 +399,10 @@ function goSearch(render) {
   });
 }
 
-function dropdownClick(item) {
+const sortValue = ref('');
+// 排序
+function getSortData(item) {
+  sortValue.value = item.text;
   if (item.value === 'download') {
     queryData.sort_by = 'download_count';
   } else if (item.value === 'name') {
@@ -408,11 +411,14 @@ function dropdownClick(item) {
     queryData.sort_by = 'update_time';
   }
 }
+
 function getModel() {
   getModelData(queryData).then((res) => {
     modelCount.value = res.data.total;
     if (modelCount.value / queryData.count_per_page < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+      layout.value = 'total, sizes, prev, pager, next';
+    } else {
+      layout.value = 'total, sizes, prev, pager, next, jumper';
     }
     modelData.value = res.data;
   });
@@ -432,9 +438,17 @@ async function getModelTag() {
     });
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
-        // if (item.title.text === '应用分类') {
-        it.isActive = false;
-        it.isSelected = false;
+        // 标签高亮
+        if (route.params.tag_kinds === 'CV' && it.kind === 'CV') {
+          it.isActive = true;
+          it.isSelected = true;
+        } else if (route.params.tag_kinds === 'NLP' && it.kind === 'NLP') {
+          it.isActive = true;
+          it.isSelected = true;
+        } else {
+          it.isActive = false;
+          it.isSelected = false;
+        }
         it.items = it.items.map((child) => {
           return {
             name: child,
@@ -449,19 +463,31 @@ async function getModelTag() {
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition.forEach((it) => {
-        it.isSelected = false;
+        // 电力跳转过来标签高亮
+        if (
+          Object.keys(route.params).length &&
+          it.items[0].name === 'electricity'
+        ) {
+          it.items[0].isActive = true;
+          it.items[0].isSelected = false;
+        } else {
+          it.isSelected = false;
+        }
       });
       item.num = index;
     });
   });
 }
-// getModelTag();
 
-const layout = ref('sizes, prev, pager, next, jumper');
+const layout = ref('total, sizes, prev, pager, next, jumper');
+
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
-    layout.value = layout.value.split(',').splice(0, 4).join(',');
+    layout.value = 'total, sizes, prev, pager, next';
+  } else {
+    layout.value = 'total, sizes, prev, pager, next, jumper';
   }
+
   queryData.count_per_page = val;
 }
 
@@ -514,12 +540,8 @@ watch(
   () => {
     getModelTag().then(() => {
       if (route.params.modelType === '1') {
-        // checkAllClick(renderCondition.value[0], 0);
-        // sortTagClick(0, 3);
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
       } else if (route.params.modelType === '2') {
-        // checkAllClick(renderCondition.value[0], 0);
-        // sortTagClick(0, 4);
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
       } else if (route.params.modelType === '3') {
         conditionClick(0, 1, renderCondition.value[0].condition[1]);
@@ -532,7 +554,17 @@ watch(
     immediate: true,
   }
 );
-
+// 电力跳转过来筛选标签
+watch(
+  () => route.params,
+  () => {
+    queryData.tag_kinds = route.params.tag_kinds;
+    queryData.tags = route.params.tags;
+  },
+  {
+    immediate: true,
+  }
+);
 onUnmounted(() => {
   debounceSearch.cancel();
 });
@@ -543,6 +575,7 @@ onUnmounted(() => {
     <div class="model-head">
       <div class="wrap">
         <div class="banner-left">
+          {{ route.params.tags }}
           <div class="title">{{ i18n.head.title }}</div>
           <div class="introduce">
             {{ i18n.head.introduce }}
@@ -561,118 +594,68 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="model-body wrap">
-      <!-- 应用分类查看全部-->
-      <div v-show="showDetail" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">{{ i18n.taskSort }}</p>
-        <div
-          v-for="(item, index) in radioList.condition"
-          :key="item.id"
-          class="condition-item"
-        >
-          <div v-if="radioList.title.text === '应用分类'">
-            <div class="condition-title">
-              <span>{{ item.kind }}</span>
-              <div
-                v-if="item.haveActive"
-                class="clear"
-                @click="clearSortItem(index)"
-              >
-                <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-                <span>{{ i18n.clear }}</span>
-              </div>
-            </div>
-            <!-- 应用分类二级标签 -->
-            <div class="condition-box-all">
-              <div
-                v-for="(detail, index2) in item.items"
-                :key="detail"
-                class="condition-detail"
-                :class="{
-                  'condition-active1': detail.isActive === true,
-                  'condition-active': detail.isSelected === true,
-                }"
-                @click="sortTagClick(index, index2)"
-              >
-                {{ detail.name }}
-                <o-icon class="icon-x">
-                  <icon-x></icon-x>
-                </o-icon>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 处理器-文件格式...二级标签 -->
-      <div v-show="showTags" class="condition">
-        <p class="getback" @click="backCondition">
-          <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
-        </p>
-        <p class="sort-title">{{ modalName }}</p>
-        <div class="condition-radio">
+    <AppContent :pc-top="40">
+      <div class="model-body">
+        <!-- 应用分类查看全部-->
+        <div v-show="showDetail" class="condition">
+          <p class="getback" @click="backCondition">
+            <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
+          </p>
+          <p class="sort-title">{{ i18n.taskSort }}</p>
           <div
-            v-for="detail in radioList2.items"
-            :key="detail"
-            class="condition-detail"
-            :class="{
-              'condition-active1': detail.isActive === true,
-              'condition-active': detail.isSelected === true,
-            }"
-            @click="radioClick(detail, radioItem)"
+            v-for="(item, index) in radioList.condition"
+            :key="item.id"
+            class="condition-item"
           >
-            {{ detail.name }}
-            <o-icon class="icon-x">
-              <icon-x></icon-x>
-            </o-icon>
+            <div v-if="radioList.title.text === '应用分类'">
+              <div class="condition-title">
+                <span>{{ item.kind }}</span>
+                <div
+                  v-if="item.haveActive"
+                  class="clear"
+                  @click="clearSortItem(index)"
+                >
+                  <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
+                  <span>{{ i18n.clear }}</span>
+                </div>
+              </div>
+              <!-- 应用分类二级标签 -->
+              <div class="condition-box-all">
+                <div
+                  v-for="(detail, index2) in item.items"
+                  :key="detail"
+                  class="condition-detail"
+                  :class="{
+                    'condition-active1': detail.isActive === true,
+                    'condition-active': detail.isSelected === true,
+                  }"
+                  @click="sortTagClick(index, index2)"
+                >
+                  {{ detail.name }}
+                  <o-icon class="icon-x">
+                    <icon-x></icon-x>
+                  </o-icon>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- 一级标签 -->
-      <div v-show="showCondition" class="condition">
-        <div
-          v-for="(item, index) in renderCondition"
-          :key="item"
-          class="condition-item"
-        >
-          <div class="condition-title">
-            <span>{{ item.title.text }}</span>
-            <div v-if="item.haveActive" class="clear" @click="clearItem(index)">
-              <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
-              <span>{{ i18n.clear }}</span>
-            </div>
-          </div>
-          <!-- 应用分类一级标签 -->
-          <div v-if="item.title.text === '应用分类'" class="condition-box">
+        <!-- 处理器-文件格式...二级标签 -->
+        <div v-show="showTags" class="condition">
+          <p class="getback" @click="backCondition">
+            <o-icon><icon-back></icon-back></o-icon>{{ i18n.back }}
+          </p>
+          <p class="sort-title">{{ modalName }}</p>
+          <div class="condition-radio">
             <div
-              v-for="(detail, index2) in item.condition"
+              v-for="detail in radioList2.items"
               :key="detail"
               class="condition-detail"
               :class="{
                 'condition-active1': detail.isActive === true,
                 'condition-active': detail.isSelected === true,
               }"
-              @click="conditionClick(index, index2, detail)"
-            >
-              {{ detail.kind }}
-              <o-icon class="icon-x">
-                <icon-x></icon-x>
-              </o-icon>
-            </div>
-          </div>
-          <!-- 其他标签、协议一级标签 -->
-          <div v-else class="condition-box">
-            <div
-              v-for="(detail, index2) in item.condition[0].items"
-              :key="detail"
-              class="condition-detail"
-              :class="{
-                'condition-active1': detail.isActive === true,
-                'condition-active': detail.isSelected === true,
-              }"
-              @click="conditionClick(index, index2, detail)"
+              @click="radioClick(detail, radioItem)"
             >
               {{ detail.name }}
               <o-icon class="icon-x">
@@ -680,73 +663,126 @@ onUnmounted(() => {
               </o-icon>
             </div>
           </div>
+        </div>
+        <!-- 一级标签 -->
+        <div v-show="showCondition" class="condition">
           <div
-            v-if="renderCondition[index].condition[0].items.length >= 5"
-            class="radio-all"
+            v-for="(item, index) in renderCondition"
+            :key="item"
+            class="condition-item"
           >
-            <div class="check-all-modal"></div>
-            <span @click="checkAllClick(item, index)">查看全部</span>
+            <div class="condition-title">
+              <span>{{ item.title.text }}</span>
+              <div
+                v-if="item.haveActive"
+                class="clear"
+                @click="clearItem(index)"
+              >
+                <o-icon class="icon-x"><icon-clear></icon-clear></o-icon>
+                <span>{{ i18n.clear }}</span>
+              </div>
+            </div>
+            <!-- 应用分类一级标签 -->
+            <div v-if="item.title.text === '应用分类'" class="condition-box">
+              <div
+                v-for="(detail, index2) in item.condition"
+                :key="detail"
+                class="condition-detail"
+                :class="{
+                  'condition-active1': detail.isActive === true,
+                  'condition-active': detail.isSelected === true,
+                }"
+                @click="conditionClick(index, index2, detail)"
+              >
+                {{ detail.kind }}
+                <o-icon class="icon-x">
+                  <icon-x></icon-x>
+                </o-icon>
+              </div>
+            </div>
+            <!-- 其他标签、协议一级标签 -->
+            <div v-else class="condition-box">
+              <div
+                v-for="(detail, index2) in item.condition[0].items"
+                :key="detail"
+                class="condition-detail"
+                :class="{
+                  'condition-active1': detail.isActive === true,
+                  'condition-active': detail.isSelected === true,
+                }"
+                @click="conditionClick(index, index2, detail)"
+              >
+                {{ detail.name === 'electricity' ? '电力' : detail.name }}
+                <o-icon class="icon-x">
+                  <icon-x></icon-x>
+                </o-icon>
+              </div>
+            </div>
+            <div
+              v-if="renderCondition[index].condition[0].items.length >= 5"
+              class="radio-all"
+            >
+              <div class="check-all-modal"></div>
+              <span @click="checkAllClick(item, index)">查看全部</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="card-box">
-        <div class="card-box-top">
-          <div class="card-head">
-            <div class="model-number">
-              {{ i18n.head.count }} {{ modelCount }}
-            </div>
-            <div class="moderl-head-right">
-              <el-input
-                v-model="keyWord"
-                :prefix-icon="Search"
-                class="w-50 m-2"
-                placeholder="请输入模型名称"
-                @change="getKeyWord"
-              />
-              <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon>
-                    <icon-menu></icon-menu>
-                  </o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </div>
-          </div>
+        <div class="card-box">
+          <div class="card-box-top">
+            <div class="card-head">
+              <div class="model-number">
+                {{ i18n.head.count }} <span>{{ modelCount }}</span>
+              </div>
+              <div class="moderl-head-right">
+                <el-input
+                  v-model="keyWord"
+                  :prefix-icon="Search"
+                  class="w-50 m-2"
+                  placeholder="请输入模型名称"
+                  @change="getKeyWord"
+                />
 
-          <div v-if="modelData.projects" class="card-list">
-            <app-card
-              v-for="item in modelData.projects"
-              :key="item.id"
-              :card-data="item"
-              :avatar-img="item.avatar_id"
-              @click="goDetail(item.owner, item.name)"
-            ></app-card>
-            <div v-if="modelCount > 10" class="pagination">
-              <el-pagination
-                :page-sizes="[10, 20, 50]"
-                :current-page="queryData.page_num"
-                :page-size="queryData.count_per_page"
-                :total="modelCount"
-                :layout="layout"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-              ></el-pagination>
+                <div class="sort-select">
+                  <el-select
+                    v-model="sortValue"
+                    placeholder="排序"
+                    @change="getSortData"
+                  >
+                    <el-option
+                      v-for="item in i18n.sortCondition"
+                      :key="item.id"
+                      :label="item.text"
+                      :value="item"
+                    />
+                  </el-select>
+                </div>
+              </div>
             </div>
+
+            <div v-if="modelData.projects" class="card-list">
+              <app-card
+                v-for="item in modelData.projects"
+                :key="item.id"
+                :card-data="item"
+                @click="goDetail(item.owner, item.name)"
+              ></app-card>
+              <div v-if="modelCount > 10" class="pagination">
+                <el-pagination
+                  :page-sizes="[10, 20, 50]"
+                  :current-page="queryData.page_num"
+                  :page-size="queryData.count_per_page"
+                  :total="modelCount"
+                  :layout="layout"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                ></el-pagination>
+              </div>
+            </div>
+            <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
           </div>
-          <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
         </div>
       </div>
-    </div>
+    </AppContent>
   </div>
 </template>
 
@@ -754,15 +790,15 @@ onUnmounted(() => {
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
-  max-width: 1472px;
+  padding: 40px 16px 136px 16px;
+  max-width: 1448px;
 }
 .model-page {
   background-color: #f5f6f8;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-model.png');
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -776,7 +812,11 @@ $theme: #0d8dff;
         padding-right: 24px;
         font-size: 18px;
         .reference {
-          color: #4dcdff;
+          color: #000;
+          text-decoration: underline;
+          &:hover {
+            color: #0d8dff;
+          }
         }
       }
       .banner-right {
@@ -787,14 +827,16 @@ $theme: #0d8dff;
   }
   .model-body {
     display: flex;
+    padding-bottom: 72px;
     .condition {
       position: relative;
       width: 100%;
-      max-width: 464px;
+      max-width: 424px;
       min-height: calc(100vh - 300px);
-      margin: 0 24px 0 0;
-      padding: 40px;
+      margin: 0 40px 0 0;
+      padding: 24px;
       background-color: #fff;
+      border-radius: 16px;
       .getback {
         font-size: 16px;
         color: #555;
@@ -894,7 +936,7 @@ $theme: #0d8dff;
         color: #555;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
 
         .icon-x {
@@ -936,7 +978,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
 
           .icon-x {
@@ -965,9 +1007,18 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 24px;
+        padding: 18px 24px;
         width: 100%;
         background-color: #fff;
+        border-radius: 16px;
+        .model-number {
+          font-size: 14px;
+          line-height: 22px;
+          span {
+            color: #555;
+            margin-left: 8px;
+          }
+        }
         .moderl-head-right {
           display: flex;
           align-items: center;
@@ -975,6 +1026,16 @@ $theme: #0d8dff;
             cursor: pointer;
             margin-left: 24px;
             font-size: 24px;
+          }
+          .el-input {
+            width: 320px;
+          }
+
+          .sort-select {
+            margin-left: 8px;
+            .el-select {
+              width: 114px;
+            }
           }
         }
       }
@@ -984,12 +1045,12 @@ $theme: #0d8dff;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         .pagination {
           display: flex;
           justify-content: center;
           position: absolute;
-          bottom: -76px;
+          bottom: -72px;
           left: 50%;
           transform: translateX(-50%);
         }

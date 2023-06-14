@@ -41,7 +41,6 @@ const props = defineProps({
 const layout = ref('sizes, prev, pager, next, jumper');
 const emit = defineEmits(['getlivecount', 'dom-change']);
 
-const avatarImg = ref('');
 const modelCount = ref(0);
 const modelData = ref([]);
 
@@ -58,9 +57,11 @@ function getUserModel() {
       if (res.data.total > 10) {
         emit('dom-change', 76);
       }
-      avatarImg.value = res.data.avatar_id;
       modelCount.value = res.data.total;
       modelData.value = res.data.models;
+      modelData.value.forEach((item) => {
+        item.avatar_id = res.data.avatar_id;
+      });
     } else {
       modelData.value = [];
     }
@@ -107,7 +108,6 @@ watch(props, () => {
       <app-card
         v-for="item in modelData"
         :key="item.id"
-        :avatar-img="avatarImg"
         :card-data="item"
         @click="goDetail(item.owner, item.name)"
       ></app-card>

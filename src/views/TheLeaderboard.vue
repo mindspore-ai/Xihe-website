@@ -334,7 +334,7 @@ function goUserPage(vel) {
 .wrap {
   margin: 0 auto;
   padding: 50px 16px 136px 16px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .modelzoo {
   // background-color: #f5f6f8;
@@ -378,7 +378,7 @@ function goUserPage(vel) {
     margin: 0 16px;
     min-height: calc(100vh - 475px) !important;
     .el-tab-pane {
-      max-width: 1440px;
+      max-width: 1416px;
       margin: 40px auto;
       background-color: #fff;
       .tips {

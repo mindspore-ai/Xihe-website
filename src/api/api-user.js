@@ -5,7 +5,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -100,7 +100,6 @@ export function getUserDatasetData(params, name) {
   const url = `/server/dataset/${name}`;
   let header = getHeaderConfig();
   // 登录之后携带token
-  // if (getUserInfo().token) {
   return request
     .get(url, {
       params,
@@ -109,11 +108,6 @@ export function getUserDatasetData(params, name) {
     .then((res) => {
       return res.data;
     });
-  /* } else {
-    return request.get(url, { params }).then((res) => {
-      return res.data;
-    });
-  } */
 }
 
 /**
@@ -159,9 +153,11 @@ export function getUserEmail(id) {
 }
 export function sendCode(reopt) {
   const url = `/server/user/email/sendbind`;
-  return request.post(url, reopt, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
+  return request
+    .post(url, reopt, { $doException: true, ...getHeaderConfig() })
+    .then((res) => {
+      return res.data;
+    });
 }
 export function bindUserEmail(params) {
   const url = `/server/user/email/bind`;

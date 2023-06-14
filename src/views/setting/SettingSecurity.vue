@@ -164,6 +164,11 @@ function resetForm(formEl) {
   time.value = 0;
   togglePhoneDlg(false);
 }
+// token框聚焦的时候失焦
+const tokenInput = ref(null);
+function disabled() {
+  tokenInput.value.blur();
+}
 </script>
 
 <template>
@@ -183,9 +188,12 @@ function resetForm(formEl) {
     <div class="setting-content">
       <div class="inline-content">
         <el-input
+          ref="tokenInput"
           v-model="gitlabToken"
-          disabled
+          type="password"
+          show-password
           class="setting-input"
+          @focus="disabled"
         ></el-input>
         <o-icon class="icon-copy" @click="handleCopy"
           ><icon-copy></icon-copy

@@ -1,0 +1,21 @@
+@charset 'UFT-8';
+@use './var.scss';
+
+.el-collapse {
+
+    .el-collapse-item__header {
+        height: var(--o-collapse-header-height);
+        font-size: var(--o-collapse-header-font_size);
+        line-height: var(--o-collapse-header-line_height);
+        border-bottom: 1px solid var(--o-collapse-border-color);
+    }
+
+    .el-collapse-item__content {
+        padding: 0px 8px 20px;
+    }
+
+    .el-icon {
+        color: var(--o-icon-color);
+        font-size: var(--o-icon-font_size);
+    }
+}

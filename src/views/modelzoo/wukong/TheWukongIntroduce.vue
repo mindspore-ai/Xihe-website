@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import wukongModel from '@/assets/imgs/wukong/wukong-model.png';
 import wukongDataset from '@/assets/imgs/wukong/wukong-dataset.png';
 import abysmView from '@/assets/imgs/wukong/abysm-view.png';
@@ -10,43 +10,45 @@ import cityView from '@/assets/imgs/wukong/city-view.png';
 import seaRunner from '@/assets/imgs/wukong/sea-runner.png';
 import umbrellaWomen from '@/assets/imgs/wukong/umbrella-women.png';
 import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
-// import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
-const router = useRouter();
+// const router = useRouter();
 const screenWidth = useWindowResize();
 
 const effectImg = reactive([
   {
     imgUrl: cityView,
-    title: '城市夜景 赛博朋克 格雷格·鲁特科夫斯基',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[0]'),
   },
   {
     imgUrl: umbrellaWomen,
-    title: '莫奈 撑阳伞的女人 月亮 梦幻',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[1]'),
   },
   {
     imgUrl: seaRunner,
-    title: '海上日出时候的奔跑者',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[2]'),
   },
   {
     imgUrl: abysmView,
-    title: '来自深渊 风景 绘画 写实',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[3]'),
   },
   {
     imgUrl: arkShip,
-    title: '诺亚方舟在世界末日起航 科幻插画',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[4]'),
   },
   {
     imgUrl: blackHole,
-    title: ' 时空 黑洞 辐射',
+    title: t('wukong.WUKONG_INFO.DISPLAY_IMGS[5]'),
   },
 ]);
 
 function goExperience() {
-  router.push(`/modelzoo/wukong`);
+  // router.push(`/modelzoo/wukong`);
+  window.open(`/modelzoo/wukong`);
 }
 
 // 了解更多
@@ -55,15 +57,19 @@ function learnWukongMore() {
     'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
   );
 }
+
+const githubLink1 = 'https://wukong-dataset.github.io/wukong-dataset/';
+const githubLink2 =
+  'https://github.com/christophschuhmann/improved-aesthetic-predictor';
 </script>
 <template>
   <div class="wukong-intro">
     <div class="wukong-bread">
       <el-breadcrumb :separator-icon="ArrowRight">
-        <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-          >大模型</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>悟空画画</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+          t('wukong.BIG_MODEL')
+        }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ t('wukong.TITLE') }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="intro-head">
@@ -74,9 +80,9 @@ function learnWukongMore() {
 
       <div class="wukong-right">
         <div class="wukong-right-top">
-          <div class="wukong-right-title">悟空.画画</div>
+          <div class="wukong-right-title">{{ t('wukong.TITLE_1') }}</div>
           <div class="wukong-right-content">
-            借助目前最大的中文开源多模态数据集悟空数据集进行训练，悟空-画画模型拥有优秀的中文文本-图像生成能力。模型能够识别各类场景描述与绘画风格，给用户带来良好的使用体验。
+            {{ t('wukong.DESC') }}
           </div>
         </div>
 
@@ -95,19 +101,20 @@ function learnWukongMore() {
             animation
             @click="learnWukongMore"
           >
-            了解更多
-            <!-- <template #suffix>
-              <OIcon><IconArrowRight /></OIcon>
-            </template> -->
+            {{ t('wukong.LEARN_MORE') }}
           </OButton>
         </div>
       </div>
     </div>
     <div class="intro-detail">
       <div class="intro">
-        <div class="intro-title">简述</div>
+        <div class="intro-title">{{ t('wukong.WUKONG_INFO.RESUME') }}</div>
         <div class="intro-concept">
-          Wukong-Huahua是基于扩散模型的中文以文生图大模型，由华为诺亚团队携手中软分布式并行实验室、昇腾计算产品部联合开发，使用昇思框架(MindSpore)+昇腾(Ascend)软硬件解决方案实现。该模型是基于目前最大的中文开源多模态数据集悟空数据集进行训练得来，具备优秀的中文文本-图像生成能力，能够实现多场景的绘画风格，可生成高质量的图像，给用户带来良好的使用体验。
+          {{ t('wukong.WUKONG_INFO.DESC') }}
+        </div>
+
+        <div class="intro-concept">
+          Wukong-Huahua是基于扩散模型的中文以文生图大模型，由华为诺亚团队携手中软分布式并行实验室、昇腾计算产品部联合开发，使用昇思框架（MindSpore）+昇腾（Ascend）软硬件解决方案实现。该模型是基于目前最大的中文开源多模态数据集悟空数据集进行训练得来，具备优秀的中文文本-图像生成能力，能够实现多场景的绘画风格，可生成高质量的图像，给用户带来良好的使用体验。
         </div>
 
         <div class="intro-concept new-vision">
@@ -125,89 +132,81 @@ function learnWukongMore() {
         </div>
       </div>
       <div class="model">
-        <div class="model-title">模型结构与训练</div>
+        <div class="model-title">{{ t('wukong.WUKONG_INFO.MODEL_TITLE') }}</div>
         <div class="model-img">
           <img :src="wukongModel" alt="" />
         </div>
         <div class="model-detail">
-          悟空画画模型分别由中文文本编码器以及Stable
-          Diffusion生成模型组成。具体的训练方法如下：
+          {{ t('wukong.WUKONG_INFO.MODEL_DETAIL') }}
           <div class="train-method">
             <div class="first-method">
-              1.预训练中文图文判别模型，得到一个具有中文图文对齐能力的文本编码器；
+              {{ t('wukong.WUKONG_INFO.DETAIL_1') }}
             </div>
             <div class="seconde-method">
-              2.我们结合Stable
-              Diffusion图像生成模型和第一步训练得到的文本编码器，在悟空中文多模态数据集上进行训练，得到中文文图生成模型——悟空画画模型。
+              {{ t('wukong.WUKONG_INFO.DETAIL_2') }}
             </div>
           </div>
         </div>
       </div>
       <div class="dataset">
-        <div class="dataset-title">悟空中文多模态数据集</div>
+        <div class="dataset-title">{{ t('wukong.WUKONG_INFO.DATASET') }}</div>
         <div class="dataset-img">
           <img :src="wukongDataset" alt="" />
         </div>
         <div class="dataset-detail">
           <div class="first-step">
-            悟空画画模型的训练依赖于悟空数据集，它是当时已开源的最大规模的中文多模态数据集。我们首先在百度搜索引擎上利用一百万个中文高频文本作为关键词进行图片搜索，获得接近20亿的原始图文对数据，此时这部分数据中包含了大量的噪声。
+            {{ t('wukong.WUKONG_INFO.ABOUT_DATASET') }}
           </div>
           <div class="second-step">
             <div>
-              第二步我们对这些原始数据进行多种方式的筛选清洗，主要操作包括：
+              {{ t('wukong.WUKONG_INFO.STEP') }}
             </div>
             <ul class="content">
               <li>
                 <span class="content-item">•</span>
                 <span>
-                  对图片的尺寸进行过滤，去除边长小于200px或者长宽比超出1/3~3范围的样本
+                  {{ t('wukong.WUKONG_INFO.STEP_1') }}
                 </span>
               </li>
               <li>
                 <span class="content-item">•</span>
                 <span>
-                  去除文本为无意义的词如 “Image”, “图片”，“照片”等的样本
+                  {{ t('wukong.WUKONG_INFO.STEP_2') }}
                 </span>
               </li>
               <li>
                 <span class="content-item">•</span>
                 <span>
-                  过滤文本长度过短，文本出现频次过高（如“如下图所示”等描述文本）的样本
+                  {{ t('wukong.WUKONG_INFO.STEP_3') }}
                 </span>
               </li>
               <li>
                 <span class="content-item">•</span>
-                <span> 过滤文本中包含隐私/敏感词的样本 </span>
+                <span> {{ t('wukong.WUKONG_INFO.STEP_4') }}</span>
               </li>
             </ul>
             <div class="result">
-              最终我们经过过滤得到了一亿较高质量中文图文对。
+              {{ t('wukong.WUKONG_INFO.STEP_5') }}
             </div>
           </div>
           <div class="final-sample">
             <div class="more-dataset">
               <div>
-                <span> 更多数据集相关细节可以参考</span>
-                <a
-                  href="https://wukong-dataset.github.io/wukong-dataset/"
-                  target="_blank"
-                >
-                  https://wukong-dataset.github.io/wukong-dataset/
+                <span>{{ t('wukong.WUKONG_INFO.RELATE_DETAIL_1') }}</span>
+                <a :href="githubLink1" target="_blank">
+                  {{ githubLink1 }}
                 </a>
                 <span>。</span>
               </div>
               <div class="conclusion">
                 <span>
-                  进一步地，在训练悟空画画模型时，我们对悟空数据集的数据根据图文匹配分数、水印分数以及艺术性分数
+                  {{ t('wukong.WUKONG_INFO.RELATE_DETAIL_2') }}
                 </span>
-                <a
-                  href="https://github.com/christophschuhmann/improved-aesthetic-predictor"
-                  target="_blank"
-                >
-                  https://github.com/christophschuhmann/improved-aesthetic-predictor
+                <a :href="githubLink2" target="_blank">
+                  {{ githubLink2 }}
                 </a>
                 <span>
-                  再次进行筛选，最终获得25M左右的数据进行训练。该部分数据具有较高的图像质量，并对常见文本内容进行了良好的覆盖，使得训练得到的悟空画画模型对文本拥有广泛的识别能力，并能根据不同的提示词生成多样的图片风格。
+                  {{ t('wukong.WUKONG_INFO.RELATE_DETAIL_3') }}
                 </span>
               </div>
             </div>
@@ -215,7 +214,7 @@ function learnWukongMore() {
         </div>
       </div>
       <div class="generating-effect">
-        <div class="title">生成效果：</div>
+        <div class="title">{{ t('wukong.WUKONG_INFO.GENERATE_RESULT') }}</div>
         <div class="effect-list">
           <div v-for="item in effectImg" :key="item.title" class="effect-item">
             <div class="effect-img">
@@ -232,7 +231,7 @@ function learnWukongMore() {
 .wukong-intro {
   padding: 120px 16px 64px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   height: 100%;
   @media screen and (max-width: 820px) {
     padding: 48px 0px 40px;

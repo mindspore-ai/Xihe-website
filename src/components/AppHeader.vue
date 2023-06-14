@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { debounce } from 'lodash/function';
 
 import logoImg from '@/assets/imgs/logo1.png';
-import logoImg1 from '@/assets/imgs/logo.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 import projectImg from '@/assets/icons/project.png';
 import modelImg from '@/assets/icons/model.png';
@@ -14,13 +13,11 @@ import userImg from '@/assets/icons/user.png';
 import { goAuthorize, logout } from '@/shared/login';
 import { escapeHtml } from '@/shared/utils';
 import OInput from '@/components/OInput.vue';
-// import ONav from '@/components/ONav.vue';
 import OIcon from '@/components/OIcon.vue';
-import IconDown from '~icons/app/down.svg';
 
-import { useLoginStore, useUserInfoStore, useLangStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import IconSearch from '~icons/app/search';
-import IconUser from '~icons/app/user.svg';
+import IconDown from '~icons/app/down.svg';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { Close } from '@element-plus/icons-vue';
 import { getSearchData } from '@/api/api-search';
@@ -30,10 +27,6 @@ import translateWhitelist from '@/whitelist/whitelist-translate';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
-
-const lang = computed(() => {
-  return useLangStore().lang;
-});
 
 const router = useRouter();
 const route = useRoute();
@@ -115,10 +108,40 @@ const navItems = reactive([
   {
     id: 'estate',
     label: computed(() => {
-      return t('home.APP_HEADER.INDUSTRY');
+      return t('home.APP_HEADER.ESTATE');
     }),
-    href: '/estate/electricity',
+    href: '',
     isActive: false,
+    menuList: [
+      {
+        id: 'electricity',
+        label: computed(() => {
+          return t('home.APP_HEADER.Electric_Power');
+        }),
+        href: '/electricity',
+      },
+      {
+        id: 'healthcare',
+        label: computed(() => {
+          return t('home.APP_HEADER.HEALTHCARE');
+        }),
+        href: '/medicine',
+      },
+      {
+        id: 'industry',
+        label: computed(() => {
+          return t('home.APP_HEADER.INDUSTRY');
+        }),
+        href: '/industry',
+      },
+      {
+        id: 'human_culture',
+        label: computed(() => {
+          return t('home.APP_HEADER.HUMAN_CULTURE');
+        }),
+        href: '/humanity',
+      },
+    ],
   },
   {
     id: 'course',
@@ -213,7 +236,7 @@ const loginedDropdownItems = reactive([
   {
     id: 'logout',
     label: computed(() => {
-      return locale.value === 'zh' ? '退出' : 'Logout';
+      return locale.value === 'zh' ? '退出登录' : 'Logout';
     }),
     action: () => {
       logout();
@@ -273,8 +296,15 @@ watch(route, (val) => {
       item.isActive = false;
     }
   });
-  if (val.path === '/modelzoo' || val.path === '/finetune') {
+  if (val.name === 'modelzoo' || val.name === 'finetune') {
     navItems[2].isActive = true;
+  } else if (
+    val.name === 'electricity' ||
+    val.name === 'industry' ||
+    val.name === 'medicine' ||
+    val.name === 'humanity'
+  ) {
+    navItems[4].isActive = true;
   }
 });
 
@@ -537,11 +567,11 @@ function handleBlur() {
   }
 }
 
-// 选择语言;
-const options = ref([
-  { value: 'zh', label: '中文' },
-  { value: 'en', label: 'En' },
-]);
+// // 选择语言;
+// const options = ref([
+//   { value: 'zh', label: '中文' },
+//   { value: 'en', label: 'En' },
+// ]);
 // 选择语言
 const handleCommand = (command) => {
   // locale.value = command.value;
@@ -829,28 +859,35 @@ const handleCommand = (command) => {
             class="loading"
           ></loading-arc>
           <div v-else class="user">
-            <el-dropdown
+            <div
               v-if="!userInfoStore.id"
               class="user-login"
               popper-class="header-nav"
             >
-              <icon-user class="user-login-icon"></icon-user>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="goAuthorize">{{
-                    locale === 'zh' ? '登录' : 'Login'
-                  }}</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+              <span class="user-login-icon" @click="goAuthorize">{{
+                locale === 'zh' ? '登录' : 'Login'
+              }}</span>
+            </div>
             <el-dropdown
               v-if="userInfoStore.id"
               class="user-info"
               popper-class="header-nav"
+              placement="bottom-end"
             >
-              <el-avatar :size="40" :src="userInfoStore.avatar" fit="fill" />
+              <div
+                class="user-info-item"
+                :class="{ 'en-info': locale === 'en' }"
+              >
+                <el-avatar :size="20" :src="userInfoStore.avatar" fit="fill" />
+                <span class="user-name">{{ userInfoStore.userName }}</span>
+                <OIcon><IconDown></IconDown></OIcon>
+              </div>
               <template #dropdown>
                 <el-dropdown-menu>
+                  <div class="user-dropdown">
+                    <el-avatar :size="48" :src="userInfoStore.avatar" />
+                    <span class="user-name">{{ userInfoStore.userName }}</span>
+                  </div>
                   <el-dropdown-item
                     v-for="item in loginedDropdownItems"
                     :key="item.id"
@@ -870,7 +907,7 @@ const handleCommand = (command) => {
 .header {
   display: flex;
   align-items: center;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   height: 100%;
   padding: 0 16px;
@@ -918,6 +955,11 @@ const handleCommand = (command) => {
         &:hover {
           color: #0d8dff;
         }
+        &:nth-child(5) {
+          .children-box {
+            left: -30px;
+          }
+        }
       }
       .is-active {
         color: #0d8dff;
@@ -934,10 +976,13 @@ const handleCommand = (command) => {
         top: 80px;
         left: -22px;
         width: 86px;
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.9);
         transform-origin: top;
         transform: scaleY(0);
         transition: all 0.3s ease-in-out;
+        box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        backdrop-filter: blur(5px);
         .item-children {
           height: 36px;
           line-height: 36px;
@@ -951,6 +996,13 @@ const handleCommand = (command) => {
         }
       }
       .menu-item:nth-child(3) {
+        &:hover {
+          .children-box {
+            transform: scaleY(1);
+          }
+        }
+      }
+      .menu-item:nth-child(5) {
         &:hover {
           .children-box {
             transform: scaleY(1);
@@ -1260,9 +1312,13 @@ const handleCommand = (command) => {
             cursor: pointer;
 
             &-icon {
-              color: #000;
-              width: 24px;
-              height: 24px;
+              font-size: 14px;
+              line-height: 22px;
+              width: 52px;
+              color: #ffffff;
+              background: #0d8dff;
+              border-radius: 16px;
+              text-align: center;
             }
           }
 
@@ -1275,8 +1331,78 @@ const handleCommand = (command) => {
               align-items: center;
               height: 100%;
             }
+            &-item {
+              display: flex;
+              align-items: center;
+              .user-name {
+                margin: 0 3px 0 8px;
+              }
+            }
+            .en-info {
+              .user-name,
+              .o-icon {
+                display: none;
+              }
+            }
           }
         }
+      }
+    }
+  }
+}
+.el-dropdown-menu {
+  background: #f5f7fc;
+  .user-dropdown {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    position: relative;
+    .user-name {
+      margin-left: 12px;
+      font-size: 20px;
+      line-height: 28px;
+      min-width: 150px;
+    }
+    &::after {
+      position: absolute;
+      bottom: 0;
+      content: '';
+      width: calc(100% - 36px);
+      height: 1px;
+      background-color: #dddddd;
+    }
+  }
+}
+.el-scrollbar__wrap {
+  background: #f5f7fc;
+  .el-dropdown__list > .el-dropdown-menu {
+    padding-bottom: 12px;
+    :deep(.el-dropdown-menu__item) {
+      font-size: 16px;
+      line-height: 24px;
+      width: calc(100% - 48px);
+      height: 40px;
+      margin: 0 auto;
+      &::after {
+        height: 0;
+        position: absolute;
+        bottom: 0;
+        content: '';
+        width: calc(100% - 32px);
+        background-color: #dddddd;
+      }
+      &:nth-child(5) {
+        margin-bottom: 8px;
+        &::after {
+          height: 1px;
+          bottom: -4px;
+        }
+      }
+      &:last-child {
+        color: #c7000b;
+      }
+      &:nth-child(2) {
+        margin-top: 4px;
       }
     }
   }

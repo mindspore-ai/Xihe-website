@@ -42,7 +42,6 @@ import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
-import IconLeft from '~icons/app/left';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -66,9 +65,6 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
-
-// import { useI18n } from 'vue-i18n';
-// const { t } = useI18n();
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
@@ -142,13 +138,13 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-function handlePreEnlage() {
+/* function handlePreEnlage() {
   if (largeIndex.value > 0) {
     largeImg.value = {};
     largeIndex.value--;
     largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
   }
-}
+} */
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};
@@ -201,15 +197,16 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
   return headersConfig;
 }
 let token = getHeaderConfig().headers
-  ? getHeaderConfig().headers['private-token']
+  ? getHeaderConfig().headers['csrf-token']
   : null;
+
 let socket;
 if (isLogined.value) {
   socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank`, [
@@ -619,7 +616,7 @@ async function handleInfer() {
           setTimeout(() => {
             socket = new WebSocket(
               `wss://${DOMAIN}/server/bigmodel/wukong/rank`,
-              [getHeaderConfig().headers['private-token']]
+              [getHeaderConfig().headers['csrf-token']]
             );
             socket.onmessage = function (event) {
               isWaiting.value = false;
@@ -990,7 +987,7 @@ function handleNum(index) {
         </div>
         <div v-else-if="errorMsg" class="waiting">
           <img :src="warning" alt="" />
-          <p>敏感信息，请重新输入关键词</p>
+          <p>{{ errorMsg }}</p>
         </div>
         <div v-else class="tip">
           <img :src="tip" alt="" />
@@ -1021,9 +1018,6 @@ function handleNum(index) {
         </template>
         <template v-else>
           <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
-            <o-icon class="turn" @click="handlePreEnlage"
-              ><icon-left></icon-left
-            ></o-icon>
             <img :src="value" alt="" />
             <o-icon class="turn" @click="handleNextEnlage"
               ><icon-right2></icon-right2
@@ -1286,7 +1280,7 @@ function handleNum(index) {
         >
         <template v-else-if="errorMsg">
           <img :src="warning" alt="" />
-          <p>敏感信息，请重新输入关键词</p></template
+          <p>{{ errorMsg }}</p></template
         >
         <template v-else> </template>
       </div>

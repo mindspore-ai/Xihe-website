@@ -1,0 +1,14 @@
+.el-dropdown-menu {
+  --o-dropdown_menu-padding: 0;
+  --o-dropdown_menu-border_radius: 16px;
+}
+.el-dropdown-menu__item {
+  --o-dropdown_menu_item-width: calc(100% - 48px);
+  --o-dropdown_menu_item-height: 40px;
+  --o-dropdown_menu_item-border_radius: 8px;
+  --o-dropdown_menu_item-margin: 4px;
+  --o-dropdown_menu_item-hover-background: #edeff2;
+}
+.el-dropdown__popper {
+  --o-dropdown__popper_shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
+}

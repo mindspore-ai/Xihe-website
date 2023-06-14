@@ -44,7 +44,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -146,9 +146,7 @@ function getFinetune() {
 getFinetune();
 
 function setWebsocket(url) {
-  const socket = new WebSocket(url, [
-    getHeaderConfig().headers['private-token'],
-  ]);
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {
@@ -579,7 +577,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 48px 16px 120px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .modelzoo-tune {
   background-color: #f5f6f8;
@@ -659,7 +657,7 @@ $theme: #0d8dff;
   }
   .apply-page {
     min-height: calc(100vh - 434px);
-    max-width: 1472px;
+    max-width: 1448px;
     margin: 0 auto;
     .apply-wrap {
       width: 90%;

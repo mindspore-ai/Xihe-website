@@ -6,7 +6,6 @@ import OIcon from '@/components/OIcon.vue';
 import OEmpty from '@/components/OEmpty.vue';
 
 import { Search } from '@element-plus/icons-vue';
-import IconMenu from '~icons/app/menu';
 import IconX from '~icons/app/x';
 import IconClear from '~icons/app/clear';
 import IconBack from '~icons/app/back';
@@ -38,9 +37,9 @@ let i18n = {
   more: '查看全部',
   clear: '清除',
   sortCondition: [
-    { text: '按照下载量排序', value: 'download' },
-    { text: '按照首字母排序', value: 'name' },
-    { text: '按照更新时间排序', value: '-update_time' },
+    { text: '最多下载', value: 'download' },
+    { text: '最新更新', value: '-update_time' },
+    { text: '首字母', value: 'name' },
   ],
   screenCondition: [
     {
@@ -208,7 +207,7 @@ function goSearch(render) {
         }
       }
       // 协议(单选)
-    } else if (item.title.key === 1) {
+    } else {
       item.condition.forEach((value) => {
         value.items.forEach((val) => {
           if (val.isActive) {
@@ -220,7 +219,6 @@ function goSearch(render) {
         });
       });
       if (time2 === item.condition[0].items.length) {
-        // query[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 1) {
           query.tags = null;
@@ -232,7 +230,7 @@ function goSearch(render) {
 
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
-  renderCondition.value[index].condition[index].items.map((item) => {
+  renderCondition.value[index].condition[0].items.map((item) => {
     item.isActive = false;
     item.isSelected = false;
     return item;
@@ -337,7 +335,9 @@ function handleTagSearch(date) {
   }
 }
 
-function dropdownClick(item) {
+const sortValue = ref('');
+function getSortData(item) {
+  sortValue.value = item.text;
   if (item.value === 'download') {
     query.sort_by = 'download_count';
   } else if (item.value === 'name') {
@@ -370,7 +370,23 @@ function getModelTag() {
     });
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
-        it.isActive = false;
+        if (
+          route.params.tag_kinds === 'CV' &&
+          (it.kind === 'CV' || it.items[0] === 'electricity')
+        ) {
+          it.isActive = true;
+          it.isSelected = true;
+        } else if (
+          route.params.tag_kinds === 'NLP' &&
+          (it.kind === 'NLP' || it.items[0] === 'electricity')
+        ) {
+          it.isActive = true;
+          it.isSelected = true;
+        } else {
+          it.isActive = false;
+          it.isSelected = false;
+        }
+        // it.isActive = false;
         item.condition.push(it);
       });
     });
@@ -389,6 +405,16 @@ function getModelTag() {
           name: it,
           isSelected: false,
         };
+      });
+      item.condition.forEach((it) => {
+        // 电力跳转过来标签高亮
+        if (
+          Object.keys(route.params).length &&
+          it.items[0].name === 'electricity'
+        ) {
+          it.items[0].isActive = true;
+          it.items[0].isSelected = false;
+        }
       });
       item.num = index;
     });
@@ -418,7 +444,7 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref('sizes, prev, pager, next, jumper');
+const layout = ref(' prev, pager, next,sizes, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -461,6 +487,17 @@ watch(
   query,
   () => {
     debounceSearch();
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => route.params,
+  () => {
+    query.tag_kinds = route.params.tag_kinds;
+    query.tags = route.params.tags;
   },
   {
     immediate: true,
@@ -629,7 +666,7 @@ onUnmounted(() => {
               }"
               @click="conditionClick(index, index2, detail.id)"
             >
-              {{ detail.name }}
+              {{ detail.name === 'electricity' ? '电力' : detail.name }}
               <o-icon class="icon-x">
                 <icon-x></icon-x>
               </o-icon>
@@ -650,7 +687,7 @@ onUnmounted(() => {
         <div class="card-box-top">
           <div class="card-head">
             <div class="model-number">
-              {{ i18n.head.count }} {{ modelCount }}
+              {{ i18n.head.count }} <span>{{ modelCount }}</span>
             </div>
             <div class="moderl-head-right">
               <el-input
@@ -660,21 +697,20 @@ onUnmounted(() => {
                 placeholder="请输入数据集名称"
                 @change="getKeyWord"
               />
-              <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon><icon-menu></icon-menu></o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <div class="sort-select">
+                <el-select
+                  v-model="sortValue"
+                  placeholder="排序"
+                  @change="getSortData"
+                >
+                  <el-option
+                    v-for="item in i18n.sortCondition"
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item"
+                  />
+                </el-select>
+              </div>
             </div>
           </div>
           <div v-if="modelData.projects" class="card-list">
@@ -709,15 +745,15 @@ onUnmounted(() => {
 $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
-  padding: 50px 16px 136px 16px;
-  max-width: 1472px;
+  padding: 40px 16px 136px 16px;
+  max-width: 1448px;
 }
 .model-page {
   background-color: #f5f6f8;
   .model-head {
     padding-top: 80px;
     background-size: cover;
-    background-image: url('@/assets/imgs/banner-head.png');
+    background-image: url('@/assets/imgs/banner-dataset.png');
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -730,7 +766,11 @@ $theme: #0d8dff;
       .introduce {
         font-size: 18px;
         .reference {
-          color: #4dcdff;
+          color: #000;
+          text-decoration: underline;
+          &:hover {
+            color: #0d8dff;
+          }
         }
       }
       .banner-right {
@@ -745,11 +785,12 @@ $theme: #0d8dff;
     .condition {
       position: relative;
       width: 100%;
-      max-width: 464px;
+      max-width: 424px;
       min-height: calc(100vh - 300px);
-      margin: 0 24px 0 0;
-      padding: 40px;
+      margin: 0 40px 0 0;
+      padding: 24px;
       background-color: #fff;
+      border-radius: 16px;
       .getback {
         font-size: 16px;
         color: #555;
@@ -854,7 +895,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
           .icon-x {
             display: none;
@@ -907,7 +948,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
           .icon-x {
             display: none;
@@ -941,7 +982,7 @@ $theme: #0d8dff;
           color: #555;
           user-select: none;
           background-color: #f3f9ff;
-          border-radius: 8px;
+          border-radius: 14px;
           border: 1px solid #e5e5e5;
           .icon-x {
             display: none;
@@ -967,9 +1008,18 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 24px;
+        padding: 18px 24px;
         width: 100%;
         background-color: #fff;
+        border-radius: 16px;
+        .model-number {
+          font-size: 14px;
+          line-height: 22px;
+          span {
+            color: #555;
+            margin-left: 8px;
+          }
+        }
         .moderl-head-right {
           display: flex;
           align-items: center;
@@ -977,6 +1027,16 @@ $theme: #0d8dff;
             cursor: pointer;
             margin-left: 24px;
             font-size: 24px;
+          }
+          .el-input {
+            width: 320px;
+          }
+
+          .sort-select {
+            margin-left: 8px;
+            .el-select {
+              width: 114px;
+            }
           }
         }
       }
@@ -986,7 +1046,7 @@ $theme: #0d8dff;
         grid-template-columns: repeat(2, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        margin-top: 40px;
+        margin-top: 24px;
         .pagination {
           display: flex;
           justify-content: center;

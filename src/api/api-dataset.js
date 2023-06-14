@@ -10,7 +10,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -80,6 +80,16 @@ export function checkNames(params) {
     .then((res) => {
       return res.data;
     });
+}
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getReadmeInfo(ownerName, modelName) {
+  const url = `/server/repo/dataset/${ownerName}/${modelName}/readme`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 /**
  * 修改数据集信息

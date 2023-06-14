@@ -2,7 +2,12 @@
 import introImg1 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro1.png';
 import introImg2 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro2.png';
 import introImg3 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro3.png';
+import introImg4 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro1-1.png';
+import introImg5 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro2-1.png';
+import introImg6 from '@/assets/imgs/estate/industry/intelligence/intelligence-intro3-1.png';
 import advantageImg from '@/assets/imgs/estate/industry/intelligence/intelligence-advantage.png';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
 </script>
 <template>
   <div class="project-explain">
@@ -26,7 +31,8 @@ import advantageImg from '@/assets/imgs/estate/industry/intelligence/intelligenc
           奥看科技与华为携手，推出行业首个低码智能视频使能平台，并聚焦全场景“大安全”打造了城市治理“一网统管”、工业安全生产等多个AI解决方案，帮助客户解决在复杂视频资源中的管理及使用难题，用人工智能技术全面释放视频新价值。
         </div>
         <div class="case-img">
-          <img :src="introImg1" alt="" />
+          <img v-if="screenWidth > 820" :src="introImg1" alt="" />
+          <img v-else :src="introImg4" alt="" />
         </div>
         <div>
           奥看科技基于AI应用场景，打造“广东移动千里眼平台平台”、“某头部能源企业灯塔工厂项目”、“常德城市视频云平台”、“新余钢铁智慧工厂”、等智慧解决方案，赋能工业安全生产等多场景下的创新应用。
@@ -35,13 +41,15 @@ import advantageImg from '@/assets/imgs/estate/industry/intelligence/intelligenc
           炬瞳安全生产AI应用平台是奥看科技面向工业安全生产场景打造的行业级轻量化应用平台，它围绕工业安全生产领域内业务层的各场景痛点需求，基于昇腾Atlas全栈算力，形成通用AI能力引擎，将场景化AI算法与华为AI计算框架的全场景适配，云边端深度融合，支持不同规模的项目部署。
         </div>
         <div class="case-img">
-          <img :src="introImg2" alt="" />
+          <img v-if="screenWidth > 820" :src="introImg2" alt="" />
+          <img v-else :src="introImg5" alt="" />
         </div>
         <div>
           奥看科技基于昇思MindSpore全场景AI框架打造“智慧安全生产管控平台”，从企业安全的角度出发，融合智能生产AI模型，提升安全管理效能，实现企业安全生产一体化管控。从工业安全生产的痛点场景切入，基于昇腾AI，聚焦全场景“大安全”，已在新余钢铁、蜂巢能源等多个工业场景中打造出了安全生产解决方案，并联合客户形成行业推广，全面护航工业制造和业务环境的稳定运行，赋能工业安全数字化转型。
         </div>
         <div class="case-img">
-          <img :src="introImg3" alt="" />
+          <img v-if="screenWidth > 820" :src="introImg3" alt="" />
+          <img v-else :src="introImg6" alt="" />
         </div>
       </div>
     </div>
@@ -111,6 +119,40 @@ import advantageImg from '@/assets/imgs/estate/industry/intelligence/intelligenc
       .case-img {
         margin-bottom: 0px;
       }
+    }
+  }
+  @media screen and (max-width: 820px) {
+    .explain-title {
+      font-size: 16px;
+      line-height: 24px;
+      margin-bottom: 16px;
+    }
+    .case-background,
+    .case-intro,
+    .case-painspot,
+    .case-advantage {
+      margin-bottom: 24px;
+      .title {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 8px;
+      }
+      .description {
+        font-size: 12px;
+        line-height: 18px;
+        .case-img {
+          margin-top: 8px;
+          margin-bottom: 8px;
+        }
+      }
+    }
+    .case-advantage {
+      margin-bottom: 0px;
     }
   }
 }

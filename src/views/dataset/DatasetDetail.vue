@@ -1,10 +1,15 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
 import IconCopy from '~icons/app/copy-nickname';
 import IconClear from '~icons/app/clear';
+import IconPlus from '~icons/app/plus';
+import IconTag from '~icons/app/icon-tag';
+import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
+import IconUp from '~icons/app/up';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -33,6 +38,13 @@ const detailData = computed(() => {
 let isTagShow = ref(false);
 const tabPosition = ref('left');
 
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+const isExpand = ref(false);
+
 let renderList = ref([]);
 
 let dialogList = {
@@ -58,28 +70,55 @@ let tabTitle = reactive([
     id: 0,
     path: '',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '文件',
     id: 1,
     path: 'tree',
     isPrivate: false,
+    isOnline: 'online',
   },
   {
     label: '设置',
     id: 2,
     path: 'settings',
     isPrivate: true,
+    isOnline: '',
   },
 ]);
 const activeName = ref(tabTitle[route.meta.index].label);
+
+function checkAllTags(val) {
+  isExpand.value = val;
+}
+function retractAlltags(val) {
+  isExpand.value = val;
+}
+
+watch(
+  () => detailData.value,
+  () => {
+    if (detailData.value?.id) {
+      nextTick(() => {
+        tagRef.value.forEach((item) => {
+          sumWidth.value += item.offsetWidth + 4;
+        });
+        containerWidth.value = containerRef.value.offsetWidth;
+        isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
+
+        sumWidth.value = 0;
+      });
+    }
+  }
+);
 
 // 渲染的nav数据 (区分访客和用户)
 const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
+        return !item.isPrivate && item.isOnline !== detailData.value.repo_type;
       });
 });
 onBeforeRouteLeave(() => {
@@ -283,6 +322,19 @@ function confirmBtn() {
       isTagShow.value = false;
     }
   );
+
+  if (detailData.value?.id) {
+    nextTick(() => {
+      tagRef.value.forEach((item) => {
+        sumWidth.value += item.offsetWidth + 4;
+      });
+      containerWidth.value = containerRef.value.offsetWidth;
+
+      isWrap.value = sumWidth.value - containerWidth.value > 1 ? true : false;
+
+      sumWidth.value = 0;
+    });
+  }
 }
 
 // 取消
@@ -372,7 +424,114 @@ watch(
 <template>
   <div v-if="detailData && detailData.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head wrap">
+
+    <div class="card-head">
+      <div class="card-head-content">
+        <div class="card-head-info wrap">
+          <div class="head-info-title">
+            <p>{{ detailData.title ? detailData.title : detailData.name }}</p>
+            <train-likes
+              v-if="userInfoStore.userName !== detailData.owner"
+              :is-digged="isDigged"
+              :dig-count="detailData.like_count"
+              class="loves"
+              @click="handleDatasetLike"
+            ></train-likes>
+          </div>
+        </div>
+
+        <div v-if="detailData.desc" class="head-info-desc wrap">
+          <p>{{ detailData.desc }}</p>
+        </div>
+
+        <div class="card-head-top wrap">
+          <div class="head-top-left">
+            <div class="portrait">
+              <img :src="detailData.avatar_id" alt="" />
+            </div>
+
+            <router-link :to="{ path: `/${route.params.user}` }">
+              {{ detailData.owner }} </router-link
+            >/
+            <span>{{ detailData.name }}</span>
+            <div
+              class="card-head-copy"
+              @click="copyText(`${detailData.owner}/${detailData.name}`)"
+            >
+              <o-icon><icon-copy></icon-copy></o-icon>
+            </div>
+          </div>
+
+          <div class="card-head-time">
+            <o-icon>
+              <icon-time> </icon-time>
+            </o-icon>
+            <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+          </div>
+
+          <div class="label-box">
+            <p class="tag-icon">
+              <o-icon>
+                <icon-tag></icon-tag>
+              </o-icon>
+            </p>
+            <div
+              v-if="detailData.is_owner"
+              class="label-add-item"
+              @click="addTagClick"
+            >
+              <o-icon><icon-plus></icon-plus></o-icon>
+              添加标签
+            </div>
+
+            <div
+              ref="containerRef"
+              class="label-box-left"
+              :class="isExpand ? 'tags-expand' : 'tags-retract'"
+            >
+              <div
+                v-for="(label, index) in modelTags"
+                :key="index"
+                ref="tagRef"
+                class="label-item"
+              >
+                {{ label.name }}
+              </div>
+
+              <template v-if="isWrap">
+                <div
+                  v-if="!isExpand"
+                  class="check-tags"
+                  @click="checkAllTags(true)"
+                >
+                  查看全部
+                  <o-icon><icon-right></icon-right></o-icon>
+                </div>
+
+                <div v-else class="retract-tags" @click="retractAlltags(false)">
+                  收起
+                  <o-icon><icon-up></icon-up></o-icon>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-head-tabs">
+        <el-tabs v-model="activeName" class="wrap" @tab-click="handleTabClick">
+          <el-tab-pane
+            v-for="item in renderNav"
+            :key="item.id"
+            :label="item.label"
+            :name="item.label"
+          >
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </div>
+
+    <!-- <div class="card-head wrap">
       <div class="card-head-top">
         <div class="portrait">
           <img :src="detailData.avatar_id" alt="" />
@@ -417,7 +576,7 @@ watch(
         >
         </el-tab-pane>
       </el-tabs>
-    </div>
+    </div> -->
     <div v-if="detailData.id" class="model-detail-body">
       <router-view class="wrap"></router-view>
     </div>
@@ -442,7 +601,7 @@ watch(
 
               <div v-if="headTags[0]" class="head-tags">
                 <div v-for="it in headTags" :key="it" class="condition-detail">
-                  {{ it.name }}
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -476,7 +635,7 @@ watch(
                         :class="{ 'condition-active': it.isActive }"
                         @click="tagClick(it, menu.key)"
                       >
-                        {{ it.name }}
+                        {{ it.name === 'electricity' ? '电力' : it.name }}
                       </div>
                     </div>
                   </div>
@@ -551,7 +710,7 @@ $theme: #0d8dff;
       color: $theme;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
       .icon-x {
         padding: 2px;
@@ -563,7 +722,7 @@ $theme: #0d8dff;
 .dialog-body {
   border-top: 1px solid #d8d8d8;
   padding-top: 7px;
-  :deep .el-tabs__item {
+  :deep(.el-tabs__item) {
     width: 188px;
     height: 56px;
     text-align: left;
@@ -571,15 +730,19 @@ $theme: #0d8dff;
     font-size: 18px;
     padding-left: 24px;
   }
-  :deep .el-tabs .el-tabs__header {
+  :deep(.el-tabs .el-tabs__header) {
     box-shadow: none;
   }
   .el-tabs--left,
   .el-tabs--right {
     border-bottom: 1px solid #d8d8d8;
   }
-  :deep .el-tabs__item.is-active {
+  :deep(.el-tabs__item.is-active) {
     background: #f7f8fa;
+    border-radius: 28px;
+  }
+  :deep(.el-tabs__nav) {
+    background: #fff;
   }
   .tan-title {
     margin: 14px 0;
@@ -605,7 +768,7 @@ $theme: #0d8dff;
     color: #555;
     user-select: none;
     background-color: #f3f9ff;
-    border-radius: 8px;
+    border-radius: 14px;
     border: 1px solid #e5e5e5;
   }
   .condition-active {
@@ -643,20 +806,29 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1472px;
+  max-width: 1448px;
 }
 .model-detail {
   background-color: #fff;
   .card-head-top {
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: #555;
+    align-items: flex-start;
+    margin-top: 24px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000;
+    .head-top-left {
+      align-self: flex-start;
+      align-items: center;
+      display: flex;
+      line-height: 20px;
+      height: 20px;
+    }
     .portrait {
       margin-right: 8px;
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
       background-color: #4d66ca;
       border-radius: 50%;
       border: 1px solid #b7ddff;
@@ -679,6 +851,11 @@ $theme: #0d8dff;
     display: flex;
     align-items: center;
     margin-left: 8px;
+    margin-right: 24px;
+    .o-icon {
+      font-size: 20px;
+      color: #555;
+    }
     .o-icon:hover {
       color: #0d8dff;
     }
@@ -688,8 +865,6 @@ $theme: #0d8dff;
     margin-left: 40px;
     font-size: 14px;
     line-height: 18px;
-    display: flex;
-    align-items: center;
     .o-icon {
       font-size: 18px;
     }
@@ -697,54 +872,175 @@ $theme: #0d8dff;
       margin-left: 6px;
     }
   }
-
   .card-head {
-    padding-top: 105px;
-    .label-box {
+    padding-top: 80px;
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    .card-head-1 {
       display: flex;
-      margin: 8px 0;
-      font-size: 12px;
-      flex-wrap: wrap;
-      .label-item {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        height: 28px;
-        padding: 0px 12px;
-        margin-right: 8px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: #555;
-        border: 1px solid #dbedff;
-        background-color: #f3f9ff;
-        border-radius: 8px;
+      margin-bottom: 16px;
+      .name {
+        font-size: 24px;
+        color: #555555;
+        line-height: 27px;
       }
-      .label-add-item {
-        height: 28px;
-        padding: 0px 12px;
-        background: #f7f8fa;
-        border-radius: 8px;
-        border: 1px solid #999999;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        .o-icon {
-          margin-right: 4px;
+    }
+
+    .card-head-time {
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 24px;
+      .o-icon {
+        margin-right: 8px;
+        svg {
+          color: #555;
+          font-size: 16px;
         }
       }
     }
+    .tag-icon {
+      align-self: flex-start;
+      margin-top: 2px;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      .o-icon {
+        font-size: 16px;
+      }
+    }
+    .handle-overlength {
+      margin-right: 50px !important;
+    }
+    .tags-retract {
+      height: 20px;
+      overflow-y: hidden;
+      padding-right: 92px;
+    }
+    .tags-expand {
+      height: auto;
+      overflow: unset;
+      padding-right: 64px;
+    }
+    .label-box {
+      display: flex;
+      font-size: 12px;
+      flex-wrap: nowrap;
+      .label-box-left {
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        .check-tags,
+        .retract-tags {
+          position: absolute;
+          right: 0;
+          bottom: 0px;
+          font-size: 14px;
+          color: #555555;
+          line-height: 18px;
+          padding: 2px 4px;
+          color: #0d8dff;
+          cursor: pointer;
+          .o-icon {
+            font-size: 16px;
+          }
+        }
+        .retract-tags {
+          bottom: 16px;
+        }
+      }
+    }
+    .label-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 4px;
+      margin-bottom: 8px;
+      padding: 0px 12px;
+      font-size: 12px;
+      color: #555;
+      border: 1px solid #dbedff;
+      background-color: #f3f9ff;
+      border-radius: 14px;
+      white-space: nowrap;
+    }
+    .label-add-item {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      padding: 2px 8px 2px 4px;
+      background: rgba(13, 141, 255, 0.15);
+      border-radius: 14px;
+      color: #0d8dff;
+      border: 1px dashed #0d8dff;
+      white-space: nowrap;
+      margin-right: 4px;
+      cursor: pointer;
+      .o-icon {
+        margin-right: 4px;
+      }
+    }
   }
+  .card-head-tabs {
+    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
+  }
+  .card-head-content {
+    padding: 24px 0;
+  }
+  .card-head-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  .head-info-title {
+    flex: 1;
+    font-size: 24px;
+    color: #555555;
+    line-height: 38px;
+    display: flex;
+    justify-content: space-between;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .head-info-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 22px;
+    margin-top: 10px;
+    p {
+      max-width: 1128px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   .model-detail-body {
     min-height: calc(100vh - 455px);
     background-color: #f5f6f8;
-    padding: 35px 0 64px;
+    padding: 40px 0 64px;
+  }
+  .tags-box {
+    :deep(.el-dialog) {
+      .el-dialog__header {
+        justify-content: flex-start;
+      }
+    }
   }
 }
 :deep(.el-tabs) {
   .el-tabs__header {
     background-color: #ffffff;
     margin-bottom: 0;
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    background: rgba(251, 251, 251, 0.85);
   }
 
   .el-tabs__item {

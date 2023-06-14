@@ -1,18 +1,14 @@
 <script setup>
 import logoImg from '@/assets/imgs/footer-logo1.png';
-import logoImg1 from '@/assets/imgs/footer-logo.png';
 import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
 import IconClose from '~icons/app/close';
 
 import { toRefs } from 'vue';
-import { useRoute } from 'vue-router';
 
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
-
-const route = useRoute();
 
 const props = defineProps({
   isCookieTip: {
@@ -31,12 +27,6 @@ function onCookieClick() {
 <template>
   <footer class="footer">
     <div v-if="locale === 'zh'" class="footer-logo">
-      <!-- <img
-        v-if="route.path === '/modelzoo/wukong'"
-        :src="logoImg1"
-        alt=""
-        srcset=""
-      /> -->
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div v-else class="footer-logo">
@@ -85,7 +75,7 @@ function onCookieClick() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1472px;
+  max-width: 1448px;
   margin: 0 auto;
   height: 200px;
   padding: 141px 16px 87px;

@@ -34,21 +34,19 @@ import IconPoppver from '~icons/app/popover.svg';
     </el-popover>
   </div>
 </template>
-
 <style lang="scss" scoped>
 .o-popper {
   position: absolute;
-  right: -40px;
+  right: -32px;
   top: 5px;
   .o-icon {
     font-size: 24px;
   }
   :deep(.el-popover.el-popper) {
-    // box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
-    padding: 16px 16px 16px 16px;
-    font-size: 12px;
-    line-height: 16px;
-    color: #656565;
+    // padding: 16px 16px 16px 16px;
+    // font-size: 12px;
+    // line-height: 16px;
+    // color: #656565;
     .remind {
       color: #f13b35;
     }

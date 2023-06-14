@@ -1,6 +1,6 @@
 <script setup>
 import { ref, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 import taichuEfficient from '@/assets/imgs/taichu/taichu-efficient.png';
@@ -24,6 +24,10 @@ import taichuFixImg from '@/assets/imgs/taichu/taichuFixImage.png';
 import OButton from '@/components/OButton.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const screenWidth = useWindowResize();
 
 const taichuvideo1 =
@@ -42,7 +46,7 @@ const instancevideo =
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
-const router = useRouter();
+// const router = useRouter();
 // 图片数组
 const videoImgArr1 = [
   {
@@ -108,7 +112,8 @@ function closeInstanceVideo() {
   showInstanceVideo.value = false;
 }
 function goTaichuExperience() {
-  router.push('/modelzoo/taichu');
+  // router.push('/modelzoo/taichu');
+  window.open('/modelzoo/taichu');
 }
 function goTaichuMore() {
   window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
@@ -119,10 +124,10 @@ function goTaichuMore() {
     <div class="taichu-wrap">
       <div class="taichu-bread">
         <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/modelzoo' }"
-            >大模型</el-breadcrumb-item
-          >
-          <el-breadcrumb-item>紫东.太初</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/modelzoo' }">{{
+            t('taichu.BIG_MODEL')
+          }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ t('taichu.TITLE') }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- <div class="taichu-content"> -->
@@ -131,10 +136,9 @@ function goTaichuMore() {
           <img draggable="false" :src="taichuBanner" alt="" />
         </div>
         <div class="banner-right">
-          <div class="banner-title">紫东.太初</div>
+          <div class="banner-title">{{ t('taichu.TITLE') }}</div>
           <div class="banner-content">
-            OPT（Omni-Perception
-            Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。
+            {{ t('taichu.TAICHU_DESC') }}
           </div>
           <div class="banner-btn">
             <OButton
@@ -143,14 +147,14 @@ function goTaichuMore() {
               animation
               @click="goTaichuExperience"
             >
-              在线体验
+              {{ t('taichu.EXPERIENCE_LIVE') }}
             </OButton>
             <OButton
               :size="screenWidth < 820 ? 'mini' : 'small'"
               animation
               @click="goTaichuMore"
             >
-              了解更多
+              {{ t('taichu.LEARN_MORE') }}
             </OButton>
           </div>
         </div>
@@ -159,21 +163,17 @@ function goTaichuMore() {
     </div>
     <div class="taichu-detail">
       <div class="taichu-detail-intro">
-        <div class="intro-title">简述</div>
+        <div class="intro-title">{{ t('taichu.INTRODUCTION.RESUME') }}</div>
         <p class="intro-info info1">
-          紫东.太初是中科院自动化所与MindSpore社区联合打造的全球首个图、文、音三模态大模型。紫东.太初将文本
-          + 视觉 + 语音
-          各个模型高效协同，实现超强性能，在图文跨模态理解与生成性能上都能领先目前业界的SOTA模型，高效完成跨模态检测、视觉问答、语义描述等下游任务。此外，视频理解与描述的性能更是实现了全球第一，在今年的两个国际大赛中，ACM
-          Multimedia（国际多媒体大会）
-          和ICCV（国际计算机视觉大会）紫东太初都获得了第一名的成绩。
+          {{ t('taichu.INTRODUCTION.RESUME_DESC1') }}
         </p>
         <p class="intro-info">
-          紫东.太初的发布将改变当前单一模型对应单一任务的人工智能研发范式，实现三模态图文音的统一语义表达，大幅提升文本、语音、图像和视频等领域的基础任务性能，并在多模态内容的理解、搜索、推荐和问答，语音识别和合成，人机交互和无人驾驶等商业应用中具有潜力巨大的市场价值。
+          {{ t('taichu.INTRODUCTION.RESUME_DESC2') }}
         </p>
 
         <div class="intro-body">
           <div class="intro-body-title">
-            全球首个三模态大模型“紫东.太初”——助力科研创新与应用孵化
+            {{ t('taichu.INTRODUCTION.APPLICATION_TITLE') }}
           </div>
           <div class="intro-body-diagram">
             <img class="diagram-left" :src="taichuEfficient" alt="" />
@@ -182,7 +182,7 @@ function goTaichuMore() {
                 <img :src="taichuEfficient1" alt="" />
                 <img :src="taichuEfficient2" alt="" />
                 <img :src="taichuEfficient3" alt="" />
-                <p>以文搜图</p>
+                <p>{{ t('taichu.INTRODUCTION.APPLICATION_1') }}</p>
               </div>
               <div class="diagram-video">
                 <div
@@ -194,7 +194,7 @@ function goTaichuMore() {
                   <img class="video-img1" :src="item.src" alt="" />
                   <img class="video-img2" :src="taichuPlay" alt="" />
                 </div>
-                <p>以图生音</p>
+                <p>{{ t('taichu.INTRODUCTION.APPLICATION_2') }}</p>
               </div>
               <div class="diagram-video">
                 <div
@@ -206,7 +206,7 @@ function goTaichuMore() {
                   <img class="video-img1" :src="taichuVideo2" alt="" />
                   <img class="video-img2" :src="taichuPlay" alt="" />
                 </div>
-                <p>以音生图</p>
+                <p>{{ t('taichu.INTRODUCTION.APPLICATION_3') }}</p>
               </div>
             </div>
           </div>
@@ -220,16 +220,18 @@ function goTaichuMore() {
       </div>
 
       <div class="taichu-detail-reference">
-        <div class="reference-title">参考设计——多模态对话虚拟人“小初”</div>
+        <div class="reference-title">
+          {{ t('taichu.INTRODUCTION.XIAOCHU_TITLE') }}
+        </div>
         <p class="reference-info">
-          自动化所所长徐波与自动化所基于紫东太初打造的三维虚拟人“小初”进行了跨时空对话，展示了不同模态间的互相转换和生成实例，涵盖视频生成、视频描述、图像生成、智能问答、语音识别等多个功能。徐波同时介绍了紫东太初大模型在纺织工业生产线中的实际应用案例。在纺织厂织机运转的过程中，紫东太初融合多模态信息，可以通过语音识别来判断断纬和断经，通过视觉识别来判断布匹的缺陷，展示出强大的综合研判能力和广阔的应用前景。
+          {{ t('taichu.INTRODUCTION.XIAOCHU_DESC') }}
         </p>
         <div class="reference-video">
           <img class="video-img1" :src="taichuVideo4" alt="" />
           <div class="video-img2">
             <img :src="taichuPlay" alt="" @click="playReferenceVideo" />
-            <div>紫东.太初</div>
-            <p>全球首个三模态大模型</p>
+            <div>{{ t('taichu.TITLE') }}</div>
+            <p>{{ t('taichu.INTRODUCTION.VIDEO_DESC') }}</p>
           </div>
           <div v-if="showReferenceVideo" class="video-content">
             <img
@@ -249,76 +251,100 @@ function goTaichuMore() {
       </div>
 
       <div class="taichu-detail-instance">
-        <div class="instance-title">应用实例——千博手语教考一体机</div>
+        <div class="instance-title">
+          {{ t('taichu.INTRODUCTION.SIGN_LANGUAGE') }}
+        </div>
         <p class="instance-info">
-          手语教考一体机：我国共有2700多万听障人士，他们面临沟通难、就业难等一系列问题，究其原因，主要是手语知识学习的挑战，这其中手语词汇匮乏、师资短缺、手语标准难统一是三大挑战
-          。千博信息基于紫东.太初利用昇思MindSpore开发了手语多模态模型，开创性地实现手语动作与示意图片和文字的联动，让初学者更加方便的理解；基于手语多模态模型，利用昇腾AI基础软硬件平台开发了手语教考一体机，帮助学生随学随练随考，高效学习。
+          {{ t('taichu.INTRODUCTION.LANGUAGE_DESC1') }}
           <br />
-          在解决手语师资短缺的同时，还能推动手语标准的推广。目前一体机已在湘潭特校等数十个学校陆续上线。
+          {{ t('taichu.INTRODUCTION.LANGUAGE_DESC2') }}
         </p>
         <div class="instance-desc">
-          <div class="instance-desc-title">听障群体持续学习成为难题</div>
+          <div class="instance-desc-title">
+            {{ t('taichu.INTRODUCTION.LEARNING') }}
+          </div>
           <div class="instance-desc-title2">
-            听障人士长期手语学习过程中的三大挑战
+            {{ t('taichu.INTRODUCTION.CHALLENGES') }}
           </div>
 
           <ul class="challenges">
             <li class="challenges-item">
               <div class="challenges-item-left">
                 <p class="challenges-item-left-num">1</p>
-                <p class="challenges-item-left-title">词汇匮乏</p>
+                <p class="challenges-item-left-title">
+                  {{ t('taichu.INTRODUCTION.CHALLENGE1_TITLE') }}
+                </p>
               </div>
               <div class="challenges-item-right">
                 <div class="top">
                   <span class="top-strip strip"></span>
                   <div class="top-total">
-                    <p class="title1">69000个词语</p>
-                    <p class="title2">《现代汉语词典》新事物 新技术…</p>
+                    <p class="title1">
+                      {{ t('taichu.INTRODUCTION.CHALLENGE1_DESC') }}
+                    </p>
+                    <p class="title2">
+                      {{ t('taichu.INTRODUCTION.CHALLENGE1_DESC_1') }}
+                    </p>
                   </div>
                 </div>
                 <div class="bottom">
                   <span class="bottom-strip strip"></span>
-                  <span class="bottom-title">8200个词语</span>
+                  <span class="bottom-title">{{
+                    t('taichu.INTRODUCTION.CHALLENGE1_DESC_2')
+                  }}</span>
                 </div>
               </div>
             </li>
             <li class="challenges-item">
               <div class="challenges-item-left">
                 <p class="challenges-item-left-num">2</p>
-                <p class="challenges-item-left-title">师资短缺</p>
+                <p class="challenges-item-left-title">
+                  {{ t('taichu.INTRODUCTION.CHALLENGE2_TITLE') }}
+                </p>
               </div>
               <div class="challenges-item-right">
                 <div class="top">
                   <span class="top-strip strip"></span>
                   <div class="top-total">
-                    <p class="title1">约460万聋哑学生</p>
-                    <!-- <p class="title2">《现代汉语词典》新事物 新技术…</p> -->
+                    <p class="title1">
+                      {{ t('taichu.INTRODUCTION.CHALLENGE2_DESC') }}
+                    </p>
                   </div>
                 </div>
                 <div class="bottom">
                   <span class="bottom-strip strip"></span>
-                  <span class="bottom-title3"> 约1万名手语教师</span>
+                  <span class="bottom-title3">
+                    {{ t('taichu.INTRODUCTION.CHALLENGE2_DESC_2') }}</span
+                  >
                 </div>
               </div>
             </li>
             <li class="challenges-item">
               <div class="challenges-item-left">
                 <p class="challenges-item-left-num">3</p>
-                <p class="challenges-item-left-title">标准不一</p>
+                <p class="challenges-item-left-title">
+                  {{ t('taichu.INTRODUCTION.CHALLENGE3_TITLE') }}
+                </p>
               </div>
               <div class="challenges-item-right">
                 <ul class="difference-arr">
                   <li class="difference-item">
                     <span class="color-block"></span>
-                    <span class="text-block">方言差异</span>
+                    <span class="text-block">{{
+                      t('taichu.INTRODUCTION.CHALLENGE3_DESC')
+                    }}</span>
                   </li>
                   <li class="difference-item">
                     <span class="color-block"></span>
-                    <span class="text-block">语法差异</span>
+                    <span class="text-block">{{
+                      t('taichu.INTRODUCTION.CHALLENGE3_DESC_1')
+                    }}</span>
                   </li>
                   <li class="difference-item">
                     <span class="color-block"></span>
-                    <span class="text-block">认知差异</span>
+                    <span class="text-block">{{
+                      t('taichu.INTRODUCTION.CHALLENGE3_DESC_2')
+                    }}</span>
                   </li>
                 </ul>
               </div>
@@ -332,22 +358,22 @@ function goTaichuMore() {
         </div>
         <div class="instance-AIdesc">
           <div class="instance-AIdesc-title">
-            AI赋能，让手语学习更简单、可持续
+            {{ t('taichu.INTRODUCTION.AI_EMPOWERMENT') }}
           </div>
           <div class="instance-AIdesc-title1">
-            听障人士长期手语学习过程中的三大挑战
+            {{ t('taichu.INTRODUCTION.THREE_CHALLENGES') }}
           </div>
           <ul class="instance-AIdesc-title2">
             <li>
-              <span>持续丰富手语词汇库</span>
+              <span>{{ t('taichu.INTRODUCTION.CHALLENGE_1') }}</span>
               <img :src="taichuArrows" alt="" />
             </li>
             <li>
-              <span>推动融合手语国家标准制定</span>
+              <span>{{ t('taichu.INTRODUCTION.CHALLENGE_2') }}</span>
               <img :src="taichuArrows" alt="" />
             </li>
             <li>
-              <span>持续丰富手语词汇库</span>
+              <span>{{ t('taichu.INTRODUCTION.CHALLENGE_3') }}</span>
             </li>
           </ul>
 
@@ -405,7 +431,7 @@ function goTaichuMore() {
 <style lang="scss" scoped>
 .wrapper {
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: 1416px;
   padding-bottom: 64px;
   @media screen and (max-width: 820px) {
     padding: 16px 16px 40px;
@@ -415,7 +441,7 @@ function goTaichuMore() {
 .taichu-wrap {
   padding-top: 120px;
   margin: 0 auto;
-  max-width: 1472px;
+  max-width: 1448px;
   @media screen and (max-width: 1080px) {
     padding: 0;
   }
@@ -454,7 +480,6 @@ function goTaichuMore() {
     border-radius: 16px;
     @media screen and (max-width: 1080px) {
       padding: 16px;
-      margin: 0 16px;
     }
     .banner-left {
       margin-right: 40px;
@@ -997,7 +1022,7 @@ function goTaichuMore() {
               .difference-item {
                 display: flex;
                 align-items: center;
-                margin-left: 24px;
+                margin-left: 20px;
                 .color-block {
                   width: 12px;
                   height: 12px;

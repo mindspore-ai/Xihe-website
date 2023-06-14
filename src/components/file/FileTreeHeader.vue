@@ -180,7 +180,7 @@ async function downloadZip() {
         <el-dropdown v-if="repoDetailData.is_owner" popper-class="filter">
           <o-button type="primary" class="add-new"
             >{{ i18n.addNew }}
-            <template #prefix>
+            <template #suffix>
               <o-icon><icon-plus></icon-plus></o-icon>
             </template>
           </o-button>
@@ -205,15 +205,26 @@ async function downloadZip() {
 
 <style lang="scss" scoped>
 $theme: #0d8dff;
+.o-popper {
+  position: relative;
+}
 :deep(.el-popover) {
-  inset: 0 auto auto -70px !important;
+  inset: 60px auto auto -180px !important;
   --el-popover-padding: 16px;
+  box-shadow: 0px 10px 40px 0px rgba(18, 20, 23, 0.08);
+  border: 1px solid #edeff2;
   .el-popper__arrow {
     display: block;
-    left: 70px !important;
+    left: 238px !important;
   }
 }
+:deep(.el-popper.is-light.el-popover) {
+  border-radius: 0px;
+}
 .model-file {
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
   .file-top {
     display: flex;
     align-items: center;
@@ -222,7 +233,8 @@ $theme: #0d8dff;
     &-left {
       .file-path {
         display: flex;
-        font-size: 18px;
+        font-size: 14px;
+        color: #555;
         .item-path {
           cursor: pointer;
           &:hover {
@@ -240,9 +252,7 @@ $theme: #0d8dff;
           flex-direction: column;
           align-items: center;
           .clone-repo {
-            padding-bottom: 16px;
             width: 100%;
-            border-bottom: 1px solid #e5e5e5;
             h5 {
               font-weight: 500;
               color: #000;
@@ -254,6 +264,10 @@ $theme: #0d8dff;
               width: 100%;
               :deep(.el-input__wrapper) {
                 padding: 6px 8px !important;
+                background: #ffffff;
+                .el-input__inner {
+                  -webkit-text-fill-color: #555;
+                }
               }
               .o-icon {
                 cursor: pointer;
@@ -266,7 +280,7 @@ $theme: #0d8dff;
             }
           }
           .download-zip {
-            margin-top: 16px;
+            margin-top: 24px;
             .o-button {
               padding: 4px 10px !important;
               min-width: 0;

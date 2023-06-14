@@ -1,0 +1,12 @@
+.el-popper {
+  --o-popper-font-size: var(--o-font_size-text);
+  --o-popper-font-color: var(--o-color-text1);
+  --o-popper-font-color_active: var(--o-color-primary1);
+  --o-popper-font-color_hover: var(--o-color-primary1);
+
+  --o-popper-bg-color: var(--o-color-bg1);
+  --o-popper-bg-color_active: #fff;
+  --o-popper-bg-color_hover: var(--o-color-bg1);
+  --o-popper-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
+  // --o-popper-shadow: red;
+}

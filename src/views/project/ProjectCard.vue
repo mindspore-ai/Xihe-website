@@ -15,6 +15,7 @@ import RelateCard from '@/components/train/RelateCard.vue';
 import NoRelate from '@/components/train/NoRelate.vue';
 
 import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getAppInfo } from '@/api/api-project';
 import {
   addDataset,
   deleteDataset,
@@ -29,7 +30,7 @@ function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
         headers: {
-          'private-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
         },
       }
     : {};
@@ -80,14 +81,14 @@ const i18n = {
   emptystart: '暂未启动项目',
 };
 
-const isShow = ref(false);
-const isShow1 = ref(false);
+const isShowDatasetDlg = ref(false);
+const isShowModelDlg = ref(false);
 const addSearch = ref('');
 
 route.hash ? getReadMeFile() : '';
 
 function addRelateClick() {
-  isShow.value = true;
+  isShowDatasetDlg.value = true;
 }
 const emit = defineEmits(['on-click']);
 
@@ -143,12 +144,12 @@ function confirmAdd() {
             message: '添加成功',
           });
           emit('on-click');
-          isShow.value = false;
+          isShowDatasetDlg.value = false;
           addSearch.value = '';
         }
       })
       .catch(() => {
-        isShow.value = false;
+        isShowDatasetDlg.value = false;
         addSearch.value = '';
         ElMessage({
           type: 'error',
@@ -200,11 +201,11 @@ function confirmClick() {
           message: '添加成功',
         });
         emit('on-click');
-        isShow1.value = false;
+        isShowModelDlg.value = false;
         addSearch.value = '';
       })
       .catch(() => {
-        isShow1.value = false;
+        isShowModelDlg.value = false;
         addSearch.value = '';
         ElMessage({
           type: 'error',
@@ -244,7 +245,7 @@ function deleteClick(item) {
 }
 
 function addModeClick() {
-  isShow1.value = true;
+  isShowModelDlg.value = true;
 }
 // 获取README文件
 function getReadMeFile() {
@@ -366,16 +367,10 @@ const clientSrc = ref('');
 // }
 //拥有者启动推理
 function handleStart() {
-  ElMessage({
-    message:
-      '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
-    type: 'warning',
-    duration: 4000,
-  });
-  /* if (detailData.value.owner === userInfo.userName) {
+  if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
       `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`,
-      [getHeaderConfig().headers['private-token']]
+      [getHeaderConfig().headers['csrf-token']]
     );
     socket.value.onmessage = function (event) {
       try {
@@ -429,7 +424,7 @@ function handleStart() {
       }
     };
     msg.value = '启动中';
-  } */
+  }
 }
 
 //停止推理
@@ -440,17 +435,8 @@ function handleStop() {
 const socket = ref(null);
 
 //拥有者判断是否有app.py，非拥有者判断启动状态
-getGitlabTree({
-  type: 'project',
-  user: routerParams.user,
-  path: 'inference',
-  id: detailData.value.id,
-  name: routerParams.name,
-}).then((res) => {
-  let apppy = res?.data?.filter((item) => {
-    return item.name === 'app.py';
-  });
-  if (apppy) {
+getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
+  if (res.data.has_file) {
     try {
       canStart.value = true;
     } catch {
@@ -636,7 +622,7 @@ onUnmounted(() => {
 
     <!-- 添加数据集弹窗 -->
     <el-dialog
-      v-model="isShow"
+      v-model="isShowDatasetDlg"
       width="640px"
       :show-close="false"
       center
@@ -658,16 +644,22 @@ onUnmounted(() => {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShow = false"
-            >取消</o-button
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="isShowDatasetDlg = false"
           >
-          <o-button type="primary" @click="confirmAdd">确定</o-button>
+            取消
+          </o-button>
+          <o-button size="small" type="primary" @click="confirmAdd">
+            确定
+          </o-button>
         </span>
       </template>
     </el-dialog>
     <!-- 添加模型 -->
     <el-dialog
-      v-model="isShow1"
+      v-model="isShowModelDlg"
       width="640px"
       :show-close="false"
       center
@@ -689,10 +681,16 @@ onUnmounted(() => {
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShow1 = false"
-            >取消</o-button
+          <o-button
+            size="small"
+            style="margin-right: 16px"
+            @click="isShowModelDlg = false"
           >
-          <o-button type="primary" @click="confirmClick">确定</o-button>
+            取消
+          </o-button>
+          <o-button size="small" type="primary" @click="confirmClick">
+            确定
+          </o-button>
         </span>
       </template>
     </el-dialog>
@@ -702,8 +700,8 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  padding-bottom: 40px;
-  min-height: calc(100vh - 340px);
+  // padding-bottom: 40px;
+  // min-height: calc(100vh - 508px);
   background-color: #f5f6f8;
   .markdown-body {
     .fail {
@@ -734,16 +732,12 @@ onUnmounted(() => {
       padding-top: 64px; //内容在按钮下16px
       height: 666px;
     }
-    .markdown-file {
-      padding-right: 48px;
-    }
     position: relative;
     height: 100%;
     .o-button {
       position: absolute;
       top: 0;
       right: 0;
-      margin-right: 48px;
     }
     .loading {
       display: flex;
@@ -790,19 +784,24 @@ onUnmounted(() => {
     }
   }
   .left-data1 {
-    margin-right: 40px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    width: 66%;
+    margin-right: 24px;
+    padding: 24px 24px 40px;
+    border-radius: 16px;
   }
   .left-data2 {
-    margin-right: 40px;
-    width: 100%;
-    border-right: 1px solid #d8d8d8;
+    width: 66%;
+    background-color: #fff;
+    margin-right: 24px;
+    padding: 24px 24px 40px;
+    border-radius: 16px;
   }
   .right-data {
-    max-width: 425px;
-    width: 100%;
     color: #000;
+    width: calc(34% - 24px);
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px 24px;
     .download-data {
       display: flex;
       &-left {
@@ -817,6 +816,7 @@ onUnmounted(() => {
         font-size: 14px;
         color: #555555;
         line-height: 24px;
+        font-weight: normal;
       }
       .download-count {
         font-size: 18px;
@@ -857,42 +857,6 @@ onUnmounted(() => {
         grid-template-columns: repeat(1, minmax(200px, 1fr));
         column-gap: 24px;
         row-gap: 24px;
-        .dataset-item {
-          width: 100%;
-          padding: 24px;
-          background-color: #fff;
-          box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-          position: relative;
-          &:hover {
-            box-shadow: 0px 6px 18px 0px rgba(13, 141, 255, 0.14);
-            .remove-item {
-              display: block;
-            }
-          }
-          .remove-item {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            display: none;
-          }
-          .dataset-top {
-            margin-bottom: 14px;
-          }
-          .dataset-bottom {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            & > div {
-              display: flex;
-              align-items: center;
-              margin-right: 24px;
-              span {
-                font-size: 20px;
-                padding-right: 4px;
-              }
-            }
-          }
-        }
       }
     }
     .add-title {
@@ -904,6 +868,7 @@ onUnmounted(() => {
       margin: 48px 0 24px;
       font-size: 18px;
       line-height: 24px;
+      font-weight: normal;
     }
     .add {
       margin: 48px 0 24px;

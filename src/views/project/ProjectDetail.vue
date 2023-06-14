@@ -7,6 +7,9 @@ import IconClear from '~icons/app/clear';
 import IconCopy from '~icons/app/copy-nickname';
 import IconPlus from '~icons/app/plus';
 import IconFork from '~icons/app/fork';
+import IconTag from '~icons/app/icon-tag';
+import IconTime from '~icons/app/time';
+import IconRight from '~icons/app/arrow-right2';
 
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
@@ -56,7 +59,7 @@ const tabPosition = ref('left');
 let dialogList = {
   head: {
     title: '已选标签',
-    delete: '清除',
+    delete: '清除全部',
   },
   tags: [],
 
@@ -75,24 +78,28 @@ let tabTitle = reactive([
     id: 0,
     path: '',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '训练',
     id: 1,
     path: 'train',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '文件',
     id: 2,
     path: 'tree',
     isPrivate: false,
+    isOnline: 'online',
   },
   {
     label: '设置',
     id: 3,
     path: 'settings',
     isPrivate: true,
+    isOnline: '',
   },
   {
     // label: '训练数据',
@@ -117,7 +124,7 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
+        return !item.isPrivate && item.isOnline !== detailData.value.repo_type;
       });
 });
 
@@ -180,6 +187,7 @@ const forkForm = reactive({
   owner: null,
   storeName: null,
   describe: null,
+  projectName: null,
 });
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
@@ -412,6 +420,17 @@ function confirmBtn() {
     }
   );
   isTagShow.value = false;
+  if (detailData.value?.id) {
+    nextTick(() => {
+      tagRef.value.forEach((item) => {
+        sumWidth.value += item.offsetWidth + 4;
+      });
+      containerWidth.value = containerRef.value.offsetWidth;
+
+      isWrap.value = sumWidth.value - containerWidth.value > 28 ? true : false;
+      sumWidth.value = 0;
+    });
+  }
 }
 
 // 取消
@@ -499,6 +518,10 @@ function forkCreateClick() {
   });
 }
 
+const nameList = ref([]);
+nameList.value.push(userInfoStore.userName);
+forkForm.owner = nameList.value[0];
+
 function forkClick() {
   checkEmail().then(() => {
     forkShow.value = true;
@@ -550,6 +573,15 @@ watch(
   }
 );
 
+const isExpand = ref(false);
+
+function checkAllTags(val) {
+  isExpand.value = val;
+}
+function retractAlltags(val) {
+  isExpand.value = val;
+}
+
 let time = null;
 function checkName(rule, value, callback) {
   if (time !== null) {
@@ -568,78 +600,155 @@ function checkName(rule, value, callback) {
 
 // 开启Jupyter
 function openJupyter() {
-  ElMessage({
-    message:
-      '该功能目前正在维护升级中，升级完成后将重新开放。感谢您的耐心等候。',
-    type: 'warning',
-    duration: 4000,
-  });
-  // router.push(
-  //   `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
-  // );
+  router.push(
+    `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
+  );
 }
+
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
+watch(
+  () => detailData.value,
+  () => {
+    if (detailData.value?.id) {
+      nextTick(() => {
+        tagRef.value.forEach((item) => {
+          sumWidth.value += item.offsetWidth + 4;
+        });
+        containerWidth.value = containerRef.value.offsetWidth;
+        isWrap.value =
+          sumWidth.value - containerWidth.value > 28 ? true : false;
+        sumWidth.value = 0;
+      });
+    }
+  }
+);
 </script>
 
 <template>
   <div v-if="detailData && detailData.id" class="model-detail">
     <textarea ref="inputDom" class="input-dom"></textarea>
-    <div class="card-head wrap">
+    <div class="card-head">
       <div class="head-top">
-        <div>
-          <div class="card-head-1">
-            <div class="avatar">
-              <img :src="detailData.avatar_id" alt="" />
+        <div class="head-wrap">
+          <div class="card-head-info">
+            <p class="head-info-desc">
+              {{ detailData.title ? detailData.title : detailData.name }}
+            </p>
+            <div class="project-handle">
+              <div class="head-info-likes">
+                <train-likes
+                  v-if="userInfoStore.userName !== detailData.owner"
+                  :is-digged="isDigged"
+                  :dig-count="detailData.like_count"
+                  class="loves"
+                  @click="handleProjectLike"
+                ></train-likes>
+              </div>
+              <div class="fork-btn">
+                <o-button
+                  v-if="userInfoStore.userName !== detailData.owner"
+                  size="small"
+                  @click="forkClick"
+                >
+                  <div class="fork-icon">
+                    <o-icon><icon-fork></icon-fork></o-icon> Fork
+                  </div>
+                </o-button>
+              </div>
+              <div
+                v-if="
+                  loginStore.isLogined &&
+                  userInfoStore.userName === detailData.owner
+                "
+                class="jupyter-btn"
+              >
+                <o-button type="primary" @click="openJupyter">
+                  打开Jupyter
+                </o-button>
+              </div>
             </div>
+          </div>
+          <div class="card-desc">
+            {{ detailData.desc }}
+          </div>
+          <div class="card-detail">
+            <div class="detail-left">
+              <div class="avatar">
+                <img :src="detailData.avatar_id" alt="" />
+              </div>
 
-            <router-link :to="{ path: `/${route.params.user}` }">
-              {{ detailData.owner }} </router-link
-            >/
-            <span>{{ detailData.name }}</span>
-            <div
-              class="card-head-copy"
-              @click="copyText(`${detailData.owner}/${detailData.name}`)"
-            >
-              <o-icon><icon-copy></icon-copy></o-icon>
+              <router-link :to="{ path: `/${route.params.user}` }">
+                {{ detailData.owner }} </router-link
+              >/
+              <span>{{ detailData.name }}</span>
+              <div
+                class="card-head-copy"
+                @click="copyText(`${detailData.owner}/${detailData.name}`)"
+              >
+                <o-icon><icon-copy></icon-copy></o-icon>
+              </div>
+              <div class="card-head-time">
+                <o-icon>
+                  <icon-time> </icon-time>
+                </o-icon>
+                <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+              </div>
             </div>
-            <div v-if="userInfoStore.userName !== detailData.owner">
-              <train-likes
-                :is-digged="isDigged"
-                :dig-count="detailData.like_count"
-                class="loves"
-                @click="handleProjectLike"
-              ></train-likes>
+            <div class="label-box">
+              <p class="tag-icon">
+                <o-icon>
+                  <icon-tag></icon-tag>
+                </o-icon>
+              </p>
+              <div v-if="isShow" class="label-add-item" @click="addTagClick">
+                <o-icon><icon-plus></icon-plus></o-icon>
+                添加标签
+              </div>
+              <div
+                ref="containerRef"
+                class="label-box-left"
+                :class="isExpand ? 'tags-expand' : 'tags-retract'"
+              >
+                <div
+                  v-for="(label, index) in modelTags"
+                  :key="index"
+                  ref="tagRef"
+                  class="label-item"
+                >
+                  {{ label.name === 'electricity' ? '电力' : label.name }}
+                </div>
+
+                <template v-if="isWrap">
+                  <div
+                    v-if="!isExpand"
+                    class="check-tags"
+                    @click="checkAllTags(true)"
+                  >
+                    查看全部
+                    <o-icon><icon-right></icon-right></o-icon>
+                  </div>
+
+                  <div
+                    v-else
+                    class="retract-tags"
+                    @click="retractAlltags(false)"
+                  >
+                    收起
+                    <o-icon><icon-right></icon-right></o-icon>
+                  </div>
+                </template>
+              </div>
             </div>
           </div>
-          <div class="label-box">
-            <div v-for="label in modelTags" :key="label" class="label-item">
-              {{ label.name }}
-            </div>
-            <div v-if="isShow" class="label-add-item" @click="addTagClick">
-              <o-icon><icon-plus></icon-plus></o-icon>
-              添加标签
-            </div>
-          </div>
-        </div>
-        <div>
-          <o-button
-            v-if="userInfoStore.userName !== detailData.owner"
-            @click="forkClick"
-          >
-            <div class="fork-btn">
-              <o-icon><icon-fork></icon-fork></o-icon> Fork
-            </div>
-          </o-button>
-        </div>
-        <div
-          v-if="
-            loginStore.isLogined && userInfoStore.userName === detailData.owner
-          "
-        >
-          <o-button type="primary" @click="openJupyter">打开Jupyter</o-button>
         </div>
       </div>
       <div class="head-tabs">
-        <el-tabs v-model="activeName" @tab-click="handleTabClick">
+        <el-tabs v-model="activeName" class="wrap" @tab-click="handleTabClick">
           <template v-for="item in renderNav">
             <el-tab-pane
               v-if="item.label !== '训练'"
@@ -657,7 +766,6 @@ function openJupyter() {
             >
               <template #label>
                 <el-dropdown placement="bottom" popper-class="nav">
-                  <!-- <p>训练 </p> -->
                   <p>训练</p>
                   <template
                     v-if="userInfoStore.userName === detailData.owner"
@@ -701,7 +809,7 @@ function openJupyter() {
         destroy-on-close
       >
         <template #header="{ titleId, title }">
-          <div :id="titleId" :class="title">
+          <div :id="titleId" :class="title" style="width: 100%">
             <div class="dialog-head">
               <div class="head-left">
                 <div class="head-title">{{ dialogList.head.title }}</div>
@@ -712,7 +820,7 @@ function openJupyter() {
               </div>
               <div v-if="headTags[0]" class="head-tags">
                 <div v-for="it in headTags" :key="it" class="condition-detail">
-                  {{ it.name }}
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
                   <o-icon class="icon-x" @click="deleteClick(it)"
                     ><icon-x></icon-x
                   ></o-icon>
@@ -761,7 +869,7 @@ function openJupyter() {
                           :class="{ 'condition-active': it.isActive }"
                           @click="tagClick(it, menu.key)"
                         >
-                          {{ it.name }}
+                          {{ it.name === 'electricity' ? '电力' : it.name }}
                         </div>
                       </div>
                     </div>
@@ -792,6 +900,14 @@ function openJupyter() {
         center
         align-center
       >
+        <template #header="{ titleId, title }">
+          <div :id="titleId" :class="title">
+            <div class="fork-title">创建Fork</div>
+            <div class="fork-intro">
+              允许用户使用自定义数据集和模型进行实践而不会对原有的项目做改动
+            </div>
+          </div>
+        </template>
         <el-form
           ref="ruleFormRef"
           :model="forkForm"
@@ -799,12 +915,30 @@ function openJupyter() {
           :label-position="tabPosition"
           hide-required-asterisk
         >
+          <el-form-item label="拥有者" prop="owner">
+            <el-select v-model="forkForm.owner">
+              <el-option v-for="item in nameList" :key="item" :value="item">
+                {{ item }}
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="仓库名称" class="store-name" prop="storeName">
             <el-input
               v-model="forkForm.storeName"
               placeholder="请输入仓库名称"
             ></el-input>
             <o-popper></o-popper>
+          </el-form-item>
+          <el-form-item
+            label="项目名称"
+            class="project-name"
+            prop="projectName"
+          >
+            <el-input
+              v-model="forkForm.projectName"
+              placeholder="请输入项目中文名称"
+            ></el-input>
+            <!-- <o-popper></o-popper> -->
           </el-form-item>
           <el-form-item label="描述" prop="describe" class="fork-desc">
             <el-input
@@ -874,11 +1008,20 @@ $theme: #0d8dff;
 }
 .fork-dialog {
   :deep .el-dialog {
-    // min-height: 502px;
-    --el-dialog-margin-top: 24vh;
-    .el-dialog__title {
-      font-size: 24px;
-      line-height: 32px;
+    .el-dialog__header {
+      .fork-title {
+        line-height: 32px;
+        font-size: 24px;
+        font-weight: normal;
+        color: #000000;
+        margin-bottom: 16px;
+      }
+      .fork-intro {
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: normal;
+        color: #999999;
+      }
     }
     .el-form {
       display: flex;
@@ -923,15 +1066,20 @@ $theme: #0d8dff;
   }
 }
 .tags-box {
-  :deep .el-dialog {
-    --el-dialog-margin-top: 20vh;
+  :deep(.el-dialog) {
+    .el-dialog__header {
+      justify-content: flex-start;
+    }
+    .el-dialog__body {
+      text-align: left;
+    }
   }
   .dialog-head {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     .head-left {
-      width: 188px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-top: 10px;
       .head-title {
@@ -960,6 +1108,7 @@ $theme: #0d8dff;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 6px;
       .condition-detail {
         cursor: pointer;
         display: flex;
@@ -971,7 +1120,7 @@ $theme: #0d8dff;
         color: $theme;
         user-select: none;
         background-color: #f3f9ff;
-        border-radius: 8px;
+        border-radius: 14px;
         border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
@@ -982,7 +1131,6 @@ $theme: #0d8dff;
   }
   .dialog-body {
     border-top: 1px solid #d8d8d8;
-    padding-top: 7px;
     :deep .el-tabs__item {
       width: 188px;
       height: 56px;
@@ -1025,7 +1173,7 @@ $theme: #0d8dff;
       color: #555;
       user-select: none;
       background-color: #f3f9ff;
-      border-radius: 8px;
+      border-radius: 14px;
       border: 1px solid #e5e5e5;
     }
     .condition-active {
@@ -1064,7 +1212,7 @@ $theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 0 16px;
-  max-width: 1440px;
+  max-width: 1448px;
 }
 .input-dom {
   position: absolute;
@@ -1074,115 +1222,217 @@ $theme: #0d8dff;
 }
 .model-detail {
   background-color: #fff;
-  .card-head-top {
-    display: flex;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: #555;
-    & > span:hover {
-      cursor: pointer;
-      color: #0d8dff;
-    }
-  }
-
   .card-head {
-    padding-top: 105px;
+    padding-top: 80px;
+    background-image: url('@/assets/imgs/model-detail-banner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
     .head-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .fork-btn {
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      .o-icon {
-        font-size: 24px;
-        margin-right: 8px;
-      }
-    }
-    .card-head-1 {
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
-      font-size: 24px;
-      color: #555;
-      a {
-        color: inherit;
-      }
-      & > span:hover,
-      & > a:hover {
-        cursor: pointer;
-        color: #0d8dff;
-      }
-      .avatar img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 8px;
-        background-color: #3d8df7;
-      }
-      .card-head-copy {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        margin-left: 8px;
-        font-size: 24px;
-        .o-icon:hover {
-          color: #0d8dff;
+      padding: 24px 0;
+      .head-wrap {
+        margin: 0 auto;
+        padding: 0 16px;
+        max-width: 1448px;
+        .card-head-info {
+          display: flex;
+          justify-content: space-between;
+          .head-info-desc {
+            flex: 1;
+            font-size: 24px;
+            color: #555555;
+            line-height: 38px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .project-handle {
+            display: flex;
+            align-items: center;
+            .head-info-likes {
+              margin-right: 8px;
+            }
+            .fork-btn {
+              font-size: 14px;
+              .o-button {
+                min-width: 82px;
+                max-height: 32px;
+                padding: 10px 16px !important;
+                display: flex;
+                align-items: center;
+              }
+              .fork-icon {
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                .o-icon {
+                  font-size: 16px;
+                  margin-right: 8px;
+                }
+              }
+            }
+            .jupyter-btn {
+              .o-button {
+                height: 36px;
+                font-size: 14px;
+                padding: 6px 16px !important;
+              }
+            }
+          }
         }
-      }
-      .loves {
-        cursor: pointer;
-        margin-left: 40px;
-        font-size: 14px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        span {
-          margin-left: 6px;
+        .card-desc {
+          max-width: 80%;
+          margin: 10px 0 25px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 14px;
         }
-        .o-icon:hover {
-          svg {
-            fill: rgba(13, 141, 255, 1);
+        .card-detail {
+          display: flex;
+          align-items: center;
+          align-items: flex-start;
+          .detail-left {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            a {
+              color: inherit;
+            }
+            & > span:hover,
+            & > a:hover {
+              cursor: pointer;
+              color: #0d8dff;
+            }
+            .avatar img {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              margin-right: 8px;
+              background-color: #3d8df7;
+            }
+            .card-head-copy {
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              margin-left: 8px;
+              font-size: 16px;
+              .o-icon:hover {
+                color: #0d8dff;
+              }
+            }
+            .card-head-time {
+              align-self: flex-start;
+              display: flex;
+              align-items: center;
+              height: 20px;
+              margin: 0 24px;
+              .o-icon {
+                margin-right: 8px;
+                svg {
+                  color: #555;
+                  font-size: 16px;
+                }
+              }
+            }
+            .loves {
+              cursor: pointer;
+              margin-left: 40px;
+              font-size: 14px;
+              line-height: 18px;
+              display: flex;
+              align-items: center;
+              span {
+                margin-left: 6px;
+              }
+              .o-icon:hover {
+                svg {
+                  fill: rgba(13, 141, 255, 1);
+                }
+              }
+            }
+          }
+          .label-box {
+            display: flex;
+            flex-wrap: nowrap;
+            font-size: 12px;
+            .tags-retract {
+              height: 20px;
+              overflow-y: hidden;
+              padding-right: 92px;
+            }
+            .tags-expand {
+              height: auto;
+              overflow: unset;
+            }
+            .label-box-left {
+              display: flex;
+              flex-wrap: wrap;
+              position: relative;
+              .check-tags,
+              .retract-tags {
+                position: absolute;
+                right: 0;
+                bottom: 0px;
+                font-size: 14px;
+                color: #555555;
+                line-height: 18px;
+                padding: 2px 4px;
+                color: #0d8dff;
+                cursor: pointer;
+                .o-icon {
+                  font-size: 16px;
+                }
+              }
+              .retract-tags {
+                bottom: 14px;
+              }
+            }
+            .tag-icon {
+              margin-right: 8px;
+              .o-icon svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+            .label-item {
+              display: flex;
+              align-items: center;
+              height: 20px;
+              margin-right: 4px;
+              margin-bottom: 8px;
+              padding: 0px 12px;
+              font-size: 12px;
+              color: #555;
+              border: 1px solid #dbedff;
+              background-color: #f3f9ff;
+              border-radius: 14px;
+              white-space: nowrap;
+            }
+            .label-add-item {
+              display: flex;
+              align-items: center;
+              height: 20px;
+              padding: 2px 8px 2px 4px;
+              background: rgba(5, 142, 240, 0.15);
+              border-radius: 14px;
+              color: #0d8dff;
+              white-space: nowrap;
+              cursor: pointer;
+              margin-right: 4px;
+              border: 1px dashed #0d8dff;
+              .o-icon {
+                margin-right: 4px;
+              }
+            }
           }
         }
       }
     }
-    .label-box {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 8px 0;
-      font-size: 14px;
-      .label-item {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 0px 12px;
-        height: 28px;
-        margin-right: 8px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: #555;
-        border: 1px solid #dbedff;
-        background-color: #f3f9ff;
-        border-radius: 8px;
-      }
-      .label-add-item {
-        height: 28px;
-        padding: 0px 12px;
-        background: #f7f8fa;
-        border-radius: 8px;
-        border: 1px solid #999999;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        .o-icon {
-          margin-right: 4px;
-        }
-      }
-    }
+
     .head-tabs {
+      box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+      background: rgba(251, 251, 251, 0.85);
       .status {
         display: inline-block;
         width: 8px;
@@ -1205,6 +1455,8 @@ $theme: #0d8dff;
         display: none;
       }
       .el-tabs {
+        --o-tabs-header-font_size: 16px;
+        background: rgba(251, 251, 251, 0.85);
         :deep(.el-tabs__nav) {
           display: flex;
           .el-tabs__item {
@@ -1231,16 +1483,16 @@ $theme: #0d8dff;
     }
   }
   .model-detail-body {
-    min-height: calc(100vh - 455px);
+    min-height: calc(100vh - 512px);
     background-color: #f5f6f8;
-    padding: 35px 0 64px;
+    padding: 40px 0 64px;
   }
 }
 :deep(.el-tabs) {
   .el-tabs__header {
-    background-color: #ffffff;
+    // background-color: #ffffff;
     margin-bottom: 0;
-    box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
+    // box-shadow: 0px 1px 3px 0px rgba(190, 196, 204, 0.2);
   }
 
   .el-tabs__item {
@@ -1268,11 +1520,16 @@ $theme: #0d8dff;
   }
 }
 // 训练下拉菜单样式
-.el-popper {
+.el-popper.nav {
   .el-dropdown-menu {
+    padding: 4px;
     a {
-      color: #000;
+      width: 100%;
+      color: #555;
+      text-align: center;
       &:hover {
+        background: #edeff2;
+        border-radius: 8px;
         color: $theme;
       }
     }

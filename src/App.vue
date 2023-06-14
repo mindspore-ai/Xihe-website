@@ -161,11 +161,11 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
-  home: {
-    name: '首页',
-    child: ['home'],
-    back: '',
-  },
+  // home: {
+  //   name: '首页',
+  //   child: ['home'],
+  //   back: '',
+  // },
   electricity: {
     name: '电力专区',
     child: [
@@ -407,7 +407,7 @@ function toPage(path, index) {
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;
   } else if (path) {
-    // isMobileFit.value = false;
+    isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;

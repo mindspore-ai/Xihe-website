@@ -288,7 +288,7 @@ function keyDown(e) {
             :placeholder="
               detectionLang === 'zh' ? i18n.PLACEHOLDER : i18n.PLACEHOLDER_EN
             "
-            :maxlength="detectionLang === 'zh' ? 500 : 2000"
+            :maxlength="2000"
             show-word-limit
             style="width: 100%"
             @keydown.enter="keyDown"

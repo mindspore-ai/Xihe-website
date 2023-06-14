@@ -1,5 +1,4 @@
 <script setup>
-import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import cover from '@/assets/imgs/estate/humanity/aigc/cover.png';
 
@@ -11,8 +10,6 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 const router = useRouter();
 const screenWidth = useWindowResize();
 
-const activeNavItem = ref('');
-
 function goBack() {
   router.push('/humanity');
 }
@@ -22,7 +19,7 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">变电站运维图像识别分析解决方案</span>
+      <span class="title">国潮AIGC生态系统</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
@@ -52,7 +49,6 @@ function goBack() {
                 :size="screenWidth < 820 ? 'mini' : 'small'"
                 disabled
                 type="primary"
-                animation
                 class="home-btn"
               >
                 运行模型
@@ -196,7 +192,7 @@ function goBack() {
           }
         }
         .industry-info {
-          padding: 40px 80px;
+          padding: 40px;
           @media screen and (max-width: 820px) {
             padding: 16px;
           }

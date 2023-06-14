@@ -135,8 +135,18 @@ import advantageImg from '@/assets/imgs/estate/medicine/diagnosis/advantage.png'
         font-size: 12px;
         line-height: 18px;
         .case-img {
+          // background-color: red;
           margin-top: 8px;
           margin-bottom: 8px;
+          padding: 8px;
+          img {
+            width: 100%;
+          }
+          .concept-title {
+            width: 80%;
+            text-align: center;
+            margin-top: 8px;
+          }
         }
       }
     }

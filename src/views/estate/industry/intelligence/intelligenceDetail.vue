@@ -191,7 +191,7 @@ function goBack() {
           }
         }
         .industry-info {
-          padding: 40px 80px;
+          padding: 40px;
           @media screen and (max-width: 820px) {
             padding: 16px;
           }

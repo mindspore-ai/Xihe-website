@@ -326,7 +326,7 @@ function goBack() {
           }
         }
         .industry-info {
-          padding: 40px 80px;
+          padding: 40px;
           @media screen and (max-width: 820px) {
             padding: 16px;
           }
@@ -417,10 +417,6 @@ function goBack() {
                   }
                 }
 
-                //TODO:
-                .img-background {
-                  width: 100%;
-                }
                 .text {
                   font-size: 12px;
                   line-height: 18px;
@@ -435,9 +431,20 @@ function goBack() {
                 .img-contain {
                   margin-top: 8px;
                   padding: 8px;
-                  .img-superiority {
+                  img {
                     width: 100%;
+                  }
+                  .img-background {
+                    height: 150px;
+                  }
+                  .img-intoduction {
+                    height: 190px;
+                  }
+                  .img-superiority {
                     height: 100px;
+                  }
+                  .img-thought-1 {
+                    height: 178px;
                   }
                   .img-thought-2 {
                     height: 200px;

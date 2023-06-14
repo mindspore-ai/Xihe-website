@@ -27,11 +27,11 @@ const prop = defineProps({
   },
 });
 function goExperience() {
-  router.push(`${prop.path}`);
+  // router.push(`${prop.path}`);
+  window.open(`${prop.path}`);
 }
 function goIntroduction() {
-  // router.push(`${prop.path}/introduce`);
-  window.open(`${prop.path}/introduce`);
+  router.push(`${prop.path}/introduce`);
 }
 </script>
 <template>

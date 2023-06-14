@@ -78,24 +78,28 @@ let tabTitle = reactive([
     id: 0,
     path: '',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '训练',
     id: 1,
     path: 'train',
     isPrivate: false,
+    isOnline: '',
   },
   {
     label: '文件',
     id: 2,
     path: 'tree',
     isPrivate: false,
+    isOnline: 'online',
   },
   {
     label: '设置',
     id: 3,
     path: 'settings',
     isPrivate: true,
+    isOnline: '',
   },
   {
     // label: '训练数据',
@@ -120,7 +124,7 @@ const renderNav = computed(() => {
   return detailData.value.is_owner
     ? tabTitle
     : tabTitle.filter((item) => {
-        return !item.isPrivate;
+        return !item.isPrivate && item.isOnline !== detailData.value.repo_type;
       });
 });
 

@@ -111,7 +111,7 @@ function checkName(rule, value, callback) {
         callback(new Error('该名称已存在'));
       }
     });
-  }, 2000);
+  }, 500);
 }
 
 let dialogList = {

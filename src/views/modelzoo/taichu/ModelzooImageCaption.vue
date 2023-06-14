@@ -453,7 +453,7 @@ function customUpload() {
         margin-top: 16px;
         height: 24px;
         font-size: 18px;
-        color: #000000;
+        color: #555;
         line-height: 24px;
       }
     }

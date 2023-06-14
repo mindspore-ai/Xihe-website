@@ -478,7 +478,7 @@ onUnmounted(() => {
 
     .description {
       font-size: 18px;
-      color: #000000;
+      color: #555;
       line-height: 24px;
       margin-top: 16px;
       @media screen and (max-width: 1080px) {

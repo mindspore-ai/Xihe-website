@@ -112,6 +112,10 @@ const githubLink2 =
           {{ t('wukong.WUKONG_INFO.DESC') }}
         </div>
 
+        <div class="intro-concept">
+          Wukong-Huahua是基于扩散模型的中文以文生图大模型，由华为诺亚团队携手中软分布式并行实验室、昇腾计算产品部联合开发，使用昇思框架（MindSpore）+昇腾（Ascend）软硬件解决方案实现。该模型是基于目前最大的中文开源多模态数据集悟空数据集进行训练得来，具备优秀的中文文本-图像生成能力，能够实现多场景的绘画风格，可生成高质量的图像，给用户带来良好的使用体验。
+        </div>
+
         <div class="intro-concept new-vision">
           在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更行内容包括一下3点：
         </div>

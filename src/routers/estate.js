@@ -114,7 +114,7 @@ export default [
     ],
   },
 
-  // 电力NLPTODO:
+  // 电力NLP
   {
     path: '/electricity/laborcontract',
     name: 'laborcontract',
@@ -131,6 +131,58 @@ export default [
         component: () => {
           return import(
             '@/views/estate/electricity/computerVision/intelligentsystem/IntelligentsystemExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+
+  // 医疗--子宫内膜癌
+  {
+    path: '/medicine/metrocarcinoma',
+    name: 'endometrialCancer',
+    component: () => {
+      return import(
+        '@/views/estate/medicine/endometrialcancer/EndometrialcancerDetail.vue'
+      );
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'endometrialcancerExplain',
+        component: () => {
+          return import(
+            '@/views/estate/medicine/endometrialcancer/EndometrialcancerExplain.vue'
+          );
+        },
+      },
+    ],
+  },
+  // 医疗--临床外科手术
+  {
+    path: '/medicine/truesight',
+    name: 'truesight',
+    component: () => {
+      return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
+    },
+  },
+
+  // 医疗--智慧病理诊断系统
+  {
+    path: '/medicine/diagnosis',
+    name: 'pathologicalDiagnosis',
+    component: () => {
+      return import('@/views/estate/medicine/diagnosis/DiagnosisDetail.vue');
+    },
+    children: [
+      // 项目说明
+      {
+        path: '',
+        name: 'diagnosisExplain',
+        component: () => {
+          return import(
+            '@/views/estate/medicine/diagnosis/DiagnosisExplain.vue'
           );
         },
       },
@@ -194,57 +246,6 @@ export default [
         component: () => {
           return import(
             '@/views/estate/industry/intelligence/intelligenceExplain.vue'
-          );
-        },
-      },
-    ],
-  },
-  // 医疗--子宫内膜癌
-  {
-    path: '/medicine/metrocarcinoma',
-    name: 'endometrialCancer',
-    component: () => {
-      return import(
-        '@/views/estate/medicine/endometrialcancer/EndometrialcancerDetail.vue'
-      );
-    },
-    children: [
-      // 项目说明
-      {
-        path: '',
-        name: 'endometrialcancerExplain',
-        component: () => {
-          return import(
-            '@/views/estate/medicine/endometrialcancer/EndometrialcancerExplain.vue'
-          );
-        },
-      },
-    ],
-  },
-  // 医疗--临床外科手术
-  {
-    path: '/medicine/truesight',
-    name: 'truesight',
-    component: () => {
-      return import('@/views/estate/medicine/truesight/TheTrueSight.vue');
-    },
-  },
-
-  // 医疗--智慧病理诊断系统
-  {
-    path: '/medicine/diagnosis',
-    name: 'pathologicalDiagnosis',
-    component: () => {
-      return import('@/views/estate/medicine/diagnosis/DiagnosisDetail.vue');
-    },
-    children: [
-      // 项目说明
-      {
-        path: '',
-        name: 'diagnosisExplain',
-        component: () => {
-          return import(
-            '@/views/estate/medicine/diagnosis/DiagnosisExplain.vue'
           );
         },
       },

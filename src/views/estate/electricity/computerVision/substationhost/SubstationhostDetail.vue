@@ -1,4 +1,3 @@
-<!-- 智慧病理诊断系统 -->
 <script setup>
 import { useRouter } from 'vue-router';
 import hostImg from '@/assets/imgs/estate/electricity/substationhost/host-cover.png';
@@ -10,10 +9,7 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 const screenWidth = useWindowResize();
 const router = useRouter();
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
+
 function goBack() {
   router.push('/electricity');
 }
@@ -192,9 +188,6 @@ function goBack() {
       .medicine-content-desc {
         background: #fff;
         border-radius: 16px;
-        // .o-nav {
-        //   background: #fff;
-        // }
         .industry-tab {
           max-width: 1416px;
           margin: 0 auto;

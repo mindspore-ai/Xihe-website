@@ -33,7 +33,7 @@ const i18n = {
     tip: '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目仓库',
     options: [
       {
-        value: 'private',
+        value: 'public',
         label: '完全公开',
         id: 1,
         describe:
@@ -47,7 +47,7 @@ const i18n = {
           '其他用户可浏览你的数据集，但仅有你及你的团队可以下载数据集和编辑数据集卡片描述',
       },
       {
-        value: 'public',
+        value: 'private',
         label: '私有',
         id: 3,
         describe:

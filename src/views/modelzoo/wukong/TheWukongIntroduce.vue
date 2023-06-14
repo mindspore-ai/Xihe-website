@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import wukongModel from '@/assets/imgs/wukong/wukong-model.png';
 import wukongDataset from '@/assets/imgs/wukong/wukong-dataset.png';
 import abysmView from '@/assets/imgs/wukong/abysm-view.png';
@@ -16,7 +16,7 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const router = useRouter();
+// const router = useRouter();
 const screenWidth = useWindowResize();
 
 const effectImg = reactive([
@@ -47,7 +47,8 @@ const effectImg = reactive([
 ]);
 
 function goExperience() {
-  router.push(`/modelzoo/wukong`);
+  // router.push(`/modelzoo/wukong`);
+  window.open(`/modelzoo/wukong`);
 }
 
 // 了解更多
@@ -117,7 +118,7 @@ const githubLink2 =
         </div>
 
         <div class="intro-concept new-vision">
-          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更行内容包括一下3点：
+          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更新内容包括以下3点：
         </div>
 
         <div class="intro-concept">

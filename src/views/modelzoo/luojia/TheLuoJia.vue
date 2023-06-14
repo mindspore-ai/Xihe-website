@@ -9,10 +9,11 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 
 function goToExperience() {
-  router.push('/modelzoo/luojia');
+  // router.push('/modelzoo/luojia');
+  window.open('/modelzoo/luojia');
 }
 
 function knowMore() {

@@ -1,6 +1,6 @@
 <script setup>
 import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
@@ -19,10 +19,11 @@ const i18n = {
 };
 
 const screenWidth = useWindowResize();
-const router = useRouter();
+// const router = useRouter();
 
 function goOnlineExperience() {
-  router.push('/modelzoo/text-detector');
+  // router.push('/modelzoo/text-detector');
+  window.open('/modelzoo/text-detector');
 }
 function learnMore() {
   window.open('https://arxiv.org/abs/2305.18149', 'blank');
@@ -87,7 +88,6 @@ function learnMore() {
   border-radius: 16px;
   @media screen and (max-width: 1080px) {
     padding: 16px;
-    margin: 0 16px;
   }
   .banner-left {
     margin-right: 40px;
@@ -143,22 +143,38 @@ function learnMore() {
   border-radius: 16px;
   background: #ffffff;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    margin-top: 16px;
+    padding: 16px;
+  }
 }
 .main-title {
   font-size: 24px;
   line-height: 32px;
   font-weight: 500;
   color: #000000;
+  @media screen and (max-width: 820px) {
+    font-size: 14px;
+    line-height: 22px;
+  }
 }
 .main-text {
   font-size: 14px;
   line-height: 22px;
   color: #555555;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 8px;
+  }
 }
 .container {
   background: #f5f9fb;
   margin-top: 24px;
+  @media screen and (max-width: 820px) {
+    margin-top: 8px;
+  }
   img {
     width: 100%;
     height: 100%;

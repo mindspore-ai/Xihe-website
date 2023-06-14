@@ -2,6 +2,9 @@
 import backgroundImg from '@/assets/imgs/estate/medicine/cancer/background.png';
 import solutionImg1 from '@/assets/imgs/estate/medicine/cancer/solution-img1.png';
 import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png';
+import solutionImg3 from '@/assets/imgs/estate/medicine/cancer/solution-img3.png';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
 </script>
 <template>
   <div class="project-explain">
@@ -59,9 +62,12 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
         <p>
           在这些研究的启发下，美佳家开发了一个基于CNNs的识别系统来自动识别良性和恶性子宫内膜细胞团块(ECCs)。通过分析细胞团块的结构和细胞学特征，克服上述两种研究的不足。
         </p>
-        <div class="case-img">
+        <div v-if="screenWidth > 820" class="case-img">
           <img :src="solutionImg1" alt="" />
           <img :src="solutionImg2" alt="" class="solution-img" />
+        </div>
+        <div v-else class="case-img2">
+          <img :src="solutionImg3" alt="" class="solution-img" />
         </div>
         <p>
           美佳家共收集113例(42例恶性，71例良性)子宫内膜样本，构建了包含15,913张图像的数据集。该分割网络共获得了39,000个ECCs补丁。然后，分别使用26880和11520个补丁进行训练和测试。在训练集达到100%的前提下，测试集的准确率为93.5%，特异性为92.2%，灵敏度为92.0%，成功建立了自动识别和诊断子宫内膜细胞团块(ECCs)病理图像的人工智能系统。
@@ -129,6 +135,13 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
           margin-top: 24px;
         }
       }
+      .case-img2 {
+        margin: 8px 0;
+        img {
+          width: 100%;
+          height: 322px;
+        }
+      }
       .summary {
         margin-top: 24px;
       }
@@ -162,6 +175,10 @@ import solutionImg2 from '@/assets/imgs/estate/medicine/cancer/solution-img2.png
         .case-img {
           margin-top: 8px;
           margin-bottom: 8px;
+          padding: 8px;
+          .background-img {
+            width: 100%;
+          }
         }
         .summary {
           margin-top: 16px;

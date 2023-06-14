@@ -993,9 +993,11 @@ body.el-popup-parent--hidden {
       top: 48px;
       left: -100%;
       // left: 164px;
+      display: none;
     }
     .children-active {
       left: 164px;
+      display: block;
     }
   }
   .language {

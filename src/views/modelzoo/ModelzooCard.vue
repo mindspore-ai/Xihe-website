@@ -30,7 +30,8 @@ function goExperience() {
   router.push(`${prop.path}`);
 }
 function goIntroduction() {
-  router.push(`${prop.path}/introduce`);
+  // router.push(`${prop.path}/introduce`);
+  window.open(`${prop.path}/introduce`);
 }
 </script>
 <template>

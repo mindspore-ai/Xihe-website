@@ -161,11 +161,11 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
-  home: {
-    name: '首页',
-    child: ['home'],
-    back: '',
-  },
+  // home: {
+  //   name: '首页',
+  //   child: ['home'],
+  //   back: '',
+  // },
   electricity: {
     name: '电力专区',
     child: [
@@ -570,14 +570,14 @@ function confirmDialog() {
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
-      <!-- <div
+      <div
         class="item-children"
         :class="{ 'children-active': mobileNav[5].isActive }"
       >
         <div v-for="item in mobileNav[5].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
-      </div> -->
+      </div>
       <div
         v-if="currentPage === '首页'"
         class="language"

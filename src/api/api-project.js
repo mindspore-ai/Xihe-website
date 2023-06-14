@@ -463,3 +463,23 @@ export function cloudDisposeTarget(cid) {
     return res.data;
   });
 }
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getReadmeInfo(ownerName, modelName) {
+  const url = `/server/repo/project/${ownerName}/${modelName}/readme`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+/**
+ * 查看是否含有readme文件
+ * @returns
+ */
+export function getAppInfo(ownerName, modelName) {
+  const url = `/server/repo/project/${ownerName}/${modelName}/app`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}

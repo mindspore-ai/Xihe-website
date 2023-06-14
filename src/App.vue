@@ -410,8 +410,8 @@ function toPage(path, index) {
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
-    // mobileNav[5].isActive = false;
-    router.push(path);
+    mobileNav[5].isActive = false;
+    // router.push(path);
   } else {
     mobileNav[3].isActive = false;
     mobileNav[5].isActive = false;

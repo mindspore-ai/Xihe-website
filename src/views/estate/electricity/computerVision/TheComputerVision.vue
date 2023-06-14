@@ -72,27 +72,26 @@ let classify = ref([
     type: 'course',
     name: '课程',
     path: '/course/c001/introduction',
-    // path: '/estate/industrial-zone',
     icon: markRaw(IconCourse),
     detail: [
       {
         desc: '昇思 MindSpore AI 框架原生支持大模型训练是发展大模型的关键，国内多个科研机构基于MindSpore打造了一系列大模型。同时，昇思MindSpore推出一站式大模型平台，将大模型能力开放给开发者，让你我皆可触碰大模型的魅力。',
         image: card1,
-        count: '7',
+        count: '77',
         detail: '了解详情',
         path: '/course/c001/introduction',
       },
       {
         desc: '计算机视觉（Computer Vision）作为人工智能的一个重要的领域，主要是开发赋予计算机视觉能力的技术。本课程基于昇思MindSpore，采用理论与实践相结合的方法带你轻松入门。',
         image: card2,
-        count: '2',
+        count: '28',
         detail: '了解详情',
         path: '/course/c002/introduction',
       },
       {
         desc: '本课程使用原理讲解加实战的方式学习神经网络模型，掌握算法调参和使用昇思MindSpore编程的能力。',
         image: card3,
-        count: '4',
+        count: '46',
         detail: '了解详情',
         path: '/course/c003/introduction',
       },
@@ -115,7 +114,7 @@ let classify = ref([
       {
         desc: '昇思MindSpore是一个全场景深度学习框架,旨在实现易开发、高效执行、全场景覆盖三大目标。 昇思AI挑战赛于2022年9月正式开启,面向全球AI开发者,赛题涵盖AI基础领域。挑战赛旨在为开发者提供一个学习MindSpore和锻炼算法能力的机会。 图像分类是计算机视觉中最基础的任务,目前图像分类的算法仍然在飞速发展。本赛题旨在让参赛者熟悉MindSpore并锻炼参赛者使用MindSpore进行图像分类预处理、图像分类的能力。',
         image: competition2,
-        count: '250',
+        count: '249',
         detail: '了解详情',
         path: '/competition/3/0/introduction',
       },
@@ -126,13 +125,6 @@ let classify = ref([
         detail: '了解详情',
         path: '/competition/2/0/introduction',
       },
-      // {
-      //   desc: '一封通往艺术殿堂的邀请函，万元奖金邀您参与AI艺术创作，象牙之塔-AI画家大赛于2023年3月正式开启，面向全球AI开发者，赛题与扩散模型（Diffusion Model）紧密结合。大赛旨在为开发者提供一个学习昇思MindSpore和Diffusion Models的机会。',
-      //   image: competition1,
-      //   count: '142',
-      //   detail: '了解详情',
-      //   path: '/competition/ai_painter/0/introduction',
-      // },
     ],
   },
   {

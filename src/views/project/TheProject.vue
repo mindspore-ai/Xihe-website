@@ -131,17 +131,6 @@ const queryData = reactive({
   sort_by: null, //排序规则
 });
 
-const options = ref([
-  {
-    id: 'maxCollect',
-    label: '最多收藏',
-  },
-  {
-    id: 'lastUpdate',
-    label: '最新更新',
-  },
-]);
-
 const debounceSearch = debounce(getProject, 500, {
   trailing: true,
 });
@@ -893,7 +882,6 @@ $theme: #0d8dff;
   }
   .dialog-body {
     border-top: 1px solid #d8d8d8;
-    padding-top: 7px;
     :deep .el-tabs__item {
       width: 188px;
       height: 56px;
@@ -1314,7 +1302,7 @@ $theme: #0d8dff;
       }
       .card-list {
         display: grid;
-        grid-template-columns: repeat(3, 456px);
+        grid-template-columns: repeat(3, 1fr);
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 24px;

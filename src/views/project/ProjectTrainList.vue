@@ -214,9 +214,7 @@ function getTrainList() {
 getTrainList();
 
 function setWebsocket(url) {
-  const socket = new WebSocket(url, [
-    getHeaderConfig().headers['csrf-token'],
-  ]);
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
 
   // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
   socket.onmessage = function (event) {

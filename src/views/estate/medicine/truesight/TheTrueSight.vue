@@ -1,5 +1,4 @@
 <script setup>
-import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import endometrialcancerCover from '@/assets/imgs/estate/medicine/true-sight/truesight-cover.png';
 

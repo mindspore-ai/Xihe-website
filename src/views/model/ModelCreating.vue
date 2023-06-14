@@ -173,8 +173,6 @@ function confirmBtn() {
       });
     });
   });
-
-  console.log();
 }
 // 取消
 function cancelBtn() {

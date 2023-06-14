@@ -1254,8 +1254,8 @@ $theme: #0d8dff;
             .fork-btn {
               font-size: 14px;
               .o-button {
-                min-width: 97px;
-                max-height: 36px;
+                min-width: 82px;
+                max-height: 32px;
                 padding: 10px 16px !important;
                 display: flex;
                 align-items: center;

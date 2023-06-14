@@ -88,7 +88,6 @@ function learnMore() {
   border-radius: 16px;
   @media screen and (max-width: 1080px) {
     padding: 16px;
-    margin: 0 16px;
   }
   .banner-left {
     margin-right: 40px;
@@ -145,7 +144,7 @@ function learnMore() {
   background: #ffffff;
   margin-top: 24px;
   @media screen and (max-width: 820px) {
-    margin: 16px 16px 0;
+    margin-top: 16px;
     padding: 16px;
   }
 }

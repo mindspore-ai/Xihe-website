@@ -32,14 +32,13 @@ const currentPage = computed(() => {
   margin: 0 auto;
   padding: 80px 0 64px 0;
   @media screen and (max-width: 820px) {
-    padding: 48px 0 32px 0;
+    padding: 48px 16px 32px 16px;
   }
 }
 .bread {
   margin: 40px 0;
   @media screen and (max-width: 820px) {
     margin: 16px 0;
-    padding: 0 16px;
   }
 }
 </style>

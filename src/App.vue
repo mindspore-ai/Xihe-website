@@ -161,47 +161,6 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
-  // home: {
-  //   name: '首页',
-  //   child: ['home'],
-  //   back: '',
-  // },
-  electricity: {
-    name: '电力专区',
-    child: [
-      'electricity',
-      'substationhostExplain',
-      'substationopsExplain',
-      'intelligentsystemExplain',
-      'laborcontractExplain',
-    ],
-    back: '/electricity',
-  },
-  medicine: {
-    name: '医疗专区',
-    child: [
-      'medicine',
-      'endometrialcancerExplain',
-      'diagnosisExplain',
-      'truesight',
-    ],
-    back: '/medicine',
-  },
-  industry: {
-    name: '工业专区',
-    child: [
-      'industry',
-      'industryExplain',
-      'algorithmExplain',
-      'intelligenceExplain',
-    ],
-    back: '/industry',
-  },
-  humanity: {
-    name: '人文专区',
-    child: ['humanity', 'aigcExplain', 'yuzhiExplain', 'languageExplain'],
-    back: '/humanity',
-  },
 };
 
 const isMobileFit = ref(false);
@@ -328,35 +287,10 @@ const mobileNav = reactive([
   },
   {
     name: computed(() => {
-      return t('home.APP_HEADER.ESTATE');
+      return t('home.APP_HEADER.INDUSTRY');
     }),
     isActive: false,
-    children: [
-      {
-        name: computed(() => {
-          return t('home.APP_HEADER.Electric_Power');
-        }),
-        path: '/electricity',
-      },
-      {
-        name: computed(() => {
-          return t('home.APP_HEADER.HEALTHCARE');
-        }),
-        path: '/medicine',
-      },
-      {
-        name: computed(() => {
-          return t('home.APP_HEADER.INDUSTRY');
-        }),
-        path: '/industry',
-      },
-      {
-        name: computed(() => {
-          return t('home.APP_HEADER.HUMAN_CULTURE');
-        }),
-        path: '/humanity',
-      },
-    ],
+    path: '/estate/electricity',
   },
   {
     name: computed(() => {
@@ -392,9 +326,8 @@ const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
   mobileNav[3].isActive = false;
-  mobileNav[5].isActive = false;
 }
-function toPage(path, index) {
+function toPage(path) {
   // if (path === '/') {
   //   mobileNav[0].isActive = true;
   //   mobileNav[3].isActive = false;
@@ -405,18 +338,14 @@ function toPage(path, index) {
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
     mobileNav[3].isActive = false;
-    mobileNav[5].isActive = false;
   } else if (path) {
     isMobileFit.value = false;
     meauActive.value = false;
     mobileNav[3].isActive = false;
-    mobileNav[5].isActive = false;
     router.push(path);
   } else {
-    mobileNav[3].isActive = false;
-    mobileNav[5].isActive = false;
     mobileNav[0].isActive = false;
-    mobileNav[index].isActive = true;
+    mobileNav[3].isActive = true;
   }
 }
 const handleCommand = () => {
@@ -554,12 +483,12 @@ function confirmDialog() {
     <div class="menu-side" :class="{ 'menu-active': meauActive }">
       <div class="nav">
         <div
-          v-for="(item, index) in mobileNav"
+          v-for="item in mobileNav"
           :key="item"
           class="nav-item"
           :class="{ active: item.isActive }"
         >
-          <span @click="toPage(item.path, index)">{{ item.name }}</span>
+          <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
       <div
@@ -567,14 +496,6 @@ function confirmDialog() {
         :class="{ 'children-active': mobileNav[3].isActive }"
       >
         <div v-for="item in mobileNav[3].children" :key="item" class="nav-item">
-          <span @click="toPage(item.path)">{{ item.name }}</span>
-        </div>
-      </div>
-      <div
-        class="item-children"
-        :class="{ 'children-active': mobileNav[5].isActive }"
-      >
-        <div v-for="item in mobileNav[5].children" :key="item" class="nav-item">
           <span @click="toPage(item.path)">{{ item.name }}</span>
         </div>
       </div>
@@ -795,7 +716,7 @@ body.el-popup-parent--hidden {
 
 .app-body {
   min-width: 1280px;
-  min-height: calc(100vh - 228px);
+  min-height: calc(100vh - 200px);
   background: #f5f6f8;
 }
 
@@ -964,6 +885,8 @@ body.el-popup-parent--hidden {
     width: 164px;
     position: relative;
     left: -100%;
+    .nav {
+    }
     .nav-item {
       font-size: 12px;
       line-height: 18px;
@@ -993,11 +916,9 @@ body.el-popup-parent--hidden {
       top: 48px;
       left: -100%;
       // left: 164px;
-      display: none;
     }
     .children-active {
       left: 164px;
-      display: block;
     }
   }
   .language {

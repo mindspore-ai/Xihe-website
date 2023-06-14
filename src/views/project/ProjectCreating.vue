@@ -338,7 +338,11 @@ function deleteAllTags() {
         </div>
         <!-- 项目中文名称 -->
         <div class="form-item">
-          <el-form-item class="item-title" :label="i18n.pro_name" prop="title">
+          <el-form-item
+            class="item-title name"
+            :label="i18n.pro_name"
+            prop="title"
+          >
             <el-input
               v-model="proList.title"
               :placeholder="i18n.input_proName2"
@@ -350,7 +354,7 @@ function deleteAllTags() {
               :teleported="false"
             >
               <template #reference>
-                <o-icon><icon-poppver></icon-poppver></o-icon>
+                <o-icon class="tip-icon"><icon-poppver></icon-poppver></o-icon>
               </template>
               <div>- 项目标题支持中文或者英文</div>
               <div>- 长度为 <span class="remind">3-35个字符</span></div>
@@ -729,7 +733,7 @@ $theme: #0d8dff;
       .remind {
         color: #f13b35;
       }
-      .o-icon {
+      .tip-icon {
         position: absolute;
         right: -32px;
         font-size: 24px;

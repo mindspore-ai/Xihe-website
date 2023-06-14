@@ -733,6 +733,7 @@ function getSortData(item) {
                 </div>
 
                 <img
+                  class="cover"
                   :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
                   alt=""
                 />
@@ -1339,6 +1340,7 @@ $theme: #0d8dff;
           }
         }
         .pagination {
+          min-width: 800px;
           display: flex;
           justify-content: center;
           position: absolute;

@@ -38,7 +38,7 @@ async function getAllCompetition() {
 }
 getAllCompetition();
 
-// 获得进行中，即将开始，已结束的课程(刷选竞赛分类和比赛状态)
+// 获得进行中，即将开始，已结束的比赛(刷选竞赛分类和比赛状态)
 const params = {};
 async function handleClick(query, tab) {
   if (query === 'type') {
@@ -91,7 +91,7 @@ function goCompetitionDetail(id) {
 }
 // 分页器
 const layout = ref('prev, pager, next');
-// 课程分页器
+// 比赛分页器
 function handleCurrentPage(val) {
   competitionPager.page = val;
   currentCompetition.value = allCompetition.value.slice(
@@ -269,14 +269,14 @@ function toTop() {
         class="empty"
       >
         <img :src="emptyImg" alt="" />
-        <p>暂无相关课程</p>
+        <p>暂无相关比赛</p>
       </div>
       <div
         v-if="activeName === 'over' && !currentCompetition.length"
         class="empty"
       >
         <img :src="emptyImg" alt="" />
-        <p>暂无已结束课程</p>
+        <p>暂无已结束比赛</p>
       </div>
       <div
         v-if="activeName === 'preparing' && !currentCompetition.length"
@@ -290,7 +290,7 @@ function toTop() {
         class="empty"
       >
         <img :src="emptyImg" alt="" />
-        <p>暂无进行中课程</p>
+        <p>暂无进行中比赛</p>
       </div>
     </div>
   </div>

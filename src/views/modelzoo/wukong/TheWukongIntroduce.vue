@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import wukongModel from '@/assets/imgs/wukong/wukong-model.png';
 import wukongDataset from '@/assets/imgs/wukong/wukong-dataset.png';
 import abysmView from '@/assets/imgs/wukong/abysm-view.png';
@@ -16,7 +16,7 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const router = useRouter();
+// const router = useRouter();
 const screenWidth = useWindowResize();
 
 const effectImg = reactive([
@@ -47,7 +47,8 @@ const effectImg = reactive([
 ]);
 
 function goExperience() {
-  router.push(`/modelzoo/wukong`);
+  // router.push(`/modelzoo/wukong`);
+  window.open(`/modelzoo/wukong`);
 }
 
 // 了解更多

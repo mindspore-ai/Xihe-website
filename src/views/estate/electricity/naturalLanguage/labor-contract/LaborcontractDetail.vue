@@ -48,12 +48,13 @@ function goDetail() {
                 识别电力合同的风险控制点，并对合同内容进行关键信息提取，实现对合同风险的快速识别和及时管控。同时，该工具还提供模板化风险维护建议和全盘风险展示功能，助力电力企业实现更高效、全面的合同风险管理。
               </div>
             </div>
-            <div class="banner-btn" @click="goDetail">
+            <div class="banner-btn">
               <OButton
                 :size="screenWidth < 820 ? 'mini' : 'small'"
                 animation
                 type="primary"
                 class="home-btn"
+                @click="goDetail"
               >
                 运行模型
                 <template #suffix>

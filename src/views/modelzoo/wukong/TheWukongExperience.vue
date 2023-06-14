@@ -42,7 +42,6 @@ import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
-import IconLeft from '~icons/app/left';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -139,13 +138,13 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-function handlePreEnlage() {
+/* function handlePreEnlage() {
   if (largeIndex.value > 0) {
     largeImg.value = {};
     largeIndex.value--;
     largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
   }
-}
+} */
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};

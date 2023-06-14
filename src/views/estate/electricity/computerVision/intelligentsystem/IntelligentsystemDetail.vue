@@ -51,12 +51,13 @@ function goBack() {
                 华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
               </div>
             </div>
-            <div class="banner-btn" @click="goDetail">
+            <div class="banner-btn">
               <OButton
                 :size="screenWidth < 820 ? 'mini' : 'small'"
                 animation
                 type="primary"
                 class="home-btn"
+                @click="goDetail"
               >
                 运行模型
                 <template #suffix>
@@ -67,14 +68,6 @@ function goBack() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
-          <!-- <div class="industry-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div> -->
           <div class="industry-info">
             <router-view />
           </div>

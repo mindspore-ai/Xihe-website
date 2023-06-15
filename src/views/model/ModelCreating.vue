@@ -29,12 +29,9 @@ const i18n = {
   license: '协议',
   visualization: '仓库属性',
   preserve: '确定',
-  public:
-    '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型',
-  public_some:
-    '其他用户可浏览、收藏你的目模型，但仅有你及你的团队可以下载文件和编辑模型',
-  private:
-    '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型',
+  public: '其他用户可浏览、使用和下载此模型，仅限你可下载与更新此模型',
+  public_some: '其他用户可在线使用但不可下载此模型，仅限你可下载与更新此模型',
+  private: '其他用户无法浏览、使用和下载此模型，仅限你可下载与更新此模型',
   placeholder: {
     warehouse_name: '仓库真实存储名称，具有唯一性',
     model_name: '请填写模型中文名称',
@@ -181,7 +178,6 @@ function cancelBtn() {
 }
 // 选择要添加的标签
 function selectTags(it) {
-  console.log('it: ', it);
   it.isActive = !it.isActive;
 
   if (it.isActive) {

@@ -11,6 +11,8 @@ import OIcon from '@/components/OIcon.vue';
 import { getUserProjectData } from '@/api/api-user';
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
+import projectcard from '@/views/user/UserProjectcard.vue';
+
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
 
@@ -109,8 +111,8 @@ watch(
 <template>
   <div>
     <div v-if="projectData.total" class="project-card">
-      <div class="card-list">
-        <div
+      <!-- <div class="card-list"> -->
+      <!-- <div
           v-for="item in projectData.projects"
           :key="item.id"
           class="pro-card"
@@ -146,7 +148,16 @@ watch(
               {{ item.updated_at.split(' ')[0] }}
             </div>
           </div>
-        </div>
+        </div> -->
+      <!-- </div> -->
+      <div v-for="item in projectData.projects" :key="item.id" class="list">
+        <projectcard
+          :card-data="item"
+          :avatar-id="projectData.avatar_id"
+          :owner="projectData.owner"
+          class="card-list-item-content"
+          @click="goDetail(item.owner, item.name)"
+        ></projectcard>
       </div>
       <div v-if="projectData.total > 12" class="pagination">
         <el-pagination
@@ -302,6 +313,12 @@ watch(
         align-items: center;
       }
     }
+  }
+}
+.list {
+  .project-card {
+    margin-top: 24px;
+    border-radius: 16px;
   }
 }
 .pagination {

@@ -425,7 +425,7 @@ const beforeLeave = (activeTab) => {
           color: #fff;
           margin: 0 24px;
           position: absolute;
-          bottom: 24px;
+          top: 206px;
           .case-type {
             font-size: 24px;
             line-height: 26px;

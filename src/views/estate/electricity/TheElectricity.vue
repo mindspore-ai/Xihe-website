@@ -91,7 +91,7 @@ const electricityClassify = [
   },
   {
     id: 4,
-    name: '图神经网络GNN',
+    name: '强化学习RL',
     mobileName: 'GNN',
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
@@ -102,15 +102,13 @@ const electricityClassify = [
 const handleClick = (tab) => {
   if (tab.paneName === '计算机视觉CV') {
     tagKinds.value = 'CV';
+  } else if (tab.paneName === '自然语言处理NLP') {
+    tagKinds.value = 'NLP';
   }
 };
 
 const beforeLeave = (activeTab) => {
-  if (
-    activeTab === '语音Audio' ||
-    activeTab === '图神经网络GNN' ||
-    activeTab === '自然语言处理NLP'
-  ) {
+  if (activeTab === '语音Audio' || activeTab === '强化学习RL') {
     ElMessage({
       type: 'warning',
       message: '暂未开放，敬请期待！',

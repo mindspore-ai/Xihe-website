@@ -34,6 +34,9 @@
         </p>
       </div>
     </div>
+    <div class="tips">
+      友情提示：当前仅开放体验版模型，未做调优，不可直接部署生产使用
+    </div>
   </div>
 </template>
 
@@ -45,7 +48,11 @@
     color: #000;
     margin-bottom: 24px;
   }
-
+  .tips {
+    font-size: 14px;
+    color: #555;
+    margin-top: 24px;
+  }
   .case-background,
   .case-intro,
   .case-advantage {
@@ -90,6 +97,10 @@
       font-size: 16px;
       line-height: 24px;
       margin-bottom: 16px;
+    }
+    .tips {
+      font-size: 12px;
+      margin-top: 16px;
     }
     .case-background,
     .case-intro,

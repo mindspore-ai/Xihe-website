@@ -10,9 +10,6 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 const screenWidth = useWindowResize();
 const router = useRouter();
-function goDetail() {
-  router.push('/projects/MindSpore/yolov7-tch-projects');
-}
 function goBack() {
   router.push('/electricity');
 }
@@ -48,18 +45,22 @@ function goBack() {
               </div>
             </div>
             <div class="banner-btn">
-              <OButton
-                :size="screenWidth < 820 ? 'mini' : 'small'"
-                animation
-                type="primary"
-                class="home-btn"
-                @click="goDetail"
+              <a
+                href="https://xihe.mindspore.cn/projects/MindSpore/yolov7-tch-projects"
+                target="_blank"
               >
-                运行模型
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
+                <OButton
+                  :size="screenWidth < 820 ? 'mini' : 'small'"
+                  animation
+                  type="primary"
+                  class="home-btn"
+                >
+                  运行模型
+                  <template #suffix>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </template>
+                </OButton>
+              </a>
             </div>
           </div>
         </div>

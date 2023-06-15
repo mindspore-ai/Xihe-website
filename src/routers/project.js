@@ -21,9 +21,9 @@ export default [
     },
     beforeEnter: (to, from, next) => {
       if (Object.keys(to.query).length) {
-        function changeFullpath(str) {
+        const changeFullpath = function (str) {
           return str.replace(/\?id=[a-zA-Z0-9]+/g, '');
-        }
+        };
         to.fullPath = changeFullpath(to.fullPath);
       }
       next();

@@ -1011,6 +1011,7 @@ const handleCommand = (command) => {
       }
       .en-children {
         left: 18px;
+        width: auto;
       }
     }
     :deep(.el-menu) {

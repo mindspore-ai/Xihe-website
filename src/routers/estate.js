@@ -130,7 +130,7 @@ export default [
         name: 'laborcontractExplain',
         component: () => {
           return import(
-            '@/views/estate/electricity/computerVision/intelligentsystem/IntelligentsystemExplain.vue'
+            '@/views/estate/electricity/naturalLanguage/labor-contract/LaborcontractExplain.vue'
           );
         },
       },

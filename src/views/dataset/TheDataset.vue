@@ -351,7 +351,9 @@ function getDataset() {
   getDatasetData(query).then((res) => {
     modelCount.value = res.data.total;
     if (modelCount.value / query.count_per_page < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+      layout.value = 'sizes, prev, pager, next';
+    } else {
+      layout.value = 'sizes, prev, pager, next, jumper';
     }
     modelData.value = res.data;
   });
@@ -444,10 +446,12 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref(' prev, pager, next,sizes, jumper');
+const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
-    layout.value = layout.value.split(',').splice(0, 4).join(',');
+    layout.value = 'sizes, prev, pager, next';
+  } else {
+    layout.value = 'sizes, prev, pager, next, jumper';
   }
   query.count_per_page = val;
 }
@@ -723,6 +727,11 @@ onUnmounted(() => {
               @click="goDetail(item.owner, item.name)"
             ></app-card>
             <div v-if="modelCount > 10" class="pagination">
+              <div class="total">
+                <span> 共 </span>
+                <span>{{ modelCount }}</span>
+                <span> 条数据 </span>
+              </div>
               <el-pagination
                 :page-sizes="[10, 20, 50]"
                 :current-page="query.page_num"
@@ -1055,6 +1064,15 @@ $theme: #0d8dff;
           bottom: -76px;
           left: 50%;
           transform: translateX(-50%);
+
+          .total {
+            line-height: 36px;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.8);
+            margin-right: 8px;
+            white-space: nowrap;
+          }
         }
       }
       :deep(.o-empty) {

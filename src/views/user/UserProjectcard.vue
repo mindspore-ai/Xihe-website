@@ -38,11 +38,21 @@ const i18n = {
 </script>
 <template>
   <div class="project-card">
+    <!-- <div
+      v-if="cardData.level === 'official' || cardData.level === 'good'"
+      :class="cardData.level === 'good' ? 'mark-tag' : 'mark-tag1'"
+    >
+      {{ cardData.level === 'official' ? '官方' : '精选' }}
+    </div> -->
+
     <div class="card-top">
-      <img
-        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
-        alt=""
-      />
+      <div class="img-box">
+        <img
+          :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
+          alt=""
+          class="cover"
+        />
+      </div>
     </div>
 
     <div class="card-bottom">
@@ -108,8 +118,31 @@ const i18n = {
   transition: all 0.3s ease;
   display: flex;
   background: #ffffff;
+  position: relative;
   &:hover {
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+  }
+  .mark-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    z-index: 10;
+    background: linear-gradient(45deg, #ffd866 0%, #ff7f0d 100%);
+    font-size: 12px;
+    color: #ffffff;
+    border-radius: 10px;
+  }
+  .mark-tag1 {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    background: linear-gradient(326deg, #0d8dff 0%, #a5d4ff 100%);
+    z-index: 10;
+    font-size: 12px;
+    color: #ffffff;
+    border-radius: 8px;
   }
   .o-icon {
     margin-right: 2px;
@@ -120,12 +153,20 @@ const i18n = {
     position: relative;
     color: #fff;
     padding: 8px;
+    overflow: hidden;
+    .img-box {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+    }
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       overflow: hidden;
       border-radius: 8px;
+      transition: all 0.3s ease;
     }
     .title {
       font-size: 18px;
@@ -164,6 +205,11 @@ const i18n = {
       font-size: 20px;
       line-height: 28px;
       margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      word-wrap: break-word;
     }
     .description {
       font-size: 14px;

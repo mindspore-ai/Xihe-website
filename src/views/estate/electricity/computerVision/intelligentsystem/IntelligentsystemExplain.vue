@@ -11,7 +11,7 @@ const screenWidth = useWindowResize();
       <div class="title">案例背景</div>
       <div class="description">
         <div>
-          新能源的可变性、间歇性、随机性、出力&用电高峰不匹配特点给电力供应安全性和可靠性带来极大的挑战。新能源电力供给地域性差异放大，导致跨区跨省的电力调度需求增加。传统的专家调度系统无法有效应对大规模新能源并网条件下的复杂实时调度挑战和各种突发事件。
+          电力安全隐患是指电力设备在运行中可能出现的安全问题，这些问题可能会造成严重的经济或社会影响。为了强化电力安全隐患排查治理和监督管理有关工作，有效防范遏制电力事故事件发生。
         </div>
       </div>
     </div>
@@ -19,10 +19,7 @@ const screenWidth = useWindowResize();
       <div class="title">案例简介</div>
       <div class="description">
         <div>
-          华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
-        </div>
-        <div>
-          该系统基于大量离线仿真数据构建AI决策模型，针对电网当前动态出力和负载状况，实时做出更加经济和安全的调度决策和编排计划。从当前的日前计划调度转变为分钟级甚至秒级的实时调度。可以更好地预测和评估在复杂出力和负载扰动下电网的运行状态，提升电网安全预警能力。
+          电力隐患检测是指对电力设备进行定期检查或试验，以发现运行中电力设备的隐患、预防发生事故或电力设备损坏。这些检查或试验需要按照规定的试验条件（如规定的试验设备、环境条件、试验方法和试验电压等）、试验项目、试验周期进行。
         </div>
         <div class="case-img">
           <img v-if="screenWidth > 820" :src="introImg" alt="" />
@@ -30,13 +27,24 @@ const screenWidth = useWindowResize();
         </div>
       </div>
     </div>
+    <div class="case-solution">
+      <div class="title">解决方案</div>
+      <div class="description">
+        <p>
+          采用无人机电力巡检对关键线路进行安全隐患检测，无人机电力检测是指使用无人机对电网设施和环境进行自动化、精细化巡检，以降低工作出错率与风险，大幅提升效率。无人机可以搭载多种传感器的任务设备，主要完成激光点云以及可见光、红外、紫外影像数据的获取。这样可以迅速定位故障，及时排除故障，大大降低工作出错率与风险，大幅度提升电网巡检效率。
+        </p>
+      </div>
+    </div>
     <div class="case-advantage">
       <div class="title">案例优势</div>
       <div class="description">
         <p>
-          目前该系统能够辅助调度员决策，降低人工调度压力，减少人为失误，提高电网对异常情况和事故的响应速度和处理效率，同时大幅提升调度安全性和经济型，降低碳排放。在南京人工智能计算中心已完成试验性部署。
+          无人机电力巡检有很多优势。它能够快速准确地了解故障情况，有效提高应急时间内的效率，为紧急抢修电塔、电线争取有效时间，进而降低因为高额停电所造成的损失。此外，无人机电力巡检可以防止意外发生，减少工作人员以身涉险的状况。
         </p>
       </div>
+    </div>
+    <div class="tips">
+      友情提示：当前仅开放体验版模型，未做调优，不可直接部署生产使用
     </div>
   </div>
 </template>
@@ -49,10 +57,14 @@ const screenWidth = useWindowResize();
     color: #000;
     margin-bottom: 24px;
   }
-
+  .tips {
+    font-size: 14px;
+    color: #555;
+    margin-top: 24px;
+  }
   .case-background,
   .case-intro,
-  .case-painspot,
+  .case-solution,
   .case-advantage {
     margin-bottom: 40px;
     .title {
@@ -89,9 +101,13 @@ const screenWidth = useWindowResize();
       line-height: 24px;
       margin-bottom: 16px;
     }
+    .tips {
+      font-size: 12px;
+      margin-top: 16px;
+    }
     .case-background,
     .case-intro,
-    .case-painspot,
+    .case-solution,
     .case-advantage {
       margin-bottom: 24px;
       .title {

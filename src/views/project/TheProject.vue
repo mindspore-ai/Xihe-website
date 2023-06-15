@@ -826,10 +826,7 @@ function getSortData(item) {
 $theme: #0d8dff;
 .tags-wrap {
   width: 800px;
-  // overflow: hidden;
   padding: 40px;
-  // background: #fff;
-  // box-shadow: 0px 6px 24px 0px rgba(18, 20, 23, 0.1);
   border-radius: 16px;
   .dialog-head {
     .head-top {
@@ -860,7 +857,6 @@ $theme: #0d8dff;
       }
     }
     .head-tags {
-      // min-height: 58px;
       flex: 1;
       display: flex;
       flex-wrap: wrap;
@@ -904,7 +900,6 @@ $theme: #0d8dff;
       .el-tabs__header {
         box-shadow: none;
         background: #f7f8fa;
-        // background-color: blue;
       }
       .el-tabs__nav-wrap::after {
         display: none;

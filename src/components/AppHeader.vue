@@ -975,7 +975,7 @@ const handleCommand = (command) => {
         text-align: center;
         top: 80px;
         left: -22px;
-        // width: 86px;
+        width: 86px;
         background: rgba(255, 255, 255, 0.9);
         transform-origin: top;
         transform: scaleY(0);
@@ -1011,6 +1011,7 @@ const handleCommand = (command) => {
       }
       .en-children {
         left: 18px;
+        width: auto;
       }
     }
     :deep(.el-menu) {

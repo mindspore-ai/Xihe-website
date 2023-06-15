@@ -351,7 +351,9 @@ function getDataset() {
   getDatasetData(query).then((res) => {
     modelCount.value = res.data.total;
     if (modelCount.value / query.count_per_page < 8) {
-      layout.value = layout.value.split(',').splice(0, 4).join(',');
+      layout.value = 'sizes, prev, pager, next';
+    } else {
+      layout.value = 'sizes, prev, pager, next, jumper';
     }
     modelData.value = res.data;
   });
@@ -444,10 +446,12 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref(' prev, pager, next,sizes, jumper');
+const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
-    layout.value = layout.value.split(',').splice(0, 4).join(',');
+    layout.value = 'sizes, prev, pager, next';
+  } else {
+    layout.value = 'sizes, prev, pager, next, jumper';
   }
   query.count_per_page = val;
 }

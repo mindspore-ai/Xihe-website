@@ -48,7 +48,7 @@ const props = defineProps({
 let query = reactive({
   name: '',
   page_num: 1,
-  count_per_page: 12,
+  count_per_page: 5,
   sort_by: 'update_time',
 });
 

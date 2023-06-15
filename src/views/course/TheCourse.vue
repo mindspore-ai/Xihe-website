@@ -379,6 +379,7 @@ $theme: #0d8dff;
         .el-tabs__nav-scroll {
           .el-tabs__nav {
             .el-tabs__item {
+              border: 1px solid transparent;
               &:first-child {
                 color: #000000;
                 font-weight: 550;
@@ -386,6 +387,7 @@ $theme: #0d8dff;
               }
             }
             .is-active {
+              border: 1px solid #0d8dff;
               .o-icon {
                 display: block;
               }

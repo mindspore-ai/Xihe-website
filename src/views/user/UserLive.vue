@@ -194,6 +194,11 @@ getCount();
           //   border-bottom-right-radius: 16px;
           //   border-bottom-left-radius: 16px;
           // }
+          // &:hover {
+          //   .cover {
+          //     transform: scale(1.05);
+          //   }
+          // }
         }
         & + .card-list-item {
           margin-top: 30px;

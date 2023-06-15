@@ -30,28 +30,27 @@ const i18n = {
   visible: {
     title: '仓库属性',
     description: '更改描述',
-    tip: '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目仓库',
     options: [
       {
         value: 'public',
         label: '完全公开',
         id: 1,
         describe:
-          '其他用户可浏览、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集',
+          '其他用户可浏览、使用和下载此数据集，仅限你可下载与更新此数据集。',
       },
       {
         value: 'online',
         label: '部分公开',
         id: 2,
         describe:
-          '其他用户可浏览你的数据集，但仅有你及你的团队可以下载数据集和编辑数据集卡片描述',
+          '其他用户可在线使用但不可下载此数据集，仅限你可下载与更新此数据集。',
       },
       {
         value: 'private',
         label: '私有',
         id: 3,
         describe:
-          '其他用户将无法搜索、查看你的数据集，仅你及你的团队成员可查看和编辑此数据集',
+          '其他用户无法浏览、使用和下载此数据集，仅限你可下载与更新此数据集。',
       },
     ],
     btnText: '确定',
@@ -90,9 +89,9 @@ let query = reactive({
   title: detailData.title,
 });
 
-if (detailData.repo_type === 'private') visibleIndex.value = 0;
+if (detailData.repo_type === 'private') visibleIndex.value = 2;
 else if (detailData.repo_type === 'online') visibleIndex.value = 1;
-else visibleIndex.value = 2;
+else visibleIndex.value = 0;
 function getIndex(value) {
   visibleIndex.value = value;
 }

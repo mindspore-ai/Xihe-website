@@ -342,6 +342,7 @@ function openJupyter() {
       border: 1px solid #d8d8d8;
       cursor: pointer;
       border-radius: 16px;
+      border: 2px solid #d8d8d8;
       .card-inner {
         width: 100%;
         height: 100%;
@@ -404,8 +405,8 @@ function openJupyter() {
       .price-tag,
       .waiting-tag {
         position: absolute;
-        right: -5px;
-        top: 0;
+        right: 4px;
+        top: 4px;
         padding: 3px 8px;
         font-size: 12px;
         color: #ffffff;
@@ -422,7 +423,7 @@ function openJupyter() {
       }
     }
     .active {
-      border: 1px solid #0d8dff;
+      border: 2px solid #0d8dff;
     }
     .specification-card-disabled {
       cursor: no-drop !important;

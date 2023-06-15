@@ -233,7 +233,10 @@ watch(
         class="item-path"
         @click="handleClick(index + 1)"
       >
-        {{ item }}
+        {{ item
+        }}<o-icon v-if="index + 1 < routerParams.contents.length"
+          ><IconRight></IconRight
+        ></o-icon>
       </div>
     </div>
     <div class="editing-card">
@@ -389,6 +392,8 @@ watch(
       cursor: pointer;
       height: 24px;
       line-height: 24px;
+      display: flex;
+      align-items: center;
       &:first-child {
         color: #555;
       }

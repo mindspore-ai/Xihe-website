@@ -70,7 +70,7 @@ function handleCurrentChange(val) {
 function getUserProject() {
   getUserProjectData(query, userInfo.value.userName).then((res) => {
     if (res.data.total) {
-      if (res.data.total > 12) {
+      if (res.data.total > 5) {
         emit('dom-change', 76);
       }
       avatarImg.value = res.data.avatar_id;
@@ -159,9 +159,9 @@ watch(
           @click="goDetail(item.owner, item.name)"
         ></projectcard>
       </div>
-      <div v-if="projectData.total > 12" class="pagination">
+      <div v-if="projectData.total > 5" class="pagination">
         <el-pagination
-          :page-sizes="[12, 24, 60]"
+          :page-sizes="[5, 10, 15]"
           :current-page="query.page"
           :page-size="query.count_per_page"
           :total="projectData.total"

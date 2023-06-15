@@ -46,10 +46,12 @@ const i18n = {
     </div> -->
 
     <div class="card-top">
-      <img
-        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
-        alt=""
-      />
+      <div class="img-box">
+        <img
+          :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
+          alt=""
+        />
+      </div>
     </div>
 
     <div class="card-bottom">
@@ -118,6 +120,11 @@ const i18n = {
   position: relative;
   &:hover {
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
+    .card-top {
+      img {
+        transform: scale(1.05);
+      }
+    }
   }
   .mark-tag {
     position: absolute;
@@ -150,12 +157,20 @@ const i18n = {
     position: relative;
     color: #fff;
     padding: 8px;
+    overflow: hidden;
+    .img-box {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 8px;
+    }
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       overflow: hidden;
       border-radius: 8px;
+      transition: all 0.3s ease;
     }
     .title {
       font-size: 18px;
@@ -194,6 +209,11 @@ const i18n = {
       font-size: 20px;
       line-height: 28px;
       margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      word-wrap: break-word;
     }
     .description {
       font-size: 14px;

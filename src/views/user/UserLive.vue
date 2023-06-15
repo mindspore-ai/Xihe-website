@@ -144,7 +144,7 @@ getCount();
           </div>
           <projectcard
             v-if="item.resource.type === 'project'"
-            :card-data="item"
+            :card-data="item.resource"
             class="card-list-item-content"
             @click="goDetail(item)"
           ></projectcard>
@@ -184,16 +184,16 @@ getCount();
       &-item {
         :deep(.project-card) {
           border-radius: 16px;
-          .card-top {
-            img {
-              border-top-right-radius: 16px;
-              border-top-left-radius: 16px;
-            }
-          }
-          .card-bottom {
-            border-bottom-right-radius: 16px;
-            border-bottom-left-radius: 16px;
-          }
+          // .card-top {
+          //   img {
+          //     border-top-right-radius: 16px;
+          //     border-top-left-radius: 16px;
+          //   }
+          // }
+          // .card-bottom {
+          //   border-bottom-right-radius: 16px;
+          //   border-bottom-left-radius: 16px;
+          // }
         }
         & + .card-list-item {
           margin-top: 30px;

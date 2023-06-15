@@ -331,6 +331,7 @@ function toTop() {
         .el-tabs__nav-scroll {
           .el-tabs__nav {
             .el-tabs__item {
+              border: 1px solid transparent;
               &:first-child {
                 color: #000000;
                 font-weight: 550;
@@ -338,6 +339,7 @@ function toTop() {
               }
             }
             .is-active {
+              border: 1px solid #0d8dff;
               .o-icon {
                 display: block;
               }

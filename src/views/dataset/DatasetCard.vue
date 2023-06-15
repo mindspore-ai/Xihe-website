@@ -24,7 +24,6 @@ const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();
-// let README = '';
 const rightModel = ref(null);
 const licensesHeight = ref(0);
 
@@ -60,7 +59,7 @@ function getReadMeFile() {
   try {
     getReadmeInfo(detailData.value.owner, detailData.value.name)
       .then((tree) => {
-        if (tree.data.has_readme) {
+        if (tree.data.has_file) {
           getGitlabFileRaw({
             type: 'dataset',
             user: routerParams.user,

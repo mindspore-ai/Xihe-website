@@ -14,9 +14,6 @@ const screenWidth = useWindowResize();
 function goBack() {
   router.push('/electricity');
 }
-function goDetail() {
-  router.push('/projects/MindSpore/ner_bert_base_chinese');
-}
 </script>
 
 <template>
@@ -49,18 +46,22 @@ function goDetail() {
               </div>
             </div>
             <div class="banner-btn">
-              <OButton
-                :size="screenWidth < 820 ? 'mini' : 'small'"
-                animation
-                type="primary"
-                class="home-btn"
-                @click="goDetail"
+              <a
+                href="https://xihe.mindspore.cn/projects/MindSpore/token_classification"
+                target="_blank"
               >
-                运行模型
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
+                <OButton
+                  :size="screenWidth < 820 ? 'mini' : 'small'"
+                  animation
+                  type="primary"
+                  class="home-btn"
+                >
+                  运行模型
+                  <template #suffix>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </template>
+                </OButton>
+              </a>
             </div>
           </div>
         </div>

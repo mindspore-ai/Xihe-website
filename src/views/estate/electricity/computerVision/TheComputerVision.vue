@@ -44,13 +44,6 @@ const props = defineProps({
 
 const cases = [
   {
-    id: 0,
-    type: '变电站AI分析主机',
-    name: '变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。',
-    image: hostImg,
-    url: '/electricity/substation-host',
-  },
-  {
     id: 1,
     type: '变电站运维图像识别分析解决方案',
     name: '智能运维的“第三只眼”，变电站运维图像识别分析解决方案，推动变电站运维工作的无人化、智能化、信息化转…',
@@ -63,6 +56,13 @@ const cases = [
     name: '基于无人机电力巡检捕获图像或者视频，并将数据传回中台或者盒子，并对关键线路进行检测。以实时检测安全问题、实时预警、排查故障。大大降低工作出错率与风险和提高了电网巡检效率。',
     image: decisionImg,
     url: '/electricity/intelligent-system',
+  },
+  {
+    id: 3,
+    type: '变电站AI分析主机',
+    name: '变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。',
+    image: hostImg,
+    url: '/electricity/substation-host',
   },
 ];
 

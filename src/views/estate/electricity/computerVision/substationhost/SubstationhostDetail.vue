@@ -45,21 +45,17 @@ function goBack() {
               </div>
             </div>
             <div class="banner-btn">
-              <a
-                href="https://xihe2.test.osinfra.cn/projects/MindSpore/ai_studio_demo/"
+              <OButton
+                :size="screenWidth < 820 ? 'mini' : 'small'"
+                disabled
+                type="primary"
+                class="home-btn"
               >
-                <OButton
-                  :size="screenWidth < 820 ? 'mini' : 'small'"
-                  animation
-                  type="primary"
-                  class="home-btn"
-                >
-                  运行模型
-                  <template #suffix>
-                    <OIcon><IconArrowRight /></OIcon>
-                  </template>
-                </OButton>
-              </a>
+                运行模型
+                <template #suffix>
+                  <OIcon><IconArrowRight /></OIcon>
+                </template>
+              </OButton>
             </div>
           </div>
         </div>

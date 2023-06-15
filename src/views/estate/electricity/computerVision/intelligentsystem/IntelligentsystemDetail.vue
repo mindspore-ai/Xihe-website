@@ -22,7 +22,7 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">智能在线决策系统</span>
+      <span class="title">电力设备安全隐患分析解决方案</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
@@ -31,7 +31,7 @@ function goBack() {
             电力专区
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            智能在线决策系统
+            电力设备安全隐患分析解决方案
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -42,9 +42,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">智能在线决策系统</div>
+              <div class="banner-title">电力设备安全隐患分析解决方案</div>
               <div class="banner-desc">
-                华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
+                基于无人机电力巡检捕获图像或者视频，并将数据传回中台或者盒子，并对关键线路进行检测。以实时检测安全问题、实时预警、排查故障。大大降低工作出错率与风险和提高了电网巡检效率。
               </div>
             </div>
             <div class="banner-btn">

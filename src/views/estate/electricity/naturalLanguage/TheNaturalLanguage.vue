@@ -51,20 +51,6 @@ const cases = [
     image: opsImg,
     url: '/electricity/laborcontract',
   },
-  /* {
-    id: 1,
-    type: '变电站运维图像识别分析解决方案',
-    name: '智能运维的“第三只眼”，变电站运维图像识别分析解决方案，推动变电站运维工作的无人化、智能化、信息化转…',
-    image: hostImg,
-    url: '/electricity/substation-ops',
-  }, */
-  // {
-  //   id: 2,
-  //   type: '智能在线决策系统',
-  //   name: '智能在线决策系统有效应对复杂实时电力调度',
-  //   image: decisionImg,
-  //   // url: '/electricity/intelligent-system',
-  // },
 ];
 
 function goCasePath(item) {

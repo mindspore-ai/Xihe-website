@@ -111,9 +111,9 @@ let query = reactive({
   name: detailData.name,
 });
 
-if (detailData.repo_type === 'private') visibleIndex.value = 0;
+if (detailData.repo_type === 'private') visibleIndex.value = 2;
 else if (detailData.repo_type === 'online') visibleIndex.value = 1;
-else visibleIndex.value = 2;
+else visibleIndex.value = 0;
 
 function getIndex(value) {
   visibleIndex.value = value;

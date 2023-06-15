@@ -74,7 +74,9 @@ const i18n = {
         <div class="card-bottom-right">
           <div class="update-time" :title="i18n.uploadTime">
             <o-icon> <icon-time></icon-time></o-icon>
-            <span class="time">{{ cardData.update_at }}</span>
+            <span class="time">{{
+              cardData.update_at || cardData.updated_at
+            }}</span>
           </div>
           <div class="download likes" :title="i18n.likesNumber">
             <o-icon><icon-heart></icon-heart></o-icon>

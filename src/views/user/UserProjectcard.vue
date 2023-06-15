@@ -50,6 +50,7 @@ const i18n = {
         <img
           :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
           alt=""
+          class="cover"
         />
       </div>
     </div>
@@ -120,11 +121,6 @@ const i18n = {
   position: relative;
   &:hover {
     box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-    .card-top {
-      img {
-        transform: scale(1.05);
-      }
-    }
   }
   .mark-tag {
     position: absolute;

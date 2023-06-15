@@ -319,6 +319,11 @@ watch(
   .project-card {
     margin-top: 24px;
     border-radius: 16px;
+    // &:hover {
+    //   :deep(.cover) {
+    //     transform: scale(1.05);
+    //   }
+    // }
   }
 }
 .pagination {

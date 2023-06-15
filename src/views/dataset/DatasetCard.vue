@@ -24,7 +24,6 @@ const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();
-// let README = '';
 const rightModel = ref(null);
 const licensesHeight = ref(0);
 

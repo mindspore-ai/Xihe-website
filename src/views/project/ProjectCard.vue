@@ -347,25 +347,15 @@ watch(
 );
 const failLog = ref('');
 const loading = ref(true);
-//判断显示哪一个页面
+// 判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
 const hasPrefix = computed(() => {
   return msg.value === '启动中' ? true : false;
 });
 const clientSrc = ref('');
-// let timer = null;
-// 游客启动推理
-// function start() {
-//   // startInference(detailData.value.id).then((res) => {
-//   //   if (res.data.status === 200) msg.value = '启动中';
-//   // socket.send(JSON.stringify({ pk: detailData.value.id }));
-//   // });
-//   socket.value = new WebSocket(
-//     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-//   );
-// }
-//拥有者启动推理
+
+// 拥有者启动推理
 function handleStart() {
   if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
@@ -427,14 +417,14 @@ function handleStart() {
   }
 }
 
-//停止推理
+// 停止推理
 function handleStop() {
   closeConn();
   msg.value = '';
 }
 const socket = ref(null);
 
-//拥有者判断是否有app.py，非拥有者判断启动状态
+// 拥有者判断是否有app.py，非拥有者判断启动状态
 getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
   if (res.data.has_file) {
     try {
@@ -448,8 +438,6 @@ getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
 function closeConn() {
   if (socket.value) {
     socket.value.close(); // 向服务端发送断开连接的请求
-    // clearInterval(timer);
-    // socket.value = null;
   }
 }
 onUnmounted(() => {

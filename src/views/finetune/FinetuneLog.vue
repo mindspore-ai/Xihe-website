@@ -11,7 +11,7 @@ const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const showLog = ref(false);
 const route = useRoute();
-const finetuneData = ref([]); //当前微调任务信息
+const finetuneData = ref([]); // 当前微调任务信息
 const finetuneLog = ref('');
 const userFinetune = useFinetuneData();
 

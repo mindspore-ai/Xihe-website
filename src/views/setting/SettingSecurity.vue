@@ -48,18 +48,11 @@ function togglePhoneDlg(flag) {
 getGitlabToken().then((res) => {
   gitlabToken.value = res?.data?.token;
 });
-//获取手机号
+// 获取手机号
 const userInfoStore = useUserInfoStore();
 const phoneExhibition = ref('');
-// try {
-//   getUserPhone(userInfoStore.id).then((res) => {
-//     if (res.data) {
-//       userInfoStore.phone = res.data;
-//       phoneExhibition.value = res.data.slice(0, 3) + '****' + res.data.slice(7);
-//     }
-//   });
-// } catch {}
-//获取验证码
+
+// 获取验证码
 function setPhone(formEl) {
   if (!formEl) return;
   formEl.validateField('phone', (vaild) => {
@@ -71,7 +64,7 @@ function setPhone(formEl) {
     }
   });
 }
-//倒计时
+// 倒计时
 const time = ref(60);
 const isDisposed = ref(false);
 const handleTimeChange = () => {
@@ -85,7 +78,7 @@ const handleTimeChange = () => {
     }, 1000);
   }
 };
-//确认绑定手机号码
+// 确认绑定手机号码
 const newQuery = reactive({
   old_mobile: '',
   old_mobile_code: '',
@@ -153,7 +146,6 @@ function keepPhone(formEl) {
           });
       }
     } else {
-      // console.error('error submit!');
       return false;
     }
   });

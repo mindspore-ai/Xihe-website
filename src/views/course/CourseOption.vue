@@ -4,10 +4,18 @@ import { useRoute, useRouter } from 'vue-router';
 import ONav from '@/components/ONav.vue';
 import { useCourseData } from '@/stores';
 
+const props = defineProps({
+  fixed: {
+    type: Boolean,
+    default: () => {
+      return {};
+    },
+  },
+});
+
 const route = useRoute();
 const router = useRouter();
 const activeNavItem = ref('');
-// const is_apply = ref(false);
 
 const courseInfo = useCourseData().courseData;
 
@@ -104,14 +112,6 @@ function handleNavClick(item) {
   }
 }
 
-const props = defineProps({
-  fixed: {
-    type: Boolean,
-    default: () => {
-      return {};
-    },
-  },
-});
 watch(
   () => {
     return props.fixed;

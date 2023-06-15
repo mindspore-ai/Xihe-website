@@ -8,12 +8,12 @@ import { useUserInfoStore } from '@/stores';
 const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
 const router = useRouter();
-const allCompetition = ref([]); //所有的比赛
-const inprogressCompetition = ref([]); //进行中的比赛
-const overCompetition = ref([]); //已结束的比赛
-const perPageAllData = ref([]); //所有比赛的每页数据
-const perPageInprogressData = ref([]); //进行中比赛的每页数据
-const perPageOverData = ref([]); //已结束比赛的每页数据
+const allCompetition = ref([]); // 所有的比赛
+const inprogressCompetition = ref([]); // 进行中的比赛
+const overCompetition = ref([]); // 已结束的比赛
+const perPageAllData = ref([]); // 所有比赛的每页数据
+const perPageInprogressData = ref([]); // 进行中比赛的每页数据
+const perPageOverData = ref([]); // 已结束比赛的每页数据
 
 let allPager = reactive({
   page: 1,

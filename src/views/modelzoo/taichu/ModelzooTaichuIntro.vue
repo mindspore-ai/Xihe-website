@@ -1,6 +1,5 @@
 <script setup>
 import { ref, nextTick } from 'vue';
-// import { useRouter } from 'vue-router';
 
 import taichuBanner from '@/assets/imgs/taichu/taichu-banner.png';
 import taichuEfficient from '@/assets/imgs/taichu/taichu-efficient.png';
@@ -46,7 +45,6 @@ const instancevideo =
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
 const showInstanceVideo = ref(false);
-// const router = useRouter();
 // 图片数组
 const videoImgArr1 = [
   {
@@ -112,7 +110,6 @@ function closeInstanceVideo() {
   showInstanceVideo.value = false;
 }
 function goTaichuExperience() {
-  // router.push('/modelzoo/taichu');
   window.open('/modelzoo/taichu');
 }
 function goTaichuMore() {

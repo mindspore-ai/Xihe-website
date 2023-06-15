@@ -105,7 +105,7 @@ function handleUploadImg(url) {
       });
 
       fileList.value = [];
-      fileList.value[0] = { raw: file }; // formData.append('blob', file);
+      fileList.value[0] = { raw: file };
 
       formData.append('picture', fileList.value[fileList.value.length - 1].raw);
 
@@ -268,7 +268,7 @@ const inputDom = ref(null);
 
 const handleKeydown = (e) => {
   if (e.keyCode === 13) {
-    //回车执行查询
+    // 回车执行查询
     sendBtn.value.click();
   }
 };

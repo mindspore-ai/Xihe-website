@@ -62,7 +62,7 @@ export function getRepoDetailByName(params) {
       throw new Error(err);
     });
 }
-//上传文件
+// 上传文件
 export async function uploadFileGitlab(params, path) {
   const url = `/api/v1/repo/${params.type}/${
     params.name
@@ -80,7 +80,7 @@ export async function uploadFileGitlab(params, path) {
       throw new Error(err);
     });
 }
-//更新上传文件
+// 更新上传文件
 export async function editorFileGitlab(params) {
   const url = `/api/v1/repo/${params.type}/${
     params.name
@@ -213,7 +213,7 @@ export async function deleteFolder(params) {
 
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {
-    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let downloadElement = document.createElement('a'); // 创建一个a 虚拟标签
     let href = null;
     if (res?.data?.content) {
       let blob = new Blob([Base64.toUint8Array(res?.data?.content).buffer], {

@@ -92,7 +92,6 @@ const codeString = ref('');
 const mkit = handleMarkdown();
 
 let routerParams = router.currentRoute.value.params;
-let README = '';
 const pushParams = {
   user: routerParams.user,
   name: routerParams.name,
@@ -137,7 +136,7 @@ function getTrainList() {
 if (userInfo.userName === detailData.value.owner) {
   getTrainList();
 }
-//跳转到选择文件创建训练实例页
+// 跳转到选择文件创建训练实例页
 function goSelectFile() {
   if (trainListData.value !== null && trainListData.value.length === 5) {
     describe.value = i18n.describe2;

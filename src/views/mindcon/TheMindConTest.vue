@@ -187,7 +187,6 @@ function cancelSubmit() {
 }
 
 function backToMindCon() {
-  // isShow1.value = true;
   router.push('/activity');
 }
 
@@ -248,7 +247,7 @@ async function getData() {
 }
 getData();
 
-//离开当前的组件，触发
+// 离开当前的组件，触发
 onBeforeRouteLeave((to, from, next) => {
   routePath.value = to.path;
 

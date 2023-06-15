@@ -152,8 +152,6 @@ router.beforeEach(async (to, from) => {
     document.body.classList.remove('mobile-fit');
   }
   // 设置语言
-  // const langStore = useLangStore();
-  // langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
   i18n.global.locale.value = to.fullPath.includes('/en') ? 'en' : 'zh';
   if (to.path === '/en' && to.meta.title) {
     document.title = to.meta.title;

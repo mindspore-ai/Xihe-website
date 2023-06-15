@@ -1,10 +1,6 @@
 import { request } from '@/shared/axios';
-// import { useUserInfoStore } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
 
-// function getUserInfo() {
-//   return useUserInfoStore();
-// }
 function getHeaderConfig() {
   const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
     ? {
@@ -21,7 +17,6 @@ function getHeaderConfig() {
  */
 export function getProjectData(params) {
   const url = `/server/project`;
-  // let header = getHeaderConfig();
   // 登录之后携带token
   return request.get(url, { params }).then((res) => {
     return res;
@@ -275,23 +270,6 @@ export function deleteTainList(projectId, trainId) {
   });
 }
 
-/**
- * 获得训练日志数据
- * @returns
- */
-// export function getTrainLog(params) {
-//   const { projectId, trainId } = params;
-//   const url = `/server/train/project/${projectId}/training/${trainId}`;
-//   return request
-//     .get(url, getHeaderConfig())
-//     .then((res) => {
-//       return res;
-//     })
-//     .catch((e) => {
-//       return e;
-//     });
-// }
-
 export function getTrainLog(params) {
   const { projectId, trainId, type } = params;
   const url = `/server/train/project/${projectId}/training/${trainId}/result/${type}`;
@@ -331,7 +309,6 @@ export function projectFork(owner, projectId, params) {
  * @returns
  */
 export function startInference(params) {
-  // const { projectId } = params;
   const url = `/api/projects/${params}/inference/infertask/`;
   return request
     .post(url, params)
@@ -343,7 +320,6 @@ export function startInference(params) {
     });
 }
 export function startInference2(params) {
-  // const { projectId } = params;
   const url = `/server/inference/project/${params.owner}/${params.pid}`;
   return request
     .post(url, null, getHeaderConfig())
@@ -360,7 +336,6 @@ export function startInference2(params) {
  * @returns
  */
 export function stopInference(params) {
-  // const { projectId } = params;
   const url = `/api/projects/${params}/inference/infertask/`;
   return request
     .delete(url, getHeaderConfig())
@@ -376,7 +351,6 @@ export function stopInference(params) {
  * @returns
  */
 export function getLog(pk) {
-  // const { projectId } = params;
   const url = `/api/projects/${pk}/inference/errorlog/`;
   return request
     .get(url, getHeaderConfig())
@@ -441,17 +415,6 @@ export function cloudSubscribe(id) {
     return res;
   });
 }
-
-/**
- * 删除云资源
- * @returns
- */
-// export function deleteCloudSource(id) {
-//   const url = `/server/cloud/subscribe`;
-//   return request.post(url, { cloud_id: id }, getHeaderConfig()).then((res) => {
-//     return res;
-//   });
-// }
 
 /**
  * 获取pod信息

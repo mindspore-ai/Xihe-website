@@ -36,8 +36,8 @@ const isLogined = computed(() => useLoginStore().isLogined);
 const router = useRouter();
 
 const buttonText = ref('启动');
-const isDisabled = ref(false); //按钮是否禁用
-const isfinshed = ref(false); //是否推理结束
+const isDisabled = ref(false); // 按钮是否禁用
+const isfinshed = ref(false); // 是否推理结束
 const deadTime = ref('');
 const jupyterUrl = ref('');
 let socket;
@@ -192,7 +192,7 @@ async function getPodInfo(id) {
       isDisabled.value = false;
 
       deadTime.value = timestampToTime(res.data.expiry);
-      //判断当前时间戳是否大于获取的时间戳，大于即过期
+      // 判断当前时间戳是否大于获取的时间戳，大于即过期
       const currentTime = new Date().getTime();
       // 是否到期
       if (res.data.expiry * 1000 > currentTime) {
@@ -238,29 +238,6 @@ async function getPodInfo(id) {
   }
 }
 
-// 表单方式创建实例
-// function createInstance() {
-//   const projectName = window.location.pathname.split('/')[3];
-
-//   router.push(`/projects/${userInfoStore.userName}/${projectName}/createfile`);
-// }
-
-// const isShowDlg = ref(false);
-// 关闭
-// function closeJupyter() {
-//   isShowDlg.value = true;
-// }
-// function confirmClose() {
-//   jupyterUrl.value = '';
-//   isfinshed.value = false;
-//   isDisabled.value = false;
-//   isShowDlg.value = false;
-//   // 关闭取消资源选择状态
-//   disposeList.value.forEach((item) => {
-//     item.isActive = false;
-//   });
-// }
-
 // 打开jupyter第三方网址
 function openJupyter() {
   window.open(jupyterUrl.value, '_blank');
@@ -291,10 +268,6 @@ onUnmounted(() => {
         <div class="desc">
           <div class="desc-left">
             云上开发环境，无需配置环境，既可灵活调试运行代码。注意一个用户只能启动一个jupyter实例，且2个小时后会自动释放资源，到期时间前请及时将资源下载到本地。
-            <!-- 详情参考
-            <span class="link" @click="createInstance"
-              >表单方式创建训练实例</span
-            > -->
           </div>
 
           <div v-if="deadTime" class="desc-right">

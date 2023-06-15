@@ -26,16 +26,14 @@ const mkit = handleMarkdown();
 
 const codeString = ref('');
 const result = ref();
-// let README = '';
 
 const isShow = ref(false);
 const addSearch = ref('');
-// const isShow1 = ref(false);
 
+const emit = defineEmits(['on-click']);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-const emit = defineEmits(['on-click']);
 
 const pushParams = {
   user: routerParams.user,
@@ -61,27 +59,10 @@ const i18n = {
   emptyVisited: '无模型卡片',
 };
 
-// 判断是否含有readme文件
-// getReadmeInfo(detailData.value.owner, detailData.value.name).then((res) => {
-//   if (res.data.has_readme) {
-//     //
-//   }
-// });
-
 // 获取README文件
 function getReadMeFile() {
   try {
-    getReadmeInfo(
-      detailData.value.owner,
-      detailData.value.name
-      //   {
-      //   type: 'model',
-      //   user: routerParams.user,
-      //   path: '',
-      //   id: detailData.value.id,
-      //   name: routerParams.name,
-      // }
-    )
+    getReadmeInfo(detailData.value.owner, detailData.value.name)
       .then((tree) => {
         if (tree.data.has_readme) {
           getGitlabFileRaw({
@@ -95,23 +76,6 @@ function getReadMeFile() {
             result.value = mkit.render(codeString.value);
           });
         }
-        // README = tree?.data?.filter((item) => {
-        //   return item.name === 'README.md';
-        // });
-        // if (README && README.length) {
-        //   getGitlabFileRaw({
-        //     type: 'model',
-        //     user: routerParams.user,
-        //     path: 'README.md',
-        //     id: detailData.value.id,
-        //     name: routerParams.name,
-        //   }).then((res) => {
-        //     res ? (codeString.value = res) : '';
-        //     result.value = mkit.render(codeString.value);
-        //   });
-        // } else {
-        //   codeString.value = '';
-        // }
       })
       .catch((err) => {
         console.error(err);

@@ -20,7 +20,6 @@ import AppContent from '@/components/AppContent.vue';
 
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
-// import { ResourceType } from 'authing-js-sdk';
 
 const userInfoStore = useUserInfoStore();
 
@@ -112,19 +111,19 @@ const showDetail = ref(false);
 const moreSortTags = ref([]);
 const showCondition = ref(true);
 const showTags = ref(false);
-const radioList = ref({}); //应用分类二级标签列表
+const radioList = ref({}); // 应用分类二级标签列表
 const radioList2 = ref({});
 const modalName = ref('');
 const keyWord = ref('');
 
 let queryData = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
-  level: null, //仓库级别
-  count_per_page: 10, //每页数量
-  page_num: 1, //分页
-  sort_by: null, //排序规则
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
+  level: null, // 仓库级别
+  count_per_page: 10, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
 
 const debounceSearch = debounce(getModel, 500, {
@@ -214,13 +213,11 @@ function clearItem(index) {
       item.isActive = false;
       item.isSelected = false;
     });
-    // handleTagSearch(renderCondition.value[index].condition);
   } else {
     renderCondition.value[index].condition[0].items.forEach((item) => {
       item.isActive = false;
       item.isSelected = false;
     });
-    // queryData.tags = null;
   }
   goSearch(renderCondition.value);
 }
@@ -335,13 +332,13 @@ function handleTagSearch(date) {
   }
 }
 
-//查询
+// 查询
 function goSearch(render) {
   let time1 = 0;
   let time2 = 0;
   queryData.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
+  let tagList = []; // 标签
+  let tag_kinds = []; // 标签类型
   render.forEach((item) => {
     time1 = 0;
     time2 = 0;

@@ -163,7 +163,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }

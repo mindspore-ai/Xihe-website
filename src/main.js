@@ -26,7 +26,7 @@ const app = createApp(App);
 app.directive('highlight', (el) => {
   hljs.configure({
     useBR: true,
-    // TODO:防范XSS注入攻击
+    // 需要加防范XSS注入攻击
     ignoreUnescapedHTML: true,
   });
   let blocks = el.querySelectorAll('pre code');
@@ -41,7 +41,7 @@ app.use(Pagination, {
 });
 app.use(createPinia());
 app.use(router);
-app.use(VueDOMPurifyHTML); //防止v-html进行xss注入
+app.use(VueDOMPurifyHTML); // 防止v-html进行xss注入
 
 app.provide('message', OAlert);
 app.component('OIcon', OIcon);

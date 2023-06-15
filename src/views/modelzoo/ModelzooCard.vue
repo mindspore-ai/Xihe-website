@@ -27,7 +27,6 @@ const prop = defineProps({
   },
 });
 function goExperience() {
-  // router.push(`${prop.path}`);
   window.open(`${prop.path}`);
 }
 function goIntroduction() {

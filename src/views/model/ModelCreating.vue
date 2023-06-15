@@ -151,7 +151,7 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    console.error(re);
+    console.error(e);
   }
 }
 getModelTags('model');

@@ -199,8 +199,7 @@ projectPhotos.value[0].is_active = true;
 
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
-// proList.protocol = protocol[0].name;
-// proList.repo_type = 'Public';
+
 onMounted(() => {});
 
 // 获取标签

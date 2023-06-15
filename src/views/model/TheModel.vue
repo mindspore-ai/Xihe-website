@@ -2,6 +2,8 @@
 import { ref, reactive, watch, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
+
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 import OEmpty from '@/components/OEmpty.vue';
@@ -20,7 +22,6 @@ import AppContent from '@/components/AppContent.vue';
 
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
-// import { ResourceType } from 'authing-js-sdk';
 
 const userInfoStore = useUserInfoStore();
 
@@ -416,9 +417,9 @@ function getModel() {
   getModelData(queryData).then((res) => {
     modelCount.value = res.data.total;
     if (modelCount.value / queryData.count_per_page < 8) {
-      layout.value = 'total, sizes, prev, pager, next';
+      layout.value = 'sizes, prev, pager, next';
     } else {
-      layout.value = 'total, sizes, prev, pager, next, jumper';
+      layout.value = 'sizes, prev, pager, next, jumper';
     }
     modelData.value = res.data;
   });
@@ -479,13 +480,13 @@ async function getModelTag() {
   });
 }
 
-const layout = ref('total, sizes, prev, pager, next, jumper');
+const layout = ref('sizes, prev, pager, next, jumper');
 
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
-    layout.value = 'total, sizes, prev, pager, next';
+    layout.value = 'sizes, prev, pager, next';
   } else {
-    layout.value = 'total, sizes, prev, pager, next, jumper';
+    layout.value = 'sizes, prev, pager, next, jumper';
   }
 
   queryData.count_per_page = val;
@@ -767,15 +768,22 @@ onUnmounted(() => {
                 @click="goDetail(item.owner, item.name)"
               ></app-card>
               <div v-if="modelCount > 10" class="pagination">
-                <el-pagination
-                  :page-sizes="[10, 20, 50]"
-                  :current-page="queryData.page_num"
-                  :page-size="queryData.count_per_page"
-                  :total="modelCount"
-                  :layout="layout"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                ></el-pagination>
+                <div class="total">
+                  <span> 共 </span>
+                  <span>{{ modelCount }}</span>
+                  <span> 条数据 </span>
+                </div>
+                <el-config-provider :locale="zhCn">
+                  <el-pagination
+                    :page-sizes="[10, 20, 50]"
+                    :current-page="queryData.page_num"
+                    :page-size="queryData.count_per_page"
+                    :total="modelCount"
+                    :layout="layout"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                  ></el-pagination>
+                </el-config-provider>
               </div>
             </div>
             <o-empty v-else :img="emptyImg" describe="无匹配模型"></o-empty>
@@ -1053,6 +1061,14 @@ $theme: #0d8dff;
           bottom: -72px;
           left: 50%;
           transform: translateX(-50%);
+          .total {
+            line-height: 36px;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.8);
+            margin-right: 8px;
+            white-space: nowrap;
+          }
         }
       }
     }

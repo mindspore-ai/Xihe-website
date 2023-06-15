@@ -25,7 +25,7 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 const i18n = {
   new_model_name: {
     title: '新模型标题',
-    placeholder: '请输入新项模型标题',
+    placeholder: '请输入新项模型中文名',
   },
   visible: {
     title: '仓库属性',
@@ -60,7 +60,7 @@ const i18n = {
     title: '重命名和转移',
     newOwn: '新拥有者',
     newName: '新仓库名',
-    placeholder: '请输入仓库名',
+    placeholder: '请输入新仓库名',
     describe: '你可重命名模型仓库，并转移你的模型仓库至组织。',
     btnText: '确定',
   },

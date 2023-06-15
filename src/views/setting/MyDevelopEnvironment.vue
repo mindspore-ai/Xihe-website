@@ -342,7 +342,7 @@ function openJupyter() {
       border: 1px solid #d8d8d8;
       cursor: pointer;
       border-radius: 16px;
-      border: 2px solid transparent;
+      border: 2px solid #d8d8d8;
       .card-inner {
         width: 100%;
         height: 100%;

@@ -1,5 +1,5 @@
 <script setup>
-import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-intro.png';
+// import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-intro.png';
 </script>
 <template>
   <div class="project-explain">
@@ -8,7 +8,7 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
       <div class="title">案例背景</div>
       <div class="description">
         <div>
-          新能源的可变性、间歇性、随机性、出力&用电高峰不匹配特点给电力供应安全性和可靠性带来极大的挑战。新能源电力供给地域性差异放大，导致跨区跨省的电力调度需求增加。传统的专家调度系统无法有效应对大规模新能源并网条件下的复杂实时调度挑战和各种突发事件。
+          合同作为所有经济活动的起点，是企业遵循市场经济规律的重要体现。合同签订流程涉及到大量的审核工作，需要丰富的法律经验。为了实现对合同全生命周期的管控，利用自然语言处理技术（NLP）进行合同文本分析，通过建立判示模型，对合同文件中的问题进行自动判别，能更加精准地把握合同签订全流程中存在的风险，有助于建立健全风险信息预警机制，提高企业合同风险管理工作水平和效率。
         </div>
       </div>
     </div>
@@ -16,21 +16,21 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
       <div class="title">案例简介</div>
       <div class="description">
         <div>
-          华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
+          目前大部分电力公司的合同风险审查工作主要依靠人工完成，审核过程可能存在缺乏客观性，同时，审核工作具有大量重复性、体力性的日常工作。此外，合同流程涉及业务部分的交叉较多，但是前期却难以直接深入了解，导致前期风险排查不及时，后期容易产生纠纷或不利后果。
         </div>
         <div>
-          该系统基于大量离线仿真数据构建AI决策模型，针对电网当前动态出力和负载状况，实时做出更加经济和安全的调度决策和编排计划。从当前的日前计划调度转变为分钟级甚至秒级的实时调度。可以更好地预测和评估在复杂出力和负载扰动下电网的运行状态，提升电网安全预警能力。
+          华为公司设计开发了基于NLP技术的合同风险评估与管理系统，利用大数据技术、NLP自然语言理解、智能规则引擎技术，实现合同签约风险诊断风险预警，将合同风险管理从业务员单一经验判断转变到与知识库融合解决的形式，把业务人员从重复性的业务工作中解放出来，投入到风险数据库建设中，杜绝已出现的合同风险重复性出现的顽疾，真正实现合同风险从事后处理向事前防范和事中控制转变。
         </div>
-        <div class="case-img">
+        <!-- <div class="case-img">
           <img :src="introImg" alt="" />
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="case-advantage">
       <div class="title">案例优势</div>
       <div class="description">
         <p>
-          目前该系统能够辅助调度员决策，降低人工调度压力，减少人为失误，提高电网对异常情况和事故的响应速度和处理效率，同时大幅提升调度安全性和经济型，降低碳排放。在南京人工智能计算中心已完成试验性部署。
+          基于NLP技术的合同评估管理系统有效支持电力公司合同风险管控工作的开展，提高合同风险管控工作效率，降低相关风险造成纠纷的概率及损失，合同风险诊断系统也必将为大渡河公司带来更大的价值。
         </p>
       </div>
     </div>
@@ -118,6 +118,5 @@ import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-
       margin-bottom: 0px;
     }
   }
-}
 }
 </style>

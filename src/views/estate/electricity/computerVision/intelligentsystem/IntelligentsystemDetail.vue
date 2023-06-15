@@ -10,12 +10,8 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 const screenWidth = useWindowResize();
 const router = useRouter();
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
 function goDetail() {
-  router.push('/projects/yyj/intelligent-system');
+  router.push('/projects/MindSpore/yolov7-tch-projects');
 }
 function goBack() {
   router.push('/electricity');

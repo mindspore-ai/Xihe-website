@@ -74,6 +74,11 @@ export default defineConfig({
         target: 'https://xiheapi.test.osinfra.cn/',
         changeOrigin: true,
       },
+      '/statistics/': {
+        target: 'https://xihe-statistics.test.osinfra.cn/',
+        rewrite: (path) => path.replace(/^\/statistics/, ''),
+        changeOrigin: true,
+      },
     },
   },
 });

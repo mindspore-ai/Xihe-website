@@ -446,6 +446,23 @@ export function getPic() {
 }
 
 /**
+ * 悟空页面访问查询
+ * @returns
+ */
+export function getStatistics(params) {
+  const url = '/statistics/api/v1/media';
+  return request
+    .post(url, params, {
+      $doException: true,
+      $noLoading: true,
+      ...getHeaderConfig(),
+    })
+    .then((res) => {
+      return res.data;
+    });
+}
+
+/**
  * AI检测器推理
  * @returns
  */

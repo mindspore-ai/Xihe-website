@@ -38,12 +38,12 @@ const i18n = {
 </script>
 <template>
   <div class="project-card">
-    <!-- <div
+    <div
       v-if="cardData.level === 'official' || cardData.level === 'good'"
       :class="cardData.level === 'good' ? 'mark-tag' : 'mark-tag1'"
     >
       {{ cardData.level === 'official' ? '官方' : '精选' }}
-    </div> -->
+    </div>
 
     <div class="card-top">
       <div class="img-box">

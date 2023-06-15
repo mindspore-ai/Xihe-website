@@ -1,5 +1,7 @@
 import { LOGIN_STATUS } from '@/shared/login';
 import { useLoginStore } from '@/stores';
+import { getStatistics } from '@/api/api-modelzoo.js';
+
 export default [
   // 大模型体验
   {
@@ -229,6 +231,20 @@ export default [
     name: 'wukongExperience',
     component: () => {
       return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
+    },
+    beforeEnter: async (to, from, next) => {
+      if (to.query.search) {
+        getStatistics({ name: to.query.search })
+          .then((res) => {
+            return res;
+          })
+          .catch((e) => {
+            return e;
+          });
+        to.fullPath = '/modelzoo/wukong';
+        to.query = {};
+      }
+      next();
     },
   },
 

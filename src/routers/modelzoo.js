@@ -233,20 +233,18 @@ export default [
       return import('@/views/modelzoo/wukong/TheWukongExperience.vue');
     },
     beforeEnter: async (to, from, next) => {
-      let index = to.href.indexOf('=');
-      if (index === -1) {
-        next();
-      } else {
-        let query = to.href.substring(index + 1);
-        getStatistics({ name: query })
+      if (to.query.search) {
+        getStatistics({ name: to.query.search })
           .then((res) => {
             return res;
           })
           .catch((e) => {
             return e;
           });
-        next(to.path);
+        to.fullPath = '/modelzoo/wukong';
+        to.query = {};
       }
+      next();
     },
   },
 

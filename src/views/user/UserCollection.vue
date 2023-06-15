@@ -111,7 +111,7 @@ function toTop() {
           </div>
           <projectcard
             v-if="item.resource.type.includes('project')"
-            :card-data="item"
+            :card-data="item.resource"
             class="collection-list-item-content"
             @click="goDetail(item)"
           ></projectcard>

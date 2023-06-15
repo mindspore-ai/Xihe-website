@@ -116,7 +116,7 @@ const otherCondition = ref([]); //训练平台、协议、项目类型标签
 const moreSortTags = ref([]);
 const keyWord = ref('');
 const activeNavItem = ref('all');
-const selectValue = ref('');
+const selectValue = ref('最多下载');
 const renderList = ref([]); //含渲染的一级标签
 const menuList = ref([]); //左侧标签
 const headTags = ref([]);
@@ -128,7 +128,7 @@ const queryData = reactive({
   level: null,
   count_per_page: 12, //每页数量
   page_num: 1, //分页
-  sort_by: null, //排序规则
+  sort_by: 'download_count', //排序规则
 });
 
 const debounceSearch = debounce(getProject, 500, {
@@ -475,6 +475,7 @@ function deleteModelTags() {
     renderList.value[menuitem].items.forEach((it) => {
       it.items.forEach((item) => {
         item.isActive = false;
+        item.isSelected = false;
       });
     });
   });
@@ -724,34 +725,38 @@ function getSortData(item) {
               class="pro-card"
               @click="goDetail(item.owner, item.name)"
             >
-              <div class="card-top">
-                <div
-                  v-if="item.level === 'official' || item.level === 'good'"
-                  :class="item.level === 'good' ? 'mark-tag' : 'mark-tag1'"
-                >
-                  {{ item.level === 'official' ? '官方' : '精选' }}
+              <div>
+                <div class="card-top">
+                  <div class="img-wrap">
+                    <div
+                      v-if="item.level === 'official' || item.level === 'good'"
+                      :class="item.level === 'good' ? 'mark-tag' : 'mark-tag1'"
+                    >
+                      {{ item.level === 'official' ? '官方' : '精选' }}
+                    </div>
+                    <img
+                      class="cover"
+                      :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${item.cover_id}.png`"
+                      alt=""
+                    />
+                  </div>
                 </div>
+                <div class="card-desc">
+                  <p class="title">{{ item.title ? item.title : item.name }}</p>
 
-                <img
-                  :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
-                  alt=""
-                />
-              </div>
-              <div class="card-desc">
-                <p class="title">{{ item.title ? item.title : item.name }}</p>
-
-                <div class="description">
-                  {{ item.desc }}
-                </div>
-                <div class="tag-list">
-                  <span
-                    v-for="(val, index) in item.tags"
-                    :key="index"
-                    :style="{ display: index < 4 ? 'inline-block' : 'none' }"
-                    class="tag"
-                  >
-                    {{ val === 'electricity' ? '电力' : val }}
-                  </span>
+                  <div class="description">
+                    {{ item.desc }}
+                  </div>
+                  <div class="tag-list">
+                    <span
+                      v-for="(val, index) in item.tags"
+                      :key="index"
+                      :style="{ display: index < 4 ? 'inline-block' : 'none' }"
+                      class="tag"
+                    >
+                      {{ val === 'electricity' ? '电力' : val }}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div class="card-bottom">
@@ -1302,7 +1307,7 @@ $theme: #0d8dff;
       }
       .card-list {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 456px);
         column-gap: 24px;
         row-gap: 24px;
         margin-top: 24px;
@@ -1339,6 +1344,7 @@ $theme: #0d8dff;
           }
         }
         .pagination {
+          min-width: 800px;
           display: flex;
           justify-content: center;
           position: absolute;
@@ -1356,6 +1362,15 @@ $theme: #0d8dff;
         .pro-card {
           cursor: pointer;
           border-radius: 16px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          &:hover {
+            .cover {
+              transform: scale(1.05);
+              transition: all 0.2s linear;
+            }
+          }
           .o-icon {
             margin-right: 2px;
           }
@@ -1364,11 +1379,18 @@ $theme: #0d8dff;
             position: relative;
             color: #fff;
             padding: 8px 8px 0px;
-            img {
+            .img-wrap {
+              width: 100%;
+              height: 100%;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            .cover {
               width: 100%;
               height: 100%;
               object-fit: cover;
               border-radius: 8px;
+              transition: all 0.2s linear;
             }
           }
           .card-desc {

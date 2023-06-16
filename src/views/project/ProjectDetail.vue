@@ -65,9 +65,7 @@ let dialogList = {
 
   menuList: [
     { tab: '应用分类', key: '0' },
-    // { tab: '项目类型', key: 'infer_sdk' },
     { tab: '训练平台', key: '1' },
-    // { tab: '协议', key: 'licenses' },
     { tab: '其他', key: '2' },
   ],
 };
@@ -368,7 +366,6 @@ function deleteClick(tag) {
 
   let menu = dialogList.menuList.map((item) => item.key);
   menu.forEach((key) => {
-    // if (key === '0') {
     renderList.value[key].items.forEach((item) => {
       item.items.forEach((it) => {
         if (it.name === tag.name) {
@@ -446,7 +443,6 @@ function getAllTags() {
     });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      // if (key === '0') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
           return {
@@ -470,7 +466,6 @@ function getAllTags() {
     });
   });
 }
-// getAllTags();
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;

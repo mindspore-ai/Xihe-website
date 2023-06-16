@@ -216,7 +216,7 @@ export default [
   //   ],
   // },
 
-  //新视觉改版后-悟空路由
+  // 新视觉改版后-悟空路由
   {
     path: '/modelzoo/wukong/introduce',
     name: 'wukongIntroduce',

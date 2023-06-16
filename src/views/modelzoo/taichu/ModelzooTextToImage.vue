@@ -164,7 +164,6 @@ function startRatiocnate1(num) {
         })
           .then((res) => {
             inferUrlList.value = [];
-            // inferenceText.value = '';
             if (res.data) {
               inferUrlList.value.push(res.data.picture + '?' + new Date());
             } else {

@@ -7,7 +7,7 @@ import { getCourseData, getViewCounts } from '@/api/api-course';
 
 const route = useRoute();
 const router = useRouter();
-const currentCourseData = ref(null); //当前课程信息
+const currentCourseData = ref(null); // 当前课程信息
 const sectionData = ref([]);
 const videoRef = ref(null);
 const isFirst = ref(true);

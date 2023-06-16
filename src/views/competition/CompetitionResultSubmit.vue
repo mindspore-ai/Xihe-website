@@ -55,12 +55,7 @@ const beforeUpload = (rawFile) => {
 };
 
 const Progress = ref(0);
-// 进度条
-// function callback(transferredAmount, totalAmount) {
-//   Progress.value = parseFloat(
-//     ((transferredAmount * 100.0) / totalAmount).toFixed(2)
-//   );
-// }
+
 async function upLoad(param) {
   togglePhoneDlg(false);
   submit(detailData1.id, param)
@@ -140,7 +135,6 @@ function goProjectClick() {
     (detailData1.is_competitor && detailData1.team_id === '') ||
     detailData1.team_role === 'leader'
   ) {
-    // router.push(`/projects/${val.owner}/${val.name}`);
     router.push(
       `/projects/${detailData.value.project.split('/')[0]}/${
         detailData.value.project.split('/')[1]
@@ -153,7 +147,7 @@ function goProjectClick() {
     });
   }
 }
-// togglePhoneDlg(true)
+
 function handelSubmit() {
   if (
     tableData.value &&

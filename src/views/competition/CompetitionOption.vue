@@ -56,7 +56,7 @@ const navItems = reactive([
     href: comInfo.forum,
     windowOpen: true,
     isIndividual: true,
-    showDiscuss: comInfo.forum ? true : false, //无forum时不显示讨论tab
+    showDiscuss: comInfo.forum ? true : false, // 无forum时不显示讨论tab
     competitionType: 'challenge',
   },
   {

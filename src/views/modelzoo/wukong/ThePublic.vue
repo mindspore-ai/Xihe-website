@@ -95,7 +95,6 @@ async function confirmQuitPublic() {
       });
     }
     publicList.value.splice(deleteIndex.value, 1);
-    // getPublicPictures();
   } catch (err) {
     console.error(err);
   }

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import IconArrow from '~icons/app/arrow-blue';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -9,10 +9,8 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const route = useRoute();
-// const router = useRouter();
 
 function goToExperience() {
-  // router.push('/modelzoo/luojia');
   window.open('/modelzoo/luojia');
 }
 

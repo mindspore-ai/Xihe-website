@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from 'vue';
-// import { useRouter } from 'vue-router';
 
 import IconCV from '~icons/app/CV';
 import IconNLP from '~icons/app/NLP';
@@ -58,8 +57,8 @@ import logo32 from '@/assets/imgs/estate/logo/logo32.png';
 
 const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉CV');
-const modelData = ref([]); //应用模型
-const datasetData = ref([]); //应用数据集
+const modelData = ref([]); // 应用模型
+const datasetData = ref([]); // 应用数据集
 const tagKinds = ref('CV');
 const screenWidth = useWindowResize();
 
@@ -69,7 +68,6 @@ const electricityClassify = [
     name: '计算机视觉CV',
     mobileName: 'CV',
     path: '/estate/electricity',
-    // path: '/estate/industrial-zone',
     currentComponent: computerVision,
     icon: IconCV,
   },
@@ -174,7 +172,6 @@ watch(tagKinds, (newValue) => {
 <template>
   <div v-if="modelData.length" class="electricity">
     <div class="electricity-head">
-      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
         <div class="banner-title">电力人工智能专区</div>
         <div class="banner-desc">

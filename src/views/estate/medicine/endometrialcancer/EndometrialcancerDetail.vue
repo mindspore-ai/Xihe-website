@@ -28,10 +28,6 @@ watch(
   { immediate: true }
 );
 
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
 function goBack() {
   router.push('/medicine');
 }

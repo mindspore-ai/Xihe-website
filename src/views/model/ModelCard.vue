@@ -30,10 +30,10 @@ const result = ref();
 const isShow = ref(false);
 const addSearch = ref('');
 
+const emit = defineEmits(['on-click']);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-const emit = defineEmits(['on-click']);
 
 const pushParams = {
   user: routerParams.user,

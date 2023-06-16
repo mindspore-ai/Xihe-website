@@ -138,13 +138,7 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-/* function handlePreEnlage() {
-  if (largeIndex.value > 0) {
-    largeImg.value = {};
-    largeIndex.value--;
-    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
-  }
-} */
+
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};
@@ -225,9 +219,6 @@ if (isLogined.value) {
               inferList.value[index].id = item.like_id;
               inferList.value[index].publicId = item.public_id;
             });
-            // res.data.pictures.forEach((item, index) => {
-            //   addWatermark(item, index);
-            // });
 
             const index1 = styleBackground.value[0].link.indexOf('=');
             const index2 = styleBackground.value[0].link.indexOf(
@@ -529,7 +520,6 @@ function choseStyleSort(val, item) {
       randomList.value[Math.floor(Math.random() * randomList.value.length)];
     newStyleData.value[0].tag1 = '随机风格';
     newStyleData.value[0].img1 = style;
-    // newStyleData.value[0].isSelected = true;
   }
 }
 
@@ -610,8 +600,7 @@ async function handleInfer() {
           img_quantity: imgQuantity.value,
         });
         isInferred.value = true;
-        // isWaiting.value = false;
-        // styleBackground.value = res.data.data.pictures;
+
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
@@ -680,7 +669,7 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
-        // isWaiting.value = false;
+
         isInferred.value = true;
         isError.value = true;
       }
@@ -754,24 +743,7 @@ function requestImg(item) {
 }
 // 临时url小于1min重新获取下载
 function downloadImage(item) {
-  // const index1 = item.indexOf('=');
-  // const index2 = item.indexOf('=', index1 + 1);
-
-  // const i1 = item.indexOf('&');
-  // const i2 = item.indexOf('&', i1 + 1);
-
-  // const deadTime = item.substring(index2 + 1, i2);
-  // const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-  // if ((deadTime - currentTime) / 60 < 60) {
-  //   temporaryLink({ link: item }).then((res) => {
-  //     if (res.data.data) {
-  //       requestImg(res.data.data.link);
-  //     }
-  //   });
-  // } else {
   requestImg(item);
-  // }
 }
 // 推理dlg关闭-触发
 function handleDlgClose() {

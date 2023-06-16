@@ -100,7 +100,7 @@ const rules = reactive({
   ],
 });
 
-//训练日志
+// 训练日志
 const form = reactive({
   name: '',
   desc: '',
@@ -429,14 +429,13 @@ function goToPage() {
 
 const downloadBlob = (blob, fileName) => {
   try {
-    const href = window.URL.createObjectURL(blob); //创建下载的链接
+    const href = window.URL.createObjectURL(blob); // 创建下载的链接
     if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
       // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
-      // downloadElement.target = '_blank';
       downloadElement.download = fileName;
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载

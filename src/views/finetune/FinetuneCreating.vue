@@ -13,8 +13,8 @@ import { createFinetune } from '@/api/api-finetune';
 const router = useRouter();
 
 const queryRef = ref(null);
-const dataset = ref(''); //输入数据集输入框
-const model = ref(''); //预训练模型输入框
+const dataset = ref(''); // 输入数据集输入框
+const model = ref(''); // 预训练模型输入框
 const jobType = ref('微调');
 const params1 = ref(false);
 const params2 = ref(false);
@@ -25,9 +25,9 @@ const endChecked = ref(true);
 const taskType = ref(null);
 
 const form = reactive({
-  name: '', //任务名称
-  taskType: '', //任务类型
-  jobType: '', //作业类型
+  name: '', // 任务名称
+  taskType: '', // 任务类型
+  jobType: '', // 作业类型
   epochs: '10',
   start_learning_rate: '1e-05',
   end_learning_rate: '1e-07',

@@ -224,15 +224,6 @@ const loginedDropdownItems = reactive([
       router.push('/new/datasets');
     },
   },
-  // {
-  //   id: 'settings',
-  //   label: computed(() => {
-  //     return locale.value === 'zh' ? '设置' : 'Settings';
-  //   }),
-  //   action: () => {
-  //     router.push('/settings');
-  //   },
-  // },
   {
     id: 'logout',
     label: computed(() => {
@@ -268,15 +259,6 @@ function handleLogoClick() {
   activeNavItem.value = '';
   return router.push('/');
 }
-
-// 点击导航
-/* function handleNavClick(item) {
-  if (item.windowOpen) {
-    window.open('https://xihe-docs.mindspore.cn');
-  } else {
-    router.push({ path: item.href });
-  }
-} */
 
 // 点击导航
 function handleSelect(path) {
@@ -567,15 +549,8 @@ function handleBlur() {
   }
 }
 
-// // 选择语言;
-// const options = ref([
-//   { value: 'zh', label: '中文' },
-//   { value: 'en', label: 'En' },
-// ]);
 // 选择语言
 const handleCommand = (command) => {
-  // locale.value = command.value;
-
   const { pathname } = window.location;
 
   if (command === '中文') {

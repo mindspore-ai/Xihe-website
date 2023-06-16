@@ -3,16 +3,12 @@ import { computed, ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
-// import ONav from '@/components/ONav.vue';
 
-// import IconMenu from '~icons/app/menu';
-// import IconPlus from '~icons/app/plus';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 import IconEmail from '~icons/app/email';
 import IconHome from '~icons/app/home1';
 import IconCourse from '~icons/app/my-course';
-// import { Search } from '@element-plus/icons-vue';
 
 import { useUserInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -20,9 +16,7 @@ import { getFollowing, cancelFollowing } from '@/api/api-user';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
-// import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
-// import IconInvitation from '~icons/app/invitation';
 import IconCloud from '~icons/app/cloud';
 const userInfoStore = useUserInfoStore();
 const settingItems = [
@@ -122,20 +116,6 @@ watch(
   },
   { immediate: true }
 );
-// 解决头部搜索二次进入个人主页页面不刷新
-// watch(
-//   () => {
-//     return route.path;
-//   },
-//   (newVal, oldVal) => {
-//     if (
-//       route.name === 'userLives' &&
-//       oldVal === '/' + userInfo.value.userName
-//     ) {
-//       router.go();
-//     }
-//   }
-// );
 
 function goSetting(item) {
   if (item.id === userInfoStore.userName)

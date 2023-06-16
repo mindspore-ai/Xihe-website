@@ -85,7 +85,7 @@ async function upLoadObs(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       let path = query.fileName.trim();
-      //非根目录下
+      // 非根目录下
       if (routerParams.contents.length) {
         path = `${routerParams.contents.join('/')}/${path}`;
       }

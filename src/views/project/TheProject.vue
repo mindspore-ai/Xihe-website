@@ -111,24 +111,24 @@ let i18n = {
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
-const renderSorts = ref([]); //应用分类标签
-const otherCondition = ref([]); //训练平台、协议、项目类型标签
+const renderSorts = ref([]); // 应用分类标签
+const otherCondition = ref([]); // 训练平台、协议、项目类型标签
 const moreSortTags = ref([]);
 const keyWord = ref('');
 const activeNavItem = ref('all');
-const selectValue = ref('最多下载');
-const renderList = ref([]); //含渲染的一级标签
-const menuList = ref([]); //左侧标签
+const selectValue = ref('');
+const renderList = ref([]); // 含渲染的一级标签
+const menuList = ref([]); // 左侧标签
 const headTags = ref([]);
 
 const queryData = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
   level: null,
-  count_per_page: 12, //每页数量
-  page_num: 1, //分页
-  sort_by: 'download_count', //排序规则
+  count_per_page: 12, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
 
 const debounceSearch = debounce(getProject, 500, {
@@ -140,7 +140,6 @@ const navItems = [
   {
     id: 'all',
     label: '全部项目',
-    // href: '/modelzoo/pangu/introduce',
   },
   {
     id: 'official',
@@ -291,14 +290,14 @@ function getModelTag() {
       });
     });
 
-    renderCondition.value = i18n.screenCondition.splice(1, 4); //训练平台、协议、项目类型的一级标签
+    renderCondition.value = i18n.screenCondition.splice(1, 4); // 训练平台、协议、项目类型的一级标签
     let ind;
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
     });
-    renderSorts.value = i18n.screenCondition.splice(ind, 1); //应用分类的一级标签
+    renderSorts.value = i18n.screenCondition.splice(ind, 1); // 应用分类的一级标签
     otherCondition.value = i18n.screenCondition;
-    moreSortTags.value = renderSorts.value[0].condition; //应用分类的二级标签
+    moreSortTags.value = renderSorts.value[0].condition; // 应用分类的二级标签
     otherCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
@@ -348,7 +347,7 @@ function getKeyWord() {
   queryData.page_num = 1;
   queryData.name = keyWord.value;
 }
-//打开jupyter useLoginStore
+// 打开jupyter useLoginStore
 function openJupyter() {
   if (loginStore.isLogined) {
     router.push('/settings/clouddev', '_blank');

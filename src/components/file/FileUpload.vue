@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OIcon from '@/components/OIcon.vue';
@@ -47,7 +47,7 @@ const Progress = ref(0);
 // gitlab 上传
 async function upLoad(param) {
   let path = `${param.file.name}`;
-  //非根目录下
+  // 非根目录下
   if (routerParams.contents.length) {
     path = `${routerParams.contents.join('/')}/${param.file.name}`;
   }
@@ -108,11 +108,6 @@ function handleClick(index) {
     },
   });
 }
-onMounted(() => {
-  // document.querySelector(
-  //   '.upload-body .el-upload__input'
-  // ).webkitdirectory = true;
-});
 </script>
 <template>
   <div class="upload">

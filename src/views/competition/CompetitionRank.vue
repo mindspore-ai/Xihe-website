@@ -10,10 +10,10 @@ import { getRank } from '@/api/api-competition';
 
 import { useCompetitionData } from '@/stores';
 
-const comInfo = useCompetitionData().competitionData; //比赛详情
+const comInfo = useCompetitionData().competitionData; // 比赛详情
 
-const preliminaryData = ref([]); //初赛排行榜数据
-const finalData = ref([]); //决赛排行榜数据
+const preliminaryData = ref([]); // 初赛排行榜数据
+const finalData = ref([]); // 决赛排行榜数据
 getRank({ id: comInfo.id }).then((res) => {
   if (res.status === 200) {
     if (res.data.data) {
@@ -24,12 +24,9 @@ getRank({ id: comInfo.id }).then((res) => {
   }
 });
 
-// const tabs = ref();
 function changeTab(index) {
   if (index === '1') {
     let params = { id: comInfo.id, phase: 'final' };
-    // tabs.value[0].classList.remove('tabs-left');
-    // tabs.value[1].classList.add('tabs-right');
     getRank(params).then((res) => {
       if (res.status === 200) {
         if (res.data.data) {
@@ -40,18 +37,7 @@ function changeTab(index) {
       }
     });
   }
-  // else if (index === '0') {
-  //   tabs.value[1].classList.remove('tabs-right');
-  //   tabs.value[0].classList.add('tabs-left');
-  // }
 }
-// nextTick(() => {
-//   tabs.value = document.querySelectorAll('.tabs-item');
-//   if (tabs.value.length) {
-//     tabs.value[1].classList.remove('tabs-right');
-//     tabs.value[0].classList.add('tabs-left');
-//   }
-// });
 </script>
 <template>
   <div v-if="comInfo.type === 'challenge'">

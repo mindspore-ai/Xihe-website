@@ -19,7 +19,6 @@ function getHeaderConfig() {
  */
 export function uploadModelzooPic(params) {
   const url = `/server/bigmodel/describe_picture`;
-  // getHeaderConfig().headers['Content-Type:multipart/form-data'];
 
   return request
     .post(url, params, {

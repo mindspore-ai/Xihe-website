@@ -27,8 +27,8 @@ function getHeaderConfig() {
 const isLogined = computed(() => useLoginStore().isLogined);
 
 const buttonText = ref('启动');
-const isDisabled = ref(false); //按钮是否禁用
-const isfinshed = ref(false); //是否推理结束
+const isDisabled = ref(false); // 按钮是否禁用
+const isfinshed = ref(false); // 是否推理结束
 const deadTime = ref('');
 const jupyterUrl = ref('');
 let socket;
@@ -62,7 +62,6 @@ async function getPodInfo(id) {
     const res = await cloudDisposeTarget(id);
     if (res.data.status === '') {
       // 表示用户没有启动实例  按钮为启动
-      // buttonText.value = '启动';
       return;
     } else if (
       res.data.status === 'starting' ||
@@ -97,7 +96,7 @@ async function getPodInfo(id) {
       isDisabled.value = false;
 
       deadTime.value = timestampToTime(res.data.expiry);
-      //判断当前时间戳是否大于获取的时间戳，大于即过期
+      // 判断当前时间戳是否大于获取的时间戳，大于即过期
       const currentTime = new Date().getTime();
       // 是否到期
       if (res.data.expiry * 1000 > currentTime) {

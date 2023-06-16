@@ -24,7 +24,7 @@ const fixed = ref(false);
 const showApplication = ref(false);
 const showCourse = ref('course');
 const showDetail = ref(false);
-const reginfo = ref({}); //报名信息
+const reginfo = ref({}); // 报名信息
 
 function getDetailData() {
   getCourseData(route.params.courseId).then((res) => {
@@ -50,7 +50,7 @@ function goApplication() {
       });
   }
 }
-//隐藏报名表单
+// 隐藏报名表单
 function hideForm(val, type) {
   showApplication.value = val;
   if (!type) {

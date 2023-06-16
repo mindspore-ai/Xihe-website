@@ -230,8 +230,16 @@ getHomeInfo()
       }
     });
   })
-  .catch((err) => {
-    console.error(err);
+  .catch(() => {
+    homeInfo.value = [
+      [{ count: 0 }, { count: 0 }, { count: 0 }],
+      [
+        { count: 0, id: 'ai_painter' },
+        { count: 0, id: '3' },
+        { count: 0, id: '2' },
+      ],
+      [{ count: 0 }, { count: 0 }, { count: 0 }],
+    ];
   });
 
 let io = new IntersectionObserver((entries) => {

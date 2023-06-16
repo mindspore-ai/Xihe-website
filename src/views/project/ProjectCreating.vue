@@ -39,11 +39,12 @@ const i18n = {
   infer_sdk: '项目类型',
   view: '仓库属性',
   submit: '提交',
-  public: '其他用户可浏览、下载你的项目，但仅有你及你的团队成员才可编辑此项目',
+  public:
+    '其他用户可浏览、使用和下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
   public_some:
-    '其他用户可浏览你的项目，但仅有你及你的团队可以下载项目和编辑项目卡片描述',
+    '其他用户可在线使用但不可下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
   private:
-    '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目',
+    '其他用户无法浏览、使用和下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
 };
 
 // 表单信息
@@ -62,6 +63,7 @@ const proList = reactive({
 
 const isTagShow = ref(false);
 const headTags = ref([]);
+const selectedTags = ref([]);
 let renderList = ref([]);
 const tabPosition = ref('left');
 
@@ -234,6 +236,16 @@ function addProjectTags() {
 // 确认
 function confirmBtn() {
   isTagShow.value = false;
+  headTags.value = [];
+  renderList.value.forEach((value1, index1) => {
+    renderList.value[index1].items.forEach((value2, index2) => {
+      renderList.value[index1].items[index2].items.forEach((value3) => {
+        if (value3.isActive) {
+          headTags.value.push(value3);
+        }
+      });
+    });
+  });
 }
 // 取消
 function cancelBtn() {
@@ -242,7 +254,7 @@ function cancelBtn() {
 // 选择要添加的标签
 function selectTags(it) {
   it.isActive = !it.isActive;
-  if (it.isActive) {
+  /* if (it.isActive) {
     headTags.value.push(it);
   } else {
     headTags.value.forEach((item, index) => {
@@ -250,12 +262,23 @@ function selectTags(it) {
         headTags.value.splice(index, 1);
       }
     });
+  } */
+  if (it.isActive) {
+    selectedTags.value.push(it);
+  } else {
+    selectedTags.value.forEach((item, index) => {
+      if (item.name === it.name) {
+        selectedTags.value.splice(index, 1);
+      }
+    });
   }
 }
 // 删除头部标签
 function deleteTag(val) {
-  let index = headTags.value.indexOf(val);
-  headTags.value.splice(index, 1);
+  // let index = headTags.value.indexOf(val);
+  // headTags.value.splice(index, 1);
+  let index = selectedTags.value.indexOf(val);
+  selectedTags.value.splice(index, 1);
 
   renderList.value.forEach((value1, index1) => {
     renderList.value[index1].items.forEach((value2, index2) => {
@@ -269,7 +292,9 @@ function deleteTag(val) {
 }
 // 删除所有标签
 function deleteAllTags() {
-  headTags.value = [];
+  // headTags.value = [];
+  selectedTags.value = [];
+
   renderList.value.forEach((value1, index1) => {
     renderList.value[index1].items.forEach((value2, index2) => {
       renderList.value[index1].items[index2].items.forEach((value3) => {
@@ -512,7 +537,7 @@ function deleteAllTags() {
 
               <div class="head-tags">
                 <div
-                  v-for="it in headTags"
+                  v-for="it in selectedTags"
                   :key="it"
                   class="dlg-condition-detail"
                 >

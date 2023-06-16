@@ -25,33 +25,31 @@ const organizationAdminList = userInfoStore.organizationAdminList;
 const i18n = {
   new_model_name: {
     title: '新模型标题',
-    placeholder: '请输入新项模型标题',
+    placeholder: '请输入新项模型中文名',
   },
   visible: {
     title: '仓库属性',
     description: '更改描述',
-    tip: '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目仓库',
     options: [
       {
-        value: 'Private',
-        label: '私有',
+        value: 'Public',
+        label: '全部公开',
         id: 1,
-        describe:
-          '其他用户将无法搜索、查看你的模型，仅你及你的团队成员可查看和编辑此模型仓库。',
+        describe: '其他用户可浏览、使用和下载此模型，仅限你可下载与更新此模型',
       },
       {
         value: 'Online',
         label: '部分公开',
         id: 2,
         describe:
-          '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型仓库。',
+          '其他用户可在线使用但不可下载此模型，仅限你可下载与更新此模型',
       },
       {
-        value: 'Public',
-        label: '全部公开',
+        value: 'Private',
+        label: '私有',
         id: 3,
         describe:
-          '其他用户可浏览、收藏、下载你的模型，但仅有你及你的团队成员才可编辑此模型仓库。',
+          '其他用户无法浏览、使用和下载此模型，仅限你可下载与更新此模型',
       },
     ],
     btnText: '确定',
@@ -60,7 +58,7 @@ const i18n = {
     title: '重命名和转移',
     newOwn: '新拥有者',
     newName: '新仓库名',
-    placeholder: '请输入仓库名',
+    placeholder: '请输入新仓库名',
     describe: '你可重命名模型仓库，并转移你的模型仓库至组织。',
     btnText: '确定',
   },
@@ -91,9 +89,9 @@ let query = reactive({
   name: detailData.name,
 });
 
-if (detailData.repo_type === 'private') visibleIndex.value = 0;
+if (detailData.repo_type === 'private') visibleIndex.value = 2;
 else if (detailData.repo_type === 'online') visibleIndex.value = 1;
-else visibleIndex.value = 2;
+else visibleIndex.value = 0;
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -245,8 +243,9 @@ function toggleDelDlg(flag) {
               @click="getIndex"
               @change="getVisiableSelect"
             ></o-select>
-
-            <div class="set-tip">{{ i18n.visible.tip }}</div>
+            <div class="set-tip">
+              {{ i18n.visible.options[visibleIndex].describe }}
+            </div>
           </div>
         </div>
         <!-- 更改描述 -->

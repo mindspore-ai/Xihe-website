@@ -31,25 +31,26 @@ const i18n = {
     description: '更改描述',
     options: [
       {
-        value: 'private',
-        label: '私有',
+        value: 'public',
+        label: '完全公开',
         id: 1,
         describe:
-          '其他用户将无法搜索、查看你的项目，仅你及你的团队成员可查看和编辑此项目',
+          '其他用户可浏览、使用和下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
       },
+
       {
         value: 'online',
         label: '部分公开',
         id: 2,
         describe:
-          '其他用户可浏览你的项目，但仅有你及你的团队可以下载项目和编辑项目卡片描述',
+          '其他用户可在线使用但不可下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
       },
       {
-        value: 'public',
-        label: '完全公开',
+        value: 'private',
+        label: '私有',
         id: 3,
         describe:
-          '其他用户可浏览、下载你的项目，但仅有你及你的团队成员才可编辑此项目',
+          '其他用户无法浏览、使用和下载此AI实验室项目，仅限你可下载与更新此AI实验室项目',
       },
     ],
     btnText: '确定',
@@ -110,9 +111,9 @@ let query = reactive({
   name: detailData.name,
 });
 
-if (detailData.repo_type === 'private') visibleIndex.value = 0;
+if (detailData.repo_type === 'private') visibleIndex.value = 2;
 else if (detailData.repo_type === 'online') visibleIndex.value = 1;
-else visibleIndex.value = 2;
+else visibleIndex.value = 0;
 
 function getIndex(value) {
   visibleIndex.value = value;
@@ -251,12 +252,15 @@ function toggleDelDlg(flag) {
               @click="getIndex"
               @change="getVisiableSelect"
             ></o-select>
-            <p v-if="visibleIndex === '0'" class="setting-tip">
+            <!-- <p v-if="visibleIndex === '0'" class="setting-tip">
               {{ i18n.visible.options[visibleIndex].describe }}
             </p>
             <p v-else class="setting-tip">
               {{ i18n.visible.options[visibleIndex].describe }}
-            </p>
+            </p> -->
+            <div class="setting-tip">
+              {{ i18n.visible.options[visibleIndex].describe }}
+            </div>
           </div>
         </div>
         <!-- 新增更改描述 -->

@@ -111,7 +111,7 @@ function toTop() {
           </div>
           <projectcard
             v-if="item.resource.type.includes('project')"
-            :card-data="item"
+            :card-data="item.resource"
             class="collection-list-item-content"
             @click="goDetail(item)"
           ></projectcard>
@@ -146,6 +146,11 @@ function toTop() {
 .collection-list-item {
   :deep(.project-card) {
     border-radius: 16px;
+    // &:hover {
+    //   :deep(.cover) {
+    //     transform: scale(1.05);
+    //   }
+    // }
     .card-top {
       img {
         border-top-right-radius: 16px;

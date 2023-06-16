@@ -324,7 +324,7 @@ function getReadMeFile() {
   try {
     getReadmeInfo(detailData.value.owner, detailData.value.name)
       .then((tree) => {
-        if (tree.data.has_readme) {
+        if (tree.data.has_file) {
           getGitlabFileRaw({
             type: 'project',
             user: routerParams.user,

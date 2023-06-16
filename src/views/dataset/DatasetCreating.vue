@@ -27,12 +27,9 @@ const i18n = {
   license: '协议',
   visualization: '仓库属性',
   preserve: '保存',
-  public:
-    '其他用户可浏览、下载你的数据集，但仅有你及你的团队成员才可编辑此数据集',
-  online:
-    '其他用户可浏览你的数据集，但仅有你及你的团队可以下载数据集和编辑数据集卡片描述',
-  private:
-    '其他用户将无法搜索、查看你的数据集，仅你及你的团队成员可查看和编辑此数据集',
+  public: '其他用户可浏览、使用和下载此数据集，仅限你可下载与更新此数据集。',
+  online: '其他用户可在线使用但不可下载此数据集，仅限你可下载与更新此数据集。',
+  private: '其他用户无法浏览、使用和下载此数据集，仅限你可下载与更新此数据集。',
   placeholder: {
     repo: '仓库真实存储名称，具有唯一性',
     name: '请填写数据集中文名称',
@@ -105,7 +102,7 @@ function checkName(rule, value, callback) {
 }
 const isTagShow = ref(false);
 const headTags = ref([]);
-
+const selectedTags = ref([]);
 let renderList = ref([]);
 const tabPosition = ref('left');
 
@@ -157,6 +154,16 @@ function addModelTags() {
 // 确认
 function confirmBtn() {
   isTagShow.value = false;
+  headTags.value = [];
+  renderList.value.forEach((value1, index1) => {
+    renderList.value[index1].items.forEach((value2, index2) => {
+      renderList.value[index1].items[index2].items.forEach((value3) => {
+        if (value3.isActive) {
+          headTags.value.push(value3);
+        }
+      });
+    });
+  });
 }
 // 取消
 function cancelBtn() {
@@ -166,19 +173,19 @@ function cancelBtn() {
 function selectTags(it) {
   it.isActive = !it.isActive;
   if (it.isActive) {
-    headTags.value.push(it);
+    selectedTags.value.push(it);
   } else {
-    headTags.value.forEach((item, index) => {
+    selectedTags.value.forEach((item, index) => {
       if (item.name === it.name) {
-        headTags.value.splice(index, 1);
+        selectedTags.value.splice(index, 1);
       }
     });
   }
 }
 // 删除头部标签
 function deleteTag(val) {
-  let index = headTags.value.indexOf(val);
-  headTags.value.splice(index, 1);
+  let index = selectedTags.value.indexOf(val);
+  selectedTags.value.splice(index, 1);
 
   renderList.value.forEach((value1, index1) => {
     renderList.value[index1].items.forEach((value2, index2) => {
@@ -192,7 +199,7 @@ function deleteTag(val) {
 }
 // 删除所有标签
 function deleteAllTags() {
-  headTags.value = [];
+  selectedTags.value = [];
   renderList.value.forEach((value1, index1) => {
     renderList.value[index1].items.forEach((value2, index2) => {
       renderList.value[index1].items[index2].items.forEach((value3) => {
@@ -419,7 +426,7 @@ function deleteAllTags() {
 
             <div class="head-tags">
               <div
-                v-for="it in headTags"
+                v-for="it in selectedTags"
                 :key="it"
                 class="dlg-condition-detail"
               >

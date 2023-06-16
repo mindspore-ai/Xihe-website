@@ -68,7 +68,6 @@ function goBack() {
                 :size="screenWidth < 820 ? 'mini' : 'small'"
                 disabled
                 type="primary"
-                animation
                 class="home-btn"
               >
                 运行模型

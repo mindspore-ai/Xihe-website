@@ -46,17 +46,22 @@ function goBack() {
               </div>
             </div>
             <div class="banner-btn">
-              <OButton
-                :size="screenWidth < 820 ? 'mini' : 'small'"
-                disabled
-                type="primary"
-                class="home-btn"
+              <a
+                href="https://xihe.mindspore.cn/projects/MindSpore/yolov7-tch-projects"
+                target="_blank"
               >
-                运行模型
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
+                <OButton
+                  :size="screenWidth < 820 ? 'mini' : 'small'"
+                  type="primary"
+                  animation
+                  class="home-btn"
+                >
+                  运行模型
+                  <template #suffix>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </template>
+                </OButton>
+              </a>
             </div>
           </div>
         </div>

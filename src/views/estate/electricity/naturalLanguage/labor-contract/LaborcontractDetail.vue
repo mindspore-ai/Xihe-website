@@ -14,9 +14,6 @@ const screenWidth = useWindowResize();
 function goBack() {
   router.push('/electricity');
 }
-function goDetail() {
-  router.push('/projects/MindSpore/ner_bert_base_chinese');
-}
 </script>
 
 <template>
@@ -45,22 +42,26 @@ function goDetail() {
             <div class="banner-content">
               <div class="banner-title">电力合同风险评估与管理</div>
               <div class="banner-desc">
-                识别电力合同的风险控制点，并对合同内容进行关键信息提取，实现对合同风险的快速识别和及时管控。同时，该工具还提供模板化风险维护建议和全盘风险展示功能，助力电力企业实现更高效、全面的合同风险管理。
+                平台利用风险判示模型识别电力合同的风险控制点，并对合同内容进行关键信息提取，实现对合同风险的快速识别和及时管控。同时，该工具还提供模板化风险维护建议和全盘风险展示功能，助力电力企业实现更高效、全面的合同风险管理。
               </div>
             </div>
             <div class="banner-btn">
-              <OButton
-                :size="screenWidth < 820 ? 'mini' : 'small'"
-                animation
-                type="primary"
-                class="home-btn"
-                @click="goDetail"
+              <a
+                href="https://xihe.mindspore.cn/projects/MindSpore/token_classification"
+                target="_blank"
               >
-                运行模型
-                <template #suffix>
-                  <OIcon><IconArrowRight /></OIcon>
-                </template>
-              </OButton>
+                <OButton
+                  :size="screenWidth < 820 ? 'mini' : 'small'"
+                  animation
+                  type="primary"
+                  class="home-btn"
+                >
+                  运行模型
+                  <template #suffix>
+                    <OIcon><IconArrowRight /></OIcon>
+                  </template>
+                </OButton>
+              </a>
             </div>
           </div>
         </div>

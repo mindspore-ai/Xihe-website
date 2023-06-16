@@ -12,7 +12,6 @@ import IconEditing from '~icons/app/editing';
 import IconDelete from '~icons/app/delete';
 import IconDownload from '~icons/app/download';
 import warningImg from '@/assets/icons/warning.png';
-import IconRight from '~icons/app/arrow-right2';
 
 import { changeByte } from '@/shared/utils';
 import { useLoadingState } from '@/stores/index';
@@ -187,6 +186,15 @@ async function copyText(textValue) {
     center: true,
   });
 }
+async function copyPath() {
+  let path = `${routerParams.name}/` + routerParams.contents.join('/');
+  await toClipboard(path);
+  ElMessage({
+    type: 'success',
+    message: '复制成功',
+    center: true,
+  });
+}
 function toggleDelDlg(flag) {
   if (flag === undefined) {
     showDel.value = !showDel.value;
@@ -226,7 +234,7 @@ watch(
       <div class="item-path" @click="handleClick(null)">
         {{ routerParams.name }}
       </div>
-      <o-icon><IconRight></IconRight></o-icon>
+      /&nbsp;
       <div
         v-for="(item, index) in routerParams.contents"
         :key="item"
@@ -234,10 +242,9 @@ watch(
         @click="handleClick(index + 1)"
       >
         {{ item
-        }}<o-icon v-if="index + 1 < routerParams.contents.length"
-          ><IconRight></IconRight
-        ></o-icon>
+        }}{{ index + 1 < routerParams.contents.length ? '/&nbsp;' : '' }}
       </div>
+      <o-icon @click="copyPath"><icon-copy></icon-copy></o-icon>
     </div>
     <div class="editing-card">
       <div class="file">

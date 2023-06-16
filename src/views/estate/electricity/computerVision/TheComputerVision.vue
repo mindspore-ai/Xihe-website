@@ -456,6 +456,7 @@ const beforeLeave = (activeTab) => {
           height: 230px;
           .case-info {
             bottom: 16px;
+            top: 146px;
             .case-type {
               font-size: 16px;
               line-height: 24px;

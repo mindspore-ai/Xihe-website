@@ -32,12 +32,16 @@ const TypeSet = async function (elements) {
   if (!window.MathJax) {
     return;
   }
-  window.MathJax.startup.promise = window.MathJax.startup.promise
-    .then(() => {
-      return window.MathJax.typesetPromise(elements);
-    })
-    .catch((err) => console.error('Typeset failed: ' + err.message));
-  return window.MathJax.startup.promise;
+  try {
+    window.MathJax.startup.promise = window.MathJax.startup.promise
+      .then(() => {
+        return window.MathJax.typesetPromise(elements);
+      })
+      .catch((err) => console.error('Typeset failed: ' + err.message));
+    return window.MathJax.startup.promise;
+  } catch (error) {
+    console.error('Typeset failed: ' + error.message);
+  }
 };
 let head = document.head;
 let script1 = document.createElement('script');

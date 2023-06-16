@@ -195,26 +195,38 @@ const homeInfo = ref([
   ],
   [{ count: 320 }, { count: 320 }, { count: 320 }],
 ]);
-getHomeInfo().then((res) => {
-  res.data.comp.forEach((item) => {
-    if (item.id === 'ai_painter') {
-      homeInfo.value[1][0].count = item.count;
-    } else if (item.id === '3') {
-      homeInfo.value[1][1].count = item.count;
-    } else if (item.id === '2') {
-      homeInfo.value[1][2].count = item.count;
-    }
+getHomeInfo()
+  .then((res) => {
+    res.data.comp.forEach((item) => {
+      if (item.id === 'ai_painter') {
+        homeInfo.value[1][0].count = item.count;
+      } else if (item.id === '3') {
+        homeInfo.value[1][1].count = item.count;
+      } else if (item.id === '2') {
+        homeInfo.value[1][2].count = item.count;
+      }
+    });
+    res.data.course.forEach((item) => {
+      if (item.id === 'c001') {
+        homeInfo.value[0][0].count = item.count;
+      } else if (item.id === 'c002') {
+        homeInfo.value[0][1].count = item.count;
+      } else if (item.id === 'c003') {
+        homeInfo.value[0][2].count = item.count;
+      }
+    });
+  })
+  .catch(() => {
+    homeInfo.value = [
+      [{ count: 0 }, { count: 0 }, { count: 0 }],
+      [
+        { count: 0, id: 'ai_painter' },
+        { count: 0, id: '3' },
+        { count: 0, id: '2' },
+      ],
+      [{ count: 0 }, { count: 0 }, { count: 0 }],
+    ];
   });
-  res.data.course.forEach((item) => {
-    if (item.id === 'c001') {
-      homeInfo.value[0][0].count = item.count;
-    } else if (item.id === 'c002') {
-      homeInfo.value[0][1].count = item.count;
-    } else if (item.id === 'c003') {
-      homeInfo.value[0][2].count = item.count;
-    }
-  });
-});
 
 let io = new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting) {

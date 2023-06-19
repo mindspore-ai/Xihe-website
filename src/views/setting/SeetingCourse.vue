@@ -28,7 +28,7 @@ const params = { mine: true };
 const personalData = usePersonalInfoStore();
 function getAllCourse() {
   allCourse.value = personalData.course;
-  currentCourse.value = allCourse.value.slice(0, coursePager.size);
+  currentCourse.value = allCourse.value?.slice(0, coursePager.size);
 }
 getAllCourse();
 
@@ -81,7 +81,7 @@ function goCourseDetail(id) {
 <template>
   <div
     v-if="
-      currentCourse.length ||
+      currentCourse?.length ||
       activeName !== 'allStatus' ||
       courseName !== 'allClassify'
     "

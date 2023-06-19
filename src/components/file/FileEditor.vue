@@ -10,6 +10,7 @@ import AppEditor from '@/components/AppEditor.vue';
 import IconPlus2 from '~icons/app/plus-square';
 import IconDescribe from '~icons/app/describe';
 import IconEdit from '~icons/app/edit-file';
+import { ElMessage } from 'element-plus';
 
 import {
   getGitlabTree,

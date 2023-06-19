@@ -35,6 +35,7 @@ import arrow from '@/assets/imgs/wukong/arrow.png';
 import useClipboard from 'vue-clipboard3';
 
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 

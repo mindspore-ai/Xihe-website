@@ -313,10 +313,12 @@ getMyCourseList({ mine: true })
           >
             <OIcon size="medium"><component :is="item.icon"></component></OIcon>
             <span v-if="item.label === '我的比赛'">
-              {{ item.label + `(${personalData.competition.length})` }}</span
+              {{
+                item.label + `(${personalData.competition?.length || 0})`
+              }}</span
             >
             <span v-else-if="item.label === '我的课程'">
-              {{ item.label + `(${personalData.course.length})` }}</span
+              {{ item.label + `(${personalData.course?.length || 0})` }}</span
             >
             <span v-else> {{ item.label }}</span>
           </li>

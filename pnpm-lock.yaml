@@ -9,7 +9,7 @@ specifiers:
   axios: ^1.3.4
   cesium: ^1.98.1
   crypto-js: ^4.1.1
-  element-plus: 2.2.34
+  element-plus: ^2.2.26
   eslint: ^8.13.0
   eslint-plugin-prettier: ^4.0.0
   eslint-plugin-vue: ^8.6.0
@@ -40,7 +40,7 @@ specifiers:
   vue-clipboard3: ^2.0.0
   vue-dompurify-html: ^4.0.0
   vue-i18n: ^9.2.2
-  vue-router: 4.0.14
+  vue-router: 4.1.6
 
 dependencies:
   '@element-plus/icons-vue': 2.0.10_vue@3.3.4
@@ -69,7 +69,7 @@ dependencies:
   vue-clipboard3: registry.npmmirror.com/vue-clipboard3/2.0.0
   vue-dompurify-html: registry.npmmirror.com/vue-dompurify-html/4.0.0_vue@3.3.4
   vue-i18n: 9.2.2_vue@3.3.4
-  vue-router: 4.0.14_vue@3.3.4
+  vue-router: 4.1.6_vue@3.3.4
 
 devDependencies:
   '@vitejs/plugin-vue': 2.3.1_vite@2.9.5+vue@3.3.4
@@ -2369,8 +2369,8 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /vue-router/4.0.14_vue@3.3.4:
-    resolution: {integrity: sha512-wAO6zF9zxA3u+7AkMPqw9LjoUCjSxfFvINQj3E/DceTt6uEz1XZLraDhdg2EYmvVwTBSGlLYsUw8bDmx0754Mw==}
+  /vue-router/4.1.6_vue@3.3.4:
+    resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:

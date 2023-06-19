@@ -32,7 +32,7 @@ let overPager = reactive({
 const personalData = usePersonalInfoStore();
 function getCompetitons() {
   allCompetition.value = personalData.competition.reverse();
-  perPageAllData.value = allCompetition.value.slice(0, allPager.size);
+  perPageAllData.value = allCompetition.value?.slice(0, allPager.size);
 }
 getCompetitons();
 // 获取用户进行中和已结束的比赛

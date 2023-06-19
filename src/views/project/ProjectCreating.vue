@@ -254,15 +254,7 @@ function cancelBtn() {
 // 选择要添加的标签
 function selectTags(it) {
   it.isActive = !it.isActive;
-  /* if (it.isActive) {
-    headTags.value.push(it);
-  } else {
-    headTags.value.forEach((item, index) => {
-      if (item.name === it.name) {
-        headTags.value.splice(index, 1);
-      }
-    });
-  } */
+
   if (it.isActive) {
     selectedTags.value.push(it);
   } else {
@@ -275,8 +267,6 @@ function selectTags(it) {
 }
 // 删除头部标签
 function deleteTag(val) {
-  // let index = headTags.value.indexOf(val);
-  // headTags.value.splice(index, 1);
   let index = selectedTags.value.indexOf(val);
   selectedTags.value.splice(index, 1);
 
@@ -292,7 +282,6 @@ function deleteTag(val) {
 }
 // 删除所有标签
 function deleteAllTags() {
-  // headTags.value = [];
   selectedTags.value = [];
 
   renderList.value.forEach((value1, index1) => {

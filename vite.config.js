@@ -66,12 +66,17 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/obs-big-model/, ''),
       },
       '/obs-xihe-avatar/': {
-        target: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
+        target: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/obs-xihe-avatar/, ''),
       },
       '/oneid': {
         target: 'https://xiheapi.test.osinfra.cn/',
+        changeOrigin: true,
+      },
+      '/statistics/': {
+        target: 'https://xihe-statistics.test.osinfra.cn/',
+        rewrite: (path) => path.replace(/^\/statistics/, ''),
         changeOrigin: true,
       },
     },

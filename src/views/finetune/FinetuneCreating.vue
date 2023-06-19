@@ -90,8 +90,8 @@ const checkEndRate = (rule, value, callback) => {
         value.indexOf('e') !== -1;
       // 如果start和end都是科学计数法
       if ((value.indexOf('E') !== -1 || value.indexOf('e') !== -1) && bool) {
-        let newStartRate = new Number(form.start_learning_rate);
-        let newEndRate = new Number(value);
+        let newStartRate = Number(form.start_learning_rate);
+        let newEndRate = Number(value);
         if (newEndRate <= newStartRate) {
           callback();
         } else {

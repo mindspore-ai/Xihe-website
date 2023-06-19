@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { getUserCompetition } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/competition-empty.png';
 import { useRouter } from 'vue-router';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, usePersonalInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
@@ -29,15 +29,10 @@ let overPager = reactive({
 });
 
 // 获取用户参加的所有比赛
+const personalData = usePersonalInfoStore();
 function getCompetitons() {
-  getUserCompetition({
-    mine: userInfoStore.userName,
-  }).then((res) => {
-    if (res.status === 200) {
-      allCompetition.value = res.data.data.reverse();
-      perPageAllData.value = allCompetition.value.slice(0, allPager.size);
-    }
-  });
+  allCompetition.value = personalData.competition.reverse();
+  perPageAllData.value = allCompetition.value.slice(0, allPager.size);
 }
 getCompetitons();
 // 获取用户进行中和已结束的比赛

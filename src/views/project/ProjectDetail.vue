@@ -1286,6 +1286,7 @@ $theme: #0d8dff;
           overflow: hidden;
           text-overflow: ellipsis;
           font-size: 14px;
+          color: #555;
         }
         .card-detail {
           display: flex;

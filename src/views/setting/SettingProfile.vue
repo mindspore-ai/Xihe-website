@@ -5,17 +5,14 @@ import { useUserInfoStore } from '@/stores';
 import { setUserData } from '@/api/api-user';
 
 import OButton from '@/components/OButton.vue';
-// import OInput from '@/components/OInput.vue';
-// import ODialog from '@/components/ODialog.vue';
 
-// import { getModelTags } from '@/api/api-shared';
-// import { useFilterData } from '@/stores';
 import avatarUrl from '../../../config/avatar-url';
+import { ElMessage } from 'element-plus';
 const filterData = ref();
 
 const userInfoStore = useUserInfoStore();
 const nickName = ref(userInfoStore.nickName); // 昵称
-const userDescription = ref(userInfoStore.description); //个人介绍
+const userDescription = ref(userInfoStore.description); // 个人介绍
 const avatar = ref(userInfoStore.avatar); // 头像
 const showAvatarList = ref(false);
 const checkedAvatar = ref(1);
@@ -35,11 +32,9 @@ function handleSizeChange(val) {
 }
 
 try {
-  // getModelTags().then((res) => {
   filterData.value = avatarUrl;
   avatarCount.value = filterData.value.user_avatar.length;
   getCheckedId(filterData.value.user_avatar);
-  // });
 } catch (error) {
   console.error(error);
 }
@@ -60,22 +55,12 @@ function toggleDelDlg(flag) {
   }
 }
 function saveData() {
-  // if (!nickName.value) {
-  //   ElMessage({
-  //     type: 'error',
-  //     message: '昵称不能为空',
-  //     center: true,
-  //   });
-  //   return;
-  // }
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    // nickname: nickName.value,
-    bio: userDescription.value || userInfoStore.description,
+    bio: userDescription.value,
     avatar_id: avatar.value,
   })
     .then(() => {
-      // if (res.status === 200) {
       userInfoStore.nickName = nickName.value;
       userInfoStore.description = userDescription.value;
       userInfoStore.avatar =

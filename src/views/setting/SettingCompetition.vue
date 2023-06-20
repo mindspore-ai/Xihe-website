@@ -3,17 +3,17 @@ import { ref, reactive } from 'vue';
 import { getUserCompetition } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/competition-empty.png';
 import { useRouter } from 'vue-router';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, usePersonalInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
 const router = useRouter();
-const allCompetition = ref([]); //所有的比赛
-const inprogressCompetition = ref([]); //进行中的比赛
-const overCompetition = ref([]); //已结束的比赛
-const perPageAllData = ref([]); //所有比赛的每页数据
-const perPageInprogressData = ref([]); //进行中比赛的每页数据
-const perPageOverData = ref([]); //已结束比赛的每页数据
+const allCompetition = ref([]); // 所有的比赛
+const inprogressCompetition = ref([]); // 进行中的比赛
+const overCompetition = ref([]); // 已结束的比赛
+const perPageAllData = ref([]); // 所有比赛的每页数据
+const perPageInprogressData = ref([]); // 进行中比赛的每页数据
+const perPageOverData = ref([]); // 已结束比赛的每页数据
 
 let allPager = reactive({
   page: 1,
@@ -29,15 +29,10 @@ let overPager = reactive({
 });
 
 // 获取用户参加的所有比赛
+const personalData = usePersonalInfoStore();
 function getCompetitons() {
-  getUserCompetition({
-    mine: userInfoStore.userName,
-  }).then((res) => {
-    if (res.status === 200) {
-      allCompetition.value = res.data.data.reverse();
-      perPageAllData.value = allCompetition.value.slice(0, allPager.size);
-    }
-  });
+  allCompetition.value = personalData.competition?.reverse();
+  perPageAllData.value = allCompetition.value?.slice(0, allPager.size);
 }
 getCompetitons();
 // 获取用户进行中和已结束的比赛
@@ -47,7 +42,7 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'in-progress',
     }).then((res) => {
-      inprogressCompetition.value = res.data.data.reverse();
+      inprogressCompetition.value = res.data.data?.reverse();
       perPageInprogressData.value = inprogressCompetition.value.slice(
         0,
         inProgressPager.size
@@ -58,7 +53,7 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'over',
     }).then((res) => {
-      overCompetition.value = res.data.data.reverse();
+      overCompetition.value = res.data.data?.reverse();
       perPageOverData.value = overCompetition.value.slice(0, overPager.size);
     });
   }
@@ -258,6 +253,7 @@ function toTop() {
 
 <style lang="scss" scoped>
 .competition {
+  min-height: 500px;
   height: 100%;
   // background-color: red;
   position: relative;

@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import IconProject from '~icons/app/project-tree';
 import IconUpload from '~icons/app/submit';
 import IconAddFile from '~icons/app/add-file';
-import { ElDialog } from 'element-plus';
+import { ElDialog, ElMessage } from 'element-plus';
 
 import OButton from '@/components/OButton.vue';
 

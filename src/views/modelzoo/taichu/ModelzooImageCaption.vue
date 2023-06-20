@@ -14,6 +14,7 @@ import { uploadModelzooPic } from '@/api/api-modelzoo';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 

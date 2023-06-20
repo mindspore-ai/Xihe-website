@@ -9,6 +9,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
 import { createFinetune } from '@/api/api-finetune';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 

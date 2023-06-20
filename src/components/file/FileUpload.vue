@@ -14,6 +14,7 @@ import { uploadFileGitlab } from '@/api/api-gitlab';
 
 import { useFileData } from '@/stores';
 import { fileToBase64 } from '@/shared/utils';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();

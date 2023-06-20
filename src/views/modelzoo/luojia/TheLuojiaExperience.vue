@@ -15,6 +15,7 @@ import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
 
 import gif from '@/assets/gifs/loading.gif';
+import { ElMessage } from 'element-plus';
 
 import {
   handleLuoJiaInfer,

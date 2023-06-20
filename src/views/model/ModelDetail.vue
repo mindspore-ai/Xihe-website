@@ -22,6 +22,7 @@ import { getUserDig, cancelCollection } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();

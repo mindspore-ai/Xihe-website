@@ -12,6 +12,7 @@ import IconCopy from '~icons/app/copy-nickname';
 
 import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 

@@ -31,6 +31,7 @@ import { checkEmail } from '@/api/api-user';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 onBeforeRouteLeave(() => {
   fileData.$reset();

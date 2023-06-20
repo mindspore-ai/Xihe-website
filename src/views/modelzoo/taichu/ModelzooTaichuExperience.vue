@@ -7,6 +7,7 @@ import OButton from '@/components/OButton.vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
+import { ElMessage } from 'element-plus';
 
 import {
   uploadModelzooPic,

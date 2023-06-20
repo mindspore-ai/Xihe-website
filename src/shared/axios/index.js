@@ -5,7 +5,7 @@ import setConfig from './setConfig';
 
 import { useLoadingState, useEmailDialogState } from '@/stores/index';
 
-import { ElLoading } from 'element-plus';
+import { ElLoading, ElMessage } from 'element-plus';
 import { goAuthorize, saveUserAuth } from '@/shared/login';
 /**
  * intactRequest是只在axios基础上更改了请求配置。

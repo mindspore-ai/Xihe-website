@@ -9,6 +9,7 @@ import IconLike from '~icons/app/wukong-like';
 import IconHeartgray from '~icons/app/heart-gray';
 
 import { useUserInfoStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 import {
   publicPictures,

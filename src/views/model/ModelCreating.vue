@@ -16,6 +16,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import protocol from '../../../config/protocol';
 import { createModelStore, checkNames, getTags } from '@/api/api-model';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const userInfo = useUserInfoStore();

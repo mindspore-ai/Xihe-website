@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useClipboard from 'vue-clipboard3';
 

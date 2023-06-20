@@ -8,6 +8,7 @@ import IconSend from '~icons/app/vqa-send';
 import IconRefresh from '~icons/app/refresh-taichu';
 
 import { handlePanguInfer } from '@/api/api-modelzoo';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -159,7 +160,7 @@ watch(
 
 const handleKeydown = (e) => {
   if (e.keyCode === 13) {
-    //回车执行查询
+    // 回车执行查询
     sendBtn.value.click();
   }
 };

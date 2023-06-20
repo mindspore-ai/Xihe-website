@@ -119,7 +119,7 @@ function keepEmail(formEl) {
     }
   });
 }
-//倒计时
+// 倒计时
 const handleTimeChange = () => {
   if (time.value <= 0) {
     isDisposed.value = false;

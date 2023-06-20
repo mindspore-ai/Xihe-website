@@ -21,9 +21,7 @@ import { getFollowing, cancelFollowing } from '@/api/api-user';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
-// import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
-// import IconInvitation from '~icons/app/invitation';
 const route = useRoute();
 const userInfoStore = useUserInfoStore();
 const settingItems = [
@@ -69,7 +67,6 @@ const settingItems = [
   },
 ];
 const activeId = ref(userInfoStore.userName);
-// const activeId = ref(route.path.split('/')[2] || 'profile');
 watch(
   () => {
     return route.path.split('/')[2];

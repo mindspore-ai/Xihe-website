@@ -4,8 +4,6 @@ import { ref, onMounted, watch } from 'vue';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// import mobile from '@/assets/imgs/home1/mobile-banner1.png';
-
 import project from '@/assets/imgs/home1/project.png';
 import project1 from '@/assets/imgs/home1/project1.png';
 import project2 from '@/assets/imgs/home1/project2.png';
@@ -44,7 +42,6 @@ import logo27 from '@/assets/imgs/home1/logo/logo27.png';
 import IconUser from '~icons/app/user';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import OButton from '@/components/OButton.vue';
-// import AppFooter from '@/components/AppFooter.vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -71,18 +68,12 @@ function renderBullet(index, className) {
     case 0:
       text = t('home.BANNER_BUTTON_1');
       break;
-    // case 1:
-    //   text = t('home.BANNER_BUTTON_3');
-    //   break;
     case 1:
       text = t('home.BANNER_BUTTON_2');
       break;
   }
   return '<span class="' + className + '">' + text + '</span>';
 }
-// function goDetail() {
-//   window.open('https://mp.weixin.qq.com/s/NGDfY-2vuDi33HZc1-Y2sw', '_blank');
-// }
 
 const screenWidth = useWindowResize();
 
@@ -140,13 +131,13 @@ function progress(swiper) {
           (Math.cos((slideProgress + 1.5) * 0.125 * Math.PI) * slideW * 1.1) /
             3.1) -
       10 +
-      'px'; //调整图片间距，根据图片宽度改变数值实现自适应
-    let rotateY = (slideProgress + 1.5) * 18.5; //图片角度
+      'px'; // 调整图片间距，根据图片宽度改变数值实现自适应
+    let rotateY = (slideProgress + 1.5) * 18.5; // 图片角度
     let translateZ =
       radius -
       Math.cos((slideProgress + 1.5) * 0.128 * Math.PI) * radius -
       900 +
-      'px'; //调整图片远近，刚好4个在画框内
+      'px'; // 调整图片远近，刚好4个在画框内
     slide.transform(
       'translateX(' +
         translateX +
@@ -166,18 +157,14 @@ function setTransition(swiper, transition) {
 }
 const swiperGally = ref();
 onMounted(() => {
-  // if (screenWidth.value > 820) {
   let a = (screenWidth.value - 32) / 1416;
   swiperGally.value.children[2].style.zoom = a;
-  // }
 });
 watch(
   () => screenWidth.value,
   () => {
-    // if (screenWidth.value > 820) {
     let a = (screenWidth.value - 32) / 1416;
     swiperGally.value.children[2].style.zoom = a;
-    // }
   }
 );
 const picDialog = ref(false);
@@ -197,7 +184,6 @@ function toIndusty(path) {
   }
 }
 
-// const route = useRoute();
 const router = useRouter();
 
 const homeInfo = ref([

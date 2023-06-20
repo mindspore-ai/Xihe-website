@@ -30,16 +30,16 @@ const isAuthentic = computed(() => {
 });
 const route = useRoute();
 const router = useRouter();
-const tips = ref(false); //控制创建训练弹窗
+const tips = ref(false); // 控制创建训练弹窗
 const queryRef = ref(null);
 const detailData = ref([]);
 const showDir = ref(false);
 const codeDir = ref(''); // 代码目录
-const bootFile = ref(''); //启动文件
-const codeDirInt = ref(null); //代码目录输入框
-const bootFileInt = ref(null); //启动文件输入框
+const bootFile = ref(''); // 启动文件
+const codeDirInt = ref(null); // 代码目录输入框
+const bootFileInt = ref(null); // 启动文件输入框
 const option = ref(''); // 选择类型
-const showbtn = ref(false); //是否弹窗确定按钮
+const showbtn = ref(false); // 是否弹窗确定按钮
 
 // 用于获取子组件元素
 const model = ref([]);
@@ -52,10 +52,10 @@ const datasetId = ref(0);
 const hyperparamsId = ref(0);
 const environmentId = ref(0);
 
-const modelList = reactive([]); //模型列表
-const datasetList = reactive([]); //数据集列表
-const hyperparamsList = reactive([]); //超参列表
-const environmentList = reactive([]); //环境变量列表
+const modelList = reactive([]); // 模型列表
+const datasetList = reactive([]); // 数据集列表
+const hyperparamsList = reactive([]); // 超参列表
+const environmentList = reactive([]); // 环境变量列表
 
 const form = reactive({
   name: '',
@@ -154,10 +154,10 @@ function change1(val) {
       return item.value === val;
     });
     form.compute.type = a.content;
-    selectData.com2 = optionData.com2[val][0].value; //根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
-    change2(); //控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
+    selectData.com2 = optionData.com2[val][0].value; // 根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
+    change2(); // 控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
   } else {
-    selectData.com2 = ''; //若前一个控件清空则后一个控件所选内容也清空
+    selectData.com2 = ''; // 若前一个控件清空则后一个控件所选内容也清空
     change2();
   }
 }
@@ -219,7 +219,7 @@ function verify(node, code, message) {
           duration: 4000,
           center: true,
         });
-        reject('未通过');
+        reject(new Error('未通过'));
       } else {
         resolve();
       }

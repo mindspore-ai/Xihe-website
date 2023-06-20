@@ -88,13 +88,13 @@ const radioList = ref({});
 const keyWord = ref('');
 
 let query = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
-  level: null, //仓库级别
-  count_per_page: 10, //每页数量
-  page_num: 1, //分页
-  sort_by: null, //排序规则
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
+  level: null, // 仓库级别
+  count_per_page: 10, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
 
 const debounceSearch = debounce(getDataset, 500, {
@@ -129,7 +129,7 @@ function clearItem1(index) {
   query.tag_kinds = null;
 }
 
-//数据集/其他（多选）--协议单选
+// 数据集/其他（多选）--协议单选
 function conditionClick(index, index2) {
   renderCondition.value[index].haveActive = true;
   // 协议
@@ -171,13 +171,13 @@ function conditionClick(index, index2) {
   goSearch(renderCondition.value);
 }
 
-//查询
+// 查询
 function goSearch(render) {
   let time1 = 0;
   let time2 = 0;
   query.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
+  let tagList = []; // 标签
+  let tag_kinds = []; // 标签类型
   render.forEach((item) => {
     time1 = 0;
     time2 = 0;
@@ -200,7 +200,6 @@ function goSearch(render) {
         }
       });
       if (time1 === item.condition.length) {
-        // query[item.title.key] = null; // 所有都未选不传
         item.haveActive = false;
         if (item.title.key === 0) {
           query.tag_kinds = null;
@@ -237,7 +236,7 @@ function clearItem(index) {
   });
   query.tags = null;
 }
-//查看全部标签
+// 查看全部标签
 let radioItem = ref({});
 function checkAllClick(item, index) {
   showCondition.value = false;
@@ -388,7 +387,6 @@ function getModelTag() {
           it.isActive = false;
           it.isSelected = false;
         }
-        // it.isActive = false;
         item.condition.push(it);
       });
     });
@@ -402,7 +400,6 @@ function getModelTag() {
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
-        // it.isSelected = false;
         return {
           name: it,
           isSelected: false,
@@ -421,7 +418,7 @@ function getModelTag() {
       item.num = index;
     });
 
-    //应用分类二级菜单查看全部
+    // 应用分类二级菜单查看全部
     moreSortTags.value = renderSorts.value[0].condition;
 
     moreSortTags.value.forEach((sort) => {

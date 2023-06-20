@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -10,7 +10,7 @@ import NoRelate from '@/components/train/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-import { ElDialog } from 'element-plus';
+import { ElDialog, ElMessage } from 'element-plus';
 
 import { addDataset, deleteDataset, getReadmeInfo } from '@/api/api-model';
 import { getGitlabFileRaw } from '@/api/api-gitlab';
@@ -30,10 +30,10 @@ const result = ref();
 const isShow = ref(false);
 const addSearch = ref('');
 
+const emit = defineEmits(['on-click']);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-const emit = defineEmits(['on-click']);
 
 const pushParams = {
   user: routerParams.user,

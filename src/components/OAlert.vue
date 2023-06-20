@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 const props = defineProps({
   message: {
     type: String,
@@ -16,11 +16,6 @@ const props = defineProps({
 });
 const isShow = ref(true);
 props.time ? autoClose(props.time) : '';
-// function autoClose(time) {
-//   setTimeout(() => {
-//     isShow.value = false;
-//   }, time);
-// }
 </script>
 <template>
   <transition name="fade">

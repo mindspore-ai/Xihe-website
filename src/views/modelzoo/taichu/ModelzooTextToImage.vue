@@ -11,6 +11,7 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -164,7 +165,6 @@ function startRatiocnate1(num) {
         })
           .then((res) => {
             inferUrlList.value = [];
-            // inferenceText.value = '';
             if (res.data) {
               inferUrlList.value.push(res.data.picture + '?' + new Date());
             } else {

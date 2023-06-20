@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import IconUser from '~icons/app/user.svg';
@@ -18,7 +19,6 @@ const prop = defineProps({
   },
 });
 function goExperience() {
-  // router.push(`/${prop.type}/${prop.cardData.id}`);
   router.push(prop.cardData.path);
 }
 </script>
@@ -30,7 +30,6 @@ function goExperience() {
         <span class="card-name">
           {{ cardData.name }}
         </span>
-        <!-- <span class="card-type">免费</span> -->
       </div>
     </div>
     <div class="card-bottom">

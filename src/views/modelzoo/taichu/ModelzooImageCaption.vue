@@ -14,6 +14,7 @@ import { uploadModelzooPic } from '@/api/api-modelzoo';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 
@@ -95,7 +96,6 @@ function submitUpload() {
 
 function handleChange(val) {
   if (val.size > 2097152) {
-    // fileList.value.pop();
     return ElMessage({
       type: 'warning',
       message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
@@ -104,7 +104,6 @@ function handleChange(val) {
     analysis.value = '';
     formData.delete('picture');
     formData = new FormData();
-    // fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
     fileList.value = [];
     fileList.value[0] = { raw: val.raw };
 
@@ -131,7 +130,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }

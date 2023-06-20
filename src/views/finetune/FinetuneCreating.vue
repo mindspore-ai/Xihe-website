@@ -9,12 +9,13 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
 import { createFinetune } from '@/api/api-finetune';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 
 const queryRef = ref(null);
-const dataset = ref(''); //输入数据集输入框
-const model = ref(''); //预训练模型输入框
+const dataset = ref(''); // 输入数据集输入框
+const model = ref(''); // 预训练模型输入框
 const jobType = ref('微调');
 const params1 = ref(false);
 const params2 = ref(false);
@@ -25,9 +26,9 @@ const endChecked = ref(true);
 const taskType = ref(null);
 
 const form = reactive({
-  name: '', //任务名称
-  taskType: '', //任务类型
-  jobType: '', //作业类型
+  name: '', // 任务名称
+  taskType: '', // 任务类型
+  jobType: '', // 作业类型
   epochs: '10',
   start_learning_rate: '1e-05',
   end_learning_rate: '1e-07',
@@ -90,8 +91,8 @@ const checkEndRate = (rule, value, callback) => {
         value.indexOf('e') !== -1;
       // 如果start和end都是科学计数法
       if ((value.indexOf('E') !== -1 || value.indexOf('e') !== -1) && bool) {
-        let newStartRate = new Number(form.start_learning_rate);
-        let newEndRate = new Number(value);
+        let newStartRate = Number(form.start_learning_rate);
+        let newEndRate = Number(value);
         if (newEndRate <= newStartRate) {
           callback();
         } else {

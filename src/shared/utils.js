@@ -108,9 +108,9 @@ export function formatDateTime(inputTime) {
 }
 
 export function formatSeconds(value) {
-  let second = value; //秒
-  let minute = 0; //分
-  let hour = 0; //小时
+  let second = value; // 秒
+  let minute = 0; // 分
+  let hour = 0; // 小时
   if (second > 59) {
     minute = parseInt(second / 60);
     second = parseInt(second % 60);
@@ -119,15 +119,15 @@ export function formatSeconds(value) {
     hour = parseInt(minute / 60);
     minute = parseInt(minute % 60);
   }
-  second < 10 ? (second = '0' + second) : (second = second);
-  minute < 10 ? (minute = '0' + minute) : (minute = minute);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
+  second = second < 10 ? '0' + second : second;
+  minute = minute < 10 ? '0' + minute : minute;
+  hour = hour < 10 ? '0' + hour : hour;
   return hour + ':' + minute + ':' + second;
 }
 
 // 时间戳转时间格式
 export function timestampToTime(timestamp) {
-  let date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  let date = new Date(timestamp * 1000); // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
   let Y = date.getFullYear() + '-';
   let M =
     (date.getMonth() + 1 < 10

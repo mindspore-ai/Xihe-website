@@ -219,7 +219,7 @@ export function getRank() {
 export function getUserCompetition(params) {
   const url = `/server/competition`;
   return request
-    .get(url, Object.assign({ params }, getHeaderConfig()))
+    .get(url, { ...{ params }, ...getHeaderConfig() })
     .then((res) => {
       return res;
     });
@@ -275,7 +275,7 @@ export function getFollowing(params) {
 export function cancelFollowing(params) {
   const url = `/server/user/following/${params.account}`;
   return request
-    .delete(url, Object.assign({ data: params }, getHeaderConfig()))
+    .delete(url, { ...{ data: params }, ...getHeaderConfig() })
     .then((res) => {
       return res.data;
     });

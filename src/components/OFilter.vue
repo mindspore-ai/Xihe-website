@@ -1,4 +1,5 @@
 <script setup>
+import { defineEmits } from 'vue';
 import IconMenu from '~icons/app/menu';
 
 let i18n = {

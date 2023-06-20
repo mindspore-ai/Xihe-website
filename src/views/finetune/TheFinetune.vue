@@ -33,6 +33,7 @@ import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 import {
   getFinetuneList,
@@ -60,9 +61,9 @@ const showStep = ref(false);
 const showTip = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
-const expiry = ref(''); //体验截止时间
+const expiry = ref(''); // 体验截止时间
 const displayType = ref('finetune');
-const describe = ref(''); //已有运行中的任务或已有5个任务提示
+const describe = ref(''); // 已有运行中的任务或已有5个任务提示
 
 const isLogined = useLoginStore().isLogined;
 const userFinetune = useFinetuneData();

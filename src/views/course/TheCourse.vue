@@ -2,7 +2,6 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-// import IconSearch from '~icons/app/course-search';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconTime from '~icons/app/time';
 import IconSelected from '~icons/app/selected';
@@ -15,7 +14,7 @@ const router = useRouter();
 const courseName = ref('allClassify');
 const activeName = ref('allStatus');
 
-const allCourse = ref([]); //当前所有课程
+const allCourse = ref([]); // 当前所有课程
 const currentCourse = ref([]); // 当前页显示的课程
 
 const coursePager = reactive({

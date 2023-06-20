@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -25,15 +25,15 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-/*TODO:暂无接口
-let i18n = {
-  placeholder: '搜索我的关注',
-  sortCondition: [
-    { text: '按照关注时间排序', value: '' },
-    { text: '按照首字母排序', value: '' },
-  ],
-};
-*/
+// 暂无接口
+// let i18n = {
+//   placeholder: '搜索我的关注',
+//   sortCondition: [
+//     { text: '按照关注时间排序', value: '' },
+//     { text: '按照首字母排序', value: '' },
+//   ],
+// };
+
 let queryData = reactive({
   search: null,
   page: 1,

@@ -62,15 +62,6 @@ const loginedDropdownItems = reactive([
       router.push('/new/datasets');
     },
   },
-  // {
-  //   id: 'settings',
-  //   label: computed(() => {
-  //     return locale.value === 'zh' ? '设置' : 'Settings';
-  //   }),
-  //   action: () => {
-  //     router.push('/settings');
-  //   },
-  // },
   {
     id: 'logout',
     label: computed(() => {
@@ -161,11 +152,6 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
-  home: {
-    name: '首页',
-    child: ['home'],
-    back: '',
-  },
   electricity: {
     name: '电力专区',
     child: [
@@ -245,7 +231,7 @@ watch(
   }
 );
 
-//比赛页面头部不透明
+// 比赛页面头部不透明
 watch(
   () => route.path,
   (newValue) => {
@@ -258,15 +244,6 @@ onMounted(() => {
   window.addEventListener('resize', onResize);
 });
 
-// function goBack() {
-//   Object.keys(routeLists).forEach((key) => {
-//     if (routeLists[key].name === currentPage.value) {
-//       backUrl.value = routeLists[key].back;
-//     }
-//   });
-
-//   router.push(backUrl.value);
-// }
 const noHeader = ref(false);
 // 监听向下滚动
 function scroll(e) {
@@ -395,11 +372,6 @@ function toggleMenu(menu) {
   mobileNav[5].isActive = false;
 }
 function toPage(path, index) {
-  // if (path === '/') {
-  //   mobileNav[0].isActive = true;
-  //   mobileNav[3].isActive = false;
-  //   router.push(path);
-  // } else
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {

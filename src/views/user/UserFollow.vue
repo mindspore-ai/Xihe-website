@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { goAuthorize } from '@/shared/login';
 import { ArrowRight } from '@element-plus/icons-vue';

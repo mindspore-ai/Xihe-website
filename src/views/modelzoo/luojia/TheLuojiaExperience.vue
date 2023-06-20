@@ -15,6 +15,7 @@ import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
 
 import gif from '@/assets/gifs/loading.gif';
+import { ElMessage } from 'element-plus';
 
 import {
   handleLuoJiaInfer,
@@ -105,6 +106,7 @@ function handleInferClick(mobile) {
     });
     return;
   }
+
   if (mobile === 'mobile') {
     activeIndex1.value = -1;
     if (!isLogined.value) {
@@ -121,6 +123,7 @@ function handleInferClick(mobile) {
       }
     }
   }
+
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
@@ -153,7 +156,7 @@ function handleInferClick(mobile) {
                     lastModified: Date.now(),
                   });
                   fileList.value = [];
-                  fileList.value[0] = { raw: file }; // formData.append('blob', file);
+                  fileList.value[0] = { raw: file };
                 });
 
               handleLuoJiaHistory().then((res) => {
@@ -314,7 +317,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }

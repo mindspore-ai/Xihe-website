@@ -4,7 +4,7 @@ export default {
   TAICHU_DESC:
     'OPT（Omni-Perception Pre-Trainer）是全场景感知预训练模型的简称，是中科院自动化和华为在探索通用人工智能道路上的重要成果，并在2021年9月发布了全球首个图文音三模态千亿大模型，中文名字叫紫东.太初；支持文本、视觉、语音不同模态间的高效协同，可支撑影视创作、工业质检、智能驾驶等产业应用。',
   LEARN_MORE: '了解更多',
-  EXPERIENCE_LIVE: '在线体验', //Experience Live
+  EXPERIENCE_LIVE: '在线体验',
   NAV_ITEMS: ['以图生文', '以文生图', '视觉问答'],
   INVALID_TEXT: '内容审核不通过，请重新输入',
   INPUT_CHINESE: '请输入中文描述',

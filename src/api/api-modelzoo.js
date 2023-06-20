@@ -19,7 +19,6 @@ function getHeaderConfig() {
  */
 export function uploadModelzooPic(params) {
   const url = `/server/bigmodel/describe_picture`;
-  // getHeaderConfig().headers['Content-Type:multipart/form-data'];
 
   return request
     .post(url, params, {
@@ -155,7 +154,12 @@ export function handlePanguInfer(params) {
 export function handleLuojiaUploadPic(params) {
   const url = '/server/bigmodel/luojia_upload_picture';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((res) => {
       return res;
     })

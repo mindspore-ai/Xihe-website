@@ -22,6 +22,7 @@ import { getUserDig, cancelCollection } from '@/api/api-project';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { useUserInfoStore, useFileData } from '@/stores';
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
@@ -140,7 +141,10 @@ function getDetailData() {
         });
         headTags.value = modelTags.value.filter((item) => {
           let a = protocol.map((it) => {
-            if (it.name === item.name) return false;
+            if (it.name === item.name) {
+              return false;
+            }
+            return true;
           });
           if (!a.indexOf(false)) return false;
           else return true;
@@ -259,9 +263,11 @@ function confirmBtn() {
     return item.name;
   });
   preStorage.value = JSON.parse(preStorage.value);
+
   preStorage.value = preStorage.value.map((item) => {
-    if (item) return item.name;
+    return item.name;
   });
+
   let add = [];
   let remove = [];
   preStorage.value.forEach((item) => {

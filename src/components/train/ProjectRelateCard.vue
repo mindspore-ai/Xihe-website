@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits } from 'vue';
+import { defineEmits, defineProps } from 'vue';
 
 import IconTime from '~icons/app/time';
 import IconDownload from '~icons/app/download';

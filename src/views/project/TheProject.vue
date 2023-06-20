@@ -1334,7 +1334,7 @@ $theme: #0d8dff;
             z-index: 10;
             font-size: 12px;
             color: #ffffff;
-            border-radius: 8px;
+            border-radius: 10px;
           }
         }
         .pagination {

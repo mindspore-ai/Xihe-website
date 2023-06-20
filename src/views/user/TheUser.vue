@@ -334,22 +334,24 @@ function handleDomChange(val) {
 
 const isCompetitionData = ref(false);
 const isCourseData = ref(false);
-getUserCompetition({ mine: userInfoStore.userName })
-  .then((res) => {
-    personalData.competition = res.data.data;
-    isCompetitionData.value = true;
-  })
-  .catch(() => {
-    isCompetitionData.value = true;
-  });
-getMyCourseList({ mine: true })
-  .then((res) => {
-    personalData.course = res.data;
-    isCourseData.value = true;
-  })
-  .catch(() => {
-    isCourseData.value = true;
-  });
+if (isAuthentic.value) {
+  getUserCompetition({ mine: userInfoStore.userName })
+    .then((res) => {
+      personalData.competition = res.data.data;
+      isCompetitionData.value = true;
+    })
+    .catch(() => {
+      isCompetitionData.value = true;
+    });
+  getMyCourseList({ mine: true })
+    .then((res) => {
+      personalData.course = res.data;
+      isCourseData.value = true;
+    })
+    .catch(() => {
+      isCourseData.value = true;
+    });
+}
 </script>
 
 <template>
@@ -560,7 +562,7 @@ getMyCourseList({ mine: true })
         <!-- 具体内容 -->
         <div ref="detailInfo" class="content-detail-info">
           <router-view
-            v-if="isCourseData && isCompetitionData"
+            v-if="(isCourseData && isCompetitionData) || !isAuthentic"
             :query-data="queryData"
             @get-fanslist="getCurrentFanslist"
             @dom-change="handleDomChange"

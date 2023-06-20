@@ -57,7 +57,7 @@ function toggleDelDlg(flag) {
 function saveData() {
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    bio: userDescription.value || userInfoStore.description,
+    bio: userDescription.value,
     avatar_id: avatar.value,
   })
     .then(() => {

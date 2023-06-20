@@ -15,17 +15,25 @@ import IconCourse from '~icons/app/my-course';
 import IconCloud from '~icons/app/cloud';
 import { Search } from '@element-plus/icons-vue';
 
-import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
+import {
+  useUserInfoStore,
+  useVisitorInfoStore,
+  usePersonalInfoStore,
+} from '@/stores';
 import { goAuthorize } from '@/shared/login';
-import { getFollowing, cancelFollowing } from '@/api/api-user';
+import {
+  getFollowing,
+  cancelFollowing,
+  getUserCompetition,
+} from '@/api/api-user';
+import { getMyCourseList } from '@/api/api-course';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
-// import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
-// import IconInvitation from '~icons/app/invitation';
 const route = useRoute();
 const userInfoStore = useUserInfoStore();
+const personalData = usePersonalInfoStore();
 const settingItems = [
   {
     id: userInfoStore.userName,
@@ -69,7 +77,6 @@ const settingItems = [
   },
 ];
 const activeId = ref(userInfoStore.userName);
-// const activeId = ref(route.path.split('/')[2] || 'profile');
 watch(
   () => {
     return route.path.split('/')[2];
@@ -324,6 +331,27 @@ function cancelFollow(name) {
 function handleDomChange(val) {
   marginBottom.value = val;
 }
+
+const isCompetitionData = ref(false);
+const isCourseData = ref(false);
+if (isAuthentic.value) {
+  getUserCompetition({ mine: userInfoStore.userName })
+    .then((res) => {
+      personalData.competition = res.data.data;
+      isCompetitionData.value = true;
+    })
+    .catch(() => {
+      isCompetitionData.value = true;
+    });
+  getMyCourseList({ mine: true })
+    .then((res) => {
+      personalData.course = res.data;
+      isCourseData.value = true;
+    })
+    .catch(() => {
+      isCourseData.value = true;
+    });
+}
 </script>
 
 <template>
@@ -458,7 +486,15 @@ function handleDomChange(val) {
             @click="goSetting(item)"
           >
             <OIcon size="medium"><component :is="item.icon"></component></OIcon>
-            {{ item.label }}
+            <span v-if="item.label === '我的比赛'">
+              {{
+                item.label + `(${personalData.competition?.length || 0})`
+              }}</span
+            >
+            <span v-else-if="item.label === '我的课程'">
+              {{ item.label + `(${personalData.course?.length || 0})` }}</span
+            >
+            <span v-else> {{ item.label }}</span>
           </li>
         </ul>
       </div>
@@ -526,6 +562,7 @@ function handleDomChange(val) {
         <!-- 具体内容 -->
         <div ref="detailInfo" class="content-detail-info">
           <router-view
+            v-if="(isCourseData && isCompetitionData) || !isAuthentic"
             :query-data="queryData"
             @get-fanslist="getCurrentFanslist"
             @dom-change="handleDomChange"

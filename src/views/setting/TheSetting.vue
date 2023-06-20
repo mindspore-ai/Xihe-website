@@ -3,28 +3,28 @@ import { computed, ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
-// import ONav from '@/components/ONav.vue';
 
-// import IconMenu from '~icons/app/menu';
-// import IconPlus from '~icons/app/plus';
 import IconGitee from '~icons/app/gitee';
 import IconGithub from '~icons/app/github';
 import IconEmail from '~icons/app/email';
 import IconHome from '~icons/app/home1';
 import IconCourse from '~icons/app/my-course';
-// import { Search } from '@element-plus/icons-vue';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, usePersonalInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
-import { getFollowing, cancelFollowing } from '@/api/api-user';
+import {
+  getFollowing,
+  cancelFollowing,
+  getUserCompetition,
+} from '@/api/api-user';
+import { getMyCourseList } from '@/api/api-course';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
-// import IconEmail from '~icons/app/email';
 import IconTrophy from '~icons/app/trophy';
-// import IconInvitation from '~icons/app/invitation';
 import IconCloud from '~icons/app/cloud';
 const userInfoStore = useUserInfoStore();
+const personalData = usePersonalInfoStore();
 const settingItems = [
   {
     id: userInfoStore.userName,
@@ -122,20 +122,6 @@ watch(
   },
   { immediate: true }
 );
-// 解决头部搜索二次进入个人主页页面不刷新
-// watch(
-//   () => {
-//     return route.path;
-//   },
-//   (newVal, oldVal) => {
-//     if (
-//       route.name === 'userLives' &&
-//       oldVal === '/' + userInfo.value.userName
-//     ) {
-//       router.go();
-//     }
-//   }
-// );
 
 function goSetting(item) {
   if (item.id === userInfoStore.userName)
@@ -196,6 +182,25 @@ function cancelFollow(name) {
     console.error(error);
   }
 }
+
+const isCompetitionData = ref(false);
+const isCourseData = ref(false);
+getUserCompetition({ mine: userInfoStore.userName })
+  .then((res) => {
+    personalData.competition = res.data.data;
+    isCompetitionData.value = true;
+  })
+  .catch(() => {
+    isCompetitionData.value = true;
+  });
+getMyCourseList({ mine: true })
+  .then((res) => {
+    personalData.course = res.data;
+    isCourseData.value = true;
+  })
+  .catch(() => {
+    isCourseData.value = true;
+  });
 </script>
 
 <template>
@@ -307,7 +312,15 @@ function cancelFollow(name) {
             @click="goSetting(item)"
           >
             <OIcon size="medium"><component :is="item.icon"></component></OIcon>
-            {{ item.label }}
+            <span v-if="item.label === '我的比赛'">
+              {{
+                item.label + `(${personalData.competition?.length || 0})`
+              }}</span
+            >
+            <span v-else-if="item.label === '我的课程'">
+              {{ item.label + `(${personalData.course?.length || 0})` }}</span
+            >
+            <span v-else> {{ item.label }}</span>
           </li>
         </ul>
       </div>
@@ -319,7 +332,7 @@ function cancelFollow(name) {
           <div class="detail-title">
             <h2>{{ detailTitle }}</h2>
           </div>
-          <router-view></router-view>
+          <router-view v-if="isCourseData && isCompetitionData"></router-view>
         </div>
       </div>
     </div>

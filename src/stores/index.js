@@ -70,6 +70,16 @@ export const useVisitorInfoStore = defineStore('visitorInfo', {
   getters: {},
 });
 
+// 个人中心数据
+export const usePersonalInfoStore = defineStore('visitorInfo', {
+  state: () => {
+    return {
+      course: [],
+      competition: [],
+    };
+  },
+});
+
 // 语言
 export const useLangStore = defineStore('lang', {
   state: () => {
@@ -177,7 +187,7 @@ export const useFinetuneData = defineStore('finetuneInfo', {
   state: () => {
     return {
       finetuneListData: null,
-      isAllowed: false, //是否有微调资格
+      isAllowed: false, // 是否有微调资格
     };
   },
   actions: {

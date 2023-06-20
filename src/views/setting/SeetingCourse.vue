@@ -2,20 +2,20 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-// import IconSearch from '~icons/app/course-search';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconTime from '~icons/app/time';
 import IconSelected from '~icons/app/selected';
 
 import emptyImg from '@/assets/imgs/live-empty.png';
 import { getMyCourseList } from '@/api/api-course';
+import { usePersonalInfoStore } from '@/stores';
 
 const router = useRouter();
 
 const courseName = ref('allClassify');
 const activeName = ref('allStatus');
 
-const allCourse = ref([]); //当前所有课程
+const allCourse = ref([]); // 当前所有课程
 const currentCourse = ref([]); // 当前页显示的课程
 
 const coursePager = reactive({
@@ -23,30 +23,12 @@ const coursePager = reactive({
   size: 5,
 });
 
-// let i18n = {
-//   head: {
-//     title: '课程',
-//     introduce: '从入门到精通，深入浅出玩转昇思MindSpore',
-//     reference: '参考文档',
-//     btn: '新建模型',
-//     count: '总数',
-//   },
-//   back: '返回上一级',
-//   taskSort: '应用分类',
-//   tagPlacholder: '请输入tag名称',
-//   more: '更多',
-//   clear: '清除',
-// };
-
 // 获取所有的课程
 const params = { mine: true };
+const personalData = usePersonalInfoStore();
 function getAllCourse() {
-  getMyCourseList(params).then((res) => {
-    if (res.data) {
-      allCourse.value = res.data;
-      currentCourse.value = res.data.slice(0, coursePager.size);
-    }
-  });
+  allCourse.value = personalData.course;
+  currentCourse.value = allCourse.value?.slice(0, coursePager.size);
 }
 getAllCourse();
 
@@ -99,7 +81,7 @@ function goCourseDetail(id) {
 <template>
   <div
     v-if="
-      currentCourse.length ||
+      currentCourse?.length ||
       activeName !== 'allStatus' ||
       courseName !== 'allClassify'
     "

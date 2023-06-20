@@ -196,6 +196,10 @@ function goAscend() {
       margin-top: 24px;
     }
 
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+    }
+
     .more-item {
       display: flex;
       align-items: center;
@@ -205,7 +209,12 @@ function goAscend() {
 
       & + .more-item {
         margin-left: 64px;
+        @media screen and (max-width: 768px) {
+          margin-left: 0;
+          margin-top: 8px;
+        }
       }
+
       &:hover {
         .o-icon {
           transform: translate(3px);

@@ -117,7 +117,7 @@ function goModelzoo() {
       </div>
 
       <div class="watch-more" @click="goModelzoo">
-        <span class="text">点击去往ModelZoo查看更多大模型</span>
+        <span class="text">点击查看更多大模型</span>
         <o-icon><icon-arrow></icon-arrow></o-icon>
       </div>
     </AppContent>

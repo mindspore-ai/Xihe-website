@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onUpdated, onUnmounted } from 'vue';
+import { ref, watch, computed, onUpdated, onUnmounted, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';

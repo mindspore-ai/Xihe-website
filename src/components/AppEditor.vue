@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, defineProps, defineEmits } from 'vue';
 import * as monaco from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
 import 'monaco-editor/esm/vs/basic-languages/python/python.contribution';

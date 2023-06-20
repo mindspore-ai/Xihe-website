@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
+import { ref, watch, defineProps, defineEmits } from 'vue';
 
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';

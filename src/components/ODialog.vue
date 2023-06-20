@@ -1,5 +1,5 @@
 <script setup>
-import { useAttrs } from 'vue';
+import { useAttrs, defineProps, defineEmits } from 'vue';
 import IconX from '~icons/app/x.svg';
 defineProps({
   close: {

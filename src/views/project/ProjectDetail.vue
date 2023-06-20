@@ -397,7 +397,7 @@ function confirmBtn() {
   });
   preStorage.value = JSON.parse(preStorage.value);
   preStorage.value = preStorage.value.map((item) => {
-    if (item) return item.name;
+    return item.name;
   });
   let add = [];
   let remove = [];

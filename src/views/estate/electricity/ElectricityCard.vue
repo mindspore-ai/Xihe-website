@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import IconUser from '~icons/app/user.svg';

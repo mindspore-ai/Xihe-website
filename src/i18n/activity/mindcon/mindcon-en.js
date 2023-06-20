@@ -21,11 +21,9 @@ export default {
   ],
   MY_INTEGRAL: '我的积分',
   INTEGRAL: '积分',
-  EXPLAIN: '本活动最终解释权归昇思MindSpore开源社区所有',
   END_TIP:
     'This activity has already ended. We look forward to meeting you at the next MindCon.',
   EXPLAIN: '本活动最终解释权归昇思MindSpore开源社区所有',
-  END_TIP: '本次活动已经结束，期待下届MindCon与你相遇',
   OVER_TIMES: '挑战次数已用尽',
   PREVIOUS: '上一页',
   NEXT: '下一页',

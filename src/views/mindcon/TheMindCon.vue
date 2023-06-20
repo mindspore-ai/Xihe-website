@@ -119,48 +119,48 @@ function goChallenge(index) {
       type: 'warning',
       message: t('mindcon.END_TIP'),
     });
-  } else {
-    if (!isLogined) {
-      goAuthorize();
-    } else {
-      // 如果已报名
-      if (activityDetail.value.is_competitor) {
-        if (index === 0) {
-          getActivity();
+  }
 
-          if (activityDetail.value.ai_question.remaining_times > 0) {
-            if (activityDetail.value.ai_question.in_progress) {
-              isShow.value = true;
-              isInProgress.value = true;
-            } else {
-              isShow.value = true;
-            }
-          } else {
-            ElMessage({
-              type: 'warning',
-              message: t('mindcon.OVER_TIMES'),
-            });
-          }
-        } else if (index === 1) {
-          // 跳转到比赛列表
-          let routerData = router.resolve({
-            path: '/competition',
-          });
-          window.open(routerData.href, '_blank');
+  if (!isLogined) {
+    goAuthorize();
+  }
+
+  // 如果已报名
+  if (activityDetail.value.is_competitor) {
+    if (index === 0) {
+      getActivity();
+
+      if (activityDetail.value.ai_question.remaining_times > 0) {
+        if (activityDetail.value.ai_question.in_progress) {
+          isShow.value = true;
+          isInProgress.value = true;
         } else {
-          window.open(
-            'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-            '_blank'
-          );
+          isShow.value = true;
         }
       } else {
-        showApplication.value = true;
-        window.open(
-          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-          '_blank'
-        );
+        ElMessage({
+          type: 'warning',
+          message: t('mindcon.OVER_TIMES'),
+        });
       }
+    } else if (index === 1) {
+      // 跳转到比赛列表
+      let routerData = router.resolve({
+        path: '/competition',
+      });
+      window.open(routerData.href, '_blank');
+    } else {
+      window.open(
+        'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+        '_blank'
+      );
     }
+  } else {
+    showApplication.value = true;
+    window.open(
+      'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+      '_blank'
+    );
   }
 }
 

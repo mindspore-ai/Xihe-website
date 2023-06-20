@@ -40,7 +40,7 @@ export function getUserDig(params) {
 export function cancelCollection(params) {
   const url = `/server/user/like`;
   return request
-    .delete(url, Object.assign({}, { data: params }, getHeaderConfig()))
+    .delete(url, { ...{ data: params }, ...getHeaderConfig() })
     .then((res) => {
       return res;
     });

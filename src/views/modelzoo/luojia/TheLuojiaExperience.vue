@@ -106,6 +106,7 @@ function handleInferClick(mobile) {
     });
     return;
   }
+
   if (mobile === 'mobile') {
     activeIndex1.value = -1;
     if (!isLogined.value) {
@@ -122,6 +123,7 @@ function handleInferClick(mobile) {
       }
     }
   }
+
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');

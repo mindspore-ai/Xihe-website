@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OIcon from '@/components/OIcon.vue';

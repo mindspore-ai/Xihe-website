@@ -152,11 +152,6 @@ const routeLists = {
     child: ['home'],
     back: '',
   },
-  home: {
-    name: '首页',
-    child: ['home'],
-    back: '',
-  },
   electricity: {
     name: '电力专区',
     child: [

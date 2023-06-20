@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUserLive } from '@/api/api-user';

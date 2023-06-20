@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive, computed } from 'vue';
+import { ref, watch, reactive, computed, defineProps, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import emptyImg from '@/assets/imgs/dataset-empty.png';

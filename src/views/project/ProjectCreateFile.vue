@@ -219,7 +219,7 @@ function verify(node, code, message) {
           duration: 4000,
           center: true,
         });
-        reject('未通过');
+        reject(new Error('未通过'));
       } else {
         resolve();
       }

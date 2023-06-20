@@ -438,7 +438,7 @@ async function cancelImgCollected(item) {
     }
   }
 }
-/* 确认公开弹窗 */
+/* 确认取消公开弹窗 */
 :deep(.confirm-dlg) {
   --el-dialog-margin-top: 34vh;
   @media screen and (max-width: 768px) {

@@ -71,17 +71,31 @@ onMounted(() => {
   getCollectedImages();
 });
 // 取消收藏
+const showConfirmDlg = ref(false);
+const imgId = ref('');
 function cancelCollect(id) {
-  cancelLikePicture(id).then((res) => {
+  imgId.value = id;
+  showConfirmDlg.value = true;
+}
+// 取消收藏图片
+async function confirmQuitPublic() {
+  try {
+    const res = await cancelLikePicture(imgId.value);
     if (res.status === 204) {
       imgInfoDlg.value = false;
-      getCollectedImages();
       ElMessage({
         type: 'success',
-        message: t('wukong.CANCEL_COLLECT'),
+        message: t('wukong.CANCEL_COLLECTION_SUCCESS'),
       });
     }
-  });
+    getCollectedImages();
+  } catch (err) {
+    console.error(err);
+  }
+  showConfirmDlg.value = false;
+}
+function cancelQuitPublic(val) {
+  showConfirmDlg.value = val;
 }
 
 // 下载图片
@@ -407,6 +421,35 @@ function handleImageClick(img) {
       </div>
     </el-dialog>
     <textarea class="input-dom"></textarea>
+    <el-dialog
+      v-model="showConfirmDlg"
+      class="confirm-dlg"
+      width="640"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <template #header>
+        <p class="confirm-title">{{ t('wukong.TIP_TITLE2') }}</p>
+      </template>
+      <div class="confirm-desc">
+        {{ t('wukong.TIP_TEXT2') }}
+      </div>
+      <template #footer>
+        <OButton
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          style="margin-right: 16px"
+          @click="cancelQuitPublic(false)"
+          >{{ t('wukong.BUTTON_CANCEL') }}</OButton
+        >
+        <OButton
+          type="primary"
+          :size="screenWidth < 820 ? 'mini' : 'small'"
+          @click="confirmQuitPublic"
+          >{{ t('wukong.BUTTON_CONFIRM') }}</OButton
+        >
+      </template>
+    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -415,10 +458,8 @@ function handleImageClick(img) {
     padding: 0;
     position: sticky;
     top: 0;
-    height: 48px;
     z-index: 200;
     .el-dialog__title {
-      // color: #fff;
       @media screen and (max-width: 820px) {
         font-size: 14px;
         line-height: 24px;
@@ -702,6 +743,7 @@ function handleImageClick(img) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-radius: 18px;
         @media screen and (max-width: 768px) {
           width: 200px;
           height: 32px;
@@ -725,6 +767,7 @@ function handleImageClick(img) {
         color: #40adff;
         text-align: center;
         cursor: pointer;
+        border-radius: 18px;
         @media screen and (max-width: 768px) {
           width: 74px;
           height: 32px;
@@ -737,6 +780,47 @@ function handleImageClick(img) {
       font-size: 12px;
       color: #555;
       margin-top: 8px;
+    }
+  }
+}
+/* 确认取消收藏弹窗 */
+:deep(.confirm-dlg) {
+  --el-dialog-margin-top: 34vh;
+  @media screen and (max-width: 768px) {
+    --el-dialog-width: 80vw !important;
+    .confirm-title {
+      font-size: 16px;
+    }
+    .confirm-desc {
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 4px;
+    }
+  }
+  .el-dialog__header {
+    padding: 40px 40px 24px;
+    @media screen and (max-width: 768px) {
+      padding: 16px 0 0;
+    }
+  }
+  .el-dialog__body {
+    @media screen and (max-width: 820px) {
+      padding: 8px 16px !important;
+      width: 454px;
+      margin: 0 auto;
+    }
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+  .el-dialog__footer {
+    display: flex;
+    justify-content: center;
+    @media screen and (max-width: 768px) {
+      padding: 16px;
+      .o-button:first-child {
+        margin-right: 8px !important;
+      }
     }
   }
 }

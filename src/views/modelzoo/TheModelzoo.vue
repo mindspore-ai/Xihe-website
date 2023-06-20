@@ -87,7 +87,7 @@ let i18n = {
   ],
 };
 function goModelzoo() {
-  window.open('https://www.hiascend.com/software/modelzoo');
+  window.open('https://gitee.com/mindspore/mindformers', '_blank');
 }
 </script>
 <template>

@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { getUserCompetition } from '@/api/api-user';
 import emptyImg from '@/assets/imgs/competition-empty.png';
 import { useRouter } from 'vue-router';
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, usePersonalInfoStore } from '@/stores';
 
 const userInfoStore = useUserInfoStore();
 const activeName = ref('all');
@@ -29,15 +29,10 @@ let overPager = reactive({
 });
 
 // 获取用户参加的所有比赛
+const personalData = usePersonalInfoStore();
 function getCompetitons() {
-  getUserCompetition({
-    mine: userInfoStore.userName,
-  }).then((res) => {
-    if (res.status === 200) {
-      allCompetition.value = res.data.data.reverse();
-      perPageAllData.value = allCompetition.value.slice(0, allPager.size);
-    }
-  });
+  allCompetition.value = personalData.competition?.reverse();
+  perPageAllData.value = allCompetition.value?.slice(0, allPager.size);
 }
 getCompetitons();
 // 获取用户进行中和已结束的比赛
@@ -47,8 +42,8 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'in-progress',
     }).then((res) => {
-      inprogressCompetition.value = res.data.data.reverse();
-      perPageInprogressData.value = inprogressCompetition.value.slice(
+      inprogressCompetition.value = res.data.data?.reverse();
+      perPageInprogressData.value = inprogressCompetition.value?.slice(
         0,
         inProgressPager.size
       );
@@ -58,8 +53,8 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'over',
     }).then((res) => {
-      overCompetition.value = res.data.data.reverse();
-      perPageOverData.value = overCompetition.value.slice(0, overPager.size);
+      overCompetition.value = res.data.data?.reverse();
+      perPageOverData.value = overCompetition.value?.slice(0, overPager.size);
     });
   }
 };
@@ -78,7 +73,7 @@ function goDetail(id) {
 const layout = ref('prev, pager, next');
 function handleAllPager(val) {
   allPager.page = val;
-  perPageAllData.value = allCompetition.value.slice(
+  perPageAllData.value = allCompetition.value?.slice(
     allPager.page * allPager.size - allPager.size,
     allPager.page * allPager.size
   );
@@ -87,7 +82,7 @@ function handleAllPager(val) {
 
 function handleInprogressPager(val) {
   inProgressPager.page = val;
-  perPageInprogressData.value = inprogressCompetition.value.slice(
+  perPageInprogressData.value = inprogressCompetition.value?.slice(
     inProgressPager.page * inProgressPager.size - inProgressPager.size,
     inProgressPager.page * inProgressPager.size
   );
@@ -95,7 +90,7 @@ function handleInprogressPager(val) {
 }
 function handleOverPager(val) {
   overPager.page = val;
-  perPageOverData.value = overCompetition.value.slice(
+  perPageOverData.value = overCompetition.value?.slice(
     overPager.page * overPager.size - overPager.size,
     overPager.page * overPager.size
   );
@@ -258,6 +253,7 @@ function toTop() {
 
 <style lang="scss" scoped>
 .competition {
+  min-height: 500px;
   height: 100%;
   // background-color: red;
   position: relative;

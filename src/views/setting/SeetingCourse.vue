@@ -8,6 +8,7 @@ import IconSelected from '~icons/app/selected';
 
 import emptyImg from '@/assets/imgs/live-empty.png';
 import { getMyCourseList } from '@/api/api-course';
+import { usePersonalInfoStore } from '@/stores';
 
 const router = useRouter();
 
@@ -24,13 +25,10 @@ const coursePager = reactive({
 
 // 获取所有的课程
 const params = { mine: true };
+const personalData = usePersonalInfoStore();
 function getAllCourse() {
-  getMyCourseList(params).then((res) => {
-    if (res.data) {
-      allCourse.value = res.data;
-      currentCourse.value = res.data.slice(0, coursePager.size);
-    }
-  });
+  allCourse.value = personalData.course;
+  currentCourse.value = allCourse.value?.slice(0, coursePager.size);
 }
 getAllCourse();
 
@@ -83,7 +81,7 @@ function goCourseDetail(id) {
 <template>
   <div
     v-if="
-      currentCourse.length ||
+      currentCourse?.length ||
       activeName !== 'allStatus' ||
       courseName !== 'allClassify'
     "

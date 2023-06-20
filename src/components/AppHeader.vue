@@ -1343,7 +1343,7 @@ const handleCommand = (command) => {
       position: absolute;
       bottom: 0;
       content: '';
-      width: calc(100% - 36px);
+      width: calc(100% - 48px);
       height: 1px;
       background-color: #dddddd;
     }
@@ -1364,7 +1364,7 @@ const handleCommand = (command) => {
         position: absolute;
         bottom: 0;
         content: '';
-        width: calc(100% - 32px);
+        width: 100%;
         background-color: #dddddd;
       }
       &:nth-child(5) {

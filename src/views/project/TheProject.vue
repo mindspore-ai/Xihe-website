@@ -213,18 +213,15 @@ function handleNavClick(item) {
       });
     });
   });
-  if (item.id === 'all') {
-    queryData.level = null;
-    queryData.tags = null;
-  } else if (item.id === 'official') {
-    queryData.tags = null;
-    queryData.level = 'official';
-  } else if (item.id === 'good') {
-    queryData.tags = null;
-    queryData.level = 'good';
-  } else if (item.id === 'electricity') {
-    queryData.level = null;
-    queryData.tags = 'electricity';
+  const levelMap = {
+    all: { level: null, tags: null },
+    official: { level: 'official', tags: null },
+    good: { level: 'good', tags: null },
+    electricity: { level: null, tags: 'electricity' },
+  };
+  if (levelMap.hasOwnProperty(item.id)) {
+    queryData.level = levelMap[item.id].level;
+    queryData.tags = levelMap[item.id].tags;
   }
   if (/^all|official|good|electricity/g.test(item.id)) {
     activeNavItem.value = item.id;
@@ -697,23 +694,6 @@ function getSortData(item) {
                   />
                 </el-select>
               </div>
-              <!-- <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon>
-                    <icon-menu></icon-menu>
-                  </o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown> -->
             </div>
           </div>
 
@@ -1338,13 +1318,13 @@ $theme: #0d8dff;
           }
         }
         .pagination {
-          min-width: 800px;
           display: flex;
           justify-content: center;
           position: absolute;
           bottom: -76px;
           left: 50%;
           transform: translateX(-50%);
+          width: 100%;
           .total {
             line-height: 36px;
             font-size: 14px;

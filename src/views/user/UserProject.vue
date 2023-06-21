@@ -3,11 +3,6 @@ import { ref, watch, reactive, computed, defineProps, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
-// import IconTime from '~icons/app/time';
-// import IconHeart from '~icons/app/heart';
-
-// import OIcon from '@/components/OIcon.vue';
-
 import { getUserProjectData } from '@/api/api-user';
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 
@@ -89,7 +84,7 @@ function goDetail(user, name) {
 
 function setNewClick() {
   router.push({
-    path: `/new/projects`,
+    path: '/new/projects',
   });
 }
 watch(props, () => {

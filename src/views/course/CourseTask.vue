@@ -122,15 +122,15 @@ function handleCurrentPage(val) {
   );
   toTop();
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 function handleSizeChange(val) {
   taskPager.size = val;
   currentTaskData.value = taskData.value.slice(
     taskPager.page * taskPager.size - taskPager.size,
     taskPager.page * taskPager.size
   );
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

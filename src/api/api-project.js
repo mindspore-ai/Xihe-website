@@ -16,7 +16,7 @@ function getHeaderConfig() {
  * @returns
  */
 export function getProjectData(params) {
-  const url = `/server/project`;
+  const url = '/server/project';
   // 登录之后携带token
   return request.get(url, { params }).then((res) => {
     return res;
@@ -28,7 +28,7 @@ export function getProjectData(params) {
  * @returns
  */
 export function getUserDig(params) {
-  const url = `/server/user/like`;
+  const url = '/server/user/like';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res;
   });
@@ -38,7 +38,7 @@ export function getUserDig(params) {
  * @returns
  */
 export function cancelCollection(params) {
-  const url = `/server/user/like`;
+  const url = '/server/user/like';
   return request
     .delete(url, { ...{ data: params }, ...getHeaderConfig() })
     .then((res) => {
@@ -51,7 +51,7 @@ export function cancelCollection(params) {
  * @returns
  */
 export function setNewProject(params) {
-  const url = `/server/project`;
+  const url = '/server/project';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -96,7 +96,7 @@ export function modifyTags(params, owner, id) {
  * @returns
  */
 export function getModelTags() {
-  const url = `/api/base/filter/`;
+  const url = '/api/base/filter/';
   return request.get(url).then((res) => {
     return res.data;
   });
@@ -147,7 +147,7 @@ export function deleteProject(owner, name) {
  */
 
 export function projectsOrder(params) {
-  const url = `/api/projects/`;
+  const url = '/api/projects/';
   return request.get(url, params).then((res) => {
     return res.data;
   });
@@ -367,7 +367,8 @@ export function getLog(pk) {
  * @returns
  */
 export function getGuide() {
-  const url = `https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_docs/README.md`;
+  const url =
+    'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_docs/README.md';
   return request
     .get(url)
     .then((res) => {
@@ -399,7 +400,7 @@ export function autoEvaluate(params, projectId, trainId) {
  * @returns
  */
 export function cloudDisposeList() {
-  const url = `/server/cloud`;
+  const url = '/server/cloud';
   return request.get(url, getHeaderConfig()).then((res) => {
     return res;
   });
@@ -410,7 +411,7 @@ export function cloudDisposeList() {
  * @returns
  */
 export function cloudSubscribe(id) {
-  const url = `/server/cloud/subscribe`;
+  const url = '/server/cloud/subscribe';
   return request.post(url, { cloud_id: id }, getHeaderConfig()).then((res) => {
     return res;
   });

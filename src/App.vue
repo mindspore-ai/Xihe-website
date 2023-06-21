@@ -20,6 +20,13 @@ const { t, locale } = useI18n();
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
 const useDialog = useEmailDialogState();
+const meauActive = ref(false);
+const route = useRoute();
+const router = useRouter();
+
+const noHeader = ref(false);
+const header = ref(null);
+const isHeaderTransparent = ref(false);
 
 const loginedDropdownItems = reactive([
   {
@@ -74,16 +81,19 @@ const loginedDropdownItems = reactive([
   },
 ]);
 
-const route = useRoute();
-const router = useRouter();
-
-const header = ref(null);
-const isHeaderTransparent = ref(false);
-
 const setHeader = () => {
   const scrollLeft = document.documentElement.scrollLeft;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
+
+// 监听向下滚动
+function scroll(e) {
+  if (e.deltaY < 0) {
+    noHeader.value = false;
+  } else if (route.name === 'home') {
+    noHeader.value = true;
+  }
+}
 
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
@@ -244,16 +254,6 @@ onMounted(() => {
   window.addEventListener('resize', onResize);
 });
 
-const noHeader = ref(false);
-// 监听向下滚动
-function scroll(e) {
-  if (e.deltaY < 0) {
-    noHeader.value = false;
-  } else if (route.name === 'home') {
-    noHeader.value = true;
-  }
-}
-
 const mobileNav = reactive([
   {
     name: computed(() => {
@@ -365,7 +365,6 @@ const mobileNav = reactive([
   },
 ]);
 
-const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
   mobileNav[3].isActive = false;
@@ -401,18 +400,19 @@ const handleCommand = () => {
   }
 };
 
-// cookies使用提示
-const isCookieTip = ref(false);
-function onCookieClick() {
-  isCookieTip.value = false;
-  document.cookie = 'xihe-cookie=false; expires=' + getCookieExpirationDate(6);
-}
 // 设置cookie过期时间
 function getCookieExpirationDate(months) {
   const date = new Date();
   date.setMonth(date.getMonth() + months);
   return date.toUTCString();
 }
+// cookies使用提示
+const isCookieTip = ref(false);
+function onCookieClick() {
+  isCookieTip.value = false;
+  document.cookie = 'xihe-cookie=false; expires=' + getCookieExpirationDate(6);
+}
+
 onMounted(() => {
   const cookies = document.cookie;
   const cookiesArray = cookies.split('; ');

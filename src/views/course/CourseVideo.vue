@@ -14,6 +14,42 @@ const isFirst = ref(true);
 const currentTime = ref(0);
 const videoDuration = ref(null);
 
+// 没有points字段的视频信息
+const videaData1 = computed(() => {
+  return chapterData.value.lessons.find((val) => {
+    return (
+      val.id === route.params.chapterId ||
+      (val.points &&
+        val.points.find((child) => child.id === route.params.chapterId))
+    );
+  });
+});
+// 有points字段的视频信息
+const videaData2 = computed(() => {
+  return videaData1.value?.points
+    ? videaData1.value.points.find((item) => {
+        return item.id === route.params.chapterId;
+      })
+    : videaData1.value;
+});
+// 当前的课节信息（含课节视频）
+const chapterData = computed(() => {
+  const data = sectionData.value.find((item) => {
+    return item.lessons.find((val) => {
+      return (
+        val.id === route.params.chapterId ||
+        (val.points &&
+          val.points.find((child) => child.id === route.params.chapterId))
+      );
+    });
+  });
+  if (!data) {
+    router.replace({ name: '404' });
+    return;
+  }
+  return data;
+});
+
 onUpdated(() => {
   // 获取当前视频播放进度
   if (videaData1.value.points) {
@@ -57,43 +93,6 @@ function getDetailData() {
   });
 }
 getDetailData();
-
-// 当前的课节信息（含课节视频）
-const chapterData = computed(() => {
-  const data = sectionData.value.find((item) => {
-    return item.lessons.find((val) => {
-      return (
-        val.id === route.params.chapterId ||
-        (val.points &&
-          val.points.find((child) => child.id === route.params.chapterId))
-      );
-    });
-  });
-  if (!data) {
-    router.replace({ name: '404' });
-    return;
-  }
-  return data;
-});
-
-// 没有points字段的视频信息
-const videaData1 = computed(() => {
-  return chapterData.value.lessons.find((val) => {
-    return (
-      val.id === route.params.chapterId ||
-      (val.points &&
-        val.points.find((child) => child.id === route.params.chapterId))
-    );
-  });
-});
-// 有points字段的视频信息
-const videaData2 = computed(() => {
-  return videaData1.value?.points
-    ? videaData1.value.points.find((item) => {
-        return item.id === route.params.chapterId;
-      })
-    : videaData1.value;
-});
 
 // 视频时长处理
 function handleTimeUpdate() {

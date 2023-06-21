@@ -38,6 +38,32 @@ import {
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 // 当前项目的详情数据
+
+const route = useRoute();
+const router = useRouter();
+const userInfoStore = useUserInfoStore();
+
+const projectId = detailData.value.id;
+const trainData = ref([]);
+const trainId = ref('');
+const tips = ref(false);
+const btnShow = ref(false);
+const description = ref('');
+let socket;
+
+const i18n = {
+  description1:
+    '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
+  description2:
+    '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
+  rebuildDesc:
+    '确认是否重建此训练实例，此操作会在原来的配置基础上再创建一份训练实例。',
+  deleteDesc: '确认是否将此训练实例删除，注意此操作不可逆',
+  terminateDesc: '确认是否将此训练实例终止，终止后将无法复原。',
+  confirm: '确定',
+  cancel: '取消',
+};
+
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -57,30 +83,6 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
-const route = useRoute();
-const router = useRouter();
-const userInfoStore = useUserInfoStore();
-
-const projectId = detailData.value.id;
-const trainData = ref([]);
-const trainId = ref('');
-const tips = ref(false);
-const btnShow = ref(false);
-const description = ref('');
-
-const i18n = {
-  description1:
-    '已有正在训练中的实例，暂不能创建新的训练实例。你可等待训练完成或终止当前训练来创建新的训练实例。',
-  description2:
-    '一个用户一个仓库最多只能创建5个训练实例，若需再创建，请删除之前的训练实例后再创建。',
-  rebuildDesc:
-    '确认是否重建此训练实例，此操作会在原来的配置基础上再创建一份训练实例。',
-  deleteDesc: '确认是否将此训练实例删除，注意此操作不可逆',
-  terminateDesc: '确认是否将此训练实例终止，终止后将无法复原。',
-  confirm: '确定',
-  cancel: '取消',
-};
-
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
   if (!isAuthentic.value) {
@@ -96,6 +98,69 @@ function goSelectFile() {
   });
   window.open(routerData.href, '_blank');
 }
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      trainData.value = JSON.parse(event.data).data;
+      if (trainData.value) {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+
+        if (bool || trainData.value.length >= 5) {
+          btnShow.value = true;
+        } else {
+          btnShow.value = false;
+        }
+
+        if (trainData.value[trainData.value.length - 1].error) {
+          btnShow.value = false;
+          ElMessage({
+            type: 'error',
+            message: trainData.value[trainData.value.length - 1].error,
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
+
+function getTrainList() {
+  try {
+    trainList(projectId).then((res) => {
+      trainData.value = res.data.data;
+      // 列表为空可以创建实例
+      if (!trainData.value) {
+        btnShow.value = false;
+      } else {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+
+        if (trainData.value.length < 5 && !bool) {
+          btnShow.value = false;
+        } else if (bool) {
+          btnShow.value = true;
+          socket = setWebsocket(
+            `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+          );
+        } else if (trainData.value.length >= 5 && !bool) {
+          btnShow.value = true;
+        }
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+getTrainList();
 
 // 删除训练
 const showDel = ref(false);
@@ -180,70 +245,6 @@ function goTrainLog(trainId) {
       trainId: trainId,
     },
   });
-}
-
-let socket;
-function getTrainList() {
-  try {
-    trainList(projectId).then((res) => {
-      trainData.value = res.data.data;
-      // 列表为空可以创建实例
-      if (!trainData.value) {
-        btnShow.value = false;
-      } else {
-        let bool = trainData.value.some(
-          (item) => item.status === 'scheduling' || item.status === 'Running'
-        );
-
-        if (trainData.value.length < 5 && !bool) {
-          btnShow.value = false;
-        } else if (bool) {
-          btnShow.value = true;
-          socket = setWebsocket(
-            `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
-          );
-        } else if (trainData.value.length >= 5 && !bool) {
-          btnShow.value = true;
-        }
-      }
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-getTrainList();
-
-function setWebsocket(url) {
-  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
-
-  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-  socket.onmessage = function (event) {
-    try {
-      trainData.value = JSON.parse(event.data).data;
-      if (trainData.value) {
-        let bool = trainData.value.some(
-          (item) => item.status === 'scheduling' || item.status === 'Running'
-        );
-
-        if (bool || trainData.value.length >= 5) {
-          btnShow.value = true;
-        } else {
-          btnShow.value = false;
-        }
-
-        if (trainData.value[trainData.value.length - 1].error) {
-          btnShow.value = false;
-          ElMessage({
-            type: 'error',
-            message: trainData.value[trainData.value.length - 1].error,
-          });
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  return socket;
 }
 
 const closeSocket = () => {

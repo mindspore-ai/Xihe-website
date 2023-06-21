@@ -132,12 +132,6 @@ export default {
         PATH: '/modelzoo/luojia',
         INTRO: '/modelzoo/luojia/introduce',
       },
-      // {
-      //   MODELZOO_NAME: '鹏程.盘古',
-      //   MODELZOO_DESC: '业界首个千亿级参数中文自然语言处理大模型',
-      //   IMAGE: modelzoo_pangu,
-      //   PATH: '/modelzoo/pangu',
-      // },
     ],
   },
   // 模型库

@@ -145,6 +145,21 @@ function verifyFile() {
 }
 verifyFile();
 
+function handleClick(index) {
+  if (route.params.contents.length === index) {
+    return false;
+  } else {
+    let contents = route.params.contents.splice(0, index);
+    router.push({
+      name: `${prop.moduleName}File`,
+      params: {
+        user: route.params.user,
+        name: route.params.name,
+        contents,
+      },
+    });
+  }
+}
 async function headleDelFile(path) {
   deleteFile({
     type: prop.moduleName,
@@ -202,21 +217,7 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
-function handleClick(index) {
-  if (route.params.contents.length === index) {
-    return false;
-  } else {
-    let contents = route.params.contents.splice(0, index);
-    router.push({
-      name: `${prop.moduleName}File`,
-      params: {
-        user: route.params.user,
-        name: route.params.name,
-        contents,
-      },
-    });
-  }
-}
+
 watch(
   () => codeString.value,
   (val) => {

@@ -26,6 +26,7 @@ function getHeaderConfig() {
   return headersConfig;
 }
 const isLogined = computed(() => useLoginStore().isLogined);
+const disposeList = ref([]);
 
 const buttonText = ref('启动');
 const isDisabled = ref(false); // 按钮是否禁用
@@ -143,7 +144,6 @@ async function getPodInfo(id) {
   }
 }
 
-const disposeList = ref([]);
 // 获取云资源配置列表
 async function getCloudDisposeList() {
   try {

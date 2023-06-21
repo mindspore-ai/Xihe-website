@@ -25,6 +25,8 @@ const repoDetailData = computed(() => {
 });
 const uploadRef = ref();
 const description = ref('');
+const fileList = ref([]);
+
 const prop = defineProps({
   moduleName: {
     type: String,
@@ -44,7 +46,20 @@ const i18n = {
   },
 };
 const Progress = ref(0);
-
+function handleClick(index) {
+  let contents = '';
+  if (route.params.contents) {
+    contents = route.params.contents.splice(0, index);
+  }
+  router.push({
+    name: `${prop.moduleName}File`,
+    params: {
+      user: route.params.user,
+      name: route.params.name,
+      contents,
+    },
+  });
+}
 // gitlab 上传
 async function upLoad(param) {
   let path = `${param.file.name}`;
@@ -75,8 +90,6 @@ async function upLoad(param) {
   });
 }
 
-const fileList = ref([]);
-
 function onChange() {
   fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
   description.value = `upload ${fileList.value[0].name}`;
@@ -95,20 +108,6 @@ function beforeUpload(rawFile) {
 const submitUpload = () => {
   uploadRef.value.submit();
 };
-function handleClick(index) {
-  let contents = '';
-  if (route.params.contents) {
-    contents = route.params.contents.splice(0, index);
-  }
-  router.push({
-    name: `${prop.moduleName}File`,
-    params: {
-      user: route.params.user,
-      name: route.params.name,
-      contents,
-    },
-  });
-}
 </script>
 <template>
   <div class="upload">

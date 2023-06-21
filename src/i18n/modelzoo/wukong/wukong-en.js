@@ -212,8 +212,11 @@ export default {
   NO_COLLECTION: 'No favorites.',
   NO_PUBLIC: 'No public paintings yet.',
   TIP_TITLE: 'Cancel Public Painting',
+  TIP_TITLE2: 'Cancel Public Picture',
   TIP_TEXT:
     'The painting has not been favorited and cannot be retrieved. Are you sure you want to cancel public availability of this painting?',
+  TIP_TEXT2:
+    'After unbookmark this picture, you will not be able to retrieve it. Are you sure to unbookmark this picture?',
   BUTTON_CANCEL: 'No',
   BUTTON_CONFIRM: 'Yes',
   ICON_PUBLIC: 'Public',
@@ -224,6 +227,7 @@ export default {
   DOWNLOAD: 'Download',
   BY_AI: '由AI模型生成',
   CANCEL_PUBLIC_SUCCESS: '取消公开成功',
+  CANCEL_COLLECTION_SUCCESS: '取消收藏成功',
   FANS: '粉丝',
   FOCUS: '关注',
   CANCEL_DIG: '取消点赞成功',

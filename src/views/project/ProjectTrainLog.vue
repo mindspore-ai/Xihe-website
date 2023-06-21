@@ -26,6 +26,7 @@ import IconAbnormal from '~icons/app/abnormal';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 

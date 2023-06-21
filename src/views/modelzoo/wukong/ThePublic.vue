@@ -9,6 +9,7 @@ import IconLike from '~icons/app/wukong-like';
 import IconHeartgray from '~icons/app/heart-gray';
 
 import { useUserInfoStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 import {
   publicPictures,
@@ -437,7 +438,7 @@ async function cancelImgCollected(item) {
     }
   }
 }
-/* 确认公开弹窗 */
+/* 确认取消公开弹窗 */
 :deep(.confirm-dlg) {
   --el-dialog-margin-top: 34vh;
   @media screen and (max-width: 768px) {

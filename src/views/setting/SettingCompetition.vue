@@ -31,7 +31,7 @@ let overPager = reactive({
 // 获取用户参加的所有比赛
 const personalData = usePersonalInfoStore();
 function getCompetitons() {
-  allCompetition.value = personalData.competition.reverse();
+  allCompetition.value = personalData.competition?.reverse();
   perPageAllData.value = allCompetition.value?.slice(0, allPager.size);
 }
 getCompetitons();
@@ -42,8 +42,8 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'in-progress',
     }).then((res) => {
-      inprogressCompetition.value = res.data.data.reverse();
-      perPageInprogressData.value = inprogressCompetition.value.slice(
+      inprogressCompetition.value = res.data.data?.reverse();
+      perPageInprogressData.value = inprogressCompetition.value?.slice(
         0,
         inProgressPager.size
       );
@@ -53,8 +53,8 @@ const handleClick = (tab) => {
       mine: userInfoStore.userName,
       status: 'over',
     }).then((res) => {
-      overCompetition.value = res.data.data.reverse();
-      perPageOverData.value = overCompetition.value.slice(0, overPager.size);
+      overCompetition.value = res.data.data?.reverse();
+      perPageOverData.value = overCompetition.value?.slice(0, overPager.size);
     });
   }
 };
@@ -73,7 +73,7 @@ function goDetail(id) {
 const layout = ref('prev, pager, next');
 function handleAllPager(val) {
   allPager.page = val;
-  perPageAllData.value = allCompetition.value.slice(
+  perPageAllData.value = allCompetition.value?.slice(
     allPager.page * allPager.size - allPager.size,
     allPager.page * allPager.size
   );
@@ -82,7 +82,7 @@ function handleAllPager(val) {
 
 function handleInprogressPager(val) {
   inProgressPager.page = val;
-  perPageInprogressData.value = inprogressCompetition.value.slice(
+  perPageInprogressData.value = inprogressCompetition.value?.slice(
     inProgressPager.page * inProgressPager.size - inProgressPager.size,
     inProgressPager.page * inProgressPager.size
   );
@@ -90,7 +90,7 @@ function handleInprogressPager(val) {
 }
 function handleOverPager(val) {
   overPager.page = val;
-  perPageOverData.value = overCompetition.value.slice(
+  perPageOverData.value = overCompetition.value?.slice(
     overPager.page * overPager.size - overPager.size,
     overPager.page * overPager.size
   );
@@ -253,6 +253,7 @@ function toTop() {
 
 <style lang="scss" scoped>
 .competition {
+  min-height: 500px;
   height: 100%;
   // background-color: red;
   position: relative;

@@ -33,6 +33,7 @@ import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 import {
   getFinetuneList,

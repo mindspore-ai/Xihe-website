@@ -8,7 +8,7 @@ import { formatSeconds } from '@/shared/utils';
 
 import IconWarning from '~icons/app/activity-warning';
 import warningImg from '@/assets/icons/warning.png';
-import { ElDialog } from 'element-plus';
+import { ElDialog, ElMessage } from 'element-plus';
 
 const router = useRouter();
 

@@ -10,7 +10,7 @@ import NoRelate from '@/components/train/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-import { ElDialog } from 'element-plus';
+import { ElDialog, ElMessage } from 'element-plus';
 
 import { addDataset, deleteDataset, getReadmeInfo } from '@/api/api-model';
 import { getGitlabFileRaw } from '@/api/api-gitlab';

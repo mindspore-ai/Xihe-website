@@ -15,6 +15,7 @@ import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
 
 import gif from '@/assets/gifs/loading.gif';
+import { ElMessage } from 'element-plus';
 
 import {
   handleLuoJiaInfer,
@@ -105,30 +106,15 @@ function handleInferClick(mobile) {
     });
     return;
   }
-  if (mobile === 'mobile') {
-    activeIndex1.value = -1;
-    if (!isLogined.value) {
-      goAuthorize();
-    } else {
-      if (fileList.value[0]) {
-        isInfer.value = true;
-      } else {
-        ElMessage({
-          type: 'warning',
-          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
-        });
-        return;
-      }
-    }
-  }
+  handleMobile(mobile);
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
-    if (mobile !== 'mobile') {
+    if (mobile === 'mobile') {
+      formData.append('picture', fileList.value[0].raw);
+    } else {
       formData = new FormData();
       formData.append('picture', tblob.value);
-    } else {
-      formData.append('picture', fileList.value[0].raw);
     }
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
@@ -136,43 +122,7 @@ function handleInferClick(mobile) {
         loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT2');
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          if (res.data?.data) {
-            if (mobile === 'mobile') {
-              activeIndex.value = -1;
-              analysis.value = '';
-              formData.delete('file');
-              formData = new FormData();
-              imageUrl.value = res.data.data.answer;
-              request
-                .get(res.data.data.answer, {
-                  responseType: 'blob',
-                })
-                .then((res) => {
-                  let file = new File([res.data], 'img', {
-                    type: 'image/png',
-                    lastModified: Date.now(),
-                  });
-                  fileList.value = [];
-                  fileList.value[0] = { raw: file };
-                });
-
-              handleLuoJiaHistory().then((res) => {
-                if (res.data) {
-                  gridData.value = [];
-                  historyInfo.value.create_at = res.data[0].created_at;
-                  historyInfo.value.id = res.data[0].id;
-                  gridData.value.push(historyInfo.value);
-                } else {
-                  gridData.value = [];
-                }
-              });
-            } else {
-              const aurl = res.data.data.answer;
-              const tempimg = document.createElement('img');
-              tempimg.src = aurl;
-              viewer.value.setImageAsLayer(tempimg);
-            }
-          }
+          handleRes(mobile, res);
         });
       } else {
         isShow.value = false;
@@ -192,6 +142,63 @@ function handleInferClick(mobile) {
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG5'),
     });
+  }
+}
+function handleRes(mobile, res) {
+  if (res.data?.data) {
+    if (mobile === 'mobile') {
+      activeIndex.value = -1;
+      analysis.value = '';
+      formData.delete('file');
+      formData = new FormData();
+      imageUrl.value = res.data.data.answer;
+      request
+        .get(res.data.data.answer, {
+          responseType: 'blob',
+        })
+        .then((res) => {
+          let file = new File([res.data], 'img', {
+            type: 'image/png',
+            lastModified: Date.now(),
+          });
+          fileList.value = [];
+          fileList.value[0] = { raw: file };
+        });
+
+      handleLuoJiaHistory().then((res) => {
+        if (res.data) {
+          gridData.value = [];
+          historyInfo.value.create_at = res.data[0].created_at;
+          historyInfo.value.id = res.data[0].id;
+          gridData.value.push(historyInfo.value);
+        } else {
+          gridData.value = [];
+        }
+      });
+    } else {
+      const aurl = res.data.data.answer;
+      const tempimg = document.createElement('img');
+      tempimg.src = aurl;
+      viewer.value.setImageAsLayer(tempimg);
+    }
+  }
+}
+function handleMobile(mobile) {
+  if (mobile === 'mobile') {
+    activeIndex1.value = -1;
+    if (!isLogined.value) {
+      goAuthorize();
+    } else {
+      if (fileList.value[0]) {
+        isInfer.value = true;
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
+        });
+        return;
+      }
+    }
   }
 }
 

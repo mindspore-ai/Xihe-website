@@ -7,6 +7,7 @@ import { setUserData } from '@/api/api-user';
 import OButton from '@/components/OButton.vue';
 
 import avatarUrl from '../../../config/avatar-url';
+import { ElMessage } from 'element-plus';
 const filterData = ref();
 
 const userInfoStore = useUserInfoStore();
@@ -56,7 +57,7 @@ function toggleDelDlg(flag) {
 function saveData() {
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    bio: userDescription.value || userInfoStore.description,
+    bio: userDescription.value,
     avatar_id: avatar.value,
   })
     .then(() => {

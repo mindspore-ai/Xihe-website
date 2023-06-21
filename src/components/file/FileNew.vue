@@ -14,6 +14,7 @@ import IconPoppver from '~icons/app/popover.svg';
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
 import { useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();

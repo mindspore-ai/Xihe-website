@@ -105,30 +105,15 @@ function handleInferClick(mobile) {
     });
     return;
   }
-  if (mobile === 'mobile') {
-    activeIndex1.value = -1;
-    if (!isLogined.value) {
-      goAuthorize();
-    } else {
-      if (fileList.value[0]) {
-        isInfer.value = true;
-      } else {
-        ElMessage({
-          type: 'warning',
-          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
-        });
-        return;
-      }
-    }
-  }
+  handleMobile(mobile);
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
-    if (mobile !== 'mobile') {
+    if (mobile === 'mobile') {
+      formData.append('picture', fileList.value[0].raw);
+    } else {
       formData = new FormData();
       formData.append('picture', tblob.value);
-    } else {
-      formData.append('picture', fileList.value[0].raw);
     }
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
@@ -194,6 +179,24 @@ function handleRes(mobile, res) {
       const tempimg = document.createElement('img');
       tempimg.src = aurl;
       viewer.value.setImageAsLayer(tempimg);
+    }
+  }
+}
+function handleMobile(mobile) {
+  if (mobile === 'mobile') {
+    activeIndex1.value = -1;
+    if (!isLogined.value) {
+      goAuthorize();
+    } else {
+      if (fileList.value[0]) {
+        isInfer.value = true;
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
+        });
+        return;
+      }
     }
   }
 }

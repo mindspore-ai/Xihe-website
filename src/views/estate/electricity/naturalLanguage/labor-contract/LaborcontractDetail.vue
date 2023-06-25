@@ -8,6 +8,10 @@ import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const router = useRouter();
 const screenWidth = useWindowResize();
 
@@ -20,16 +24,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">电力合同风险评估与管理</span>
+      <span class="title">{{ t('laborcontract.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/electricity' }">
-            电力专区
+            {{ t('laborcontract.ELETRIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            电力合同风险评估与管理
+            {{ t('laborcontract.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -40,9 +44,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">电力合同风险评估与管理</div>
+              <div class="banner-title">{{ t('laborcontract.TITLE') }}</div>
               <div class="banner-desc">
-                平台利用风险判示模型识别电力合同的风险控制点，并对合同内容进行关键信息提取，实现对合同风险的快速识别和及时管控。同时，该工具还提供模板化风险维护建议和全盘风险展示功能，助力电力企业实现更高效、全面的合同风险管理。
+                {{ t('laborcontract.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -56,7 +60,7 @@ function goBack() {
                   type="primary"
                   class="home-btn"
                 >
-                  运行模型
+                  {{ t('laborcontract.RUN_MODEL') }}
                   <template #suffix>
                     <OIcon><IconArrowRight /></OIcon>
                   </template>

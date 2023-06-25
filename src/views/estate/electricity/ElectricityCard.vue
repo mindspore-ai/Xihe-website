@@ -3,6 +3,9 @@ import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 import IconUser from '~icons/app/user.svg';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 
@@ -43,7 +46,7 @@ function goExperience() {
         </div>
 
         <OButton size="mini" animation @click="goExperience">
-          了解详情
+          {{ t('electricity.DETAIL') }}
         </OButton>
       </div>
     </div>

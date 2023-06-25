@@ -6,7 +6,9 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const screenWidth = useWindowResize();
 const router = useRouter();
 
@@ -19,16 +21,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">变电站AI分析主机</span>
+      <span class="title">{{ t('substation.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/electricity' }">
-            电力专区
+            {{ t('substation.ELECTRIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            变电站AI分析主机
+            {{ t('substation.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +41,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">变电站AI分析主机</div>
+              <div class="banner-title">{{ t('substation.TITLE') }}</div>
               <div class="banner-desc">
-                变电站AI分析主机内置设备缺陷识别、设备状态判别、安全管控、环境状态感知等多类模型，可以对变电站内设备、环境状态、作业安全进行自动诊断和预警，实现“智能巡检”。变电站AI分析主机产品应用能够大幅降低运维人员日常工作，有力提升变电站巡视效率和监控强度，提升缺陷的应急响应速度，缩短缺陷的处理时间。数据显示，应用变电电站AI分析主机对某220kV变电站4000+点位巡检，单次巡检只要30+分钟，小于巡检规范要求的2小时，效能提升70%，利用AI分析主机能够提升巡检频次，在节约成本的同时确保缺陷及时发现、及时处理，保障电网安全稳定运行。
+                {{ t('substation.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -51,7 +53,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('substation.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>
@@ -60,7 +62,6 @@ function goBack() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
               :nav-items="navItems"

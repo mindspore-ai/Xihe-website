@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, defineEmits } from 'vue';
+import { ref, watch, onMounted, computed, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -28,6 +28,9 @@ const result = ref();
 
 const isShow = ref(false);
 const addSearch = ref('');
+
+const rightDiv = ref(null);
+const leftDiv = ref(null);
 
 const emit = defineEmits(['on-click']);
 const detailData = computed(() => {
@@ -192,10 +195,28 @@ watch(
     immediate: true,
   }
 );
+
+// 上滑后固定右侧div
+onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightDiv.value) {
+        if (intervalTop <= 80) {
+          rightDiv.value.style.position = 'sticky';
+          rightDiv.value.style.top = '80px';
+        } else {
+          rightDiv.value.style.position = 'static';
+        }
+      }
+    }
+  };
+  window.addEventListener('scroll', handleScroll); // 在页面加载后添加滚动事件监听器
+});
 </script>
 <template>
   <div v-if="detailData.id" class="model-card">
-    <div v-if="codeString" class="markdown-body">
+    <div v-if="codeString" ref="leftDiv" class="markdown-body">
       <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
       <o-button
         v-if="detailData.owner === userInfo.userName"
@@ -232,46 +253,48 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div class="download-data">
-        <div class="download-title">{{ i18n.recentDownload }}</div>
-        <span class="download-count">{{ detailData.download_count }}</span>
-      </div>
-      <!-- 添加数据集 -->
-      <div class="dataset-data">
-        <div class="add-title">
-          <div class="title">{{ i18n.dataset }}</div>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addRelateClick"
-          >
-            {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
+      <div ref="rightDiv" class="relate-wrap">
+        <div class="download-data">
+          <div class="download-title">{{ i18n.recentDownload }}</div>
+          <span class="download-count">{{ detailData.download_count }}</span>
         </div>
-        <div class="dataset-box">
-          <relate-card
-            v-if="detailData.related_datasets"
+        <!-- 添加数据集 -->
+        <div class="dataset-data">
+          <div class="add-title">
+            <div class="title">{{ i18n.dataset }}</div>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addRelateClick"
+            >
+              {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
+          <div class="dataset-box">
+            <relate-card
+              v-if="detailData.related_datasets"
+              :detail-data="detailData"
+              :name="'related_datasets'"
+              @delete="deleteClick"
+              @jump="goDetailClick"
+            ></relate-card>
+            <no-relate v-else relate-name="dataset"></no-relate>
+          </div>
+        </div>
+        <!-- 项目 -->
+        <div class="related-project">
+          <div class="add-title">
+            <div class="title">{{ i18n.relatedItem }}</div>
+          </div>
+          <project-relate-card
+            v-if="detailData.related_projects"
             :detail-data="detailData"
-            :name="'related_datasets'"
+            :name="'related_projects'"
             @delete="deleteClick"
-            @jump="goDetailClick"
-          ></relate-card>
-          <no-relate v-else relate-name="dataset"></no-relate>
+            @jump="goProjectClick"
+          ></project-relate-card
+          ><no-relate v-else relate-name="project"></no-relate>
         </div>
-      </div>
-      <!-- 项目 -->
-      <div class="related-project">
-        <div class="add-title">
-          <div class="title">{{ i18n.relatedItem }}</div>
-        </div>
-        <project-relate-card
-          v-if="detailData.related_projects"
-          :detail-data="detailData"
-          :name="'related_projects'"
-          @delete="deleteClick"
-          @jump="goProjectClick"
-        ></project-relate-card
-        ><no-relate v-else relate-name="project"></no-relate>
       </div>
     </div>
 
@@ -399,8 +422,11 @@ watch(
     width: 100%;
     color: #000;
     background: #fff;
-    padding: 40px 24px;
+    padding: 0px 24px 40px;
     border-radius: 16px;
+    .relate-wrap {
+      padding-top: 40px;
+    }
 
     h1,
     h2,

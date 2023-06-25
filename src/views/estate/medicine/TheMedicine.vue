@@ -6,25 +6,28 @@ import surgeryImg from '@/assets/imgs/estate/medicine/surgery.png';
 import diagnosticImg from '@/assets/imgs/estate/medicine/diagnostic-system.png';
 // import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const cases = [
   {
     id: 0,
-    type: '子宫内膜癌筛查联合方案',
-    name: '西安美佳家医疗科技有限责任公司基于昇思MindSpore AI框架在华为昇腾910处理器中成功构建了一套人工智能…',
+    type: t('medicine.CASES[0].TYPE'),
+    name: t('medicine.CASES[0].DESC'),
     image: cancerImg,
     url: '/medicine/metrocarcinoma',
   },
   {
     id: 1,
-    type: 'TrueSight人工智能临床外科手术决策支持系统',
-    name: '本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医…',
+    type: t('medicine.CASES[1].TYPE'),
+    name: t('medicine.CASES[1].DESC'),
     image: surgeryImg,
     url: '/medicine/truesight',
   },
   {
     id: 2,
-    type: '智慧病理诊断系统',
-    name: '智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。',
+    type: t('medicine.CASES[2].TYPE'),
+    name: t('medicine.CASES[2].DESC'),
     image: diagnosticImg,
     url: '/medicine/diagnosis',
   },
@@ -41,14 +44,14 @@ function goCasePath(item) {
     <div class="medicine-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="estate-banner">
-        <div class="banner-title">昇思大模型平台助力产业发展</div>
+        <div class="banner-title">{{ t('medicine.TITLE') }}</div>
         <div class="banner-desc">
-          昇思MindSpore广泛应用在互联网、零售、电力、工业、医疗、安防监控、物流等行业场景中
+          {{ t('medicine.DESCRIPTION') }}
         </div>
       </div>
     </div>
     <div class="medicine-wrapper">
-      <p class="application-cases">应用案例</p>
+      <p class="application-cases">{{ t('medicine.APPLICATION_CASE') }}</p>
 
       <div class="case-cards">
         <div

@@ -452,19 +452,21 @@ onUnmounted(() => {
 });
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll); // 在页面加载后添加滚动事件监听器
-});
-const handleScroll = () => {
-  const intervalTop = leftDiv.value.getBoundingClientRect().top;
-  if (rightDiv.value) {
-    if (intervalTop <= 80) {
-      rightDiv.value.style.position = 'sticky';
-      rightDiv.value.style.top = '80px';
-    } else {
-      rightDiv.value.style.position = 'static';
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightDiv.value) {
+        if (intervalTop <= 80) {
+          rightDiv.value.style.position = 'sticky';
+          rightDiv.value.style.top = '80px';
+        } else {
+          rightDiv.value.style.position = 'static';
+        }
+      }
     }
-  }
-};
+  };
+  window.addEventListener('scroll', handleScroll);
+});
 </script>
 <template>
   <div v-if="detailData" class="model-card">

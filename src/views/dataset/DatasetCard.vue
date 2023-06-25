@@ -138,19 +138,21 @@ watch(
 
 // 上滑固定右侧div
 onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightModel.value) {
+        if (intervalTop <= 80) {
+          rightModel.value.style.position = 'sticky';
+          rightModel.value.style.top = '80px';
+        } else {
+          rightModel.value.style.position = 'static';
+        }
+      }
+    }
+  };
   window.addEventListener('scroll', handleScroll);
 });
-const handleScroll = () => {
-  const intervalTop = leftDiv.value.getBoundingClientRect().top;
-  if (rightModel.value) {
-    if (intervalTop <= 80) {
-      rightModel.value.style.position = 'sticky';
-      rightModel.value.style.top = '80px';
-    } else {
-      rightModel.value.style.position = 'static';
-    }
-  }
-};
 </script>
 <template>
   <div v-if="detailData.id" class="model-card">

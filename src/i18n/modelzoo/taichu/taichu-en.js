@@ -21,9 +21,8 @@ export default {
       'The algorithm automatically generates descriptive text based on the input image. It is an important task in image understanding.',
     START_INFER: 'Start Inference',
     START_INFER: 'Start Inference',
-    ACTION: 'Drag and upload an image (JPG, JEPG, or PNG) less than 2M.',
-    MOBIlE_ACTION:
-      'Select and upload an image (JPG, JEPG, or PNG) less than 2M.',
+    ACTION: 'Drag and upload an image less than 2M.',
+    MOBIlE_ACTION: 'Select and upload an image less than 2M.',
     CUSTOM_IMG: 'Custom image',
     MOBIlE_CUSTOM: 'Custom',
     ANALYSE_RESULT: 'Result Analysis',

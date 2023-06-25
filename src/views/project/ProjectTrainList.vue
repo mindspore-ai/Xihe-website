@@ -43,7 +43,6 @@ const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 
-const projectId = detailData.value.id;
 const trainData = ref([]);
 const trainId = ref('');
 const tips = ref(false);
@@ -67,6 +66,7 @@ const i18n = {
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
+const projectId = detailData.value.id;
 
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;

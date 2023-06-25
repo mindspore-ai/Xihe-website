@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
 import IconArrowBlue from '~icons/app/arrow-blue';

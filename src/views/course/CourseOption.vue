@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, defineProps } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ONav from '@/components/ONav.vue';
 import { useCourseData } from '@/stores';

@@ -24,9 +24,36 @@ const date = new Date();
 const year = date.getFullYear();
 let month = date.getMonth() + 1;
 let day = date.getDate();
+const detailData = ref();
 
 if (month < 10) month = '0' + month;
 if (day < 10) day = '0' + day;
+
+async function upLoad(param) {
+  togglePhoneDlg(false);
+  submit(detailData1.id, param)
+    .then(() => {
+      getSubmissions(detailData1.id).then((res) => {
+        tableData.value = res.data.details;
+        if (tableData.value.length > 3) {
+          tableData.value = tableData.value.slice(0, 3);
+        }
+      });
+    })
+    .catch((err) => {
+      if (err.response.data?.msg === 'no permission to submit') {
+        ElMessage({
+          type: 'error',
+          message: '您未进入决赛，无需提交！',
+        });
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '上传失败,请稍后重试！',
+        });
+      }
+    });
+}
 const beforeUpload = (rawFile) => {
   if (
     detailData1.name === '昇思AI挑战赛-艺术家画作风格迁移' &&
@@ -55,39 +82,6 @@ const beforeUpload = (rawFile) => {
 };
 
 const Progress = ref(0);
-
-async function upLoad(param) {
-  togglePhoneDlg(false);
-  submit(detailData1.id, param)
-    .then(() => {
-      getSubmissions(detailData1.id).then((res) => {
-        tableData.value = res.data.details;
-        if (tableData.value.length > 3) {
-          tableData.value = tableData.value.slice(0, 3);
-        }
-      });
-    })
-    .catch((err) => {
-      if (err.response.data?.msg === 'no permission to submit') {
-        ElMessage({
-          type: 'error',
-          message: '您未进入决赛，无需提交！',
-        });
-      } else {
-        ElMessage({
-          type: 'error',
-          message: '上传失败,请稍后重试！',
-        });
-      }
-    });
-}
-const fileList = ref([]);
-function onChange() {
-  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
-}
-const submitUpload = () => {
-  uploadRef.value.submit();
-};
 function togglePhoneDlg(flag) {
   if (flag === undefined) {
     showPhoneDlg.value = !showPhoneDlg.value;
@@ -95,6 +89,15 @@ function togglePhoneDlg(flag) {
     showPhoneDlg.value = flag;
   }
 }
+
+const fileList = ref([]);
+function onChange() {
+  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+}
+const submitUpload = () => {
+  uploadRef.value.submit();
+};
+
 // 绑定关联项目
 const relatedPro = ref('');
 const newProject = ref('');
@@ -129,7 +132,6 @@ getSubmissions(detailData1.id).then((res) => {
   }
 });
 
-const detailData = ref();
 function goProjectClick() {
   if (
     (detailData1.is_competitor && detailData1.team_id === '') ||

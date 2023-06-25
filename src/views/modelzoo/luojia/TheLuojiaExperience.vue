@@ -96,6 +96,13 @@ async function handleDrawClick() {
     }
   }
 }
+
+const activeIndex1 = ref(-1);
+const fileList = ref([]);
+const activeIndex = ref(-1);
+const analysis = ref('');
+const imageUrl = ref('');
+
 // 1. 未选区域，点击识别提示，不发请求
 // 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
 function handleInferClick(mobile) {
@@ -292,7 +299,6 @@ const imgLists = [
     url: 'luojia-example-04',
   },
 ];
-const fileList = ref([]);
 function handleChange(val) {
   activeIndex1.value = 5;
   analysis.value = '';
@@ -303,6 +309,13 @@ function handleChange(val) {
   activeIndex.value = -1;
   imageUrl.value = URL.createObjectURL(val.raw);
 }
+
+const getImage = (name) => {
+  return new URL(
+    `../../../assets/imgs/luojia/luojia-example/${name}.jpg`,
+    import.meta.url
+  ).href;
+};
 function selectImage(item, index) {
   activeIndex.value = index;
   activeIndex1.value = index;
@@ -326,16 +339,6 @@ function selectImage(item, index) {
   }
 }
 
-const activeIndex = ref(-1);
-const activeIndex1 = ref(-1);
-const analysis = ref('');
-const imageUrl = ref('');
-const getImage = (name) => {
-  return new URL(
-    `../../../assets/imgs/luojia/luojia-example/${name}.jpg`,
-    import.meta.url
-  ).href;
-};
 const showPic = ref(false);
 const dialogImg = ref('');
 function enlarge(url) {

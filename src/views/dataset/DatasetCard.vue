@@ -53,8 +53,6 @@ const i18n = {
   emptyVisited: '无数据集卡片',
 };
 
-route.hash ? getReadMeFile() : '';
-
 // 获取README文件
 function getReadMeFile() {
   try {
@@ -82,6 +80,8 @@ function getReadMeFile() {
     console.error(error);
   }
 }
+
+route.hash ? getReadMeFile() : '';
 
 function handleEditor() {
   pushParams.contents = ['README.md'];

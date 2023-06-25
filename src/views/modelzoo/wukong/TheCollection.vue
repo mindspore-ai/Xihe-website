@@ -29,6 +29,9 @@ const screenWidth = useWindowResize();
 const userInfoStore = useUserInfoStore();
 const { toClipboard } = useClipboard();
 
+const imgInfoDlg = ref(false);
+const imageInfo = ref();
+
 const collecteImages = ref([]);
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
@@ -233,8 +236,6 @@ async function publicImage(imgId) {
 const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
 
 // 移动端点击收藏图片
-const imgInfoDlg = ref(false);
-const imageInfo = ref();
 function handleImageClick(img) {
   imageInfo.value = img;
   imgInfoDlg.value = true;

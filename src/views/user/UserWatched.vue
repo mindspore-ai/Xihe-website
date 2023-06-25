@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
@@ -110,14 +110,13 @@ function handleSizeChange(val) {
   }
   queryData.size = val;
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 
 function handleCurrentChange(val) {
   queryData.page = val;
   toTop();
-}
-
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 

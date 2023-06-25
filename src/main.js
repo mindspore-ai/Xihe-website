@@ -6,7 +6,6 @@ import { router } from './routers';
 
 import i18n from './i18n';
 
-// import '@authing/native-js-ui-components/lib/index.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/dark.css';
 import 'element-plus/theme-chalk/el-loading.css';

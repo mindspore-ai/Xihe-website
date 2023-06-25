@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';

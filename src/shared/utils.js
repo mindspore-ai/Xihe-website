@@ -18,8 +18,8 @@ export const changeByte = (byte) => {
     const sizeStr = `${size}`; // 转成字符串
     const index = sizeStr.indexOf('.'); // 获取小数点处的索引
     const dou = sizeStr.substr(index + 1, 2); // 获取小数点后两位的值
-    // eslint-disable-next-line eqeqeq
-    if (dou == '00') {
+
+    if (dou === '00') {
       // 判断后两位是否为00，如果是则删除00
       return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2);
     }
@@ -119,9 +119,9 @@ export function formatSeconds(value) {
     hour = parseInt(minute / 60);
     minute = parseInt(minute % 60);
   }
-  second < 10 ? (second = '0' + second) : (second = second);
-  minute < 10 ? (minute = '0' + minute) : (minute = minute);
-  hour < 10 ? (hour = '0' + hour) : (hour = hour);
+  second = second < 10 ? '0' + second : second;
+  minute = minute < 10 ? '0' + minute : minute;
+  hour = hour < 10 ? '0' + hour : hour;
   return hour + ':' + minute + ':' + second;
 }
 
@@ -141,4 +141,20 @@ export function timestampToTime(timestamp) {
     ':';
   let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
   return Y + M + D + h + m + s;
+}
+
+// 随机选取五个样例
+export function getRandom(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
 }

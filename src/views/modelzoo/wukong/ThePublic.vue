@@ -25,6 +25,9 @@ const userInfoStore = useUserInfoStore();
 const screenWidth = useWindowResize();
 const publicList = ref([]);
 const cancelPublicId = ref('');
+const imgInfoDlg = ref(false);
+const imageInfo = ref();
+
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
   const img = new Image();
@@ -102,8 +105,6 @@ async function confirmQuitPublic() {
   showConfirmDlg.value = false;
 }
 // 移动端点击公开图片
-const imgInfoDlg = ref(false);
-const imageInfo = ref();
 function handleImageClick(info) {
   imageInfo.value = info;
   imgInfoDlg.value = true;

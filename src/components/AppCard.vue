@@ -2,7 +2,7 @@
 import IconTime from '~icons/app/time';
 import IconDownload from '~icons/app/download';
 import IconHeart from '~icons/app/heart';
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps({
   cardData: {

@@ -1,5 +1,12 @@
 <script setup>
-import { ref, reactive, defineExpose, computed } from 'vue';
+import {
+  ref,
+  reactive,
+  defineExpose,
+  computed,
+  defineProps,
+  defineEmits,
+} from 'vue';
 
 import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
@@ -185,6 +192,7 @@ function handleProvince(num) {
       query.loc_province = val.label;
       return true;
     }
+    return false;
   });
   query.loc_city = citys.value[0].label;
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, reactive } from 'vue';
+import { ref, computed, watch, reactive, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconModel from '~icons/app/model-blue';

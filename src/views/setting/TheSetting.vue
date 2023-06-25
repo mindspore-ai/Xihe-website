@@ -67,29 +67,6 @@ const settingItems = [
     icon: IconCloud,
   },
 ];
-const detailTitle = computed(() => {
-  let activeItem, item;
-  for (let i = 0, len = settingItems.length; i < len; i++) {
-    item = settingItems[i];
-    if (item.id === activeId.value) {
-      activeItem = item;
-      break;
-    }
-  }
-  return activeItem.label || 'profile';
-});
-
-const activeId = ref('profile');
-const route = useRoute();
-watch(
-  () => {
-    return route.path.split('/')[2];
-  },
-  (val) => {
-    activeId.value = val || 'profile';
-  },
-  { immediate: true }
-);
 
 const router = useRouter();
 
@@ -105,6 +82,29 @@ const marginBottom = ref('');
 
 // 动态显示banner标题
 const banner = ref('');
+
+const activeId = ref('profile');
+const route = useRoute();
+const detailTitle = computed(() => {
+  let activeItem, item;
+  for (let i = 0, len = settingItems.length; i < len; i++) {
+    item = settingItems[i];
+    if (item.id === activeId.value) {
+      activeItem = item;
+      break;
+    }
+  }
+  return activeItem.label || 'profile';
+});
+watch(
+  () => {
+    return route.path.split('/')[2];
+  },
+  (val) => {
+    activeId.value = val || 'profile';
+  },
+  { immediate: true }
+);
 
 watch(
   () => {

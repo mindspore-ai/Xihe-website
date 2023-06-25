@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
 import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';

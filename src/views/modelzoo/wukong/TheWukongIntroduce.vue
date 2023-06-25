@@ -45,7 +45,7 @@ const effectImg = reactive([
 ]);
 
 function goExperience() {
-  window.open(`/modelzoo/wukong`);
+  window.open('/modelzoo/wukong');
 }
 
 // 了解更多

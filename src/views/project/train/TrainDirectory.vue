@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
+import { ref, watch, defineProps, defineEmits } from 'vue';
 
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
@@ -111,6 +111,7 @@ watch(
   }
 );
 
+const fileRelativePath = ref([]);
 // 头部点击选择目录
 function handleClick(item, index) {
   // 代码目录
@@ -145,7 +146,6 @@ function handleClick(item, index) {
   }
 }
 
-const fileRelativePath = ref([]);
 // 点击文件夹或者文件
 function goBlob(item) {
   // 如果是文件夹

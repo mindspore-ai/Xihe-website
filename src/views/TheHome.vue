@@ -56,9 +56,11 @@ import { getHomeInfo } from '@/api/api-shared';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
+const router = useRouter();
 
 AOS.init();
 
+const open = ref(false);
 const modules = [Pagination, Autoplay];
 const galleryModules = [Autoplay, FreeMode];
 const logoModules = [FreeMode, Autoplay];
@@ -184,8 +186,6 @@ function toIndusty(path) {
   }
 }
 
-const router = useRouter();
-
 const homeInfo = ref([
   [{ count: 0 }, { count: 0 }, { count: 0 }],
   [
@@ -235,7 +235,6 @@ let io = new IntersectionObserver((entries) => {
     open.value = false;
   }
 });
-const open = ref(false);
 onMounted(() => {
   let more = document.querySelectorAll('.more')[0];
   io.observe(more);

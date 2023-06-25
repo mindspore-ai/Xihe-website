@@ -46,6 +46,7 @@ const userInfo = useUserInfoStore();
 const isLogined = useLoginStore().isLogined;
 const imgs = ref([]);
 const activeName = ref('official');
+const screenWidth = useWindowResize();
 
 const showPic = ref(false);
 const showShare = ref(false);
@@ -133,7 +134,7 @@ const handleScroll = () => {
   const scrollHeight = document.documentElement.scrollHeight;
   const windowHeight = document.documentElement.clientHeight;
   const total = scrollTop + windowHeight;
-
+  console.log(Number((total + 100).toFixed(0)), scrollHeight);
   if (Number((total + 100).toFixed(0)) > scrollHeight) {
     throttleGet();
   }
@@ -314,7 +315,6 @@ async function copyText(textValue) {
   });
 }
 
-const screenWidth = useWindowResize();
 // 绘制圆角矩形（使用 arcTo）
 function drawRoundedRect(ctx, x, y, width, height, radius) {
   // 保存当前环境的状态

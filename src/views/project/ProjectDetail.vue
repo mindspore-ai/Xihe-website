@@ -655,7 +655,10 @@ watch(
               </div>
               <div class="fork-btn">
                 <o-button
-                  v-if="userInfoStore.userName !== detailData.owner"
+                  v-if="
+                    userInfoStore.userName !== detailData.owner &&
+                    detailData.repo_type === 'public'
+                  "
                   size="small"
                   @click="forkClick"
                 >

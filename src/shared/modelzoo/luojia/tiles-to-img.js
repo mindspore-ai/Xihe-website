@@ -109,19 +109,21 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
       };
       break;
     case 'Virtual Earth影像':
-      let bingTileURL = await getBingTileURL();
-      getWMTSURL = (m, n) => {
-        let quadkey = Cesium.BingMapsImageryProvider.tileXYToQuadKey(
-          m,
-          n,
-          nowzoom
-        );
-        quadkey = quadkey.substr(1, quadkey.length);
+      {
+        let bingTileURL = await getBingTileURL();
+        getWMTSURL = (m, n) => {
+          let quadkey = Cesium.BingMapsImageryProvider.tileXYToQuadKey(
+            m,
+            n,
+            nowzoom
+          );
+          quadkey = quadkey.substr(1, quadkey.length);
 
-        let turl = bingTileURL.replace('{quadkey}', quadkey);
+          let turl = bingTileURL.replace('{quadkey}', quadkey);
 
-        return turl;
-      };
+          return turl;
+        };
+      }
       break;
     default:
       getWMTSURL = (m, n) => {
@@ -139,13 +141,8 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
 
   // 没有rbxy[0]+1的话会出现最后一张瓦片缺失的情况，为img未完全加载问题，稍微改了下，多了个判断
   // 加载速度太慢
-
-  l1: for (let m = ltxy[0]; m <= rbxy[0] + 2; m++) {
-    for (let n = ltxy[1]; n <= rbxy[1] + 1; n++) {
-      if (finflag === 1) {
-        break l1;
-      }
-
+  for (let m = ltxy[0]; m <= rbxy[0] + 2 && finflag !== 1; m++) {
+    for (let n = ltxy[1]; n <= rbxy[1] + 1 && finflag !== 1; n++) {
       const req = await fetch(getWMTSURL(m, n), {
         headers: {
           accept:

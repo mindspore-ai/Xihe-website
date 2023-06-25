@@ -90,6 +90,9 @@ function goCompetitionDetail(id) {
 }
 // 分页器
 const layout = ref('prev, pager, next');
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 // 比赛分页器
 function handleCurrentPage(val) {
   competitionPager.page = val;
@@ -98,9 +101,6 @@ function handleCurrentPage(val) {
     competitionPager.page * competitionPager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

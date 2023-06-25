@@ -54,32 +54,6 @@ let instance = null;
 
 const isLogined = computed(() => useLoginStore().isLogined);
 
-function handleTabClick(i, item) {
-  if (i === 5) return;
-  activeIndex.value = i;
-
-  isDisabled.value = false;
-
-  instance.dispose();
-  init(item);
-}
-
-self.MonacoEnvironment = {
-  getWorker: function (_, label) {
-    if (label === 'json') {
-      return new jsonWorker();
-    } else if (label === 'typescript' || label === 'javascript') {
-      return new tsWorker();
-    }
-    return new editorWorker();
-  },
-};
-
-// 获取文本内容
-function getValue() {
-  return instance.getValue();
-}
-
 function init(item) {
   instance = monaco.editor.create(edit.value, {
     value: item.code,
@@ -104,6 +78,32 @@ function init(item) {
 
   count.value = instance.getModel().getLineCount();
   instance.revealLine(count.value);
+}
+
+function handleTabClick(i, item) {
+  if (i === 5) return;
+  activeIndex.value = i;
+
+  isDisabled.value = false;
+
+  instance.dispose();
+  init(item);
+}
+
+self.MonacoEnvironment = {
+  getWorker: function (_, label) {
+    if (label === 'json') {
+      return new jsonWorker();
+    } else if (label === 'typescript' || label === 'javascript') {
+      return new tsWorker();
+    }
+    return new editorWorker();
+  },
+};
+
+// 获取文本内容
+function getValue() {
+  return instance.getValue();
 }
 
 function hanleGenerateCode() {

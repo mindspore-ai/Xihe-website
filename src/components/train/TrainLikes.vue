@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps, defineEmits } from 'vue';
 import IconHeart from '~icons/app/heart';
 import IconDigged from '~icons/app/digged';
 

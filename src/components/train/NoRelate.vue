@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue';
 import IconEmpty from '~icons/app/model-card-empty';
 import IconDataset from '~icons/app/dataset';
 import IconProject from '~icons/app/project';

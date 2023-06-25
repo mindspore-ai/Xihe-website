@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import OButton from '@/components/OButton.vue';
 import agreement from '@/assets/statement/competition_agreement.md?raw';
 import MdStatement from '@/components/MdStatement.vue';

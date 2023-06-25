@@ -86,10 +86,7 @@ let tabTitle = reactive([
   },
 ]);
 const activeName = ref(tabTitle[route.meta.index].label);
-// 渲染的nav数据 (区分访客和用户)
-const renderNav = computed(() => {
-  return getRenderNav();
-});
+const preStorage = ref();
 
 function getRenderNav() {
   if (detailData.value.is_owner) {
@@ -102,6 +99,10 @@ function getRenderNav() {
     }
   }
 }
+// 渲染的nav数据 (区分访客和用户)
+const renderNav = computed(() => {
+  return getRenderNav();
+});
 
 // return detailData.value.is_owner
 //   ? tabTitle
@@ -112,6 +113,37 @@ function getRenderNav() {
 onBeforeRouteLeave(() => {
   fileData.$reset();
 });
+
+function getTagList() {
+  getTags('model').then((res) => {
+    renderList.value = res.data;
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
+    let menu = dialogList.menuList.map((item) => item.key);
+    menu.forEach((key) => {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return {
+            name: it,
+            isActive: false,
+          };
+        });
+      });
+    });
+    headTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
+            if (it.name === item.name) {
+              it.isActive = true;
+            }
+          });
+        });
+      });
+    });
+  });
+}
 
 let modelTags = ref([]);
 // 模型详情数据
@@ -141,7 +173,10 @@ function getDetailData() {
         });
         headTags.value = modelTags.value.filter((item) => {
           let a = protocol.map((it) => {
-            if (it.name === item.name) return false;
+            if (it.name === item.name) {
+              return false;
+            }
+            return true;
           });
           if (!a.indexOf(false)) return false;
           else return true;
@@ -174,7 +209,6 @@ function getDetailData() {
       console.error(error);
     });
 }
-const preStorage = ref();
 getDetailData();
 
 function tagClick(it, key) {
@@ -260,9 +294,11 @@ function confirmBtn() {
     return item.name;
   });
   preStorage.value = JSON.parse(preStorage.value);
+
   preStorage.value = preStorage.value.map((item) => {
-    if (item) return item.name;
+    return item.name;
   });
+
   let add = [];
   let remove = [];
   preStorage.value.forEach((item) => {
@@ -299,36 +335,6 @@ function confirmBtn() {
 // 取消
 function cancelBtn() {
   isTagShow.value = false;
-}
-function getTagList() {
-  getTags('model').then((res) => {
-    renderList.value = res.data;
-    dialogList.menuList = res.data.map((item, index) => {
-      return { tab: item.domain, key: index };
-    });
-    let menu = dialogList.menuList.map((item) => item.key);
-    menu.forEach((key) => {
-      renderList.value[key].items.forEach((item) => {
-        item.items = item.items.map((it) => {
-          return {
-            name: it,
-            isActive: false,
-          };
-        });
-      });
-    });
-    headTags.value.forEach((item) => {
-      menu.forEach((menuitem) => {
-        renderList.value[menuitem].items.forEach((mit) => {
-          mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
-          });
-        });
-      });
-    });
-  });
 }
 
 function handleTabClick(item) {

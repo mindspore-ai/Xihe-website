@@ -51,6 +51,29 @@ let query = reactive({
   tags: [],
 });
 
+const isTagShow = ref(false);
+const headTags = ref([]);
+const selectedTags = ref([]);
+let renderList = ref([]);
+const tabPosition = ref('left');
+
+let dialogList = {
+  head: {
+    title: '已选标签',
+    delete: '清除全部',
+  },
+  tags: [],
+
+  menuList: [
+    { tab: '应用分类', key: 'task' },
+    { tab: '处理器', key: 'device_target' },
+    { tab: '文件格式', key: 'model_format' },
+    { tab: '框架', key: 'libraries' },
+    { tab: '协议', key: 'licenses' },
+    { tab: '其他', key: 'tags' },
+  ],
+};
+
 try {
   owner.value = useUserInfoStore().owner;
 } catch (error) {
@@ -101,28 +124,7 @@ function checkName(rule, value, callback) {
     });
   }, 500);
 }
-const isTagShow = ref(false);
-const headTags = ref([]);
-const selectedTags = ref([]);
-let renderList = ref([]);
-const tabPosition = ref('left');
 
-let dialogList = {
-  head: {
-    title: '已选标签',
-    delete: '清除全部',
-  },
-  tags: [],
-
-  menuList: [
-    { tab: '应用分类', key: 'task' },
-    { tab: '处理器', key: 'device_target' },
-    { tab: '文件格式', key: 'model_format' },
-    { tab: '框架', key: 'libraries' },
-    { tab: '协议', key: 'licenses' },
-    { tab: '其他', key: 'tags' },
-  ],
-};
 // 获取标签
 function getModelTags(type) {
   try {

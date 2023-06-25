@@ -4,7 +4,7 @@ import logoImg2 from '@/assets/imgs/logo2.png';
 import qrCodeImg from '@/assets/imgs/qr-code.png';
 import IconClose from '~icons/app/close';
 
-import { toRefs } from 'vue';
+import { toRefs, defineProps, defineEmits } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 

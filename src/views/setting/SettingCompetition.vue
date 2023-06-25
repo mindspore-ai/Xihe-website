@@ -69,6 +69,11 @@ function goDetail(id) {
     params: { id: id },
   });
 }
+
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
+
 // 分页器
 const layout = ref('prev, pager, next');
 function handleAllPager(val) {
@@ -95,9 +100,6 @@ function handleOverPager(val) {
     overPager.page * overPager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

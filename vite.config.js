@@ -20,7 +20,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/shared/styles/o-theme/var.scss" as *;`,
+        additionalData: '@use "@/shared/styles/o-theme/var.scss" as *;',
       },
     },
   },

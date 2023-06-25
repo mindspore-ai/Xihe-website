@@ -200,58 +200,23 @@ export default {
     const barArea = computed(() => {
       return proxy.$el.querySelector('.verify-bar-area');
     });
-    function init() {
-      text.value = explain.value;
-      getPictrue();
-      nextTick(() => {
-        const { imgHeight, imgWidth, barHeight, barWidth } = resetSize(proxy);
-        setSize.imgHeight = imgHeight;
-        setSize.imgWidth = imgWidth;
-        setSize.barHeight = barHeight;
-        setSize.barWidth = barWidth;
-        proxy.$parent.$emit('ready', proxy);
-      });
 
-      window.removeEventListener('touchmove', function (e) {
-        move(e);
-      });
-      window.removeEventListener('mousemove', function (e) {
-        move(e);
-      });
-
-      // 鼠标松开
-      window.removeEventListener('touchend', function () {
-        end();
-      });
-      window.removeEventListener('mouseup', function () {
-        end();
-      });
-
-      window.addEventListener('touchmove', function (e) {
-        move(e);
-      });
-      window.addEventListener('mousemove', function (e) {
-        move(e);
-      });
-
-      // 鼠标松开
-      window.addEventListener('touchend', function () {
-        end();
-      });
-      window.addEventListener('mouseup', function () {
-        end();
+    // 请求背景图片和验证图片
+    function getPictrue() {
+      const data = {
+        captchaType: captchaType.value,
+      };
+      reqGet(data).then((res) => {
+        if (res.repCode === '0000') {
+          backImgBase.value = res.repData.originalImageBase64;
+          blockBackImgBase.value = res.repData.jigsawImageBase64;
+          backToken.value = res.repData.token;
+          secretKey.value = res.repData.secretKey;
+        } else {
+          tipWords.value = res.repMsg;
+        }
       });
     }
-    watch(type, () => {
-      init();
-    });
-    onMounted(() => {
-      // 禁止拖拽
-      init();
-      proxy.$el.onselectstart = function () {
-        return false;
-      };
-    });
     // 鼠标按下
     function start(e) {
       e = e || window.event;
@@ -407,22 +372,59 @@ export default {
       }, 300);
     };
 
-    // 请求背景图片和验证图片
-    function getPictrue() {
-      const data = {
-        captchaType: captchaType.value,
-      };
-      reqGet(data).then((res) => {
-        if (res.repCode === '0000') {
-          backImgBase.value = res.repData.originalImageBase64;
-          blockBackImgBase.value = res.repData.jigsawImageBase64;
-          backToken.value = res.repData.token;
-          secretKey.value = res.repData.secretKey;
-        } else {
-          tipWords.value = res.repMsg;
-        }
+    function init() {
+      text.value = explain.value;
+      getPictrue();
+      nextTick(() => {
+        const { imgHeight, imgWidth, barHeight, barWidth } = resetSize(proxy);
+        setSize.imgHeight = imgHeight;
+        setSize.imgWidth = imgWidth;
+        setSize.barHeight = barHeight;
+        setSize.barWidth = barWidth;
+        proxy.$parent.$emit('ready', proxy);
+      });
+
+      window.removeEventListener('touchmove', function (e) {
+        move(e);
+      });
+      window.removeEventListener('mousemove', function (e) {
+        move(e);
+      });
+
+      // 鼠标松开
+      window.removeEventListener('touchend', function () {
+        end();
+      });
+      window.removeEventListener('mouseup', function () {
+        end();
+      });
+
+      window.addEventListener('touchmove', function (e) {
+        move(e);
+      });
+      window.addEventListener('mousemove', function (e) {
+        move(e);
+      });
+
+      // 鼠标松开
+      window.addEventListener('touchend', function () {
+        end();
+      });
+      window.addEventListener('mouseup', function () {
+        end();
       });
     }
+    watch(type, () => {
+      init();
+    });
+    onMounted(() => {
+      // 禁止拖拽
+      init();
+      proxy.$el.onselectstart = function () {
+        return false;
+      };
+    });
+
     return {
       secretKey, // 后端返回的ase加密秘钥
       passFlag, // 是否通过的标识

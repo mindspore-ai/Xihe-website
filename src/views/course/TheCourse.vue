@@ -16,6 +16,7 @@ const activeName = ref('allStatus');
 
 const allCourse = ref([]); // 当前所有课程
 const currentCourse = ref([]); // 当前页显示的课程
+const layout = ref('prev, pager, next');
 
 const coursePager = reactive({
   page: 1,
@@ -67,7 +68,9 @@ function handleClick(query, tab) {
   coursePager.page = 1;
 }
 
-const layout = ref('prev, pager, next');
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 // 课程分页器
 function handleCurrentPage(val) {
   coursePager.page = val;
@@ -76,9 +79,6 @@ function handleCurrentPage(val) {
     coursePager.page * coursePager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 
 function goCourseDetail(id) {

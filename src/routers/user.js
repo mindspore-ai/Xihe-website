@@ -209,13 +209,6 @@ export default [
           return import('@/views/setting/SettingCompetition.vue');
         },
       },
-      // {
-      //   path: 'invitation',
-      //   name: 'settingsInvitation',
-      //   component: () => {
-      //     return import('@/views/setting/SettingInvitation.vue');
-      //   },
-      // },
       {
         path: 'clouddev',
         name: 'developEnvironment',

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onUpdated, onUnmounted } from 'vue';
+import { ref, watch, computed, onUpdated, onUnmounted, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -129,6 +129,34 @@ const i18n = {
 const describe = ref('');
 
 const trainListData = ref([]);
+
+// 获取README文件
+function getReadMeFile() {
+  try {
+    getReadmeInfo(detailData.value.owner, detailData.value.name)
+      .then((tree) => {
+        if (tree.data.has_file) {
+          getGitlabFileRaw({
+            type: 'project',
+            user: routerParams.user,
+            path: 'README.md',
+            id: detailData.value.id,
+            name: routerParams.name,
+          }).then((res) => {
+            res ? (codeString.value = res) : '';
+            result.value = mkit.render(codeString.value);
+          });
+        } else {
+          codeString.value = '';
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
 route.hash ? getReadMeFile() : '';
 
 // 获取训练列表数据
@@ -323,33 +351,7 @@ function deleteClick(item) {
 function addModeClick() {
   isShowModelDlg.value = true;
 }
-// 获取README文件
-function getReadMeFile() {
-  try {
-    getReadmeInfo(detailData.value.owner, detailData.value.name)
-      .then((tree) => {
-        if (tree.data.has_file) {
-          getGitlabFileRaw({
-            type: 'project',
-            user: routerParams.user,
-            path: 'README.md',
-            id: detailData.value.id,
-            name: routerParams.name,
-          }).then((res) => {
-            res ? (codeString.value = res) : '';
-            result.value = mkit.render(codeString.value);
-          });
-        } else {
-          codeString.value = '';
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 // 路由监听
 watch(
   () => route,

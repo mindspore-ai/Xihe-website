@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useSlots } from 'vue';
+import { computed, useSlots, defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   size: {

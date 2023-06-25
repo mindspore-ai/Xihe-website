@@ -42,6 +42,7 @@ const deadTime = ref('');
 const jupyterUrl = ref('');
 let socket;
 const cloudId = ref('');
+const disposeList = ref([]);
 
 // 返回项目
 function goBack() {
@@ -129,28 +130,6 @@ function startJupyter() {
   }
 }
 
-const disposeList = ref([]);
-// 获取云资源配置列表
-async function getCloudDisposeList() {
-  try {
-    const res = await cloudDisposeList();
-    disposeList.value = res.data.data;
-    // 登录状态下，查到资源has_holding = true 获取pod信息
-    disposeList.value.forEach((item) => {
-      item.isActive = false;
-      if (isLogined.value && item.has_holding) {
-        cloudId.value = item.id;
-        getPodInfo(cloudId.value);
-      } else {
-        buttonText.value = '启动';
-      }
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-getCloudDisposeList();
-
 // 获取pod信息
 async function getPodInfo(id) {
   try {
@@ -237,6 +216,27 @@ async function getPodInfo(id) {
     console.error(e);
   }
 }
+
+// 获取云资源配置列表
+async function getCloudDisposeList() {
+  try {
+    const res = await cloudDisposeList();
+    disposeList.value = res.data.data;
+    // 登录状态下，查到资源has_holding = true 获取pod信息
+    disposeList.value.forEach((item) => {
+      item.isActive = false;
+      if (isLogined.value && item.has_holding) {
+        cloudId.value = item.id;
+        getPodInfo(cloudId.value);
+      } else {
+        buttonText.value = '启动';
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+getCloudDisposeList();
 
 // 打开jupyter第三方网址
 function openJupyter() {

@@ -253,6 +253,11 @@ watch(
   { immediate: true }
 );
 
+function emptyValue() {
+  keyword.value = '';
+  show.value = true;
+}
+
 // 返回主页
 function handleLogoClick() {
   emptyValue();
@@ -297,6 +302,7 @@ function showInput() {
     document.querySelector('.search-input').focus();
   });
 }
+
 // 搜索防抖函数
 const debounceSearch = debounce(getSearch, 500, {
   trailing: true,
@@ -304,52 +310,7 @@ const debounceSearch = debounce(getSearch, 500, {
 onUnmounted(() => {
   debounceSearch.cancel();
 });
-function getSearch() {
-  query.name = keyword.value;
-  try {
-    if (query.name) {
-      getSearchData(query).then((res) => {
-        if (res.status === 200) {
-          queryData.value = res.data.data;
-          // 模型、数据集、项目、用户名的搜索结果数量
-          modelCount.value = res.data.data.model.total;
-          datasetCount.value = res.data.data.dataset.total;
-          projectCount.value = res.data.data.project.total;
-          userCount.value = res.data.data.user.total;
-          // 模型、数据集、项目、用户名的搜索结果
-          if (modelCount.value) {
-            modelData.value = res.data.data.model.top;
-            getModelResult(modelData.value);
-          } else {
-            modelData.value = [];
-          }
-          if (datasetCount.value) {
-            datasetData.value = res.data.data.dataset.top;
-            getDatasetResult(datasetData.value);
-          } else {
-            datasetData.value = [];
-          }
-          if (projectCount.value) {
-            projectData.value = res.data.data.project.top;
-            getProjectResult(projectData.value);
-          } else {
-            projectData.value = [];
-          }
-          if (userCount.value) {
-            userData.value = res.data.data.user.top;
-            getUserResult(userData.value);
-          } else {
-            userData.value = [];
-          }
-        }
-      });
-    } else {
-      return;
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 // 监听输入框值变化
 watch(
   keyword,
@@ -360,10 +321,6 @@ watch(
   },
   { immediate: true }
 );
-function emptyValue() {
-  keyword.value = '';
-  show.value = true;
-}
 
 // 模型搜索结果
 function getModelResult(modelData) {
@@ -390,7 +347,6 @@ function getModelResult(modelData) {
   });
   modelResult.value = dataList;
 }
-
 // 数据集搜索结果
 function getDatasetResult(datasetData) {
   let resultList = [];
@@ -466,6 +422,52 @@ function getUserResult(userData) {
   userResult.value = dataList;
 }
 
+function getSearch() {
+  query.name = keyword.value;
+  try {
+    if (query.name) {
+      getSearchData(query).then((res) => {
+        if (res.status === 200) {
+          queryData.value = res.data.data;
+          // 模型、数据集、项目、用户名的搜索结果数量
+          modelCount.value = res.data.data.model.total;
+          datasetCount.value = res.data.data.dataset.total;
+          projectCount.value = res.data.data.project.total;
+          userCount.value = res.data.data.user.total;
+          // 模型、数据集、项目、用户名的搜索结果
+          if (modelCount.value) {
+            modelData.value = res.data.data.model.top;
+            getModelResult(modelData.value);
+          } else {
+            modelData.value = [];
+          }
+          if (datasetCount.value) {
+            datasetData.value = res.data.data.dataset.top;
+            getDatasetResult(datasetData.value);
+          } else {
+            datasetData.value = [];
+          }
+          if (projectCount.value) {
+            projectData.value = res.data.data.project.top;
+            getProjectResult(projectData.value);
+          } else {
+            projectData.value = [];
+          }
+          if (userCount.value) {
+            userData.value = res.data.data.user.top;
+            getUserResult(userData.value);
+          } else {
+            userData.value = [];
+          }
+        }
+      });
+    } else {
+      return;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 // 获得搜索结果第一条数据
 const firstData = computed(() => {
   return projectData.value.length !== 0

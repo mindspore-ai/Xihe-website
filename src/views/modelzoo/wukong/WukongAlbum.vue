@@ -128,7 +128,10 @@ const throttleGet = throttle(getMore, 1000, {
   leading: true,
 });
 const handleScroll = () => {
-  const scrollTop = document.documentElement.scrollTop;
+  const scrollTop =
+    document.documentElement.scrollTop ||
+    window.pageYOffset ||
+    document.body.scrollTop;
   const scrollHeight = document.documentElement.scrollHeight;
   const windowHeight = document.documentElement.clientHeight;
   const total = scrollTop + windowHeight;
@@ -139,19 +142,11 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  if (window.addEventListener) {
-    window.addEventListener('scroll', handleScroll);
-  } else if (window.attachEvent) {
-    window.attachEvent('scroll', handleScroll);
-  }
+  window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
-  if (window.removeEventListener) {
-    window.removeEventListener('scroll', handleScroll);
-  } else if (window.detachEvent) {
-    window.detachEvent('scroll', handleScroll);
-  }
+  window.removeEventListener('scroll', handleScroll);
 });
 
 function changeTab(name) {

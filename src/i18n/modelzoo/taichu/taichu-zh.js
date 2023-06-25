@@ -14,8 +14,8 @@ export default {
     DESCRIPTION:
       '顾名思义，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。',
     START_INFER: '开始推理',
-    ACTION: '拖拽图片(jpg/jepg/png)到此处上传',
-    MOBIlE_ACTION: '选择图片(jpg/jepg/png)上传',
+    ACTION: '拖拽图片至此处\n- 或 -\n点击上传',
+    MOBIlE_ACTION: '选择图片上传',
     CUSTOM_IMG: '自定义图片',
     MOBIlE_CUSTOM: '自定义',
     ANALYSE_RESULT: '分析结果',

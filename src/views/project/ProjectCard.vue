@@ -85,6 +85,51 @@ const isShowDatasetDlg = ref(false);
 const isShowModelDlg = ref(false);
 const addSearch = ref('');
 
+// 获取README文件
+function getReadMeFile() {
+  try {
+    if (detailData.value.type === 'Gradio') {
+      getGuide().then((tree) => {
+        README = tree.data;
+        codeString2.value = README;
+        result2.value = mkit.render(codeString2.value);
+      });
+    } else {
+      getGitlabTree({
+        type: 'project',
+        user: routerParams.user,
+        path: '',
+        id: detailData.value.id,
+        name: routerParams.name,
+      })
+        .then((tree) => {
+          README = tree?.data?.filter((item) => {
+            return item.name === 'README.md';
+          });
+          if (README[0]) {
+            getGitlabFileRaw({
+              type: 'project',
+              user: routerParams.user,
+              path: 'README.md',
+              id: detailData.value.repo_id,
+              name: routerParams.name,
+            }).then((res) => {
+              res ? (codeString.value = res) : '';
+              result.value = mkit.render(codeString.value);
+            });
+          } else {
+            codeString.value = '';
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 route.hash ? getReadMeFile() : '';
 
 function addRelateClick() {
@@ -247,50 +292,7 @@ function deleteClick(item) {
 function addModeClick() {
   isShowModelDlg.value = true;
 }
-// 获取README文件
-function getReadMeFile() {
-  try {
-    if (detailData.value.type === 'Gradio') {
-      getGuide().then((tree) => {
-        README = tree.data;
-        codeString2.value = README;
-        result2.value = mkit.render(codeString2.value);
-      });
-    } else {
-      getGitlabTree({
-        type: 'project',
-        user: routerParams.user,
-        path: '',
-        id: detailData.value.id,
-        name: routerParams.name,
-      })
-        .then((tree) => {
-          README = tree?.data?.filter((item) => {
-            return item.name === 'README.md';
-          });
-          if (README[0]) {
-            getGitlabFileRaw({
-              type: 'project',
-              user: routerParams.user,
-              path: 'README.md',
-              id: detailData.value.repo_id,
-              name: routerParams.name,
-            }).then((res) => {
-              res ? (codeString.value = res) : '';
-              result.value = mkit.render(codeString.value);
-            });
-          } else {
-            codeString.value = '';
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 // 路由监听
 watch(
   () => route,
@@ -360,6 +362,13 @@ const hasPrefix = computed(() => {
   return msg.value === '启动中' ? true : false;
 });
 const clientSrc = ref('');
+const socket = ref(null);
+
+// 停止推理
+function handleStop() {
+  closeConn();
+  msg.value = '';
+}
 
 // 拥有者启动推理
 function handleStart() {
@@ -422,13 +431,6 @@ function handleStart() {
     msg.value = '启动中';
   }
 }
-
-// 停止推理
-function handleStop() {
-  closeConn();
-  msg.value = '';
-}
-const socket = ref(null);
 
 // 拥有者判断是否有app.py，非拥有者判断启动状态
 getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {

@@ -38,7 +38,7 @@ export function getSortData() {
  * @returns
  */
 export function getModelData(params) {
-  const url = `/server/model`;
+  const url = '/server/model';
   let header = getHeaderConfig();
   // 登录之后携带token
   return request
@@ -55,7 +55,7 @@ export function getModelData(params) {
  * @returns
  */
 export function createModel(params) {
-  const url = `/api/models/`;
+  const url = '/api/models/';
   return request.post(url, JSON.stringify(params)).then((res) => {
     return res.data;
   });
@@ -91,7 +91,7 @@ export function modifyTags(params, owner, id) {
  * @returns
  */
 export function getModelTags() {
-  const url = `/api/base/filter/`;
+  const url = '/api/base/filter/';
   return request.get(url).then((res) => {
     return res.data;
   });
@@ -113,15 +113,6 @@ export function deleteModel(owner, name) {
   });
 }
 
-/**
- * 点赞
- * @returns
- */
-/* export function getUserDig(reopt) {
-  return request(reopt).then((res) => {
-    return res;
-  });
-} */
 /**
  * 添加下载记录
  * @returns
@@ -149,7 +140,7 @@ export function getReadmeInfo(ownerName, modelName) {
  * @returns
  */
 export function createModelStore(params) {
-  const url = `/server/model`;
+  const url = '/server/model';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

@@ -33,12 +33,12 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 
-onBeforeRouteLeave(() => {
-  fileData.$reset();
-});
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
 const loginStore = useLoginStore();
+onBeforeRouteLeave(() => {
+  fileData.$reset();
+});
 
 const router = useRouter();
 const route = useRoute();
@@ -142,6 +142,23 @@ const trainSelect = reactive([
 ]);
 
 const ruleFormRef = ref();
+
+let time = null;
+function checkName(rule, value, callback) {
+  if (time !== null) {
+    clearTimeout(time);
+  }
+  time = setTimeout(() => {
+    checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
+      if (res.data.can_apply) {
+        callback();
+      } else {
+        callback(new Error('该名称已存在'));
+      }
+    });
+  }, 500);
+}
+
 const rules = reactive({
   owner: [
     {
@@ -188,8 +205,50 @@ const forkForm = reactive({
   describe: null,
   projectName: null,
 });
+
+const containerRef = ref(null);
+const tagRef = ref(null);
+const sumWidth = ref(0);
+const containerWidth = ref(0);
+const isWrap = ref(false);
+
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
+
+function getAllTags() {
+  getTags('project').then((res) => {
+    renderList.value = res.data;
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
+    let menu = dialogList.menuList.map((item) => item.key);
+
+    menu.forEach((key) => {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return {
+            name: it,
+            isActive: false,
+          };
+        });
+      });
+    });
+
+    // 已添加标签高亮
+    headTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
+            if (it.name === item.name) {
+              it.isActive = true;
+            }
+          });
+        });
+      });
+    });
+  });
+}
+const preStorage = ref();
 
 // 项目详情数据
 function getDetailData() {
@@ -256,7 +315,6 @@ function getDetailData() {
     console.error(error);
   }
 }
-const preStorage = ref();
 getDetailData();
 
 function handleTabClick(item) {
@@ -436,37 +494,6 @@ function cancelBtn() {
   isTagShow.value = false;
 }
 
-function getAllTags() {
-  getTags('project').then((res) => {
-    renderList.value = res.data;
-    dialogList.menuList = res.data.map((item, index) => {
-      return { tab: item.domain, key: index };
-    });
-    let menu = dialogList.menuList.map((item) => item.key);
-    menu.forEach((key) => {
-      renderList.value[key].items.forEach((item) => {
-        item.items = item.items.map((it) => {
-          return {
-            name: it,
-            isActive: false,
-          };
-        });
-      });
-    });
-    // 已添加标签高亮
-    headTags.value.forEach((item) => {
-      menu.forEach((menuitem) => {
-        renderList.value[menuitem].items.forEach((mit) => {
-          mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
-          });
-        });
-      });
-    });
-  });
-}
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;
@@ -578,34 +605,12 @@ function retractAlltags(val) {
   isExpand.value = val;
 }
 
-let time = null;
-function checkName(rule, value, callback) {
-  if (time !== null) {
-    clearTimeout(time);
-  }
-  time = setTimeout(() => {
-    checkNames({ name: value, owner: userInfoStore.userName }).then((res) => {
-      if (res.data.can_apply) {
-        callback();
-      } else {
-        callback(new Error('该名称已存在'));
-      }
-    });
-  }, 500);
-}
-
 // 开启Jupyter
 function openJupyter() {
   router.push(
     `/projects/${userInfoStore.userName}/${detailData.value.name}/clouddev`
   );
 }
-
-const containerRef = ref(null);
-const tagRef = ref(null);
-const sumWidth = ref(0);
-const containerWidth = ref(0);
-const isWrap = ref(false);
 
 watch(
   () => detailData.value,
@@ -1282,6 +1287,7 @@ $theme: #0d8dff;
           overflow: hidden;
           text-overflow: ellipsis;
           font-size: 14px;
+          color: #555;
         }
         .card-detail {
           display: flex;

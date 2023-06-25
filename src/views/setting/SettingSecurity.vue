@@ -17,6 +17,7 @@ import { ElMessage } from 'element-plus';
 const { toClipboard } = useClipboard();
 
 const gitlabToken = ref('');
+const isDisposed = ref(false);
 
 // 绑定手机号
 const showPhoneDlg = ref(false);
@@ -52,6 +53,19 @@ getGitlabToken().then((res) => {
 const userInfoStore = useUserInfoStore();
 const phoneExhibition = ref('');
 
+// 倒计时
+const time = ref(60);
+const handleTimeChange = () => {
+  if (time.value <= 0) {
+    isDisposed.value = false;
+    time.value = 60;
+  } else {
+    setTimeout(() => {
+      time.value--;
+      handleTimeChange();
+    }, 1000);
+  }
+};
 // 获取验证码
 function setPhone(formEl) {
   if (!formEl) return;
@@ -64,20 +78,6 @@ function setPhone(formEl) {
     }
   });
 }
-// 倒计时
-const time = ref(60);
-const isDisposed = ref(false);
-const handleTimeChange = () => {
-  if (time.value <= 0) {
-    isDisposed.value = false;
-    time.value = 60;
-  } else {
-    setTimeout(() => {
-      time.value--;
-      handleTimeChange();
-    }, 1000);
-  }
-};
 // 确认绑定手机号码
 const newQuery = reactive({
   old_mobile: '',

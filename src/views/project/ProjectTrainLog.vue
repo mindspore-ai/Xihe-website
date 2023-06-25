@@ -39,6 +39,7 @@ const route = useRoute();
 const router = useRouter();
 
 const logUrl = ref('');
+const customContent = ref('开始评估');
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -365,7 +366,6 @@ function saveSetting() {
     }
   });
 }
-const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {

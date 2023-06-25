@@ -20,6 +20,13 @@ function getHeaderConfig() {
   return headersConfig;
 }
 
+export function getGitlabToken() {
+  const url = `/server/user/${getUserInfo().userName}/gitlab`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
+
 export async function getGitlabConfig() {
   const loginStore = useLoginStore();
   let headersConfig = {
@@ -37,13 +44,6 @@ export async function getGitlabConfig() {
     headersConfig.headers['PRIVATE-TOKEN'] = res.data.token;
   }
   return headersConfig;
-}
-
-export function getGitlabToken() {
-  const url = `/server/user/${getUserInfo().userName}/gitlab`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
 }
 
 // 获取仓库详情

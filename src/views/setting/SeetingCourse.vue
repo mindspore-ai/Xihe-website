@@ -8,8 +8,10 @@ import IconSelected from '~icons/app/selected';
 
 import emptyImg from '@/assets/imgs/live-empty.png';
 import { getMyCourseList } from '@/api/api-course';
+import { usePersonalInfoStore } from '@/stores';
 
 const router = useRouter();
+const layout = ref('prev, pager, next');
 
 const courseName = ref('allClassify');
 const activeName = ref('allStatus');
@@ -24,13 +26,10 @@ const coursePager = reactive({
 
 // 获取所有的课程
 const params = { mine: true };
+const personalData = usePersonalInfoStore();
 function getAllCourse() {
-  getMyCourseList(params).then((res) => {
-    if (res.data) {
-      allCourse.value = res.data;
-      currentCourse.value = res.data.slice(0, coursePager.size);
-    }
-  });
+  allCourse.value = personalData.course;
+  currentCourse.value = allCourse.value?.slice(0, coursePager.size);
 }
 getAllCourse();
 
@@ -61,7 +60,9 @@ function handleClick(query, tab) {
   coursePager.page = 1;
 }
 
-const layout = ref('prev, pager, next');
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 // 课程分页器
 function handleCurrentPage(val) {
   coursePager.page = val;
@@ -70,9 +71,6 @@ function handleCurrentPage(val) {
     coursePager.page * coursePager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 
 function goCourseDetail(id) {
@@ -83,7 +81,7 @@ function goCourseDetail(id) {
 <template>
   <div
     v-if="
-      currentCourse.length ||
+      currentCourse?.length ||
       activeName !== 'allStatus' ||
       courseName !== 'allClassify'
     "

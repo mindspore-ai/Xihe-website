@@ -47,26 +47,6 @@ export default [
           );
         },
       },
-      /*  // 数据准备
-      {
-        path: 'data-prepare',
-        name: 'dataPrepare',
-        component: () => {
-          return import(
-            '@/views/estate/electricity/cases/case-1/ElectricityDataPrepare.vue'
-          );
-        },
-      },
-      // 模型训练
-      {
-        path: 'model-train',
-        name: 'modelTrain',
-        component: () => {
-          return import(
-            '@/views/estate/electricity/cases/case-1/ElectricityModelTrain.vue'
-          );
-        },
-      }, */
     ],
   },
   // 电力--变电站运维图像识别分析解决方案

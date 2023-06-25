@@ -10,15 +10,21 @@ import IconEmail from '~icons/app/email';
 import IconHome from '~icons/app/home1';
 import IconCourse from '~icons/app/my-course';
 
-import { useUserInfoStore } from '@/stores';
+import { useUserInfoStore, usePersonalInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
-import { getFollowing, cancelFollowing } from '@/api/api-user';
+import {
+  getFollowing,
+  cancelFollowing,
+  getUserCompetition,
+} from '@/api/api-user';
+import { getMyCourseList } from '@/api/api-course';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
 import IconTrophy from '~icons/app/trophy';
 import IconCloud from '~icons/app/cloud';
 const userInfoStore = useUserInfoStore();
+const personalData = usePersonalInfoStore();
 const settingItems = [
   {
     id: userInfoStore.userName,
@@ -61,29 +67,6 @@ const settingItems = [
     icon: IconCloud,
   },
 ];
-const detailTitle = computed(() => {
-  let activeItem, item;
-  for (let i = 0, len = settingItems.length; i < len; i++) {
-    item = settingItems[i];
-    if (item.id === activeId.value) {
-      activeItem = item;
-      break;
-    }
-  }
-  return activeItem.label || 'profile';
-});
-
-const activeId = ref('profile');
-const route = useRoute();
-watch(
-  () => {
-    return route.path.split('/')[2];
-  },
-  (val) => {
-    activeId.value = val || 'profile';
-  },
-  { immediate: true }
-);
 
 const router = useRouter();
 
@@ -99,6 +82,29 @@ const marginBottom = ref('');
 
 // 动态显示banner标题
 const banner = ref('');
+
+const activeId = ref('profile');
+const route = useRoute();
+const detailTitle = computed(() => {
+  let activeItem, item;
+  for (let i = 0, len = settingItems.length; i < len; i++) {
+    item = settingItems[i];
+    if (item.id === activeId.value) {
+      activeItem = item;
+      break;
+    }
+  }
+  return activeItem.label || 'profile';
+});
+watch(
+  () => {
+    return route.path.split('/')[2];
+  },
+  (val) => {
+    activeId.value = val || 'profile';
+  },
+  { immediate: true }
+);
 
 watch(
   () => {
@@ -176,6 +182,25 @@ function cancelFollow(name) {
     console.error(error);
   }
 }
+
+const isCompetitionData = ref(false);
+const isCourseData = ref(false);
+getUserCompetition({ mine: userInfoStore.userName })
+  .then((res) => {
+    personalData.competition = res.data.data;
+    isCompetitionData.value = true;
+  })
+  .catch(() => {
+    isCompetitionData.value = true;
+  });
+getMyCourseList({ mine: true })
+  .then((res) => {
+    personalData.course = res.data;
+    isCourseData.value = true;
+  })
+  .catch(() => {
+    isCourseData.value = true;
+  });
 </script>
 
 <template>
@@ -287,7 +312,15 @@ function cancelFollow(name) {
             @click="goSetting(item)"
           >
             <OIcon size="medium"><component :is="item.icon"></component></OIcon>
-            {{ item.label }}
+            <span v-if="item.label === '我的比赛'">
+              {{
+                item.label + `(${personalData.competition?.length || 0})`
+              }}</span
+            >
+            <span v-else-if="item.label === '我的课程'">
+              {{ item.label + `(${personalData.course?.length || 0})` }}</span
+            >
+            <span v-else> {{ item.label }}</span>
           </li>
         </ul>
       </div>
@@ -299,7 +332,7 @@ function cancelFollow(name) {
           <div class="detail-title">
             <h2>{{ detailTitle }}</h2>
           </div>
-          <router-view></router-view>
+          <router-view v-if="isCourseData && isCompetitionData"></router-view>
         </div>
       </div>
     </div>

@@ -66,6 +66,17 @@ async function getUserToken(params) {
   }
 }
 
+// 存储用户token至本地，用于下次登录
+export function saveUserAuth(token) {
+  if (!token) {
+    localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
+    const userInfoStore = useUserInfoStore();
+    userInfoStore.$reset();
+  } else {
+    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
+  }
+}
+
 function afterLogined(userInfo) {
   const {
     id,
@@ -96,50 +107,11 @@ function afterLogined(userInfo) {
   userInfoStore.followingCount = followingCount;
   userInfoStore.bonus = bonus;
 }
-
-// 登录
-export async function doLogin() {
-  const query = getUrlParam();
-  const { token } = getUserAuth();
-  if (query.code && query.state) {
-    await getUserToken({ code: query.code });
-  } else if (token) {
-    await requestUserInfo();
-  }
-}
-
-// 存储用户token至本地，用于下次登录
-export function saveUserAuth(token) {
-  if (!token) {
-    localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
-    const userInfoStore = useUserInfoStore();
-    userInfoStore.$reset();
-  } else {
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
-  }
-}
-
 // 获取本地token
 export function getUserAuth() {
   return {
     token: localStorage.getItem(LOGIN_KEYS.USER_TOKEN) || '',
   };
-}
-
-// 退出
-export async function logout() {
-  try {
-    const userName = useUserInfoStore().userName;
-    const idTokenRes = await queryUserIdToken({ userName });
-    const { info: idToken } = idTokenRes.data;
-    const redirectUri = `${window.location.origin}/`;
-
-    setStatus(LOGIN_STATUS.NOT);
-    saveUserAuth();
-    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
-  } catch (error) {
-    console.error('退出失败！');
-  }
 }
 
 // 请求用户信息
@@ -163,6 +135,33 @@ export async function requestUserInfo() {
       setStatus(LOGIN_STATUS.FAILED);
       console.error('获取用户信息失败：', err);
     }
+  }
+}
+
+// 登录
+export async function doLogin() {
+  const query = getUrlParam();
+  const { token } = getUserAuth();
+  if (query.code && query.state) {
+    await getUserToken({ code: query.code });
+  } else if (token) {
+    await requestUserInfo();
+  }
+}
+
+// 退出
+export async function logout() {
+  try {
+    const userName = useUserInfoStore().userName;
+    const idTokenRes = await queryUserIdToken({ userName });
+    const { info: idToken } = idTokenRes.data;
+    const redirectUri = `${window.location.origin}/`;
+
+    setStatus(LOGIN_STATUS.NOT);
+    saveUserAuth();
+    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
+  } catch (error) {
+    console.error('退出失败！');
   }
 }
 

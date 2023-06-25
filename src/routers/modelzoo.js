@@ -33,13 +33,6 @@ export default [
           return import('@/views/modelzoo/taichu/ModelzooTaichuVision.vue');
         },
       },
-      /*  {
-        path: 'introduce',
-        name: 'taichuIntroduction',
-        component: () => {
-          return import('@/views/modelzoo/taichu/ModelzooTaichuIntro.vue');
-        },
-      }, */
       {
         path: 'text',
         name: 'textToImage',
@@ -152,35 +145,6 @@ export default [
       },
     ],
   },
-  // 鹏程.盘古
-  // {
-  //   path: '/modelzoo/pangu',
-  //   name: 'pangu',
-  //   component: () => {
-  //     return import('@/views/modelzoo/pangu/ThePangu.vue');
-  //   },
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'panguExperience',
-  //       component: () => {
-  //         return import('@/views/modelzoo/pangu/ThePanguExperience.vue');
-  //       },
-  //     },
-  //     {
-  //       path: 'introduce',
-  //       name: 'panguIntroduce',
-  //       component: () => {
-  //         return import('@/views/modelzoo/pangu/ThePanguIntroduce.vue');
-  //       },
-  //     },
-  //     {
-  //       path: 'experience',
-  //       // name: 'pangutest',
-  //       redirect: '/modelzoo/pangu',
-  //     },
-  //   ],
-  // },
   // 鹏程.神农
   {
     path: '/modelzoo/shennong/introduce',
@@ -189,35 +153,6 @@ export default [
       return import('@/views/modelzoo/shengnong/ModelzooShennong.vue');
     },
   },
-  // 悟空
-  // {
-  //   path: '/modelzoo/wukong',
-  //   name: 'wukong',
-  //   component: () => {
-  //     return import('@/views/modelzoo/wukong/TheWukong.vue');
-  //   },
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'wukongExperience',
-  //       component: () => {
-  //         return import('@/views/modelzoo/wukong/TheWukongExperience1.vue');
-  //       },
-  //     },
-  //     {
-  //       path: 'introduce',
-  //       name: 'wukongIntroduce',
-  //       component: () => {
-  //         return import('@/views/modelzoo/wukong/TheWukongIntroduce.vue');
-  //       },
-  //     },
-  //     {
-  //       path: 'experience',
-  //       redirect: '/modelzoo/wukong',
-  //     },
-  //   ],
-  // },
-
   // 新视觉改版后-悟空路由
   {
     path: '/modelzoo/wukong/introduce',

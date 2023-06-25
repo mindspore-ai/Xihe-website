@@ -17,6 +17,9 @@ const invitationUrl = ref(
 const invitationInput = ref(null);
 const showDlg = ref(false);
 const invitedNum = parseInt(userInfoStore.bonus / 10);
+const toggleDlg = (flag) => {
+  showDlg.value = flag;
+};
 
 const handleCopy = async () => {
   try {
@@ -25,10 +28,6 @@ const handleCopy = async () => {
   } catch (e) {
     console.error(e);
   }
-};
-
-const toggleDlg = (flag) => {
-  showDlg.value = flag;
 };
 </script>
 

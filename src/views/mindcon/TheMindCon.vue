@@ -174,6 +174,7 @@ function handleStartAnswer() {
   router.push('/activity-1');
 }
 // 排行榜
+const rankingData = ref([]);
 const currentPage = ref(1);
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
@@ -215,7 +216,7 @@ watch(
     }
   }
 );
-const rankingData = ref([]);
+
 GetRankingList().then((res) => {
   rankingData.value = res.data;
   rankingData.value.forEach((item, index) => {

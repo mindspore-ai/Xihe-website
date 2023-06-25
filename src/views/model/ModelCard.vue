@@ -21,7 +21,6 @@ const userInfo = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
-route.hash ? getReadMeFile() : '';
 const mkit = handleMarkdown();
 
 const codeString = ref('');
@@ -84,6 +83,8 @@ function getReadMeFile() {
     console.error(error);
   }
 }
+route.hash ? getReadMeFile() : '';
+
 function addRelateClick() {
   isShow.value = true;
 }

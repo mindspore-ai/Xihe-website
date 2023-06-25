@@ -85,6 +85,22 @@ let dialogList = {
 };
 
 const ruleFormRef = ref(null);
+
+function checkName(rule, value, callback) {
+  if (time !== null) {
+    clearTimeout(time);
+  }
+  time = setTimeout(() => {
+    checkNames({ name: value, owner: userInfo.userName }).then((res) => {
+      if (res.data.can_apply) {
+        callback();
+      } else {
+        callback(new Error('该名称已存在'));
+      }
+    });
+  }, 500);
+}
+
 const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -130,26 +146,35 @@ const rules = reactive({
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
 let time = null;
-function checkName(rule, value, callback) {
-  if (time !== null) {
-    clearTimeout(time);
-  }
-  time = setTimeout(() => {
-    checkNames({ name: value, owner: userInfo.userName }).then((res) => {
-      if (res.data.can_apply) {
-        callback();
-      } else {
-        callback(new Error('该名称已存在'));
-      }
-    });
-  }, 500);
-}
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);
 
 nameList.value.push(userInfo.userName);
 proList.owner = nameList.value[0];
+
+// 新建项目
+function setProject() {
+  headTags.value.forEach((item) => {
+    proList.tags.push(item.name);
+  });
+  setNewProject(proList)
+    .then((res) => {
+      ElMessage({
+        type: 'success',
+        message: '创建成功',
+      });
+      router.push(`/projects/${userInfo.userName}/${res.data.name}`);
+    })
+    .catch((err) => {
+      if (err.msg === 'unsupported protocol') {
+        ElMessage({
+          type: 'error',
+          message: '暂不支持该协议',
+        });
+      }
+    });
+}
 
 const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
@@ -174,28 +199,6 @@ function selectImgClick(item) {
   item.is_active = true;
 }
 
-// 新建项目
-function setProject() {
-  headTags.value.forEach((item) => {
-    proList.tags.push(item.name);
-  });
-  setNewProject(proList)
-    .then((res) => {
-      ElMessage({
-        type: 'success',
-        message: '创建成功',
-      });
-      router.push(`/projects/${userInfo.userName}/${res.data.name}`);
-    })
-    .catch((err) => {
-      if (err.msg === 'unsupported protocol') {
-        ElMessage({
-          type: 'error',
-          message: '暂不支持该协议',
-        });
-      }
-    });
-}
 // 项目封面，项目类型以及训练平台的数据
 projectPhotos.value[0].is_active = true;
 

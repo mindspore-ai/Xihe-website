@@ -16,6 +16,7 @@ const userDescription = ref(userInfoStore.description); // 个人介绍
 const avatar = ref(userInfoStore.avatar); // 头像
 const showAvatarList = ref(false);
 const checkedAvatar = ref(1);
+const disabled = ref(true);
 
 const avatarCount = ref(0);
 let query = reactive({
@@ -31,20 +32,20 @@ function handleSizeChange(val) {
   query.size = val;
 }
 
-try {
-  filterData.value = avatarUrl;
-  avatarCount.value = filterData.value.user_avatar.length;
-  getCheckedId(filterData.value.user_avatar);
-} catch (error) {
-  console.error(error);
-}
-
 function getCheckedId(list) {
   list.forEach((item) => {
     if (item.url === avatar.value) {
       checkedAvatar.value = item.id;
     }
   });
+}
+
+try {
+  filterData.value = avatarUrl;
+  avatarCount.value = filterData.value.user_avatar.length;
+  getCheckedId(filterData.value.user_avatar);
+} catch (error) {
+  console.error(error);
 }
 
 function toggleDelDlg(flag) {
@@ -57,7 +58,7 @@ function toggleDelDlg(flag) {
 function saveData() {
   getCheckedId(filterData.value.user_avatar);
   setUserData({
-    bio: userDescription.value || userInfoStore.description,
+    bio: userDescription.value,
     avatar_id: avatar.value,
   })
     .then(() => {
@@ -90,7 +91,6 @@ function confirmAvatar() {
 function handleCurrentChange(val) {
   query.page = val;
 }
-const disabled = ref(true);
 watch([userDescription, avatar], () => {
   disabled.value = false;
 });

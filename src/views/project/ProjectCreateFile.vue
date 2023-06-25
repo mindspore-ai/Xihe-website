@@ -24,10 +24,6 @@ import TrainDirectory from '@/views/project/train/TrainDirectory.vue';
 
 const userInfoStore = useUserInfoStore();
 
-// 是否是访客
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
 const route = useRoute();
 const router = useRouter();
 const tips = ref(false); // 控制创建训练弹窗
@@ -56,6 +52,11 @@ const modelList = reactive([]); // 模型列表
 const datasetList = reactive([]); // 数据集列表
 const hyperparamsList = reactive([]); // 超参列表
 const environmentList = reactive([]); // 环境变量列表
+
+// 是否是访客
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
 
 const form = reactive({
   name: '',
@@ -148,20 +149,6 @@ const optionData = reactive({
   },
 });
 
-function change1(val) {
-  if (val) {
-    let a = optionData.com1.find((item) => {
-      return item.value === val;
-    });
-    form.compute.type = a.content;
-    selectData.com2 = optionData.com2[val][0].value; // 根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
-    change2(); // 控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
-  } else {
-    selectData.com2 = ''; // 若前一个控件清空则后一个控件所选内容也清空
-    change2();
-  }
-}
-
 function change2() {
   let val = selectData.com2;
   if (val) {
@@ -177,6 +164,20 @@ function change2() {
     form.compute.flavor = c.content;
   } else {
     selectData.com3 = '';
+  }
+}
+
+function change1(val) {
+  if (val) {
+    let a = optionData.com1.find((item) => {
+      return item.value === val;
+    });
+    form.compute.type = a.content;
+    selectData.com2 = optionData.com2[val][0].value; // 根据第一个控件所选项确定第二个控件下拉内容的对象数组，并使默认为第一个数组项
+    change2(); // 控件2手动改变时会自动触发该方法，但是被动改变时不会触发，所以手动加上去
+  } else {
+    selectData.com2 = ''; // 若前一个控件清空则后一个控件所选内容也清空
+    change2();
   }
 }
 

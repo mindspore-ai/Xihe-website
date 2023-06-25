@@ -86,8 +86,13 @@ let i18n = {
     },
   ],
 };
-function goModelzoo() {
-  window.open('https://www.hiascend.com/software/modelzoo');
+
+function goMindformers() {
+  window.open('https://gitee.com/mindspore/mindformers', '_blank');
+}
+
+function goAscend() {
+  window.open('https://www.hiascend.com/zh/software/modelzoo', '_blank');
 }
 </script>
 <template>
@@ -116,9 +121,15 @@ function goModelzoo() {
         </div>
       </div>
 
-      <div class="watch-more" @click="goModelzoo">
-        <span class="text">点击去往ModelZoo查看更多大模型</span>
-        <o-icon><icon-arrow></icon-arrow></o-icon>
+      <div class="watch-more">
+        <div class="more-item" @click="goMindformers">
+          <span class="text">点击获取MindSpore更多大模型</span>
+          <o-icon><icon-arrow></icon-arrow></o-icon>
+        </div>
+        <div class="more-item" @click="goAscend">
+          <span class="text">点击访问昇腾ModelZoo</span>
+          <o-icon><icon-arrow></icon-arrow></o-icon>
+        </div>
       </div>
     </AppContent>
   </div>
@@ -177,38 +188,58 @@ function goModelzoo() {
     margin: 0 auto;
     margin-top: 64px;
     max-width: 1472px;
-    text-align: center;
-    cursor: pointer;
+
     @media screen and (max-width: 1080px) {
       margin-top: 40px;
     }
     @media screen and (max-width: 820px) {
       margin-top: 24px;
     }
-    &:hover {
-      .o-icon {
-        transform: translate(3px);
-        transition: all 0.2s linear;
-      }
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
     }
-    .text {
-      font-size: 14px;
-      font-weight: 400;
-      color: #000000;
-      line-height: 22px;
-      @media screen and (max-width: 768px) {
-        font-size: 12px;
+
+    .more-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+
+      & + .more-item {
+        margin-left: 64px;
+        @media screen and (max-width: 768px) {
+          margin-left: 0;
+          margin-top: 8px;
+        }
+      }
+
+      &:hover {
+        .o-icon {
+          transform: translate(3px);
+          transition: all 0.2s linear;
+        }
+      }
+      .text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #000000;
         line-height: 22px;
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+          line-height: 22px;
+        }
       }
-    }
-    .o-icon {
-      font-size: 16px;
-      margin-left: 8px;
-      transform: translate(0px);
-      transition: all 0.2s linear;
-      @media screen and (max-width: 768px) {
-        font-size: 12px;
-        display: inline-block;
+      .o-icon {
+        font-size: 16px;
+        margin-left: 8px;
+        transform: translate(0px);
+        transition: all 0.2s linear;
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+          display: inline-block;
+        }
       }
     }
   }

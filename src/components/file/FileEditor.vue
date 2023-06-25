@@ -66,6 +66,22 @@ function previewFile() {
   });
 }
 
+function handleClick(index) {
+  let routerName = '';
+  route.params.contents.length === index
+    ? (routerName = `${prop.moduleName}FileBlob`)
+    : (routerName = `${prop.moduleName}File`);
+  let contents = route.params.contents.splice(0, index);
+  router.push({
+    name: routerName,
+    params: {
+      user: route.params.user,
+      name: route.params.name,
+      contents,
+    },
+  });
+}
+
 async function uploadGitlab() {
   await editorFileGitlab(
     {
@@ -116,22 +132,6 @@ function verifyFile() {
   }
 }
 verifyFile();
-
-function handleClick(index) {
-  let routerName = '';
-  route.params.contents.length === index
-    ? (routerName = `${prop.moduleName}FileBlob`)
-    : (routerName = `${prop.moduleName}File`);
-  let contents = route.params.contents.splice(0, index);
-  router.push({
-    name: routerName,
-    params: {
-      user: route.params.user,
-      name: route.params.name,
-      contents,
-    },
-  });
-}
 </script>
 <template>
   <div class="upload-file">

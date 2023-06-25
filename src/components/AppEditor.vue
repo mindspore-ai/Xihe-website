@@ -31,7 +31,11 @@ const fillLang = {
   js: 'javascrpit',
   md: 'markdown',
 };
-getLanguage();
+const emit = defineEmits(['update:modelValue']);
+
+const dom = ref();
+
+let instance = null;
 function getLanguage() {
   if (fillLang[props.lang]) {
     language.value = fillLang[props.lang];
@@ -41,11 +45,7 @@ function getLanguage() {
     language.value = 'python';
   }
 }
-const emit = defineEmits(['update:modelValue']);
-
-const dom = ref();
-
-let instance = null;
+getLanguage();
 
 onMounted(() => {
   const Model = monaco.editor.createModel(props.modelValue, language.value);

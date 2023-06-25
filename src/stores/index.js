@@ -70,6 +70,16 @@ export const useVisitorInfoStore = defineStore('visitorInfo', {
   getters: {},
 });
 
+// 个人中心数据
+export const usePersonalInfoStore = defineStore('visitorInfo', {
+  state: () => {
+    return {
+      course: [],
+      competition: [],
+    };
+  },
+});
+
 // 语言
 export const useLangStore = defineStore('lang', {
   state: () => {

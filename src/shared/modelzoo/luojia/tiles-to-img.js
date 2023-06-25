@@ -96,19 +96,17 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
 
   switch (map) {
     case '天地图影像':
-      {
-        getWMTSURL = (m, n) => {
-          return (
-            'http://t0.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix=' +
-            nowzoom.toString() +
-            '&TileRow=' +
-            n.toString() +
-            '&TileCol=' +
-            m.toString() +
-            '&style=default&format=tiles&tk=5c64e3d39ec181832df33eb6125ecc89'
-          );
-        };
-      }
+      getWMTSURL = (m, n) => {
+        return (
+          'http://t0.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix=' +
+          nowzoom.toString() +
+          '&TileRow=' +
+          n.toString() +
+          '&TileCol=' +
+          m.toString() +
+          '&style=default&format=tiles&tk=5c64e3d39ec181832df33eb6125ecc89'
+        );
+      };
       break;
     case 'Virtual Earth影像':
       {
@@ -128,18 +126,16 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
       }
       break;
     default:
-      {
-        getWMTSURL = (m, n) => {
-          return (
-            'https://webst04.is.autonavi.com/appmaptile?style=6&x=' +
-            m.toString() +
-            '&y=' +
-            n.toString() +
-            '&z=' +
-            nowzoom.toString()
-          );
-        };
-      }
+      getWMTSURL = (m, n) => {
+        return (
+          'https://webst04.is.autonavi.com/appmaptile?style=6&x=' +
+          m.toString() +
+          '&y=' +
+          n.toString() +
+          '&z=' +
+          nowzoom.toString()
+        );
+      };
       break;
   }
 
@@ -171,36 +167,6 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
       }
     }
   }
-  // l1: for (let m = ltxy[0]; m <= rbxy[0] + 2; m++) {
-  //   for (let n = ltxy[1]; n <= rbxy[1] + 1; n++) {
-  //     if (finflag === 1) {
-  //       break l1;
-  //     }
-
-  //     const req = await fetch(getWMTSURL(m, n), {
-  //       headers: {
-  //         accept:
-  //           'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-  //         'sec-fetch-dest': 'image',
-  //       },
-  //     });
-
-  //     const tempblob = await req.blob();
-
-  //     const tempimg = new Image();
-  //     tempimg.crossOrigin = '';
-  //     const tempurl = URL.createObjectURL(tempblob);
-  //     tempimg.src = tempurl;
-
-  //     tempimg.onload = () => {
-  //       context?.drawImage(tempimg, (m - ltxy[0]) * 256, (n - ltxy[1]) * 256);
-  //     };
-
-  //     if (m === rbxy[0] + 1 && n === rbxy[1] + 1) {
-  //       finflag = 1;
-  //     }
-  //   }
-  // }
 
   const sx = ltpixelXY[0];
   const sy = ltpixelXY[1];

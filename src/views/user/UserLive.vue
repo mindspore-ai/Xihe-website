@@ -92,12 +92,12 @@ function handleSizeChange(val) {
   }
   queryData.size = val;
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 function handleCurrentChange(val) {
   queryData.page = val;
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 
 function getCount() {

@@ -139,11 +139,19 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+  if (window.addEventListener) {
+    window.addEventListener('scroll', handleScroll);
+  } else if (window.attachEvent) {
+    window.attachEvent('scroll', handleScroll);
+  }
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  if (window.removeEventListener) {
+    window.removeEventListener('scroll', handleScroll);
+  } else if (window.detachEvent) {
+    window.detachEvent('scroll', handleScroll);
+  }
 });
 
 function changeTab(name) {

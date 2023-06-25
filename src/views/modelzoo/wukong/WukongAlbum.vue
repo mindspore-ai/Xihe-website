@@ -128,7 +128,10 @@ const throttleGet = throttle(getMore, 1000, {
   leading: true,
 });
 const handleScroll = () => {
-  const scrollTop = document.documentElement.scrollTop;
+  const scrollTop =
+    document.documentElement.scrollTop ||
+    window.pageYOffset ||
+    document.body.scrollTop;
   const scrollHeight = document.documentElement.scrollHeight;
   const windowHeight = document.documentElement.clientHeight;
   const total = scrollTop + windowHeight;

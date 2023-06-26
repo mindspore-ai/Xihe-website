@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import { useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -11,23 +11,13 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
+import { getRandom } from '@/shared/utils';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+const screenWidth = useWindowResize();
 
 const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
-
-const screenWidth = ref(
-  window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth
-);
-
-const onResize = () => {
-  screenWidth.value =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-};
-window.addEventListener('resize', onResize);
 
 const inferUrlList = ref([]);
 
@@ -48,22 +38,6 @@ const lists = [
   { name: t('taichu.IMG_GENERATE.LISTS[13]'), isSelected: false },
   { name: t('taichu.IMG_GENERATE.LISTS[14]'), isSelected: false },
 ];
-
-// 随机选取五个样例
-function getRandom(arr, count) {
-  let shuffled = arr.slice(0),
-    i = arr.length,
-    min = i - count,
-    temp,
-    index;
-  while (i-- > min) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
-  }
-  return shuffled.slice(min);
-}
 
 const exampleList = ref([
   { name: t('taichu.IMG_GENERATE.LISTS[8]'), isSelected: false },
@@ -164,7 +138,6 @@ function startRatiocnate1(num) {
         })
           .then((res) => {
             inferUrlList.value = [];
-            // inferenceText.value = '';
             if (res.data) {
               inferUrlList.value.push(res.data.picture + '?' + new Date());
             } else {
@@ -228,10 +201,6 @@ function handleTextChange() {
 function refreshTags() {
   exampleList.value = getRandom(lists, 5);
 }
-
-onUnmounted(() => {
-  window.removeEventListener('resize', onResize);
-});
 </script>
 <template>
   <div class="model-page">

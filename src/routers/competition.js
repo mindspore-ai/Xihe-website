@@ -107,7 +107,7 @@ export default [
         path: '1',
         name: 'register',
         component: () => {
-          return import('@/views/competition/CompetitionRegister.vue'); //待修改
+          return import('@/views/competition/CompetitionRegister.vue'); // 待修改
         },
         beforeEnter: async () => {
           const logingStore = useLoginStore();

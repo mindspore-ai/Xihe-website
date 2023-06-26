@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -14,6 +14,7 @@ import IconPoppver from '~icons/app/popover.svg';
 import { uploadFileGitlab } from '@/api/api-gitlab';
 
 import { useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();
@@ -85,7 +86,7 @@ async function upLoadObs(formEl) {
   formEl.validate((valid) => {
     if (valid) {
       let path = query.fileName.trim();
-      //非根目录下
+      // 非根目录下
       if (routerParams.contents.length) {
         path = `${routerParams.contents.join('/')}/${path}`;
       }

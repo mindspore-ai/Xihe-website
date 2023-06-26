@@ -135,13 +135,6 @@ export default {
         PATH: '/modelzoo/luojia',
         INTRO: '/modelzoo/luojia/introduce',
       },
-      // {
-      //   MODELZOO_NAME: 'PCL-L',
-      //   MODELZOO_DESC:
-      //     " Industry's first 100-billion-parameter Chinese NLP model",
-      //   IMAGE: modelzoo_pangu,
-      //   PATH: '/modelzoo/pangu',
-      // },
     ],
   },
   // 模型库

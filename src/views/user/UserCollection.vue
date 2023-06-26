@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUserCollection } from '@/api/api-user';
@@ -73,14 +73,13 @@ function handleSizeChange(val) {
   }
   queryData.size = val;
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 
 function handleCurrentChange(val) {
   queryData.page = val;
   toTop();
-}
-
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

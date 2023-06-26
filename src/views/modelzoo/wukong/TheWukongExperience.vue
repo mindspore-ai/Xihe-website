@@ -70,6 +70,7 @@ const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
+const router = useRouter();
 
 const { toClipboard } = useClipboard();
 
@@ -124,6 +125,7 @@ function viewAll() {
 }
 const isWaiting = ref(false);
 const isLine = ref(null);
+const errorMsg = ref('');
 
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
@@ -138,13 +140,7 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-/* function handlePreEnlage() {
-  if (largeIndex.value > 0) {
-    largeImg.value = {};
-    largeIndex.value--;
-    largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
-  }
-} */
+
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};
@@ -163,7 +159,6 @@ function toggleCollectionDlg() {
     router.push('/modelzoo/wukong/admin');
   }
 }
-const router = useRouter();
 nextTick(() => {
   let bgImg = document.getElementById('app');
 
@@ -191,6 +186,30 @@ const routeList = [
 ];
 function goPath(val) {
   router.push(val);
+}
+
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = '24px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
+
+    styleBackground.value[index] = canvas.toDataURL('image/png');
+
+    return styleBackground.value[index];
+  };
 }
 
 function getHeaderConfig() {
@@ -225,9 +244,6 @@ if (isLogined.value) {
               inferList.value[index].id = item.like_id;
               inferList.value[index].publicId = item.public_id;
             });
-            // res.data.pictures.forEach((item, index) => {
-            //   addWatermark(item, index);
-            // });
 
             const index1 = styleBackground.value[0].link.indexOf('=');
             const index2 = styleBackground.value[0].link.indexOf(
@@ -341,6 +357,14 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
+const imgQuantity = ref(4);
+
+const inferList = ref([
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+]);
 
 userAvatar.value = userInfoStore.avatar.replace(
   'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
@@ -529,7 +553,6 @@ function choseStyleSort(val, item) {
       randomList.value[Math.floor(Math.random() * randomList.value.length)];
     newStyleData.value[0].tag1 = '随机风格';
     newStyleData.value[0].img1 = style;
-    // newStyleData.value[0].isSelected = true;
   }
 }
 
@@ -544,31 +567,6 @@ function initData() {
   });
 }
 
-// 给生成图片加文字水印
-function addWatermark(imgUrl, index) {
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.src = imgUrl;
-
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, img.width, img.height);
-
-    ctx.font = '24px 微软雅黑';
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
-
-    styleBackground.value[index] = canvas.toDataURL('image/png');
-
-    return styleBackground.value[index];
-  };
-}
-
-const errorMsg = ref('');
 // wk推理
 const inferDisabled = ref(false);
 async function handleInfer() {
@@ -610,8 +608,7 @@ async function handleInfer() {
           img_quantity: imgQuantity.value,
         });
         isInferred.value = true;
-        // isWaiting.value = false;
-        // styleBackground.value = res.data.data.pictures;
+
         if (res.status === 201) {
           setTimeout(() => {
             socket = new WebSocket(
@@ -680,7 +677,7 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
-        // isWaiting.value = false;
+
         isInferred.value = true;
         isError.value = true;
       }
@@ -693,12 +690,7 @@ async function handleInfer() {
     }
   }
 }
-const inferList = ref([
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-]);
+
 // 收藏
 function handleCollect(key, index) {
   addLikePicture({
@@ -754,25 +746,10 @@ function requestImg(item) {
 }
 // 临时url小于1min重新获取下载
 function downloadImage(item) {
-  // const index1 = item.indexOf('=');
-  // const index2 = item.indexOf('=', index1 + 1);
-
-  // const i1 = item.indexOf('&');
-  // const i2 = item.indexOf('&', i1 + 1);
-
-  // const deadTime = item.substring(index2 + 1, i2);
-  // const currentTime = (new Date().getTime() + '').substring(0, 10);
-
-  // if ((deadTime - currentTime) / 60 < 60) {
-  //   temporaryLink({ link: item }).then((res) => {
-  //     if (res.data.data) {
-  //       requestImg(res.data.data.link);
-  //     }
-  //   });
-  // } else {
   requestImg(item);
-  // }
 }
+
+const resultIndex = ref(-1);
 // 推理dlg关闭-触发
 function handleDlgClose() {
   showInferDlg.value = false;
@@ -815,13 +792,10 @@ function reset(val) {
   svgRotate.value = val;
 }
 
-const resultIndex = ref(-1);
-
 function handleResultClcik(i) {
   resultIndex.value = i;
 }
 const showConfirmDlg = ref(false);
-const imgQuantity = ref(4);
 const numOptions = ref([
   { id: 4, active: true },
   { id: 2, active: false },

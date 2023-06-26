@@ -7,7 +7,9 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const screenWidth = useWindowResize();
 const router = useRouter();
 function goBack() {
@@ -19,16 +21,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">电力设备安全隐患分析解决方案</span>
+      <span class="title">{{ t('system.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/electricity' }">
-            电力专区
+            {{ t('system.ELECTRIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            电力设备安全隐患分析解决方案
+            {{ t('system.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +41,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">电力设备安全隐患分析解决方案</div>
+              <div class="banner-title">{{ t('system.TITLE') }}</div>
               <div class="banner-desc">
-                基于无人机电力巡检捕获图像或者视频，并将数据传回中台或者盒子，并对关键线路进行检测。以实时检测安全问题、实时预警、排查故障。大大降低工作出错率与风险和提高了电网巡检效率。
+                {{ t('system.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -55,7 +57,7 @@ function goBack() {
                   type="primary"
                   class="home-btn"
                 >
-                  运行模型
+                  {{ t('system.RUN_MODEL') }}
                   <template #suffix>
                     <OIcon><IconArrowRight /></OIcon>
                   </template>

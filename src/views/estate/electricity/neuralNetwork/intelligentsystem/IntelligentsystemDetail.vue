@@ -6,6 +6,9 @@ import systemCover from '@/assets/imgs/estate/electricity/intelligentsystem/syst
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const router = useRouter();
 // 点击导航
 /* function handleNavClick(item) {
@@ -22,10 +25,10 @@ function goDetail() {
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/electricity' }">
-            电力专区
+            {{ t('intelligent.ELETRIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            智能在线决策系统
+            {{ t('intelligent.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -36,14 +39,14 @@ function goDetail() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">智能在线决策系统</div>
+              <div class="banner-title">{{ t('intelligent.TITLE') }}</div>
               <div class="banner-desc">
-                华为联合中科院自动化所推出基于全场景AI框架昇思MindSpore的智能在线决策系统，其在昇腾AI计算集群上进行训练，昇思MindSpore高效的分布式强化学习能力可以应用到业界多种多样的决策智能任务。
+                {{ t('intelligent.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn" @click="goDetail">
               <OButton animation type="primary" class="home-btn">
-                运行模型
+                {{ t('intelligent.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>
@@ -52,7 +55,6 @@ function goDetail() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
               :nav-items="navItems"

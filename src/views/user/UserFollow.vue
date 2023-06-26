@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { goAuthorize } from '@/shared/login';
 import { ArrowRight } from '@element-plus/icons-vue';
@@ -14,6 +14,7 @@ const currentFansList = ref([]);
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
 const route = useRoute();
+const emit = defineEmits(['dom-change', 'get-fanslist']);
 
 // 是否是访客
 const isAuthentic = computed(() => {
@@ -37,7 +38,6 @@ function getFansList() {
 }
 getFansList();
 
-const emit = defineEmits(['dom-change', 'get-fanslist']);
 watch(
   () => {
     return currentFansList.value;
@@ -90,13 +90,13 @@ function handleSizeChange(val) {
   queryData.size = val;
 }
 
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
+
 function handleCurrentChange(val) {
   queryData.page = val;
   toTop();
-}
-
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 defineExpose({ getFansList });
 </script>

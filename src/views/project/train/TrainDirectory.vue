@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
+import { ref, watch, defineProps, defineEmits } from 'vue';
 
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
@@ -29,8 +29,8 @@ const dirHeadPath = ref([]); // 代码目录弹窗头部路径，最终代码目
 const fileHeadPath = ref([]); // 启动文件弹窗头部路径
 
 let routerParams = router.currentRoute.value.params;
-const dirTableData = ref([]); //代码目录文件树table内容
-const fileTableData = ref([]); //启动文件文件树table内容
+const dirTableData = ref([]); // 代码目录文件树table内容
+const fileTableData = ref([]); // 启动文件文件树table内容
 
 const emit = defineEmits(['handle']);
 
@@ -111,6 +111,7 @@ watch(
   }
 );
 
+const fileRelativePath = ref([]);
 // 头部点击选择目录
 function handleClick(item, index) {
   // 代码目录
@@ -118,7 +119,7 @@ function handleClick(item, index) {
     if (item) {
       let arr = dirHeadPath.value.slice(0, index + 1);
       let str = arr.join('/');
-      dirPath.value = str; //再次请求数据
+      dirPath.value = str; // 再次请求数据
       dirHeadPath.value = dirHeadPath.value.slice(0, index + 1);
       emit('handle', dirHeadPath.value.join('/') + '/');
       fileHeadPath.value = dirHeadPath.value.map((item) => {
@@ -136,7 +137,7 @@ function handleClick(item, index) {
     if (item && index >= dirHeadPath.value.length - 1) {
       let arr = fileHeadPath.value.slice(0, index + 1);
       let str = arr.join('/');
-      filePath.value = str; //再次请求数据
+      filePath.value = str; // 再次请求数据
       fileHeadPath.value = fileHeadPath.value.slice(0, index + 1);
       fileRelativePath.value.splice(index);
     } else {
@@ -145,7 +146,6 @@ function handleClick(item, index) {
   }
 }
 
-const fileRelativePath = ref([]);
 // 点击文件夹或者文件
 function goBlob(item) {
   // 如果是文件夹

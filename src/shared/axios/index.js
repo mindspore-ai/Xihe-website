@@ -5,7 +5,7 @@ import setConfig from './setConfig';
 
 import { useLoadingState, useEmailDialogState } from '@/stores/index';
 
-import { ElLoading } from 'element-plus';
+import { ElLoading, ElMessage } from 'element-plus';
 import { goAuthorize, saveUserAuth } from '@/shared/login';
 /**
  * intactRequest是只在axios基础上更改了请求配置。
@@ -37,9 +37,8 @@ const requestInterceptorId = request.interceptors.request.use(
       });
     }
     config.$noLoading ? '' : loadingCount++;
-
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
-    request.config = Object.assign({}, config);
+    request.config = { ...config };
     // 在发送请求之前做些什么
     config.cancelToken = new axios.CancelToken((cancelFn) => {
       pendingPool.has(config.url)

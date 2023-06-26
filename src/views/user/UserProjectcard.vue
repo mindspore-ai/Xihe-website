@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconDownload from '~icons/app/download';

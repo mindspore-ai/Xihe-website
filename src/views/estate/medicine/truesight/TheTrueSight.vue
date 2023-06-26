@@ -6,7 +6,9 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const screenWidth = useWindowResize();
 const router = useRouter();
 
@@ -19,16 +21,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">TrueSight人工智能临床外科手术决策支持系统</span>
+      <span class="title">{{ t('truesight.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/medicine' }">
-            医疗专区
+            {{ t('truesight.MEDEIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            TrueSight人工智能临床外科手术决策支持系统
+            {{ t('truesight.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -40,10 +42,10 @@ function goBack() {
           <div class="banner-right">
             <div class="banner-content">
               <div class="banner-title">
-                TrueSight人工智能临床外科手术决策支持系统
+                {{ t('truesight.TITLE') }}
               </div>
               <div class="banner-desc">
-                本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医工结合人工智能研究，是清华大学董家鸿院士和华中科技大学校长尤政院士的科研转化成果。
+                {{ t('truesight.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -53,7 +55,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('truesight.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>
@@ -65,20 +67,19 @@ function goBack() {
           <div class="industry-info">
             <!-- <router-view /> -->
             <div class="project-explain">
-              <p class="explain-title">项目说明</p>
+              <p class="explain-title">{{ t('truesight.EXPLAIN') }}</p>
               <div class="case-background">
-                <p class="title">案例背景</p>
+                <p class="title">{{ t('truesight.BACKGROUND') }}</p>
                 <div class="case-bg">
                   <p class="text">
-                    目前大多数医院采用人工或半自动术前规划，其存在的主要问题有：
+                    {{ t('truesight.BACKGROUND_DESC') }}
                   </p>
-                  <p class="text">（1）二维影像不全面不直观，手术风险较高；</p>
+                  <p class="text">{{ t('truesight.BACKGROUND_DESC1') }}</p>
                   <p class="text">
-                    （2）医生人工分割重建效率低下，一例腹部薄层增强CT一般由300-500张切片组成，一例重建需要临床医生3-5个小时的时间；
+                    {{ t('truesight.BACKGROUND_DESC2') }}
                   </p>
                   <p class="text">
-                    （3）半自动重建在面对肿瘤与血管粘连、弥漫性病变等情况，通过读取相似CT
-                    值进行区域提取的方法仍需要大量人工修正，存在费时费力问题，无法在临床中广泛使用。
+                    {{ t('truesight.BACKGROUND_DESC3') }}
                   </p>
                 </div>
                 <div class="img-contain">
@@ -90,9 +91,9 @@ function goBack() {
                 </div>
               </div>
               <div class="case-intro">
-                <p class="title">案例简介</p>
+                <p class="title">{{ t('truesight.RESUME') }}</p>
                 <div class="intro-item text">
-                  本案例是一项由清华大学附属清华长庚医院肝胆胰中心与清华大学精密仪器系骨干成员共同组成申请的创新型医工结合人工智能研究，是清华大学董家鸿院士和华中科技大学校长尤政院士的科研转化成果。本项目采用了深度学习、自适应阈值分割与三维条件随机场等先进技术，以至少千例的腹部薄层CT影像数据集作为支撑，同时以UNet为基础架构专门面向不同组织、不同显影程度、特定问题、改进的网络模型，研发出了首个全栈国产自主高精度、全量化、全自动的人工智能临床外科手术决策支持系统。本项目成果可精准分割器官轮廓、血管与病灶等组织，团队刷新了“国际肝脏影像数据分割大赛”世界纪录，准确率高达97.4%，显著高于人工85.7%。
+                  {{ t('truesight.RESUME_DESC') }}
                 </div>
                 <div class="img-contain">
                   <img
@@ -103,36 +104,34 @@ function goBack() {
                 </div>
               </div>
               <div class="case-difficulty">
-                <p class="title">案例难点</p>
+                <p class="title">{{ t('truesight.DIFFICULT') }}</p>
                 <div class="difficults-item">
                   <p class="text">
-                    1.在手术中，外科医生面对不透明的人体器官，高度依赖过往的手术经验和解剖理解，但仍缺乏对患者个体化的器官和肿瘤信息的支持辅助，且面对术中的突发状况，较难根据《临床诊疗指南》进行快速决
-                    策和高质量处置。
+                    {{ t('truesight.DIFFICULT_DESC') }}
                   </p>
                   <p class="text">
-                    2.在没有智能化手术系统而单纯依靠人的经验判断的情况下，有时会带来不必要的手术折返和手术风险，同时提高了手术并发症的发生率。
+                    {{ t('truesight.DIFFICULT_DESC1') }}
                   </p>
                   <p class="text">
-                    3.目前的手术术前规划需要人工逐层勾勒每一张CT、MR图像的病灶形态与特征，通常一例就需要耗费外科医生1.5-2个小时。
+                    {{ t('truesight.DIFFICULT_DESC2') }}
                   </p>
                   <p class="text">
-                    4.以肝胆外科为例，目前肝脏的功能肝体积的自动计算仍处于空白，三维重建及物理肝体积计算停留在手动及半自动水平，严重限制了肝脏术前规划的效率和精度，严重影响着肝胆手术整体观上的判断，
-                    不利于对手术方案进行精确制定。同时，这些信息的缺失，也使得高质量的手术导航、术中的信息决策、高精度数字化的手术辅助无法实现。
+                    {{ t('truesight.DIFFICULT_DESC3') }}
                   </p>
                 </div>
               </div>
 
               <div class="case-solution">
-                <p class="title">解决思路</p>
+                <p class="title">{{ t('truesight.SOLUTION') }}</p>
                 <div class="solve-thoughts">
                   <p class="text">
-                    1.本案例是清华大学董家鸿院士和华中科技大学校长尤政院士的科研成果转化，具备强有力的科研支撑。同时在产品内部导入了专家共识及指南，向医生提供标准化方案作为参考，帮助医生降低对经验主观判断的依赖，缩短基层医生的成长曲线，帮助基层医院更可靠、安全的实施较高难度手术，助力国家分级诊疗制度的落地与实施。
+                    {{ t('truesight.SOLUTION_DESC') }}
                   </p>
                   <p class="text">
-                    2.本案例是行业独家人工智能本地化一站式精准外科手术计划产品，可适用于多种术式场景，为医生带来更清晰的血管和病灶结构判断，为患者带来更精准的术中手术治疗和更少的术中暴露，经临床试验验证显著减少了患者术中出血和术后并发症，缩短了患者的入院时间。
+                    {{ t('truesight.SOLUTION_DESC1') }}
                   </p>
                   <p class="text">
-                    3.本案例将人工智能深度学习算法与医学图像分割重建相结合，实现15分钟内快速精准的重建器官轮廓、血管与病灶重建，大幅提高了医生的诊疗效率。
+                    {{ t('truesight.SOLUTION_DESC2') }}
                   </p>
                 </div>
                 <div class="img-contain">
@@ -144,7 +143,7 @@ function goBack() {
                 </div>
                 <div class="solve-thoughts-1">
                   <p class="text">
-                    4.本案例使用深度学习算法，依据Couinaud分段解剖标志及肝脏影像的任务场景，量身定制了高连通性、高普适性的算法，实现全自动肝段分割及肝段体积计算，达到精确计算拟切除肝段体积与剩余肝脏体积以达到精确术前评估的目的。且本产品已完成与华为国产硬件平台的全面适配测试，成功验证了公司产品软硬件全国产化的预期性能。
+                    {{ t('truesight.SOLUTION_DESC3') }}
                   </p>
                 </div>
                 <div class="img-contain">
@@ -156,16 +155,16 @@ function goBack() {
                 </div>
                 <div class="solve-thoughts-1">
                   <p class="text">
-                    5.本案例于多家中心三甲医院收集了多年龄段、全病种、全期相的数万级训练数据，构建了世界上数据量最大、数据面最广、数据类型最全训练数据，精标注的切片数量达到百万级。并在模型、训练和推理等层面，运用多类算法，增加模型的泛化能力，减少泛化误差。
+                    {{ t('truesight.SOLUTION_DESC4') }}
                   </p>
                 </div>
               </div>
 
               <div class="case-advantage">
-                <p class="title">案例优势</p>
+                <p class="title">{{ t('truesight.ADVANTAGE') }}</p>
                 <div class="case-superiority">
                   <p class="text">
-                    1.本产品可适用于多种术式场景，实现人工智能秒级重建，分钟级手术规划，为医生带来更清晰的血管和病灶结构判断，为患者带来更精准的术中手术治疗和更少的术中暴露。
+                    {{ t('truesight.ADVANTAGE_DESC') }}
                   </p>
                 </div>
                 <div class="img-contain">
@@ -177,13 +176,13 @@ function goBack() {
                 </div>
                 <div class="case-superiority">
                   <p class="text">
-                    2.本产品于多家中心三甲医院收集了多年龄段、全病种、全期相的数万级训练数据，构建了世界上数据量最大、数据面最广、数据类型最全训练数据，精标注的切片数量达到百万级。并在模型、训练和推理等层面，运用多类算法，增加模型的泛化能力，减少泛化误差。
+                    {{ t('truesight.ADVANTAGE_DESC1') }}
                   </p>
                   <p class="text">
-                    3.本产品导入了专家共识及指南，向医生提供标准化方案作为参考，帮助医生降低对经验主观判断的依赖，缩短基层医生的成长曲线，帮助基层医院更可靠、安全的实施较高难度手术，助力国家分级诊疗制度的落地与实施。
+                    {{ t('truesight.ADVANTAGE_DESC2') }}
                   </p>
                   <p class="text">
-                    4.本产品已完成与华为国产硬件平台与昇思MindSpore软件框架的全面适配测试，成功验证了公司产品软硬件全国产化的预期性能。
+                    {{ t('truesight.ADVANTAGE_DESC3') }}
                   </p>
                 </div>
               </div>

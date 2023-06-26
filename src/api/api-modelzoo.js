@@ -18,8 +18,7 @@ function getHeaderConfig() {
  * @returns
  */
 export function uploadModelzooPic(params) {
-  const url = `/server/bigmodel/describe_picture`;
-  // getHeaderConfig().headers['Content-Type:multipart/form-data'];
+  const url = '/server/bigmodel/describe_picture';
 
   return request
     .post(url, params, {
@@ -42,7 +41,7 @@ export function uploadModelzooPic(params) {
  * @returns
  */
 export function getSinglePicture(params) {
-  const url = `/server/bigmodel/single_picture`;
+  const url = '/server/bigmodel/single_picture';
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
@@ -58,7 +57,7 @@ export function getSinglePicture(params) {
  * @returns
  */
 export function getMultiplePicture(params) {
-  const url = `/server/bigmodel/multiple_pictures`;
+  const url = '/server/bigmodel/multiple_pictures';
   return request
     .post(url, params, {
       headers: {
@@ -79,7 +78,7 @@ export function getMultiplePicture(params) {
  * @returns
  */
 export function uploadVqaPicture(params) {
-  const url = `/server/bigmodel/vqa_upload_picture`;
+  const url = '/server/bigmodel/vqa_upload_picture';
   return request
     .post(url, params, {
       headers: {
@@ -116,7 +115,7 @@ export function handleVqaInference(params) {
  * @returns
  */
 export function handleGenerateCode(params) {
-  const url = `/server/bigmodel/codegeex`;
+  const url = '/server/bigmodel/codegeex';
   return request
     .post(url, params, getHeaderConfig())
     .then((res) => {
@@ -155,7 +154,12 @@ export function handlePanguInfer(params) {
 export function handleLuojiaUploadPic(params) {
   const url = '/server/bigmodel/luojia_upload_picture';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      headers: {
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((res) => {
       return res;
     })

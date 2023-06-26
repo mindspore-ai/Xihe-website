@@ -33,6 +33,7 @@ import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 import {
   getFinetuneList,
@@ -60,9 +61,9 @@ const showStep = ref(false);
 const showTip = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
-const expiry = ref(''); //体验截止时间
+const expiry = ref(''); // 体验截止时间
 const displayType = ref('finetune');
-const describe = ref(''); //已有运行中的任务或已有5个任务提示
+const describe = ref(''); // 已有运行中的任务或已有5个任务提示
 
 const isLogined = useLoginStore().isLogined;
 const userFinetune = useFinetuneData();
@@ -107,6 +108,19 @@ const applySteps = reactive([
   },
 ]);
 
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      userFinetune.setFinetuneData(JSON.parse(event.data).data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return socket;
+}
 // 获取微调任务列表
 let socket;
 function getFinetune() {
@@ -145,20 +159,6 @@ function getFinetune() {
 }
 getFinetune();
 
-function setWebsocket(url) {
-  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
-
-  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-  socket.onmessage = function (event) {
-    try {
-      userFinetune.setFinetuneData(JSON.parse(event.data).data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  return socket;
-}
-
 // 毫秒级时间戳换算成日期
 function getFullTime(val) {
   const stamp = new Date(val);
@@ -192,7 +192,7 @@ function goCreateTune() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({ path: `/finetune/new` });
+    router.push({ path: '/finetune/new' });
   }
 }
 

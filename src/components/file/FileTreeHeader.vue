@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { computed, ref } from 'vue';
+import { computed, ref, defineProps } from 'vue';
 import useClipboard from 'vue-clipboard3';
 
 import OButton from '@/components/OButton.vue';
@@ -12,6 +12,7 @@ import IconCopy from '~icons/app/copy-nickname';
 
 import { gitlabDownloadAll } from '@/api/api-gitlab';
 import { useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 

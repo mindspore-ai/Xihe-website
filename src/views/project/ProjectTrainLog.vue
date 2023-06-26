@@ -26,6 +26,7 @@ import IconAbnormal from '~icons/app/abnormal';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { LOGIN_KEYS } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -38,6 +39,7 @@ const route = useRoute();
 const router = useRouter();
 
 const logUrl = ref('');
+const customContent = ref('开始评估');
 
 // 当前项目的详情数据
 const detailData = computed(() => {
@@ -100,7 +102,7 @@ const rules = reactive({
   ],
 });
 
-//训练日志
+// 训练日志
 const form = reactive({
   name: '',
   desc: '',
@@ -364,7 +366,6 @@ function saveSetting() {
     }
   });
 }
-const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {
@@ -429,14 +430,13 @@ function goToPage() {
 
 const downloadBlob = (blob, fileName) => {
   try {
-    const href = window.URL.createObjectURL(blob); //创建下载的链接
+    const href = window.URL.createObjectURL(blob); // 创建下载的链接
     if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
       // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
-      // downloadElement.target = '_blank';
       downloadElement.download = fileName;
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载

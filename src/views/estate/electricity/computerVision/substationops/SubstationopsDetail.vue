@@ -8,6 +8,9 @@ import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const router = useRouter();
 const screenWidth = useWindowResize();
 
@@ -20,16 +23,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">变电站运维图像识别分析解决方案</span>
+      <span class="title">{{ t('substationops.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/electricity' }">
-            电力专区
+            {{ t('substationops.ELECTRIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            变电站运维图像识别分析解决方案
+            {{ t('substationops.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -40,9 +43,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">变电站运维图像识别分析解决方案</div>
+              <div class="banner-title">{{ t('substationops.TITLE') }}</div>
               <div class="banner-desc">
-                基于对变电站智能运维场景的深刻洞察，许继软件携手华为推出业内领先的变电站运维图像识别分析解决方案，并完成与全场景AI框架昇思MindSpore的兼容性测试。
+                {{ t('substationops.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -56,7 +59,7 @@ function goBack() {
                   animation
                   class="home-btn"
                 >
-                  运行模型
+                  {{ t('substationops.RUN_MODEL') }}
                   <template #suffix>
                     <OIcon><IconArrowRight /></OIcon>
                   </template>
@@ -66,7 +69,6 @@ function goBack() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- TODO: -->
           <!-- <div class="industry-tab">
             <o-nav
               :nav-items="navItems"

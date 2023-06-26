@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconOpen from '~icons/app/eye-open';
@@ -8,6 +8,9 @@ import { ArrowRight } from '@element-plus/icons-vue';
 
 import { useUserInfoStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
+
+const screenWidth = useWindowResize();
 
 const { t } = useI18n();
 const router = useRouter();
@@ -36,29 +39,6 @@ function handleNavClick(item) {
   router.push(item.path);
 }
 
-const screenWidth = ref(
-  window.innerWiscreenWidthdth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth
-);
-
-const onResize = () => {
-  screenWidth.value =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-};
-
-watch(
-  () => screenWidth.value,
-  (newValue) => {
-    screenWidth.value = newValue;
-  }
-);
-
-onMounted(() => {
-  window.addEventListener('resize', onResize);
-});
 // 跳转粉丝页
 function goFollow() {
   router.push({ path: `/${userInfoStore.userName}/follows` });

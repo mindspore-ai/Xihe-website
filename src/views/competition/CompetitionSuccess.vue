@@ -2,11 +2,9 @@
 import { inject } from 'vue';
 import OButton from '@/components/OButton.vue';
 import { useRoute, useRouter } from 'vue-router';
-// import { useCompetitionData } from '@/stores';
 
 const route = useRoute();
 const router = useRouter();
-// const userComData = useCompetitionData();
 const getDetailData = inject('getDetailData');
 
 const i18n = {
@@ -22,7 +20,7 @@ function goCompetitionIntro() {
   router.push({
     name: 'option',
     params: {
-      id: route.params.id, //比赛id
+      id: route.params.id, // 比赛id
     },
   });
   getDetailData();

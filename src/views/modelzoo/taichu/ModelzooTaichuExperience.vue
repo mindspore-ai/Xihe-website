@@ -7,6 +7,7 @@ import OButton from '@/components/OButton.vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
+import { ElMessage } from 'element-plus';
 
 import {
   uploadModelzooPic,
@@ -163,7 +164,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }

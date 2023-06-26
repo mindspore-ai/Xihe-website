@@ -20,7 +20,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/shared/styles/o-theme/var.scss" as *;`,
+        additionalData: '@use "@/shared/styles/o-theme/var.scss" as *;',
       },
     },
   },
@@ -66,7 +66,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/obs-big-model/, ''),
       },
       '/obs-xihe-avatar/': {
-        target: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
+        target: 'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/obs-xihe-avatar/, ''),
       },

@@ -97,7 +97,6 @@
 import { aesEncrypt } from './../utils/ase';
 import { resetSize } from './../utils/util';
 import { reqGet, reqCheck } from '@/api/api-user';
-// import { useI18n, useI18nStr } from 'shared/i18n/index.ts';
 import {
   computed,
   onMounted,
@@ -120,7 +119,7 @@ export default {
       type: String,
       default: '1',
     },
-    //弹出式pop，固定fixed
+    // 弹出式pop，固定fixed
     mode: {
       type: String,
       default: 'fixed',
@@ -163,17 +162,16 @@ export default {
   },
   setup(props) {
     const { mode, captchaType, type, blockSize } = toRefs(props);
-    // const i18n = useI18n();
     const explain = computed(() => '向右滑动完成验证');
     const { proxy } = getCurrentInstance();
-    const secretKey = ref(''), //后端返回的ase加密秘钥
-      passFlag = ref(''), //是否通过的标识
-      backImgBase = ref(''), //验证码背景图片
-      blockBackImgBase = ref(''), //验证滑块的背景图片
-      backToken = ref(''), //后端返回的唯一token值
-      startMoveTime = ref(''), //移动开始的时间
-      endMovetime = ref(''), //移动结束的时间
-      tipsBackColor = ref(''), //提示词的背景颜色
+    const secretKey = ref(''), // 后端返回的ase加密秘钥
+      passFlag = ref(''), // 是否通过的标识
+      backImgBase = ref(''), // 验证码背景图片
+      blockBackImgBase = ref(''), // 验证滑块的背景图片
+      backToken = ref(''), // 后端返回的唯一token值
+      startMoveTime = ref(''), // 移动开始的时间
+      endMovetime = ref(''), // 移动结束的时间
+      tipsBackColor = ref(''), // 提示词的背景颜色
       tipWords = ref(''),
       text = ref(''),
       finishText = ref(''),
@@ -192,8 +190,8 @@ export default {
       leftBarBorderColor = ref('#ddd'),
       iconColor = ref(undefined),
       iconClass = ref('icon-right'),
-      status = ref(false), //鼠标状态
-      isEnd = ref(false), //是够验证完成
+      status = ref(false), // 鼠标状态
+      isEnd = ref(false), // 是够验证完成
       showRefresh = ref(true),
       transitionLeft = ref(''),
       transitionWidth = ref(''),
@@ -202,73 +200,38 @@ export default {
     const barArea = computed(() => {
       return proxy.$el.querySelector('.verify-bar-area');
     });
-    function init() {
-      text.value = explain.value;
-      getPictrue();
-      nextTick(() => {
-        const { imgHeight, imgWidth, barHeight, barWidth } = resetSize(proxy);
-        setSize.imgHeight = imgHeight;
-        setSize.imgWidth = imgWidth;
-        setSize.barHeight = barHeight;
-        setSize.barWidth = barWidth;
-        proxy.$parent.$emit('ready', proxy);
-      });
 
-      window.removeEventListener('touchmove', function (e) {
-        move(e);
-      });
-      window.removeEventListener('mousemove', function (e) {
-        move(e);
-      });
-
-      //鼠标松开
-      window.removeEventListener('touchend', function () {
-        end();
-      });
-      window.removeEventListener('mouseup', function () {
-        end();
-      });
-
-      window.addEventListener('touchmove', function (e) {
-        move(e);
-      });
-      window.addEventListener('mousemove', function (e) {
-        move(e);
-      });
-
-      //鼠标松开
-      window.addEventListener('touchend', function () {
-        end();
-      });
-      window.addEventListener('mouseup', function () {
-        end();
+    // 请求背景图片和验证图片
+    function getPictrue() {
+      const data = {
+        captchaType: captchaType.value,
+      };
+      reqGet(data).then((res) => {
+        if (res.repCode === '0000') {
+          backImgBase.value = res.repData.originalImageBase64;
+          blockBackImgBase.value = res.repData.jigsawImageBase64;
+          backToken.value = res.repData.token;
+          secretKey.value = res.repData.secretKey;
+        } else {
+          tipWords.value = res.repMsg;
+        }
       });
     }
-    watch(type, () => {
-      init();
-    });
-    onMounted(() => {
-      // 禁止拖拽
-      init();
-      proxy.$el.onselectstart = function () {
-        return false;
-      };
-    });
-    //鼠标按下
+    // 鼠标按下
     function start(e) {
       e = e || window.event;
       let x;
       if (!e.touches) {
-        //兼容PC端
+        // 兼容PC端
         x = e.clientX;
       } else {
-        //兼容移动端
+        // 兼容移动端
         x = e.touches[0].pageX;
       }
       startLeft.value = Math.floor(
         x - barArea.value.getBoundingClientRect().left
       );
-      startMoveTime.value = +new Date(); //开始滑动的时间
+      startMoveTime.value = +new Date(); // 开始滑动的时间
       if (isEnd.value === false) {
         text.value = '';
         moveBlockBackgroundColor.value = '#0d8dff';
@@ -278,20 +241,20 @@ export default {
         status.value = true;
       }
     }
-    //鼠标移动
+    // 鼠标移动
     function move(e) {
       e = e || window.event;
       if (status.value && isEnd.value === false) {
         let x;
         if (!e.touches) {
-          //兼容PC端
+          // 兼容PC端
           x = e.clientX;
         } else {
-          //兼容移动端
+          // 兼容移动端
           x = e.touches[0].pageX;
         }
         const bar_area_left = barArea.value.getBoundingClientRect().left;
-        let move_block_left = x - bar_area_left; //小方块相对于父元素的left值
+        let move_block_left = x - bar_area_left; // 小方块相对于父元素的left值
         if (
           move_block_left >=
           barArea.value.offsetWidth -
@@ -306,16 +269,16 @@ export default {
         if (move_block_left <= 0) {
           move_block_left = parseInt(parseInt(blockSize.value.width) / 2);
         }
-        //拖动后小方块的left值
+        // 拖动后小方块的left值
         moveBlockLeft.value = move_block_left - startLeft.value + 'px';
         leftBarWidth.value = move_block_left - startLeft.value + 'px';
       }
     }
 
-    //鼠标松开
+    // 鼠标松开
     function end() {
       endMovetime.value = +new Date();
-      //判断是否重合
+      // 判断是否重合
       if (status.value && isEnd.value === false) {
         let moveLeftDistance = parseInt(
           (moveBlockLeft.value || '').replace('px', '')
@@ -347,11 +310,6 @@ export default {
               }, 1500);
             }
             passFlag.value = true;
-            // tipWords.value = useI18nStr('VERIFY_SUCCESS', [
-            //   `${((endMovetime.value - startMoveTime.value) / 1000).toFixed(
-            //     2
-            //   )}`,
-            // ]).value;
             tipWords.value = `${(
               (endMovetime.value - startMoveTime.value) /
               1000
@@ -381,7 +339,6 @@ export default {
               refresh();
             }, 1000);
             proxy.$parent.$emit('error', proxy);
-            // tipWords.value = i18n.value.VERIFY_FAILED;
             setTimeout(() => {
               tipWords.value = '';
             }, 1000);
@@ -415,31 +372,68 @@ export default {
       }, 300);
     };
 
-    // 请求背景图片和验证图片
-    function getPictrue() {
-      const data = {
-        captchaType: captchaType.value,
-      };
-      reqGet(data).then((res) => {
-        if (res.repCode === '0000') {
-          backImgBase.value = res.repData.originalImageBase64;
-          blockBackImgBase.value = res.repData.jigsawImageBase64;
-          backToken.value = res.repData.token;
-          secretKey.value = res.repData.secretKey;
-        } else {
-          tipWords.value = res.repMsg;
-        }
+    function init() {
+      text.value = explain.value;
+      getPictrue();
+      nextTick(() => {
+        const { imgHeight, imgWidth, barHeight, barWidth } = resetSize(proxy);
+        setSize.imgHeight = imgHeight;
+        setSize.imgWidth = imgWidth;
+        setSize.barHeight = barHeight;
+        setSize.barWidth = barWidth;
+        proxy.$parent.$emit('ready', proxy);
+      });
+
+      window.removeEventListener('touchmove', function (e) {
+        move(e);
+      });
+      window.removeEventListener('mousemove', function (e) {
+        move(e);
+      });
+
+      // 鼠标松开
+      window.removeEventListener('touchend', function () {
+        end();
+      });
+      window.removeEventListener('mouseup', function () {
+        end();
+      });
+
+      window.addEventListener('touchmove', function (e) {
+        move(e);
+      });
+      window.addEventListener('mousemove', function (e) {
+        move(e);
+      });
+
+      // 鼠标松开
+      window.addEventListener('touchend', function () {
+        end();
+      });
+      window.addEventListener('mouseup', function () {
+        end();
       });
     }
+    watch(type, () => {
+      init();
+    });
+    onMounted(() => {
+      // 禁止拖拽
+      init();
+      proxy.$el.onselectstart = function () {
+        return false;
+      };
+    });
+
     return {
-      secretKey, //后端返回的ase加密秘钥
-      passFlag, //是否通过的标识
-      backImgBase, //验证码背景图片
-      blockBackImgBase, //验证滑块的背景图片
-      backToken, //后端返回的唯一token值
-      startMoveTime, //移动开始的时间
-      endMovetime, //移动结束的时间
-      tipsBackColor, //提示词的背景颜色
+      secretKey, // 后端返回的ase加密秘钥
+      passFlag, // 是否通过的标识
+      backImgBase, // 验证码背景图片
+      blockBackImgBase, // 验证滑块的背景图片
+      backToken, // 后端返回的唯一token值
+      startMoveTime, // 移动开始的时间
+      endMovetime, // 移动结束的时间
+      tipsBackColor, // 提示词的背景颜色
       tipWords,
       text,
       finishText,
@@ -453,8 +447,8 @@ export default {
       leftBarBorderColor,
       iconColor,
       iconClass,
-      status, //鼠标状态
-      isEnd, //是够验证完成
+      status, // 鼠标状态
+      isEnd, // 是够验证完成
       showRefresh,
       transitionLeft,
       transitionWidth,

@@ -111,28 +111,24 @@ let i18n = {
 const projectCount = ref(0);
 const projectData = ref([]);
 const renderCondition = ref([]);
-const renderSorts = ref([]); //应用分类标签
-const otherCondition = ref([]); //训练平台、协议、项目类型标签
+const renderSorts = ref([]); // 应用分类标签
+const otherCondition = ref([]); // 训练平台、协议、项目类型标签
 const moreSortTags = ref([]);
 const keyWord = ref('');
 const activeNavItem = ref('all');
-const selectValue = ref('最多下载');
-const renderList = ref([]); //含渲染的一级标签
-const menuList = ref([]); //左侧标签
+const selectValue = ref('');
+const renderList = ref([]); // 含渲染的一级标签
+const menuList = ref([]); // 左侧标签
 const headTags = ref([]);
 
 const queryData = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
   level: null,
-  count_per_page: 12, //每页数量
-  page_num: 1, //分页
-  sort_by: 'download_count', //排序规则
-});
-
-const debounceSearch = debounce(getProject, 500, {
-  trailing: true,
+  count_per_page: 12, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
 
 // 头部tabs
@@ -140,7 +136,6 @@ const navItems = [
   {
     id: 'all',
     label: '全部项目',
-    // href: '/modelzoo/pangu/introduce',
   },
   {
     id: 'official',
@@ -202,6 +197,23 @@ let dialogList = {
   },
   tags: [],
 };
+const layout = ref('sizes, prev, pager, next, jumper');
+
+function getProject() {
+  getProjectData(queryData).then((res) => {
+    if (res.status === 200) {
+      projectCount.value = res.data.data.total;
+      if (projectCount.value / 10 < 8) {
+        layout.value = layout.value.split(',').splice(0, 4).join(',');
+      }
+      projectData.value = res.data.data;
+    }
+  });
+}
+
+const debounceSearch = debounce(getProject, 500, {
+  trailing: true,
+});
 
 // 点击导航
 function handleNavClick(item) {
@@ -214,18 +226,15 @@ function handleNavClick(item) {
       });
     });
   });
-  if (item.id === 'all') {
-    queryData.level = null;
-    queryData.tags = null;
-  } else if (item.id === 'official') {
-    queryData.tags = null;
-    queryData.level = 'official';
-  } else if (item.id === 'good') {
-    queryData.tags = null;
-    queryData.level = 'good';
-  } else if (item.id === 'electricity') {
-    queryData.level = null;
-    queryData.tags = 'electricity';
+  const levelMap = {
+    all: { level: null, tags: null },
+    official: { level: 'official', tags: null },
+    good: { level: 'good', tags: null },
+    electricity: { level: null, tags: 'electricity' },
+  };
+  if (levelMap.hasOwnProperty(item.id)) {
+    queryData.level = levelMap[item.id].level;
+    queryData.tags = levelMap[item.id].tags;
   }
   if (/^all|official|good|electricity/g.test(item.id)) {
     activeNavItem.value = item.id;
@@ -246,18 +255,6 @@ function highlightTag(tag) {
     tag.active = true;
     queryData.tag_kinds = tag.value;
   }
-}
-
-function getProject() {
-  getProjectData(queryData).then((res) => {
-    if (res.status === 200) {
-      projectCount.value = res.data.data.total;
-      if (projectCount.value / 10 < 8) {
-        layout.value = layout.value.split(',').splice(0, 4).join(',');
-      }
-      projectData.value = res.data.data;
-    }
-  });
 }
 
 function getModelTag() {
@@ -291,14 +288,14 @@ function getModelTag() {
       });
     });
 
-    renderCondition.value = i18n.screenCondition.splice(1, 4); //训练平台、协议、项目类型的一级标签
+    renderCondition.value = i18n.screenCondition.splice(1, 4); // 训练平台、协议、项目类型的一级标签
     let ind;
     res.data.forEach((item, index) => {
       if (item.domain === '应用分类') ind = index;
     });
-    renderSorts.value = i18n.screenCondition.splice(ind, 1); //应用分类的一级标签
+    renderSorts.value = i18n.screenCondition.splice(ind, 1); // 应用分类的一级标签
     otherCondition.value = i18n.screenCondition;
-    moreSortTags.value = renderSorts.value[0].condition; //应用分类的二级标签
+    moreSortTags.value = renderSorts.value[0].condition; // 应用分类的二级标签
     otherCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
@@ -328,7 +325,7 @@ function goSetNew() {
     goAuthorize();
   }
 }
-const layout = ref('sizes, prev, pager, next, jumper');
+
 function handleSizeChange(val) {
   if (projectCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -336,19 +333,19 @@ function handleSizeChange(val) {
   queryData.count_per_page = val;
 }
 
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
+
 function handleCurrentChange(val) {
   queryData.page_num = val;
   toTop();
-}
-
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 function getKeyWord() {
   queryData.page_num = 1;
   queryData.name = keyWord.value;
 }
-//打开jupyter useLoginStore
+// 打开jupyter useLoginStore
 function openJupyter() {
   if (loginStore.isLogined) {
     router.push('/settings/clouddev', '_blank');
@@ -698,23 +695,6 @@ function getSortData(item) {
                   />
                 </el-select>
               </div>
-              <!-- <el-dropdown popper-class="filter">
-                <span class="el-dropdown-link">
-                  <o-icon>
-                    <icon-menu></icon-menu>
-                  </o-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-for="item in i18n.sortCondition"
-                      :key="item"
-                      @click="dropdownClick(item)"
-                      >{{ item.text }}</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown> -->
             </div>
           </div>
 
@@ -1339,13 +1319,13 @@ $theme: #0d8dff;
           }
         }
         .pagination {
-          min-width: 800px;
           display: flex;
           justify-content: center;
           position: absolute;
           bottom: -76px;
           left: 50%;
           transform: translateX(-50%);
+          width: 100%;
           .total {
             line-height: 36px;
             font-size: 14px;

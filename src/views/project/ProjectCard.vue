@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onUnmounted } from 'vue';
+import { ref, watch, computed, onMounted, onUnmounted, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -46,7 +46,8 @@ const route = useRoute();
 let routerParams = router.currentRoute.value.params;
 
 const mkit = handleMarkdown();
-
+const rightDiv = ref(null);
+const leftDiv = ref(null);
 const codeString = ref('');
 const codeString2 = ref('');
 const result = ref();
@@ -84,6 +85,51 @@ const i18n = {
 const isShowDatasetDlg = ref(false);
 const isShowModelDlg = ref(false);
 const addSearch = ref('');
+
+// 获取README文件
+function getReadMeFile() {
+  try {
+    if (detailData.value.type === 'Gradio') {
+      getGuide().then((tree) => {
+        README = tree.data;
+        codeString2.value = README;
+        result2.value = mkit.render(codeString2.value);
+      });
+    } else {
+      getGitlabTree({
+        type: 'project',
+        user: routerParams.user,
+        path: '',
+        id: detailData.value.id,
+        name: routerParams.name,
+      })
+        .then((tree) => {
+          README = tree?.data?.filter((item) => {
+            return item.name === 'README.md';
+          });
+          if (README[0]) {
+            getGitlabFileRaw({
+              type: 'project',
+              user: routerParams.user,
+              path: 'README.md',
+              id: detailData.value.repo_id,
+              name: routerParams.name,
+            }).then((res) => {
+              res ? (codeString.value = res) : '';
+              result.value = mkit.render(codeString.value);
+            });
+          } else {
+            codeString.value = '';
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 route.hash ? getReadMeFile() : '';
 
@@ -247,50 +293,7 @@ function deleteClick(item) {
 function addModeClick() {
   isShowModelDlg.value = true;
 }
-// 获取README文件
-function getReadMeFile() {
-  try {
-    if (detailData.value.type === 'Gradio') {
-      getGuide().then((tree) => {
-        README = tree.data;
-        codeString2.value = README;
-        result2.value = mkit.render(codeString2.value);
-      });
-    } else {
-      getGitlabTree({
-        type: 'project',
-        user: routerParams.user,
-        path: '',
-        id: detailData.value.id,
-        name: routerParams.name,
-      })
-        .then((tree) => {
-          README = tree?.data?.filter((item) => {
-            return item.name === 'README.md';
-          });
-          if (README[0]) {
-            getGitlabFileRaw({
-              type: 'project',
-              user: routerParams.user,
-              path: 'README.md',
-              id: detailData.value.repo_id,
-              name: routerParams.name,
-            }).then((res) => {
-              res ? (codeString.value = res) : '';
-              result.value = mkit.render(codeString.value);
-            });
-          } else {
-            codeString.value = '';
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 // 路由监听
 watch(
   () => route,
@@ -353,25 +356,22 @@ watch(
 );
 const failLog = ref('');
 const loading = ref(true);
-//判断显示哪一个页面
+// 判断显示哪一个页面
 const canStart = ref(false);
 const msg = ref('未启动');
 const hasPrefix = computed(() => {
   return msg.value === '启动中' ? true : false;
 });
 const clientSrc = ref('');
-// let timer = null;
-// 游客启动推理
-// function start() {
-//   // startInference(detailData.value.id).then((res) => {
-//   //   if (res.data.status === 200) msg.value = '启动中';
-//   // socket.send(JSON.stringify({ pk: detailData.value.id }));
-//   // });
-//   socket.value = new WebSocket(
-//     `wss://${DOMAIN}/server/inference/project/${detailData.value.owner}/${detailData.value.id}`
-//   );
-// }
-//拥有者启动推理
+const socket = ref(null);
+
+// 停止推理
+function handleStop() {
+  closeConn();
+  msg.value = '';
+}
+
+// 拥有者启动推理
 function handleStart() {
   if (detailData.value.owner === userInfo.userName) {
     socket.value = new WebSocket(
@@ -433,14 +433,7 @@ function handleStart() {
   }
 }
 
-//停止推理
-function handleStop() {
-  closeConn();
-  msg.value = '';
-}
-const socket = ref(null);
-
-//拥有者判断是否有app.py，非拥有者判断启动状态
+// 拥有者判断是否有app.py，非拥有者判断启动状态
 getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
   if (res.data.has_file) {
     try {
@@ -454,17 +447,36 @@ getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
 function closeConn() {
   if (socket.value) {
     socket.value.close(); // 向服务端发送断开连接的请求
-    // clearInterval(timer);
-    // socket.value = null;
   }
 }
 onUnmounted(() => {
   closeConn();
 });
+
+onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightDiv.value) {
+        if (intervalTop <= 80) {
+          rightDiv.value.style.position = 'sticky';
+          rightDiv.value.style.top = '80px';
+        } else {
+          rightDiv.value.style.position = 'static';
+        }
+      }
+    }
+  };
+  window.addEventListener('scroll', handleScroll);
+});
 </script>
 <template>
   <div v-if="detailData" class="model-card">
-    <div v-if="detailData.type === 'Gradio' && loading" class="left-data2">
+    <div
+      v-if="detailData.type === 'Gradio' && loading"
+      ref="leftDiv"
+      class="left-data2"
+    >
       <div v-if="msg === '运行中'" class="markdown-body">
         <iframe
           :src="clientSrc"
@@ -570,59 +582,61 @@ onUnmounted(() => {
       </div>
     </div>
     <div v-if="loading" class="right-data">
-      <div class="download-data">
-        <div class="download-data-left">
-          <h4 class="download-title">{{ i18n.recentDownload }}</h4>
-          <span class="download-count">{{ detailData.download_count }}</span>
+      <div ref="rightDiv" class="relate-wrap">
+        <div class="download-data">
+          <div class="download-data-left">
+            <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+            <span class="download-count">{{ detailData.download_count }}</span>
+          </div>
+          <div class="download-data-right">
+            <h4 class="download-title">{{ i18n.fork }}</h4>
+            <span class="download-count">{{ detailData.fork_count }}</span>
+          </div>
         </div>
-        <div class="download-data-right">
-          <h4 class="download-title">{{ i18n.fork }}</h4>
-          <span class="download-count">{{ detailData.fork_count }}</span>
+        <!-- 添加数据集 -->
+        <div class="dataset-data">
+          <div class="add-title">
+            <h4 class="title">{{ i18n.dataset }}</h4>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addRelateClick"
+            >
+              {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
+          <div class="dataset-box">
+            <relate-card
+              v-if="detailData.related_datasets"
+              :detail-data="detailData"
+              :name="'related_datasets'"
+              @delete="deleteClick"
+              @jump="goDetasetClick"
+            ></relate-card
+            ><no-relate v-else :relate-name="'dataset'"></no-relate>
+          </div>
         </div>
-      </div>
-      <!-- 添加数据集 -->
-      <div class="dataset-data">
-        <div class="add-title">
-          <h4 class="title">{{ i18n.dataset }}</h4>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addRelateClick"
-          >
-            {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
-        </div>
-        <div class="dataset-box">
+        <!-- 添加模型 -->
+        <div class="related-project">
+          <div class="add-title">
+            <h4 class="title">{{ i18n.relatedItem }}</h4>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addModeClick"
+            >
+              {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
           <relate-card
-            v-if="detailData.related_datasets"
+            v-if="detailData.related_models"
             :detail-data="detailData"
-            :name="'related_datasets'"
+            :name="'related_models'"
             @delete="deleteClick"
-            @jump="goDetasetClick"
-          ></relate-card
-          ><no-relate v-else :relate-name="'dataset'"></no-relate>
+            @jump="goDetailClick"
+          ></relate-card>
+          <no-relate v-else :relate-name="'model'"></no-relate>
         </div>
-      </div>
-      <!-- 添加模型 -->
-      <div class="related-project">
-        <div class="add-title">
-          <h4 class="title">{{ i18n.relatedItem }}</h4>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addModeClick"
-          >
-            {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
-        </div>
-        <relate-card
-          v-if="detailData.related_models"
-          :detail-data="detailData"
-          :name="'related_models'"
-          @delete="deleteClick"
-          @jump="goDetailClick"
-        ></relate-card>
-        <no-relate v-else :relate-name="'model'"></no-relate>
       </div>
     </div>
 
@@ -706,8 +720,6 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  // padding-bottom: 40px;
-  // min-height: calc(100vh - 508px);
   background-color: #f5f6f8;
   .markdown-body {
     .fail {
@@ -807,7 +819,10 @@ onUnmounted(() => {
     width: calc(34% - 24px);
     background: #ffffff;
     border-radius: 16px;
-    padding: 40px 24px;
+    padding: 0px 24px 40px;
+    .relate-wrap {
+      padding-top: 40px;
+    }
     .download-data {
       display: flex;
       &-left {

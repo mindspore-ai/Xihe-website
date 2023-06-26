@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from 'vue';
-// import { useRouter } from 'vue-router';
 
 import IconCV from '~icons/app/CV';
 import IconNLP from '~icons/app/NLP';
@@ -56,26 +55,28 @@ import logo30 from '@/assets/imgs/estate/logo/logo30.png';
 import logo31 from '@/assets/imgs/estate/logo/logo31.png';
 import logo32 from '@/assets/imgs/estate/logo/logo32.png';
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const logoModules = [FreeMode, Autoplay];
 const activeName = ref('计算机视觉CV');
-const modelData = ref([]); //应用模型
-const datasetData = ref([]); //应用数据集
+const modelData = ref([]); // 应用模型
+const datasetData = ref([]); // 应用数据集
 const tagKinds = ref('CV');
 const screenWidth = useWindowResize();
 
 const electricityClassify = [
   {
     id: 1,
-    name: '计算机视觉CV',
+    name: t('electricity.TAB_TTITLES[0]'),
     mobileName: 'CV',
     path: '/estate/electricity',
-    // path: '/estate/industrial-zone',
     currentComponent: computerVision,
     icon: IconCV,
   },
   {
     id: 2,
-    name: '自然语言处理NLP',
+    name: t('electricity.TAB_TTITLES[1]'),
     mobileName: 'NLP',
     path: '/estate/medicine',
     currentComponent: naturalLanguage,
@@ -83,7 +84,7 @@ const electricityClassify = [
   },
   {
     id: 3,
-    name: '语音Audio',
+    name: t('electricity.TAB_TTITLES[2]'),
     mobileName: 'Audio',
     path: '/estate/industry',
     currentComponent: voice,
@@ -91,7 +92,7 @@ const electricityClassify = [
   },
   {
     id: 4,
-    name: '强化学习RL',
+    name: t('electricity.TAB_TTITLES[3]'),
     mobileName: 'GNN',
     path: '/estate/humanity',
     currentComponent: neuralNetwork,
@@ -100,18 +101,21 @@ const electricityClassify = [
 ];
 
 const handleClick = (tab) => {
-  if (tab.paneName === '计算机视觉CV') {
+  if (tab.paneName === t('electricity.TAB_TTITLES[0]')) {
     tagKinds.value = 'CV';
-  } else if (tab.paneName === '自然语言处理NLP') {
+  } else if (tab.paneName === t('electricity.TAB_TTITLES[1]')) {
     tagKinds.value = 'NLP';
   }
 };
 
 const beforeLeave = (activeTab) => {
-  if (activeTab === '语音Audio' || activeTab === '强化学习RL') {
+  if (
+    activeTab === t('electricity.TAB_TTITLES[2]') ||
+    activeTab === t('electricity.TAB_TTITLES[3]')
+  ) {
     ElMessage({
       type: 'warning',
-      message: '暂未开放，敬请期待！',
+      message: t('electricity.CLOSED'),
       duration: 3000,
       offset: 64,
       center: true,
@@ -174,12 +178,10 @@ watch(tagKinds, (newValue) => {
 <template>
   <div v-if="modelData.length" class="electricity">
     <div class="electricity-head">
-      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="electricity-banner">
-        <div class="banner-title">电力人工智能专区</div>
+        <div class="banner-title">{{ t('electricity.TITLE') }}</div>
         <div class="banner-desc">
-          汇集大量电力行业案例，开放特色电力数据集与模型，发布学习实践课程，比赛与活动，用
-          “ AI ” 电亮未来，为 “ 电力 ” 插上数智化双翼。
+          {{ t('electricity.DESCRIPTION') }}
         </div>
       </div>
     </div>
@@ -220,7 +222,7 @@ watch(tagKinds, (newValue) => {
       </el-tabs>
     </div>
     <div class="logo">
-      <p class="title">合作伙伴</p>
+      <p class="title">{{ t('electricity.PARTNERS') }}</p>
       <!-- <div class="logo-img">
         <div v-for="(item, index) in logoPic" :key="index" class="img">
           <img :src="item" alt="" />

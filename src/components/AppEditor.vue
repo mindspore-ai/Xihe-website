@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, defineProps, defineEmits } from 'vue';
 import * as monaco from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
 import 'monaco-editor/esm/vs/basic-languages/python/python.contribution';
@@ -31,7 +31,11 @@ const fillLang = {
   js: 'javascrpit',
   md: 'markdown',
 };
-getLanguage();
+const emit = defineEmits(['update:modelValue']);
+
+const dom = ref();
+
+let instance = null;
 function getLanguage() {
   if (fillLang[props.lang]) {
     language.value = fillLang[props.lang];
@@ -41,11 +45,7 @@ function getLanguage() {
     language.value = 'python';
   }
 }
-const emit = defineEmits(['update:modelValue']);
-
-const dom = ref();
-
-let instance = null;
+getLanguage();
 
 onMounted(() => {
   const Model = monaco.editor.createModel(props.modelValue, language.value);

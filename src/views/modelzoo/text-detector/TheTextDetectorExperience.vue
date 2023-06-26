@@ -205,10 +205,10 @@ watch(
 
 function keyDown(e) {
   if (e.ctrlKey && e.keyCode === 13) {
-    //用户点击了ctrl+enter触发
+    // 用户点击了ctrl+enter触发
     inputMsg.value += '\n';
   } else if (e.keyCode === 13) {
-    //用户点击了enter触发
+    // 用户点击了enter触发
     btnRef.value.click();
     e.preventDefault();
   }

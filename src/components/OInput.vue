@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps, defineEmits } from 'vue';
 defineProps({
   placeholder: {
     type: String,

@@ -45,8 +45,8 @@ const router = useRouter();
 const isInProgress = ref(false);
 
 const isShow = ref(false);
-const showApplication = ref(false); //显示报名弹窗
-const showMindcon = ref('MindCon'); //区别mindcon/比赛弹窗
+const showApplication = ref(false); // 显示报名弹窗
+const showMindcon = ref('MindCon'); // 区别mindcon/比赛弹窗
 const applicationData = ref(null);
 const showBtn = ref(false);
 const activityDetail = ref('');
@@ -119,52 +119,52 @@ function goChallenge(index) {
       type: 'warning',
       message: t('mindcon.END_TIP'),
     });
-  } else {
-    if (!isLogined) {
-      goAuthorize();
-    } else {
-      // 如果已报名
-      if (activityDetail.value.is_competitor) {
-        if (index === 0) {
-          getActivity();
+  }
 
-          if (activityDetail.value.ai_question.remaining_times > 0) {
-            if (activityDetail.value.ai_question.in_progress) {
-              isShow.value = true;
-              isInProgress.value = true;
-            } else {
-              isShow.value = true;
-            }
-          } else {
-            ElMessage({
-              type: 'warning',
-              message: t('mindcon.OVER_TIMES'),
-            });
-          }
-        } else if (index === 1) {
-          // 跳转到比赛列表
-          let routerData = router.resolve({
-            path: '/competition',
-          });
-          window.open(routerData.href, '_blank');
+  if (!isLogined) {
+    goAuthorize();
+  }
+
+  // 如果已报名
+  if (activityDetail.value.is_competitor) {
+    if (index === 0) {
+      getActivity();
+
+      if (activityDetail.value.ai_question.remaining_times > 0) {
+        if (activityDetail.value.ai_question.in_progress) {
+          isShow.value = true;
+          isInProgress.value = true;
         } else {
-          window.open(
-            'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-            '_blank'
-          );
+          isShow.value = true;
         }
       } else {
-        showApplication.value = true;
-        window.open(
-          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-          '_blank'
-        );
+        ElMessage({
+          type: 'warning',
+          message: t('mindcon.OVER_TIMES'),
+        });
       }
+    } else if (index === 1) {
+      // 跳转到比赛列表
+      let routerData = router.resolve({
+        path: '/competition',
+      });
+      window.open(routerData.href, '_blank');
+    } else {
+      window.open(
+        'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+        '_blank'
+      );
     }
+  } else {
+    showApplication.value = true;
+    window.open(
+      'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+      '_blank'
+    );
   }
 }
 
-//隐藏报名表单
+// 隐藏报名表单
 function hideForm(val) {
   showApplication.value = val;
 }
@@ -174,6 +174,7 @@ function handleStartAnswer() {
   router.push('/activity-1');
 }
 // 排行榜
+const rankingData = ref([]);
 const currentPage = ref(1);
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
@@ -215,7 +216,7 @@ watch(
     }
   }
 );
-const rankingData = ref([]);
+
 GetRankingList().then((res) => {
   rankingData.value = res.data;
   rankingData.value.forEach((item, index) => {

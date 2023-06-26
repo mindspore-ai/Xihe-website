@@ -21,6 +21,7 @@ import { getTags, modifyTags } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
 import { useUserInfoStore, useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const fileData = useFileData();
 const userInfoStore = useUserInfoStore();
@@ -44,6 +45,7 @@ const sumWidth = ref(0);
 const containerWidth = ref(0);
 const isWrap = ref(false);
 const isExpand = ref(false);
+const preStorage = ref();
 
 let renderList = ref([]);
 
@@ -124,6 +126,40 @@ const renderNav = computed(() => {
 onBeforeRouteLeave(() => {
   fileData.$reset();
 });
+
+function getTagList() {
+  getTags('dataset').then((res) => {
+    renderList.value = res.data;
+    dialogList.menuList = res.data.map((item, index) => {
+      return { tab: item.domain, key: index };
+    });
+    let menu = dialogList.menuList.map((item) => item.key);
+    menu.forEach((key) => {
+      // if (key === 'task') {
+      renderList.value[key].items.forEach((item) => {
+        item.items = item.items.map((it) => {
+          return {
+            name: it,
+            isActive: false,
+          };
+        });
+      });
+    });
+    headTags.value.forEach((item) => {
+      menu.forEach((menuitem) => {
+        // if (menuitem === 'task') {
+        renderList.value[menuitem].items.forEach((mit) => {
+          mit.items.forEach((it) => {
+            if (it.name === item.name) {
+              it.isActive = true;
+            }
+          });
+        });
+      });
+    });
+  });
+}
+
 let modelTags = ref([]);
 // 数据集详情数据
 function getDetailData() {
@@ -152,7 +188,10 @@ function getDetailData() {
           });
           headTags.value = modelTags.value.filter((item) => {
             let a = protocol.map((it) => {
-              if (it.name === item.name) return false;
+              if (it.name === item.name) {
+                return false;
+              }
+              return true;
             });
             if (!a.indexOf(false)) return false;
             else return true;
@@ -169,7 +208,6 @@ function getDetailData() {
     console.error(error);
   }
 }
-const preStorage = ref();
 getDetailData();
 
 function handleTabClick(item) {
@@ -302,7 +340,7 @@ function confirmBtn() {
   });
   preStorage.value = JSON.parse(preStorage.value);
   preStorage.value = preStorage.value.map((item) => {
-    if (item) return item.name;
+    return item.name;
   });
   let add = [];
   let remove = [];
@@ -340,39 +378,6 @@ function confirmBtn() {
 // 取消
 function cancelBtn() {
   isTagShow.value = false;
-}
-
-function getTagList() {
-  getTags('dataset').then((res) => {
-    renderList.value = res.data;
-    dialogList.menuList = res.data.map((item, index) => {
-      return { tab: item.domain, key: index };
-    });
-    let menu = dialogList.menuList.map((item) => item.key);
-    menu.forEach((key) => {
-      // if (key === 'task') {
-      renderList.value[key].items.forEach((item) => {
-        item.items = item.items.map((it) => {
-          return {
-            name: it,
-            isActive: false,
-          };
-        });
-      });
-    });
-    headTags.value.forEach((item) => {
-      menu.forEach((menuitem) => {
-        // if (menuitem === 'task') {
-        renderList.value[menuitem].items.forEach((mit) => {
-          mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
-          });
-        });
-      });
-    });
-  });
 }
 
 // 复制用户名

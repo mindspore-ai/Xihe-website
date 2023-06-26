@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
 
@@ -27,7 +28,6 @@ const prop = defineProps({
   },
 });
 function goExperience() {
-  // router.push(`${prop.path}`);
   window.open(`${prop.path}`);
 }
 function goIntroduction() {

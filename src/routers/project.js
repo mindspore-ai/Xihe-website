@@ -1,5 +1,3 @@
-// import { useLoginStore } from '@/stores';
-
 export default [
   // 项目
   {

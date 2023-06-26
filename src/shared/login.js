@@ -8,7 +8,6 @@ import { useLoginStore, useUserInfoStore } from '@/stores';
 const APP_ID = import.meta.env.VITE_APP_ID;
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
 const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
-// const APP_HOST = import.meta.env.VITE_APP_HOST;
 
 // 登录事件
 export const LOGIN_EVENTS = {
@@ -54,26 +53,27 @@ function getUrlParam(url = window.location.search) {
 
 // code换token
 async function getUserToken(params) {
-  // if (localStorage.getItem('XIHE_INVITED')) {
-  //   params.invited = localStorage.getItem('XIHE_INVITED');
-  // }
   try {
     // 去掉url中的code
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
     await queryUserToken({ ...params, redirect_uri: newUrl });
     window.location.href = newUrl;
-    // WARNING: 该方法会导致code无法清除
-    // if (window.history.replaceState) {
-    //   window.history.replaceState({}, '', newUrl);
-    //   await requestUserInfo();
-    // } else {
-    //   window.location.href = newUrl;
-    // }
   } catch (error) {
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
     window.location.href = newUrl;
     setStatus(LOGIN_STATUS.FAILED);
     console.error('获取用户信息失败！');
+  }
+}
+
+// 存储用户token至本地，用于下次登录
+export function saveUserAuth(token) {
+  if (!token) {
+    localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
+    const userInfoStore = useUserInfoStore();
+    userInfoStore.$reset();
+  } else {
+    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
   }
 }
 
@@ -107,63 +107,11 @@ function afterLogined(userInfo) {
   userInfoStore.followingCount = followingCount;
   userInfoStore.bonus = bonus;
 }
-
-// 登录
-export async function doLogin() {
-  const query = getUrlParam();
-  const { token } = getUserAuth();
-  if (query.code && query.state) {
-    await getUserToken({ code: query.code });
-  } else if (token) {
-    await requestUserInfo();
-  }
-}
-
-// 存储用户token至本地，用于下次登录
-export function saveUserAuth(token) {
-  if (!token) {
-    localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
-    const userInfoStore = useUserInfoStore();
-    userInfoStore.$reset();
-  } else {
-    // localStorage.removeItem('XIHE_INVITED');
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
-  }
-}
-
 // 获取本地token
 export function getUserAuth() {
   return {
     token: localStorage.getItem(LOGIN_KEYS.USER_TOKEN) || '',
   };
-}
-
-// 退出
-export async function logout() {
-  try {
-    const userName = useUserInfoStore().userName;
-    const idTokenRes = await queryUserIdToken({ userName });
-    const { info: idToken } = idTokenRes.data;
-    const redirectUri = `${window.location.origin}/`;
-    // const client = new AuthenticationClient({
-    //   appId: APP_ID,
-    //   appHost: APP_HOST,
-    //   redirectUri,
-    //   idToken,
-    // });
-    // 构造 OIDC 登出URL
-    // const url = client.buildLogoutUrl({
-    //   protocol: 'oidc',
-    //   expert: true,
-    //   redirectUri,
-    //   idToken,
-    // });
-    setStatus(LOGIN_STATUS.NOT);
-    saveUserAuth();
-    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
-  } catch (error) {
-    console.error('退出失败！');
-  }
 }
 
 // 请求用户信息
@@ -190,28 +138,36 @@ export async function requestUserInfo() {
   }
 }
 
+// 登录
+export async function doLogin() {
+  const query = getUrlParam();
+  const { token } = getUserAuth();
+  if (query.code && query.state) {
+    await getUserToken({ code: query.code });
+  } else if (token) {
+    await requestUserInfo();
+  }
+}
+
+// 退出
+export async function logout() {
+  try {
+    const userName = useUserInfoStore().userName;
+    const idTokenRes = await queryUserIdToken({ userName });
+    const { info: idToken } = idTokenRes.data;
+    const redirectUri = `${window.location.origin}/`;
+
+    setStatus(LOGIN_STATUS.NOT);
+    saveUserAuth();
+    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
+  } catch (error) {
+    console.error('退出失败！');
+  }
+}
+
 // authing认证
 export async function goAuthorize() {
   try {
-    // const client = new AuthenticationClient({
-    //   appId: APP_ID,
-    //   appHost: APP_HOST,
-    //   redirectUri: `${window.location.href}`,
-    // });
-    // 构造 OIDC 授权登录 URL
-    // const url = client.buildAuthorizeUrl({
-    //   scope: 'openid profile email phone address username',
-    // });
-    // window.location.href = url;
-
-    // 登录
-    // const url = buildAuthenticationClient({
-    //   client_id: APP_ID,
-    //   redirect_uri: `${window.location.href}`,
-    //   response_type: 'code',
-    //   scope: 'openid profile email phone address username',
-    // });
-
     window.location.href = `${LOGIN_URL}/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);

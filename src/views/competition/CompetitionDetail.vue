@@ -87,7 +87,6 @@ onUpdated(() => {
   let card = document.querySelector('.competition-card');
   let box = document.querySelector('.competition-info');
   let top1 = card.offsetTop + 30;
-  // let top2 = parent.offsetTop;
   window.addEventListener('scroll', function () {
     if (
       window.pageYOffset > top1 &&
@@ -103,7 +102,6 @@ onUpdated(() => {
     }
     if (window.pageYOffset < top1) {
       box.style.display = 'none';
-      // card.classList.remove('fixed');
       fixed.value = false;
     }
   });

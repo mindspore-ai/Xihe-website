@@ -6,7 +6,6 @@ import comBanner1 from '@/assets/imgs/competition/artist-banner.jpg';
 import comBanner2 from '@/assets/imgs/competition/book-banner.png';
 import comBanner3 from '@/assets/imgs/competition/insect-banner.png';
 import emptyImg from '@/assets/imgs/live-empty.png';
-// import comBanner4 from '@/assets/imgs/competition/com-banner4.png';
 
 import OButton from '@/components/OButton.vue';
 import IconArrowRight from '~icons/app/arrow-right.svg';
@@ -15,7 +14,7 @@ import IconSelected from '~icons/app/selected';
 import { getCompetitionList } from '@/api/api-competition';
 
 const router = useRouter();
-const allCompetition = ref([]); //当前所有比赛
+const allCompetition = ref([]); // 当前所有比赛
 const currentCompetition = ref([]); // 当前页显示的比赛
 const competitionName = ref('allClassify');
 const activeName = ref('allStatus');
@@ -91,6 +90,9 @@ function goCompetitionDetail(id) {
 }
 // 分页器
 const layout = ref('prev, pager, next');
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 // 比赛分页器
 function handleCurrentPage(val) {
   competitionPager.page = val;
@@ -99,9 +101,6 @@ function handleCurrentPage(val) {
     competitionPager.page * competitionPager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

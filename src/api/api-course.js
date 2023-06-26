@@ -139,7 +139,7 @@ export function getCertificate(id) {
  * @returns
  */
 export function getReginfo() {
-  const url = `/server/course/reginfo`;
+  const url = '/server/course/reginfo';
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {

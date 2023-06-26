@@ -1,5 +1,5 @@
 export default [
-  //活动
+  // 活动
   {
     path: '/activity',
     name: 'activity',

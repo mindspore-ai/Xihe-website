@@ -51,7 +51,7 @@ const lngLatToPixelXY = (lng, lat, level) => {
  */
 const getBingMeta = async () => {
   const BING_KEY =
-    'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o'; //Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
+    'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o'; // Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
 
   const req = await fetch(
     'https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?key=' +
@@ -83,15 +83,15 @@ const getBingTileURL = async () => {
  * @param map 地图种类
  */
 const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
-  // const TILE_SIZE = 256; //高德瓦片尺寸
+  // const TILE_SIZE = 256; // 高德瓦片尺寸
 
   const imgcanvas = document.createElement('canvas');
   const context = imgcanvas.getContext('2d');
 
-  //canvas宽高初始化
+  // canvas宽高初始化
   imgcanvas.width = 256 * (rbxy[0] - ltxy[0] + 1);
   imgcanvas.height = 256 * (rbxy[1] - ltxy[1] + 1);
-  let finflag = 0; //瓦片获取完毕标志
+  let finflag = 0; // 瓦片获取完毕标志
   let getWMTSURL;
 
   switch (map) {
@@ -109,19 +109,21 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
       };
       break;
     case 'Virtual Earth影像':
-      let bingTileURL = await getBingTileURL();
-      getWMTSURL = (m, n) => {
-        let quadkey = Cesium.BingMapsImageryProvider.tileXYToQuadKey(
-          m,
-          n,
-          nowzoom
-        );
-        quadkey = quadkey.substr(1, quadkey.length);
+      {
+        let bingTileURL = await getBingTileURL();
+        getWMTSURL = (m, n) => {
+          let quadkey = Cesium.BingMapsImageryProvider.tileXYToQuadKey(
+            m,
+            n,
+            nowzoom
+          );
+          quadkey = quadkey.substr(1, quadkey.length);
 
-        let turl = bingTileURL.replace('{quadkey}', quadkey);
+          let turl = bingTileURL.replace('{quadkey}', quadkey);
 
-        return turl;
-      };
+          return turl;
+        };
+      }
       break;
     default:
       getWMTSURL = (m, n) => {
@@ -137,15 +139,10 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
       break;
   }
 
-  //没有rbxy[0]+1的话会出现最后一张瓦片缺失的情况，为img未完全加载问题，稍微改了下，多了个判断
-  //TODO:加载速度太慢
-
-  l1: for (let m = ltxy[0]; m <= rbxy[0] + 2; m++) {
-    for (let n = ltxy[1]; n <= rbxy[1] + 1; n++) {
-      if (finflag === 1) {
-        break l1;
-      }
-
+  // 没有rbxy[0]+1的话会出现最后一张瓦片缺失的情况，为img未完全加载问题，稍微改了下，多了个判断
+  // 加载速度太慢
+  for (let m = ltxy[0]; m <= rbxy[0] + 2 && finflag !== 1; m++) {
+    for (let n = ltxy[1]; n <= rbxy[1] + 1 && finflag !== 1; n++) {
       const req = await fetch(getWMTSURL(m, n), {
         headers: {
           accept:
@@ -175,7 +172,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
   const sy = ltpixelXY[1];
 
   const widmid = () => {
-    const n = rbxy[0] - ltxy[0] - 1; //+1-2
+    const n = rbxy[0] - ltxy[0] - 1; // +1-2
     if (n < 0) {
       return 0;
     } else {
@@ -184,7 +181,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
   };
 
   const heimid = () => {
-    const n = rbxy[1] - ltxy[1] - 1; //+1-2
+    const n = rbxy[1] - ltxy[1] - 1; // +1-2
     if (n < 0) {
       return 0;
     } else {
@@ -206,7 +203,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
     sheight = 256 - ltpixelXY[1] + heimid() * 256 + rbpixelXY[1];
   }
 
-  //裁剪
+  // 裁剪
   const fullimg = new Image();
 
   fullimg.src = imgcanvas.toDataURL('image/png');
@@ -232,13 +229,13 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
  * @param zoomlv 图像的缩放等级
  */
 export const rectToImg = async (ltpoint, rbpoint, zoomlv, map) => {
-  //左上角，右下角
+  // 左上角，右下角
   const ltxy = lngLatToTileXY(ltpoint[0], ltpoint[1], zoomlv);
   const rbxy = lngLatToTileXY(rbpoint[0], rbpoint[1], zoomlv);
   const ltpixelXY = lngLatToPixelXY(ltpoint[0], ltpoint[1], zoomlv);
   const rbpixelXY = lngLatToPixelXY(rbpoint[0], rbpoint[1], zoomlv);
 
-  //TODO:需要加入RECT大小限制检测
+  // 需要加入RECT大小限制检测
   const tileImg = await getTileImg(
     ltxy,
     rbxy,

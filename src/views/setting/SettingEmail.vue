@@ -48,6 +48,18 @@ function setEmail(formEl) {
     }
   });
 }
+// 倒计时
+const handleTimeChange = () => {
+  if (time.value <= 0) {
+    isDisposed.value = false;
+    time.value = 60;
+  } else {
+    setTimeout(() => {
+      time.value--;
+      handleTimeChange();
+    }, 1000);
+  }
+};
 function verifySuccess(data) {
   sendCode({ email: ruleForm.email, capt: data.captchaVerification })
     .then(() => {
@@ -119,18 +131,7 @@ function keepEmail(formEl) {
     }
   });
 }
-//倒计时
-const handleTimeChange = () => {
-  if (time.value <= 0) {
-    isDisposed.value = false;
-    time.value = 60;
-  } else {
-    setTimeout(() => {
-      time.value--;
-      handleTimeChange();
-    }, 1000);
-  }
-};
+
 const isVisibel = ref(false);
 function toggleVisible(val) {
   isVisibel.value = val;

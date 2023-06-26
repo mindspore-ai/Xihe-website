@@ -201,7 +201,6 @@ function getDetailData() {
       });
   } catch (error) {
     router.push('/404');
-    console.error(error);
   }
 }
 getDetailData();

@@ -122,7 +122,7 @@ function getMore() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   }
 }

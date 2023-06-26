@@ -22,7 +22,7 @@ getGuide(userComData.dataset_doc)
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {
-    console.error(err);
+    return err;
   });
 
 function downloadDataset() {

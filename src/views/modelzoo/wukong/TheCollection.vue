@@ -67,7 +67,7 @@ async function getCollectedImages() {
       });
     }
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 onMounted(() => {
@@ -93,7 +93,7 @@ async function confirmQuitPublic() {
     }
     getCollectedImages();
   } catch (err) {
-    console.error(err);
+    return err;
   }
   showConfirmDlg.value = false;
 }

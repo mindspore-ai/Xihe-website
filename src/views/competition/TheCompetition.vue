@@ -32,7 +32,7 @@ async function getAllCompetition() {
       currentCompetition.value = res.data.slice(0, competitionPager.size);
     }
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 getAllCompetition();

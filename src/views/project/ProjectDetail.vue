@@ -255,7 +255,7 @@ function getDetailData() {
         router.push('/404');
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 const preStorage = ref();

@@ -227,7 +227,7 @@ function getModelTags(type) {
       });
     });
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 getModelTags('project');

@@ -62,9 +62,7 @@ let query = reactive({
 
 try {
   owner.value = useUserInfoStore().owner;
-} catch (error) {
-  console.error(error);
-}
+} catch (error) {}
 
 function createModel(formEl) {
   if (!formEl) return;
@@ -92,7 +90,6 @@ function createModel(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });
@@ -150,7 +147,7 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 getModelTags('model');

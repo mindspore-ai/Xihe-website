@@ -151,7 +151,6 @@ async function foundTeam(formEl) {
       });
       form1.teamName = '';
     } else {
-      console.error('error submit!');
       return false;
     }
   } catch (error) {
@@ -184,7 +183,6 @@ async function addTeam(formEl) {
       });
       form2.leaderName = '';
     } else {
-      console.error('error submit!');
       return false;
     }
   } catch (error) {
@@ -225,7 +223,6 @@ function confirmEdit(formEl) {
         });
       });
     } else {
-      console.error('error submit!');
       return false;
     }
   });

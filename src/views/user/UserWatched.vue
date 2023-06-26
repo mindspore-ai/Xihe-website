@@ -48,7 +48,7 @@ function getFollowList() {
       currentFollowList.value = res.data.data;
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 getFollowList();
@@ -79,7 +79,7 @@ function getWatch(name) {
         getFollowList();
       });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   }
 }
@@ -97,7 +97,7 @@ function cancelWatch(name) {
         getFollowList();
       });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   }
 }

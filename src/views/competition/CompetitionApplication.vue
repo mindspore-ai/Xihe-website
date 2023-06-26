@@ -271,7 +271,6 @@ function saveInfo(formEl) {
         });
       }
     } else {
-      console.error('error submit!');
       return false;
     }
   });

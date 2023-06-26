@@ -117,7 +117,6 @@ async function upLoadObs(formEl) {
         });
       });
     } else {
-      console.error('error submit!');
       return false;
     }
   });

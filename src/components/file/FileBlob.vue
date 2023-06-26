@@ -110,7 +110,7 @@ function previewFile() {
       }
     })
     .catch((error) => {
-      console.error(error);
+      return error;
     });
 }
 function verifyFile() {
@@ -140,7 +140,7 @@ function verifyFile() {
       }
     })
     .catch((error) => {
-      console.error(error);
+      return error;
     });
 }
 verifyFile();

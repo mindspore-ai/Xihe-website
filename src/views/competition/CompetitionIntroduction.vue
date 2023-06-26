@@ -22,7 +22,7 @@ getGuide(comInfo.value.doc)
     result.value = mkit.render(codeString.value);
   })
   .catch((err) => {
-    console.error(err);
+    return err;
   });
 </script>
 <template>

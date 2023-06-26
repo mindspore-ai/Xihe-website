@@ -284,7 +284,7 @@ if (isLogined.value) {
           });
       }
     } catch (err) {
-      console.error(err);
+      return err;
     }
   };
 }
@@ -369,7 +369,6 @@ async function publicImage(val, index) {
     showConfirmDlg.value = false;
   } catch (err) {
     showConfirmDlg.value = false;
-    console.error(err);
   }
 }
 // 取消公开
@@ -383,7 +382,7 @@ async function cancelPublicImage(i) {
       message: '已取消公开',
     });
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 // 分享图片
@@ -616,7 +615,7 @@ async function handleInfer() {
                     });
                 }
               } catch (err) {
-                console.error(err);
+                return err;
               }
             };
           }, 2000);

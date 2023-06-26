@@ -177,7 +177,7 @@ async function handleGetOutput() {
       document.body.removeChild(downloadElement); // 下载完成移除元素
       window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
     } catch (e) {
-      console.error(e);
+      return e;
     }
   } else {
     return;
@@ -237,7 +237,7 @@ socket.onmessage = function (event) {
         }
       }
     } catch (e) {
-      console.error(e);
+      return e;
     }
   });
 };
@@ -278,7 +278,7 @@ function setEvaluateWebscoket(id, type) {
           ws.close();
         }
       } catch (e) {
-        console.error(e);
+        return e;
       }
     } else {
       try {
@@ -304,7 +304,7 @@ function setEvaluateWebscoket(id, type) {
           ws.close();
         }
       } catch (e) {
-        console.error(e);
+        return e;
       }
     }
   };
@@ -444,7 +444,7 @@ const downloadBlob = (blob, fileName) => {
       window.URL.revokeObjectURL(href); // 释放掉blob对象
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 };
 

@@ -465,7 +465,7 @@ function getSearch() {
       return;
     }
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 // 获得搜索结果第一条数据

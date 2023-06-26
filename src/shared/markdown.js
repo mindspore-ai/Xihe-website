@@ -15,7 +15,7 @@ const newWindow = (tokens, idx) => {
         ? ''
         : tokens[idx].attrPush(['target', '_blank']);
     } catch (error) {
-      console.error(error);
+      return error;
     }
   } else {
     tokens[idx].attrs[aIndex][1] = '_blank';

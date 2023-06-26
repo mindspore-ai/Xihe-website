@@ -125,7 +125,7 @@ function submitUpload() {
         }
       });
     } catch (e) {
-      console.error(e);
+      return e;
     }
   }
 }

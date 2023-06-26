@@ -35,7 +35,7 @@ const handleCopy = async () => {
       message: '复制成功',
     });
   } catch (e) {
-    console.error(e);
+    return e;
   }
 };
 

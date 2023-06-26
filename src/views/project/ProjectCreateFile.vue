@@ -205,7 +205,7 @@ function getDetailData() {
       detailData.value = res.data;
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 getDetailData();

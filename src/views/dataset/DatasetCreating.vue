@@ -76,9 +76,7 @@ let dialogList = {
 
 try {
   owner.value = useUserInfoStore().owner;
-} catch (error) {
-  return error;
-}
+} catch (error) {}
 function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {

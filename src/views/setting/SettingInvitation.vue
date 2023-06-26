@@ -26,7 +26,7 @@ const handleCopy = async () => {
     await toClipboard(invitationUrl.value);
     toggleDlg(true);
   } catch (e) {
-    console.error(e);
+    return e;
   }
 };
 </script>

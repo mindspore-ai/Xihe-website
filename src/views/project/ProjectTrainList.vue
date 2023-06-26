@@ -126,7 +126,7 @@ function setWebsocket(url) {
         }
       }
     } catch (e) {
-      console.error(e);
+      return e;
     }
   };
   return socket;
@@ -157,7 +157,7 @@ function getTrainList() {
       }
     });
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 getTrainList();

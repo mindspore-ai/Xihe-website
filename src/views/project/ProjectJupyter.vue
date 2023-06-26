@@ -97,7 +97,7 @@ async function orderCloudSbuscrible(id) {
       };
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 
@@ -213,7 +213,7 @@ async function getPodInfo(id) {
       });
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 
@@ -233,7 +233,7 @@ async function getCloudDisposeList() {
       }
     });
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 getCloudDisposeList();

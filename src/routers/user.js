@@ -50,7 +50,6 @@ export default [
           }
           return true;
         } catch (err) {
-          console.error('获取用户信息失败：', err);
           return {
             name: '404',
           };

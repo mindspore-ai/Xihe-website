@@ -122,7 +122,7 @@ function getMore() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   }
 }
@@ -318,25 +318,6 @@ async function copyText(textValue) {
   });
 }
 
-// 绘制圆角矩形（使用 arcTo）
-function drawRoundedRect(ctx, x, y, width, height, radius) {
-  // 保存当前环境的状态
-  ctx.save();
-  // 重置当前路径
-  ctx.beginPath();
-  // 移动到左上角
-  ctx.moveTo(x + radius, y);
-  // 绘制右上角
-  ctx.arcTo(x + width, y, x + width, y + radius, radius);
-  // 绘制右下角
-  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-  // 绘制左下角
-  ctx.arcTo(x, height, x, height - radius, radius);
-  // 绘制左上角
-  ctx.arcTo(x, y, x + radius, y, radius);
-  // 填充当前路径
-  ctx.fill();
-}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
@@ -355,10 +336,23 @@ function downloadPoster() {
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      // 绘制圆角矩形
-      drawRoundedRect(ctx, 0, 0, img.width, img.height, 28);
-      // 对矩形进行剪切
-      ctx.clip();
+      // 绘制圆角矩形（使用 arcTo）
+      let radius = 22;
+      ctx.save(); // 保存当前环境的状态
+      ctx.beginPath(); // 重置当前路径
+      ctx.moveTo(0 + radius, 0); // 移动到左上角
+      ctx.arcTo(0 + img.width, 0, 0 + img.width, 0 + radius, radius); // 绘制右上角
+      ctx.arcTo(
+        0 + img.width,
+        0 + img.height,
+        0 + img.width - radius,
+        0 + img.height,
+        radius
+      ); // 绘制右下角
+      ctx.arcTo(0, img.height, 0, img.height - radius, radius); // 绘制左下角
+      ctx.arcTo(0, 0, 0 + radius, 0, radius); // 绘制左上角
+      ctx.fill(); // 填充当前路径
+      ctx.clip(); // 对矩形进行剪切
       // 绘制图片
       ctx.drawImage(img, 0, 0, img.width, img.height);
 

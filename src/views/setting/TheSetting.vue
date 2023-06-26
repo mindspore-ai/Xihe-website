@@ -163,7 +163,7 @@ function getFollow(name) {
         userInfoStore.followingCount++;
       });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   }
 }
@@ -179,7 +179,7 @@ function cancelFollow(name) {
       userInfoStore.followingCount--;
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 

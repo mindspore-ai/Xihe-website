@@ -62,7 +62,6 @@ async function getUserToken(params) {
     const newUrl = window.location.href.replace(/\?code=(.)+/g, '');
     window.location.href = newUrl;
     setStatus(LOGIN_STATUS.FAILED);
-    console.error('获取用户信息失败！');
   }
 }
 
@@ -92,7 +91,6 @@ function afterLogined(userInfo) {
   if (!id) {
     setStatus(LOGIN_STATUS.FAILED);
     saveUserAuth();
-    return console.error('用户信息不正确！');
   }
 
   setStatus(LOGIN_STATUS.DONE);
@@ -114,6 +112,22 @@ export function getUserAuth() {
   };
 }
 
+// 退出
+export async function logout() {
+  try {
+    const userName = useUserInfoStore().userName;
+    const idTokenRes = await queryUserIdToken({ userName });
+    const { info: idToken } = idTokenRes.data;
+    const redirectUri = `${window.location.origin}/`;
+
+    setStatus(LOGIN_STATUS.NOT);
+    saveUserAuth();
+    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
+  } catch (error) {
+    return error;
+  }
+}
+
 // 请求用户信息
 export async function requestUserInfo() {
   const { token } = getUserAuth();
@@ -128,12 +142,10 @@ export async function requestUserInfo() {
       } else {
         logout();
         setStatus(LOGIN_STATUS.FAILED);
-        console.error('获取用户信息失败：', err);
       }
     } catch (err) {
       logout();
       setStatus(LOGIN_STATUS.FAILED);
-      console.error('获取用户信息失败：', err);
     }
   }
 }
@@ -149,28 +161,11 @@ export async function doLogin() {
   }
 }
 
-// 退出
-export async function logout() {
-  try {
-    const userName = useUserInfoStore().userName;
-    const idTokenRes = await queryUserIdToken({ userName });
-    const { info: idToken } = idTokenRes.data;
-    const redirectUri = `${window.location.origin}/`;
-
-    setStatus(LOGIN_STATUS.NOT);
-    saveUserAuth();
-    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
-  } catch (error) {
-    console.error('退出失败！');
-  }
-}
-
 // authing认证
 export async function goAuthorize() {
   try {
     window.location.href = `${LOGIN_URL}/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
-    console.error('获取登录信息失败！');
   }
 }

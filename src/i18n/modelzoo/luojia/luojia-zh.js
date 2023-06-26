@@ -55,7 +55,7 @@ export default {
     ORIGIN: '原图',
     RESULT: '结果图',
     DOWNLOAD: '下载',
-    MOBILD_UPLOAD: '点击上传图片(jpg/jepg/png)或选择下方案例图片',
+    MOBILD_UPLOAD: '点击上传图片或选择下方案例图片',
     HISTORY_TIP: '仅展示最近一条记录',
   },
   // 介绍

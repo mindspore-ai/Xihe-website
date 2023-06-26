@@ -300,6 +300,7 @@ function customUpload() {
     color: #999;
     line-height: 22px;
     margin-top: 8px;
+    white-space: pre-wrap;
     @media screen and (max-width: 820px) {
       font-size: 12px;
     }

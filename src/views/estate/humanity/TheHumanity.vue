@@ -5,26 +5,29 @@ import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
 // import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const router = useRouter();
 const cases = [
   {
     id: 1,
-    type: '国潮AIGC生态系统',
-    name: '湖南禾福文化科技有限公司“薪火芳华”团队基于全场景AI框架昇思MindSpore，自行研发基于知识图谱和大模型…',
+    type: t('humanity.CASES[0].NAME'),
+    name: t('humanity.CASES[0].DESC'),
     image: case1,
     url: '/humanity/AIGC',
   },
   {
     id: 2,
-    type: '玉知-悟空图文理解大模型',
-    name: '作为国内专业从事游戏与泛娱乐AI研究和应用的顶尖机构，网易伏羲于2021年起着力打造“玉知”多模态理解大…',
+    type: t('humanity.CASES[1].NAME'),
+    name: t('humanity.CASES[1].DESC'),
     image: case2,
     url: '/humanity/yuzhi',
   },
   {
     id: 3,
-    type: '手语教考一体机',
-    name: 'AI破解手语难题，用科技连接孤岛，拨亮人文关怀的灯盏',
+    type: t('humanity.CASES[2].NAME'),
+    name: t('humanity.CASES[2].DESC'),
     image: case3,
     url: '/humanity/sign-language',
   },
@@ -39,14 +42,14 @@ function goCasePath(item) {
     <div class="humanity-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="humanity-banner">
-        <div class="banner-title">昇思大模型平台助力产业发展</div>
+        <div class="banner-title">{{ t('humanity.TITLE') }}</div>
         <div class="banner-desc">
-          昇思MindSpore广泛应用在互联网、零售、电力、工业、医疗、安防监控、物流等行业场景中
+          {{ t('humanity.DESCRIPTION') }}
         </div>
       </div>
     </div>
     <div class="humanity-wrapper">
-      <p class="application-cases">应用案例</p>
+      <p class="application-cases">{{ t('humanity.APPLICATION_CASES') }}</p>
 
       <div class="case-cards">
         <div

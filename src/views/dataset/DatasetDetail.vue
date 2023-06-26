@@ -135,7 +135,6 @@ function getTagList() {
     });
     let menu = dialogList.menuList.map((item) => item.key);
     menu.forEach((key) => {
-      // if (key === 'task') {
       renderList.value[key].items.forEach((item) => {
         item.items = item.items.map((it) => {
           return {
@@ -147,12 +146,9 @@ function getTagList() {
     });
     headTags.value.forEach((item) => {
       menu.forEach((menuitem) => {
-        // if (menuitem === 'task') {
         renderList.value[menuitem].items.forEach((mit) => {
           mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
+            if (it.name === item.name) it.isActive = true;
           });
         });
       });
@@ -198,11 +194,11 @@ function getDetailData() {
           });
         }
         preStorage.value = JSON.stringify(headTags.value);
+        getTagList();
       })
       .catch(() => {
         router.push('/404');
       });
-    getTagList();
   } catch (error) {
     router.push('/404');
     console.error(error);

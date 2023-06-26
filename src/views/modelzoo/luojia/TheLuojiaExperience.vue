@@ -102,7 +102,63 @@ const fileList = ref([]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const imageUrl = ref('');
+function handleMobile(mobile) {
+  if (mobile === 'mobile') {
+    activeIndex1.value = -1;
+    if (!isLogined.value) {
+      goAuthorize();
+    } else {
+      if (fileList.value[0]) {
+        isInfer.value = true;
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
+        });
+        return;
+      }
+    }
+  }
+}
+function handleRes(mobile, res) {
+  if (res.data?.data) {
+    if (mobile === 'mobile') {
+      activeIndex.value = -1;
+      analysis.value = '';
+      formData.delete('file');
+      formData = new FormData();
+      imageUrl.value = res.data.data.answer;
+      request
+        .get(res.data.data.answer, {
+          responseType: 'blob',
+        })
+        .then((res) => {
+          let file = new File([res.data], 'img', {
+            type: 'image/png',
+            lastModified: Date.now(),
+          });
+          fileList.value = [];
+          fileList.value[0] = { raw: file };
+        });
 
+      handleLuoJiaHistory().then((res) => {
+        if (res.data) {
+          gridData.value = [];
+          historyInfo.value.create_at = res.data[0].created_at;
+          historyInfo.value.id = res.data[0].id;
+          gridData.value.push(historyInfo.value);
+        } else {
+          gridData.value = [];
+        }
+      });
+    } else {
+      const aurl = res.data.data.answer;
+      const tempimg = document.createElement('img');
+      tempimg.src = aurl;
+      viewer.value.setImageAsLayer(tempimg);
+    }
+  }
+}
 // 1. 未选区域，点击识别提示，不发请求
 // 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
 function handleInferClick(mobile) {
@@ -149,63 +205,6 @@ function handleInferClick(mobile) {
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG5'),
     });
-  }
-}
-function handleRes(mobile, res) {
-  if (res.data?.data) {
-    if (mobile === 'mobile') {
-      activeIndex.value = -1;
-      analysis.value = '';
-      formData.delete('file');
-      formData = new FormData();
-      imageUrl.value = res.data.data.answer;
-      request
-        .get(res.data.data.answer, {
-          responseType: 'blob',
-        })
-        .then((res) => {
-          let file = new File([res.data], 'img', {
-            type: 'image/png',
-            lastModified: Date.now(),
-          });
-          fileList.value = [];
-          fileList.value[0] = { raw: file };
-        });
-
-      handleLuoJiaHistory().then((res) => {
-        if (res.data) {
-          gridData.value = [];
-          historyInfo.value.create_at = res.data[0].created_at;
-          historyInfo.value.id = res.data[0].id;
-          gridData.value.push(historyInfo.value);
-        } else {
-          gridData.value = [];
-        }
-      });
-    } else {
-      const aurl = res.data.data.answer;
-      const tempimg = document.createElement('img');
-      tempimg.src = aurl;
-      viewer.value.setImageAsLayer(tempimg);
-    }
-  }
-}
-function handleMobile(mobile) {
-  if (mobile === 'mobile') {
-    activeIndex1.value = -1;
-    if (!isLogined.value) {
-      goAuthorize();
-    } else {
-      if (fileList.value[0]) {
-        isInfer.value = true;
-      } else {
-        ElMessage({
-          type: 'warning',
-          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
-        });
-        return;
-      }
-    }
   }
 }
 

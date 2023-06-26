@@ -114,6 +114,22 @@ export function getUserAuth() {
   };
 }
 
+// 退出
+export async function logout() {
+  try {
+    const userName = useUserInfoStore().userName;
+    const idTokenRes = await queryUserIdToken({ userName });
+    const { info: idToken } = idTokenRes.data;
+    const redirectUri = `${window.location.origin}/`;
+
+    setStatus(LOGIN_STATUS.NOT);
+    saveUserAuth();
+    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
+  } catch (error) {
+    console.error('退出失败！');
+  }
+}
+
 // 请求用户信息
 export async function requestUserInfo() {
   const { token } = getUserAuth();
@@ -146,22 +162,6 @@ export async function doLogin() {
     await getUserToken({ code: query.code });
   } else if (token) {
     await requestUserInfo();
-  }
-}
-
-// 退出
-export async function logout() {
-  try {
-    const userName = useUserInfoStore().userName;
-    const idTokenRes = await queryUserIdToken({ userName });
-    const { info: idToken } = idTokenRes.data;
-    const redirectUri = `${window.location.origin}/`;
-
-    setStatus(LOGIN_STATUS.NOT);
-    saveUserAuth();
-    window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
-  } catch (error) {
-    console.error('退出失败！');
   }
 }
 

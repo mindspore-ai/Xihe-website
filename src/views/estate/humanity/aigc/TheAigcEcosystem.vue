@@ -7,6 +7,9 @@ import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const router = useRouter();
 const screenWidth = useWindowResize();
 
@@ -19,16 +22,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">国潮AIGC生态系统</span>
+      <span class="title">{{ t('aigc.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/humanity' }">
-            人文专区
+            {{ t('aigc.BACK_PAGE') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            国潮AIGC生态系统
+            {{ t('aigc.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +42,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">国潮AIGC生态系统</div>
+              <div class="banner-title">{{ t('aigc.TITLE') }}</div>
               <div class="banner-desc">
-                湖南禾福文化科技有限公司“薪火芳华”团队基于全场景AI框架昇思MindSpore，自行研发基于知识图谱和大模型的国潮AIGC生态系统（AI生成2D平面图像、3D模型、视频等元宇宙数字内容），为元宇宙空间提供可商用的优质数字内容，优化工业设计到生产的流程效率，降本增效，有效的将文化遗产演变为数字资产，打通“文化-科技-消费”全链路径，释放国潮文化的源头生产力，在消费端打造一个率先出海的…
+                {{ t('aigc.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -51,7 +54,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('aigc.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

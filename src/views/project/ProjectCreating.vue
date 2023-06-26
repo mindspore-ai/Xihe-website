@@ -85,6 +85,7 @@ let dialogList = {
 };
 
 const ruleFormRef = ref(null);
+let time = null;
 
 function checkName(rule, value, callback) {
   if (time !== null) {
@@ -145,7 +146,6 @@ const rules = reactive({
   ],
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
-let time = null;
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);

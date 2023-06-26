@@ -45,11 +45,9 @@ import IconRight2 from '~icons/app/arrow-right2';
 import IconAlbum from '~icons/app/wukong-album';
 import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
-
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import useClipboard from 'vue-clipboard3';
-
 import {
   wuKongInfer,
   addLikePicture,
@@ -62,29 +60,22 @@ import {
 import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
-
 import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
-
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
 const router = useRouter();
-
 const { toClipboard } = useClipboard();
-
 const inputText = ref('');
 const sortTag = ref('');
 const styleIndex = ref(0);
-
 const showInferDlg = ref(false);
 const isInferred = ref(false);
 const isError = ref(false);
-
 const styleBackground = ref([]);
 const styleBackground1 = ref([]);
-
 const randomList = ref([
   { tag: '巴洛克', isSelected: false, img: style1 },
   { tag: '毕加索', isSelected: false, img: style2 },
@@ -126,7 +117,6 @@ function viewAll() {
 const isWaiting = ref(false);
 const isLine = ref(null);
 const errorMsg = ref('');
-
 const exampleData = ref([
   { text: '秋水共长天一色', isSelected: false },
   { text: '城市夜景', isSelected: false },
@@ -140,7 +130,6 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};
@@ -161,7 +150,6 @@ function toggleCollectionDlg() {
 }
 nextTick(() => {
   let bgImg = document.getElementById('app');
-
   bgImg.style.background = `url(${wukongbg})`;
   bgImg.style.backgroundSize = 'cover';
   bgImg.children[1].style.background = 'unset';
@@ -187,27 +175,21 @@ const routeList = [
 function goPath(val) {
   router.push(val);
 }
-
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = imgUrl;
-
   img.onload = () => {
     const canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
-
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
-
     ctx.font = '24px 微软雅黑';
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText('由AI模型生成', img.width - 182, img.height - 24);
-
     styleBackground.value[index] = canvas.toDataURL('image/png');
-
     return styleBackground.value[index];
   };
 }
@@ -306,7 +288,6 @@ if (isLogined.value) {
     }
   };
 }
-
 function imgErr() {}
 watch(
   () => {
@@ -318,7 +299,6 @@ watch(
     }
   }
 );
-
 const lists = ref([
   { text: '城市夜景 油画', isSelected: false },
   { text: '星空 梵高', isSelected: false },
@@ -358,19 +338,13 @@ const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
 const imgQuantity = ref(4);
-
 const inferList = ref([
   { isCollected: false, id: '', publicId: '' },
   { isCollected: false, id: '', publicId: '' },
   { isCollected: false, id: '', publicId: '' },
   { isCollected: false, id: '', publicId: '' },
 ]);
-
-userAvatar.value = userInfoStore.avatar.replace(
-  'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
-  '/obs-xihe-avatar/'
-);
-
+userAvatar.value = userInfoStore.avatar;
 // 公开图片
 async function publicImage(val, index) {
   try {
@@ -412,7 +386,6 @@ async function cancelPublicImage(i) {
     console.error(err);
   }
 }
-
 // 分享图片
 const isSharedPoster = ref(false);
 const shareImg = ref('');
@@ -434,7 +407,6 @@ function shareImage(url) {
       .split('/')[4]
       .split('-01.jpg')[0];
   }
-
   if (screenWidth.value <= 820) {
     nextTick(() => {
       const poster = document.querySelector('#screenshot');
@@ -447,50 +419,40 @@ function shareImage(url) {
     });
   }
 }
-// 绘制圆角矩形（使用 arcTo）
-function drawRoundedRect(ctx, x, y, width, height, radius) {
-  // 保存当前环境的状态
-  ctx.save();
-  // 重置当前路径
-  ctx.beginPath();
-  // 移动到左上角
-  ctx.moveTo(x + radius, y);
-  // 绘制右上角
-  ctx.arcTo(x + width, y, x + width, y + radius, radius);
-  // 绘制右下角
-  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-  // 绘制左下角
-  ctx.arcTo(x, height, x, height - radius, radius);
-  // 绘制左上角
-  ctx.arcTo(x, y, x + radius, y, radius);
-  // 填充当前路径
-  ctx.fill();
-}
+
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
-
   html2canvas(poster, {
     useCORS: true,
   }).then((val) => {
     let url = val.toDataURL('image/png');
-
     const img = new Image();
     img.crossOrigin = 'Anonymous';
     img.src = url;
-
     img.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      // 绘制圆角矩形
-      drawRoundedRect(ctx, 0, 0, img.width, img.height, 38);
-      // 对矩形进行剪切
-      ctx.clip();
-      // 绘制图片
-      ctx.drawImage(img, 0, 0, img.width, img.height);
-
+      // 绘制圆角矩形（使用 arcTo）
+      let radius = 22;
+      ctx.save(); // 保存当前环境的状态
+      ctx.beginPath(); // 重置当前路径
+      ctx.moveTo(0 + radius, 0); // 移动到左上角
+      ctx.arcTo(0 + img.width, 0, 0 + img.width, 0 + radius, radius); // 绘制右上角
+      ctx.arcTo(
+        0 + img.width,
+        0 + img.height,
+        0 + img.width - radius,
+        0 + img.height,
+        radius
+      ); // 绘制右下角
+      ctx.arcTo(0, img.height, 0, img.height - radius, radius); // 绘制左下角
+      ctx.arcTo(0, 0, 0 + radius, 0, radius); // 绘制左上角
+      ctx.fill(); // 填充当前路径
+      ctx.clip(); // 对矩形进行剪切
+      ctx.drawImage(img, 0, 0, img.width, img.height); // 绘制图片
       const posterLink = canvas.toDataURL('image/png');
       let aLink = document.createElement('a');
       aLink.style.display = 'none';
@@ -541,7 +503,6 @@ function handleInput() {
     }
   });
 }
-// 当前点击风格下标
 const activeIndex = ref(null);
 // 选择风格类别
 function choseStyleSort(val, item) {
@@ -555,18 +516,14 @@ function choseStyleSort(val, item) {
     newStyleData.value[0].img1 = style;
   }
 }
-
 // 初始化推理数据
 function initData() {
   sortTag.value = '';
-
   styleBackground.value = [];
-
   exampleData.value.forEach((item) => {
     item.isSelected = false;
   });
 }
-
 // wk推理
 const inferDisabled = ref(false);
 async function handleInfer() {
@@ -590,7 +547,6 @@ async function handleInfer() {
           }
         }
       });
-
       // 重置喜欢公开数据
       inferList.value = [
         { isCollected: false, id: '', publicId: '' },
@@ -598,7 +554,6 @@ async function handleInfer() {
         { isCollected: false, id: '', publicId: '' },
         { isCollected: false, id: '', publicId: '' },
       ];
-
       try {
         isLine.value = null;
         inferDisabled.value = true;
@@ -677,7 +632,6 @@ async function handleInfer() {
         } else if (err.code === 'system_error') {
           errorMsg.value = '系统错误';
         }
-
         isInferred.value = true;
         isError.value = true;
       }
@@ -690,7 +644,6 @@ async function handleInfer() {
     }
   }
 }
-
 // 收藏
 function handleCollect(key, index) {
   addLikePicture({
@@ -748,7 +701,6 @@ function requestImg(item) {
 function downloadImage(item) {
   requestImg(item);
 }
-
 const resultIndex = ref(-1);
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -781,7 +733,6 @@ function getDescExamples(arr, count) {
   }
   return shuffled.slice(min);
 }
-
 const svgRotate = ref(false);
 // 换一批
 function refreshTags() {
@@ -791,7 +742,6 @@ function refreshTags() {
 function reset(val) {
   svgRotate.value = val;
 }
-
 function handleResultClcik(i) {
   resultIndex.value = i;
 }
@@ -836,7 +786,6 @@ function handleNum(index) {
         ></template>
       </el-input>
       <div class="wk-experience-examples">
-        <!-- <p class="title">选择样例</p> -->
         <div class="example-items">
           <p
             v-for="item in exampleData"
@@ -851,7 +800,6 @@ function handleNum(index) {
           <o-icon :class="svgRotate ? 'rotating' : ''"
             ><icon-refresh></icon-refresh
           ></o-icon>
-          <!-- <p>换一批</p> -->
         </div>
       </div>
       <div class="wk-experience-styles">
@@ -878,7 +826,6 @@ function handleNum(index) {
                 alt=""
                 :class="item.isSelected ? 'active-1' : ''"
               />
-
               <div class="style-item-name">
                 {{ index === 0 ? item.tag1 : item.tag }}
               </div>
@@ -890,21 +837,6 @@ function handleNum(index) {
           <div v-if="isAllStyle" class="all-kind retract" @click="retract">
             收起
           </div>
-
-          <!-- <div class="sort-tag">
-            <div
-              v-for="item in styleData[styleIndex].options"
-              :key="item"
-              class="sort-item"
-              :class="item.isSelected ? 'active' : ' '"
-              @click="choseSortTag(item)"
-            >
-              {{ item.tag }}
-            </div>
-
-            <div class="triangle" :class="`triangle${styleIndex}`"></div>
-          </div> -->
-
           <div class="title num-title">生成数量</div>
           <div class="option-box">
             <div
@@ -924,7 +856,6 @@ function handleNum(index) {
           </div>
         </div>
       </div>
-      <!-- <div class="wk-experience-btn" @click="handleInfer">立即生成</div> -->
       <div class="experience-btn">
         <o-button type="primary" :disabled="inferDisabled" @click="handleInfer"
           >立即生成</o-button
@@ -1007,7 +938,6 @@ function handleNum(index) {
                     <div class="icon-name">公开</div>
                   </div>
                 </template>
-
                 <template v-else>
                   <div class="func-item" @click="cancelPublicImage(largeIndex)">
                     <p class="icon-item">
@@ -1029,7 +959,6 @@ function handleNum(index) {
                   <img class="arrow" :src="arrow" alt="" />
                   <div class="icon-name">下载</div>
                 </div>
-
                 <div class="func-item" @click="shareImage(value)">
                   <p>
                     <o-icon><icon-share></icon-share></o-icon>
@@ -1037,7 +966,6 @@ function handleNum(index) {
                   <img class="arrow" :src="arrow" alt="" />
                   <div class="icon-name">分享</div>
                 </div>
-
                 <template v-if="!inferList[largeIndex].isCollected">
                   <div class="func-item">
                     <p @click="handleCollect(value, largeIndex)">
@@ -1047,7 +975,6 @@ function handleNum(index) {
                     <div class="icon-name">收藏</div>
                   </div>
                 </template>
-
                 <template v-else>
                   <div class="func-item">
                     <p class="liked" @click="handleCancelCollect(largeIndex)">
@@ -1059,12 +986,10 @@ function handleNum(index) {
                 </template>
               </div>
             </div>
-            <!-- <div class="mask"></div> -->
           </div>
         </template>
       </div>
     </div>
-
     <textarea class="input-dom"></textarea>
   </div>
   <!-- mobile -->
@@ -2852,7 +2777,6 @@ function handleNum(index) {
 }
 :deep(.confirm-dlg) {
   @media screen and (max-width: 768px) {
-    // --el-dialog-width: 80vw !important;
     max-width: 335px;
     .confirm-title {
       font-size: 16px;

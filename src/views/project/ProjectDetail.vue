@@ -460,9 +460,7 @@ function getAllTags() {
       menu.forEach((menuitem) => {
         renderList.value[menuitem].items.forEach((mit) => {
           mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
+            if (it.name === item.name) it.isActive = true;
           });
         });
       });

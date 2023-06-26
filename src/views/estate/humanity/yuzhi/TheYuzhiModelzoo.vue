@@ -6,7 +6,9 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const router = useRouter();
 const screenWidth = useWindowResize();
 
@@ -19,16 +21,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">玉知-悟空图文理解大模型</span>
+      <span class="title">{{ t('yuzhi.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/humanity' }">
-            人文专区
+            {{ t('yuzhi.BACK_PAGE') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            玉知-悟空图文理解大模型
+            {{ t('yuzhi.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +41,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">玉知-悟空图文理解大模型</div>
+              <div class="banner-title">{{ t('yuzhi.TITLE') }}</div>
               <div class="banner-desc">
-                作为国内专业从事游戏与泛娱乐AI研究和应用的顶尖机构，网易伏羲于2021年起着力打造“玉知”多模态理解大模型。基于图片-文本双塔结构，先后训练了2亿、4亿、9亿参数的“玉知”版本。
+                {{ t('yuzhi.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -51,7 +53,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('yuzhi.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

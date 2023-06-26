@@ -8,6 +8,9 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const screenWidth = useWindowResize();
 const router = useRouter();
@@ -21,16 +24,16 @@ function goBack() {
   <div class="industry-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">工业AI算法库READ</span>
+      <span class="title">{{ t('algorithm.TITLE') }}</span>
     </div>
     <div class="industry-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/industry' }">
-            工业专区
+            {{ t('algorithm.BACK_PAGE') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            工业AI算法库READ
+            {{ t('algorithm.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -41,9 +44,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">工业AI算法库READ</div>
+              <div class="banner-title">{{ t('algorithm.TITLE') }}</div>
               <div class="banner-desc">
-                READ专注于研发与集成基于无监督监督学习的大规模异常检测算法和模型，重点解决工业质检中小样本和数据长尾问题，通过针对不同行业的业务和数据特点，研发可在无异常（无缺陷）图像上进行自学习和自训练的异常检测技术。
+                {{ t('algorithm.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -53,7 +56,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('algorithm.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

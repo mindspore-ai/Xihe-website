@@ -19,6 +19,8 @@ import OPopper from '@/components/OPopper.vue';
 import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
 import protocol from '../../../config/protocol';
+import { trainSdk, inferSdk } from '../../../config/protocol';
+
 import {
   modifyTags,
   getTags,
@@ -294,11 +296,10 @@ function getDetailData() {
           });
         }
         headTags.value = headTags.value.filter((item) => {
-          let a = protocol.map((it) => {
-            if (it.name === item.name) return false;
-          });
-          if (!a.indexOf(false)) return false;
-          else return true;
+          const protocolData = protocol.some((it) => it.name === item.name);
+          const trainSdkData = trainSdk.some((it) => it.name === item.name);
+          const inferSdkData = inferSdk.some((it) => it.name === item.name);
+          return !(protocolData || trainSdkData || inferSdkData);
         });
         preStorage.value = JSON.stringify(headTags.value);
         getAllTags();
@@ -546,12 +547,17 @@ nameList.value.push(userInfoStore.userName);
 forkForm.owner = nameList.value[0];
 
 function forkClick() {
-  checkEmail().then(() => {
-    forkShow.value = true;
-    nextTick(() => {
-      document.querySelector('.el-input__inner').focus();
+  if (!userInfoStore.id) {
+    // 如未登录
+    goAuthorize();
+  } else {
+    checkEmail().then(() => {
+      forkShow.value = true;
+      nextTick(() => {
+        document.querySelector('.el-input__inner').focus();
+      });
     });
-  });
+  }
 }
 
 watch(
@@ -652,7 +658,10 @@ watch(
               </div>
               <div class="fork-btn">
                 <o-button
-                  v-if="userInfoStore.userName !== detailData.owner"
+                  v-if="
+                    userInfoStore.userName !== detailData.owner &&
+                    detailData.repo_type === 'public'
+                  "
                   size="small"
                   @click="forkClick"
                 >
@@ -822,9 +831,9 @@ watch(
               <div v-if="headTags[0]" class="head-tags">
                 <div v-for="it in headTags" :key="it" class="condition-detail">
                   {{ it.name === 'electricity' ? '电力' : it.name }}
-                  <o-icon class="icon-x" @click="deleteClick(it)"
-                    ><icon-x></icon-x
-                  ></o-icon>
+                  <o-icon class="icon-x" @click="deleteClick(it)">
+                    <icon-x></icon-x>
+                  </o-icon>
                 </div>
               </div>
             </div>

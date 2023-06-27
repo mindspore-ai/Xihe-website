@@ -40,6 +40,7 @@ import IconCancel from '~icons/app/eye-close';
 import IconArrow from '~icons/app/eye-open';
 import IconShare from '~icons/app/share-gray';
 import IconCopy from '~icons/app/copy-nickname';
+import IconLeft from '~icons/app/left';
 import IconRight from '~icons/app/arrow-right';
 import IconRight2 from '~icons/app/arrow-right2';
 import IconAlbum from '~icons/app/wukong-album';
@@ -138,13 +139,13 @@ function handleEnlage(value, key) {
   largeIndex.value = key;
   isLarge.value = true;
 }
-/* function handlePreEnlage() {
+function handlePreEnlage() {
   if (largeIndex.value > 0) {
     largeImg.value = {};
     largeIndex.value--;
     largeImg.value[largeIndex.value] = styleBackground.value[largeIndex.value];
   }
-} */
+}
 function handleNextEnlage() {
   if (largeIndex.value < styleBackground.value.length - 1) {
     largeImg.value = {};
@@ -850,7 +851,7 @@ function handleNum(index) {
     <div class="wrap-left">
       <el-input
         v-model="inputText"
-        maxlength="75"
+        maxlength="55"
         placeholder="请输入简体中文或选择下方样例"
         show-word-limit
         type="textarea"
@@ -1018,10 +1019,13 @@ function handleNum(index) {
         </template>
         <template v-else>
           <div v-for="(value, key) in largeImg" :key="key" class="result-item1">
+            <o-icon class="turn" @click="handlePreEnlage">
+              <icon-left></icon-left>
+            </o-icon>
             <img :src="value" alt="" />
-            <o-icon class="turn" @click="handleNextEnlage"
-              ><icon-right2></icon-right2
-            ></o-icon>
+            <o-icon class="turn" @click="handleNextEnlage">
+              <icon-right2></icon-right2>
+            </o-icon>
             <div class="handles">
               <div class="public">
                 <template v-if="!inferList[largeIndex].publicId">
@@ -1113,7 +1117,7 @@ function handleNum(index) {
   <div class="wk-experience-mobile">
     <el-input
       v-model="inputText"
-      maxlength="75"
+      maxlength="55"
       placeholder="请输入简体中文或选择下方样例"
       show-word-limit
       type="textarea"

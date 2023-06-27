@@ -7,8 +7,7 @@ import { Search, ArrowDown } from '@element-plus/icons-vue';
 import IconX from '~icons/app/x';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
-import IconClear from '~icons/app/clear';
-import IconClear2 from '~icons/app/clear2';
+import IconClear from '~icons/app/clear2';
 import IconDownload from '~icons/app/download';
 import IconFork from '~icons/app/fork-gray';
 
@@ -54,7 +53,7 @@ let i18n = {
   clear: '清除',
   sortCondition: [
     { text: '最多下载', value: 'download' },
-    { text: '最新更新', value: '-update_time' },
+    { text: '最新更新', value: 'update_time' },
     { text: '首字母', value: 'name' },
   ],
   screenCondition: [
@@ -117,7 +116,7 @@ const otherCondition = ref([]); // 训练平台、协议、项目类型标签
 const moreSortTags = ref([]);
 const keyWord = ref('');
 const activeNavItem = ref('all');
-const selectValue = ref('');
+const selectValue = ref('最多下载');
 const renderList = ref([]); // 含渲染的一级标签
 const menuList = ref([]); // 左侧标签
 const headTags = ref([]); // 标签弹窗头部标签
@@ -130,7 +129,7 @@ const queryData = reactive({
   level: null,
   count_per_page: 12, // 每页数量
   page_num: 1, // 分页
-  sort_by: null, // 排序规则
+  sort_by: 'download_count', // 排序规则
 });
 
 // 头部tabs
@@ -507,7 +506,7 @@ function getSortData(item) {
     queryData.sort_by = 'download_count';
   } else if (item.value === 'name') {
     queryData.sort_by = 'first_letter';
-  } else if (item.value === '-update_time') {
+  } else if (item.value === 'update_time') {
     queryData.sort_by = 'update_time';
   }
 }
@@ -681,7 +680,6 @@ async function deleteAllTags() {
                         <o-button type="primary" @click="confirmBtn"
                           >确定</o-button
                         >
-                        <!-- -->
                       </div>
                     </div>
                   </template>
@@ -738,7 +736,7 @@ async function deleteAllTags() {
                 </div>
               </div>
               <div class="head-delete" @click="deleteAllTags">
-                <o-icon><icon-clear2></icon-clear2></o-icon>
+                <o-icon><icon-clear></icon-clear></o-icon>
                 {{ dialogList.head.delete }}
               </div>
             </div>
@@ -878,6 +876,7 @@ $theme: #0d8dff;
         .o-icon {
           margin-right: 6px;
           align-self: center;
+          font-size: 16px;
         }
       }
     }
@@ -1238,7 +1237,6 @@ $theme: #0d8dff;
               padding: 5px 12px;
               margin-left: 8px;
               border: 1px solid transparent;
-
               .o-icon {
                 margin-right: 4px;
                 color: #ccc;

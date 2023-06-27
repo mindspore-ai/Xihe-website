@@ -11,7 +11,9 @@ import IconSend from '~icons/app/vqa-send';
 import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import { useI18n } from 'vue-i18n';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+const screenWidth = useWindowResize();
 const { t } = useI18n();
 const userInfoStore = useUserInfoStore();
 
@@ -67,21 +69,6 @@ const sendList = ref([]);
 const isClick = ref(true);
 
 avatarUrl.value = userInfoStore.avatar;
-
-const screenWidth = ref(
-  window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth
-);
-
-const onResize = () => {
-  screenWidth.value =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-};
-
-window.addEventListener('resize', onResize);
 
 const getImage = (name) => {
   return new URL(
@@ -289,8 +276,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', onResize);
-
   inputDom.value.removeEventListener('keydown', handleKeydown);
 });
 </script>

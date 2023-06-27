@@ -25,6 +25,7 @@ import industry from './estate/industry';
 import algorithm from './estate/industry/algorithm';
 import intelligence from './estate/industry/intelligence';
 import metalpart from './estate/industry/metalpart';
+import cancer from './estate/medicine/endometrialcancer';
 
 const messages = {
   zh: {
@@ -53,6 +54,7 @@ const messages = {
     algorithm: algorithm.zh,
     intelligence: intelligence.zh,
     metalpart: metalpart.zh,
+    cancer: cancer.zh,
   },
   en: {
     home: home.en,
@@ -80,6 +82,7 @@ const messages = {
     algorithm: algorithm.en,
     intelligence: intelligence.en,
     metalpart: metalpart.en,
+    cancer: cancer.en,
   },
 };
 

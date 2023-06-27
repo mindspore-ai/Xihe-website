@@ -1,1 +1,21 @@
-export default {};
+export default {
+  TITLE: 'Industrial AI algorithm library READ',
+  DESCRIPTION: '',
+  BACK_PAGE: '',
+  RUN_MODEL: '',
+  EXPLAIN: '',
+  BACKGROUND: '',
+  BACKGROUND_DESC: '',
+  BACKGROUND_DESC1: '',
+  RESUME: '',
+  RESUME_DESC: '',
+  RESUME_DESC1: '',
+  RESUME_DESC2: '',
+  RESUME_DESC3: '',
+  DIFFICULT: '',
+  DIFFICULT_DESC: '',
+  DIFFICULT_DESC1: '',
+  DIFFICULT_DESC2: '',
+  ADVANTAGE: '',
+  ADVANTAGE_DESC: '',
+};

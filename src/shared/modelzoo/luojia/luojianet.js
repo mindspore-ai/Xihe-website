@@ -187,6 +187,7 @@ const TDT_IMG_C_P = new Cesium.ProviderViewModel({
 });
 
 // 在选择栏中显示高德地图的配置
+// tileMatrixLabels: ['0',...,'19']
 const AMAP_IMG_P = new Cesium.ProviderViewModel({
   name: '高德影像',
   tooltip: '高德影像',
@@ -201,28 +202,7 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
       tileMatrixSetID: 'c',
       subdomains: ['01', '02', '03', '04'],
       tilingScheme: new Cesium.WebMercatorTilingScheme(),
-      tileMatrixLabels: [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-      ],
+      // tileMatrixLabels: [],
       maximumLevel: 18,
     });
     let wmts2 = new Cesium.WebMapTileServiceImageryProvider({
@@ -233,28 +213,7 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
       tileMatrixSetID: 'c',
       subdomains: ['01', '02', '03', '04'],
       tilingScheme: new Cesium.WebMercatorTilingScheme(),
-      tileMatrixLabels: [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-      ],
+      // tileMatrixLabels: [],
       maximumLevel: 18,
     });
     return [wmts, wmts2];
@@ -512,9 +471,7 @@ export default class ExampleCesium {
     var moveActive = false;
 
     function move(movement) {
-      if (!moveActive) {
-        return;
-      }
+      if (!moveActive) return;
 
       var relativeOffset = movement.endPosition.x;
 

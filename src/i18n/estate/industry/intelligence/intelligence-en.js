@@ -1,1 +1,17 @@
-export default {};
+export default {
+  TITLE: 'Low code intelligent video enabling platform',
+  DESCRIPTION: '',
+  BACK_PAGE: '',
+  RUN_MODEL: '',
+  EXPLAIN: '',
+  BACKGROUND: '',
+  BACKGROUND_DESC: '',
+  BACKGROUND_DESC1: '',
+  RESUME: '',
+  RESUME_DESC: '',
+  RESUME_DESC1: '',
+  RESUME_DESC2: '',
+  RESUME_DESC3: '',
+  ADVANTAGE: '',
+  ADVANTAGE_DESC: '',
+};

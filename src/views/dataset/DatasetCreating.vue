@@ -76,9 +76,7 @@ let dialogList = {
 
 try {
   owner.value = useUserInfoStore().owner;
-} catch (error) {
-  console.error(error);
-}
+} catch (error) {}
 function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -104,7 +102,6 @@ function create(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });
@@ -145,7 +142,7 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    console.error(re);
+    return e;
   }
 }
 getModelTags('dataset');

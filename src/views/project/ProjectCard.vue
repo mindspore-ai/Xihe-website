@@ -123,11 +123,11 @@ function getReadMeFile() {
           }
         })
         .catch((err) => {
-          console.error(err);
+          return err;
         });
     }
   } catch (error) {
-    console.error(error);
+    return err;
   }
 }
 
@@ -439,7 +439,7 @@ getAppInfo(detailData.value.owner, detailData.value.name).then((res) => {
     try {
       canStart.value = true;
     } catch {
-      console.error('canStart', canStart.value);
+      return canStart.value;
     }
   }
 });

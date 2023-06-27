@@ -44,7 +44,9 @@ const TypeSet = async function (elements) {
     .then(() => {
       return window.MathJax.typesetPromise(elements);
     })
-    .catch((err) => console.error('Typeset failed: ' + err.message));
+    .catch((err) => {
+      return err;
+    });
   return window.MathJax.startup.promise;
 };
 let head = document.head;
@@ -157,10 +159,10 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 route.hash ? getReadMeFile() : '';

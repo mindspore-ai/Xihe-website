@@ -234,7 +234,7 @@ function handleNavClick(item) {
     good: { level: 'good', tags: null },
     electricity: { level: null, tags: 'electricity' },
   };
-  if (levelMap.hasOwnProperty(item.id)) {
+  if (item.id in levelMap) {
     queryData.level = levelMap[item.id].level;
     queryData.tags = levelMap[item.id].tags;
   }

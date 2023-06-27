@@ -8,6 +8,9 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import diagnosisCover from '@/assets/imgs/estate/medicine/diagnosis/diagnosis-cover.png';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const screenWidth = useWindowResize();
 const router = useRouter();
 function goBack() {
@@ -19,16 +22,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">智慧病理诊断系统</span>
+      <span class="title">{{ t('diagnosis.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/medicine' }">
-            医疗专区
+            {{ t('diagnosis.MEDEIC') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            智慧病理诊断系统
+            {{ t('diagnosis.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +42,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">智慧病理诊断系统</div>
+              <div class="banner-title">{{ t('diagnosis.TITLE') }}</div>
               <div class="banner-desc">
-                智慧病理诊断系统，实现了病理诊断全流程标准化、数字化和智能化，为病理诊断领域发展注入强劲动力。
+                {{ t('diagnosis.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -51,7 +54,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('diagnosis.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

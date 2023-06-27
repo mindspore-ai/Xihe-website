@@ -7,6 +7,10 @@ import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const router = useRouter();
 const screenWidth = useWindowResize();
 
@@ -19,16 +23,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">手语教考一体机</span>
+      <span class="title">{{ t('sign.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/humanity' }">
-            人文专区
+            {{ t('sign.BACK_PAGE') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            手语教考一体机
+            {{ t('sign.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -39,9 +43,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">手语教考一体机</div>
+              <div class="banner-title">{{ t('sign.TITLE') }}</div>
               <div class="banner-desc">
-                基于紫东太初开发的手语多模态模型，华为联合千博信息，实现了手语动作与示意图片和文字的联动，让初学者更加方便的理解手语。同时，基于手语多模态模型，千博信息打造了手语教考一体机，帮助学生随学随练随考，极大的推动手语标准的推广，帮助听障朋友以及手语爱好者更好的学习。
+                {{ t('sign.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -51,7 +55,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('sign.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

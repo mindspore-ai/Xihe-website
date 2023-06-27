@@ -104,11 +104,6 @@ const renderNav = computed(() => {
   return getRenderNav();
 });
 
-// return detailData.value.is_owner
-//   ? tabTitle
-//   : tabTitle.filter((item) => {
-//       return !item.isPrivate;
-//     });
 // 离开详情页清除 pinia数据
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -135,9 +130,7 @@ function getTagList() {
       menu.forEach((menuitem) => {
         renderList.value[menuitem].items.forEach((mit) => {
           mit.items.forEach((it) => {
-            if (it.name === item.name) {
-              it.isActive = true;
-            }
+            if (it.name === item.name) it.isActive = true;
           });
         });
       });
@@ -206,7 +199,6 @@ function getDetailData() {
     })
     .catch((error) => {
       router.push('/404');
-      console.error(error);
     });
 }
 getDetailData();

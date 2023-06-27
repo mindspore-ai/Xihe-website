@@ -72,7 +72,8 @@ export function saveUserAuth(token) {
     const userInfoStore = useUserInfoStore();
     userInfoStore.$reset();
   } else {
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
+    let checkString = token;
+    localStorage.setItem('_XIHE_U_T_', checkString);
   }
 }
 

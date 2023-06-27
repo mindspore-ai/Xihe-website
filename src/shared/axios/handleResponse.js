@@ -1,8 +1,8 @@
-import { LOGIN_KEYS } from '@/shared/login';
 export default (response) => {
   const headers = response.headers;
   if (headers['csrf-token']) {
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, headers['csrf-token']);
+    let checkString = headers['csrf-token'];
+    localStorage.setItem('_XIHE_U_T_', checkString);
   }
   const status = response.status;
   // 如果http响应状态码response.status正常，则直接返回数据

@@ -1,10 +1,9 @@
-import { LOGIN_KEYS } from '@/shared/login';
-
 export default (err) => {
   const { response } = err;
 
   if (response.headers['csrf-token'] && response.status !== 404) {
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, response.headers['csrf-token']);
+    let checkString = response.headers['csrf-token'];
+    localStorage.setItem('_XIHE_U_T_', checkString);
   }
 
   if (!response.status) {

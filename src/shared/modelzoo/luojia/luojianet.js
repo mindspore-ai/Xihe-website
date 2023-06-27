@@ -3,6 +3,7 @@ window.CESIUM_BASE_URL = '/lib/Cesium/';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
+import publicUrl from '@/shared/modelzoo/luojia/public-address';
 
 // 初始视角更改
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
@@ -13,7 +14,7 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 );
 
 Cesium.Ion.defaultAccessToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTFlNWVmMC1jOWRhLTQyMDktOTY4Ny02YTU5YWFlMGYwY2IiLCJpZCI6OTQzNDQsImlhdCI6MTY1Mjg4ODEyNn0.g2vq1qq_rdfZeRTy73nBkEDzhMIM4upkYcbIdFYnCiQ'; //Fix:Your access token can be found at: https://cesium.com/ion/tokens.
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTFlNWVmMC1jOWRhLTQyMDktOTY4Ny02YTU5YWFlMGYwY2IiLCJpZCI6OTQzNDQsImlhdCI6MTY1Mjg4ODEyNn0.g2vq1qq_rdfZeRTy73nBkEDzhMIM4upkYcbIdFYnCiQ';
 
 // 设置天地图token
 const tdtkey = '3a696e02b3d443d903ed577690be0c8b'; // Fix:http://lbs.tianditu.gov.cn/authorization/authorization.html
@@ -228,7 +229,7 @@ const BING_IMG_P = new Cesium.ProviderViewModel({
     'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/bing.png',
   creationFunction: function () {
     let wmts = new Cesium.BingMapsImageryProvider({
-      url: 'https://dev.virtualearth.net',
+      url: publicUrl.virtualEarth,
       key: 'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o',
       mapStyle: Cesium.BingMapsStyle.AERIAL,
     });
@@ -278,7 +279,6 @@ export default class ExampleCesium {
     if (ans.length > 0) {
       this.viewer.baseLayerPicker.viewModel.selectedImagery = ans[0];
     } else {
-      console.warn('No selected ImageryProvider, use first ImageryProvider!');
       this.viewer.baseLayerPicker.viewModel.selectedImagery = models[0];
     }
   }
@@ -289,7 +289,6 @@ export default class ExampleCesium {
       this.viewer.scene.imageryLayers.remove(this.imglay);
       this.viewer.entities.remove(this.drawer.ansShape);
     }
-    // this.showInfoDetails(false)
     this.showInfo(false);
     this.drawer.setRectHandler();
   }
@@ -378,7 +377,7 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      console.warn(error);
+      return error;
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了
@@ -449,7 +448,6 @@ export default class ExampleCesium {
 
     // Sync the position of the slider with the split position
     var slider = document.getElementById('slider');
-    // slider.style.display = 'block';
 
     this.viewer.scene.splitPosition =
       (slider.offsetLeft - 0) / slider.parentElement.offsetWidth;
@@ -457,7 +455,7 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      console.warn(error);
+      return error;
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了

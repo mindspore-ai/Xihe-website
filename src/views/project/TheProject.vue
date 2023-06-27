@@ -1201,7 +1201,6 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        // width: 100%;
         .project-tags {
           display: flex;
           align-items: center;

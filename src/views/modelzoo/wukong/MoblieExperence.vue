@@ -119,6 +119,18 @@ const exampleData = ref([
 const isLarge = ref(false);
 const largeIndex = ref(null);
 
+const posterDlg = ref(false);
+const posterLink = ref('');
+const posterInfo = ref('');
+const userAvatar = ref('');
+const imgQuantity = ref(4);
+const inferList = ref([
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+  { isCollected: false, id: '', publicId: '' },
+]);
+
 nextTick(() => {
   let bgImg = document.getElementById('app');
   bgImg.style.background = `url(${wukongbg})`;
@@ -179,6 +191,31 @@ let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['csrf-token']
   : null;
 
+function handlePic(styleBackground, styleBackground1) {
+  temporaryLink({ link: styleBackground.value[0].link }).then((res) => {
+    styleBackground1.value[0] = res.data.data.link;
+    addWatermark(res.data.data.link, 0);
+    temporaryLink({ link: styleBackground.value[1].link }).then((res) => {
+      styleBackground1.value[1] = res.data.data.link;
+      addWatermark(res.data.data.link, 1);
+      if (styleBackground.value.length === 4) {
+        temporaryLink({
+          link: styleBackground.value[2].link,
+        }).then((res) => {
+          styleBackground1.value[2] = res.data.data.link;
+          addWatermark(res.data.data.link, 2);
+          temporaryLink({
+            link: styleBackground.value[3].link,
+          }).then((res) => {
+            styleBackground1.value[3] = res.data.data.link;
+            addWatermark(res.data.data.link, 3);
+          });
+        });
+      }
+    });
+  });
+}
+
 let socket;
 if (isLogined.value) {
   socket = new WebSocket(`wss://${DOMAIN}/server/bigmodel/wukong/rank`, [
@@ -234,30 +271,7 @@ if (isLogined.value) {
     }
   };
 }
-function handlePic(styleBackground, styleBackground1) {
-  temporaryLink({ link: styleBackground.value[0].link }).then((res) => {
-    styleBackground1.value[0] = res.data.data.link;
-    addWatermark(res.data.data.link, 0);
-    temporaryLink({ link: styleBackground.value[1].link }).then((res) => {
-      styleBackground1.value[1] = res.data.data.link;
-      addWatermark(res.data.data.link, 1);
-      if (styleBackground.value.length === 4) {
-        temporaryLink({
-          link: styleBackground.value[2].link,
-        }).then((res) => {
-          styleBackground1.value[2] = res.data.data.link;
-          addWatermark(res.data.data.link, 2);
-          temporaryLink({
-            link: styleBackground.value[3].link,
-          }).then((res) => {
-            styleBackground1.value[3] = res.data.data.link;
-            addWatermark(res.data.data.link, 3);
-          });
-        });
-      }
-    });
-  });
-}
+
 watch(
   () => {
     return screenWidth.value;
@@ -301,18 +315,8 @@ const lists = ref([
   { text: '星空 高清', isSelected: false },
   { text: '重峦叠嶂 山水画', isSelected: false },
 ]);
+const showConfirmDlg = ref(false);
 
-const posterDlg = ref(false);
-const posterLink = ref('');
-const posterInfo = ref('');
-const userAvatar = ref('');
-const imgQuantity = ref(4);
-const inferList = ref([
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-  { isCollected: false, id: '', publicId: '' },
-]);
 userAvatar.value = userInfoStore.avatar;
 // 公开图片
 async function publicImage(val, index) {
@@ -694,7 +698,6 @@ function reset(val) {
 function handleResultClcik(i) {
   resultIndex.value = i;
 }
-const showConfirmDlg = ref(false);
 const numOptions = ref([
   { id: 4, active: true },
   { id: 2, active: false },

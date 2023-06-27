@@ -8,6 +8,7 @@ import IconX from '~icons/app/x';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconClear from '~icons/app/clear';
+import IconClear2 from '~icons/app/clear2';
 import IconDownload from '~icons/app/download';
 import IconFork from '~icons/app/fork-gray';
 
@@ -119,7 +120,8 @@ const activeNavItem = ref('all');
 const selectValue = ref('');
 const renderList = ref([]); // 含渲染的一级标签
 const menuList = ref([]); // 左侧标签
-const headTags = ref([]);
+const headTags = ref([]); // 标签弹窗头部标签
+const outerTags = ref([]); // 外层的已选标签
 
 const queryData = reactive({
   name: null, // 项目名
@@ -453,7 +455,6 @@ function deleteClick(tag) {
 
   let menu = menuList.value.map((item) => item.key);
   menu.forEach((key) => {
-    // if (key === '0') {
     renderList.value[key].items.forEach((item) => {
       item.items.forEach((it) => {
         if (it.name === tag.name) {
@@ -483,6 +484,7 @@ function deleteModelTags() {
 
 const dropdownRef = ref(null);
 function confirmBtn() {
+  outerTags.value = [...headTags.value];
   let tagsArray = headTags.value.map((item) => {
     return item.name;
   });
@@ -507,6 +509,25 @@ function getSortData(item) {
     queryData.sort_by = 'first_letter';
   } else if (item.value === '-update_time') {
     queryData.sort_by = 'update_time';
+  }
+}
+
+// 头部删除标签
+async function deleteTag(tag) {
+  try {
+    deleteClick(tag);
+    confirmBtn();
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+// 头部清除全部的标签
+async function deleteAllTags() {
+  try {
+    deleteModelTags();
+    confirmBtn();
+  } catch (error) {
+    throw new Error(error);
   }
 }
 </script>
@@ -557,147 +578,171 @@ function getSortData(item) {
       <div class="card-box">
         <div class="card-box-top">
           <div class="card-head">
-            <div class="project-tags">
-              <el-dropdown
-                ref="dropdownRef"
-                trigger="click"
-                :hide-on-click="true"
-                placement="bottom-start"
-                popper-class="my-popper"
-                class="my-popper"
-              >
-                <span class="link-text">
-                  所有项目标签
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </span>
-                <template #dropdown>
-                  <div class="tags-wrap">
-                    <!-- 头部 -->
-                    <div class="dialog-head">
-                      <div class="head-top">
-                        <div class="head-title">
-                          <span>
-                            {{ dialogList.head.title }}
-                          </span>
-                          <span class="tags-limit">(最多可选择5个标签)</span>
+            <div class="head-option">
+              <div class="project-tags">
+                <el-dropdown
+                  ref="dropdownRef"
+                  trigger="click"
+                  :hide-on-click="true"
+                  placement="bottom-start"
+                  popper-class="my-popper"
+                  class="my-popper"
+                >
+                  <span class="link-text">
+                    所有项目标签
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <div class="tags-wrap">
+                      <!-- 头部 -->
+                      <div class="dialog-head">
+                        <div class="head-top">
+                          <div class="head-title">
+                            <span>
+                              {{ dialogList.head.title }}
+                            </span>
+                            <span class="tags-limit">(最多可选择5个标签)</span>
+                          </div>
+                          <div class="head-delete" @click="deleteModelTags">
+                            <o-icon><icon-clear></icon-clear></o-icon>
+                            {{ dialogList.head.delete }}
+                          </div>
                         </div>
-                        <div class="head-delete" @click="deleteModelTags">
-                          <o-icon><icon-clear></icon-clear></o-icon>
-                          {{ dialogList.head.delete }}
+                        <div class="head-tags">
+                          <div
+                            v-for="it in headTags"
+                            :key="it"
+                            class="condition-detail"
+                          >
+                            {{ it.name === 'electricity' ? '电力' : it.name }}
+                            <o-icon class="icon-x" @click="deleteClick(it)"
+                              ><icon-x></icon-x
+                            ></o-icon>
+                          </div>
                         </div>
                       </div>
-                      <div class="head-tags">
-                        <div
-                          v-for="it in headTags"
-                          :key="it"
-                          class="condition-detail"
-                        >
-                          {{ it.name === 'electricity' ? '电力' : it.name }}
-                          <o-icon class="icon-x" @click="deleteClick(it)"
-                            ><icon-x></icon-x
-                          ></o-icon>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- 中部 -->
-                    <div v-if="menuList" class="dialog-body">
-                      <el-tabs tab-position="left" style="height: 100%">
-                        <el-tab-pane
-                          v-for="menu in menuList"
-                          :key="menu.key"
-                          :label="menu.tab"
-                        >
-                          <div class="body-right-container">
-                            <div v-if="renderList[menu.key]" class="body-right">
+                      <!-- 中部 -->
+                      <div v-if="menuList" class="dialog-body">
+                        <el-tabs tab-position="left" style="height: 100%">
+                          <el-tab-pane
+                            v-for="menu in menuList"
+                            :key="menu.key"
+                            :label="menu.tab"
+                          >
+                            <div class="body-right-container">
                               <div
-                                v-for="(item, index) in renderList[menu.key]
-                                  .items"
-                                :key="item"
-                                class="detail-box"
+                                v-if="renderList[menu.key]"
+                                class="body-right"
                               >
-                                <div>
-                                  <p class="tan-title">
-                                    {{ item.kind }}
-                                  </p>
-                                  <!-- 标签管理右侧标签 -->
-                                  <div class="noTask-box">
-                                    <div
-                                      v-for="it in item.items"
-                                      :key="it"
-                                      class="condition-detail"
-                                      :class="[
-                                        { 'condition-active': it.isActive },
-                                        { 'condition-active1': it.isSelected },
-                                      ]"
-                                      @click="tagClick(it, menu.tab, index)"
-                                    >
-                                      {{
-                                        it.name === 'electricity'
-                                          ? '电力'
-                                          : it.name
-                                      }}
+                                <div
+                                  v-for="(item, index) in renderList[menu.key]
+                                    .items"
+                                  :key="item"
+                                  class="detail-box"
+                                >
+                                  <div>
+                                    <p class="tan-title">
+                                      {{ item.kind }}
+                                    </p>
+                                    <!-- 标签管理右侧标签 -->
+                                    <div class="noTask-box">
+                                      <div
+                                        v-for="it in item.items"
+                                        :key="it"
+                                        class="condition-detail"
+                                        :class="[
+                                          { 'condition-active': it.isActive },
+                                          {
+                                            'condition-active1': it.isSelected,
+                                          },
+                                        ]"
+                                        @click="tagClick(it, menu.tab, index)"
+                                      >
+                                        {{
+                                          it.name === 'electricity'
+                                            ? '电力'
+                                            : it.name
+                                        }}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </el-tab-pane>
-                      </el-tabs>
+                          </el-tab-pane>
+                        </el-tabs>
+                      </div>
+                      <div class="btn-box">
+                        <o-button style="margin-right: 16px" @click="cancelBtn"
+                          >取消</o-button
+                        >
+                        <o-button type="primary" @click="confirmBtn"
+                          >确定</o-button
+                        >
+                        <!-- -->
+                      </div>
                     </div>
-                    <div class="btn-box">
-                      <o-button style="margin-right: 16px" @click="cancelBtn"
-                        >取消</o-button
-                      >
-                      <o-button type="primary" @click="confirmBtn"
-                        >确定</o-button
-                      >
-                      <!-- -->
-                    </div>
-                  </div>
-                </template>
-              </el-dropdown>
-              <div class="hot-tags">
-                <!-- <span class="title">热门</span> -->
-                <span
-                  v-for="tag in hotTagsList"
-                  :key="tag.id"
-                  class="tag-item"
-                  :class="{ 'tag-active': tag.active }"
-                  @click="highlightTag(tag)"
-                >
-                  <o-icon> <component :is="tag.icon"></component> </o-icon>
-                  <span> {{ tag.name }} </span>
-                </span>
+                  </template>
+                </el-dropdown>
+                <div class="hot-tags">
+                  <span
+                    v-for="tag in hotTagsList"
+                    :key="tag.id"
+                    class="tag-item"
+                    :class="{ 'tag-active': tag.active }"
+                    @click="highlightTag(tag)"
+                  >
+                    <o-icon> <component :is="tag.icon"></component> </o-icon>
+                    <span> {{ tag.name }} </span>
+                  </span>
+                </div>
+              </div>
+              <div class="project-search">
+                <el-input
+                  v-model="keyWord"
+                  :prefix-icon="Search"
+                  class="w-50 m-2"
+                  placeholder="请输入项目名称"
+                  @change="getKeyWord"
+                />
+                <div class="sort-select">
+                  <el-select
+                    v-model="selectValue"
+                    placeholder="排序"
+                    @change="getSortData"
+                  >
+                    <el-option
+                      v-for="item in i18n.sortCondition"
+                      :key="item.id"
+                      :label="item.text"
+                      :value="item"
+                    />
+                  </el-select>
+                </div>
               </div>
             </div>
-            <div class="project-search">
-              <el-input
-                v-model="keyWord"
-                :prefix-icon="Search"
-                class="w-50 m-2"
-                placeholder="请输入项目名称"
-                @change="getKeyWord"
-              />
-              <div class="sort-select">
-                <el-select
-                  v-model="selectValue"
-                  placeholder="排序"
-                  @change="getSortData"
-                >
-                  <el-option
-                    v-for="item in i18n.sortCondition"
-                    :key="item.id"
-                    :label="item.text"
-                    :value="item"
-                  />
-                </el-select>
+            <el-divider v-if="outerTags.length" />
+            <!-- 已选标签 -->
+            <div v-if="outerTags.length" class="head-tags">
+              <div class="head-title">
+                <span class="title">
+                  {{ dialogList.head.title }}
+                </span>
+                <div v-for="it in outerTags" :key="it" class="condition-detail">
+                  {{ it.name === 'electricity' ? '电力' : it.name }}
+                  <o-icon class="icon-x" @click="deleteTag(it)">
+                    <icon-x></icon-x>
+                  </o-icon>
+                </div>
+              </div>
+              <div class="head-delete" @click="deleteAllTags">
+                <o-icon><icon-clear2></icon-clear2></o-icon>
+                {{ dialogList.head.delete }}
               </div>
             </div>
           </div>
-
           <div v-if="projectData.projects" class="card-list">
             <div
               v-for="item in projectData.projects"
@@ -842,18 +887,8 @@ $theme: #0d8dff;
       flex-wrap: wrap;
       padding: 4px 0 16px;
       .condition-detail {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
         margin: 10px 16px 0 0;
-        height: 28px;
-        font-size: 14px;
         color: $theme;
-        user-select: none;
-        background-color: #f3f9ff;
-        border-radius: 14px;
-        border: 1px solid #e5e5e5;
         .icon-x {
           padding: 2px;
           font-size: 20px;
@@ -902,18 +937,8 @@ $theme: #0d8dff;
       }
     }
     .condition-detail {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
       margin: 0 16px 16px 0;
-      height: 28px;
-      font-size: 14px;
       color: #555;
-      user-select: none;
-      background-color: #f3f9ff;
-      border-radius: 14px;
-      border: 1px solid #e5e5e5;
     }
     .condition-active {
       color: #0d8dff;
@@ -952,7 +977,6 @@ $theme: #0d8dff;
     padding-top: 40px;
   }
 }
-$theme: #0d8dff;
 .wrap {
   margin: 0 auto;
   padding: 40px 16px 136px 16px;
@@ -1108,19 +1132,8 @@ $theme: #0d8dff;
         margin-bottom: 24px;
       }
       .condition-detail {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
         margin: 0 16px 16px 0;
-        height: 28px;
-        font-size: 14px;
         color: #555;
-        user-select: none;
-        background-color: #f3f9ff;
-        border-radius: 14px;
-        border: 1px solid #e5e5e5;
-
         .icon-x {
           display: none;
         }
@@ -1150,19 +1163,8 @@ $theme: #0d8dff;
         flex-wrap: wrap;
         margin-bottom: 24px;
         .condition-detail {
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          padding: 0 12px;
           margin: 0 16px 16px 0;
-          height: 28px;
-          font-size: 14px;
           color: #555;
-          user-select: none;
-          background-color: #f3f9ff;
-          border-radius: 14px;
-          border: 1px solid #e5e5e5;
-
           .icon-x {
             display: none;
           }
@@ -1192,13 +1194,15 @@ $theme: #0d8dff;
         flex: 1;
       }
       .card-head {
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 18px 24px;
+      }
+      .head-option {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 18px 24px;
-        width: 100%;
-        background-color: #fff;
-        border-radius: 16px;
+        // width: 100%;
         .project-tags {
           display: flex;
           align-items: center;
@@ -1274,6 +1278,45 @@ $theme: #0d8dff;
           }
           .el-input {
             width: 320px;
+          }
+        }
+      }
+      .head-tags {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 28px;
+        line-height: 28px;
+        .head-title {
+          display: flex;
+          align-items: center;
+          .title {
+            margin-right: 8px;
+            font-size: 14px;
+            color: #000;
+            font-weight: 400;
+            line-height: 22px;
+          }
+          .condition-detail {
+            margin: 0px 16px 0 0;
+            color: $theme;
+            background-color: rgba(13, 141, 255, 0.15);
+            .icon-x {
+              padding: 2px;
+              font-size: 20px;
+            }
+          }
+        }
+        .head-delete {
+          font-size: 12px;
+          color: #555555;
+          line-height: 18px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          .o-icon {
+            font-size: 16px;
+            margin-right: 6px;
           }
         }
       }
@@ -1454,5 +1497,23 @@ $theme: #0d8dff;
       }
     }
   }
+}
+.condition-detail {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  margin: 0 16px 16px 0;
+  height: 28px;
+  font-size: 14px;
+  color: #555;
+  user-select: none;
+  background-color: #f3f9ff;
+  border-radius: 14px;
+  border: 1px solid #e5e5e5;
+}
+.el-divider {
+  margin: 16px auto;
+  color: #e5e5e5;
 }
 </style>

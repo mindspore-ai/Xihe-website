@@ -137,7 +137,7 @@ const handleScroll = () => {
   const scrollHeight = document.documentElement.scrollHeight;
   const windowHeight = document.documentElement.clientHeight;
   const total = scrollTop + windowHeight;
-  console.log(scrollTop, windowHeight, scrollHeight);
+
   if (Number((total + 100).toFixed(0)) > scrollHeight) {
     throttleGet();
   }

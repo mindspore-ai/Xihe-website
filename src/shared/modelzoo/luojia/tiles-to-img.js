@@ -81,8 +81,9 @@ const getBingTileURL = async () => {
  * @param rbpixelXY 右下像点坐标
  * @param nowzoom 当前缩放等级
  * @param map 地图种类
+ * (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map)
  */
-const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
+const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, map) => {
   // const TILE_SIZE = 256; // 高德瓦片尺寸
 
   const imgcanvas = document.createElement('canvas');
@@ -93,6 +94,8 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
   imgcanvas.height = 256 * (rbxy[1] - ltxy[1] + 1);
   let finflag = 0; // 瓦片获取完毕标志
   let getWMTSURL;
+
+  const nowzoom = 18;
 
   switch (map) {
     case '天地图影像':
@@ -227,13 +230,14 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, nowzoom, map) => {
  * @param ltpoints 左上点经纬度
  * @param rbpoints 右下点经纬度
  * @param zoomlv 图像的缩放等级
+ * ltpoint, rbpoint, zoomlv, map
  */
-export const rectToImg = async (ltpoint, rbpoint, zoomlv, map) => {
+export const rectToImg = async (ltpoint, rbpoint, map) => {
   // 左上角，右下角
-  const ltxy = lngLatToTileXY(ltpoint[0], ltpoint[1], zoomlv);
-  const rbxy = lngLatToTileXY(rbpoint[0], rbpoint[1], zoomlv);
-  const ltpixelXY = lngLatToPixelXY(ltpoint[0], ltpoint[1], zoomlv);
-  const rbpixelXY = lngLatToPixelXY(rbpoint[0], rbpoint[1], zoomlv);
+  const ltxy = lngLatToTileXY(ltpoint[0], ltpoint[1], 18);
+  const rbxy = lngLatToTileXY(rbpoint[0], rbpoint[1], 18);
+  const ltpixelXY = lngLatToPixelXY(ltpoint[0], ltpoint[1], 18);
+  const rbpixelXY = lngLatToPixelXY(rbpoint[0], rbpoint[1], 18);
 
   // 需要加入RECT大小限制检测
   const tileImg = await getTileImg(
@@ -241,7 +245,7 @@ export const rectToImg = async (ltpoint, rbpoint, zoomlv, map) => {
     rbxy,
     ltpixelXY,
     rbpixelXY,
-    zoomlv,
+    // zoomlv,
     map
   );
 

@@ -50,7 +50,7 @@ async function getDirData(dirPath2) {
       }
     });
   } catch (error) {
-    return e;
+    return error;
   }
 }
 function getDirByPath(item) {

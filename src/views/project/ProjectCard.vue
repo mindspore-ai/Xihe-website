@@ -127,7 +127,7 @@ function getReadMeFile() {
         });
     }
   } catch (error) {
-    return err;
+    return error;
   }
 }
 

@@ -5,7 +5,7 @@ import { useUserInfoStore } from '@/stores';
 import IconPoppver from '~icons/app/popover.svg';
 import IconPlus from '~icons/app/plus.svg';
 import IconX from '~icons/app/x';
-import IconClear from '~icons/app/clear';
+import IconClear from '~icons/app/clear2';
 
 import OTag from '@/components/OTag.vue';
 

@@ -200,7 +200,7 @@ function handleInferClick(mobile) {
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG4'),
     });
-  } else if (isSelected.value && !isInfer.value && mobile !== 'mobile') {
+  } else if (isSelected.value) {
     ElMessage({
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG5'),

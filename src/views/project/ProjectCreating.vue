@@ -15,7 +15,7 @@ import IconX from '~icons/app/x';
 
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPlus from '~icons/app/plus.svg';
-import IconClear from '~icons/app/clear';
+import IconClear from '~icons/app/clear2';
 import IconPoppver from '~icons/app/popover.svg';
 
 import { ElMessage } from 'element-plus';

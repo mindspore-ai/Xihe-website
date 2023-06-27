@@ -733,10 +733,7 @@ function toNextPic() {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           transition: all 0.3s linear;
         }
-        @media screen and (max-width: 820px) {
-          width: 226px;
-        }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 376px) {
           width: 167px;
         }
         .box-top {

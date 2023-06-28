@@ -116,13 +116,14 @@ const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
 
+userAvatar.value = userInfoStore.avatar.replace(OBSAVATAR, '/obs-xihe-avatar');
+
 const isSharedPoster = ref(false);
 const shareImg = ref('');
 // 分享海报dlg
-function shareImage(link, desc, style, avatar) {
+function shareImage(link, desc, style) {
   posterInfo.value = desc + '  ' + style;
 
-  userAvatar.value = avatar.replace(OBSAVATAR, '/obs-xihe-avatar');
   posterLink.value = link;
   posterDlg.value = true;
 
@@ -254,9 +255,7 @@ function handleImageClick(img) {
               </div>
               <div
                 class="icon-item middle"
-                @click="
-                  shareImage(item.link, item.desc, item.style, item.avatar)
-                "
+                @click="shareImage(item.link, item.desc, item.style)"
               >
                 <o-icon><icon-share></icon-share></o-icon>
               </div>

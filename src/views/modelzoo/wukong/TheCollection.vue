@@ -113,9 +113,8 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
-const index1 = userInfoStore.avatar.indexOf('.com/');
-userAvatar.value =
-  '/obs-xihe-avatar/' + userInfoStore.avatar.substring(index1 + 5);
+
+userAvatar.value = userInfoStore.avatar;
 
 const isSharedPoster = ref(false);
 const shareImg = ref('');

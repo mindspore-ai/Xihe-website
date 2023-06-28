@@ -23,6 +23,8 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
+const OBSAVATAR = import.meta.env.VITE_AVATAR_URL;
+
 const { t } = useI18n();
 const screenWidth = useWindowResize();
 
@@ -113,19 +115,15 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
-const index1 = userInfoStore.avatar.indexOf('.com/');
-userAvatar.value =
-  '/obs-xihe-avatar/' + userInfoStore.avatar.substring(index1 + 5);
 
 const isSharedPoster = ref(false);
 const shareImg = ref('');
 // 分享海报dlg
-function shareImage(link, desc, style) {
+function shareImage(link, desc, style, avatar) {
   posterInfo.value = desc + '  ' + style;
 
-  let index2 = link.indexOf(':443');
-
-  posterLink.value = '/obs-big-model/' + link.substring(index2 + 5);
+  userAvatar.value = avatar.replace(OBSAVATAR, '/obs-xihe-avatar');
+  posterLink.value = link;
   posterDlg.value = true;
 
   if (screenWidth.value <= 820) {
@@ -256,7 +254,9 @@ function handleImageClick(img) {
               </div>
               <div
                 class="icon-item middle"
-                @click="shareImage(item.link, item.desc, item.style)"
+                @click="
+                  shareImage(item.link, item.desc, item.style, item.avatar)
+                "
               >
                 <o-icon><icon-share></icon-share></o-icon>
               </div>

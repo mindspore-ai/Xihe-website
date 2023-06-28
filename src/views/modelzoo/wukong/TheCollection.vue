@@ -23,6 +23,8 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
+const OBSAVATAR = import.meta.env.VITE_AVATAR_URL;
+
 const { t } = useI18n();
 const screenWidth = useWindowResize();
 
@@ -113,9 +115,8 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
-const index1 = userInfoStore.avatar.indexOf('.com/');
-userAvatar.value =
-  '/obs-xihe-avatar/' + userInfoStore.avatar.substring(index1 + 5);
+
+userAvatar.value = userInfoStore.avatar.replace(OBSAVATAR, '/obs-xihe-avatar');
 
 const isSharedPoster = ref(false);
 const shareImg = ref('');
@@ -123,9 +124,7 @@ const shareImg = ref('');
 function shareImage(link, desc, style) {
   posterInfo.value = desc + '  ' + style;
 
-  let index2 = link.indexOf(':443');
-
-  posterLink.value = '/obs-big-model/' + link.substring(index2 + 5);
+  posterLink.value = link;
   posterDlg.value = true;
 
   if (screenWidth.value <= 820) {

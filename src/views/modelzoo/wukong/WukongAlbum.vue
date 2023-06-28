@@ -36,6 +36,7 @@ import useClipboard from 'vue-clipboard3';
 
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
+const OBSAVATAR = import.meta.env.VITE_AVATAR_URL;
 
 const { t } = useI18n();
 
@@ -156,7 +157,10 @@ function getDialogData(num) {
   dialogData.value = imgs.value[num];
   picIndex.value = num;
   dialogData.value.link = dialogData.value.link;
-  dialogData.value.avatar = dialogData.value.avatar;
+  dialogData.value.avatar = dialogData.value.avatar.replace(
+    OBSAVATAR,
+    '/obs-xihe-avatar'
+  );
   userInfo.avatar = userInfo.avatar;
 }
 
@@ -693,10 +697,7 @@ function toNextPic() {
           box-shadow: 0px 1px 30px 0px rgba(0, 0, 0, 0.05);
           transition: all 0.3s linear;
         }
-        @media screen and (max-width: 820px) {
-          width: 226px;
-        }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 376px) {
           width: 167px;
         }
         .box-top {

@@ -1,5 +1,5 @@
 import * as Cesium from 'cesium';
-
+import publicUrl from '@/shared/modelzoo/luojia/public-address';
 /**
  * 经纬度坐标转高德瓦片坐标
  * @param lng
@@ -53,10 +53,7 @@ const getBingMeta = async () => {
   const BING_KEY =
     'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o'; // Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
 
-  const req = await fetch(
-    'https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial?key=' +
-      BING_KEY
-  );
+  const req = await fetch(publicUrl.metaUrl + '?key=' + BING_KEY);
 
   const jsonData = await req.json();
 
@@ -101,7 +98,8 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, map) => {
     case '天地图影像':
       getWMTSURL = (m, n) => {
         return (
-          'http://t0.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix=' +
+          publicUrl.bingUrl +
+          '?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix=' +
           nowzoom.toString() +
           '&TileRow=' +
           n.toString() +
@@ -131,7 +129,8 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, map) => {
     default:
       getWMTSURL = (m, n) => {
         return (
-          'https://webst04.is.autonavi.com/appmaptile?style=6&x=' +
+          publicUrl.wmtsUrl +
+          '?style=6&x=' +
           m.toString() +
           '&y=' +
           n.toString() +

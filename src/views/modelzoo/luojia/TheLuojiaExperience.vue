@@ -42,7 +42,6 @@ const historyInfo = ref({
 const cesiumContainer = ref('');
 const viewer = ref(null);
 const nowModelName = ref('高德影像');
-// const zoomlv = ref(18);
 
 const isSelected = ref(false);
 const tblob = ref(null);
@@ -79,8 +78,7 @@ async function handleDrawClick() {
 
         tblob.value = await rectToImg(
           ltpoint,
-          rbpoint,
-          // zoomlv.value,
+          rbpoint, // zoomlv.value,
           nowModelName.value
         );
 

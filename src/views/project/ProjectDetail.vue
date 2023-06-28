@@ -467,7 +467,6 @@ function getAllTags() {
     });
   });
 }
-// getAllTags();
 // 复制用户名
 function copyText(textValue) {
   inputDom.value.value = textValue;

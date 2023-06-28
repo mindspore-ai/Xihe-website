@@ -36,7 +36,6 @@ import useClipboard from 'vue-clipboard3';
 
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
-const OBSAVATAR = import.meta.env.VITE_AVATAR_URL;
 
 const { t } = useI18n();
 
@@ -157,10 +156,7 @@ function getDialogData(num) {
   dialogData.value = imgs.value[num];
   picIndex.value = num;
   dialogData.value.link = dialogData.value.link;
-  dialogData.value.avatar = dialogData.value.avatar.replace(
-    OBSAVATAR,
-    '/obs-xihe-avatar'
-  );
+  dialogData.value.avatar = dialogData.value.avatar;
   userInfo.avatar = userInfo.avatar;
 }
 

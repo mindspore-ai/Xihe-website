@@ -3,7 +3,8 @@ window.CESIUM_BASE_URL = '/lib/Cesium/';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
-import publicUrl from '@/shared/modelzoo/luojia/public-address';
+const VIRTUALEARTH = import.meta.env.VITE_VIRTUAL_EARTH;
+const GAODESERVE = import.meta.env.VITE_GAODE_SERVE;
 
 // 初始视角更改
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
@@ -77,7 +78,7 @@ const AMAPURL_CONFIG = {
   AMAP_IMG_CIA:
     'https://webst{s}.is.autonavi.com/appmaptile?style=8&x={TileCol}&y={TileRow}&z={TileMatrix}',
   AMAP_IMG_NEW:
-    publicUrl.gaodeService +
+    GAODESERVE +
     '?x={TileCol}&y={TileRow}&z={TileMatrix}&lang=zh_cn&size=1&scl=2&style=6 ',
 };
 
@@ -230,7 +231,7 @@ const BING_IMG_P = new Cesium.ProviderViewModel({
     'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/bing.png',
   creationFunction: function () {
     let wmts = new Cesium.BingMapsImageryProvider({
-      url: publicUrl.virtualEarth,
+      url: VIRTUALEARTH,
       key: 'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o',
       mapStyle: Cesium.BingMapsStyle.AERIAL,
     });

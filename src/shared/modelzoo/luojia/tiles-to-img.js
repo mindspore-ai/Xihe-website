@@ -1,5 +1,8 @@
 import * as Cesium from 'cesium';
-import publicUrl from '@/shared/modelzoo/luojia/public-address';
+const METAURL = import.meta.env.VITE_META_URL;
+const BINGURL = import.meta.env.VITE_BING_URL;
+const WMTSURL = import.meta.env.VITE_WMTS_URL;
+
 /**
  * 经纬度坐标转高德瓦片坐标
  * @param lng
@@ -53,7 +56,7 @@ const getBingMeta = async () => {
   const BING_KEY =
     'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o'; // Fix:https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
 
-  const req = await fetch(publicUrl.metaUrl + '?key=' + BING_KEY);
+  const req = await fetch(METAURL + '?key=' + BING_KEY);
 
   const jsonData = await req.json();
 
@@ -98,7 +101,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, map) => {
     case '天地图影像':
       getWMTSURL = (m, n) => {
         return (
-          publicUrl.bingUrl +
+          BINGURL +
           '?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix=' +
           nowzoom.toString() +
           '&TileRow=' +
@@ -129,7 +132,7 @@ const getTileImg = async (ltxy, rbxy, ltpixelXY, rbpixelXY, map) => {
     default:
       getWMTSURL = (m, n) => {
         return (
-          publicUrl.wmtsUrl +
+          WMTSURL +
           '?style=6&x=' +
           m.toString() +
           '&y=' +

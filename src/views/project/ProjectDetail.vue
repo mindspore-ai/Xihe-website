@@ -3,7 +3,7 @@ import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 
 import IconX from '~icons/app/x';
-import IconClear from '~icons/app/clear';
+import IconClear from '~icons/app/clear2';
 import IconCopy from '~icons/app/copy-nickname';
 import IconPlus from '~icons/app/plus';
 import IconFork from '~icons/app/fork';
@@ -1101,6 +1101,7 @@ $theme: #0d8dff;
         .o-icon {
           margin-right: 6px;
           align-self: center;
+          font-size: 16px;
         }
       }
     }

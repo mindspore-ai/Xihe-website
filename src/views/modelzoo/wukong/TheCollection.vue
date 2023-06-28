@@ -122,9 +122,7 @@ const shareImg = ref('');
 function shareImage(link, desc, style) {
   posterInfo.value = desc + '  ' + style;
 
-  let index2 = link.indexOf(':443');
-
-  posterLink.value = '/obs-big-model/' + link.substring(index2 + 5);
+  posterLink.value = link;
   posterDlg.value = true;
 
   if (screenWidth.value <= 820) {

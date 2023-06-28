@@ -77,7 +77,8 @@ const AMAPURL_CONFIG = {
   AMAP_IMG_CIA:
     'https://webst{s}.is.autonavi.com/appmaptile?style=8&x={TileCol}&y={TileRow}&z={TileMatrix}',
   AMAP_IMG_NEW:
-    'http://wprd{s}.is.autonavi.com/appmaptile?x={TileCol}&y={TileRow}&z={TileMatrix}&lang=zh_cn&size=1&scl=2&style=6 ',
+    publicUrl.gaodeService +
+    '?x={TileCol}&y={TileRow}&z={TileMatrix}&lang=zh_cn&size=1&scl=2&style=6 ',
 };
 
 // 默认显示天地图

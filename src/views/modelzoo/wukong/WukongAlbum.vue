@@ -37,7 +37,6 @@ import useClipboard from 'vue-clipboard3';
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
 
-
 const { t } = useI18n();
 
 const { toClipboard } = useClipboard();
@@ -295,7 +294,6 @@ async function copyText(textValue) {
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
-
   html2canvas(poster, {
     useCORS: true,
   }).then((canvas) => {
@@ -311,7 +309,7 @@ function downloadPoster() {
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
       // 绘制圆角矩形（使用 arcTo）
-      let radius = 22;
+      let radius = 24;
       ctx.save(); // 保存当前环境的状态
       ctx.beginPath(); // 重置当前路径
       ctx.moveTo(0 + radius, 0); // 移动到左上角

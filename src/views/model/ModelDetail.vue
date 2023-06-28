@@ -197,7 +197,7 @@ function getDetailData() {
 
       getTagList();
     })
-    .catch((error) => {
+    .catch(() => {
       router.push('/404');
     });
 }

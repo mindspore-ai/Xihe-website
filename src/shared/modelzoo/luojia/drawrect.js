@@ -1,27 +1,12 @@
 import * as Cesium from 'cesium';
 
-// crypto需要考虑浏览器兼容
-const crypto =
-  window.crypto ||
-  window.webkitCrypto ||
-  window.mozCrypto ||
-  window.oCrypto ||
-  window.msCrypto;
-function randomFloat() {
-  // 生成 32 位随机值
-  const fooArray = new Uint32Array(1);
-  // 最大值是 2^32 –1
-  const maxUint32 = 0xffffffff;
-  // 用最大可能的值来除
-  return crypto.getRandomValues(fooArray)[0] / maxUint32;
-}
 /**
  * 生成标识码
  * @returns {string}
  */
 export function guid() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (randomFloat() * 16) | 0,
+    var r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });

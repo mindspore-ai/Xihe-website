@@ -23,7 +23,6 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
-const OBSAVATAR = import.meta.env.VITE_AVATAR_URL;
 
 const { t } = useI18n();
 const screenWidth = useWindowResize();
@@ -116,7 +115,7 @@ const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
 
-userAvatar.value = userInfoStore.avatar.replace(OBSAVATAR, '/obs-xihe-avatar');
+userAvatar.value = userInfoStore.avatar;
 
 const isSharedPoster = ref(false);
 const shareImg = ref('');

@@ -26,7 +26,7 @@ export const LOGIN_STATUS = {
 };
 
 export const LOGIN_KEYS = {
-  USER_TOKEN: '_XIHE_U_T_',
+  SERVE_CODE: '_XIHE_C_T_',
 };
 
 // 修改pinia登录状态
@@ -66,13 +66,13 @@ async function getUserToken(params) {
 }
 
 // 存储用户token至本地，用于下次登录
-export function saveUserAuth(token) {
-  if (!token) {
-    localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
+export function saveUserAuth(code) {
+  if (!code) {
+    localStorage.removeItem(LOGIN_KEYS.SERVE_CODE);
     const userInfoStore = useUserInfoStore();
     userInfoStore.$reset();
   } else {
-    localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
+    localStorage.setItem(LOGIN_KEYS.SERVE_CODE, code);
   }
 }
 
@@ -108,7 +108,7 @@ function afterLogined(userInfo) {
 // 获取本地token
 export function getUserAuth() {
   return {
-    token: localStorage.getItem(LOGIN_KEYS.USER_TOKEN) || '',
+    token: localStorage.getItem(LOGIN_KEYS.SERVE_CODE) || '',
   };
 }
 

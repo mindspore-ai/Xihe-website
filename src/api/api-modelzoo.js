@@ -3,10 +3,10 @@ import { LOGIN_KEYS } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 
 function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
     ? {
         headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         },
       }
     : {};
@@ -24,7 +24,7 @@ export function uploadModelzooPic(params) {
     .post(url, params, {
       $noLoading: true,
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -61,7 +61,7 @@ export function getMultiplePicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })
@@ -82,7 +82,7 @@ export function uploadVqaPicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -135,7 +135,7 @@ export function handlePanguInfer(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })
@@ -156,7 +156,7 @@ export function handleLuojiaUploadPic(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -226,7 +226,7 @@ export function wuKongInfer(params) {
       $doException: true,
       $noLoading: true,
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })

@@ -93,7 +93,6 @@ export default {
   },
   setup(props) {
     const { captchaType, mode } = toRefs(props);
-    // const i18n = useI18n();
     const clickShow = ref(false);
     const verifyType = ref(undefined);
     const componentType = ref(undefined);

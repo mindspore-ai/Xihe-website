@@ -37,7 +37,6 @@ const i18n = {
     describe: '请输入内容',
   },
 };
-const owner = ref([]);
 
 let queryRef = ref(null);
 
@@ -73,10 +72,6 @@ let dialogList = {
     { tab: '其他', key: 'tags' },
   ],
 };
-
-try {
-  owner.value = useUserInfoStore().owner;
-} catch (error) {}
 
 function create(formEl) {
   if (!formEl) return;
@@ -239,7 +234,7 @@ function deleteAllTags() {
           size="large"
         >
           <el-option
-            v-for="item in owner"
+            v-for="item in userInfo.owner"
             :key="item.id"
             :label="item.name"
             :value="item.id"

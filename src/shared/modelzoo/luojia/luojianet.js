@@ -5,6 +5,9 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
 const VIRTUALEARTH = import.meta.env.VITE_VIRTUAL_EARTH;
 const GAODESERVE = import.meta.env.VITE_GAODE_SERVE;
+const BINGICON = import.meta.env.VITE_BING_ICON;
+const GAODEICON = import.meta.env.VITE_GAODE_ICON;
+const VEICON = import.meta.env.VITE_VE_ICON;
 
 // 初始视角更改
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
@@ -120,8 +123,7 @@ const defaultProvider = new Cesium.WebMapTileServiceImageryProvider({
 const TDT_IMG_C_P = new Cesium.ProviderViewModel({
   name: '天地图影像',
   tooltip: '天地图影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/tianditu.png', // Fix:cesium地图来源选择处显示的图标存储路径
+  iconUrl: BINGICON, // Fix:cesium地图来源选择处显示的图标存储路径
   creationFunction: function () {
     let wmts = new Cesium.WebMapTileServiceImageryProvider({
       // url: TDTURL_CONFIG.TDT_VEC_C, // 矢量地图
@@ -194,8 +196,7 @@ const TDT_IMG_C_P = new Cesium.ProviderViewModel({
 const AMAP_IMG_P = new Cesium.ProviderViewModel({
   name: '高德影像',
   tooltip: '高德影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/amap.png',
+  iconUrl: GAODEICON,
   creationFunction: function () {
     let wmts = new Cesium.WebMapTileServiceImageryProvider({
       url: AMAPURL_CONFIG.AMAP_IMG,
@@ -227,8 +228,7 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
 const BING_IMG_P = new Cesium.ProviderViewModel({
   name: 'Virtual Earth影像',
   tooltip: 'Virtual Earth影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/bing.png',
+  iconUrl: VEICON,
   creationFunction: function () {
     let wmts = new Cesium.BingMapsImageryProvider({
       url: VIRTUALEARTH,

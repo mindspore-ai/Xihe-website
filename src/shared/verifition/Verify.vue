@@ -385,7 +385,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 9999;
-  background-image: url('../src/assets/svg-icons/icon-done.svg');
+  background-image: url('@/assets/svg-icons/icon-done.svg');
   background-size: contain;
 }
 
@@ -401,7 +401,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 9999;
-  background-image: url('../src/assets/svg-icons/icon-cancel.svg');
+  background-image: url('@/assets/svg-icons/icon-cancel.svg');
   background-size: contain;
 }
 
@@ -418,7 +418,7 @@ export default {
   bottom: 0;
   background-size: cover;
   z-index: 9999;
-  background-image: url('../src/assets/svg-icons/icon-chevron-right.svg');
+  background-image: url('@/assets/svg-icons/icon-chevron-right.svg');
   background-size: contain;
 }
 
@@ -434,7 +434,7 @@ export default {
   top: 0;
   bottom: 0;
   z-index: 9999;
-  background-image: url('../src/assets/svg-icons/icon-refresh.svg');
+  background-image: url('@/assets/svg-icons/icon-refresh.svg');
   background-size: contain;
 }
 </style>

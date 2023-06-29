@@ -36,6 +36,8 @@ import {
   deleteModel,
 } from '@/api/api-project';
 
+const MATHJSX = import.meta.env.VITE_MATH_JSX;
+
 const TypeSet = async function (elements) {
   if (!window.MathJax) {
     return;
@@ -55,10 +57,7 @@ let script = document.createElement('script');
 script.setAttribute('type', 'text/javascript');
 script.setAttribute('id', 'MathJax-script');
 script.setAttribute('async', '');
-script.setAttribute(
-  'src',
-  'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
-);
+script.setAttribute('src', MATHJSX);
 let code =
   'MathJax = {' +
   '  tex: {' +

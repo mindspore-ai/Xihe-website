@@ -807,7 +807,7 @@ async function deleteAllTags() {
                   </span>
                   <span class="fork">
                     <o-icon><icon-fork></icon-fork></o-icon>
-                    {{ item.download_count }}
+                    {{ item.fork_count }}
                   </span>
                 </div>
               </div>

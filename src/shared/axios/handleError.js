@@ -3,7 +3,8 @@ export default (err) => {
   const { response } = err;
 
   if (response.headers['csrf-token'] && response.status !== 404) {
-    localStorage.setItem(LOGIN_KEYS.SERVE_CODE, response.headers['csrf-token']);
+    let code = response.headers['csrf-token'];
+    localStorage.setItem(LOGIN_KEYS.SERVE_CODE, code);
   }
 
   if (!response.status) {

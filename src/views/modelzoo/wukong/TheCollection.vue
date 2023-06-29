@@ -23,6 +23,7 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
+
 const { t } = useI18n();
 const screenWidth = useWindowResize();
 

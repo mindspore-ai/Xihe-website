@@ -385,10 +385,7 @@ const isSharedPoster = ref(false);
 const shareImg = ref('');
 function shareImage(url) {
   posterDlg.value = true;
-  posterLink.value = url.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-    '/obs-big-model/'
-  );
+  posterLink.value = url;
   posterInfo.value = inputText.value + '  ' + sortTag.value;
   if (posterInfo.value === '  ') {
     posterInfo.value = decodeURIComponent(

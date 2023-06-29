@@ -68,13 +68,7 @@ async function getPublicPictures() {
     if (res.status === 200 && res.data.data) {
       publicList.value = res.data.data;
       res.data.data.forEach((item, index) => {
-        addWatermark(
-          item.link.replace(
-            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-            '/obs-big-model/'
-          ),
-          index
-        );
+        addWatermark(item.link, index);
       });
     }
   } catch (e) {

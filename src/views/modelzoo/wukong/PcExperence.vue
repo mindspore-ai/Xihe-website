@@ -345,11 +345,7 @@ async function publicImage(val, index) {
   try {
     const res = await publicTemporaryPicture({
       obspath: decodeURIComponent(
-        styleBackground1.value[index]
-          .split('?')[0]
-          .split(
-            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
-          )[1]
+        styleBackground1.value[index].split('?')[0].split('443/')[1]
       ),
     });
     if (res.data) {
@@ -385,21 +381,12 @@ const isSharedPoster = ref(false);
 const shareImg = ref('');
 function shareImage(url) {
   posterDlg.value = true;
-  posterLink.value = url.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-    '/obs-big-model/'
-  );
+  posterLink.value = url;
   posterInfo.value = inputText.value + '  ' + sortTag.value;
   if (posterInfo.value === '  ') {
     posterInfo.value = decodeURIComponent(
-      styleBackground1.value[1]
-        .split('?')[0]
-        .split(
-          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
-        )[1]
-    )
-      .split('/')[4]
-      .split('-01.jpg')[0];
+      styleBackground1.value[1].split('?')[0].split('/')[8]
+    ).split('-01.jpg')[0];
   }
   if (screenWidth.value <= 820) {
     nextTick(() => {
@@ -634,11 +621,7 @@ async function handleInfer() {
 function handleCollect(key, index) {
   addLikePicture({
     obspath: decodeURIComponent(
-      styleBackground1.value[index]
-        .split('?')[0]
-        .split(
-          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/'
-        )[1]
+      styleBackground1.value[index].split('?')[0].split('443/')[1]
     ),
   }).then((res) => {
     if (res.data.data) {

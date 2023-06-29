@@ -95,6 +95,17 @@ function submitUpload() {
 }
 
 function handleChange(val) {
+  if (
+    val.raw.type !== 'image/jepg' ||
+    val.raw.type !== 'image/png' ||
+    val.raw.type !== 'image/jpg'
+  ) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择jepg/jpg/png图片上传',
+    });
+  }
+
   if (val.size > 2097152) {
     return ElMessage({
       type: 'warning',

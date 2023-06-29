@@ -465,20 +465,21 @@ function confirmDialog() {
     <div class="header-tool">
       <loading-arc v-if="loginStore.isLoggingIn" class="loading"></loading-arc>
       <div v-else class="user">
-        <el-dropdown
+        <div
           v-if="!userInfoStore.id"
           class="user-login"
           popper-class="header-nav"
+          @click="goAuthorize"
         >
           <icon-user class="user-login-icon"></icon-user>
-          <template #dropdown>
+          <!-- <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="goAuthorize">{{
                 locale === 'zh' ? '登录' : 'Login'
               }}</el-dropdown-item>
             </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+          </template> -->
+        </div>
         <el-dropdown
           v-if="userInfoStore.id"
           class="user-info"

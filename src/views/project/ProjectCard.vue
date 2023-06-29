@@ -14,15 +14,17 @@ import { ElDialog } from 'element-plus';
 import RelateCard from '@/components/train/RelateCard.vue';
 import NoRelate from '@/components/train/NoRelate.vue';
 
-import { getGitlabFileRaw, getGitlabTree } from '@/api/api-gitlab';
+import { getGitlabFileRaw } from '@/api/api-gitlab';
 import { getAppInfo } from '@/api/api-project';
 import {
   addDataset,
   deleteDataset,
   addModel,
   deleteModel,
-  getGuide,
+  getReadmeInfo,
 } from '@/api/api-project';
+import agreement from '@/assets/statement/guide.md?raw';
+import MdStatement from '@/components/MdStatement.vue';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
 import { LOGIN_KEYS } from '@/shared/login';
@@ -49,10 +51,7 @@ const mkit = handleMarkdown();
 const rightDiv = ref(null);
 const leftDiv = ref(null);
 const codeString = ref('');
-const codeString2 = ref('');
 const result = ref();
-const result2 = ref();
-let README = '';
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
@@ -89,25 +88,10 @@ const addSearch = ref('');
 // 获取README文件
 function getReadMeFile() {
   try {
-    if (detailData.value.type === 'Gradio') {
-      getGuide().then((tree) => {
-        README = tree.data;
-        codeString2.value = README;
-        result2.value = mkit.render(codeString2.value);
-      });
-    } else {
-      getGitlabTree({
-        type: 'project',
-        user: routerParams.user,
-        path: '',
-        id: detailData.value.id,
-        name: routerParams.name,
-      })
+    if (detailData.value.type !== 'Gradio') {
+      getReadmeInfo(detailData.value.owner, detailData.value.name)
         .then((tree) => {
-          README = tree?.data?.filter((item) => {
-            return item.name === 'README.md';
-          });
-          if (README[0]) {
+          if (tree.data.has_file) {
             getGitlabFileRaw({
               type: 'project',
               user: routerParams.user,
@@ -524,7 +508,9 @@ onMounted(() => {
         v-else-if="detailData.owner === userInfo.userName"
         class="markdown-body"
       >
-        <div v-dompurify-html="result2" class="markdown-file"></div>
+        <div class="markdown-file">
+          <MdStatement :statement="agreement"></MdStatement>
+        </div>
         <o-button type="primary" :disabled="!canStart" @click="handleStart"
           >启动</o-button
         >
@@ -771,6 +757,9 @@ onMounted(() => {
         color: #555555;
         margin-top: 19px;
       }
+    }
+    .markdown-file {
+      padding-top: 48px;
     }
   }
   .upload-readme {

@@ -155,7 +155,13 @@ export function handlePanguInfer(params) {
 export function handleLuojiaUploadPic(params) {
   const url = '/server/bigmodel/luojia_upload_picture';
   return request
-    .post(url, params, getHeaderConfig())
+    .post(url, params, {
+      $noLoading: true,
+      headers: {
+        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then((res) => {
       return res;
     })

@@ -94,22 +94,32 @@ function submitUpload() {
 }
 
 function handleChange(val) {
-  if (val.size > 2097152) {
-    // fileList.value.pop();
-    return ElMessage({
-      type: 'warning',
-      message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
-    });
-  } else {
-    analysis.value = '';
-    formData.delete('picture');
-    formData = new FormData();
-    // fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
-    fileList.value = [];
-    fileList.value[0] = { raw: val.raw };
+  if (
+    val.raw.type === 'image/jpeg' ||
+    val.raw.type === 'image/png' ||
+    val.raw.type === 'image/jpg'
+  ) {
+    if (val.size > 2097152) {
+      return ElMessage({
+        type: 'warning',
+        message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
+      });
+    } else {
+      analysis.value = '';
+      formData.delete('picture');
+      formData = new FormData();
+      fileList.value = [];
+      fileList.value[0] = { raw: val.raw };
 
-    activeIndex.value = -1;
-    imageUrl.value = URL.createObjectURL(val.raw);
+      activeIndex.value = -1;
+      imageUrl.value = URL.createObjectURL(val.raw);
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请选择jpeg/jpg/png图片上传',
+    });
+    return;
   }
 }
 
@@ -157,7 +167,6 @@ function customUpload() {
                 drag
                 action=""
                 :multiple="false"
-                accept=".png,.jpeg,.jpg"
                 list-type="picture"
                 :file-list="fileList"
                 :auto-upload="false"

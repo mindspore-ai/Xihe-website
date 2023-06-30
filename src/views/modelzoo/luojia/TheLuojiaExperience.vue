@@ -287,15 +287,35 @@ const imgLists = [
 ];
 const fileList = ref([]);
 function handleChange(val) {
-  activeIndex1.value = 5;
-  analysis.value = '';
-  formData.delete('file');
-  formData = new FormData();
-  fileList.value[0] = val;
-  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
-  activeIndex.value = -1;
-  imageUrl.value = URL.createObjectURL(val.raw);
+  if (
+    val.raw.type === 'image/jpeg' ||
+    val.raw.type === 'image/png' ||
+    val.raw.type === 'image/jpg'
+  ) {
+    if (val.size > 5242880) {
+      return ElMessage({
+        type: 'warning',
+        message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
+      });
+    } else {
+      activeIndex1.value = 5;
+      analysis.value = '';
+      formData.delete('file');
+      formData = new FormData();
+      fileList.value[0] = val;
+      fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+      activeIndex.value = -1;
+      imageUrl.value = URL.createObjectURL(val.raw);
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请选择jpeg/jpg/png图片上传',
+    });
+    return;
+  }
 }
+
 function selectImage(item, index) {
   activeIndex.value = index;
   activeIndex1.value = index;

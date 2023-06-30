@@ -735,6 +735,9 @@ function toNextPic() {
         @media screen and (max-width: 376px) {
           width: 167px;
         }
+        @media screen and (max-width: 360px) {
+          width: 160px;
+        }
         .box-top {
           height: 342px;
           position: relative;

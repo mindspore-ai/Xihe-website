@@ -297,14 +297,33 @@ const imgLists = [
   },
 ];
 function handleChange(val) {
-  activeIndex1.value = 5;
-  analysis.value = '';
-  formData.delete('file');
-  formData = new FormData();
-  fileList.value[0] = val;
-  fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
-  activeIndex.value = -1;
-  imageUrl.value = URL.createObjectURL(val.raw);
+  if (
+    val.raw.type === 'image/jpeg' ||
+    val.raw.type === 'image/png' ||
+    val.raw.type === 'image/jpg'
+  ) {
+    if (val.size > 5242880) {
+      return ElMessage({
+        type: 'warning',
+        message: t('taichu.IMAGE_CAPTION.IMG_LIMIT'),
+      });
+    } else {
+      activeIndex1.value = 5;
+      analysis.value = '';
+      formData.delete('file');
+      formData = new FormData();
+      fileList.value[0] = val;
+      fileList.value.length > 1 ? fileList.value.splice(0, 1) : '';
+      activeIndex.value = -1;
+      imageUrl.value = URL.createObjectURL(val.raw);
+    }
+  } else {
+    ElMessage({
+      type: 'warning',
+      message: '请选择jpeg/jpg/png图片上传',
+    });
+    return;
+  }
 }
 
 const getImage = (name) => {
@@ -598,11 +617,13 @@ function enlarge(url) {
 .compare-box {
   display: flex;
   justify-content: space-between;
+
   img {
     width: 315px;
     height: 315px;
     border-radius: 16px;
   }
+
   .original,
   .result {
     .botoom {
@@ -613,13 +634,16 @@ function enlarge(url) {
       color: #555555;
       line-height: 22px;
       margin-top: 16px;
+
       .download {
         display: flex;
         align-items: center;
         cursor: pointer;
+
         &:hover {
           color: #0d8dff;
         }
+
         .o-icon {
           margin-right: 4px;
         }
@@ -627,6 +651,7 @@ function enlarge(url) {
     }
   }
 }
+
 :deep(.el-table) {
   --el-table-header-bg-color: #e5e8f0;
   --el-table-row-hover-bg-color: #f7f8fa;
@@ -634,26 +659,32 @@ function enlarge(url) {
   box-shadow: 0 1px 5px rgba(45, 47, 51, 0.1);
   color: #707070;
   --el-table-border: none;
+
   .el-table__empty-block {
     background-color: #fff;
+
     @media screen and (max-width: 768px) {
       .el-table__empty-text {
         line-height: 52px;
       }
     }
   }
+
   thead {
     font-size: 14px;
     color: #000000;
     line-height: 22px;
   }
+
   .detail {
     cursor: pointer;
     color: #0d8dff;
   }
+
   tr {
     background: #fff;
     position: relative;
+
     &::after {
       width: calc(100% - 32px);
       background: #e5e5e5;
@@ -667,13 +698,16 @@ function enlarge(url) {
 
       z-index: 1;
     }
+
     &:last-child::after {
       height: 0;
     }
+
     td {
       color: #707070;
     }
   }
+
   .el-table__cell {
     padding: 16px 0;
     font-size: 14px;
@@ -681,12 +715,15 @@ function enlarge(url) {
     line-height: 22px;
   }
 }
+
 :deep(.result-dlg) {
   width: 750px;
 }
+
 :deep(.el-dialog) {
   --el-dialog-margin-top: 30vh;
   z-index: 1000;
+
   .el-dialog__headerbtn {
     top: 16px;
     right: 16px;
@@ -696,9 +733,11 @@ function enlarge(url) {
     align-items: center;
     justify-content: center;
   }
+
   .el-dialog__header {
     padding: 24px 40px;
     justify-content: flex-start;
+
     .el-dialog__title {
       font-size: 18px;
       font-weight: 400;
@@ -706,8 +745,10 @@ function enlarge(url) {
       line-height: 25px;
     }
   }
+
   .el-dialog__body {
     padding: 0px 40px 24px !important;
+
     .history-tip {
       font-size: 14px;
       color: #555555;
@@ -716,6 +757,7 @@ function enlarge(url) {
     }
   }
 }
+
 .map-container {
   position: relative;
 
@@ -726,14 +768,17 @@ function enlarge(url) {
     .cesium-toolbar-button {
       border: none;
       background: none;
+
       &:nth-child(1) {
         display: none;
       }
     }
+
     .cesium-home-button {
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid #444;
     }
+
     .cesium-baseLayerPicker-selected {
       display: none;
     }
@@ -746,28 +791,35 @@ function enlarge(url) {
       transform: translate(-50%, -50%);
     }
   }
+
   :deep(.cesium-geocoder-searchButton) {
     background: none;
   }
+
   :deep(.cesium-viewer-geocoderContainer .cesium-geocoder-input) {
     background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
   }
+
   :deep(.cesium-viewer-bottom) {
     display: none;
   }
+
   :deep(.cesium-viewer-fullscreenContainer) {
     display: none !important;
   }
+
   :deep(.cesium-infoBox) {
     display: none !important;
   }
+
   :deep(.cesium-widget) {
     canvas {
       border-radius: 16px;
     }
   }
 }
+
 .loading-box {
   position: absolute;
   left: 50%;
@@ -779,15 +831,18 @@ function enlarge(url) {
   justify-content: center;
   align-items: center;
   height: 90px;
+
   img {
     width: 60px;
   }
+
   p {
     font-size: 16px;
     color: #ffffff;
     line-height: 22px;
   }
 }
+
 .button-wrap {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -801,17 +856,22 @@ function enlarge(url) {
   position: absolute;
   z-index: 99;
   top: 16px;
+
   &:hover {
     box-shadow: 0 0 8px #fff;
   }
+
   cursor: pointer;
+
   .o-icon {
     margin-right: 8px;
   }
+
   &:hover {
     color: #66e6ff;
   }
 }
+
 .select-button {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -826,23 +886,30 @@ function enlarge(url) {
   z-index: 99;
   top: 16px;
   left: 16px;
+
   &:hover {
     box-shadow: 0 0 8px #fff;
   }
+
   .o-icon {
     margin-right: 8px;
   }
+
   position: absolute;
+
   &:hover {
     color: #66e6ff;
+
     .o-icon {
       color: #66e6ff;
     }
+
     .select-tip {
       display: block;
     }
   }
 }
+
 .select-tip {
   position: absolute;
   top: 52px;
@@ -856,6 +923,7 @@ function enlarge(url) {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+
   .triangle {
     position: absolute;
     top: -16px;
@@ -873,11 +941,13 @@ function enlarge(url) {
   right: 125px;
   display: flex;
   align-items: center;
+
   div {
     display: flex;
     align-items: center;
     line-height: 16px;
   }
+
   .divider {
     margin: 0 7px;
     width: 1px;
@@ -885,9 +955,11 @@ function enlarge(url) {
     border: 1px dashed #979797;
   }
 }
+
 .start-button {
   right: 15px;
 }
+
 .slider {
   position: absolute;
   top: 0px;
@@ -897,6 +969,7 @@ function enlarge(url) {
   height: 100%;
   background-color: #d3d3d3;
 }
+
 .luojia {
   .luojia-top {
     .type {
@@ -905,6 +978,7 @@ function enlarge(url) {
       text-align: center;
       line-height: 48px;
       margin-top: 40px;
+
       @media screen and (max-width: 768px) {
         font-size: 14px;
         height: 22px;
@@ -913,6 +987,7 @@ function enlarge(url) {
         text-align: center;
       }
     }
+
     .desc {
       font-size: 14px;
       font-weight: 400;
@@ -920,6 +995,7 @@ function enlarge(url) {
       text-align: center;
       line-height: 22px;
       margin-top: 16px;
+
       @media screen and (max-width: 768px) {
         height: auto;
         font-size: 12px;
@@ -928,30 +1004,38 @@ function enlarge(url) {
       }
     }
   }
+
   &-bottom {
     margin-top: 24px;
+
     @media screen and (max-width: 768px) {
       display: none;
     }
+
     @media screen and (max-width: 820px) {
       display: none;
     }
+
     .process {
       margin-top: 20px;
       font-size: 14px;
       line-height: 28px;
       font-weight: 400;
       color: #555555;
+
       span {
         margin-left: 4px;
       }
+
       @media screen and (max-width: 768px) {
         display: none;
       }
+
       @media screen and (max-width: 820px) {
         display: none;
       }
     }
+
     .tip {
       font-size: 14px;
       font-weight: 400;
@@ -964,26 +1048,34 @@ function enlarge(url) {
 
 .luojia-mobile {
   display: none;
+
   @media screen and (max-width: 768px) {
     display: block;
   }
+
   @media screen and (max-width: 820px) {
     display: block;
   }
+
   :deep(.el-dialog) {
     --el-dialog-margin-top: 0;
+
     @media screen and (max-width: 820px) {
       overflow: scroll;
     }
+
     @media screen and (max-width: 767px) {
       overflow: hidden;
     }
+
     .el-dialog__body {
       img {
         width: 100%;
       }
+
       // padding: 60px 16px 40px !important;
       margin-top: 0;
+
       @media screen and (max-width: 820px) {
         height: 100%;
         display: flex;
@@ -991,8 +1083,10 @@ function enlarge(url) {
       }
     }
   }
+
   :deep(.el-upload) {
     width: 100%;
+
     .el-upload-dragger {
       width: 100%;
       border: none;
@@ -1003,16 +1097,20 @@ function enlarge(url) {
       align-items: center;
       justify-content: center;
       border: 1px solid #acacac;
+
       @media screen and (max-width: 820px) {
         height: 346px;
         margin: 16px 0;
       }
+
       @media screen and (max-width: 767px) {
         height: 196px;
         margin: 0;
       }
+
       border: 1px solid #acacac;
       background-color: #f5f6f8;
+
       img {
         border: 1px solid #a0d2ff;
         max-height: 100%;
@@ -1021,6 +1119,7 @@ function enlarge(url) {
       }
     }
   }
+
   .empty-status {
     height: 100%;
     display: flex;
@@ -1028,24 +1127,29 @@ function enlarge(url) {
     justify-content: center;
     align-items: center;
     padding: 0 40px;
+
     .o-icon {
       color: #ccc;
       font-size: 48px;
+
       @media screen and (max-width: 820px) {
         font-size: 32px;
       }
     }
+
     .upload-tip {
       font-size: 14px;
       color: #ccc;
       line-height: 22px;
       margin-top: 8px;
+
       span {
         color: #0d8dff;
         white-space: nowrap;
       }
     }
   }
+
   .img-list {
     display: flex;
     background-color: #f5f6f8;
@@ -1053,16 +1157,19 @@ function enlarge(url) {
     align-items: center;
     margin: 16px 0 0;
     position: relative;
+
     .o-icon {
       color: #b2b2b2;
       position: absolute;
       left: -16px;
+
       &:last-child {
         left: unset;
         right: -16px;
         rotate: 180deg;
       }
     }
+
     // width: 100%;
     .img-list-item {
       position: relative;
@@ -1071,15 +1178,18 @@ function enlarge(url) {
       // height: 0;
       // padding-bottom: 100%;
       border: 1px solid transparent;
+
       .img {
         width: 100%;
         height: 0;
         padding-bottom: 100%;
         overflow: hidden;
+
         img {
           width: 180%;
         }
       }
+
       .modal {
         position: absolute;
         left: 0;
@@ -1090,25 +1200,31 @@ function enlarge(url) {
         background: rgba(165, 213, 255, 0.5);
       }
     }
+
     .img-list-item + .img-list-item {
       @media screen and (max-width: 820px) {
         margin-left: 8px;
       }
+
       @media screen and (max-width: 767px) {
         margin-left: 4px;
       }
     }
+
     .active {
       border: 1px solid #a0d2ff;
+
       .modal {
         display: block;
       }
     }
   }
+
   .o-button {
     display: block;
     margin: 16px auto 0;
   }
+
   .history {
     font-size: 14px;
     height: 22px;
@@ -1116,34 +1232,41 @@ function enlarge(url) {
     margin: 24px 0 16px;
     display: flex;
     justify-content: space-between;
+
     span:last-child {
       color: #999;
     }
+
     @media screen and (max-width: 820px) {
       span:last-child {
         font-size: 12px;
       }
     }
   }
+
   .table {
     :deep(.el-table) {
       overflow: auto;
       box-shadow: none;
+
       .el-table__header {
         .el-table__cell {
           height: 36px;
           font-size: 12px;
           line-height: 22px;
+
           .cell {
             padding: 0 10px;
           }
         }
       }
+
       .el-table__body-wrapper {
         .el-table__cell {
           height: 52px;
           font-size: 12px;
           line-height: 22px;
+
           .cell {
             padding: 0 10px;
           }
@@ -1151,30 +1274,36 @@ function enlarge(url) {
       }
     }
   }
+
   .img-detail {
     font-size: 14px;
     height: 22px;
     line-height: 22px;
     margin: 24px 0 16px;
   }
+
   .compare-box {
     img {
       @media screen and (max-width: 820px) {
         width: 300px;
         height: 300px;
       }
+
       @media screen and (max-width: 767px) {
         width: 160px;
         height: 160px;
       }
     }
   }
+
   .el-overlay {
     @media screen and (max-width: 820px) {
       display: none;
+
       .el-overlay-dialog {
         display: none;
       }
+
       .el-dialog {
         display: none;
       }

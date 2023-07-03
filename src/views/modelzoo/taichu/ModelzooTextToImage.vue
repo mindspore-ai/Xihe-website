@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onUnmounted, onMounted } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 
 import { useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -11,13 +11,23 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 import { useI18n } from 'vue-i18n';
-import { ElMessage } from 'element-plus';
-import { getRandom } from '@/shared/utils';
-import useWindowResize from '@/shared/hooks/useWindowResize.js';
-const screenWidth = useWindowResize();
 
 const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
+
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+window.addEventListener('resize', onResize);
 
 const inferUrlList = ref([]);
 
@@ -39,6 +49,44 @@ const lists = [
   { name: t('taichu.IMG_GENERATE.LISTS[14]'), isSelected: false },
 ];
 
+// 随机选取五个样例
+function getRandom(arr, count) {
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index, font, arr) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = font + 'px 微软雅黑';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(t('wukong.BY_AI'), img.width - arr[0], img.height - arr[1]);
+
+    inferUrlList.value[index] = canvas.toDataURL('image/png');
+
+    return inferUrlList.value[index];
+  };
+}
 const exampleList = ref([
   { name: t('taichu.IMG_GENERATE.LISTS[8]'), isSelected: false },
   { name: t('taichu.IMG_GENERATE.LISTS[0]'), isSelected: false },
@@ -63,7 +111,7 @@ function startRatiocnate() {
     }).then((res) => {
       inferUrlList.value = [];
       if (res.data) {
-        inferUrlList.value.push(res.data.picture + '?' + new Date());
+        inferUrlList.value.push(res.data.picture);
         loading1.value = false;
       } else {
         loading1.value = false;
@@ -121,7 +169,9 @@ function startRatiocnate1(num) {
           desc: inferenceText.value,
         }).then((res) => {
           if (res.data) {
-            inferUrlList.value = res.data.pictures;
+            res.data.pictures.forEach((item, index) => {
+              addWatermark(item, index, 14, [100, 16]);
+            });
           } else {
             if (res.code === 'bigmodel_sensitive_info') {
               ElMessage({
@@ -139,7 +189,7 @@ function startRatiocnate1(num) {
           .then((res) => {
             inferUrlList.value = [];
             if (res.data) {
-              inferUrlList.value.push(res.data.picture + '?' + new Date());
+              addWatermark(res.data.picture, 0, 48, [324, 48]);
             } else {
               if (res.code === 'bigmodel_sensitive_info') {
                 ElMessage({
@@ -150,7 +200,7 @@ function startRatiocnate1(num) {
             }
           })
           .catch((err) => {
-            return err;
+            console.error('err: ', err);
           });
       }
     } else {
@@ -162,21 +212,19 @@ function startRatiocnate1(num) {
   }
 }
 
-function downLoadPictures() {
-  inferUrlList.value.forEach((item) => {
-    let x = new XMLHttpRequest();
-    x.open('GET', item, true);
-    x.responseType = 'blob';
-    x.onload = function () {
-      const blobs = new Blob([x.response], { type: 'image/jpg' });
-      let url = window.URL.createObjectURL(blobs);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = 'infer.jpg';
-      a.click();
-    };
-    x.send();
-  });
+function downLoadPictures(index) {
+  let x = new XMLHttpRequest();
+  x.open('GET', inferUrlList.value[index], true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/jpg' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.jpg';
+    a.click();
+  };
+  x.send();
 }
 
 function selectTag(val) {
@@ -201,6 +249,10 @@ function handleTextChange() {
 function refreshTags() {
   exampleList.value = getRandom(lists, 5);
 }
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="model-page">
@@ -211,6 +263,7 @@ function refreshTags() {
         <p class="experience-text">
           {{ t('taichu.IMG_GENERATE.MODEL_DESC') }}
         </p>
+        <span>由AI模型生成</span>
         <div class="content">
           <div class="content-top">
             <el-input
@@ -260,13 +313,13 @@ function refreshTags() {
               {{ t('taichu.IMG_GENERATE.IMG_RESULT') }}
             </p>
             <div class="result">
-              <div v-for="item in inferUrlList" :key="item" class="img-item">
-                <img
-                  :src="item + '?' + new Date()"
-                  class="result-img"
-                  :draggable="false"
-                />
-                <div class="download" @click="downLoadPictures">
+              <div
+                v-for="(item, index) in inferUrlList"
+                :key="item"
+                class="img-item"
+              >
+                <img :src="item" class="result-img" :draggable="false" />
+                <div class="download" @click="downLoadPictures(index)">
                   <div class="icon-item">
                     <o-icon><icon-download></icon-download> </o-icon>
                   </div>

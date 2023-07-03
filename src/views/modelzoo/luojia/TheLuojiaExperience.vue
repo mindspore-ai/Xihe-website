@@ -195,9 +195,9 @@ function handleInferClick(mobile) {
   }
 }
 
-const inputImg = `https://luojianet.obs.cn-central-221.ovaijisuan.com/infer/${userInfoStore.userName}/input.png`;
+const inputImg = `https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/luojianet/infer/${userInfoStore.userName}/input.png`;
 
-const outputImg = `https://luojianet.obs.cn-central-221.ovaijisuan.com/infer/${userInfoStore.userName}/output.png`;
+const outputImg = `https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/luojianet/infer/${userInfoStore.userName}/output.png`;
 
 // 下载图片
 function handleOriImgDownload() {
@@ -233,6 +233,8 @@ function handleHistoryClick() {
     gridData.value.push(historyInfo.value);
     handleLuoJiaHistory().then((res) => {
       if (res.data) {
+        console.log('res.data: ', res.data);
+
         gridData.value = [];
         historyInfo.value.create_at = res.data[0].created_at;
         gridData.value.push(historyInfo.value);
@@ -460,7 +462,7 @@ function enlarge(url) {
     >
       <div class="compare-box">
         <div class="original">
-          <img :src="inputImg + '?' + Math.random()" alt="" />
+          <img :src="inputImg" alt="" />
           <div class="botoom">
             <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
             <div class="download" @click="handleOriImgDownload">
@@ -471,7 +473,7 @@ function enlarge(url) {
         </div>
 
         <div class="result">
-          <img :src="outputImg + '?' + Math.random()" alt="" />
+          <img :src="outputImg" alt="" />
           <div class="botoom">
             <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
             <div class="download" @click="handleResImgDownload">
@@ -565,11 +567,7 @@ function enlarge(url) {
         <div class="img-detail">{{ t('luojia.EXPERIENCE.DETAIL') }}</div>
         <div class="compare-box">
           <div class="original">
-            <img
-              :src="inputImg + '?' + Math.random()"
-              alt=""
-              @click="enlarge(inputImg + '?' + Math.random())"
-            />
+            <img :src="inputImg" alt="" @click="enlarge(inputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
               <!-- <div class="download" @click="handleOriImgDownload">
@@ -579,11 +577,7 @@ function enlarge(url) {
             </div>
           </div>
           <div class="result">
-            <img
-              :src="outputImg + '?' + Math.random()"
-              alt=""
-              @click="enlarge(outputImg + '?' + Math.random())"
-            />
+            <img :src="outputImg" alt="" @click="enlarge(outputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
               <!-- <div class="download" @click="handleResImgDownload">

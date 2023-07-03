@@ -28,18 +28,18 @@ const prop = defineProps({
   },
 });
 function goExperience() {
-  // router.push(`${prop.path}`);
-  if (prop.path === '/modelzoo/taichu') {
-    ElMessage({
-      type: 'warning',
-      message: '大模型升级中，敬请期待！',
-      duration: 3000,
-      offset: 64,
-      center: true,
-    });
-  } else {
-    window.open(`${prop.path}`);
-  }
+  router.push(`${prop.path}`);
+  // if (prop.path === '/modelzoo/taichu') {
+  //   ElMessage({
+  //     type: 'warning',
+  //     message: '大模型升级中，敬请期待！',
+  //     duration: 3000,
+  //     offset: 64,
+  //     center: true,
+  //   });
+  // } else {
+  //   window.open(`${prop.path}`);
+  // }
 }
 function goIntroduction() {
   router.push(`${prop.path}/introduce`);

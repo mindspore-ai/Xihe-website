@@ -703,7 +703,7 @@ watch(
                 <o-icon>
                   <icon-time> </icon-time>
                 </o-icon>
-                <p>{{ detailData.updated_at.replaceAll('-', '.') }}</p>
+                <p>{{ detailData.updated_at.replace(/-/g, '.') }}</p>
               </div>
             </div>
             <div class="label-box">
@@ -1470,6 +1470,7 @@ $theme: #0d8dff;
           display: flex;
           .el-tabs__item {
             cursor: pointer;
+            // background-color: red;
             &:hover {
               .el-dropdown {
                 color: #3d8df7;
@@ -1482,7 +1483,6 @@ $theme: #0d8dff;
             }
           }
           .el-dropdown {
-            height: 100%;
             line-height: 48px;
             color: #555;
             font-size: 16px;

@@ -79,7 +79,7 @@ function addWatermark(imgUrl, index, font, arr) {
     ctx.drawImage(img, 0, 0, img.width, img.height);
 
     ctx.font = font + 'px 微软雅黑';
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = 'rgba(245,245,245,0.8)';
     ctx.fillText(t('wukong.BY_AI'), img.width - arr[0], img.height - arr[1]);
 
     inferUrlList.value[index] = canvas.toDataURL('image/png');

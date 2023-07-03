@@ -164,8 +164,16 @@ function customUpload() {
         <div class="caption-bottom">
           <div class="caption-bottom-left">
             <div>
-              <el-upload drag action="" :multiple="false" list-type="picture" :file-list="fileList" :auto-upload="false"
-                :show-file-list="false" :on-change="handleChange">
+              <el-upload
+                drag
+                action=""
+                :multiple="false"
+                list-type="picture"
+                :file-list="fileList"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="handleChange"
+              >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <div v-else class="empty-status">
                   <o-icon><icon-upload></icon-upload></o-icon>
@@ -177,8 +185,13 @@ function customUpload() {
             </div>
 
             <div class="img-list">
-              <div v-for="(item, index) in imgLists" :key="item" class="img-list-item"
-                :class="item.id === activeIndex ? 'active' : ''" @click="selectImage(item.url, index)">
+              <div
+                v-for="(item, index) in imgLists"
+                :key="item"
+                class="img-list-item"
+                :class="item.id === activeIndex ? 'active' : ''"
+                @click="selectImage(item.url, index)"
+              >
                 <img draggable="false" :src="getImage(item.url)" />
               </div>
               <div class="img-list-item custom" @click="customUpload">
@@ -197,8 +210,14 @@ function customUpload() {
             <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
             <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
             <div class="experience-btn">
-              <o-button v-if="!loading" type="primary" size="small" :disabled="loading" @click="submitUpload">{{
-                t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button>
+              <o-button
+                v-if="!loading"
+                type="primary"
+                size="small"
+                :disabled="loading"
+                @click="submitUpload"
+                >{{ t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button
+              >
             </div>
           </div>
         </div>
@@ -210,8 +229,17 @@ function customUpload() {
           {{ t('taichu.IMAGE_CAPTION.DESCRIPTION') }}
         </div>
         <div class="image-upload">
-          <el-upload drag action="" :multiple="false" accept=".png,.jpeg,.jpg" list-type="picture" :file-list="fileList"
-            :auto-upload="false" :show-file-list="false" :on-change="handleChange">
+          <el-upload
+            drag
+            action=""
+            :multiple="false"
+            accept=".png,.jpeg,.jpg"
+            list-type="picture"
+            :file-list="fileList"
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleChange"
+          >
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <div v-else class="empty-status">
               <o-icon><icon-upload></icon-upload></o-icon>
@@ -226,8 +254,13 @@ function customUpload() {
         </div>
 
         <div class="img-list">
-          <div v-for="(item, index) in imgLists" :key="item" class="img-list-item"
-            :class="item.id === activeIndex ? 'active' : ''" @click="selectImage(item.url, index)">
+          <div
+            v-for="(item, index) in imgLists"
+            :key="item"
+            class="img-list-item"
+            :class="item.id === activeIndex ? 'active' : ''"
+            @click="selectImage(item.url, index)"
+          >
             <img draggable="false" :src="getImage(item.url)" />
           </div>
           <div class="img-list-item custom" @click="customUpload">
@@ -246,8 +279,13 @@ function customUpload() {
         </div> -->
 
         <div class="mobile-btn">
-          <o-button type="primary" size="mini" :disabled="loading" @click="submitUpload">{{
-            t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button>
+          <o-button
+            type="primary"
+            size="mini"
+            :disabled="loading"
+            @click="submitUpload"
+            >{{ t('taichu.IMAGE_CAPTION.START_INFER') }}</o-button
+          >
         </div>
       </div>
     </div>

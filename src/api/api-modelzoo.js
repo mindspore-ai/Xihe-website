@@ -156,7 +156,6 @@ export function handleLuojiaUploadPic(params) {
   const url = '/server/bigmodel/luojia_upload_picture';
   return request
     .post(url, params, {
-      $noLoading: true,
       headers: {
         'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',

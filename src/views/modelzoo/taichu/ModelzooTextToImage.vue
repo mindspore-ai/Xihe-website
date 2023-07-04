@@ -64,7 +64,29 @@ function getRandom(arr, count) {
   }
   return shuffled.slice(min);
 }
+// 给生成图片加文字水印
+function addWatermark(imgUrl, index, font, arr) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imgUrl;
 
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    ctx.font = font + 'px 微软雅黑';
+    ctx.fillStyle = 'rgba(245,245,245,0.8)';
+    ctx.fillText(t('wukong.BY_AI'), img.width - arr[0], img.height - arr[1]);
+
+    inferUrlList.value[index] = canvas.toDataURL('image/png');
+
+    return inferUrlList.value[index];
+  };
+}
 const exampleList = ref([
   { name: t('taichu.IMG_GENERATE.LISTS[8]'), isSelected: false },
   { name: t('taichu.IMG_GENERATE.LISTS[0]'), isSelected: false },
@@ -89,7 +111,7 @@ function startRatiocnate() {
     }).then((res) => {
       inferUrlList.value = [];
       if (res.data) {
-        inferUrlList.value.push(res.data.picture + '?' + new Date());
+        inferUrlList.value.push(res.data.picture);
         loading1.value = false;
       } else {
         loading1.value = false;
@@ -147,7 +169,9 @@ function startRatiocnate1(num) {
           desc: inferenceText.value,
         }).then((res) => {
           if (res.data) {
-            inferUrlList.value = res.data.pictures;
+            res.data.pictures.forEach((item, index) => {
+              addWatermark(item, index, 14, [100, 16]);
+            });
           } else {
             if (res.code === 'bigmodel_sensitive_info') {
               ElMessage({
@@ -164,9 +188,8 @@ function startRatiocnate1(num) {
         })
           .then((res) => {
             inferUrlList.value = [];
-            // inferenceText.value = '';
             if (res.data) {
-              inferUrlList.value.push(res.data.picture + '?' + new Date());
+              addWatermark(res.data.picture, 0, 48, [324, 48]);
             } else {
               if (res.code === 'bigmodel_sensitive_info') {
                 ElMessage({
@@ -189,21 +212,19 @@ function startRatiocnate1(num) {
   }
 }
 
-function downLoadPictures() {
-  inferUrlList.value.forEach((item) => {
-    let x = new XMLHttpRequest();
-    x.open('GET', item, true);
-    x.responseType = 'blob';
-    x.onload = function () {
-      const blobs = new Blob([x.response], { type: 'image/jpg' });
-      let url = window.URL.createObjectURL(blobs);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = 'infer.jpg';
-      a.click();
-    };
-    x.send();
-  });
+function downLoadPictures(index) {
+  let x = new XMLHttpRequest();
+  x.open('GET', inferUrlList.value[index], true);
+  x.responseType = 'blob';
+  x.onload = function () {
+    const blobs = new Blob([x.response], { type: 'image/jpg' });
+    let url = window.URL.createObjectURL(blobs);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'infer.jpg';
+    a.click();
+  };
+  x.send();
 }
 
 function selectTag(val) {
@@ -242,6 +263,7 @@ onUnmounted(() => {
         <p class="experience-text">
           {{ t('taichu.IMG_GENERATE.MODEL_DESC') }}
         </p>
+        <span>由AI模型生成</span>
         <div class="content">
           <div class="content-top">
             <el-input
@@ -291,13 +313,13 @@ onUnmounted(() => {
               {{ t('taichu.IMG_GENERATE.IMG_RESULT') }}
             </p>
             <div class="result">
-              <div v-for="item in inferUrlList" :key="item" class="img-item">
-                <img
-                  :src="item + '?' + new Date()"
-                  class="result-img"
-                  :draggable="false"
-                />
-                <div class="download" @click="downLoadPictures">
+              <div
+                v-for="(item, index) in inferUrlList"
+                :key="item"
+                class="img-item"
+              >
+                <img :src="item" class="result-img" :draggable="false" />
+                <div class="download" @click="downLoadPictures(index)">
                   <div class="icon-item">
                     <o-icon><icon-download></icon-download> </o-icon>
                   </div>

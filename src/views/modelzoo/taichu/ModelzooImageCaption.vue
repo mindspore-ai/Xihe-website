@@ -164,8 +164,16 @@ function customUpload() {
         <div class="caption-bottom">
           <div class="caption-bottom-left">
             <div>
-              <el-upload drag action="" :multiple="false" list-type="picture" :file-list="fileList" :auto-upload="false"
-                :show-file-list="false" :on-change="handleChange">
+              <el-upload
+                drag
+                action=""
+                :multiple="false"
+                list-type="picture"
+                :file-list="fileList"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="handleChange"
+              >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <div v-else class="empty-status">
                   <o-icon><icon-upload></icon-upload></o-icon>

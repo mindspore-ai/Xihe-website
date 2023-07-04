@@ -21,6 +21,8 @@ import { Autoplay, FreeMode } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
+import qrCode from '@/assets/imgs/estate/qr-code.png';
+
 // 合作伙伴图片
 import logo1 from '@/assets/imgs/estate/logo/logo1.png';
 import logo2 from '@/assets/imgs/estate/logo/logo2.png';
@@ -266,6 +268,9 @@ watch(tagKinds, (newValue) => {
       </swiper>
     </div>
   </div>
+  <div class="qr-code">
+    <img :src="qrCode" alt="" />
+  </div>
 </template>
 <style lang="scss" scoped>
 .electricity {
@@ -496,6 +501,18 @@ watch(tagKinds, (newValue) => {
     -o-transition-timing-function: linear;
     transition-timing-function: linear;
     margin: 0 auto;
+  }
+}
+.qr-code {
+  width: 86px;
+  height: 159px;
+  position: fixed;
+  z-index: 1;
+  top: 60vh;
+  right: 40px;
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

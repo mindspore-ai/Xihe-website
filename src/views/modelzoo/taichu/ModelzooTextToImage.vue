@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onUnmounted, onMounted } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 
 import { useLoginStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
@@ -16,6 +16,20 @@ import { getRandom } from '@/shared/utils';
 
 const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
+
+const screenWidth = ref(
+  window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+
+const onResize = () => {
+  screenWidth.value =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+};
+window.addEventListener('resize', onResize);
 
 const inferUrlList = ref([]);
 
@@ -173,7 +187,7 @@ function startRatiocnate1(num) {
             }
           })
           .catch((err) => {
-            return err;
+            console.error('err: ', err);
           });
       }
     } else {
@@ -222,6 +236,10 @@ function handleTextChange() {
 function refreshTags() {
   exampleList.value = getRandom(lists, 5);
 }
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 </script>
 <template>
   <div class="model-page">

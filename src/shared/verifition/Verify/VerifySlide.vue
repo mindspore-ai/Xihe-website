@@ -164,7 +164,7 @@ export default {
     const { mode, captchaType, type, blockSize } = toRefs(props);
     const explain = computed(() => '向右滑动完成验证');
     const { proxy } = getCurrentInstance();
-    const secretKey = ref(''), // 后端返回的ase加密秘钥
+    const secretKey = ref(''), // 后端返回的ase加密
       passFlag = ref(''), // 是否通过的标识
       backImgBase = ref(''), // 验证码背景图片
       blockBackImgBase = ref(''), // 验证滑块的背景图片
@@ -426,7 +426,7 @@ export default {
     });
 
     return {
-      secretKey, // 后端返回的ase加密秘钥
+      secretKey, // 后端返回的ase加密
       passFlag, // 是否通过的标识
       backImgBase, // 验证码背景图片
       blockBackImgBase, // 验证滑块的背景图片

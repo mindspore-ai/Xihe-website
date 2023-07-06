@@ -1,16 +1,5 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { getHeaderConfig } from '@/shared/login';
 
 export function getCourseList({ status = undefined, type = undefined } = {}) {
   const queryParams = {};

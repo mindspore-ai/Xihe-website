@@ -1,20 +1,9 @@
 import { request } from '@/shared/axios';
 import { useUserInfoStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 
 function getUserInfo() {
   return useUserInfoStore();
-}
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
 }
 
 /**

@@ -32,7 +32,7 @@ import DeleteTask from '@/components/TaskDelete.vue';
 import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -40,17 +40,6 @@ import {
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 const router = useRouter();
 const DOMAIN = import.meta.env.VITE_DOMAIN;

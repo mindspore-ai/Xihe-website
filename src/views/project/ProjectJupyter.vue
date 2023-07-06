@@ -7,7 +7,7 @@ import IconBack from '~icons/app/left';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 
 import { timestampToTime } from '@/shared/utils';
 
@@ -19,17 +19,6 @@ import {
 import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 const isLogined = computed(() => useLoginStore().isLogined);
 

@@ -3,7 +3,7 @@ import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import { useRouter, useRoute } from 'vue-router';
 import { useFileData, useUserInfoStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { formatSeconds } from '@/shared/utils';
 
 import OButton from '@/components/OButton.vue';
@@ -71,17 +71,6 @@ const projectId = detailData.value.id;
 const isAuthentic = computed(() => {
   return route.params.user === userInfoStore.userName;
 });
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {

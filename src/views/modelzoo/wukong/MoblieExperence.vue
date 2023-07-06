@@ -52,7 +52,7 @@ import {
   cancelPublic,
   getPic,
 } from '@/api/api-modelzoo.js';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useRouter } from 'vue-router';
@@ -177,16 +177,6 @@ function addWatermark(imgUrl, index) {
   };
 }
 
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 let token = getHeaderConfig().headers
   ? getHeaderConfig().headers['csrf-token']
   : null;

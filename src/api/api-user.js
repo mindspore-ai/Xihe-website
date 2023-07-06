@@ -1,16 +1,5 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS, saveUserAuth } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { saveUserAuth, getHeaderConfig } from '@/shared/login';
 
 export function buildAuthenticationClient(params) {
   const url = '/oneid/oidc/authorize';

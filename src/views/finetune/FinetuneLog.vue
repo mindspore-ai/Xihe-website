@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { getFinetuneList, getFinetuneLog } from '@/api/api-finetune';
 import { useFinetuneData } from '@/stores';
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -14,17 +14,6 @@ const route = useRoute();
 const finetuneData = ref([]); // 当前微调任务信息
 const finetuneLog = ref('');
 const userFinetune = useFinetuneData();
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 // 日志
 const socket = new WebSocket(

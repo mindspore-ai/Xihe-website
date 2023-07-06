@@ -27,17 +27,7 @@ import agreement from '@/assets/statement/guide.md?raw';
 import MdStatement from '@/components/MdStatement.vue';
 import { useFileData } from '@/stores';
 import { ElMessage } from 'element-plus';
-import { LOGIN_KEYS } from '@/shared/login';
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { getHeaderConfig } from '@/shared/login';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 

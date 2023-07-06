@@ -2,22 +2,11 @@ import { request } from '@/shared/axios';
 import { Base64 } from 'js-base64';
 
 import { useUserInfoStore, useLoginStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 
 function getUserInfo() {
   return useUserInfoStore();
-}
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
 }
 
 export function getGitlabToken() {

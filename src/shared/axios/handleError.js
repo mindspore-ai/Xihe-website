@@ -1,12 +1,5 @@
-import { LOGIN_KEYS } from '@/shared/login';
 export default (err) => {
   const { response } = err;
-
-  if (response.headers['csrf-token'] && response.status !== 404) {
-    let code = response.headers['csrf-token'];
-    localStorage.setItem(LOGIN_KEYS.SERVE_CODE, code);
-  }
-
   if (!response.status) {
     err.status = '';
     err.code = '';

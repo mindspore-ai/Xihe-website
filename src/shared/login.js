@@ -4,10 +4,23 @@ import {
   queryUserIdToken,
 } from '@/api/api-user';
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import Cookies from 'js-cookie';
 
 const APP_ID = import.meta.env.VITE_APP_ID;
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
 const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
+
+// header
+export function getHeaderConfig() {
+  const headersConfig = Cookies.get(LOGIN_KEYS.SERVE_CODE)
+    ? {
+        headers: {
+          'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
+        },
+      }
+    : {};
+  return headersConfig;
+}
 
 // 登录事件
 export const LOGIN_EVENTS = {
@@ -26,7 +39,7 @@ export const LOGIN_STATUS = {
 };
 
 export const LOGIN_KEYS = {
-  SERVE_CODE: '_XIHE_C_T_',
+  SERVE_CODE: 'CSRF-Token',
 };
 
 // 修改pinia登录状态
@@ -68,11 +81,8 @@ async function getUserToken(params) {
 // 存储用户token至本地，用于下次登录
 export function saveUserAuth(code) {
   if (!code) {
-    localStorage.removeItem(LOGIN_KEYS.SERVE_CODE);
     const userInfoStore = useUserInfoStore();
     userInfoStore.$reset();
-  } else {
-    localStorage.setItem(LOGIN_KEYS.SERVE_CODE, code);
   }
 }
 
@@ -108,7 +118,7 @@ function afterLogined(userInfo) {
 // 获取本地token
 export function getUserAuth() {
   return {
-    token: localStorage.getItem(LOGIN_KEYS.SERVE_CODE) || '',
+    token: Cookies.get(LOGIN_KEYS.SERVE_CODE) || '',
   };
 }
 
@@ -149,7 +159,7 @@ export async function requestUserInfo() {
     }
   }
 }
-
+console.log(Cookies.get(LOGIN_KEYS.SERVE_CODE));
 // 登录
 export async function doLogin() {
   const query = getUrlParam();

@@ -6,26 +6,29 @@ import algorithmImg from '@/assets/imgs/estate/industry/algorithm.png';
 import codeImg from '@/assets/imgs/estate/industry/code-intelligence.png';
 // import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const router = useRouter();
 const cases = [
   {
     id: 0,
-    type: '低码智能视频使能平台',
-    name: '行业首个低码智能视频使能平台，赋能工业安全数字化转型。',
+    type: t('industry.CASES[0].NAME'),
+    name: t('industry.CASES[0].DESC'),
     image: codeImg,
     url: '/industry/intelligence',
   },
   {
     id: 1,
-    type: '工业AI算法库READ',
-    name: 'READ专注于研发与集成基于无监督监督学习的大规模异常检测算法和模型，重点解决工业质检中小样本和数据…',
+    type: t('industry.CASES[1].NAME'),
+    name: t('industry.CASES[1].DESC'),
     image: algorithmImg,
     url: '/industry/algorithm',
   },
   {
     id: 2,
-    type: '金属零部件缺陷检测',
-    name: '金属零部件作为系统的关键连接件，需对存在瑕疵的零部件需被准确并高效地检出，不可流入市场销售。',
+    type: t('industry.CASES[2].NAME'),
+    name: t('industry.CASES[2].DESC'),
     image: hostImg,
     url: '/industry/metal-part',
   },
@@ -40,14 +43,14 @@ function goCasePath(item) {
     <div class="industry-head">
       <!-- <img :src="estateBanner" alt="" /> -->
       <div class="industry-banner">
-        <div class="banner-title">昇思大模型平台助力产业发展</div>
+        <div class="banner-title">{{ t('industry.TITLE') }}</div>
         <div class="banner-desc">
-          昇思MindSpore广泛应用在互联网、零售、电力、工业、医疗、安防监控、物流等行业场景中
+          {{ t('industry.DESCRIPTION') }}
         </div>
       </div>
     </div>
     <div class="industry-wrapper">
-      <p class="application-cases">应用案例</p>
+      <p class="application-cases">{{ t('industry.APPLICATION_CASE') }}</p>
 
       <div class="case-cards">
         <div

@@ -36,6 +36,8 @@ import {
   deleteModel,
 } from '@/api/api-project';
 
+const MATHJSX = import.meta.env.VITE_MATH_JSX;
+
 const TypeSet = async function (elements) {
   if (!window.MathJax) {
     return;
@@ -44,7 +46,9 @@ const TypeSet = async function (elements) {
     .then(() => {
       return window.MathJax.typesetPromise(elements);
     })
-    .catch((err) => console.error('Typeset failed: ' + err.message));
+    .catch((err) => {
+      return err;
+    });
   return window.MathJax.startup.promise;
 };
 let head = document.head;
@@ -53,10 +57,7 @@ let script = document.createElement('script');
 script.setAttribute('type', 'text/javascript');
 script.setAttribute('id', 'MathJax-script');
 script.setAttribute('async', '');
-script.setAttribute(
-  'src',
-  'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
-);
+script.setAttribute('src', MATHJSX);
 let code =
   'MathJax = {' +
   '  tex: {' +
@@ -157,10 +158,10 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 route.hash ? getReadMeFile() : '';
@@ -174,7 +175,7 @@ function getTrainList() {
 if (userInfo.userName === detailData.value.owner) {
   getTrainList();
 }
-//跳转到选择文件创建训练实例页
+// 跳转到选择文件创建训练实例页
 function goSelectFile() {
   if (trainListData.value !== null && trainListData.value.length === 5) {
     describe.value = i18n.describe2;

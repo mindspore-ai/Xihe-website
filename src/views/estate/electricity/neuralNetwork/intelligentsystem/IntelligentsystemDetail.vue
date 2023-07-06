@@ -10,10 +10,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const router = useRouter();
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
+
 function goDetail() {
   router.push('/projects/yyj/intelligent-system');
 }

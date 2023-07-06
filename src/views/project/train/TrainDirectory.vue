@@ -50,7 +50,7 @@ async function getDirData(dirPath2) {
       }
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 function getDirByPath(item) {
@@ -88,7 +88,7 @@ async function getFileData(dirPath2) {
       }
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 function getFileByPath(item) {

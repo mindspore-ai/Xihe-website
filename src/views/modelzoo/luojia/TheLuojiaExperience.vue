@@ -42,7 +42,6 @@ const historyInfo = ref({
 const cesiumContainer = ref('');
 const viewer = ref(null);
 const nowModelName = ref('高德影像');
-const zoomlv = ref(18);
 
 const isSelected = ref(false);
 const tblob = ref(null);
@@ -79,8 +78,7 @@ async function handleDrawClick() {
 
         tblob.value = await rectToImg(
           ltpoint,
-          rbpoint,
-          zoomlv.value,
+          rbpoint, // zoomlv.value,
           nowModelName.value
         );
 
@@ -102,53 +100,22 @@ const fileList = ref([]);
 const activeIndex = ref(-1);
 const analysis = ref('');
 const imageUrl = ref('');
-
-// 1. 未选区域，点击识别提示，不发请求
-// 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
-function handleInferClick(mobile) {
-  if (loadingText.value === t('luojia.EXPERIENCE.LOADING_TEXT')) {
-    ElMessage({
-      type: 'warning',
-      message: t('luojia.EXPERIENCE.WARNING_MSG2'),
-    });
-    return;
-  }
-  handleMobile(mobile);
-  if (isInfer.value) {
-    isShow.value = true;
-    loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
-    if (mobile === 'mobile') {
-      formData.append('picture', fileList.value[0].raw);
+function handleMobile(mobile) {
+  if (mobile === 'mobile') {
+    activeIndex1.value = -1;
+    if (!isLogined.value) {
+      goAuthorize();
     } else {
-      formData = new FormData();
-      formData.append('picture', tblob.value);
-    }
-    // 上传图片到obs;
-    handleLuojiaUploadPic(formData).then((res) => {
-      if (res.data.data) {
-        loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT2');
-        handleLuoJiaInfer().then((res) => {
-          isShow.value = false;
-          handleRes(mobile, res);
-        });
+      if (fileList.value[0]) {
+        isInfer.value = true;
       } else {
-        isShow.value = false;
         ElMessage({
-          type: 'error',
-          message: res.data.msg,
+          type: 'warning',
+          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
         });
+        return;
       }
-    });
-  } else if (!isInfer.value && mobile !== 'mobile') {
-    ElMessage({
-      type: 'warning',
-      message: t('luojia.EXPERIENCE.WARNING_MSG4'),
-    });
-  } else if (isSelected.value && !isInfer.value && mobile !== 'mobile') {
-    ElMessage({
-      type: 'warning',
-      message: t('luojia.EXPERIENCE.WARNING_MSG5'),
-    });
+    }
   }
 }
 function handleRes(mobile, res) {
@@ -190,22 +157,52 @@ function handleRes(mobile, res) {
     }
   }
 }
-function handleMobile(mobile) {
-  if (mobile === 'mobile') {
-    activeIndex1.value = -1;
-    if (!isLogined.value) {
-      goAuthorize();
+// 1. 未选区域，点击识别提示，不发请求
+// 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
+function handleInferClick(mobile) {
+  if (loadingText.value === t('luojia.EXPERIENCE.LOADING_TEXT')) {
+    ElMessage({
+      type: 'warning',
+      message: t('luojia.EXPERIENCE.WARNING_MSG2'),
+    });
+    return;
+  }
+  handleMobile(mobile);
+  if (isInfer.value) {
+    isShow.value = true;
+    loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
+    if (mobile === 'mobile') {
+      formData.append('picture', fileList.value[0].raw);
     } else {
-      if (fileList.value[0]) {
-        isInfer.value = true;
-      } else {
-        ElMessage({
-          type: 'warning',
-          message: t('luojia.EXPERIENCE.WARNING_MSG3'),
-        });
-        return;
-      }
+      formData = new FormData();
+      formData.append('picture', tblob.value);
     }
+    // 上传图片到obs;
+    handleLuojiaUploadPic(formData).then((res) => {
+      if (res.data.data) {
+        loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT2');
+        handleLuoJiaInfer().then((res) => {
+          isShow.value = false;
+          handleRes(mobile, res);
+        });
+      } else {
+        isShow.value = false;
+        ElMessage({
+          type: 'error',
+          message: res.data.msg,
+        });
+      }
+    });
+  } else if (!isInfer.value && mobile !== 'mobile') {
+    ElMessage({
+      type: 'warning',
+      message: t('luojia.EXPERIENCE.WARNING_MSG4'),
+    });
+  } else if (isSelected.value) {
+    ElMessage({
+      type: 'warning',
+      message: t('luojia.EXPERIENCE.WARNING_MSG5'),
+    });
   }
 }
 

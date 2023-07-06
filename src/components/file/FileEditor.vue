@@ -128,7 +128,7 @@ function verifyFile() {
       }
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 verifyFile();

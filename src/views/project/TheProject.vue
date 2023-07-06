@@ -233,7 +233,7 @@ function handleNavClick(item) {
     good: { level: 'good', tags: null },
     electricity: { level: null, tags: 'electricity' },
   };
-  if (levelMap.hasOwnProperty(item.id)) {
+  if (item.id in levelMap) {
     queryData.level = levelMap[item.id].level;
     queryData.tags = levelMap[item.id].tags;
   }
@@ -1201,7 +1201,6 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        // width: 100%;
         .project-tags {
           display: flex;
           align-items: center;

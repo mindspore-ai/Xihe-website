@@ -63,7 +63,7 @@ function getFollow(name) {
         getFansList();
       });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   }
 }
@@ -77,7 +77,7 @@ function cancelFollow(name) {
       getFansList();
     });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 

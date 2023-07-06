@@ -2,10 +2,10 @@ import { request } from '@/shared/axios';
 import { LOGIN_KEYS } from '@/shared/login';
 
 function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
     ? {
         headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         },
       }
     : {};
@@ -354,23 +354,6 @@ export function getLog(pk) {
   const url = `/api/projects/${pk}/inference/errorlog/`;
   return request
     .get(url, getHeaderConfig())
-    .then((res) => {
-      return res;
-    })
-    .catch((e) => {
-      return e;
-    });
-}
-
-/**
- * 获取用户指引
- * @returns
- */
-export function getGuide() {
-  const url =
-    'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/default_docs/README.md';
-  return request
-    .get(url)
     .then((res) => {
       return res;
     })

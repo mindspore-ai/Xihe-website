@@ -1,15 +1,15 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@element-plus/icons-vue': ^1.1.4
+  '@element-plus/icons-vue': ^2.0.10
   '@vitejs/plugin-vue': ^2.3.1
   '@vue/eslint-config-prettier': ^7.0.0
   aos: ^2.3.4
   authing-js-sdk: ^4.23.35
-  axios: ^0.26.1
+  axios: ^1.3.4
   cesium: ^1.98.1
   crypto-js: ^4.1.1
-  element-plus: ^2.2.26
+  element-plus: ^2.2.34
   eslint: ^8.13.0
   eslint-plugin-prettier: ^4.0.0
   eslint-plugin-vue: ^8.6.0
@@ -19,16 +19,16 @@ specifiers:
   js-base64: ^3.7.2
   lodash: ^4.17.21
   markdown-it: ^12.3.2
-  markdown-it-anchor: ^8.6.4
+  markdown-it-anchor: ^8.6.6
   markdown-it-for-inline: ^0.1.1
   markdown-it-sanitizer: ^0.4.3
   markdown-it-toc: ^1.1.0
   moment: ^2.29.4
-  monaco-editor: ^0.33.0
+  monaco-editor: ^0.34.1
   normalize.css: ^8.0.1
-  pinia: ^2.0.13
+  pinia: ^2.0.33
   prettier: ^2.6.2
-  sass: ^1.50.0
+  sass: ^1.62.0
   swiper: ^8.4.2
   unplugin-auto-import: ^0.7.1
   unplugin-element-plus: ^0.4.0
@@ -36,20 +36,20 @@ specifiers:
   unplugin-vue-components: ^0.19.3
   vite: ^2.9.5
   vite-plugin-cesium: ^1.1.1
-  vue: ^3.2.25
+  vue: ^3.2.47
   vue-clipboard3: ^2.0.0
   vue-dompurify-html: ^4.0.0
   vue-i18n: ^9.2.2
-  vue-router: ^4.0.14
+  vue-router: ^4.1.6
 
 dependencies:
-  '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/1.1.4_vue@3.3.4
+  '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.0.10_vue@3.3.4
   aos: registry.npmmirror.com/aos/2.3.4
   authing-js-sdk: registry.npmmirror.com/authing-js-sdk/4.23.35
-  axios: registry.npmmirror.com/axios/0.26.1
+  axios: registry.npmmirror.com/axios/1.4.0
   cesium: 1.98.1
   crypto-js: 4.1.1
-  element-plus: registry.npmmirror.com/element-plus/2.2.26_vue@3.3.4
+  element-plus: registry.npmmirror.com/element-plus/2.3.7_vue@3.3.4
   highlight.js: 11.5.1
   html2canvas: 1.4.1
   js-base64: 3.7.2
@@ -60,7 +60,7 @@ dependencies:
   markdown-it-sanitizer: registry.npmmirror.com/markdown-it-sanitizer/0.4.3
   markdown-it-toc: 1.1.0
   moment: registry.npmmirror.com/moment/2.29.4
-  monaco-editor: registry.npmmirror.com/monaco-editor/0.33.0
+  monaco-editor: registry.npmmirror.com/monaco-editor/0.34.1
   normalize.css: 8.0.1
   pinia: registry.npmmirror.com/pinia/2.1.3_vue@3.3.4
   sass: registry.npmmirror.com/sass/1.63.3
@@ -69,7 +69,7 @@ dependencies:
   vue-clipboard3: registry.npmmirror.com/vue-clipboard3/2.0.0
   vue-dompurify-html: registry.npmmirror.com/vue-dompurify-html/4.0.0_vue@3.3.4
   vue-i18n: 9.2.2_vue@3.3.4
-  vue-router: registry.npmmirror.com/vue-router/4.0.14_vue@3.3.4
+  vue-router: registry.npmmirror.com/vue-router/4.2.2_vue@3.3.4
 
 devDependencies:
   '@vitejs/plugin-vue': 2.3.1_vite@2.9.5+vue@3.3.4
@@ -1880,17 +1880,6 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  registry.npmmirror.com/@element-plus/icons-vue/1.1.4_vue@3.3.4:
-    resolution: {integrity: sha512-Iz/nHqdp1sFPmdzRwHkEQQA3lKvoObk8azgABZ81QUOpW9s/lUyQVUSh0tNtEPZXQlKwlSh7SPgoVxzrE0uuVQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@element-plus/icons-vue/-/icons-vue-1.1.4.tgz}
-    id: registry.npmmirror.com/@element-plus/icons-vue/1.1.4
-    name: '@element-plus/icons-vue'
-    version: 1.1.4
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      vue: registry.npmmirror.com/vue/3.3.4
-    dev: false
-
   registry.npmmirror.com/@element-plus/icons-vue/2.0.10_vue@3.3.4:
     resolution: {integrity: sha512-ygEZ1mwPjcPo/OulhzLE7mtDrQBWI8vZzEWSNB2W/RNCRjoQGwbaK4N8lV4rid7Ts4qvySU3njMN7YCiSlSaTQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@element-plus/icons-vue/-/icons-vue-2.0.10.tgz}
     id: registry.npmmirror.com/@element-plus/icons-vue/2.0.10
@@ -2115,6 +2104,12 @@ packages:
     version: 4.2.5
     dev: false
 
+  registry.npmmirror.com/asynckit/0.4.0:
+    resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/asynckit/-/asynckit-0.4.0.tgz}
+    name: asynckit
+    version: 0.4.0
+    dev: false
+
   registry.npmmirror.com/authing-js-sdk/4.23.35:
     resolution: {integrity: sha512-EdrDl1tczeInFc/NGqO4dasl8BZTSLDnduv4rTMw9bIuBb5Ko+4SDmbag1bZpSCpclbTBSmLDTD/6bCtgx6YAQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/authing-js-sdk/-/authing-js-sdk-4.23.35.tgz}
     name: authing-js-sdk
@@ -2141,12 +2136,14 @@ packages:
       - supports-color
     dev: false
 
-  registry.npmmirror.com/axios/0.26.1:
-    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios/-/axios-0.26.1.tgz}
+  registry.npmmirror.com/axios/1.4.0:
+    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios/-/axios-1.4.0.tgz}
     name: axios
-    version: 0.26.1
+    version: 1.4.0
     dependencies:
       follow-redirects: registry.npmmirror.com/follow-redirects/1.15.2
+      form-data: registry.npmmirror.com/form-data/4.0.0
+      proxy-from-env: registry.npmmirror.com/proxy-from-env/1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -2197,6 +2194,15 @@ packages:
       tiny-emitter: registry.npmmirror.com/tiny-emitter/2.1.0
     dev: false
 
+  registry.npmmirror.com/combined-stream/1.0.8:
+    resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/combined-stream/-/combined-stream-1.0.8.tgz}
+    name: combined-stream
+    version: 1.0.8
+    engines: {node: '>= 0.8'}
+    dependencies:
+      delayed-stream: registry.npmmirror.com/delayed-stream/1.0.0
+    dev: false
+
   registry.npmmirror.com/csstype/3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/csstype/-/csstype-3.1.2.tgz}
     name: csstype
@@ -2219,6 +2225,13 @@ packages:
         optional: true
     dependencies:
       ms: registry.npmmirror.com/ms/2.0.0
+    dev: false
+
+  registry.npmmirror.com/delayed-stream/1.0.0:
+    resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz}
+    name: delayed-stream
+    version: 1.0.0
+    engines: {node: '>=0.4.0'}
     dev: false
 
   registry.npmmirror.com/delegate/3.2.0:
@@ -2246,11 +2259,11 @@ packages:
     version: 3.0.1
     dev: false
 
-  registry.npmmirror.com/element-plus/2.2.26_vue@3.3.4:
-    resolution: {integrity: sha512-O/rdY5m9DkclpVg8r3GynyqCunm7MxSR142xSsjrZA77bi7bcwA3SIy6SPEDqHi5R4KqgkGYgKSp4Q4e3irbYg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.2.26.tgz}
-    id: registry.npmmirror.com/element-plus/2.2.26
+  registry.npmmirror.com/element-plus/2.3.7_vue@3.3.4:
+    resolution: {integrity: sha512-h6TxclbaLUJxg/Bv5j/ZKsK+K5yadQliw5+R30HWyE69pXlqXTX24oYx+yw3pA4Dy+lqEDi5501FQ0CORk3OSA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.3.7.tgz}
+    id: registry.npmmirror.com/element-plus/2.3.7
     name: element-plus
-    version: 2.2.26
+    version: 2.3.7
     peerDependencies:
       vue: ^3.2.0
     dependencies:
@@ -2541,6 +2554,17 @@ packages:
       - supports-color
     dev: false
 
+  registry.npmmirror.com/form-data/4.0.0:
+    resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/form-data/-/form-data-4.0.0.tgz}
+    name: form-data
+    version: 4.0.0
+    engines: {node: '>= 6'}
+    dependencies:
+      asynckit: registry.npmmirror.com/asynckit/0.4.0
+      combined-stream: registry.npmmirror.com/combined-stream/1.0.8
+      mime-types: registry.npmmirror.com/mime-types/2.1.35
+    dev: false
+
   registry.npmmirror.com/fsevents/2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz}
     name: fsevents
@@ -2705,16 +2729,32 @@ packages:
     version: 6.0.0
     dev: false
 
+  registry.npmmirror.com/mime-db/1.52.0:
+    resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/mime-db/-/mime-db-1.52.0.tgz}
+    name: mime-db
+    version: 1.52.0
+    engines: {node: '>= 0.6'}
+    dev: false
+
+  registry.npmmirror.com/mime-types/2.1.35:
+    resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/mime-types/-/mime-types-2.1.35.tgz}
+    name: mime-types
+    version: 2.1.35
+    engines: {node: '>= 0.6'}
+    dependencies:
+      mime-db: registry.npmmirror.com/mime-db/1.52.0
+    dev: false
+
   registry.npmmirror.com/moment/2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/moment/-/moment-2.29.4.tgz}
     name: moment
     version: 2.29.4
     dev: false
 
-  registry.npmmirror.com/monaco-editor/0.33.0:
-    resolution: {integrity: sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/monaco-editor/-/monaco-editor-0.33.0.tgz}
+  registry.npmmirror.com/monaco-editor/0.34.1:
+    resolution: {integrity: sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/monaco-editor/-/monaco-editor-0.34.1.tgz}
     name: monaco-editor
-    version: 0.33.0
+    version: 0.34.1
     dev: false
 
   registry.npmmirror.com/ms/2.0.0:
@@ -2782,6 +2822,12 @@ packages:
       nanoid: registry.npmmirror.com/nanoid/3.3.3
       picocolors: registry.npmmirror.com/picocolors/1.0.0
       source-map-js: registry.npmmirror.com/source-map-js/1.0.2
+
+  registry.npmmirror.com/proxy-from-env/1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz}
+    name: proxy-from-env
+    version: 1.1.0
+    dev: false
 
   registry.npmmirror.com/readdirp/3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/readdirp/-/readdirp-3.6.0.tgz}
@@ -2968,11 +3014,11 @@ packages:
       - '@vue/composition-api'
     dev: false
 
-  registry.npmmirror.com/vue-router/4.0.14_vue@3.3.4:
-    resolution: {integrity: sha512-wAO6zF9zxA3u+7AkMPqw9LjoUCjSxfFvINQj3E/DceTt6uEz1XZLraDhdg2EYmvVwTBSGlLYsUw8bDmx0754Mw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/-/vue-router-4.0.14.tgz}
-    id: registry.npmmirror.com/vue-router/4.0.14
+  registry.npmmirror.com/vue-router/4.2.2_vue@3.3.4:
+    resolution: {integrity: sha512-cChBPPmAflgBGmy3tBsjeoe3f3VOSG6naKyY5pjtrqLGbNEXdzCigFUHgBvp9e3ysAtFtEx7OLqcSDh/1Cq2TQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/-/vue-router-4.2.2.tgz}
+    id: registry.npmmirror.com/vue-router/4.2.2
     name: vue-router
-    version: 4.0.14
+    version: 4.2.2
     peerDependencies:
       vue: ^3.2.0
     dependencies:

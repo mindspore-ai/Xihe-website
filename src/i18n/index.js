@@ -17,6 +17,15 @@ import intelligent from './estate/electricity/nature-network/intelligentsystem';
 import medicine from './estate/medicine';
 import diagnosis from './estate/medicine/diagnosis';
 import truesight from './estate/medicine/truesight';
+import humanity from './estate/humanity';
+import aigc from './estate/humanity/aigc';
+import sign from './estate/humanity/sign';
+import yuzhi from './estate/humanity/yuzhi';
+import industry from './estate/industry';
+import algorithm from './estate/industry/algorithm';
+import intelligence from './estate/industry/intelligence';
+import metalpart from './estate/industry/metalpart';
+import cancer from './estate/medicine/endometrialcancer';
 
 const messages = {
   zh: {
@@ -37,6 +46,15 @@ const messages = {
     medicine: medicine.zh,
     diagnosis: diagnosis.zh,
     truesight: truesight.zh,
+    humanity: humanity.zh,
+    aigc: aigc.zh,
+    sign: sign.zh,
+    yuzhi: yuzhi.zh,
+    industry: industry.zh,
+    algorithm: algorithm.zh,
+    intelligence: intelligence.zh,
+    metalpart: metalpart.zh,
+    cancer: cancer.zh,
   },
   en: {
     home: home.en,
@@ -56,6 +74,15 @@ const messages = {
     medicine: medicine.en,
     diagnosis: diagnosis.en,
     truesight: truesight.en,
+    humanity: humanity.en,
+    aigc: aigc.en,
+    sign: sign.en,
+    yuzhi: yuzhi.en,
+    industry: industry.en,
+    algorithm: algorithm.en,
+    intelligence: intelligence.en,
+    metalpart: metalpart.en,
+    cancer: cancer.en,
   },
 };
 

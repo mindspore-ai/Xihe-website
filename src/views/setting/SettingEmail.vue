@@ -126,7 +126,6 @@ function keepEmail(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });

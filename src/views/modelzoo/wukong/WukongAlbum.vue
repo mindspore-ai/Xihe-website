@@ -92,13 +92,7 @@ getWuKongPic(params.value).then((res) => {
   imgs.value = res.data.pictures;
 
   res.data.pictures.forEach((item, index) => {
-    addWatermark(
-      item.link.replace(
-        'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-        '/obs-big-model/'
-      ),
-      index
-    );
+    addWatermark(item.link, index);
   });
 });
 
@@ -112,17 +106,11 @@ function getMore() {
         imgs.value = imgs.value.concat(res.data.pictures);
 
         for (let i = oldLen; i < imgs.value.length; i++) {
-          addWatermark(
-            imgs.value[i].link.replace(
-              'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-              '/obs-big-model/'
-            ),
-            i
-          );
+          addWatermark(imgs.value[i].link, i);
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   }
 }
@@ -137,7 +125,7 @@ const handleScroll = () => {
   const scrollHeight = document.documentElement.scrollHeight;
   const windowHeight = document.documentElement.clientHeight;
   const total = scrollTop + windowHeight;
-  console.log(scrollTop, windowHeight, scrollHeight);
+
   if (Number((total + 100).toFixed(0)) > scrollHeight) {
     throttleGet();
   }
@@ -158,13 +146,7 @@ function changeTab(name) {
     picTotal.value = res.data.total;
     imgs.value = res.data.pictures;
     res.data.pictures.forEach((item, index) => {
-      addWatermark(
-        item.link.replace(
-          'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-          '/obs-big-model/'
-        ),
-        index
-      );
+      addWatermark(item.link, index);
     });
   });
 }
@@ -173,18 +155,9 @@ function changeTab(name) {
 function getDialogData(num) {
   dialogData.value = imgs.value[num];
   picIndex.value = num;
-  dialogData.value.link = dialogData.value.link.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-    '/obs-big-model/'
-  );
-  dialogData.value.avatar = dialogData.value.avatar.replace(
-    'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
-    '/obs-xihe-avatar/'
-  );
-  userInfo.avatar = userInfo.avatar.replace(
-    'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
-    '/obs-xihe-avatar/'
-  );
+  dialogData.value.link = dialogData.value.link;
+  dialogData.value.avatar = dialogData.value.avatar;
+  userInfo.avatar = userInfo.avatar;
 }
 
 // 点击大图弹窗
@@ -318,29 +291,9 @@ async function copyText(textValue) {
   });
 }
 
-// 绘制圆角矩形（使用 arcTo）
-function drawRoundedRect(ctx, x, y, width, height, radius) {
-  // 保存当前环境的状态
-  ctx.save();
-  // 重置当前路径
-  ctx.beginPath();
-  // 移动到左上角
-  ctx.moveTo(x + radius, y);
-  // 绘制右上角
-  ctx.arcTo(x + width, y, x + width, y + radius, radius);
-  // 绘制右下角
-  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-  // 绘制左下角
-  ctx.arcTo(x, height, x, height - radius, radius);
-  // 绘制左上角
-  ctx.arcTo(x, y, x + radius, y, radius);
-  // 填充当前路径
-  ctx.fill();
-}
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
-
   html2canvas(poster, {
     useCORS: true,
   }).then((canvas) => {
@@ -355,10 +308,23 @@ function downloadPoster() {
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      // 绘制圆角矩形
-      drawRoundedRect(ctx, 0, 0, img.width, img.height, 28);
-      // 对矩形进行剪切
-      ctx.clip();
+      // 绘制圆角矩形（使用 arcTo）
+      let radius = 24;
+      ctx.save(); // 保存当前环境的状态
+      ctx.beginPath(); // 重置当前路径
+      ctx.moveTo(0 + radius, 0); // 移动到左上角
+      ctx.arcTo(0 + img.width, 0, 0 + img.width, 0 + radius, radius); // 绘制右上角
+      ctx.arcTo(
+        0 + img.width,
+        0 + img.height,
+        0 + img.width - radius,
+        0 + img.height,
+        radius
+      ); // 绘制右下角
+      ctx.arcTo(0, img.height, 0, img.height - radius, radius); // 绘制左下角
+      ctx.arcTo(0, 0, 0 + radius, 0, radius); // 绘制左上角
+      ctx.fill(); // 填充当前路径
+      ctx.clip(); // 对矩形进行剪切
       // 绘制图片
       ctx.drawImage(img, 0, 0, img.width, img.height);
 
@@ -380,10 +346,7 @@ function toPrePic() {
   if (picIndex.value > 0) {
     picIndex.value = picIndex.value - 1;
     dialogData.value = imgs.value[picIndex.value];
-    dialogData.value.link = dialogData.value.link.replace(
-      'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-      '/obs-big-model/'
-    );
+    dialogData.value.link = dialogData.value.link;
   } else {
     ElMessage({
       type: 'warning',
@@ -397,10 +360,7 @@ function toNextPic() {
   if (picIndex.value < imgs.value.length - 1) {
     picIndex.value = Number(picIndex.value) + 1;
     dialogData.value = imgs.value[picIndex.value];
-    dialogData.value.link = dialogData.value.link.replace(
-      'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-      '/obs-big-model/'
-    );
+    dialogData.value.link = dialogData.value.link;
   } else {
     ElMessage({
       type: 'error',

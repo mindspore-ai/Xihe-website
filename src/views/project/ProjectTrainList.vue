@@ -73,10 +73,10 @@ const isAuthentic = computed(() => {
 });
 
 function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
+  const headersConfig = localStorage.getItem(LOGIN_KEYS.SERVE_CODE)
     ? {
         headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+          'csrf-token': localStorage.getItem(LOGIN_KEYS.SERVE_CODE),
         },
       }
     : {};
@@ -126,7 +126,7 @@ function setWebsocket(url) {
         }
       }
     } catch (e) {
-      console.error(e);
+      return e;
     }
   };
   return socket;
@@ -157,7 +157,7 @@ function getTrainList() {
       }
     });
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 getTrainList();

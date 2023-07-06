@@ -3,6 +3,11 @@ window.CESIUM_BASE_URL = '/lib/Cesium/';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
+const VIRTUALEARTH = import.meta.env.VITE_VIRTUAL_EARTH;
+const GAODESERVE = import.meta.env.VITE_GAODE_SERVE;
+const BINGICON = import.meta.env.VITE_BING_ICON;
+const GAODEICON = import.meta.env.VITE_GAODE_ICON;
+const VEICON = import.meta.env.VITE_VE_ICON;
 
 // 初始视角更改
 Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
@@ -13,7 +18,7 @@ Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
 );
 
 Cesium.Ion.defaultAccessToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTFlNWVmMC1jOWRhLTQyMDktOTY4Ny02YTU5YWFlMGYwY2IiLCJpZCI6OTQzNDQsImlhdCI6MTY1Mjg4ODEyNn0.g2vq1qq_rdfZeRTy73nBkEDzhMIM4upkYcbIdFYnCiQ'; //Fix:Your access token can be found at: https://cesium.com/ion/tokens.
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTFlNWVmMC1jOWRhLTQyMDktOTY4Ny02YTU5YWFlMGYwY2IiLCJpZCI6OTQzNDQsImlhdCI6MTY1Mjg4ODEyNn0.g2vq1qq_rdfZeRTy73nBkEDzhMIM4upkYcbIdFYnCiQ';
 
 // 设置天地图token
 const tdtkey = '3a696e02b3d443d903ed577690be0c8b'; // Fix:http://lbs.tianditu.gov.cn/authorization/authorization.html
@@ -76,7 +81,8 @@ const AMAPURL_CONFIG = {
   AMAP_IMG_CIA:
     'https://webst{s}.is.autonavi.com/appmaptile?style=8&x={TileCol}&y={TileRow}&z={TileMatrix}',
   AMAP_IMG_NEW:
-    'http://wprd{s}.is.autonavi.com/appmaptile?x={TileCol}&y={TileRow}&z={TileMatrix}&lang=zh_cn&size=1&scl=2&style=6 ',
+    GAODESERVE +
+    '?x={TileCol}&y={TileRow}&z={TileMatrix}&lang=zh_cn&size=1&scl=2&style=6 ',
 };
 
 // 默认显示天地图
@@ -117,8 +123,7 @@ const defaultProvider = new Cesium.WebMapTileServiceImageryProvider({
 const TDT_IMG_C_P = new Cesium.ProviderViewModel({
   name: '天地图影像',
   tooltip: '天地图影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/tianditu.png', // Fix:cesium地图来源选择处显示的图标存储路径
+  iconUrl: BINGICON, // Fix:cesium地图来源选择处显示的图标存储路径
   creationFunction: function () {
     let wmts = new Cesium.WebMapTileServiceImageryProvider({
       // url: TDTURL_CONFIG.TDT_VEC_C, // 矢量地图
@@ -187,11 +192,11 @@ const TDT_IMG_C_P = new Cesium.ProviderViewModel({
 });
 
 // 在选择栏中显示高德地图的配置
+// tileMatrixLabels: ['0',...,'19']
 const AMAP_IMG_P = new Cesium.ProviderViewModel({
   name: '高德影像',
   tooltip: '高德影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/amap.png',
+  iconUrl: GAODEICON,
   creationFunction: function () {
     let wmts = new Cesium.WebMapTileServiceImageryProvider({
       url: AMAPURL_CONFIG.AMAP_IMG,
@@ -201,28 +206,7 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
       tileMatrixSetID: 'c',
       subdomains: ['01', '02', '03', '04'],
       tilingScheme: new Cesium.WebMercatorTilingScheme(),
-      tileMatrixLabels: [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-      ],
+      // tileMatrixLabels: [],
       maximumLevel: 18,
     });
     let wmts2 = new Cesium.WebMapTileServiceImageryProvider({
@@ -233,28 +217,7 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
       tileMatrixSetID: 'c',
       subdomains: ['01', '02', '03', '04'],
       tilingScheme: new Cesium.WebMercatorTilingScheme(),
-      tileMatrixLabels: [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14',
-        '15',
-        '16',
-        '17',
-        '18',
-        '19',
-      ],
+      // tileMatrixLabels: [],
       maximumLevel: 18,
     });
     return [wmts, wmts2];
@@ -265,11 +228,10 @@ const AMAP_IMG_P = new Cesium.ProviderViewModel({
 const BING_IMG_P = new Cesium.ProviderViewModel({
   name: 'Virtual Earth影像',
   tooltip: 'Virtual Earth影像',
-  iconUrl:
-    'https://luojianet-frontend.obs.cn-central-221.ovaijisuan.com/staticimage/bing.png',
+  iconUrl: VEICON,
   creationFunction: function () {
     let wmts = new Cesium.BingMapsImageryProvider({
-      url: 'https://dev.virtualearth.net',
+      url: VIRTUALEARTH,
       key: 'Al39BHMrIUKkzRBWXLk09Hqd2fsIXhVlyEvYKu2QhOg41oK2kE0rigtShwIAWw1o',
       mapStyle: Cesium.BingMapsStyle.AERIAL,
     });
@@ -319,7 +281,6 @@ export default class ExampleCesium {
     if (ans.length > 0) {
       this.viewer.baseLayerPicker.viewModel.selectedImagery = ans[0];
     } else {
-      console.warn('No selected ImageryProvider, use first ImageryProvider!');
       this.viewer.baseLayerPicker.viewModel.selectedImagery = models[0];
     }
   }
@@ -330,7 +291,6 @@ export default class ExampleCesium {
       this.viewer.scene.imageryLayers.remove(this.imglay);
       this.viewer.entities.remove(this.drawer.ansShape);
     }
-    // this.showInfoDetails(false)
     this.showInfo(false);
     this.drawer.setRectHandler();
   }
@@ -419,7 +379,7 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      console.warn(error);
+      return error;
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了
@@ -490,7 +450,6 @@ export default class ExampleCesium {
 
     // Sync the position of the slider with the split position
     var slider = document.getElementById('slider');
-    // slider.style.display = 'block';
 
     this.viewer.scene.splitPosition =
       (slider.offsetLeft - 0) / slider.parentElement.offsetWidth;
@@ -498,7 +457,7 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      console.warn(error);
+      return error;
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了
@@ -512,9 +471,7 @@ export default class ExampleCesium {
     var moveActive = false;
 
     function move(movement) {
-      if (!moveActive) {
-        return;
-      }
+      if (!moveActive) return;
 
       var relativeOffset = movement.endPosition.x;
 

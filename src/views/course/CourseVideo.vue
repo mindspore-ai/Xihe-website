@@ -13,25 +13,6 @@ const videoRef = ref(null);
 const isFirst = ref(true);
 const currentTime = ref(0);
 const videoDuration = ref(null);
-
-// 没有points字段的视频信息
-const videaData1 = computed(() => {
-  return chapterData.value.lessons.find((val) => {
-    return (
-      val.id === route.params.chapterId ||
-      (val.points &&
-        val.points.find((child) => child.id === route.params.chapterId))
-    );
-  });
-});
-// 有points字段的视频信息
-const videaData2 = computed(() => {
-  return videaData1.value?.points
-    ? videaData1.value.points.find((item) => {
-        return item.id === route.params.chapterId;
-      })
-    : videaData1.value;
-});
 // 当前的课节信息（含课节视频）
 const chapterData = computed(() => {
   const data = sectionData.value.find((item) => {
@@ -48,6 +29,25 @@ const chapterData = computed(() => {
     return;
   }
   return data;
+});
+// 没有points字段的视频信息
+const videaData1 = computed(() => {
+  return chapterData.value.lessons.find((val) => {
+    return (
+      val.id === route.params.chapterId ||
+      (val.points &&
+        val.points.find((child) => child.id === route.params.chapterId))
+    );
+  });
+});
+
+// 有points字段的视频信息
+const videaData2 = computed(() => {
+  return videaData1.value?.points
+    ? videaData1.value.points.find((item) => {
+        return item.id === route.params.chapterId;
+      })
+    : videaData1.value;
 });
 
 onUpdated(() => {

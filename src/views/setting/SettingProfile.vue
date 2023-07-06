@@ -44,9 +44,7 @@ try {
   filterData.value = avatarUrl;
   avatarCount.value = filterData.value.user_avatar.length;
   getCheckedId(filterData.value.user_avatar);
-} catch (error) {
-  console.error(error);
-}
+} catch (error) {}
 
 function toggleDelDlg(flag) {
   if (flag === undefined) {

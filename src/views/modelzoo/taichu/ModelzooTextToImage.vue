@@ -150,7 +150,7 @@ function startRatiocnate1(num) {
             }
           })
           .catch((err) => {
-            console.error('err: ', err);
+            return err;
           });
       }
     } else {

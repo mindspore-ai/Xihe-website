@@ -244,8 +244,6 @@ function handleHistoryClick() {
     gridData.value.push(historyInfo.value);
     handleLuoJiaHistory().then((res) => {
       if (res.data) {
-        console.log('res.data: ', res.data);
-
         gridData.value = [];
         historyInfo.value.create_at = res.data[0].created_at;
         gridData.value.push(historyInfo.value);

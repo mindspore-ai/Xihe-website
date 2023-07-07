@@ -36,6 +36,18 @@ function setStatus(status) {
   loginStore.loginStatus = status;
 }
 
+// 获取存在服务端的CSRF-Token
+export function getHeaderConfig() {
+  const headersConfig = Cookies.get(LOGIN_KEYS.SERVE_CODE)
+    ? {
+        headers: {
+          'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
+        },
+      }
+    : {};
+  return headersConfig;
+}
+
 // 获取url回调参数
 function getUrlParam(url = window.location.search) {
   const param = {};

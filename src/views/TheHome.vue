@@ -1,9 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-
 import project from '@/assets/imgs/home1/project.png';
 import project1 from '@/assets/imgs/home1/project1.png';
 import project2 from '@/assets/imgs/home1/project2.png';
@@ -57,8 +54,6 @@ import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
 const router = useRouter();
-
-AOS.init();
 
 const open = ref(false);
 const modules = [Pagination, Autoplay];
@@ -235,9 +230,57 @@ let io = new IntersectionObserver((entries) => {
     open.value = false;
   }
 });
+let isTopImgIo = ref(false);
+let topImgIo = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    isTopImgIo.value = true;
+  } else {
+    isTopImgIo.value = false;
+  }
+});
+let isMiddleImgIo = ref(false);
+let middleImgIo = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    isMiddleImgIo.value = true;
+  } else {
+    isMiddleImgIo.value = false;
+  }
+});
+let isBottomImgIo = ref(false);
+let bottomImgIo = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    isBottomImgIo.value = true;
+  } else {
+    isBottomImgIo.value = false;
+  }
+});
+let isModolzooIo = ref(false);
+let modolzooIo = new IntersectionObserver((entries) => {
+  if (
+    entries[0].isIntersecting &&
+    entries[0]?.target.className === 'modelzoo-contant'
+  ) {
+    isModolzooIo.value = true;
+  } else if (
+    !entries[0].isIntersecting &&
+    entries[0]?.target.className === 'home-modelzoo'
+  ) {
+    isModolzooIo.value = false;
+  }
+});
+const topImg = ref();
+const middleImg = ref();
+const bottomImg = ref();
+const modelzooContant = ref();
+const homeModelzoo = ref();
 onMounted(() => {
   let more = document.querySelectorAll('.more')[0];
   io.observe(more);
+  topImgIo.observe(topImg.value);
+  middleImgIo.observe(middleImg.value);
+  bottomImgIo.observe(bottomImg.value);
+  modolzooIo.observe(modelzooContant.value);
+  modolzooIo.observe(homeModelzoo.value);
 });
 const logoPic = [
   logo1,
@@ -285,12 +328,6 @@ const logoPic = [
           </div>
           <div class="mask" :class="{ hidden: locale === 'en' }"></div>
         </swiper-slide>
-        <!-- <swiper-slide
-          class="slide3"
-          :class="{ hidden: locale === 'en' }"
-          @click="goDetail"
-        >
-        </swiper-slide> -->
         <swiper-slide
           class="slide2"
           :class="{ hidden: locale === 'en' }"
@@ -320,12 +357,10 @@ const logoPic = [
             ></video>
           </div>
         </div>
-        <div class="top-img">
+        <div ref="topImg" class="top-img">
           <div
             class="project-card"
-            data-aos="slide-right"
-            :data-aos-duration="500"
-            data-aos-offset="200"
+            :class="{ 'img-left': isTopImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[0].PATH'))"
           >
             <div class="img-box">
@@ -344,9 +379,7 @@ const logoPic = [
           </div>
           <div
             class="project-card"
-            data-aos="slide-left"
-            :data-aos-duration="500"
-            data-aos-offset="200"
+            :class="{ 'img-left': isTopImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[1].PATH'))"
           >
             <div class="img-box">
@@ -364,12 +397,10 @@ const logoPic = [
             </div>
           </div>
         </div>
-        <div class="middle-img">
+        <div ref="middleImg" class="middle-img">
           <div
             class="project-card"
-            data-aos="slide-right"
-            :data-aos-duration="550"
-            data-aos-offset="200"
+            :class="{ 'img-left': isMiddleImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[2].PATH'))"
           >
             <div class="img-box">
@@ -388,9 +419,7 @@ const logoPic = [
           </div>
           <div
             class="project-card"
-            data-aos="slide-left"
-            :data-aos-duration="550"
-            data-aos-offset="200"
+            :class="{ 'img-left': isMiddleImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[3].PATH'))"
           >
             <div class="img-box">
@@ -408,12 +437,10 @@ const logoPic = [
             </div>
           </div>
         </div>
-        <div class="bottom-img">
+        <div ref="bottomImg" class="bottom-img">
           <div
             class="project-card"
-            data-aos="slide-right"
-            :data-aos-duration="600"
-            data-aos-offset="200"
+            :class="{ 'img-left': isBottomImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[4].PATH'))"
           >
             <div class="img-box">
@@ -432,9 +459,7 @@ const logoPic = [
           </div>
           <div
             class="project-card"
-            data-aos="slide-left"
-            :data-aos-duration="600"
-            data-aos-offset="200"
+            :class="{ 'img-left': isBottomImgIo }"
             @click="router.push(t('home.AI_LAB.CARDS[5].PATH'))"
           >
             <div class="img-box">
@@ -454,18 +479,16 @@ const logoPic = [
         </div>
       </div>
     </div>
-    <div class="home-modelzoo">
+    <div ref="homeModelzoo" class="home-modelzoo">
       <div class="modelzoo-wrapper">
         <p class="title">{{ t('home.MODELZOO.TITLE') }}</p>
         <p class="introduce">{{ t('home.MODELZOO.INTRODUCE') }}</p>
-        <div class="modelzoo-contant">
+        <div ref="modelzooContant" class="modelzoo-contant">
           <div
             v-for="(item, index) in 3"
             :key="item"
             class="item"
-            data-aos="slide-up"
-            :data-aos-duration="200 + (index === 1 ? 0 : 2) * 100"
-            data-aos-offset="200"
+            :class="{ 'modolzoo-io': isModolzooIo }"
           >
             <div class="img">
               <img :src="t(`home.MODELZOO.CARDS[${index}].IMAGE`)" alt="" />
@@ -615,9 +638,6 @@ const logoPic = [
               {{
                 t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].NAME`)
               }}
-              <!-- <span class="tag">{{
-                t(`home.SHENGSI_JOURNEY.TABLISTS[${index}].CARDS[${i}].TYPE`)
-              }}</span> -->
             </div>
             <div class="card-introduce">
               {{
@@ -983,6 +1003,7 @@ p {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    position: relative;
     @media screen and (max-width: 820px) {
       gap: 8px;
     }
@@ -996,6 +1017,7 @@ p {
   }
   .top-img {
     .project-card:first-child {
+      transform: translateX(-800px);
       .frame:first-child {
         width: 68px;
       }
@@ -1007,6 +1029,7 @@ p {
       }
     }
     .project-card:last-child {
+      transform: translateX(800px);
       .frame:first-child {
         width: 68px;
       }
@@ -1017,9 +1040,14 @@ p {
         width: 86px;
       }
     }
+    .img-left:first-child,
+    .img-left:last-child {
+      transform: translateX(0);
+    }
   }
   .bottom-img {
     .project-card:first-child {
+      transform: translateX(-800px);
       .frame:first-child {
         width: 43px;
       }
@@ -1031,6 +1059,7 @@ p {
       }
     }
     .project-card:last-child {
+      transform: translateX(800px);
       .frame:first-child {
         width: 68px;
       }
@@ -1041,6 +1070,10 @@ p {
         width: 46px;
       }
     }
+    .img-left:first-child,
+    .img-left:last-child {
+      transform: translateX(0);
+    }
   }
   .middle-img {
     width: 1255px;
@@ -1050,12 +1083,14 @@ p {
       padding: 8px 0;
     }
     .project-card:last-child {
+      transform: translateX(800px);
       span {
         color: #8071de;
         background-color: #edefff;
       }
     }
     .project-card:first-child {
+      transform: translateX(-800px);
       .frame:first-child {
         width: 114px;
       }
@@ -1079,6 +1114,10 @@ p {
       .frame:last-child {
         width: 46px;
       }
+    }
+    .img-left:first-child,
+    .img-left:last-child {
+      transform: translateX(0);
     }
   }
   .bottom-img {
@@ -1164,6 +1203,7 @@ p {
       position: relative;
       border-radius: 20px;
       transition: all 0.3s ease;
+      transform: translateY(80px);
       cursor: pointer;
       @media screen and (max-width: 820px) {
         padding: 6px;
@@ -1204,6 +1244,9 @@ p {
           margin-bottom: 3px;
         }
       }
+    }
+    .modolzoo-io {
+      transform: translateY(0);
     }
     .img {
       width: 100%;

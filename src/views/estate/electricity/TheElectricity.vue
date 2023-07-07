@@ -466,8 +466,10 @@ watch(tagKinds, (newValue) => {
             }
             .region-name {
               height: 100%;
+              line-height: 48px;
               margin-left: 24px;
               @media screen and (max-width: 820px) {
+                line-height: 34px;
                 margin-left: 0px;
               }
             }
@@ -513,6 +515,10 @@ watch(tagKinds, (newValue) => {
   img {
     width: 100%;
     height: 100%;
+  }
+  @media screen and (max-width: 820px) {
+    top: 42vh;
+    right: 24px;
   }
 }
 </style>

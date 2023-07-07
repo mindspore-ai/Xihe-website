@@ -156,7 +156,6 @@ onUnmounted(() => {
     }
   }
   .taichu-info {
-    // background-color: #f5f6f8;
     border-radius: 16px;
   }
 }

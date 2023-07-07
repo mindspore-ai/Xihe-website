@@ -145,11 +145,6 @@ function handleCurrentChange(val) {
 .collection-list-item {
   :deep(.project-card) {
     border-radius: 16px;
-    // &:hover {
-    //   :deep(.cover) {
-    //     transform: scale(1.05);
-    //   }
-    // }
     .card-top {
       img {
         border-top-right-radius: 16px;

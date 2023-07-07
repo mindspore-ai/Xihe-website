@@ -173,7 +173,6 @@ function toggleVisible(val) {
           class="setting-input"
         ></el-input>
       </el-form-item>
-      <!-- <p class="setting-tip">可对主要电子邮箱地址进行更改，需在新邮箱</p> -->
       <el-form-item
         class="email_code"
         prop="email_code"

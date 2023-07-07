@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
 <script setup>
 import { ref, onMounted, nextTick, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -405,8 +404,6 @@ function toNextPic() {
             name="official"
           ></el-tab-pane>
           <el-tab-pane :label="t('wukong.ALL')" name=""></el-tab-pane>
-          <!-- <el-tab-pane label="最热" name="3"></el-tab-pane>
-          <el-tab-pane label="最新" name="4"></el-tab-pane> -->
         </el-tabs>
       </div>
 
@@ -458,7 +455,6 @@ function toNextPic() {
               </div>
             </div>
           </div>
-          <!-- </div> -->
         </div>
       </div>
     </div>

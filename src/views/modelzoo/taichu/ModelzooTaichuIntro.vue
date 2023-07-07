@@ -127,7 +127,6 @@ function goTaichuMore() {
           <el-breadcrumb-item>{{ t('taichu.TITLE') }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <!-- <div class="taichu-content"> -->
       <div class="taichu-banner">
         <div class="banner-left">
           <img draggable="false" :src="taichuBanner" alt="" />
@@ -156,7 +155,6 @@ function goTaichuMore() {
           </div>
         </div>
       </div>
-      <!-- </div> -->
     </div>
     <div class="taichu-detail">
       <div class="taichu-detail-intro">

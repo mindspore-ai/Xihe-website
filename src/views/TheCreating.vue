@@ -48,13 +48,6 @@ const bannerLabel = computed(() => {
           }}</a>
         </div>
       </div>
-      <!-- <div class="step">
-        <span class="step-step1">1</span>
-        <span class="step-text1">{{ i18n[bannerLabel].progress1 }}</span>
-        <span class="step-point">························</span>
-        <span class="step-step2">2</span>
-        <span class="step-text2">{{ i18n[bannerLabel].progress2 }}</span>
-      </div> -->
     </div>
   </div>
 
@@ -66,8 +59,6 @@ const bannerLabel = computed(() => {
   max-width: 1448px;
 }
 .creating-banner {
-  // width: 100%;
-  // padding: 0 16px;
   padding-top: 80px;
   background-size: cover;
   background-image: url('@/assets/imgs/banner-model.png');
@@ -94,40 +85,6 @@ const bannerLabel = computed(() => {
         }
       }
     }
-    // .step {
-    //   margin-top: 22px;
-    //   &-step1 {
-    //     background-color: #40adff;
-    //     display: inline-block;
-    //     width: 22px;
-    //     text-align: center;
-    //     border-radius: 50%;
-    //   }
-    //   &-text1 {
-    //     color: #40adff;
-    //     font-size: 16px;
-    //     margin: 0 10px;
-    //   }
-    //   &-point {
-    //     display: inline-block;
-    //     line-height: 5px;
-    //     margin-right: 10px;
-    //   }
-    //   &-step2 {
-    //     border: 2px solid #ffffff;
-    //     display: inline-block;
-    //     width: 22px;
-    //     height: 22px;
-    //     text-align: center;
-    //     line-height: 18px;
-    //     border-radius: 50%;
-    //   }
-    //   &-text2 {
-    //     color: #ffffff;
-    //     font-size: 16px;
-    //     margin: 0 10px;
-    //   }
-    // }
   }
 }
 </style>

@@ -628,7 +628,6 @@ onUnmounted(() => {
             <span class="main">&nbsp;{{ analysis }}</span>
           </div>
           <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-          <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
         </div>
       </div>
     </div>
@@ -681,7 +680,6 @@ onUnmounted(() => {
               <span class="head">Caption:</span>
               <span class="main">&nbsp;{{ analysis }}</span>
             </div>
-            <!-- <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" /> -->
           </div>
           <div class="btn-box-mobile">
             <o-button

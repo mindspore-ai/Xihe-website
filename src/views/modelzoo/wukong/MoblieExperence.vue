@@ -625,8 +625,6 @@ function handleCancelCollect(index) {
     }
   });
 }
-// 下载图片
-// 临时url小于1min重新获取下载
 const resultIndex = ref(-1);
 // 推理dlg关闭-触发
 function handleDlgClose() {
@@ -872,7 +870,6 @@ function handleNum(index) {
                   <p>
                     <o-icon><icon-arrow></icon-arrow></o-icon>
                   </p>
-                  <!-- <div class="icon-name">公开</div> -->
                 </div>
               </template>
 
@@ -881,19 +878,14 @@ function handleNum(index) {
                   <p class="icon-item">
                     <o-icon><icon-cancel></icon-cancel></o-icon>
                   </p>
-                  <!-- <div class="icon-name">取消公开</div> -->
                 </div>
               </template>
             </div>
             <div class="handles-contain">
-              <!-- <p @click="downloadImage(value)">
-                  <o-icon><icon-download></icon-download></o-icon>
-                </p> -->
               <div class="func-item">
                 <p @click="shareImage(value)">
                   <o-icon><icon-share></icon-share></o-icon>
                 </p>
-                <!-- <div class="icon-name">分享</div> -->
               </div>
 
               <template v-if="!inferList[key].isCollected">
@@ -901,7 +893,6 @@ function handleNum(index) {
                   <p>
                     <o-icon><icon-like></icon-like></o-icon>
                   </p>
-                  <!-- <div class="icon-name">收藏</div> -->
                 </div>
               </template>
 
@@ -910,27 +901,12 @@ function handleNum(index) {
                   <p class="liked">
                     <o-icon><icon-heart></icon-heart></o-icon>
                   </p>
-                  <!-- <div class="icon-name">取消收藏</div> -->
                 </div>
               </template>
             </div>
           </div>
-          <!-- <div class="mask"></div> -->
         </div>
       </div>
-
-      <!-- <div v-if="isError" class="infer-dlg-error">
-        <p>
-          <o-icon><icon-warning></icon-warning></o-icon>
-        </p>
-
-        <p>{{ errorMsg }}</p>
-
-        <p @click="reEnterDesc">
-          <span>重新输入</span>
-          <o-icon><icon-right></icon-right></o-icon>
-        </p>
-      </div> -->
     </el-dialog>
 
     <el-dialog
@@ -1129,15 +1105,6 @@ function handleNum(index) {
         .func-item {
           margin-left: 12px;
           cursor: pointer;
-          .icon-name {
-            color: #fff;
-            font-size: 14px;
-            margin-top: 6px;
-            text-align: center;
-            @media screen and (max-width: 768px) {
-              font-size: 12px;
-            }
-          }
         }
 
         .liked {

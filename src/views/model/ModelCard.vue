@@ -329,44 +329,12 @@ onMounted(() => {
         </span>
       </template>
     </el-dialog>
-    <!-- 无添加项目 -->
-    <!-- <el-dialog
-      v-model="isShow1"
-      width="640px"
-      :show-close="false"
-      center
-      align-center
-      destroy-on-close
-    >
-      <template #header="{ titleId, title }">
-        <div :id="titleId" :class="title">
-          {{ i18n.addProject }}
-        </div>
-      </template>
-      <el-form>
-        <el-form-item label="拥有者/项目名称">
-          <el-input
-            v-model="addSearch"
-            placeholder="你可以直接复制拥有者/项目名称进行输入"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <o-button style="margin-right: 38px" @click="isShow1 = false"
-            >取消</o-button
-          >
-          <o-button type="primary" @click="confirmClick">确定</o-button>
-        </span>
-      </template>
-    </el-dialog> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  // min-height: calc(100vh - 340px);
   min-height: calc(100vh - 516px);
   background-color: #f5f6f8;
   .markdown-body {
@@ -375,10 +343,7 @@ onMounted(() => {
     width: 100%;
     border-radius: 16px;
     background: #fff;
-    // border-right: 1px solid #d8d8d8;
     .markdown-file {
-      // max-width: 800px;
-      // padding-right: 40px;
       padding: 24px;
       background: #fff;
       border-radius: 16px;
@@ -394,7 +359,6 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     font-size: 14px;
-    // max-height: 700px;
     .upload-readme-img {
       margin-top: 205px;
       .o-icon {

@@ -95,14 +95,6 @@ watch([userDescription, avatar], () => {
 </script>
 
 <template>
-  <!-- <div class="setting-box">
-    <p class="setting-title">昵称</p>
-    <el-input
-      v-model.trim="nickName"
-      placeholder="请输入您的昵称"
-      class="setting-input"
-    ></el-input>
-  </div> -->
   <div class="setting-box">
     <p class="setting-title">头像</p>
     <div class="avatar-uploader" @click="toggleDelDlg(true)">

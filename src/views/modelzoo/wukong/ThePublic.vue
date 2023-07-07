@@ -167,10 +167,6 @@ async function cancelImgCollected(item) {
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
             </div>
-            <!-- <div class="right">
-              <o-icon><icon-fingure></icon-fingure></o-icon>
-              <p class="dig-counts">{{ item.digg_count }}</p>
-            </div> -->
           </div>
         </div>
 

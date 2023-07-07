@@ -549,18 +549,7 @@ function goRule() {
 <style lang="scss" scoped>
 .activity-dlg {
   :deep(.el-dialog) {
-    // width: 817px !important;
     --el-dialog-margin-top: 32vh;
-    // .el-dialog__header {
-    //   display: block;
-    //   // font-size: 24px;
-    //   // line-height: 32px;
-    //   // padding-top: 40px;
-    //   color: #000000;
-    //   text-align: center;
-    //   margin-right: 0;
-    // }
-
     .el-dialog__body {
       padding: 0px 40px 40px;
     }

@@ -516,9 +516,5 @@ watch(tagKinds, (newValue) => {
     width: 100%;
     height: 100%;
   }
-  @media screen and (max-width: 820px) {
-    top: 42vh;
-    right: 24px;
-  }
 }
 </style>

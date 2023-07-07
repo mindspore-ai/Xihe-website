@@ -164,7 +164,7 @@ export default {
     const { mode, captchaType, type, blockSize } = toRefs(props);
     const explain = computed(() => '向右滑动完成验证');
     const { proxy } = getCurrentInstance();
-    const secretKey = ref(''), // 后端返回的ase加密
+    const secretCode = ref(''), // 后端返回的ase加密
       passFlag = ref(''), // 是否通过的标识
       backImgBase = ref(''), // 验证码背景图片
       blockBackImgBase = ref(''), // 验证滑块的背景图片
@@ -211,7 +211,7 @@ export default {
           backImgBase.value = res.repData.originalImageBase64;
           blockBackImgBase.value = res.repData.jigsawImageBase64;
           backToken.value = res.repData.token;
-          secretKey.value = res.repData.secretKey;
+          secretCode.value = res.repData.secretKey;
         } else {
           tipWords.value = res.repMsg;
         }
@@ -287,10 +287,10 @@ export default {
           (moveLeftDistance * 310) / parseInt(setSize.imgWidth);
         const data = {
           captchaType: captchaType.value,
-          pointJson: secretKey.value
+          pointJson: secretCode.value
             ? aesEncrypt(
                 JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
-                secretKey.value
+                secretCode.value
               )
             : JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
           token: backToken.value,
@@ -314,12 +314,12 @@ export default {
               (endMovetime.value - startMoveTime.value) /
               1000
             ).toFixed(2)}s验证成功`;
-            const captchaVerification = secretKey.value
+            const captchaVerification = secretCode.value
               ? aesEncrypt(
                   backToken.value +
                     '---' +
                     JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
-                  secretKey.value
+                    secretCode.value
                 )
               : backToken.value +
                 '---' +
@@ -426,7 +426,7 @@ export default {
     });
 
     return {
-      secretKey, // 后端返回的ase加密
+      secretCode, // 后端返回的ase加密
       passFlag, // 是否通过的标识
       backImgBase, // 验证码背景图片
       blockBackImgBase, // 验证滑块的背景图片

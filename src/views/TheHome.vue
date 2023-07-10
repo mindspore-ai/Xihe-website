@@ -526,7 +526,7 @@ const logoPic = [
       <p class="introduce">{{ t(`home.MODEL.INTRODUCE`) }}</p>
       <div class="model-contant">
         <div v-for="(item, index) in 4" :key="item" class="item">
-          <router-link :to="{ name: 'models', params: { modelType: item } }">
+          <router-link :to="{ name: 'models', state: { modelType: item } }">
             <img :src="t(`home.MODEL.CARDS[${index}].IMAGE`)" alt="" />
             <div class="models-type">
               {{ t(`home.MODEL.CARDS[${index}].MODEL_NAME`) }}
@@ -1299,7 +1299,6 @@ p {
       background: url(@/assets/imgs/home1/models-bg.png);
       background-size: cover;
       // background-position: 50%;
-      padding: 40px;
       position: relative;
       border-radius: 20px;
       transition: all 0.3s ease;
@@ -1324,6 +1323,10 @@ p {
           background-color: #fcf4ef;
         }
       }
+    }
+    a {
+      padding: 40px;
+      display: inline-block;
     }
     img {
       width: 48px;

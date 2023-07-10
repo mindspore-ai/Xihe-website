@@ -535,16 +535,16 @@ watch(
   }
 );
 watch(
-  () => route.params.modelType,
-  () => {
+  () => window.history.state.modelType,
+  (val) => {
     getModelTag().then(() => {
-      if (route.params.modelType === '1') {
+      if (val === 1) {
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
-      } else if (route.params.modelType === '2') {
+      } else if (val === 2) {
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
-      } else if (route.params.modelType === '3') {
+      } else if (val === 3) {
         conditionClick(0, 1, renderCondition.value[0].condition[1]);
-      } else if (route.params.modelType === '4') {
+      } else if (val === 4) {
         conditionClick(0, 3, renderCondition.value[0].condition[3]);
       }
     });

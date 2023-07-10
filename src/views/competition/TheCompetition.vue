@@ -117,13 +117,6 @@ function handleCurrentPage(val) {
           <el-carousel-item
             ><img :src="comBanner3" alt="" @click="goDetail('learn23-img')" />
           </el-carousel-item>
-          <!-- <el-carousel-item
-            ><img
-              :src="comBanner4"
-              alt=""
-              @click="goDetail('第四届MindCon-外卖评论文本分类')"
-            />
-          </el-carousel-item> -->
         </el-carousel>
       </div>
     </div>

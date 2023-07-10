@@ -304,14 +304,6 @@ function deleteAllTags() {
         <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
           >个人主页</el-breadcrumb-item
         >
-        <!-- <el-breadcrumb-item
-          :to="{
-            path: `/${
-              fromPath === '/projects' ? 'projects' : userInfo.userName
-            }`,
-          }"
-          >{{ option }}</el-breadcrumb-item
-        > -->
         <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
       </el-breadcrumb>
     </div>

@@ -77,7 +77,6 @@ function downloadImage(url) {
       class="certificate-img"
     >
       <p>{{ certificateData.owner }}</p>
-      <!-- <img ref="certRef" :src="certificateData.cert" @load="loadImg" /> -->
       <img ref="certRef" src="@/assets/imgs/course/cert.png" @load="loadImg" />
     </div>
   </div>

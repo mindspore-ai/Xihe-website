@@ -320,9 +320,6 @@ onUnmounted(() => {
 
       <div class="footer">
         <template v-if="isfinshed">
-          <!-- <o-button style="margin-right: 16px" @click="closeJupyter"
-            >关闭</o-button
-          > -->
           <o-button type="primary" @click="openJupyter">查看jupyter</o-button>
         </template>
 
@@ -335,33 +332,6 @@ onUnmounted(() => {
         >
       </div>
     </div>
-    <!-- 关闭jupyter确认弹窗 -->
-    <!-- <el-dialog
-      v-model="isShowDlg"
-      width="640px"
-      :show-close="false"
-      center
-      align-center
-      destroy-on-close
-      :close-on-click-modal="false"
-    >
-      <template #header="{ titleId, title }">
-        <div :id="titleId" :class="title">
-          <img :src="warningImg" alt="" />
-        </div>
-      </template>
-      <div class="dialog-body">
-        确认是否将此jupyter实例关闭，注意此操作不可逆，相关资源将会释放，请提前将需要的文件的下载到本地。
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShowDlg = false"
-            >取消</o-button
-          >
-          <o-button type="primary" @click="confirmClose">确定</o-button>
-        </span>
-      </template>
-    </el-dialog> -->
   </div>
 </template>
 <style lang="scss" scoped>

@@ -65,7 +65,6 @@ watch(
   },
   {
     deep: true,
-    // immediate: true,
   }
 );
 
@@ -184,21 +183,6 @@ getCount();
       &-item {
         :deep(.project-card) {
           border-radius: 16px;
-          // .card-top {
-          //   img {
-          //     border-top-right-radius: 16px;
-          //     border-top-left-radius: 16px;
-          //   }
-          // }
-          // .card-bottom {
-          //   border-bottom-right-radius: 16px;
-          //   border-bottom-left-radius: 16px;
-          // }
-          // &:hover {
-          //   .cover {
-          //     transform: scale(1.05);
-          //   }
-          // }
         }
         & + .card-list-item {
           margin-top: 30px;

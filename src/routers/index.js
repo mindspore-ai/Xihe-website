@@ -94,14 +94,6 @@ export const routes = [
       },
     ],
   },
-  // 排行榜
-  {
-    path: '/leaderboard',
-    name: 'leaderboards',
-    component: () => {
-      return import('@/views/TheLeaderboard.vue');
-    },
-  },
   // 用户
   ...user,
   // 模型

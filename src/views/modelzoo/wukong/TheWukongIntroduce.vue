@@ -72,7 +72,6 @@ const githubLink2 =
     <div class="intro-head">
       <div class="wukong-left">
         <img draggable="false" :src="wukongBanner1" alt="" />
-        <!-- <img v-else draggable="false" :src="wukongBanner2" alt="" /> -->
       </div>
 
       <div class="wukong-right">

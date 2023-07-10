@@ -404,7 +404,6 @@ if (isAuthentic.value) {
                     'W'
                   : userInfo.fansCount
               }}</span>
-              <!-- <span class="social-item-fans">{{ userInfo.fansCount }}</span> -->
             </p>
             <p class="user-social-item" @click="goWatched()">
               <span>关注</span>
@@ -421,12 +420,6 @@ if (isAuthentic.value) {
             </p>
           </div>
 
-          <!-- <OButton
-            v-if="isAuthentic"
-            :style="{ marginTop: '24px' }"
-            @click="goSetting"
-            >设置个人资料</OButton
-          > -->
           <div v-if="!isAuthentic" :style="{ marginTop: '24px' }">
             <OButton
               v-if="userInfo.isFollower"
@@ -499,7 +492,6 @@ if (isAuthentic.value) {
         </ul>
       </div>
 
-      <!-- content -->
       <div class="content-detail">
         <!-- 工具栏 -->
         <div v-if="showTool" class="content-detail-tool">

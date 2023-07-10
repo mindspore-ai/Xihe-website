@@ -41,7 +41,6 @@ const activeName = ref('first');
     }
   }
   &-content {
-    // background-color: red;
     max-width: 1448px;
     margin: 0 auto;
     padding-left: 16px;

@@ -251,12 +251,6 @@ function toggleDelDlg(flag) {
               @click="getIndex"
               @change="getVisiableSelect"
             ></o-select>
-            <!-- <p v-if="visibleIndex === '0'" class="setting-tip">
-              {{ i18n.visible.options[visibleIndex].describe }}
-            </p>
-            <p v-else class="setting-tip">
-              {{ i18n.visible.options[visibleIndex].describe }}
-            </p> -->
             <div class="setting-tip">
               {{ i18n.visible.options[visibleIndex].describe }}
             </div>

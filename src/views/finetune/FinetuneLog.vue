@@ -157,17 +157,10 @@ watch(
         width: 100%;
         height: 710px;
         position: relative;
-        /* img {
-          width: 60px;
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        } */
+
         .el-textarea {
           width: 100% !important;
           height: 100%;
-          //margin-top: 24px;
           :deep .el-textarea__inner {
             min-height: 560px !important;
             height: 100%;

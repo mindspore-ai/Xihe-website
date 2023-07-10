@@ -10,18 +10,6 @@ const APP_ID = import.meta.env.VITE_APP_ID;
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
 const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
 
-// header
-export function getHeaderConfig() {
-  const headersConfig = Cookies.get(LOGIN_KEYS.SERVE_CODE)
-    ? {
-        headers: {
-          'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
 // 登录事件
 export const LOGIN_EVENTS = {
   SHOW_LOGIN: 'show-login',
@@ -46,6 +34,18 @@ export const LOGIN_KEYS = {
 function setStatus(status) {
   const loginStore = useLoginStore();
   loginStore.loginStatus = status;
+}
+
+// 获取存在服务端的CSRF-Token
+export function getHeaderConfig() {
+  const headersConfig = Cookies.get(LOGIN_KEYS.SERVE_CODE)
+    ? {
+        headers: {
+          'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
+        },
+      }
+    : {};
+  return headersConfig;
 }
 
 // 获取url回调参数
@@ -159,7 +159,6 @@ export async function requestUserInfo() {
     }
   }
 }
-console.log(Cookies.get(LOGIN_KEYS.SERVE_CODE));
 // 登录
 export async function doLogin() {
   const query = getUrlParam();

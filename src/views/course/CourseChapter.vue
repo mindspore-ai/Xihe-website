@@ -56,15 +56,12 @@ function handleNodeClick(node, data) {
     >
       <template #default="{ node, data }">
         <div class="course-tree-node" @click="handleNodeClick(node, data)">
-          <!-- <span>已学习</span> -->
           <div class="course-node-left">
-            <!-- <span v-if="!data.children" class="learn-status">未学习</span> -->
             <o-icon v-if="!data.lessons" class="course-icon">
               <icon-play></icon-play>
             </o-icon>
             <span class="course-name">{{ node.label }}</span>
           </div>
-          <!-- <span v-if="data.children && data.children.length > 0">fdds</span> -->
           <div
             v-if="!data.lessons && userCourseData.courseData.is_apply"
             class="course-node-right"

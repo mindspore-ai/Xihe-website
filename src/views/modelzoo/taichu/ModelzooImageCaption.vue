@@ -208,7 +208,6 @@ function customUpload() {
               <span class="main">&nbsp;{{ analysis }}</span>
             </div>
             <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-            <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
             <div class="experience-btn">
               <o-button
                 v-if="!loading"
@@ -274,9 +273,6 @@ function customUpload() {
           <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
           <p v-else>{{ analysis }}</p>
         </div>
-        <!-- <div class="analyse-result">
-          <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-        </div> -->
 
         <div class="mobile-btn">
           <o-button

@@ -429,13 +429,9 @@ function handleOverPager(val) {
         }
       }
       .is-active {
-        // box-shadow: 0 0 0 1px #0d8dff inset;
         color: #0d8dff;
       }
     }
-    // .el-tabs__nav-wrap {
-    //   box-shadow: 0px 1px 5px 0px rgba(45, 47, 51, 0.1);
-    // }
   }
 }
 :deep(.el-pagination) {

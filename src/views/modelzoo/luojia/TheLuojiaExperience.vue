@@ -244,8 +244,6 @@ function handleHistoryClick() {
     gridData.value.push(historyInfo.value);
     handleLuoJiaHistory().then((res) => {
       if (res.data) {
-        console.log('res.data: ', res.data);
-
         gridData.value = [];
         historyInfo.value.create_at = res.data[0].created_at;
         gridData.value.push(historyInfo.value);
@@ -525,14 +523,6 @@ function enlarge(url) {
           </div>
           <div class="modal"></div>
         </div>
-        <!-- <o-icon
-          @click="selectImage(imgLists[activeIndex - 1].url, activeIndex - 1)"
-          ><icon-left></icon-left
-        ></o-icon>
-        <o-icon
-          @click="selectImage(imgLists[activeIndex + 1].url, activeIndex + 1)"
-          ><icon-left></icon-left
-        ></o-icon> -->
       </div>
       <o-button
         :disabled="activeIndex1 === -1"
@@ -564,9 +554,6 @@ function enlarge(url) {
             :label="t('luojia.EXPERIENCE.TAB_ITEM_4')"
             width="90"
           />
-          <!-- <el-table-column label="操作">
-            <span class="detail" @click="handleDetailClick">查看详情</span>
-          </el-table-column> -->
         </el-table>
       </div>
       <div v-if="gridData.length">
@@ -576,20 +563,12 @@ function enlarge(url) {
             <img :src="inputImg" alt="" @click="enlarge(inputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
-              <!-- <div class="download" @click="handleOriImgDownload">
-                <o-icon><icon-download></icon-download></o-icon>
-                <span>下载</span>
-              </div> -->
             </div>
           </div>
           <div class="result">
             <img :src="outputImg" alt="" @click="enlarge(outputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
-              <!-- <div class="download" @click="handleResImgDownload">
-                <o-icon><icon-download></icon-download></o-icon>
-                <span>下载</span>
-              </div> -->
             </div>
           </div>
         </div>
@@ -607,7 +586,6 @@ function enlarge(url) {
   </div>
 </template>
 <style lang="scss" scoped>
-// 对比框
 .compare-box {
   display: flex;
   justify-content: space-between;

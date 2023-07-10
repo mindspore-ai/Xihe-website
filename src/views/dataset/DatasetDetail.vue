@@ -531,52 +531,6 @@ watch(
       </div>
     </div>
 
-    <!-- <div class="card-head wrap">
-      <div class="card-head-top">
-        <div class="portrait">
-          <img :src="detailData.avatar_id" alt="" />
-        </div>
-        <router-link :to="{ path: `/${route.params.user}` }">
-          {{ detailData.owner }} </router-link
-        >/
-        <span>{{ detailData.name }}</span>
-        <div
-          class="card-head-copy"
-          @click="copyText(`${detailData.owner}/${detailData.name}`)"
-        >
-          <o-icon><icon-copy></icon-copy></o-icon>
-        </div>
-        <div v-if="userInfoStore.userName !== detailData.owner">
-          <train-likes
-            :is-digged="isDigged"
-            :dig-count="detailData.like_count"
-            class="loves"
-            @click="handleDatasetLike"
-          ></train-likes>
-        </div>
-      </div>
-      <div class="label-box">
-        <div v-for="label in modelTags" :key="label" class="label-item">
-          {{ label.name }}
-        </div>
-        <div
-          v-if="detailData.is_owner"
-          class="label-add-item"
-          @click="addTagClick"
-        >
-          + 添加标签
-        </div>
-      </div>
-      <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane
-          v-for="item in renderNav"
-          :key="item.id"
-          :label="item.label"
-          :name="item.label"
-        >
-        </el-tab-pane>
-      </el-tabs>
-    </div> -->
     <div v-if="detailData.id" class="model-detail-body">
       <router-view class="wrap"></router-view>
     </div>

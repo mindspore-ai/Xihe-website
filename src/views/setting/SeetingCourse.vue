@@ -207,12 +207,6 @@ function goCourseDetail(id) {
                   </template>
                 </OButton>
               </div>
-              <!-- <div v-else-if="item.status === 'preparing'" class="right-wrap">
-                <div class="not-started">报名未开始</div>
-              </div> -->
-              <!-- <div v-else class="right-wrap">
-                <div class="not-started">报名已截止</div>
-              </div> -->
             </div>
           </div>
         </div>

@@ -223,11 +223,6 @@ function handelCancel() {
         >
           你可对该项目内的文件进行改动
         </div>
-        <!-- <project-relate-card
-          :detail-data="detailData.project"
-          :name="'project'"
-          @jump="goProjectClick"
-        ></project-relate-card> -->
         <div class="project" @click="goProjectClick">
           <o-icon><icon-project></icon-project></o-icon>
           {{ detailData.project.split('/')[1] }}

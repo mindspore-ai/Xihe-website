@@ -183,7 +183,7 @@ function goDatasetDetail(user, name) {
 function goModels() {
   router.push({
     name: 'models',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },
@@ -193,7 +193,7 @@ function goModels() {
 function goDatasets() {
   router.push({
     name: 'datasets',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },
@@ -203,7 +203,7 @@ function goDatasets() {
 function goProjects() {
   router.push({
     name: 'projects',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },

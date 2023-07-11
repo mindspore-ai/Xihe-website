@@ -4,9 +4,7 @@ import { useRouter } from 'vue-router';
 
 import IconArrowBlue from '~icons/app/arrow-blue';
 
-// import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';
 import opsImg from '@/assets/imgs/estate/electricity/substation-ops.png';
-// import decisionImg from '@/assets/imgs/estate/electricity/substation-decision.png';
 
 import IconCourse from '~icons/app/course';
 import IconCompetition from '~icons/app/competition';
@@ -172,7 +170,7 @@ function goDatasetDetail(user, name) {
 function goModels() {
   router.push({
     name: 'models',
-    params: {
+    state: {
       tag_kinds: 'NLP',
       tags: 'electricity',
     },
@@ -182,7 +180,7 @@ function goModels() {
 function goDatasets() {
   router.push({
     name: 'datasets',
-    params: {
+    state: {
       tag_kinds: 'NLP',
       tags: 'electricity',
     },
@@ -192,7 +190,7 @@ function goDatasets() {
 function goProjects() {
   router.push({
     name: 'projects',
-    params: {
+    state: {
       tag_kinds: 'NLP',
       tags: 'electricity',
     },

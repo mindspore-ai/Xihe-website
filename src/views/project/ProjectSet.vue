@@ -84,6 +84,7 @@ const visibleValue = ref(detailData.repo_type);
 const description = ref(detailData.desc);
 const modelTitle = ref(detailData.title);
 
+const validTitle = ref(true);
 const visibleIndex = ref(0);
 const showDel = ref(false);
 const showConfirm = ref(false); // 控制删除成功跳转个人主页弹窗
@@ -143,6 +144,13 @@ function selectImgClick(item) {
 }
 
 function confirmPrivate() {
+  if (!validTitle.value) {
+    ElMessage({
+      type: 'error',
+      message: '请按要求填写',
+    });
+    return;
+  }
   let query = {
     type: visibleValue.value,
     cover_id: `${photoId.value}`,
@@ -221,6 +229,10 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
+function validateInput() {
+  validTitle.value =
+    modelTitle.value.length >= 3 && modelTitle.value.length <= 35;
+}
 </script>
 <template>
   <div class="setting-wrap">
@@ -233,8 +245,24 @@ function toggleDelDlg(flag) {
             <el-input
               v-model="modelTitle"
               :placeholder="i18n.rename.placeholder2"
+              @input="validateInput"
             >
             </el-input>
+            <el-popover
+              placement="bottom-start"
+              :width="320"
+              trigger="hover"
+              :teleported="false"
+            >
+              <template #reference>
+                <o-icon class="tip-icon"><icon-poppver></icon-poppver></o-icon>
+              </template>
+              <div>- 项目标题支持中文或者英文</div>
+              <div>- 长度为 <span class="remind">3-35个字符</span></div>
+            </el-popover>
+            <div v-if="!validTitle" class="error-message">
+              项目标题长度为3-35个字符
+            </div>
           </div>
         </div>
         <!-- 仓库属性 -->
@@ -611,8 +639,25 @@ function toggleDelDlg(flag) {
     }
     .attribute-option {
       width: 580px;
+      position: relative;
       .setting-tip {
         margin-bottom: 0px;
+      }
+      .remind {
+        color: #f13b35;
+      }
+      .tip-icon {
+        position: absolute;
+        right: -34px;
+        top: 5px;
+        font-size: 24px;
+      }
+      .error-message {
+        color: #f3524d;
+        font-size: 12px;
+        position: absolute;
+        right: -188px;
+        top: 10px;
       }
     }
     .el-textarea {

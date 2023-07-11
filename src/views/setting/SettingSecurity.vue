@@ -4,7 +4,8 @@ import { useUserInfoStore } from '@/stores';
 
 import { setUserPhone, keepUserPhone, changeUserPhone } from '@/api/api-user';
 import { getGitlabToken } from '@/api/api-gitlab';
-import useClipboard from 'vue-clipboard3';
+
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import OButton from '@/components/OButton.vue';
 import ODialog from '@/components/ODialog.vue';
@@ -13,8 +14,6 @@ import OIcon from '@/components/OIcon.vue';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconCopy from '~icons/app/copy-nickname';
 import { ElMessage } from 'element-plus';
-
-const { toClipboard } = useClipboard();
 
 const gitlabToken = ref('');
 const isDisposed = ref(false);
@@ -29,7 +28,7 @@ const ruleForm = reactive({
 
 const handleCopy = async () => {
   try {
-    await toClipboard(gitlabToken.value);
+    await writeToClipboard(gitlabToken.value);
     ElMessage({
       type: 'success',
       message: '复制成功',

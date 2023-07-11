@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
 import { computed, ref, defineProps } from 'vue';
-import useClipboard from 'vue-clipboard3';
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import OButton from '@/components/OButton.vue';
 import FileTree from './FileTree.vue';
@@ -16,7 +16,6 @@ import { ElMessage } from 'element-plus';
 
 const GITLAB_ADDRESS = import.meta.env.VITE_GITLAB_ADDRESS;
 
-const { toClipboard } = useClipboard();
 const router = useRouter();
 const route = useRoute();
 let routerParams = route.params;
@@ -76,7 +75,7 @@ const i18n = {
 };
 const handleCopy = async () => {
   try {
-    await toClipboard(gitCloneUrl.value);
+    await writeToClipboard(gitCloneUrl.value);
     ElMessage({
       type: 'success',
       message: '复制成功',

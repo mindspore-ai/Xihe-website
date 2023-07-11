@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import useClipboard from 'vue-clipboard3';
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -31,8 +31,6 @@ const prop = defineProps({
     default: '',
   },
 });
-
-const { toClipboard } = useClipboard();
 
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
@@ -194,7 +192,7 @@ function goRaw(blob) {
 }
 
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -203,7 +201,7 @@ async function copyText(textValue) {
 }
 async function copyPath() {
   let path = `${routerParams.name}/` + routerParams.contents.join('/');
-  await toClipboard(path);
+  await writeToClipboard(path);
   ElMessage({
     type: 'success',
     message: '复制成功',

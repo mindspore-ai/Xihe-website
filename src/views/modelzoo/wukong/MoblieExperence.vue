@@ -42,7 +42,8 @@ import IconPainting from '~icons/app/painting';
 import IconArrowRight from '~icons/app/arrow-right.svg';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
-import useClipboard from 'vue-clipboard3';
+
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 import {
   wuKongInfer,
   addLikePicture,
@@ -62,7 +63,7 @@ const screenWidth = useWindowResize();
 const isLogined = computed(() => useLoginStore().isLogined);
 const userInfoStore = useUserInfoStore();
 const router = useRouter();
-const { toClipboard } = useClipboard();
+
 const inputText = ref('');
 const sortTag = ref('');
 const styleIndex = ref(0);
@@ -419,7 +420,7 @@ function handlePosterDlgClose() {
 }
 // 复制用户名
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     offset: 64,
     type: 'success',

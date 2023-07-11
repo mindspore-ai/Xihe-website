@@ -379,10 +379,10 @@ watch(
 
 // 电力跳转过来筛选标签
 watch(
-  () => route.params,
+  () => window.history.state.tags,
   () => {
-    queryData.tag_kinds = route.params.tag_kinds;
-    queryData.tags = route.params.tags;
+    queryData.tag_kinds = window.history.state.tag_kinds;
+    queryData.tags = window.history.state.tags;
   },
   {
     immediate: true,

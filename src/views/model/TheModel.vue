@@ -440,10 +440,13 @@ async function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         // 标签高亮
-        if (route.params.tag_kinds === 'CV' && it.kind === 'CV') {
+        if (window.history.state.tag_kinds === 'CV' && it.kind === 'CV') {
           it.isActive = true;
           it.isSelected = true;
-        } else if (route.params.tag_kinds === 'NLP' && it.kind === 'NLP') {
+        } else if (
+          window.history.state.tag_kinds === 'NLP' &&
+          it.kind === 'NLP'
+        ) {
           it.isActive = true;
           it.isSelected = true;
         } else {
@@ -465,10 +468,7 @@ async function getModelTag() {
       item.showTagsAll = false;
       item.condition.forEach((it) => {
         // 电力跳转过来标签高亮
-        if (
-          Object.keys(route.params).length &&
-          it.items[0].name === 'electricity'
-        ) {
+        if (window.history.state.tags && it.items[0].name === 'electricity') {
           it.items[0].isActive = true;
           it.items[0].isSelected = false;
         } else {
@@ -555,10 +555,10 @@ watch(
 );
 // 电力跳转过来筛选标签
 watch(
-  () => route.params,
+  () => window.history.state.tags,
   () => {
-    queryData.tag_kinds = route.params.tag_kinds;
-    queryData.tags = route.params.tags;
+    queryData.tag_kinds = window.history.state.tag_kinds;
+    queryData.tags = window.history.state.tags;
   },
   {
     immediate: true,

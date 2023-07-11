@@ -11,7 +11,8 @@ import IconHeart from '~icons/app/heart-white';
 import IconHeart2 from '~icons/app/heart-gray';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
-import useClipboard from 'vue-clipboard3';
+
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import {
   collectedPictures,
@@ -28,7 +29,6 @@ const { t } = useI18n();
 const screenWidth = useWindowResize();
 
 const userInfoStore = useUserInfoStore();
-const { toClipboard } = useClipboard();
 
 const imgInfoDlg = ref(false);
 const imageInfo = ref();
@@ -191,7 +191,7 @@ function handleDlgClose() {
 }
 // 复制用户名
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     type: 'success',
     message: t('wukong.COPY'),

@@ -31,14 +31,12 @@ import IconCopy from '~icons/app/copy-nickname';
 
 import arrow from '@/assets/imgs/wukong/arrow.png';
 
-import useClipboard from 'vue-clipboard3';
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
-
-const { toClipboard } = useClipboard();
 
 const router = useRouter();
 const userInfo = useUserInfoStore();
@@ -281,7 +279,7 @@ function collectPic(index) {
   }
 }
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     type: 'success',
     message: t('wukong.COPY'),

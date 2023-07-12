@@ -1,17 +1,5 @@
 import { request } from '@/shared/axios';
-
-import { LOGIN_KEYS } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { getHeaderConfig } from '@/shared/login';
 
 /**
  * 详情

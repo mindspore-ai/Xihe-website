@@ -1,23 +1,12 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { getHeaderConfig } from '@/shared/login';
 
 /**
  * 获取微调任务列表
  * @returns
  */
 export function getFinetuneList() {
-  const url = `/server/finetune`;
+  const url = '/server/finetune';
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {
@@ -29,7 +18,7 @@ export function getFinetuneList() {
  * @returns
  */
 export function createFinetune(params) {
-  const url = `/server/finetune`;
+  const url = '/server/finetune';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });

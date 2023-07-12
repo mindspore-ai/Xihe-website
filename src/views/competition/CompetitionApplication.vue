@@ -1,5 +1,12 @@
 <script setup>
-import { ref, reactive, defineExpose, computed } from 'vue';
+import {
+  ref,
+  reactive,
+  defineExpose,
+  computed,
+  defineProps,
+  defineEmits,
+} from 'vue';
 
 import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
@@ -58,7 +65,7 @@ const i18n = {
   description: '描述',
   save: '保存',
   agree: '已阅读并同意',
-  statement: '《昇思大模型平台隐私政策声明》',
+  statement: '《比赛和课程相关隐私政策》',
 };
 const query = reactive({
   name: props.userReginfo.Name,
@@ -185,6 +192,7 @@ function handleProvince(num) {
       query.loc_province = val.label;
       return true;
     }
+    return false;
   });
   query.loc_city = citys.value[0].label;
 }
@@ -263,10 +271,14 @@ function saveInfo(formEl) {
         });
       }
     } else {
-      console.error('error submit!');
       return false;
     }
   });
+}
+// 跳转到隐私政策
+function goPrivacy() {
+  sessionStorage.setItem('privacyType', 'competition');
+  window.open('/privacy');
 }
 </script>
 <template>
@@ -494,9 +506,9 @@ function saveInfo(formEl) {
         <span>{{ i18n.agree }}</span>
       </div>
       <div class="statement">
-        <router-link target="_blank" to="/privacy">
+        <div class="privacy" @click="goPrivacy">
           {{ i18n.statement }}
-        </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -654,8 +666,9 @@ function saveInfo(formEl) {
       }
     }
     .statement {
-      a {
+      .privacy {
         color: #0d8dff;
+        cursor: pointer;
       }
     }
   }

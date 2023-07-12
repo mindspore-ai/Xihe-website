@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import OButton from '@/components/OButton.vue';
-import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUserLive } from '@/api/api-user';
@@ -65,7 +65,6 @@ watch(
   },
   {
     deep: true,
-    // immediate: true,
   }
 );
 
@@ -92,12 +91,12 @@ function handleSizeChange(val) {
   }
   queryData.size = val;
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 function handleCurrentChange(val) {
   queryData.page = val;
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 
 function getCount() {
@@ -184,21 +183,6 @@ getCount();
       &-item {
         :deep(.project-card) {
           border-radius: 16px;
-          // .card-top {
-          //   img {
-          //     border-top-right-radius: 16px;
-          //     border-top-left-radius: 16px;
-          //   }
-          // }
-          // .card-bottom {
-          //   border-bottom-right-radius: 16px;
-          //   border-bottom-left-radius: 16px;
-          // }
-          // &:hover {
-          //   .cover {
-          //     transform: scale(1.05);
-          //   }
-          // }
         }
         & + .card-list-item {
           margin-top: 30px;

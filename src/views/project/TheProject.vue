@@ -132,10 +132,6 @@ const queryData = reactive({
   sort_by: 'download_count', // 排序规则
 });
 
-const debounceSearch = debounce(getProject, 500, {
-  trailing: true,
-});
-
 // 头部tabs
 const navItems = [
   {
@@ -202,6 +198,23 @@ let dialogList = {
   },
   tags: [],
 };
+const layout = ref('sizes, prev, pager, next, jumper');
+
+function getProject() {
+  getProjectData(queryData).then((res) => {
+    if (res.status === 200) {
+      projectCount.value = res.data.data.total;
+      if (projectCount.value / 10 < 8) {
+        layout.value = layout.value.split(',').splice(0, 4).join(',');
+      }
+      projectData.value = res.data.data;
+    }
+  });
+}
+
+const debounceSearch = debounce(getProject, 500, {
+  trailing: true,
+});
 
 // 点击导航
 function handleNavClick(item) {
@@ -220,7 +233,7 @@ function handleNavClick(item) {
     good: { level: 'good', tags: null },
     electricity: { level: null, tags: 'electricity' },
   };
-  if (levelMap.hasOwnProperty(item.id)) {
+  if (item.id in levelMap) {
     queryData.level = levelMap[item.id].level;
     queryData.tags = levelMap[item.id].tags;
   }
@@ -243,18 +256,6 @@ function highlightTag(tag) {
     tag.active = true;
     queryData.tag_kinds = tag.value;
   }
-}
-
-function getProject() {
-  getProjectData(queryData).then((res) => {
-    if (res.status === 200) {
-      projectCount.value = res.data.data.total;
-      if (projectCount.value / 10 < 8) {
-        layout.value = layout.value.split(',').splice(0, 4).join(',');
-      }
-      projectData.value = res.data.data;
-    }
-  });
 }
 
 function getModelTag() {
@@ -325,7 +326,7 @@ function goSetNew() {
     goAuthorize();
   }
 }
-const layout = ref('sizes, prev, pager, next, jumper');
+
 function handleSizeChange(val) {
   if (projectCount.value / val < 8) {
     layout.value = layout.value.split(',').splice(0, 4).join(',');
@@ -333,13 +334,13 @@ function handleSizeChange(val) {
   queryData.count_per_page = val;
 }
 
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
+
 function handleCurrentChange(val) {
   queryData.page_num = val;
   toTop();
-}
-
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 function getKeyWord() {
   queryData.page_num = 1;
@@ -378,10 +379,10 @@ watch(
 
 // 电力跳转过来筛选标签
 watch(
-  () => route.params,
+  () => window.history.state.tags,
   () => {
-    queryData.tag_kinds = route.params.tag_kinds;
-    queryData.tags = route.params.tags;
+    queryData.tag_kinds = window.history.state.tag_kinds;
+    queryData.tags = window.history.state.tags;
   },
   {
     immediate: true,
@@ -1200,7 +1201,6 @@ $theme: #0d8dff;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        // width: 100%;
         .project-tags {
           display: flex;
           align-items: center;

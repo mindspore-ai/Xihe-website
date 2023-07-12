@@ -48,6 +48,18 @@ function setEmail(formEl) {
     }
   });
 }
+// 倒计时
+const handleTimeChange = () => {
+  if (time.value <= 0) {
+    isDisposed.value = false;
+    time.value = 60;
+  } else {
+    setTimeout(() => {
+      time.value--;
+      handleTimeChange();
+    }, 1000);
+  }
+};
 function verifySuccess(data) {
   sendCode({ email: ruleForm.email, capt: data.captchaVerification })
     .then(() => {
@@ -114,23 +126,11 @@ function keepEmail(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });
 }
-//倒计时
-const handleTimeChange = () => {
-  if (time.value <= 0) {
-    isDisposed.value = false;
-    time.value = 60;
-  } else {
-    setTimeout(() => {
-      time.value--;
-      handleTimeChange();
-    }, 1000);
-  }
-};
+
 const isVisibel = ref(false);
 function toggleVisible(val) {
   isVisibel.value = val;
@@ -173,7 +173,6 @@ function toggleVisible(val) {
           class="setting-input"
         ></el-input>
       </el-form-item>
-      <!-- <p class="setting-tip">可对主要电子邮箱地址进行更改，需在新邮箱</p> -->
       <el-form-item
         class="email_code"
         prop="email_code"

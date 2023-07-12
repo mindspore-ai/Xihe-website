@@ -1,5 +1,13 @@
 <script setup>
-import { ref, watch, computed, onUpdated, onUnmounted } from 'vue';
+import {
+  ref,
+  watch,
+  computed,
+  onUpdated,
+  onMounted,
+  onUnmounted,
+  defineEmits,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { handleMarkdown } from '@/shared/markdown';
@@ -28,20 +36,20 @@ import {
   deleteModel,
 } from '@/api/api-project';
 
+const MATHJSX = import.meta.env.VITE_MATH_JSX;
+
 const TypeSet = async function (elements) {
   if (!window.MathJax) {
     return;
   }
-  try {
-    window.MathJax.startup.promise = window.MathJax.startup.promise
-      .then(() => {
-        return window.MathJax.typesetPromise(elements);
-      })
-      .catch((err) => console.error('Typeset failed: ' + err.message));
-    return window.MathJax.startup.promise;
-  } catch (error) {
-    console.error('Typeset failed: ' + error.message);
-  }
+  window.MathJax.startup.promise = window.MathJax.startup.promise
+    .then(() => {
+      return window.MathJax.typesetPromise(elements);
+    })
+    .catch((err) => {
+      return err;
+    });
+  return window.MathJax.startup.promise;
 };
 let head = document.head;
 let script1 = document.createElement('script');
@@ -49,10 +57,7 @@ let script = document.createElement('script');
 script.setAttribute('type', 'text/javascript');
 script.setAttribute('id', 'MathJax-script');
 script.setAttribute('async', '');
-script.setAttribute(
-  'src',
-  'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
-);
+script.setAttribute('src', MATHJSX);
 let code =
   'MathJax = {' +
   '  tex: {' +
@@ -92,6 +97,8 @@ const showTip = ref(false);
 // 左侧显示文件内容
 const result = ref();
 const codeString = ref('');
+const rightDiv = ref(null);
+const leftDiv = ref(null);
 
 const mkit = handleMarkdown();
 
@@ -129,6 +136,34 @@ const i18n = {
 const describe = ref('');
 
 const trainListData = ref([]);
+
+// 获取README文件
+function getReadMeFile() {
+  try {
+    getReadmeInfo(detailData.value.owner, detailData.value.name)
+      .then((tree) => {
+        if (tree.data.has_file) {
+          getGitlabFileRaw({
+            type: 'project',
+            user: routerParams.user,
+            path: 'README.md',
+            id: detailData.value.id,
+            name: routerParams.name,
+          }).then((res) => {
+            res ? (codeString.value = res) : '';
+            result.value = mkit.render(codeString.value);
+          });
+        } else {
+          codeString.value = '';
+        }
+      })
+      .catch((err) => {
+        return err;
+      });
+  } catch (error) {
+    return error;
+  }
+}
 route.hash ? getReadMeFile() : '';
 
 // 获取训练列表数据
@@ -140,7 +175,7 @@ function getTrainList() {
 if (userInfo.userName === detailData.value.owner) {
   getTrainList();
 }
-//跳转到选择文件创建训练实例页
+// 跳转到选择文件创建训练实例页
 function goSelectFile() {
   if (trainListData.value !== null && trainListData.value.length === 5) {
     describe.value = i18n.describe2;
@@ -323,33 +358,7 @@ function deleteClick(item) {
 function addModeClick() {
   isShowModelDlg.value = true;
 }
-// 获取README文件
-function getReadMeFile() {
-  try {
-    getReadmeInfo(detailData.value.owner, detailData.value.name)
-      .then((tree) => {
-        if (tree.data.has_file) {
-          getGitlabFileRaw({
-            type: 'project',
-            user: routerParams.user,
-            path: 'README.md',
-            id: detailData.value.id,
-            name: routerParams.name,
-          }).then((res) => {
-            res ? (codeString.value = res) : '';
-            result.value = mkit.render(codeString.value);
-          });
-        } else {
-          codeString.value = '';
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 // 路由监听
 watch(
   () => route,
@@ -406,10 +415,28 @@ watch(
     result.value = mkit.render(codeString.value);
   }
 );
+
+// 下滑后固定右侧div
+onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightDiv.value) {
+        if (intervalTop <= 80) {
+          rightDiv.value.style.position = 'sticky';
+          rightDiv.value.style.top = '80px';
+        } else {
+          rightDiv.value.style.position = 'static';
+        }
+      }
+    }
+  };
+  window.addEventListener('scroll', handleScroll);
+});
 </script>
 <template>
   <div class="project-train">
-    <div class="project-train-file">
+    <div ref="leftDiv" class="project-train-file">
       <div
         v-show="userInfo.userName === detailData.owner"
         class="createtrain-btn"
@@ -454,59 +481,61 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div class="download-data">
-        <div class="download-data-left">
-          <h4 class="download-title">{{ i18n.recentDownload }}</h4>
-          <span class="download-count">{{ detailData.download_count }}</span>
+      <div ref="rightDiv" class="relate-wrap">
+        <div class="download-data">
+          <div class="download-data-left">
+            <h4 class="download-title">{{ i18n.recentDownload }}</h4>
+            <span class="download-count">{{ detailData.download_count }}</span>
+          </div>
+          <div class="download-data-right">
+            <h4 class="download-title">{{ i18n.fork }}</h4>
+            <span class="download-count">{{ detailData.fork_count }}</span>
+          </div>
         </div>
-        <div class="download-data-right">
-          <h4 class="download-title">{{ i18n.fork }}</h4>
-          <span class="download-count">{{ detailData.fork_count }}</span>
+        <!-- 添加数据集 -->
+        <div class="dataset-data">
+          <div class="add-title">
+            <h4 class="title">{{ i18n.dataset }}</h4>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addRelateClick"
+            >
+              {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
+          <div class="dataset-box">
+            <relate-card
+              v-if="detailData.related_datasets"
+              :detail-data="detailData"
+              :name="'related_datasets'"
+              @delete="deleteClick"
+              @jump="goDetasetClick"
+            ></relate-card>
+            <no-relate v-else :relate-name="'dataset'"></no-relate>
+          </div>
         </div>
-      </div>
-      <!-- 添加数据集 -->
-      <div class="dataset-data">
-        <div class="add-title">
-          <h4 class="title">{{ i18n.dataset }}</h4>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addRelateClick"
-          >
-            {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
-        </div>
-        <div class="dataset-box">
+        <!-- 添加模型 -->
+        <div class="related-project">
+          <div class="add-title">
+            <h4 class="title">{{ i18n.relatedItem }}</h4>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addModeClick"
+            >
+              {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
           <relate-card
-            v-if="detailData.related_datasets"
+            v-if="detailData.related_models"
             :detail-data="detailData"
-            :name="'related_datasets'"
+            :name="'related_models'"
             @delete="deleteClick"
-            @jump="goDetasetClick"
+            @jump="goDetailClick"
           ></relate-card>
-          <no-relate v-else :relate-name="'dataset'"></no-relate>
+          <no-relate v-else :relate-name="'model'"></no-relate>
         </div>
-      </div>
-      <!-- 添加模型 -->
-      <div class="related-project">
-        <div class="add-title">
-          <h4 class="title">{{ i18n.relatedItem }}</h4>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addModeClick"
-          >
-            {{ i18n.addModel }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
-        </div>
-        <relate-card
-          v-if="detailData.related_models"
-          :detail-data="detailData"
-          :name="'related_models'"
-          @delete="deleteClick"
-          @jump="goDetailClick"
-        ></relate-card>
-        <no-relate v-else :relate-name="'model'"></no-relate>
       </div>
     </div>
 
@@ -620,6 +649,11 @@ watch(
 </template>
 
 <style lang="scss" scoped>
+.fixed {
+  position: absolute;
+  top: 80px;
+  right: 0;
+}
 .project-train {
   display: flex;
   // padding-bottom: 40px;
@@ -694,12 +728,14 @@ watch(
     }
   }
   .right-data {
-    // max-width: 425px;
     width: calc(34% - 24px);
     color: #000;
     background: #ffffff;
     border-radius: 16px;
-    padding: 40px 24px;
+    padding: 0px 24px 40px;
+    .relate-wrap {
+      padding-top: 40px;
+    }
     .download-data {
       display: flex;
       &-left {

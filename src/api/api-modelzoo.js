@@ -1,18 +1,7 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS } from '@/shared/login';
+import { LOGIN_KEYS, getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
+import Cookies from 'js-cookie';
 /**
  * 上传紫东太初大模型推理图片
  * @returns
@@ -25,7 +14,7 @@ export function uploadModelzooPic(params) {
     .post(url, params, {
       $noLoading: true,
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -62,7 +51,7 @@ export function getMultiplePicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })
@@ -83,7 +72,7 @@ export function uploadVqaPicture(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -136,7 +125,7 @@ export function handlePanguInfer(params) {
   return request
     .post(url, params, {
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })
@@ -156,9 +145,8 @@ export function handleLuojiaUploadPic(params) {
   const url = '/server/bigmodel/luojia_upload_picture';
   return request
     .post(url, params, {
-      $noLoading: true,
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -228,7 +216,7 @@ export function wuKongInfer(params) {
       $doException: true,
       $noLoading: true,
       headers: {
-        'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
+        'csrf-token': Cookies.get(LOGIN_KEYS.SERVE_CODE),
       },
       timeout: 60000,
     })

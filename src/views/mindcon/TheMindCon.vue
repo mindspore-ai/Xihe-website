@@ -45,8 +45,8 @@ const router = useRouter();
 const isInProgress = ref(false);
 
 const isShow = ref(false);
-const showApplication = ref(false); //显示报名弹窗
-const showMindcon = ref('MindCon'); //区别mindcon/比赛弹窗
+const showApplication = ref(false); // 显示报名弹窗
+const showMindcon = ref('MindCon'); // 区别mindcon/比赛弹窗
 const applicationData = ref(null);
 const showBtn = ref(false);
 const activityDetail = ref('');
@@ -164,7 +164,7 @@ function goChallenge(index) {
   }
 }
 
-//隐藏报名表单
+// 隐藏报名表单
 function hideForm(val) {
   showApplication.value = val;
 }
@@ -174,6 +174,7 @@ function handleStartAnswer() {
   router.push('/activity-1');
 }
 // 排行榜
+const rankingData = ref([]);
 const currentPage = ref(1);
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
@@ -215,7 +216,7 @@ watch(
     }
   }
 );
-const rankingData = ref([]);
+
 GetRankingList().then((res) => {
   rankingData.value = res.data;
   rankingData.value.forEach((item, index) => {
@@ -548,18 +549,7 @@ function goRule() {
 <style lang="scss" scoped>
 .activity-dlg {
   :deep(.el-dialog) {
-    // width: 817px !important;
     --el-dialog-margin-top: 32vh;
-    // .el-dialog__header {
-    //   display: block;
-    //   // font-size: 24px;
-    //   // line-height: 32px;
-    //   // padding-top: 40px;
-    //   color: #000000;
-    //   text-align: center;
-    //   margin-right: 0;
-    // }
-
     .el-dialog__body {
       padding: 0px 40px 40px;
     }

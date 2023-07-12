@@ -9,6 +9,7 @@ import IconLike from '~icons/app/wukong-like';
 import IconHeartgray from '~icons/app/heart-gray';
 
 import { useUserInfoStore } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 import {
   publicPictures,
@@ -24,6 +25,9 @@ const userInfoStore = useUserInfoStore();
 const screenWidth = useWindowResize();
 const publicList = ref([]);
 const cancelPublicId = ref('');
+const imgInfoDlg = ref(false);
+const imageInfo = ref();
+
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
   const img = new Image();
@@ -64,17 +68,11 @@ async function getPublicPictures() {
     if (res.status === 200 && res.data.data) {
       publicList.value = res.data.data;
       res.data.data.forEach((item, index) => {
-        addWatermark(
-          item.link.replace(
-            'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/',
-            '/obs-big-model/'
-          ),
-          index
-        );
+        addWatermark(item.link, index);
       });
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 getPublicPictures();
@@ -95,15 +93,12 @@ async function confirmQuitPublic() {
       });
     }
     publicList.value.splice(deleteIndex.value, 1);
-    // getPublicPictures();
   } catch (err) {
-    console.error(err);
+    return err;
   }
   showConfirmDlg.value = false;
 }
 // 移动端点击公开图片
-const imgInfoDlg = ref(false);
-const imageInfo = ref();
 function handleImageClick(info) {
   imageInfo.value = info;
   imgInfoDlg.value = true;
@@ -138,7 +133,7 @@ async function cancelImgCollected(item) {
       item.is_like = false;
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 </script>
@@ -172,10 +167,6 @@ async function cancelImgCollected(item) {
                 <o-icon><icon-like></icon-like></o-icon>
               </p>
             </div>
-            <!-- <div class="right">
-              <o-icon><icon-fingure></icon-fingure></o-icon>
-              <p class="dig-counts">{{ item.digg_count }}</p>
-            </div> -->
           </div>
         </div>
 

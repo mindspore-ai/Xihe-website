@@ -7,6 +7,7 @@ import OButton from '@/components/OButton.vue';
 import IconUpload from '~icons/app/modelzoo-upload';
 import IconDownload from '~icons/app/download';
 import IconRefresh from '~icons/app/refresh-taichu';
+import { ElMessage } from 'element-plus';
 
 import {
   uploadModelzooPic,
@@ -124,7 +125,7 @@ function submitUpload() {
         }
       });
     } catch (e) {
-      console.error(e);
+      return e;
     }
   }
 }
@@ -163,7 +164,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }
@@ -627,7 +628,6 @@ onUnmounted(() => {
             <span class="main">&nbsp;{{ analysis }}</span>
           </div>
           <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-          <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
         </div>
       </div>
     </div>
@@ -680,7 +680,6 @@ onUnmounted(() => {
               <span class="head">Caption:</span>
               <span class="main">&nbsp;{{ analysis }}</span>
             </div>
-            <!-- <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" /> -->
           </div>
           <div class="btn-box-mobile">
             <o-button

@@ -11,6 +11,8 @@ import IconRefresh from '~icons/app/refresh-taichu';
 
 import { getSinglePicture, getMultiplePicture } from '@/api/api-modelzoo';
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
+import { getRandom } from '@/shared/utils';
 
 const { t } = useI18n();
 const isLogined = computed(() => useLoginStore().isLogined);
@@ -49,21 +51,6 @@ const lists = [
   { name: t('taichu.IMG_GENERATE.LISTS[14]'), isSelected: false },
 ];
 
-// 随机选取五个样例
-function getRandom(arr, count) {
-  let shuffled = arr.slice(0),
-    i = arr.length,
-    min = i - count,
-    temp,
-    index;
-  while (i-- > min) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
-  }
-  return shuffled.slice(min);
-}
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index, font, arr) {
   const img = new Image();

@@ -14,6 +14,7 @@ import { uploadModelzooPic } from '@/api/api-modelzoo';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
 import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 
@@ -87,7 +88,7 @@ function submitUpload() {
           }
         });
       } catch (e) {
-        console.error(e);
+        return e;
       }
     }
   }
@@ -141,7 +142,7 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }
@@ -207,7 +208,6 @@ function customUpload() {
               <span class="main">&nbsp;{{ analysis }}</span>
             </div>
             <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-            <!-- <p><span>Caption:</span>{{ analysis }}</p> -->
             <div class="experience-btn">
               <o-button
                 v-if="!loading"
@@ -273,9 +273,6 @@ function customUpload() {
           <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
           <p v-else>{{ analysis }}</p>
         </div>
-        <!-- <div class="analyse-result">
-          <img v-if="loading" src="@/assets/gifs/loading.gif" alt="" />
-        </div> -->
 
         <div class="mobile-btn">
           <o-button
@@ -298,26 +295,32 @@ function customUpload() {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   .o-icon {
     color: #ccc;
     font-size: 48px;
+
     @media screen and (max-width: 820px) {
       font-size: 32px;
     }
   }
+
   .upload-tip {
     font-size: 14px;
     color: #999;
     line-height: 22px;
     margin-top: 8px;
     white-space: pre-wrap;
+
     @media screen and (max-width: 820px) {
       font-size: 12px;
     }
   }
 }
+
 :deep(.el-upload) {
   width: 100%;
+
   .el-upload-dragger {
     width: 100%;
     height: 414px;
@@ -327,16 +330,19 @@ function customUpload() {
     align-items: center;
     justify-content: center;
     border-radius: 16px 16px 0 0;
+
     @media screen and (max-width: 820px) {
       height: 346px;
       border: 1px solid #acacac;
       border-radius: 16px;
     }
+
     @media screen and (max-width: 767px) {
       height: 196px;
       border: 1px solid #acacac;
       padding: 8px;
     }
+
     img {
       border: 1px solid #a0d2ff;
       max-height: 100%;
@@ -345,6 +351,7 @@ function customUpload() {
     }
   }
 }
+
 .img-list {
   padding: 0 40px 40px;
   display: flex;
@@ -352,16 +359,20 @@ function customUpload() {
   justify-content: space-between;
   align-items: center;
   border-radius: 0 0 16px 16px;
+
   @media screen and (max-width: 820px) {
     padding: 0;
     margin-top: 16px;
   }
+
   .active {
     border: 2px solid #a0d2ff;
+
     .modal {
       display: block;
     }
   }
+
   .custom {
     display: flex;
     flex-direction: column;
@@ -369,6 +380,7 @@ function customUpload() {
     align-items: center;
     color: #0d8dff;
     background-color: #e7f4ff;
+
     .o-icon {
       @media screen and (max-width: 768px) {
         font-size: 24px;
@@ -380,6 +392,7 @@ function customUpload() {
       font-weight: 400;
       line-height: 20px;
       margin-top: 8px;
+
       @media screen and (max-width: 768px) {
         font-size: 9px;
         line-height: 13px;
@@ -388,31 +401,37 @@ function customUpload() {
       }
     }
   }
+
   .img-list-item {
     width: 106px;
     height: 106px;
     position: relative;
     cursor: pointer;
     border-radius: 8px;
+
     @media screen and (max-width: 820px) {
       width: 96px;
       height: 96px;
       border: 1px solid transparent;
     }
+
     @media screen and (max-width: 767px) {
       width: 54px;
       height: 54px;
       border: 1px solid transparent;
+
       &:nth-child(5),
       &:nth-child(6) {
         display: none;
       }
     }
+
     img {
       width: 100%;
       height: 100%;
       border-radius: 8px;
     }
+
     .modal {
       position: absolute;
       left: 0;
@@ -422,43 +441,53 @@ function customUpload() {
       display: none;
       background: rgba(165, 213, 255, 0.5);
     }
+
     &:hover {
       border: 1px solid #a0d2ff;
+
       .modal {
         display: block;
       }
     }
   }
 }
+
 .model-page {
   width: 100%;
   padding-bottom: 64px;
+
   @media screen and (max-width: 820px) {
     padding-bottom: 0px;
   }
+
   .model-wrap {
     margin: 0 auto;
     max-width: 1416px;
     border-radius: 16px;
+
     @media screen and (max-width: 820px) {
       background-color: #fff;
       padding: 16px 16px 24px;
     }
   }
+
   // PC
   .image-caption {
     @media screen and (max-width: 820px) {
       display: none;
     }
+
     .caption-top {
       text-align: center;
       padding: 40px 0px;
+
       .experience-title {
         font-weight: 300;
         font-size: 36px;
         color: #000000;
         line-height: 48px;
       }
+
       .experience-text {
         margin-top: 16px;
         height: 24px;
@@ -467,17 +496,21 @@ function customUpload() {
         line-height: 24px;
       }
     }
+
     .caption-bottom {
       height: 560px;
       display: flex;
+
       .caption-bottom-left {
         flex: 1;
         width: 70%;
         margin-right: 24px;
+
         .o-icon {
           font-size: 48px;
         }
       }
+
       .caption-bottom-right {
         width: calc(30% - 24px);
         padding: 24px 24px 40px;
@@ -487,6 +520,7 @@ function customUpload() {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
         .result {
           font-size: 18px;
           font-weight: 400;
@@ -508,6 +542,7 @@ function customUpload() {
           font-size: 14px;
           color: #555555;
           line-height: 20px;
+
           .head {
             font-size: 16px;
             font-weight: 500;
@@ -515,6 +550,7 @@ function customUpload() {
             line-height: 24px;
             margin-bottom: 8px;
           }
+
           .main {
             font-size: 14px;
             font-weight: 400;
@@ -522,36 +558,44 @@ function customUpload() {
             line-height: 20px;
           }
         }
+
         .experience-btn {
           text-align: center;
         }
       }
     }
   }
+
   // mobile
   .mobile {
     display: none;
+
     @media screen and (max-width: 820px) {
       display: block;
     }
+
     .model-name {
       font-size: 14px;
       line-height: 28px;
       color: #000000;
     }
+
     .model-desc {
       font-size: 12px;
       line-height: 18px;
       font-weight: 400;
       color: #555555;
+
       @media screen and (max-width: 820px) {
         border-bottom: 1px solid #dbdbdb;
         padding: 8px 0 16px;
       }
     }
+
     .image-upload {
       margin-top: 16px;
     }
+
     .analyse {
       font-size: 14px;
       line-height: 20px;
@@ -559,6 +603,7 @@ function customUpload() {
       color: #000000;
       margin-top: 24px;
     }
+
     .analyse-result {
       height: 120px;
       border: 1px solid #a0d2ff;
@@ -566,6 +611,7 @@ function customUpload() {
       padding: 8px;
       font-size: 12px;
       position: relative;
+
       img {
         width: 50px;
         position: absolute;
@@ -574,6 +620,7 @@ function customUpload() {
         transform: translate(-50%, -50%);
       }
     }
+
     .mobile-btn {
       margin-top: 16px;
       display: flex;

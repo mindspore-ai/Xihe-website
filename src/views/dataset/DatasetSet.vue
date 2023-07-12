@@ -133,7 +133,6 @@ async function confirmRename(formEl) {
         });
       }
     } else {
-      console.error('error submit!');
       return false;
     }
   });

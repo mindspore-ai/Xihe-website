@@ -20,6 +20,13 @@ const { t, locale } = useI18n();
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
 const useDialog = useEmailDialogState();
+const meauActive = ref(false);
+const route = useRoute();
+const router = useRouter();
+
+const noHeader = ref(false);
+const header = ref(null);
+const isHeaderTransparent = ref(false);
 
 const loginedDropdownItems = reactive([
   {
@@ -62,15 +69,6 @@ const loginedDropdownItems = reactive([
       router.push('/new/datasets');
     },
   },
-  // {
-  //   id: 'settings',
-  //   label: computed(() => {
-  //     return locale.value === 'zh' ? '设置' : 'Settings';
-  //   }),
-  //   action: () => {
-  //     router.push('/settings');
-  //   },
-  // },
   {
     id: 'logout',
     label: computed(() => {
@@ -83,16 +81,19 @@ const loginedDropdownItems = reactive([
   },
 ]);
 
-const route = useRoute();
-const router = useRouter();
-
-const header = ref(null);
-const isHeaderTransparent = ref(false);
-
 const setHeader = () => {
   const scrollLeft = document.documentElement.scrollLeft;
   header.value && (header.value.style.left = `-${scrollLeft}px`);
 };
+
+// 监听向下滚动
+function scroll(e) {
+  if (e.deltaY < 0) {
+    noHeader.value = false;
+  } else if (route.name === 'home') {
+    noHeader.value = true;
+  }
+}
 
 onMounted(() => {
   window.addEventListener('scroll', setHeader);
@@ -155,11 +156,6 @@ const routeLists = {
     name: 'AI画集',
     child: ['AIAlbum'],
     back: '/modelzoo/wukong',
-  },
-  home: {
-    name: '首页',
-    child: ['home'],
-    back: '',
   },
   home: {
     name: '首页',
@@ -245,7 +241,7 @@ watch(
   }
 );
 
-//比赛页面头部不透明
+// 比赛页面头部不透明
 watch(
   () => route.path,
   (newValue) => {
@@ -257,25 +253,6 @@ watch(
 onMounted(() => {
   window.addEventListener('resize', onResize);
 });
-
-// function goBack() {
-//   Object.keys(routeLists).forEach((key) => {
-//     if (routeLists[key].name === currentPage.value) {
-//       backUrl.value = routeLists[key].back;
-//     }
-//   });
-
-//   router.push(backUrl.value);
-// }
-const noHeader = ref(false);
-// 监听向下滚动
-function scroll(e) {
-  if (e.deltaY < 0) {
-    noHeader.value = false;
-  } else if (route.name === 'home') {
-    noHeader.value = true;
-  }
-}
 
 const mobileNav = reactive([
   {
@@ -388,18 +365,12 @@ const mobileNav = reactive([
   },
 ]);
 
-const meauActive = ref(false);
 function toggleMenu(menu) {
   meauActive.value = menu;
   mobileNav[3].isActive = false;
   mobileNav[5].isActive = false;
 }
 function toPage(path, index) {
-  // if (path === '/') {
-  //   mobileNav[0].isActive = true;
-  //   mobileNav[3].isActive = false;
-  //   router.push(path);
-  // } else
   if (path === '/docs') {
     window.open('https://xihe-docs.mindspore.cn');
   } else if (router.currentRoute.value.fullPath === path) {
@@ -429,18 +400,19 @@ const handleCommand = () => {
   }
 };
 
-// cookies使用提示
-const isCookieTip = ref(false);
-function onCookieClick() {
-  isCookieTip.value = false;
-  document.cookie = 'xihe-cookie=false; expires=' + getCookieExpirationDate(6);
-}
 // 设置cookie过期时间
 function getCookieExpirationDate(months) {
   const date = new Date();
   date.setMonth(date.getMonth() + months);
   return date.toUTCString();
 }
+// cookies使用提示
+const isCookieTip = ref(false);
+function onCookieClick() {
+  isCookieTip.value = false;
+  document.cookie = 'xihe-cookie=false; expires=' + getCookieExpirationDate(6);
+}
+
 onMounted(() => {
   const cookies = document.cookie;
   const cookiesArray = cookies.split('; ');
@@ -493,20 +465,21 @@ function confirmDialog() {
     <div class="header-tool">
       <loading-arc v-if="loginStore.isLoggingIn" class="loading"></loading-arc>
       <div v-else class="user">
-        <el-dropdown
+        <div
           v-if="!userInfoStore.id"
           class="user-login"
           popper-class="header-nav"
+          @click="goAuthorize"
         >
           <icon-user class="user-login-icon"></icon-user>
-          <template #dropdown>
+          <!-- <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="goAuthorize">{{
                 locale === 'zh' ? '登录' : 'Login'
               }}</el-dropdown-item>
             </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+          </template> -->
+        </div>
         <el-dropdown
           v-if="userInfoStore.id"
           class="user-info"

@@ -51,7 +51,7 @@ export default {
   PRIVACY_POLICY: '隐私政策',
   LEGAL_NOTICE: '法律声明',
   COPYRIGHT: '版权所有',
-  OWNERSHIP: '保留一切权力',
+  OWNERSHIP: '保留一切权利',
   LANG: 'En',
   BANNER_BUTTON_1: '昇思大模型平台',
   BANNER_BUTTON_2: 'AI画家大赛',
@@ -132,12 +132,6 @@ export default {
         PATH: '/modelzoo/luojia',
         INTRO: '/modelzoo/luojia/introduce',
       },
-      // {
-      //   MODELZOO_NAME: '鹏程.盘古',
-      //   MODELZOO_DESC: '业界首个千亿级参数中文自然语言处理大模型',
-      //   IMAGE: modelzoo_pangu,
-      //   PATH: '/modelzoo/pangu',
-      // },
     ],
   },
   // 模型库

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, onMounted, computed, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import OButton from '@/components/OButton.vue';
@@ -10,7 +10,7 @@ import NoRelate from '@/components/train/NoRelate.vue';
 import IconPlus from '~icons/app/plus';
 import IconAddFile from '~icons/app/add-file';
 import IconFile from '~icons/app/model-card-empty';
-import { ElDialog } from 'element-plus';
+import { ElDialog, ElMessage } from 'element-plus';
 
 import { addDataset, deleteDataset, getReadmeInfo } from '@/api/api-model';
 import { getGitlabFileRaw } from '@/api/api-gitlab';
@@ -21,7 +21,6 @@ const userInfo = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
 let routerParams = router.currentRoute.value.params;
-route.hash ? getReadMeFile() : '';
 const mkit = handleMarkdown();
 
 const codeString = ref('');
@@ -30,10 +29,13 @@ const result = ref();
 const isShow = ref(false);
 const addSearch = ref('');
 
+const rightDiv = ref(null);
+const leftDiv = ref(null);
+
+const emit = defineEmits(['on-click']);
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-const emit = defineEmits(['on-click']);
 
 const pushParams = {
   user: routerParams.user,
@@ -78,12 +80,14 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
+route.hash ? getReadMeFile() : '';
+
 function addRelateClick() {
   isShow.value = true;
 }
@@ -191,10 +195,28 @@ watch(
     immediate: true,
   }
 );
+
+// 上滑后固定右侧div
+onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightDiv.value) {
+        if (intervalTop <= 80) {
+          rightDiv.value.style.position = 'sticky';
+          rightDiv.value.style.top = '80px';
+        } else {
+          rightDiv.value.style.position = 'static';
+        }
+      }
+    }
+  };
+  window.addEventListener('scroll', handleScroll); // 在页面加载后添加滚动事件监听器
+});
 </script>
 <template>
   <div v-if="detailData.id" class="model-card">
-    <div v-if="codeString" class="markdown-body">
+    <div v-if="codeString" ref="leftDiv" class="markdown-body">
       <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
       <o-button
         v-if="detailData.owner === userInfo.userName"
@@ -231,46 +253,48 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div class="download-data">
-        <div class="download-title">{{ i18n.recentDownload }}</div>
-        <span class="download-count">{{ detailData.download_count }}</span>
-      </div>
-      <!-- 添加数据集 -->
-      <div class="dataset-data">
-        <div class="add-title">
-          <div class="title">{{ i18n.dataset }}</div>
-          <p
-            v-if="userInfo.userName === detailData.owner"
-            class="add"
-            @click="addRelateClick"
-          >
-            {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
-          </p>
+      <div ref="rightDiv" class="relate-wrap">
+        <div class="download-data">
+          <div class="download-title">{{ i18n.recentDownload }}</div>
+          <span class="download-count">{{ detailData.download_count }}</span>
         </div>
-        <div class="dataset-box">
-          <relate-card
-            v-if="detailData.related_datasets"
+        <!-- 添加数据集 -->
+        <div class="dataset-data">
+          <div class="add-title">
+            <div class="title">{{ i18n.dataset }}</div>
+            <p
+              v-if="userInfo.userName === detailData.owner"
+              class="add"
+              @click="addRelateClick"
+            >
+              {{ i18n.addDataset }} <o-icon><icon-plus></icon-plus></o-icon>
+            </p>
+          </div>
+          <div class="dataset-box">
+            <relate-card
+              v-if="detailData.related_datasets"
+              :detail-data="detailData"
+              :name="'related_datasets'"
+              @delete="deleteClick"
+              @jump="goDetailClick"
+            ></relate-card>
+            <no-relate v-else relate-name="dataset"></no-relate>
+          </div>
+        </div>
+        <!-- 项目 -->
+        <div class="related-project">
+          <div class="add-title">
+            <div class="title">{{ i18n.relatedItem }}</div>
+          </div>
+          <project-relate-card
+            v-if="detailData.related_projects"
             :detail-data="detailData"
-            :name="'related_datasets'"
+            :name="'related_projects'"
             @delete="deleteClick"
-            @jump="goDetailClick"
-          ></relate-card>
-          <no-relate v-else relate-name="dataset"></no-relate>
+            @jump="goProjectClick"
+          ></project-relate-card
+          ><no-relate v-else relate-name="project"></no-relate>
         </div>
-      </div>
-      <!-- 项目 -->
-      <div class="related-project">
-        <div class="add-title">
-          <div class="title">{{ i18n.relatedItem }}</div>
-        </div>
-        <project-relate-card
-          v-if="detailData.related_projects"
-          :detail-data="detailData"
-          :name="'related_projects'"
-          @delete="deleteClick"
-          @jump="goProjectClick"
-        ></project-relate-card
-        ><no-relate v-else relate-name="project"></no-relate>
       </div>
     </div>
 
@@ -305,44 +329,12 @@ watch(
         </span>
       </template>
     </el-dialog>
-    <!-- 无添加项目 -->
-    <!-- <el-dialog
-      v-model="isShow1"
-      width="640px"
-      :show-close="false"
-      center
-      align-center
-      destroy-on-close
-    >
-      <template #header="{ titleId, title }">
-        <div :id="titleId" :class="title">
-          {{ i18n.addProject }}
-        </div>
-      </template>
-      <el-form>
-        <el-form-item label="拥有者/项目名称">
-          <el-input
-            v-model="addSearch"
-            placeholder="你可以直接复制拥有者/项目名称进行输入"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <o-button style="margin-right: 38px" @click="isShow1 = false"
-            >取消</o-button
-          >
-          <o-button type="primary" @click="confirmClick">确定</o-button>
-        </span>
-      </template>
-    </el-dialog> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
 .model-card {
   display: flex;
-  // min-height: calc(100vh - 340px);
   min-height: calc(100vh - 516px);
   background-color: #f5f6f8;
   .markdown-body {
@@ -351,10 +343,7 @@ watch(
     width: 100%;
     border-radius: 16px;
     background: #fff;
-    // border-right: 1px solid #d8d8d8;
     .markdown-file {
-      // max-width: 800px;
-      // padding-right: 40px;
       padding: 24px;
       background: #fff;
       border-radius: 16px;
@@ -370,7 +359,6 @@ watch(
     flex-direction: column;
     align-items: center;
     font-size: 14px;
-    // max-height: 700px;
     .upload-readme-img {
       margin-top: 205px;
       .o-icon {
@@ -398,8 +386,11 @@ watch(
     width: 100%;
     color: #000;
     background: #fff;
-    padding: 40px 24px;
+    padding: 0px 24px 40px;
     border-radius: 16px;
+    .relate-wrap {
+      padding-top: 40px;
+    }
 
     h1,
     h2,

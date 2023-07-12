@@ -1,16 +1,5 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { getHeaderConfig } from '@/shared/login';
 
 export function getCourseList({ status = undefined, type = undefined } = {}) {
   const queryParams = {};
@@ -139,7 +128,7 @@ export function getCertificate(id) {
  * @returns
  */
 export function getReginfo() {
-  const url = `/server/course/reginfo`;
+  const url = '/server/course/reginfo';
   return request
     .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {

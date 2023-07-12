@@ -43,8 +43,8 @@ export const useUserInfoStore = defineStore('userInfo', {
     return {
       id: null, // id
       userName: '', // 用户名
-      description: '', //个人描述
-      avatar: '', //头像
+      description: '', // 个人描述
+      avatar: '', // 头像
       email: '', // 邮箱
       fansCount: 0, // 粉丝数量
       followingCount: 0, // 关注数量
@@ -60,7 +60,7 @@ export const useVisitorInfoStore = defineStore('visitorInfo', {
       id: null, // id
       userName: '', // 用户名
       description: '', //个人描述
-      avatar: '', //头像
+      avatar: '', // 头像
       email: '', // 邮箱
       fansCount: 0, // 粉丝数量
       followingCount: 0, // 关注数量

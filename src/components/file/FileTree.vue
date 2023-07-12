@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, reactive } from 'vue';
+import { ref, computed, watch, reactive, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import IconModel from '~icons/app/model-blue';
@@ -152,7 +152,7 @@ async function getDetailData(path) {
         getDetailData(`${contents.value.join('/')}/`);
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
 function toggleDelDlg(flag, itemFileName, itemIsFolder) {
@@ -232,7 +232,6 @@ function creatFolter(formEl) {
         });
       });
     } else {
-      console.error('error submit!');
       return false;
     }
   });

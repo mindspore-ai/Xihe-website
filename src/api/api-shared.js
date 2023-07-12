@@ -5,7 +5,7 @@ import { request } from '@/shared/axios';
  * @returns
  */
 export function getBaseInfo() {
-  const url = `/api/base/base/`;
+  const url = '/api/base/base/';
   return request.get(url).then((res) => {
     return res.data;
   });
@@ -15,7 +15,7 @@ export function getBaseInfo() {
  * @returns
  */
 export function getModelTags() {
-  const url = `/api/base/filter/`;
+  const url = '/api/base/filter/';
   return request.get(url).then((res) => {
     return res.data;
   });
@@ -46,7 +46,7 @@ export function getFiles(id) {
  * @returns
  */
 export function getHomeInfo() {
-  const url = `/server/homepage`;
+  const url = '/server/homepage';
   return request.get(url).then((res) => {
     return res.data;
   });

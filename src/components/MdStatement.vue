@@ -1,6 +1,6 @@
 <script setup>
 import Markdown from 'markdown-it';
-
+import { defineProps } from 'vue';
 const props = defineProps({
   statement: {
     type: String,

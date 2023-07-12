@@ -1,5 +1,5 @@
 <script setup>
-import { useAttrs } from 'vue';
+import { useAttrs, defineProps } from 'vue';
 
 defineProps({
   tagColor: {

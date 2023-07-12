@@ -26,6 +26,7 @@ const codeString = ref('');
 const result = ref();
 const rightModel = ref(null);
 const licensesHeight = ref(0);
+const leftDiv = ref(null);
 
 const detailData = computed(() => {
   return useFileData().fileStoreData;
@@ -52,8 +53,6 @@ const i18n = {
   emptyVisited: '无数据集卡片',
 };
 
-route.hash ? getReadMeFile() : '';
-
 // 获取README文件
 function getReadMeFile() {
   try {
@@ -75,12 +74,14 @@ function getReadMeFile() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        return err;
       });
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
+
+route.hash ? getReadMeFile() : '';
 
 function handleEditor() {
   pushParams.contents = ['README.md'];
@@ -134,10 +135,28 @@ watch(
     immediate: true,
   }
 );
+
+// 上滑固定右侧div
+onMounted(() => {
+  const handleScroll = () => {
+    if (leftDiv.value) {
+      const intervalTop = leftDiv.value.getBoundingClientRect().top;
+      if (rightModel.value) {
+        if (intervalTop <= 80) {
+          rightModel.value.style.position = 'sticky';
+          rightModel.value.style.top = '80px';
+        } else {
+          rightModel.value.style.position = 'static';
+        }
+      }
+    }
+  };
+  window.addEventListener('scroll', handleScroll);
+});
 </script>
 <template>
   <div v-if="detailData.id" class="model-card">
-    <div v-if="codeString" class="markdown-body">
+    <div v-if="codeString" ref="leftDiv" class="markdown-body">
       <div v-highlight v-dompurify-html="result" class="markdown-file"></div>
       <o-button v-if="detailData.is_owner" @click="handleEditor">{{
         i18n.editor
@@ -169,7 +188,7 @@ watch(
       </div>
     </div>
     <div class="right-data">
-      <div ref="rightModel" class="right-inner">
+      <div ref="rightModel" class="relate-wrap">
         <div class="download-data">
           <div class="download-title">{{ i18n.recentDownload }}</div>
           <span class="download-count">{{ detailData.download_count }}</span>
@@ -275,8 +294,11 @@ watch(
   width: 100%;
   color: #000;
   background: #fff;
-  padding: 40px 24px;
+  padding: 0px 24px 40px;
   border-radius: 16px;
+  .relate-wrap {
+    padding-top: 40px;
+  }
   .download-data {
     .download-title {
       margin-bottom: 8px;

@@ -7,7 +7,7 @@ import IconBack from '~icons/app/left';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 
 import { timestampToTime } from '@/shared/utils';
 
@@ -20,28 +20,18 @@ import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
-
 const isLogined = computed(() => useLoginStore().isLogined);
 
 const router = useRouter();
 
 const buttonText = ref('启动');
-const isDisabled = ref(false); //按钮是否禁用
-const isfinshed = ref(false); //是否推理结束
+const isDisabled = ref(false); // 按钮是否禁用
+const isfinshed = ref(false); // 是否推理结束
 const deadTime = ref('');
 const jupyterUrl = ref('');
 let socket;
 const cloudId = ref('');
+const disposeList = ref([]);
 
 // 返回项目
 function goBack() {
@@ -96,7 +86,7 @@ async function orderCloudSbuscrible(id) {
       };
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 
@@ -128,28 +118,6 @@ function startJupyter() {
     }
   }
 }
-
-const disposeList = ref([]);
-// 获取云资源配置列表
-async function getCloudDisposeList() {
-  try {
-    const res = await cloudDisposeList();
-    disposeList.value = res.data.data;
-    // 登录状态下，查到资源has_holding = true 获取pod信息
-    disposeList.value.forEach((item) => {
-      item.isActive = false;
-      if (isLogined.value && item.has_holding) {
-        cloudId.value = item.id;
-        getPodInfo(cloudId.value);
-      } else {
-        buttonText.value = '启动';
-      }
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-getCloudDisposeList();
 
 // 获取pod信息
 async function getPodInfo(id) {
@@ -192,7 +160,7 @@ async function getPodInfo(id) {
       isDisabled.value = false;
 
       deadTime.value = timestampToTime(res.data.expiry);
-      //判断当前时间戳是否大于获取的时间戳，大于即过期
+      // 判断当前时间戳是否大于获取的时间戳，大于即过期
       const currentTime = new Date().getTime();
       // 是否到期
       if (res.data.expiry * 1000 > currentTime) {
@@ -234,32 +202,30 @@ async function getPodInfo(id) {
       });
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 }
 
-// 表单方式创建实例
-// function createInstance() {
-//   const projectName = window.location.pathname.split('/')[3];
-
-//   router.push(`/projects/${userInfoStore.userName}/${projectName}/createfile`);
-// }
-
-// const isShowDlg = ref(false);
-// 关闭
-// function closeJupyter() {
-//   isShowDlg.value = true;
-// }
-// function confirmClose() {
-//   jupyterUrl.value = '';
-//   isfinshed.value = false;
-//   isDisabled.value = false;
-//   isShowDlg.value = false;
-//   // 关闭取消资源选择状态
-//   disposeList.value.forEach((item) => {
-//     item.isActive = false;
-//   });
-// }
+// 获取云资源配置列表
+async function getCloudDisposeList() {
+  try {
+    const res = await cloudDisposeList();
+    disposeList.value = res.data.data;
+    // 登录状态下，查到资源has_holding = true 获取pod信息
+    disposeList.value.forEach((item) => {
+      item.isActive = false;
+      if (isLogined.value && item.has_holding) {
+        cloudId.value = item.id;
+        getPodInfo(cloudId.value);
+      } else {
+        buttonText.value = '启动';
+      }
+    });
+  } catch (e) {
+    return e;
+  }
+}
+getCloudDisposeList();
 
 // 打开jupyter第三方网址
 function openJupyter() {
@@ -291,10 +257,6 @@ onUnmounted(() => {
         <div class="desc">
           <div class="desc-left">
             云上开发环境，无需配置环境，既可灵活调试运行代码。注意一个用户只能启动一个jupyter实例，且2个小时后会自动释放资源，到期时间前请及时将资源下载到本地。
-            <!-- 详情参考
-            <span class="link" @click="createInstance"
-              >表单方式创建训练实例</span
-            > -->
           </div>
 
           <div v-if="deadTime" class="desc-right">
@@ -358,9 +320,6 @@ onUnmounted(() => {
 
       <div class="footer">
         <template v-if="isfinshed">
-          <!-- <o-button style="margin-right: 16px" @click="closeJupyter"
-            >关闭</o-button
-          > -->
           <o-button type="primary" @click="openJupyter">查看jupyter</o-button>
         </template>
 
@@ -373,33 +332,6 @@ onUnmounted(() => {
         >
       </div>
     </div>
-    <!-- 关闭jupyter确认弹窗 -->
-    <!-- <el-dialog
-      v-model="isShowDlg"
-      width="640px"
-      :show-close="false"
-      center
-      align-center
-      destroy-on-close
-      :close-on-click-modal="false"
-    >
-      <template #header="{ titleId, title }">
-        <div :id="titleId" :class="title">
-          <img :src="warningImg" alt="" />
-        </div>
-      </template>
-      <div class="dialog-body">
-        确认是否将此jupyter实例关闭，注意此操作不可逆，相关资源将会释放，请提前将需要的文件的下载到本地。
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <o-button style="margin-right: 16px" @click="isShowDlg = false"
-            >取消</o-button
-          >
-          <o-button type="primary" @click="confirmClose">确定</o-button>
-        </span>
-      </template>
-    </el-dialog> -->
   </div>
 </template>
 <style lang="scss" scoped>

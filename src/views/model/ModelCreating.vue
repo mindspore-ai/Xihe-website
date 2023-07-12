@@ -16,6 +16,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import protocol from '../../../config/protocol';
 import { createModelStore, checkNames, getTags } from '@/api/api-model';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const userInfo = useUserInfoStore();
@@ -38,7 +39,6 @@ const i18n = {
     describe: '请输入内容',
   },
 };
-const owner = ref([]);
 
 const isTagShow = ref(false);
 const headTags = ref([]);
@@ -58,12 +58,6 @@ let query = reactive({
   repo_type: 'public',
   tags: [],
 });
-
-try {
-  owner.value = useUserInfoStore().owner;
-} catch (error) {
-  console.error(error);
-}
 
 function createModel(formEl) {
   if (!formEl) return;
@@ -91,7 +85,6 @@ function createModel(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });
@@ -149,7 +142,7 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    console.error(re);
+    return e;
   }
 }
 getModelTags('model');
@@ -248,7 +241,7 @@ function deleteAllTags() {
                   size="large"
                 >
                   <el-option
-                    v-for="item in owner"
+                    v-for="item in userInfo.owner"
                     :key="item.id"
                     :label="item.name"
                     :value="item.id"
@@ -313,7 +306,7 @@ function deleteAllTags() {
                     {
                       validator: (rule, value, callback) => {
                         if (value && (value.length < 3 || value.length > 35)) {
-                          callback('模型中文名称长度为3-35个字符');
+                          callback('模型标题长度为3-35个字符');
                         } else {
                           callback();
                         }

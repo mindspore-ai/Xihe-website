@@ -1,20 +1,9 @@
 import { request } from '@/shared/axios';
 import { useUserInfoStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 
 function getUserInfo() {
   return useUserInfoStore();
-}
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
 }
 
 /**
@@ -43,7 +32,7 @@ export function getSortData() {
  * @returns
  */
 export function getDatasetData(params) {
-  const url = `/server/dataset`;
+  const url = '/server/dataset';
   let header = getHeaderConfig();
   // 登录之后携带token
   if (getUserInfo().token) {
@@ -66,7 +55,7 @@ export function getDatasetData(params) {
  * @returns
  */
 export function createDataset(params) {
-  const url = `/server/dataset`;
+  const url = '/server/dataset';
   return request
     .post(url, JSON.stringify(params), getHeaderConfig())
     .then((res) => {
@@ -91,21 +80,7 @@ export function getReadmeInfo(ownerName, modelName) {
     return res.data;
   });
 }
-/**
- * 修改数据集信息
- * @returns
- */
-/* export function modifyDataset(params) {
-  const url = `/api/datasets/${params.id}`;
-  return request
-    .put(url, params, getHeaderConfig())
-    .then((res) => {
-      return res.data;
-    })
-    .catch((e) => {
-      return e;
-    });
-} */
+
 export function modifyDataset(params, owner, id) {
   const url = `/server/dataset/${owner}/${id}`;
   return request.put(url, params, getHeaderConfig()).then((res) => {
@@ -127,7 +102,7 @@ export function deleteDataset(owner, name) {
  * @returns
  */
 export function getModelTags() {
-  const url = `/api/base/filter/`;
+  const url = '/api/base/filter/';
   return request.get(url).then((res) => {
     return res.data;
   });

@@ -25,7 +25,8 @@ import IconAbnormal from '~icons/app/abnormal';
 
 import IconPoppver from '~icons/app/popover.svg';
 
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -38,22 +39,12 @@ const route = useRoute();
 const router = useRouter();
 
 const logUrl = ref('');
+const customContent = ref('开始评估');
 
 // 当前项目的详情数据
 const detailData = computed(() => {
   return useFileData().fileStoreData;
 });
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 const i18n = {
   title: '评估',
@@ -100,7 +91,7 @@ const rules = reactive({
   ],
 });
 
-//训练日志
+// 训练日志
 const form = reactive({
   name: '',
   desc: '',
@@ -175,7 +166,7 @@ async function handleGetOutput() {
       document.body.removeChild(downloadElement); // 下载完成移除元素
       window.URL.revokeObjectURL(res.data.data.log_url); // 释放掉blob对象
     } catch (e) {
-      console.error(e);
+      return e;
     }
   } else {
     return;
@@ -235,7 +226,7 @@ socket.onmessage = function (event) {
         }
       }
     } catch (e) {
-      console.error(e);
+      return e;
     }
   });
 };
@@ -276,7 +267,7 @@ function setEvaluateWebscoket(id, type) {
           ws.close();
         }
       } catch (e) {
-        console.error(e);
+        return e;
       }
     } else {
       try {
@@ -302,7 +293,7 @@ function setEvaluateWebscoket(id, type) {
           ws.close();
         }
       } catch (e) {
-        console.error(e);
+        return e;
       }
     }
   };
@@ -364,7 +355,6 @@ function saveSetting() {
     }
   });
 }
-const customContent = ref('开始评估');
 
 // 自定义评估
 function handleAssessment() {
@@ -429,14 +419,13 @@ function goToPage() {
 
 const downloadBlob = (blob, fileName) => {
   try {
-    const href = window.URL.createObjectURL(blob); //创建下载的链接
+    const href = window.URL.createObjectURL(blob); // 创建下载的链接
     if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, fileName);
     } else {
       // 创建a标签 添加download属性下载
       const downloadElement = document.createElement('a');
       downloadElement.href = href;
-      // downloadElement.target = '_blank';
       downloadElement.download = fileName;
       document.body.appendChild(downloadElement);
       downloadElement.click(); // 点击下载
@@ -444,7 +433,7 @@ const downloadBlob = (blob, fileName) => {
       window.URL.revokeObjectURL(href); // 释放掉blob对象
     }
   } catch (e) {
-    console.error(e);
+    return e;
   }
 };
 

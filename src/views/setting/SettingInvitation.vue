@@ -1,11 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import useClipboard from 'vue-clipboard3';
+
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 import { useUserInfoStore } from '@/stores';
 
 import successIcon from '@/assets/icons/success.png';
-
-const { toClipboard } = useClipboard();
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const userInfoStore = useUserInfoStore();
@@ -17,18 +16,17 @@ const invitationUrl = ref(
 const invitationInput = ref(null);
 const showDlg = ref(false);
 const invitedNum = parseInt(userInfoStore.bonus / 10);
+const toggleDlg = (flag) => {
+  showDlg.value = flag;
+};
 
 const handleCopy = async () => {
   try {
-    await toClipboard(invitationUrl.value);
+    await writeToClipboard(invitationUrl.value);
     toggleDlg(true);
   } catch (e) {
-    console.error(e);
+    return e;
   }
-};
-
-const toggleDlg = (flag) => {
-  showDlg.value = flag;
 };
 </script>
 

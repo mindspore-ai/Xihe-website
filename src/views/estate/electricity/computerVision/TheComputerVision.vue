@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
 import hostImg from '@/assets/imgs/estate/electricity/substation-host.png';
@@ -23,6 +23,7 @@ import activity3 from '@/assets/imgs/home1/more/activity3.png';
 
 import appCard from '@/components/AppCard.vue';
 import electricityCard from '@/views/estate/electricity/ElectricityCard.vue';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 
@@ -182,7 +183,7 @@ function goDatasetDetail(user, name) {
 function goModels() {
   router.push({
     name: 'models',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },
@@ -192,7 +193,7 @@ function goModels() {
 function goDatasets() {
   router.push({
     name: 'datasets',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },
@@ -202,7 +203,7 @@ function goDatasets() {
 function goProjects() {
   router.push({
     name: 'projects',
-    params: {
+    state: {
       tag_kinds: 'CV',
       tags: 'electricity',
     },

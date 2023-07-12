@@ -1,0 +1,15 @@
+export default {
+  TITLE: 'Risk assessment and management of power contracts',
+  DESCRIPTION: '',
+  ELETRIC: '',
+  RUN_MODEL: '',
+  EXPLAIN: '',
+  BACKGROUND: '',
+  BACKGROUND_DESC: '',
+  RESUME: '',
+  RESUME_DESC: '',
+  RESUME_DESC1: '',
+  ADVANTAGE: '',
+  ADVANTAGE_DESC: '',
+  FRIENDLY_TIP: '',
+};

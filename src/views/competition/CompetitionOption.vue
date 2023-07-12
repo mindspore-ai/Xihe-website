@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive, defineProps } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ONav from '@/components/ONav.vue';
 import { useCompetitionData } from '@/stores';
@@ -56,7 +56,7 @@ const navItems = reactive([
     href: comInfo.forum,
     windowOpen: true,
     isIndividual: true,
-    showDiscuss: comInfo.forum ? true : false, //无forum时不显示讨论tab
+    showDiscuss: comInfo.forum ? true : false, // 无forum时不显示讨论tab
     competitionType: 'challenge',
   },
   {

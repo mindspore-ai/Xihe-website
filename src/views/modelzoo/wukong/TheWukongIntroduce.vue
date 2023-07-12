@@ -1,6 +1,5 @@
 <script setup>
 import { reactive } from 'vue';
-// import { useRouter } from 'vue-router';
 import wukongModel from '@/assets/imgs/wukong/wukong-model.png';
 import wukongDataset from '@/assets/imgs/wukong/wukong-dataset.png';
 import abysmView from '@/assets/imgs/wukong/abysm-view.png';
@@ -16,7 +15,6 @@ import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-// const router = useRouter();
 const screenWidth = useWindowResize();
 
 const effectImg = reactive([
@@ -47,8 +45,7 @@ const effectImg = reactive([
 ]);
 
 function goExperience() {
-  // router.push(`/modelzoo/wukong`);
-  window.open(`/modelzoo/wukong`);
+  window.open('/modelzoo/wukong');
 }
 
 // 了解更多
@@ -75,7 +72,6 @@ const githubLink2 =
     <div class="intro-head">
       <div class="wukong-left">
         <img draggable="false" :src="wukongBanner1" alt="" />
-        <!-- <img v-else draggable="false" :src="wukongBanner2" alt="" /> -->
       </div>
 
       <div class="wukong-right">
@@ -113,22 +109,18 @@ const githubLink2 =
           {{ t('wukong.WUKONG_INFO.DESC') }}
         </div>
 
-        <div class="intro-concept">
-          Wukong-Huahua是基于扩散模型的中文以文生图大模型，由华为诺亚团队携手中软分布式并行实验室、昇腾计算产品部联合开发，使用昇思框架（MindSpore）+昇腾（Ascend）软硬件解决方案实现。该模型是基于目前最大的中文开源多模态数据集悟空数据集进行训练得来，具备优秀的中文文本-图像生成能力，能够实现多场景的绘画风格，可生成高质量的图像，给用户带来良好的使用体验。
-        </div>
-
         <div class="intro-concept new-vision">
-          在1.0的基础上Wukong-Huahua模型基于华为MindSpore平台+昇腾硬件910进行大规模多机多卡训练，在新数据集上进行训练升级到2.0版本。相比于原版本，新版本大幅提升画质、艺术性和推理速度，更新内容包括以下3点：
+          {{ t('wukong.WUKONG_INFO.NEW_DESC') }}
         </div>
 
         <div class="intro-concept">
           <p>
-            1.提升输出分辨率，2.0模型目前可以支持更高分辨率图形输出，从1.0版本的512x512提升到768x768，大图更清晰。
+            {{ t('wukong.WUKONG_INFO.FEATURE_1') }}
           </p>
           <p>
-            2.采用自研Multistep-SDE采样加速推理技术，采样步数从原先的50步采样降到20~30步，加速2~3倍。
+            {{ t('wukong.WUKONG_INFO.FEATURE_2') }}
           </p>
-          <p>3.采用自研RLAIF算法，提升生成图片的画质以及艺术性表达。</p>
+          <p>{{ t('wukong.WUKONG_INFO.FEATURE_3') }}</p>
         </div>
       </div>
       <div class="model">

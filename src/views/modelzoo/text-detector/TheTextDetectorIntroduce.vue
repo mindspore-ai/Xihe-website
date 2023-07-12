@@ -1,6 +1,5 @@
 <script setup>
 import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
-// import { useRouter } from 'vue-router';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
@@ -19,10 +18,8 @@ const i18n = {
 };
 
 const screenWidth = useWindowResize();
-// const router = useRouter();
 
 function goOnlineExperience() {
-  // router.push('/modelzoo/text-detector');
   window.open('/modelzoo/text-detector');
 }
 function learnMore() {

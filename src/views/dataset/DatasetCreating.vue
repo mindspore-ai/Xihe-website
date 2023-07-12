@@ -14,6 +14,7 @@ import OButton from '@/components/OButton.vue';
 import protocol from '../../../config/protocol';
 import { createDataset, checkNames, getTags } from '@/api/api-dataset';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 const router = useRouter();
 const userInfo = useUserInfoStore();
 const i18n = {
@@ -36,7 +37,6 @@ const i18n = {
     describe: '请输入内容',
   },
 };
-const owner = ref([]);
 
 let queryRef = ref(null);
 
@@ -50,11 +50,29 @@ let query = reactive({
   tags: [],
 });
 
-try {
-  owner.value = useUserInfoStore().owner;
-} catch (error) {
-  console.error(error);
-}
+const isTagShow = ref(false);
+const headTags = ref([]);
+const selectedTags = ref([]);
+let renderList = ref([]);
+const tabPosition = ref('left');
+
+let dialogList = {
+  head: {
+    title: '已选标签',
+    delete: '清除全部',
+  },
+  tags: [],
+
+  menuList: [
+    { tab: '应用分类', key: 'task' },
+    { tab: '处理器', key: 'device_target' },
+    { tab: '文件格式', key: 'model_format' },
+    { tab: '框架', key: 'libraries' },
+    { tab: '协议', key: 'licenses' },
+    { tab: '其他', key: 'tags' },
+  ],
+};
+
 function create(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
@@ -80,7 +98,6 @@ function create(formEl) {
           }
         });
     } else {
-      console.error('error submit!');
       return false;
     }
   });
@@ -100,28 +117,7 @@ function checkName(rule, value, callback) {
     });
   }, 500);
 }
-const isTagShow = ref(false);
-const headTags = ref([]);
-const selectedTags = ref([]);
-let renderList = ref([]);
-const tabPosition = ref('left');
 
-let dialogList = {
-  head: {
-    title: '已选标签',
-    delete: '清除全部',
-  },
-  tags: [],
-
-  menuList: [
-    { tab: '应用分类', key: 'task' },
-    { tab: '处理器', key: 'device_target' },
-    { tab: '文件格式', key: 'model_format' },
-    { tab: '框架', key: 'libraries' },
-    { tab: '协议', key: 'licenses' },
-    { tab: '其他', key: 'tags' },
-  ],
-};
 // 获取标签
 function getModelTags(type) {
   try {
@@ -142,7 +138,7 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    console.error(re);
+    return e;
   }
 }
 getModelTags('dataset');
@@ -238,7 +234,7 @@ function deleteAllTags() {
           size="large"
         >
           <el-option
-            v-for="item in owner"
+            v-for="item in userInfo.owner"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -295,7 +291,7 @@ function deleteAllTags() {
           {
             validator: (rule, value, callback) => {
               if (value && (value.length < 3 || value.length > 35)) {
-                callback('数据集中文名称长度为3-35个字符');
+                callback('数据集标题长度为3-35个字符');
               } else {
                 callback();
               }

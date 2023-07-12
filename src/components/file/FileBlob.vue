@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import useClipboard from 'vue-clipboard3';
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import { handleMarkdown } from '@/shared/markdown';
 
@@ -31,8 +31,6 @@ const prop = defineProps({
     default: '',
   },
 });
-
-const { toClipboard } = useClipboard();
 
 const repoDetailData = computed(() => {
   return useFileData().fileStoreData;
@@ -110,7 +108,7 @@ function previewFile() {
       }
     })
     .catch((error) => {
-      console.error(error);
+      return error;
     });
 }
 function verifyFile() {
@@ -140,11 +138,26 @@ function verifyFile() {
       }
     })
     .catch((error) => {
-      console.error(error);
+      return error;
     });
 }
 verifyFile();
 
+function handleClick(index) {
+  if (route.params.contents.length === index) {
+    return false;
+  } else {
+    let contents = route.params.contents.splice(0, index);
+    router.push({
+      name: `${prop.moduleName}File`,
+      params: {
+        user: route.params.user,
+        name: route.params.name,
+        contents,
+      },
+    });
+  }
+}
 async function headleDelFile(path) {
   deleteFile({
     type: prop.moduleName,
@@ -179,7 +192,7 @@ function goRaw(blob) {
 }
 
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -188,7 +201,7 @@ async function copyText(textValue) {
 }
 async function copyPath() {
   let path = `${routerParams.name}/` + routerParams.contents.join('/');
-  await toClipboard(path);
+  await writeToClipboard(path);
   ElMessage({
     type: 'success',
     message: '复制成功',
@@ -202,21 +215,7 @@ function toggleDelDlg(flag) {
     showDel.value = flag;
   }
 }
-function handleClick(index) {
-  if (route.params.contents.length === index) {
-    return false;
-  } else {
-    let contents = route.params.contents.splice(0, index);
-    router.push({
-      name: `${prop.moduleName}File`,
-      params: {
-        user: route.params.user,
-        name: route.params.name,
-        contents,
-      },
-    });
-  }
-}
+
 watch(
   () => codeString.value,
   (val) => {

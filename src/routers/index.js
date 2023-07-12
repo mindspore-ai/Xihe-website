@@ -94,14 +94,6 @@ export const routes = [
       },
     ],
   },
-  // 排行榜
-  {
-    path: '/leaderboard',
-    name: 'leaderboards',
-    component: () => {
-      return import('@/views/TheLeaderboard.vue');
-    },
-  },
   // 用户
   ...user,
   // 模型
@@ -152,8 +144,6 @@ router.beforeEach(async (to, from) => {
     document.body.classList.remove('mobile-fit');
   }
   // 设置语言
-  // const langStore = useLangStore();
-  // langStore.lang = to.fullPath.includes('en') ? 'en' : 'zh';
   i18n.global.locale.value = to.fullPath.includes('/en') ? 'en' : 'zh';
   if (to.path === '/en' && to.meta.title) {
     document.title = to.meta.title;

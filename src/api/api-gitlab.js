@@ -2,22 +2,18 @@ import { request } from '@/shared/axios';
 import { Base64 } from 'js-base64';
 
 import { useUserInfoStore, useLoginStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 
 function getUserInfo() {
   return useUserInfoStore();
 }
 
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
+export function getGitlabToken() {
+  const url = `/server/user/${getUserInfo().userName}/gitlab`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
 }
 
 export async function getGitlabConfig() {
@@ -39,13 +35,6 @@ export async function getGitlabConfig() {
   return headersConfig;
 }
 
-export function getGitlabToken() {
-  const url = `/server/user/${getUserInfo().userName}/gitlab`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-}
-
 // 获取仓库详情
 export function getRepoDetailByName(params) {
   const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
@@ -62,7 +51,7 @@ export function getRepoDetailByName(params) {
       throw new Error(err);
     });
 }
-//上传文件
+// 上传文件
 export async function uploadFileGitlab(params, path) {
   const url = `/api/v1/repo/${params.type}/${
     params.name
@@ -80,7 +69,7 @@ export async function uploadFileGitlab(params, path) {
       throw new Error(err);
     });
 }
-//更新上传文件
+// 更新上传文件
 export async function editorFileGitlab(params) {
   const url = `/api/v1/repo/${params.type}/${
     params.name
@@ -213,7 +202,7 @@ export async function deleteFolder(params) {
 
 export function downloadFile(params) {
   getGitlabFile(params).then((res) => {
-    let downloadElement = document.createElement('a'); //创建一个a 虚拟标签
+    let downloadElement = document.createElement('a'); // 创建一个a 虚拟标签
     let href = null;
     if (res?.data?.content) {
       let blob = new Blob([Base64.toUint8Array(res?.data?.content).buffer], {

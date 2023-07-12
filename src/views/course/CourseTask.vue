@@ -19,7 +19,7 @@ const taskInput = ref('');
 const activeName = ref('');
 const taskData = ref([]);
 const currentTaskData = ref([]); // 当前页显示的课程
-const taskResult = ref({}); //作业提交结果（关联项目）
+const taskResult = ref({}); // 作业提交结果（关联项目）
 const showSubmission = ref(false);
 
 const userCourseData = useCourseData();
@@ -72,7 +72,6 @@ async function relateProject() {
       const res = await getProject(userCourseData.courseData.id);
       taskResult.value = res.data;
       taskInput.value = '';
-      // showSubmission.value = true;
     } catch (err) {
       if (err.response.data.msg === "name's length should be between 3 to 35") {
         ElMessage({
@@ -108,7 +107,7 @@ function goProjectDetail(item) {
   router.push(`/projects/${item[0].owner}/${item[0].name}`);
 }
 
-//作业详情页
+// 作业详情页
 function goTaskDetail(item) {
   router.push(`/course/task/${route.params.courseId}/${item.id}`);
 }
@@ -123,15 +122,15 @@ function handleCurrentPage(val) {
   );
   toTop();
 }
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 function handleSizeChange(val) {
   taskPager.size = val;
   currentTaskData.value = taskData.value.slice(
     taskPager.page * taskPager.size - taskPager.size,
     taskPager.page * taskPager.size
   );
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 </script>
 <template>

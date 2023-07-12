@@ -253,6 +253,11 @@ watch(
   { immediate: true }
 );
 
+function emptyValue() {
+  keyword.value = '';
+  show.value = true;
+}
+
 // 返回主页
 function handleLogoClick() {
   emptyValue();
@@ -297,6 +302,7 @@ function showInput() {
     document.querySelector('.search-input').focus();
   });
 }
+
 // 搜索防抖函数
 const debounceSearch = debounce(getSearch, 500, {
   trailing: true,
@@ -351,10 +357,6 @@ watch(
   },
   { immediate: true }
 );
-function emptyValue() {
-  keyword.value = '';
-  show.value = true;
-}
 
 // 模型搜索结果
 function getModelResult(modelData) {
@@ -381,7 +383,6 @@ function getModelResult(modelData) {
   });
   modelResult.value = dataList;
 }
-
 // 数据集搜索结果
 function getDatasetResult(datasetData) {
   let resultList = [];

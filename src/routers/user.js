@@ -50,7 +50,6 @@ export default [
           }
           return true;
         } catch (err) {
-          console.error('获取用户信息失败：', err);
           return {
             name: '404',
           };
@@ -209,13 +208,6 @@ export default [
           return import('@/views/setting/SettingCompetition.vue');
         },
       },
-      // {
-      //   path: 'invitation',
-      //   name: 'settingsInvitation',
-      //   component: () => {
-      //     return import('@/views/setting/SettingInvitation.vue');
-      //   },
-      // },
       {
         path: 'clouddev',
         name: 'developEnvironment',

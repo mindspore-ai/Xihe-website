@@ -11,7 +11,8 @@ import IconHeart from '~icons/app/heart-white';
 import IconHeart2 from '~icons/app/heart-gray';
 import IconDownload from '~icons/app/wukong-download';
 import IconCopy from '~icons/app/copy-nickname';
-import useClipboard from 'vue-clipboard3';
+
+import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import {
   collectedPictures,
@@ -23,11 +24,14 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
+
 const { t } = useI18n();
 const screenWidth = useWindowResize();
 
 const userInfoStore = useUserInfoStore();
-const { toClipboard } = useClipboard();
+
+const imgInfoDlg = ref(false);
+const imageInfo = ref();
 
 const collecteImages = ref([]);
 // 给生成图片加文字水印
@@ -64,7 +68,7 @@ async function getCollectedImages() {
       });
     }
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 onMounted(() => {
@@ -90,7 +94,7 @@ async function confirmQuitPublic() {
     }
     getCollectedImages();
   } catch (err) {
-    console.error(err);
+    return err;
   }
   showConfirmDlg.value = false;
 }
@@ -110,20 +114,16 @@ const posterDlg = ref(false);
 const posterLink = ref('');
 const posterInfo = ref('');
 const userAvatar = ref('');
-userAvatar.value = userInfoStore.avatar.replace(
-  'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/',
-  '/obs-xihe-avatar/'
-);
+
+userAvatar.value = userInfoStore.avatar;
 
 const isSharedPoster = ref(false);
 const shareImg = ref('');
 // 分享海报dlg
 function shareImage(link, desc, style) {
   posterInfo.value = desc + '  ' + style;
-  posterLink.value = link.replace(
-    'https://big-model-deploy.obs.cn-central-221.ovaijisuan.com:443/',
-    '/obs-big-model/'
-  );
+
+  posterLink.value = link;
   posterDlg.value = true;
 
   if (screenWidth.value <= 820) {
@@ -138,25 +138,7 @@ function shareImage(link, desc, style) {
     });
   }
 }
-// 绘制圆角矩形（使用 arcTo）
-function drawRoundedRect(ctx, x, y, width, height, radius) {
-  // 保存当前环境的状态
-  ctx.save();
-  // 重置当前路径
-  ctx.beginPath();
-  // 移动到左上角
-  ctx.moveTo(x + radius, y);
-  // 绘制右上角
-  ctx.arcTo(x + width, y, x + width, y + radius, radius);
-  // 绘制右下角
-  ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-  // 绘制左下角
-  ctx.arcTo(x, height, x, height - radius, radius);
-  // 绘制左上角
-  ctx.arcTo(x, y, x + radius, y, radius);
-  // 填充当前路径
-  ctx.fill();
-}
+
 // 下载海报截图
 function downloadPoster() {
   const poster = document.querySelector('#screenshot');
@@ -173,12 +155,24 @@ function downloadPoster() {
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      // 绘制圆角矩形
-      drawRoundedRect(ctx, 0, 0, img.width, img.height, 38);
-      // 对矩形进行剪切
-      ctx.clip();
-      // 绘制图片
-      ctx.drawImage(img, 0, 0, img.width, img.height);
+      // 绘制圆角矩形（使用 arcTo）
+      let radius = 22;
+      ctx.save(); // 保存当前环境的状态
+      ctx.beginPath(); // 重置当前路径
+      ctx.moveTo(0 + radius, 0); // 移动到左上角
+      ctx.arcTo(0 + img.width, 0, 0 + img.width, 0 + radius, radius); // 绘制右上角
+      ctx.arcTo(
+        0 + img.width,
+        0 + img.height,
+        0 + img.width - radius,
+        0 + img.height,
+        radius
+      ); // 绘制右下角
+      ctx.arcTo(0, img.height, 0, img.height - radius, radius); // 绘制左下角
+      ctx.arcTo(0, 0, 0 + radius, 0, radius); // 绘制左上角
+      ctx.fill(); // 填充当前路径
+      ctx.clip(); // 对矩形进行剪切
+      ctx.drawImage(img, 0, 0, img.width, img.height); // 绘制图片
 
       const posterLink = canvas.toDataURL('image/png');
       let aLink = document.createElement('a');
@@ -197,7 +191,7 @@ function handleDlgClose() {
 }
 // 复制用户名
 async function copyText(textValue) {
-  await toClipboard(textValue);
+  await writeToClipboard(textValue);
   ElMessage({
     type: 'success',
     message: t('wukong.COPY'),
@@ -233,8 +227,6 @@ async function publicImage(imgId) {
 const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
 
 // 移动端点击收藏图片
-const imgInfoDlg = ref(false);
-const imageInfo = ref();
 function handleImageClick(img) {
   imageInfo.value = img;
   imgInfoDlg.value = true;

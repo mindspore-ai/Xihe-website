@@ -3,9 +3,22 @@ import { ref } from 'vue';
 
 import privacy from '@/assets/statement/privacy.md?raw';
 import competitionPrivacy from '@/assets/statement/competition_privacy.md?raw';
+import finetunePrivacy from '@/assets/statement/finetune_privacy.md?raw';
 import MdStatement from '@/components/MdStatement.vue';
 
 const activeName = ref('first');
+const privacyType = sessionStorage.getItem('privacyType');
+function getPrivacyType() {
+  if (privacyType === 'competition') {
+    activeName.value = 'second';
+  } else if (privacyType === 'finetune') {
+    activeName.value = 'three';
+  }
+}
+getPrivacyType();
+function handleClick() {
+  sessionStorage.removeItem('privacyType');
+}
 </script>
 
 <template>
@@ -14,12 +27,15 @@ const activeName = ref('first');
       <div class="wrap">隐私政策</div>
     </div>
     <div class="privacy-content">
-      <el-tabs v-model="activeName" class="demo-tabs">
+      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="平台相关隐私政策" name="first">
           <MdStatement :statement="privacy"></MdStatement>
         </el-tab-pane>
-        <el-tab-pane label="比赛相关隐私政策" name="second">
+        <el-tab-pane label="比赛和课程相关隐私政策" name="second">
           <MdStatement :statement="competitionPrivacy"></MdStatement>
+        </el-tab-pane>
+        <el-tab-pane label="微调相关隐私政策" name="three">
+          <MdStatement :statement="finetunePrivacy"></MdStatement>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -41,7 +57,6 @@ const activeName = ref('first');
     }
   }
   &-content {
-    // background-color: red;
     max-width: 1448px;
     margin: 0 auto;
     padding-left: 16px;

@@ -55,9 +55,9 @@ const activeName = ref('first');
 const teamName1 = ref(null);
 const leaderName = ref(null);
 const queryRef3 = ref(null);
-const teamData = ref([]); //团队信息
-const teamMemberData = ref([]); //团队成员信息
-const leaderData = ref([]); //队长信息
+const teamData = ref([]); //  团队信息
+const teamMemberData = ref([]); // 团队成员信息
+const leaderData = ref([]); // 队长信息
 const showTeam = ref(false);
 const showDel = ref(false);
 const showEdit = ref(false);
@@ -151,7 +151,6 @@ async function foundTeam(formEl) {
       });
       form1.teamName = '';
     } else {
-      console.error('error submit!');
       return false;
     }
   } catch (error) {
@@ -184,7 +183,6 @@ async function addTeam(formEl) {
       });
       form2.leaderName = '';
     } else {
-      console.error('error submit!');
       return false;
     }
   } catch (error) {
@@ -225,7 +223,6 @@ function confirmEdit(formEl) {
         });
       });
     } else {
-      console.error('error submit!');
       return false;
     }
   });

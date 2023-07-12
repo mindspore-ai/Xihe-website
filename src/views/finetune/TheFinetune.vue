@@ -32,24 +32,14 @@ import DeleteTask from '@/components/TaskDelete.vue';
 import StopTask from '@/components/TaskStop.vue';
 
 import { useLoginStore, useFinetuneData } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 import {
   getFinetuneList,
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 const router = useRouter();
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -60,9 +50,10 @@ const showStep = ref(false);
 const showTip = ref(false);
 const showtable = ref(false);
 const showFinetune = ref(false);
-const expiry = ref(''); //体验截止时间
+const expiry = ref(''); // 体验截止时间
 const displayType = ref('finetune');
-const describe = ref(''); //已有运行中的任务或已有5个任务提示
+const describe = ref(''); // 已有运行中的任务或已有5个任务提示
+const agree = ref(false);
 
 const isLogined = useLoginStore().isLogined;
 const userFinetune = useFinetuneData();
@@ -107,6 +98,19 @@ const applySteps = reactive([
   },
 ]);
 
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      userFinetune.setFinetuneData(JSON.parse(event.data).data);
+    } catch (e) {
+      return e;
+    }
+  };
+  return socket;
+}
 // 获取微调任务列表
 let socket;
 function getFinetune() {
@@ -136,7 +140,7 @@ function getFinetune() {
           }
         });
     } catch (error) {
-      console.error(error);
+      return error;
     }
   } else {
     showFinetune.value = true;
@@ -144,20 +148,6 @@ function getFinetune() {
   }
 }
 getFinetune();
-
-function setWebsocket(url) {
-  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
-
-  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-  socket.onmessage = function (event) {
-    try {
-      userFinetune.setFinetuneData(JSON.parse(event.data).data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  return socket;
-}
 
 // 毫秒级时间戳换算成日期
 function getFullTime(val) {
@@ -192,7 +182,7 @@ function goCreateTune() {
     describe.value = i18n.describe1;
     showTip.value = true;
   } else {
-    router.push({ path: `/finetune/new` });
+    router.push({ path: '/finetune/new' });
   }
 }
 
@@ -251,6 +241,12 @@ function goFinetuneLog(finetuneId) {
 const closeSocket = () => {
   socket.close();
 };
+
+// 跳转到隐私政策
+function goPrivacy() {
+  sessionStorage.setItem('privacyType', 'finetune');
+  window.open('/privacy');
+}
 
 // 页面刷新
 onMounted(() => {
@@ -475,13 +471,34 @@ onUnmounted(() => {
             </span>
           </div>
         </div>
-        <div class="apply-btn" @click="showStep = true">
-          <OButton type="primary" animation class="home-btn">
+        <div class="apply-btn">
+          <OButton v-if="!agree" type="secondary" disabled class="home-btn">
             立即申请
             <template #suffix>
               <OIcon><IconArrowRight /></OIcon>
             </template>
           </OButton>
+          <OButton
+            v-else
+            type="primary"
+            animation
+            class="home-btn"
+            @click="showStep = true"
+          >
+            立即申请
+            <template #suffix>
+              <OIcon><IconArrowRight /></OIcon>
+            </template>
+          </OButton>
+        </div>
+        <div class="agree">
+          <div class="agree-text" @click="agree = !agree">
+            <input v-model="agree" type="checkbox" class="input" />
+            <span>已阅读并同意</span>
+          </div>
+          <div class="statement">
+            <div class="privacy" @click="goPrivacy">《微调相关隐私政策》</div>
+          </div>
         </div>
         <div class="contact">
           <span> 如果您有任何疑问,可以发邮件至: </span>
@@ -708,6 +725,28 @@ $theme: #0d8dff;
         display: flex;
         justify-content: center;
         margin-bottom: 24px;
+      }
+      .agree {
+        font-size: 14px;
+        color: #000;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: center;
+        .agree-text {
+          display: flex;
+          align-items: center;
+          span {
+            margin-left: 8px;
+            cursor: pointer;
+          }
+        }
+        .statement {
+          .privacy {
+            color: #0d8dff;
+            cursor: pointer;
+          }
+        }
       }
       .contact {
         line-height: 22px;

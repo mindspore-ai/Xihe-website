@@ -11,7 +11,9 @@ import IconSend from '~icons/app/vqa-send';
 import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import { useI18n } from 'vue-i18n';
+import useWindowResize from '@/shared/hooks/useWindowResize.js';
 
+const screenWidth = useWindowResize();
 const { t } = useI18n();
 const userInfoStore = useUserInfoStore();
 
@@ -68,21 +70,6 @@ const isClick = ref(true);
 
 avatarUrl.value = userInfoStore.avatar;
 
-const screenWidth = ref(
-  window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth
-);
-
-const onResize = () => {
-  screenWidth.value =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-};
-
-window.addEventListener('resize', onResize);
-
 const getImage = (name) => {
   return new URL(
     `../../../assets/imgs/taichu/taichu-vision/${name}.jpg`,
@@ -105,7 +92,7 @@ function handleUploadImg(url) {
       });
 
       fileList.value = [];
-      fileList.value[0] = { raw: file }; // formData.append('blob', file);
+      fileList.value[0] = { raw: file };
 
       formData.append('picture', fileList.value[fileList.value.length - 1].raw);
 
@@ -268,7 +255,7 @@ const inputDom = ref(null);
 
 const handleKeydown = (e) => {
   if (e.keyCode === 13) {
-    //回车执行查询
+    // 回车执行查询
     sendBtn.value.click();
   }
 };
@@ -289,8 +276,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', onResize);
-
   inputDom.value.removeEventListener('keydown', handleKeydown);
 });
 </script>

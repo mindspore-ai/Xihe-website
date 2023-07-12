@@ -16,6 +16,7 @@ const userDescription = ref(userInfoStore.description); // 个人介绍
 const avatar = ref(userInfoStore.avatar); // 头像
 const showAvatarList = ref(false);
 const checkedAvatar = ref(1);
+const disabled = ref(true);
 
 const avatarCount = ref(0);
 let query = reactive({
@@ -31,14 +32,6 @@ function handleSizeChange(val) {
   query.size = val;
 }
 
-try {
-  filterData.value = avatarUrl;
-  avatarCount.value = filterData.value.user_avatar.length;
-  getCheckedId(filterData.value.user_avatar);
-} catch (error) {
-  console.error(error);
-}
-
 function getCheckedId(list) {
   list.forEach((item) => {
     if (item.url === avatar.value) {
@@ -46,6 +39,12 @@ function getCheckedId(list) {
     }
   });
 }
+
+try {
+  filterData.value = avatarUrl;
+  avatarCount.value = filterData.value.user_avatar.length;
+  getCheckedId(filterData.value.user_avatar);
+} catch (error) {}
 
 function toggleDelDlg(flag) {
   if (flag === undefined) {
@@ -90,21 +89,12 @@ function confirmAvatar() {
 function handleCurrentChange(val) {
   query.page = val;
 }
-const disabled = ref(true);
 watch([userDescription, avatar], () => {
   disabled.value = false;
 });
 </script>
 
 <template>
-  <!-- <div class="setting-box">
-    <p class="setting-title">昵称</p>
-    <el-input
-      v-model.trim="nickName"
-      placeholder="请输入您的昵称"
-      class="setting-input"
-    ></el-input>
-  </div> -->
   <div class="setting-box">
     <p class="setting-title">头像</p>
     <div class="avatar-uploader" @click="toggleDelDlg(true)">

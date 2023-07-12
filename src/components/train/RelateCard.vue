@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, ref, watch } from 'vue';
+import { defineEmits, ref, watch, defineProps } from 'vue';
 
 import IconTime from '~icons/app/time';
 import IconRemove from '~icons/app/remove';

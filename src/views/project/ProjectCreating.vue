@@ -85,6 +85,23 @@ let dialogList = {
 };
 
 const ruleFormRef = ref(null);
+let time = null;
+
+function checkName(rule, value, callback) {
+  if (time !== null) {
+    clearTimeout(time);
+  }
+  time = setTimeout(() => {
+    checkNames({ name: value, owner: userInfo.userName }).then((res) => {
+      if (res.data.can_apply) {
+        callback();
+      } else {
+        callback(new Error('该名称已存在'));
+      }
+    });
+  }, 500);
+}
+
 const rules = reactive({
   name: [
     { required: true, message: '必填项', trigger: 'blur' },
@@ -119,7 +136,7 @@ const rules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value && (value.length < 3 || value.length > 35)) {
-          callback(new Error('项目中文名称长度为3-35个字符'));
+          callback(new Error('项目标题长度为3-35个字符'));
         } else {
           callback();
         }
@@ -129,27 +146,35 @@ const rules = reactive({
   ],
   desc: [{ min: 1, max: 200, message: '内容不能为空', trigger: 'blur' }],
 });
-let time = null;
-function checkName(rule, value, callback) {
-  if (time !== null) {
-    clearTimeout(time);
-  }
-  time = setTimeout(() => {
-    checkNames({ name: value, owner: userInfo.userName }).then((res) => {
-      if (res.data.can_apply) {
-        callback();
-      } else {
-        callback(new Error('该名称已存在'));
-      }
-    });
-  }, 500);
-}
 
 const nameList = ref([]);
 const projectPhotos = ref(projectPhoto);
 
 nameList.value.push(userInfo.userName);
 proList.owner = nameList.value[0];
+
+// 新建项目
+function setProject() {
+  headTags.value.forEach((item) => {
+    proList.tags.push(item.name);
+  });
+  setNewProject(proList)
+    .then((res) => {
+      ElMessage({
+        type: 'success',
+        message: '创建成功',
+      });
+      router.push(`/projects/${userInfo.userName}/${res.data.name}`);
+    })
+    .catch((err) => {
+      if (err.msg === 'unsupported protocol') {
+        ElMessage({
+          type: 'error',
+          message: '暂不支持该协议',
+        });
+      }
+    });
+}
 
 const submitClick = async () => {
   ruleFormRef.value.validate((valid) => {
@@ -174,35 +199,12 @@ function selectImgClick(item) {
   item.is_active = true;
 }
 
-// 新建项目
-function setProject() {
-  headTags.value.forEach((item) => {
-    proList.tags.push(item.name);
-  });
-  setNewProject(proList)
-    .then((res) => {
-      ElMessage({
-        type: 'success',
-        message: '创建成功',
-      });
-      router.push(`/projects/${userInfo.userName}/${res.data.name}`);
-    })
-    .catch((err) => {
-      if (err.msg === 'unsupported protocol') {
-        ElMessage({
-          type: 'error',
-          message: '暂不支持该协议',
-        });
-      }
-    });
-}
 // 项目封面，项目类型以及训练平台的数据
 projectPhotos.value[0].is_active = true;
 
 proList.type = inferSdk[0].name;
 proList.training = trainSdk[0].name;
-// proList.protocol = protocol[0].name;
-// proList.repo_type = 'Public';
+
 onMounted(() => {});
 
 // 获取标签
@@ -225,7 +227,7 @@ function getModelTags(type) {
       });
     });
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 getModelTags('project');
@@ -255,15 +257,7 @@ function cancelBtn() {
 // 选择要添加的标签
 function selectTags(it) {
   it.isActive = !it.isActive;
-  /* if (it.isActive) {
-    headTags.value.push(it);
-  } else {
-    headTags.value.forEach((item, index) => {
-      if (item.name === it.name) {
-        headTags.value.splice(index, 1);
-      }
-    });
-  } */
+
   if (it.isActive) {
     selectedTags.value.push(it);
   } else {
@@ -276,8 +270,6 @@ function selectTags(it) {
 }
 // 删除头部标签
 function deleteTag(val) {
-  // let index = headTags.value.indexOf(val);
-  // headTags.value.splice(index, 1);
   let index = selectedTags.value.indexOf(val);
   selectedTags.value.splice(index, 1);
 
@@ -293,7 +285,6 @@ function deleteTag(val) {
 }
 // 删除所有标签
 function deleteAllTags() {
-  // headTags.value = [];
   selectedTags.value = [];
 
   renderList.value.forEach((value1, index1) => {
@@ -313,14 +304,6 @@ function deleteAllTags() {
         <el-breadcrumb-item :to="{ path: `/${userInfo.userName}` }"
           >个人主页</el-breadcrumb-item
         >
-        <!-- <el-breadcrumb-item
-          :to="{
-            path: `/${
-              fromPath === '/projects' ? 'projects' : userInfo.userName
-            }`,
-          }"
-          >{{ option }}</el-breadcrumb-item
-        > -->
         <el-breadcrumb-item class="set-new">新建项目</el-breadcrumb-item>
       </el-breadcrumb>
     </div>

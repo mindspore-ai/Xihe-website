@@ -33,12 +33,10 @@ const { t } = useI18n();
         class="img-class guide-left"
         src="@/assets/imgs/luojia/luojia-4.png"
       />
-      <!-- <div class="scroll"> -->
       <img
         class="img-class guide-right"
         src="@/assets/imgs/luojia/luojia-5.png"
       />
-      <!-- </div> -->
     </div>
     <h4 class="left">{{ t('luojia.INTRODUCTION.SUPPORT_3') }}</h4>
     <p class="text-class">

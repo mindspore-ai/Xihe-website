@@ -15,6 +15,7 @@ import IconDownload from '~icons/app/download';
 import IconUpload from '~icons/app/modelzoo-upload';
 
 import gif from '@/assets/gifs/loading.gif';
+import { ElMessage } from 'element-plus';
 
 import {
   handleLuoJiaInfer,
@@ -41,7 +42,6 @@ const historyInfo = ref({
 const cesiumContainer = ref('');
 const viewer = ref(null);
 const nowModelName = ref('高德影像');
-const zoomlv = ref(18);
 
 const isSelected = ref(false);
 const tblob = ref(null);
@@ -78,8 +78,7 @@ async function handleDrawClick() {
 
         tblob.value = await rectToImg(
           ltpoint,
-          rbpoint,
-          zoomlv.value,
+          rbpoint, // zoomlv.value,
           nowModelName.value
         );
 
@@ -95,16 +94,13 @@ async function handleDrawClick() {
     }
   }
 }
-// 1. 未选区域，点击识别提示，不发请求
-// 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
-function handleInferClick(mobile) {
-  if (loadingText.value === t('luojia.EXPERIENCE.LOADING_TEXT')) {
-    ElMessage({
-      type: 'warning',
-      message: t('luojia.EXPERIENCE.WARNING_MSG2'),
-    });
-    return;
-  }
+
+const activeIndex1 = ref(-1);
+const fileList = ref([]);
+const activeIndex = ref(-1);
+const analysis = ref('');
+const imageUrl = ref('');
+function handleMobile(mobile) {
   if (mobile === 'mobile') {
     activeIndex1.value = -1;
     if (!isLogined.value) {
@@ -121,14 +117,65 @@ function handleInferClick(mobile) {
       }
     }
   }
+}
+function handleRes(mobile, res) {
+  if (res.data?.data) {
+    if (mobile === 'mobile') {
+      activeIndex.value = -1;
+      analysis.value = '';
+      formData.delete('file');
+      formData = new FormData();
+      imageUrl.value = res.data.data.answer;
+      request
+        .get(res.data.data.answer, {
+          responseType: 'blob',
+        })
+        .then((res) => {
+          let file = new File([res.data], 'img', {
+            type: 'image/png',
+            lastModified: Date.now(),
+          });
+          fileList.value = [];
+          fileList.value[0] = { raw: file };
+        });
+
+      handleLuoJiaHistory().then((res) => {
+        if (res.data) {
+          gridData.value = [];
+          historyInfo.value.create_at = res.data[0].created_at;
+          historyInfo.value.id = res.data[0].id;
+          gridData.value.push(historyInfo.value);
+        } else {
+          gridData.value = [];
+        }
+      });
+    } else {
+      const aurl = res.data.data.answer;
+      const tempimg = document.createElement('img');
+      tempimg.src = aurl;
+      viewer.value.setImageAsLayer(tempimg);
+    }
+  }
+}
+// 1. 未选区域，点击识别提示，不发请求
+// 2. 选区结束，推理完成后，未再次选区，点击识别提示，不发请求
+function handleInferClick(mobile) {
+  if (loadingText.value === t('luojia.EXPERIENCE.LOADING_TEXT')) {
+    ElMessage({
+      type: 'warning',
+      message: t('luojia.EXPERIENCE.WARNING_MSG2'),
+    });
+    return;
+  }
+  handleMobile(mobile);
   if (isInfer.value) {
     isShow.value = true;
     loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT1');
-    if (mobile !== 'mobile') {
+    if (mobile === 'mobile') {
+      formData.append('picture', fileList.value[0].raw);
+    } else {
       formData = new FormData();
       formData.append('picture', tblob.value);
-    } else {
-      formData.append('picture', fileList.value[0].raw);
     }
     // 上传图片到obs;
     handleLuojiaUploadPic(formData).then((res) => {
@@ -136,43 +183,7 @@ function handleInferClick(mobile) {
         loadingText.value = t('luojia.EXPERIENCE.LOADING_TEXT2');
         handleLuoJiaInfer().then((res) => {
           isShow.value = false;
-          if (res.data?.data) {
-            if (mobile === 'mobile') {
-              activeIndex.value = -1;
-              analysis.value = '';
-              formData.delete('file');
-              formData = new FormData();
-              imageUrl.value = res.data.data.answer;
-              request
-                .get(res.data.data.answer, {
-                  responseType: 'blob',
-                })
-                .then((res) => {
-                  let file = new File([res.data], 'img', {
-                    type: 'image/png',
-                    lastModified: Date.now(),
-                  });
-                  fileList.value = [];
-                  fileList.value[0] = { raw: file }; // formData.append('blob', file);
-                });
-
-              handleLuoJiaHistory().then((res) => {
-                if (res.data) {
-                  gridData.value = [];
-                  historyInfo.value.create_at = res.data[0].created_at;
-                  historyInfo.value.id = res.data[0].id;
-                  gridData.value.push(historyInfo.value);
-                } else {
-                  gridData.value = [];
-                }
-              });
-            } else {
-              const aurl = res.data.data.answer;
-              const tempimg = document.createElement('img');
-              tempimg.src = aurl;
-              viewer.value.setImageAsLayer(tempimg);
-            }
-          }
+          handleRes(mobile, res);
         });
       } else {
         isShow.value = false;
@@ -187,7 +198,7 @@ function handleInferClick(mobile) {
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG4'),
     });
-  } else if (isSelected.value && !isInfer.value && mobile !== 'mobile') {
+  } else if (isSelected.value) {
     ElMessage({
       type: 'warning',
       message: t('luojia.EXPERIENCE.WARNING_MSG5'),
@@ -285,7 +296,6 @@ const imgLists = [
     url: 'luojia-example-04',
   },
 ];
-const fileList = ref([]);
 function handleChange(val) {
   if (
     val.raw.type === 'image/jpeg' ||
@@ -316,6 +326,12 @@ function handleChange(val) {
   }
 }
 
+const getImage = (name) => {
+  return new URL(
+    `../../../assets/imgs/luojia/luojia-example/${name}.jpg`,
+    import.meta.url
+  ).href;
+};
 function selectImage(item, index) {
   activeIndex.value = index;
   activeIndex1.value = index;
@@ -334,21 +350,11 @@ function selectImage(item, index) {
           lastModified: Date.now(),
         });
         fileList.value = [];
-        fileList.value[0] = { raw: file }; // formData.append('blob', file);
+        fileList.value[0] = { raw: file };
       });
   }
 }
 
-const activeIndex = ref(-1);
-const activeIndex1 = ref(-1);
-const analysis = ref('');
-const imageUrl = ref('');
-const getImage = (name) => {
-  return new URL(
-    `../../../assets/imgs/luojia/luojia-example/${name}.jpg`,
-    import.meta.url
-  ).href;
-};
 const showPic = ref(false);
 const dialogImg = ref('');
 function enlarge(url) {
@@ -517,14 +523,6 @@ function enlarge(url) {
           </div>
           <div class="modal"></div>
         </div>
-        <!-- <o-icon
-          @click="selectImage(imgLists[activeIndex - 1].url, activeIndex - 1)"
-          ><icon-left></icon-left
-        ></o-icon>
-        <o-icon
-          @click="selectImage(imgLists[activeIndex + 1].url, activeIndex + 1)"
-          ><icon-left></icon-left
-        ></o-icon> -->
       </div>
       <o-button
         :disabled="activeIndex1 === -1"
@@ -556,9 +554,6 @@ function enlarge(url) {
             :label="t('luojia.EXPERIENCE.TAB_ITEM_4')"
             width="90"
           />
-          <!-- <el-table-column label="操作">
-            <span class="detail" @click="handleDetailClick">查看详情</span>
-          </el-table-column> -->
         </el-table>
       </div>
       <div v-if="gridData.length">
@@ -568,20 +563,12 @@ function enlarge(url) {
             <img :src="inputImg" alt="" @click="enlarge(inputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.ORIGIN') }}</p>
-              <!-- <div class="download" @click="handleOriImgDownload">
-                <o-icon><icon-download></icon-download></o-icon>
-                <span>下载</span>
-              </div> -->
             </div>
           </div>
           <div class="result">
             <img :src="outputImg" alt="" @click="enlarge(outputImg)" />
             <div class="botoom">
               <p>{{ t('luojia.EXPERIENCE.RESULT') }}</p>
-              <!-- <div class="download" @click="handleResImgDownload">
-                <o-icon><icon-download></icon-download></o-icon>
-                <span>下载</span>
-              </div> -->
             </div>
           </div>
         </div>
@@ -599,15 +586,16 @@ function enlarge(url) {
   </div>
 </template>
 <style lang="scss" scoped>
-// 对比框
 .compare-box {
   display: flex;
   justify-content: space-between;
+
   img {
     width: 315px;
     height: 315px;
     border-radius: 16px;
   }
+
   .original,
   .result {
     .botoom {
@@ -618,13 +606,16 @@ function enlarge(url) {
       color: #555555;
       line-height: 22px;
       margin-top: 16px;
+
       .download {
         display: flex;
         align-items: center;
         cursor: pointer;
+
         &:hover {
           color: #0d8dff;
         }
+
         .o-icon {
           margin-right: 4px;
         }
@@ -632,6 +623,7 @@ function enlarge(url) {
     }
   }
 }
+
 :deep(.el-table) {
   --el-table-header-bg-color: #e5e8f0;
   --el-table-row-hover-bg-color: #f7f8fa;
@@ -639,26 +631,32 @@ function enlarge(url) {
   box-shadow: 0 1px 5px rgba(45, 47, 51, 0.1);
   color: #707070;
   --el-table-border: none;
+
   .el-table__empty-block {
     background-color: #fff;
+
     @media screen and (max-width: 768px) {
       .el-table__empty-text {
         line-height: 52px;
       }
     }
   }
+
   thead {
     font-size: 14px;
     color: #000000;
     line-height: 22px;
   }
+
   .detail {
     cursor: pointer;
     color: #0d8dff;
   }
+
   tr {
     background: #fff;
     position: relative;
+
     &::after {
       width: calc(100% - 32px);
       background: #e5e5e5;
@@ -672,13 +670,16 @@ function enlarge(url) {
 
       z-index: 1;
     }
+
     &:last-child::after {
       height: 0;
     }
+
     td {
       color: #707070;
     }
   }
+
   .el-table__cell {
     padding: 16px 0;
     font-size: 14px;
@@ -686,12 +687,15 @@ function enlarge(url) {
     line-height: 22px;
   }
 }
+
 :deep(.result-dlg) {
   width: 750px;
 }
+
 :deep(.el-dialog) {
   --el-dialog-margin-top: 30vh;
   z-index: 1000;
+
   .el-dialog__headerbtn {
     top: 16px;
     right: 16px;
@@ -701,9 +705,11 @@ function enlarge(url) {
     align-items: center;
     justify-content: center;
   }
+
   .el-dialog__header {
     padding: 24px 40px;
     justify-content: flex-start;
+
     .el-dialog__title {
       font-size: 18px;
       font-weight: 400;
@@ -711,8 +717,10 @@ function enlarge(url) {
       line-height: 25px;
     }
   }
+
   .el-dialog__body {
     padding: 0px 40px 24px !important;
+
     .history-tip {
       font-size: 14px;
       color: #555555;
@@ -721,6 +729,7 @@ function enlarge(url) {
     }
   }
 }
+
 .map-container {
   position: relative;
 
@@ -731,14 +740,17 @@ function enlarge(url) {
     .cesium-toolbar-button {
       border: none;
       background: none;
+
       &:nth-child(1) {
         display: none;
       }
     }
+
     .cesium-home-button {
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid #444;
     }
+
     .cesium-baseLayerPicker-selected {
       display: none;
     }
@@ -751,28 +763,35 @@ function enlarge(url) {
       transform: translate(-50%, -50%);
     }
   }
+
   :deep(.cesium-geocoder-searchButton) {
     background: none;
   }
+
   :deep(.cesium-viewer-geocoderContainer .cesium-geocoder-input) {
     background: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
   }
+
   :deep(.cesium-viewer-bottom) {
     display: none;
   }
+
   :deep(.cesium-viewer-fullscreenContainer) {
     display: none !important;
   }
+
   :deep(.cesium-infoBox) {
     display: none !important;
   }
+
   :deep(.cesium-widget) {
     canvas {
       border-radius: 16px;
     }
   }
 }
+
 .loading-box {
   position: absolute;
   left: 50%;
@@ -784,15 +803,18 @@ function enlarge(url) {
   justify-content: center;
   align-items: center;
   height: 90px;
+
   img {
     width: 60px;
   }
+
   p {
     font-size: 16px;
     color: #ffffff;
     line-height: 22px;
   }
 }
+
 .button-wrap {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -806,17 +828,22 @@ function enlarge(url) {
   position: absolute;
   z-index: 99;
   top: 16px;
+
   &:hover {
     box-shadow: 0 0 8px #fff;
   }
+
   cursor: pointer;
+
   .o-icon {
     margin-right: 8px;
   }
+
   &:hover {
     color: #66e6ff;
   }
 }
+
 .select-button {
   color: #fff;
   background: rgba(0, 0, 0, 0.5);
@@ -831,23 +858,30 @@ function enlarge(url) {
   z-index: 99;
   top: 16px;
   left: 16px;
+
   &:hover {
     box-shadow: 0 0 8px #fff;
   }
+
   .o-icon {
     margin-right: 8px;
   }
+
   position: absolute;
+
   &:hover {
     color: #66e6ff;
+
     .o-icon {
       color: #66e6ff;
     }
+
     .select-tip {
       display: block;
     }
   }
 }
+
 .select-tip {
   position: absolute;
   top: 52px;
@@ -861,6 +895,7 @@ function enlarge(url) {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.5);
   box-shadow: 0px -10px 32px 0px rgba(45, 47, 51, 0.18);
+
   .triangle {
     position: absolute;
     top: -16px;
@@ -878,11 +913,13 @@ function enlarge(url) {
   right: 125px;
   display: flex;
   align-items: center;
+
   div {
     display: flex;
     align-items: center;
     line-height: 16px;
   }
+
   .divider {
     margin: 0 7px;
     width: 1px;
@@ -890,9 +927,11 @@ function enlarge(url) {
     border: 1px dashed #979797;
   }
 }
+
 .start-button {
   right: 15px;
 }
+
 .slider {
   position: absolute;
   top: 0px;
@@ -902,6 +941,7 @@ function enlarge(url) {
   height: 100%;
   background-color: #d3d3d3;
 }
+
 .luojia {
   .luojia-top {
     .type {
@@ -910,6 +950,7 @@ function enlarge(url) {
       text-align: center;
       line-height: 48px;
       margin-top: 40px;
+
       @media screen and (max-width: 768px) {
         font-size: 14px;
         height: 22px;
@@ -918,6 +959,7 @@ function enlarge(url) {
         text-align: center;
       }
     }
+
     .desc {
       font-size: 14px;
       font-weight: 400;
@@ -925,6 +967,7 @@ function enlarge(url) {
       text-align: center;
       line-height: 22px;
       margin-top: 16px;
+
       @media screen and (max-width: 768px) {
         height: auto;
         font-size: 12px;
@@ -933,30 +976,38 @@ function enlarge(url) {
       }
     }
   }
+
   &-bottom {
     margin-top: 24px;
+
     @media screen and (max-width: 768px) {
       display: none;
     }
+
     @media screen and (max-width: 820px) {
       display: none;
     }
+
     .process {
       margin-top: 20px;
       font-size: 14px;
       line-height: 28px;
       font-weight: 400;
       color: #555555;
+
       span {
         margin-left: 4px;
       }
+
       @media screen and (max-width: 768px) {
         display: none;
       }
+
       @media screen and (max-width: 820px) {
         display: none;
       }
     }
+
     .tip {
       font-size: 14px;
       font-weight: 400;
@@ -969,26 +1020,34 @@ function enlarge(url) {
 
 .luojia-mobile {
   display: none;
+
   @media screen and (max-width: 768px) {
     display: block;
   }
+
   @media screen and (max-width: 820px) {
     display: block;
   }
+
   :deep(.el-dialog) {
     --el-dialog-margin-top: 0;
+
     @media screen and (max-width: 820px) {
       overflow: scroll;
     }
+
     @media screen and (max-width: 767px) {
       overflow: hidden;
     }
+
     .el-dialog__body {
       img {
         width: 100%;
       }
+
       // padding: 60px 16px 40px !important;
       margin-top: 0;
+
       @media screen and (max-width: 820px) {
         height: 100%;
         display: flex;
@@ -996,8 +1055,10 @@ function enlarge(url) {
       }
     }
   }
+
   :deep(.el-upload) {
     width: 100%;
+
     .el-upload-dragger {
       width: 100%;
       border: none;
@@ -1008,16 +1069,20 @@ function enlarge(url) {
       align-items: center;
       justify-content: center;
       border: 1px solid #acacac;
+
       @media screen and (max-width: 820px) {
         height: 346px;
         margin: 16px 0;
       }
+
       @media screen and (max-width: 767px) {
         height: 196px;
         margin: 0;
       }
+
       border: 1px solid #acacac;
       background-color: #f5f6f8;
+
       img {
         border: 1px solid #a0d2ff;
         max-height: 100%;
@@ -1026,6 +1091,7 @@ function enlarge(url) {
       }
     }
   }
+
   .empty-status {
     height: 100%;
     display: flex;
@@ -1033,24 +1099,29 @@ function enlarge(url) {
     justify-content: center;
     align-items: center;
     padding: 0 40px;
+
     .o-icon {
       color: #ccc;
       font-size: 48px;
+
       @media screen and (max-width: 820px) {
         font-size: 32px;
       }
     }
+
     .upload-tip {
       font-size: 14px;
       color: #ccc;
       line-height: 22px;
       margin-top: 8px;
+
       span {
         color: #0d8dff;
         white-space: nowrap;
       }
     }
   }
+
   .img-list {
     display: flex;
     background-color: #f5f6f8;
@@ -1058,16 +1129,19 @@ function enlarge(url) {
     align-items: center;
     margin: 16px 0 0;
     position: relative;
+
     .o-icon {
       color: #b2b2b2;
       position: absolute;
       left: -16px;
+
       &:last-child {
         left: unset;
         right: -16px;
         rotate: 180deg;
       }
     }
+
     // width: 100%;
     .img-list-item {
       position: relative;
@@ -1076,15 +1150,18 @@ function enlarge(url) {
       // height: 0;
       // padding-bottom: 100%;
       border: 1px solid transparent;
+
       .img {
         width: 100%;
         height: 0;
         padding-bottom: 100%;
         overflow: hidden;
+
         img {
           width: 180%;
         }
       }
+
       .modal {
         position: absolute;
         left: 0;
@@ -1095,25 +1172,31 @@ function enlarge(url) {
         background: rgba(165, 213, 255, 0.5);
       }
     }
+
     .img-list-item + .img-list-item {
       @media screen and (max-width: 820px) {
         margin-left: 8px;
       }
+
       @media screen and (max-width: 767px) {
         margin-left: 4px;
       }
     }
+
     .active {
       border: 1px solid #a0d2ff;
+
       .modal {
         display: block;
       }
     }
   }
+
   .o-button {
     display: block;
     margin: 16px auto 0;
   }
+
   .history {
     font-size: 14px;
     height: 22px;
@@ -1121,34 +1204,41 @@ function enlarge(url) {
     margin: 24px 0 16px;
     display: flex;
     justify-content: space-between;
+
     span:last-child {
       color: #999;
     }
+
     @media screen and (max-width: 820px) {
       span:last-child {
         font-size: 12px;
       }
     }
   }
+
   .table {
     :deep(.el-table) {
       overflow: auto;
       box-shadow: none;
+
       .el-table__header {
         .el-table__cell {
           height: 36px;
           font-size: 12px;
           line-height: 22px;
+
           .cell {
             padding: 0 10px;
           }
         }
       }
+
       .el-table__body-wrapper {
         .el-table__cell {
           height: 52px;
           font-size: 12px;
           line-height: 22px;
+
           .cell {
             padding: 0 10px;
           }
@@ -1156,30 +1246,36 @@ function enlarge(url) {
       }
     }
   }
+
   .img-detail {
     font-size: 14px;
     height: 22px;
     line-height: 22px;
     margin: 24px 0 16px;
   }
+
   .compare-box {
     img {
       @media screen and (max-width: 820px) {
         width: 300px;
         height: 300px;
       }
+
       @media screen and (max-width: 767px) {
         width: 160px;
         height: 160px;
       }
     }
   }
+
   .el-overlay {
     @media screen and (max-width: 820px) {
       display: none;
+
       .el-overlay-dialog {
         display: none;
       }
+
       .el-dialog {
         display: none;
       }

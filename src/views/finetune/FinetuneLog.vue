@@ -4,27 +4,16 @@ import { useRoute } from 'vue-router';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { getFinetuneList, getFinetuneLog } from '@/api/api-finetune';
 import { useFinetuneData } from '@/stores';
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 const showLog = ref(false);
 const route = useRoute();
-const finetuneData = ref([]); //当前微调任务信息
+const finetuneData = ref([]); // 当前微调任务信息
 const finetuneLog = ref('');
 const userFinetune = useFinetuneData();
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 // 日志
 const socket = new WebSocket(
@@ -168,17 +157,10 @@ watch(
         width: 100%;
         height: 710px;
         position: relative;
-        /* img {
-          width: 60px;
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        } */
+
         .el-textarea {
           width: 100% !important;
           height: 100%;
-          //margin-top: 24px;
           :deep .el-textarea__inner {
             min-height: 560px !important;
             height: 100%;

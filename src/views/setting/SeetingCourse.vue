@@ -11,6 +11,7 @@ import { getMyCourseList } from '@/api/api-course';
 import { usePersonalInfoStore } from '@/stores';
 
 const router = useRouter();
+const layout = ref('prev, pager, next');
 
 const courseName = ref('allClassify');
 const activeName = ref('allStatus');
@@ -59,7 +60,9 @@ function handleClick(query, tab) {
   coursePager.page = 1;
 }
 
-const layout = ref('prev, pager, next');
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 // 课程分页器
 function handleCurrentPage(val) {
   coursePager.page = val;
@@ -68,9 +71,6 @@ function handleCurrentPage(val) {
     coursePager.page * coursePager.size
   );
   toTop();
-}
-function toTop() {
-  document.documentElement.scrollTop = 0;
 }
 
 function goCourseDetail(id) {
@@ -207,12 +207,6 @@ function goCourseDetail(id) {
                   </template>
                 </OButton>
               </div>
-              <!-- <div v-else-if="item.status === 'preparing'" class="right-wrap">
-                <div class="not-started">报名未开始</div>
-              </div> -->
-              <!-- <div v-else class="right-wrap">
-                <div class="not-started">报名已截止</div>
-              </div> -->
             </div>
           </div>
         </div>

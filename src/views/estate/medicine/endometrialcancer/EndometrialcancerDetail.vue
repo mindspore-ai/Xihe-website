@@ -8,7 +8,9 @@ import IconLeft from '~icons/app/left.svg';
 
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const activeNavItem = ref('');
@@ -28,10 +30,6 @@ watch(
   { immediate: true }
 );
 
-// 点击导航
-/* function handleNavClick(item) {
-  router.push(`/estate/electric/case-1/${item.href}`);
-} */
 function goBack() {
   router.push('/medicine');
 }
@@ -41,16 +39,16 @@ function goBack() {
   <div class="medicine-detail">
     <div v-if="screenWidth < 820" class="navigation">
       <o-icon class="turn" @click="goBack"><icon-left></icon-left></o-icon>
-      <span class="title">子宫内膜癌筛查联合方案</span>
+      <span class="title">{{ t('cancer.TITLE') }}</span>
     </div>
     <div class="medicine-wrap">
       <div class="bread-wrap">
         <el-breadcrumb :separator-icon="ArrowRight">
           <el-breadcrumb-item :to="{ path: '/medicine' }">
-            医疗专区
+            {{ t('cancer.BACK_PAGE') }}
           </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-item">
-            子宫内膜癌筛查联合方案
+            {{ t('cancer.TITLE') }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -61,10 +59,9 @@ function goBack() {
           </div>
           <div class="banner-right">
             <div class="banner-content">
-              <div class="banner-title">子宫内膜癌筛查联合方案</div>
+              <div class="banner-title">{{ t('cancer.TITLE') }}</div>
               <div class="banner-desc">
-                西安美佳家医疗科技有限责任公司基于昇思MindSpore
-                AI框架在华为昇腾910处理器中成功构建了一套人工智能系统对恶性和良性ECCs进行分类，减少病理学家的工作量，提供决策帮助，促进子宫内膜癌筛查的发展。
+                {{ t('cancer.DESCRIPTION') }}
               </div>
             </div>
             <div class="banner-btn">
@@ -74,7 +71,7 @@ function goBack() {
                 type="primary"
                 class="home-btn"
               >
-                运行模型
+                {{ t('cancer.RUN_MODEL') }}
                 <template #suffix>
                   <OIcon><IconArrowRight /></OIcon>
                 </template>

@@ -105,6 +105,7 @@ let i18n = {
     },
   ],
 };
+const layout = ref('sizes, prev, pager, next, jumper');
 
 const modelCount = ref(0);
 const modelData = ref([]);
@@ -113,29 +114,89 @@ const showDetail = ref(false);
 const moreSortTags = ref([]);
 const showCondition = ref(true);
 const showTags = ref(false);
-const radioList = ref({}); //应用分类二级标签列表
+const radioList = ref({}); // 应用分类二级标签列表
 const radioList2 = ref({});
 const modalName = ref('');
 const keyWord = ref('');
 
 let queryData = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
-  level: null, //仓库级别
-  count_per_page: 10, //每页数量
-  page_num: 1, //分页
-  sort_by: null, //排序规则
-});
-
-const debounceSearch = debounce(getModel, 500, {
-  trailing: true,
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
+  level: null, // 仓库级别
+  count_per_page: 10, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
 
 function backCondition() {
   showDetail.value = false;
   showCondition.value = true;
   showTags.value = false;
+}
+
+// 查询
+function goSearch(render) {
+  let time1 = 0;
+  let time2 = 0;
+  queryData.page_num = 1;
+  let tagList = []; // 标签
+  let tag_kinds = []; // 标签类型
+  render.forEach((item) => {
+    time1 = 0;
+    time2 = 0;
+    // 应用分类
+    if (item.title.text === '应用分类') {
+      item.condition.forEach((value) => {
+        if (value.isActive) {
+          tag_kinds.push(value.kind);
+          if (tag_kinds.length < 6) {
+            queryData.tag_kinds = tag_kinds.join(',');
+          } else {
+            ElMessage({
+              message: '最多支持刷选5个标签 !',
+              type: 'warning',
+            });
+            return;
+          }
+        } else {
+          time1 += 1;
+        }
+      });
+      if (time1 === item.condition.length) {
+        item.haveActive = false;
+        if (item.title.key === 0) {
+          queryData.tag_kinds = null;
+        }
+      }
+      // 协议(单选)
+    } else {
+      item.condition.forEach((value) => {
+        value.items.forEach((val) => {
+          if (val.isActive) {
+            tagList.push(val.name);
+            if (tagList.length < 6) {
+              queryData.tags = tagList.join(',');
+            } else {
+              ElMessage({
+                message: '最多支持刷选5个标签 !',
+                type: 'warning',
+              });
+              return;
+            }
+          } else {
+            time2 += 1;
+          }
+        });
+      });
+      if (time2 === item.condition[0].items.length) {
+        item.haveActive = false;
+        if (item.title.key === 1) {
+          queryData.tags = null;
+        }
+      }
+    }
+  });
 }
 
 // 多选-->处理器，文件格式，框架，训练数据集，其他;-->应用分类 ，协议单选
@@ -215,13 +276,11 @@ function clearItem(index) {
       item.isActive = false;
       item.isSelected = false;
     });
-    // handleTagSearch(renderCondition.value[index].condition);
   } else {
     renderCondition.value[index].condition[0].items.forEach((item) => {
       item.isActive = false;
       item.isSelected = false;
     });
-    // queryData.tags = null;
   }
   goSearch(renderCondition.value);
 }
@@ -272,6 +331,23 @@ function radioClick(detail, list) {
   goSearch(renderCondition.value);
 }
 
+// 二级标签查询
+function handleTagSearch(date) {
+  let taskId = [];
+  date.forEach((item) => {
+    item.items.forEach((it) => {
+      if (it.isActive === true) {
+        taskId.push(it.name);
+      }
+    });
+  });
+  if (taskId.length > 0) {
+    queryData.tags = taskId.join(',');
+  } else {
+    queryData.tags = null;
+  }
+}
+
 // 分类二级标签
 function sortTagClick(index, index2) {
   renderCondition.value[0].condition.forEach((item) => {
@@ -319,86 +395,6 @@ function clearSortItem(index) {
   });
   handleTagSearch(moreSortTags.value);
 }
-// 二级标签查询
-function handleTagSearch(date) {
-  let taskId = [];
-  date.forEach((item) => {
-    item.items.forEach((it) => {
-      if (it.isActive === true) {
-        taskId.push(it.name);
-      }
-    });
-  });
-  if (taskId.length > 0) {
-    queryData.tags = taskId.join(',');
-  } else {
-    queryData.tags = null;
-  }
-}
-
-//查询
-function goSearch(render) {
-  let time1 = 0;
-  let time2 = 0;
-  queryData.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
-  render.forEach((item) => {
-    time1 = 0;
-    time2 = 0;
-    // 应用分类
-    if (item.title.text === '应用分类') {
-      item.condition.forEach((value) => {
-        if (value.isActive) {
-          tag_kinds.push(value.kind);
-          if (tag_kinds.length < 6) {
-            queryData.tag_kinds = tag_kinds.join(',');
-          } else {
-            ElMessage({
-              message: '最多支持刷选5个标签 !',
-              type: 'warning',
-            });
-            return;
-          }
-        } else {
-          time1 += 1;
-        }
-      });
-      if (time1 === item.condition.length) {
-        item.haveActive = false;
-        if (item.title.key === 0) {
-          queryData.tag_kinds = null;
-        }
-      }
-      // 协议(单选)
-    } else {
-      item.condition.forEach((value) => {
-        value.items.forEach((val) => {
-          if (val.isActive) {
-            tagList.push(val.name);
-            if (tagList.length < 6) {
-              queryData.tags = tagList.join(',');
-            } else {
-              ElMessage({
-                message: '最多支持刷选5个标签 !',
-                type: 'warning',
-              });
-              return;
-            }
-          } else {
-            time2 += 1;
-          }
-        });
-      });
-      if (time2 === item.condition[0].items.length) {
-        item.haveActive = false;
-        if (item.title.key === 1) {
-          queryData.tags = null;
-        }
-      }
-    }
-  });
-}
 
 const sortValue = ref('');
 // 排序
@@ -425,6 +421,10 @@ function getModel() {
   });
 }
 
+const debounceSearch = debounce(getModel, 500, {
+  trailing: true,
+});
+
 async function getModelTag() {
   await getTags('global_model').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
@@ -440,10 +440,13 @@ async function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         // 标签高亮
-        if (route.params.tag_kinds === 'CV' && it.kind === 'CV') {
+        if (window.history.state.tag_kinds === 'CV' && it.kind === 'CV') {
           it.isActive = true;
           it.isSelected = true;
-        } else if (route.params.tag_kinds === 'NLP' && it.kind === 'NLP') {
+        } else if (
+          window.history.state.tag_kinds === 'NLP' &&
+          it.kind === 'NLP'
+        ) {
           it.isActive = true;
           it.isSelected = true;
         } else {
@@ -465,10 +468,7 @@ async function getModelTag() {
       item.showTagsAll = false;
       item.condition.forEach((it) => {
         // 电力跳转过来标签高亮
-        if (
-          Object.keys(route.params).length &&
-          it.items[0].name === 'electricity'
-        ) {
+        if (window.history.state.tags && it.items[0].name === 'electricity') {
           it.items[0].isActive = true;
           it.items[0].isSelected = false;
         } else {
@@ -479,8 +479,6 @@ async function getModelTag() {
     });
   });
 }
-
-const layout = ref('sizes, prev, pager, next, jumper');
 
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
@@ -537,16 +535,16 @@ watch(
   }
 );
 watch(
-  () => route.params.modelType,
-  () => {
+  () => window.history.state.modelType,
+  (val) => {
     getModelTag().then(() => {
-      if (route.params.modelType === '1') {
+      if (val === 1) {
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
-      } else if (route.params.modelType === '2') {
+      } else if (val === 2) {
         conditionClick(0, 0, renderCondition.value[0].condition[0]);
-      } else if (route.params.modelType === '3') {
+      } else if (val === 3) {
         conditionClick(0, 1, renderCondition.value[0].condition[1]);
-      } else if (route.params.modelType === '4') {
+      } else if (val === 4) {
         conditionClick(0, 3, renderCondition.value[0].condition[3]);
       }
     });
@@ -557,10 +555,10 @@ watch(
 );
 // 电力跳转过来筛选标签
 watch(
-  () => route.params,
+  () => window.history.state.tags,
   () => {
-    queryData.tag_kinds = route.params.tag_kinds;
-    queryData.tags = route.params.tags;
+    queryData.tag_kinds = window.history.state.tag_kinds;
+    queryData.tags = window.history.state.tags;
   },
   {
     immediate: true,

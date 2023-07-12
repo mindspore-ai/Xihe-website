@@ -22,6 +22,8 @@ const userInfoStore = useUserInfoStore();
 
 const route = useRoute();
 const router = useRouter();
+const layout = ref('sizes, prev, pager, next, jumper');
+
 let i18n = {
   head: {
     title: '数据集',
@@ -88,14 +90,26 @@ const radioList = ref({});
 const keyWord = ref('');
 
 let query = reactive({
-  name: null, //项目名
-  tags: null, //标签
-  tag_kinds: null, //标签类型(应用分类)
-  level: null, //仓库级别
-  count_per_page: 10, //每页数量
-  page_num: 1, //分页
-  sort_by: null, //排序规则
+  name: null, // 项目名
+  tags: null, // 标签
+  tag_kinds: null, // 标签类型(应用分类)
+  level: null, // 仓库级别
+  count_per_page: 10, // 每页数量
+  page_num: 1, // 分页
+  sort_by: null, // 排序规则
 });
+
+function getDataset() {
+  getDatasetData(query).then((res) => {
+    modelCount.value = res.data.total;
+    if (modelCount.value / query.count_per_page < 8) {
+      layout.value = 'sizes, prev, pager, next';
+    } else {
+      layout.value = 'sizes, prev, pager, next, jumper';
+    }
+    modelData.value = res.data;
+  });
+}
 
 const debounceSearch = debounce(getDataset, 500, {
   trailing: true,
@@ -110,6 +124,62 @@ function backCondition() {
   showDetail.value = false;
   showCondition.value = true;
   showTags.value = false;
+}
+
+// 查询
+function goSearch(render) {
+  let time1 = 0;
+  let time2 = 0;
+  query.page_num = 1;
+  let tagList = []; // 标签
+  let tag_kinds = []; // 标签类型
+  render.forEach((item) => {
+    time1 = 0;
+    time2 = 0;
+    // 应用分类
+    if (item.title.key === 0) {
+      item.condition.forEach((value) => {
+        if (value.isActive) {
+          tag_kinds.push(value.kind);
+          if (tag_kinds.length < 6) {
+            query.tag_kinds = tag_kinds.join(',');
+          } else {
+            ElMessage({
+              message: '最多支持刷选5个标签 !',
+              type: 'warning',
+            });
+            return;
+          }
+        } else {
+          time1 += 1;
+        }
+      });
+      if (time1 === item.condition.length) {
+        item.haveActive = false;
+        if (item.title.key === 0) {
+          query.tag_kinds = null;
+        }
+      }
+      // 协议(单选)
+    } else {
+      item.condition.forEach((value) => {
+        value.items.forEach((val) => {
+          if (val.isActive) {
+            tagList.push(val.name);
+            query.tags = tagList.join(',');
+          } else {
+            time2 += 1;
+          }
+        });
+      });
+      if (time2 === item.condition[0].items.length) {
+        item.haveActive = false;
+        if (item.title.key === 1) {
+          query.tags = null;
+        }
+      }
+    }
+  });
 }
 
 // 应用分类--多选
@@ -129,7 +199,7 @@ function clearItem1(index) {
   query.tag_kinds = null;
 }
 
-//数据集/其他（多选）--协议单选
+// 数据集/其他（多选）--协议单选
 function conditionClick(index, index2) {
   renderCondition.value[index].haveActive = true;
   // 协议
@@ -171,63 +241,6 @@ function conditionClick(index, index2) {
   goSearch(renderCondition.value);
 }
 
-//查询
-function goSearch(render) {
-  let time1 = 0;
-  let time2 = 0;
-  query.page_num = 1;
-  let tagList = []; //标签
-  let tag_kinds = []; //标签类型
-  render.forEach((item) => {
-    time1 = 0;
-    time2 = 0;
-    // 应用分类
-    if (item.title.key === 0) {
-      item.condition.forEach((value) => {
-        if (value.isActive) {
-          tag_kinds.push(value.kind);
-          if (tag_kinds.length < 6) {
-            query.tag_kinds = tag_kinds.join(',');
-          } else {
-            ElMessage({
-              message: '最多支持刷选5个标签 !',
-              type: 'warning',
-            });
-            return;
-          }
-        } else {
-          time1 += 1;
-        }
-      });
-      if (time1 === item.condition.length) {
-        // query[item.title.key] = null; // 所有都未选不传
-        item.haveActive = false;
-        if (item.title.key === 0) {
-          query.tag_kinds = null;
-        }
-      }
-      // 协议(单选)
-    } else {
-      item.condition.forEach((value) => {
-        value.items.forEach((val) => {
-          if (val.isActive) {
-            tagList.push(val.name);
-            query.tags = tagList.join(',');
-          } else {
-            time2 += 1;
-          }
-        });
-      });
-      if (time2 === item.condition[0].items.length) {
-        item.haveActive = false;
-        if (item.title.key === 1) {
-          query.tags = null;
-        }
-      }
-    }
-  });
-}
-
 function clearItem(index) {
   renderCondition.value[index].haveActive = false;
   renderCondition.value[index].condition[0].items.map((item) => {
@@ -237,7 +250,7 @@ function clearItem(index) {
   });
   query.tags = null;
 }
-//查看全部标签
+// 查看全部标签
 let radioItem = ref({});
 function checkAllClick(item, index) {
   showCondition.value = false;
@@ -278,6 +291,32 @@ function radioClick(detail, list) {
   }
   goSearch(renderCondition.value);
 }
+
+// 二级标签查询
+function handleTagSearch(date) {
+  let tagList = [];
+  date.forEach((item) => {
+    item.items.forEach((val) => {
+      if (val.isActive === true) {
+        tagList.push(val.name);
+      }
+    });
+  });
+  if (tagList.length > 0) {
+    if (tagList.length < 6) {
+      query.tags = tagList.join(',');
+    } else {
+      ElMessage({
+        message: '最多支持刷选5个标签 !',
+        type: 'warning',
+      });
+      return;
+    }
+  } else {
+    query.tags = null;
+  }
+}
+
 // 应用分类二级标签
 function sortTagClick(index, index2) {
   moreSortTags.value[index].haveActive = true;
@@ -310,31 +349,6 @@ function clearSortItem(index) {
   handleTagSearch(moreSortTags.value);
 }
 
-// 二级标签查询
-function handleTagSearch(date) {
-  let tagList = [];
-  date.forEach((item) => {
-    item.items.forEach((val) => {
-      if (val.isActive === true) {
-        tagList.push(val.name);
-      }
-    });
-  });
-  if (tagList.length > 0) {
-    if (tagList.length < 6) {
-      query.tags = tagList.join(',');
-    } else {
-      ElMessage({
-        message: '最多支持刷选5个标签 !',
-        type: 'warning',
-      });
-      return;
-    }
-  } else {
-    query.tags = null;
-  }
-}
-
 const sortValue = ref('');
 function getSortData(item) {
   sortValue.value = item.text;
@@ -347,17 +361,6 @@ function getSortData(item) {
   }
 }
 
-function getDataset() {
-  getDatasetData(query).then((res) => {
-    modelCount.value = res.data.total;
-    if (modelCount.value / query.count_per_page < 8) {
-      layout.value = 'sizes, prev, pager, next';
-    } else {
-      layout.value = 'sizes, prev, pager, next, jumper';
-    }
-    modelData.value = res.data;
-  });
-}
 function getModelTag() {
   getTags('global_dataset').then((res) => {
     i18n.screenCondition = res.data.map((item, index) => {
@@ -373,13 +376,13 @@ function getModelTag() {
     i18n.screenCondition.forEach((item) => {
       res.data[item.title.key].items.forEach((it) => {
         if (
-          route.params.tag_kinds === 'CV' &&
+          window.history.state.tag_kinds === 'CV' &&
           (it.kind === 'CV' || it.items[0] === 'electricity')
         ) {
           it.isActive = true;
           it.isSelected = true;
         } else if (
-          route.params.tag_kinds === 'NLP' &&
+          window.history.state.tag_kinds === 'NLP' &&
           (it.kind === 'NLP' || it.items[0] === 'electricity')
         ) {
           it.isActive = true;
@@ -388,7 +391,6 @@ function getModelTag() {
           it.isActive = false;
           it.isSelected = false;
         }
-        // it.isActive = false;
         item.condition.push(it);
       });
     });
@@ -402,7 +404,6 @@ function getModelTag() {
     renderCondition.value.forEach((item, index) => {
       item.showTagsAll = false;
       item.condition[0].items = item.condition[0].items.map((it) => {
-        // it.isSelected = false;
         return {
           name: it,
           isSelected: false,
@@ -410,10 +411,7 @@ function getModelTag() {
       });
       item.condition.forEach((it) => {
         // 电力跳转过来标签高亮
-        if (
-          Object.keys(route.params).length &&
-          it.items[0].name === 'electricity'
-        ) {
+        if (window.history.state.tags && it.items[0].name === 'electricity') {
           it.items[0].isActive = true;
           it.items[0].isSelected = false;
         }
@@ -421,7 +419,7 @@ function getModelTag() {
       item.num = index;
     });
 
-    //应用分类二级菜单查看全部
+    // 应用分类二级菜单查看全部
     moreSortTags.value = renderSorts.value[0].condition;
 
     moreSortTags.value.forEach((sort) => {
@@ -446,7 +444,6 @@ function goDetail(user, name) {
   window.open(routerData.href, '_blank');
 }
 
-const layout = ref('sizes, prev, pager, next, jumper');
 function handleSizeChange(val) {
   if (modelCount.value / val < 8) {
     layout.value = 'sizes, prev, pager, next';
@@ -456,13 +453,14 @@ function handleSizeChange(val) {
   query.count_per_page = val;
 }
 
+function toTop() {
+  document.documentElement.scrollTop = 0;
+}
 function handleCurrentChange(val) {
   query.page_num = val;
   toTop();
 }
-function toTop() {
-  document.documentElement.scrollTop = 0;
-}
+
 function goNewModel() {
   if (userInfoStore.id) {
     router.push('/new/datasets');
@@ -498,10 +496,10 @@ watch(
 );
 
 watch(
-  () => route.params,
+  () => window.history.state.tags,
   () => {
-    query.tag_kinds = route.params.tag_kinds;
-    query.tags = route.params.tags;
+    query.tag_kinds = window.history.state.tag_kinds;
+    query.tags = window.history.state.tags;
   },
   {
     immediate: true,

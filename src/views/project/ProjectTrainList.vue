@@ -3,7 +3,7 @@ import { ref, computed, onUnmounted, onMounted } from 'vue';
 
 import { useRouter, useRoute } from 'vue-router';
 import { useFileData, useUserInfoStore } from '@/stores';
-import { LOGIN_KEYS } from '@/shared/login';
+import { getHeaderConfig } from '@/shared/login';
 import { formatSeconds } from '@/shared/utils';
 
 import OButton from '@/components/OButton.vue';
@@ -38,35 +38,17 @@ import {
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
 // 当前项目的详情数据
-const detailData = computed(() => {
-  return useFileData().fileStoreData;
-});
-
-const isAuthentic = computed(() => {
-  return route.params.user === userInfoStore.userName;
-});
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
 
 const route = useRoute();
 const router = useRouter();
 const userInfoStore = useUserInfoStore();
 
-const projectId = detailData.value.id;
 const trainData = ref([]);
 const trainId = ref('');
 const tips = ref(false);
 const btnShow = ref(false);
 const description = ref('');
+let socket;
 
 const i18n = {
   description1:
@@ -81,6 +63,15 @@ const i18n = {
   cancel: '取消',
 };
 
+const detailData = computed(() => {
+  return useFileData().fileStoreData;
+});
+const projectId = detailData.value.id;
+
+const isAuthentic = computed(() => {
+  return route.params.user === userInfoStore.userName;
+});
+
 // 进入页面判断是否是自己的项目，不是则返回首页
 function goHome() {
   if (!isAuthentic.value) {
@@ -89,13 +80,76 @@ function goHome() {
 }
 goHome();
 
-//跳转到选择文件创建训练实例页
+// 跳转到选择文件创建训练实例页
 function goSelectFile() {
   let routerData = router.resolve({
     path: `/projects/${detailData.value.owner}/${detailData.value.name}/createfile`,
   });
   window.open(routerData.href, '_blank');
 }
+
+function setWebsocket(url) {
+  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
+
+  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
+  socket.onmessage = function (event) {
+    try {
+      trainData.value = JSON.parse(event.data).data;
+      if (trainData.value) {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+
+        if (bool || trainData.value.length >= 5) {
+          btnShow.value = true;
+        } else {
+          btnShow.value = false;
+        }
+
+        if (trainData.value[trainData.value.length - 1].error) {
+          btnShow.value = false;
+          ElMessage({
+            type: 'error',
+            message: trainData.value[trainData.value.length - 1].error,
+          });
+        }
+      }
+    } catch (e) {
+      return e;
+    }
+  };
+  return socket;
+}
+
+function getTrainList() {
+  try {
+    trainList(projectId).then((res) => {
+      trainData.value = res.data.data;
+      // 列表为空可以创建实例
+      if (!trainData.value) {
+        btnShow.value = false;
+      } else {
+        let bool = trainData.value.some(
+          (item) => item.status === 'scheduling' || item.status === 'Running'
+        );
+
+        if (trainData.value.length < 5 && !bool) {
+          btnShow.value = false;
+        } else if (bool) {
+          btnShow.value = true;
+          socket = setWebsocket(
+            `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
+          );
+        } else if (trainData.value.length >= 5 && !bool) {
+          btnShow.value = true;
+        }
+      }
+    });
+  } catch (e) {
+    return e;
+  }
+}
+getTrainList();
 
 // 删除训练
 const showDel = ref(false);
@@ -180,70 +234,6 @@ function goTrainLog(trainId) {
       trainId: trainId,
     },
   });
-}
-
-let socket;
-function getTrainList() {
-  try {
-    trainList(projectId).then((res) => {
-      trainData.value = res.data.data;
-      // 列表为空可以创建实例
-      if (!trainData.value) {
-        btnShow.value = false;
-      } else {
-        let bool = trainData.value.some(
-          (item) => item.status === 'scheduling' || item.status === 'Running'
-        );
-
-        if (trainData.value.length < 5 && !bool) {
-          btnShow.value = false;
-        } else if (bool) {
-          btnShow.value = true;
-          socket = setWebsocket(
-            `wss://${DOMAIN}/server/train/project/${projectId}/training/ws`
-          );
-        } else if (trainData.value.length >= 5 && !bool) {
-          btnShow.value = true;
-        }
-      }
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-getTrainList();
-
-function setWebsocket(url) {
-  const socket = new WebSocket(url, [getHeaderConfig().headers['csrf-token']]);
-
-  // 当websocket接收到服务端发来的消息时，自动会触发这个函数。
-  socket.onmessage = function (event) {
-    try {
-      trainData.value = JSON.parse(event.data).data;
-      if (trainData.value) {
-        let bool = trainData.value.some(
-          (item) => item.status === 'scheduling' || item.status === 'Running'
-        );
-
-        if (bool || trainData.value.length >= 5) {
-          btnShow.value = true;
-        } else {
-          btnShow.value = false;
-        }
-
-        if (trainData.value[trainData.value.length - 1].error) {
-          btnShow.value = false;
-          ElMessage({
-            type: 'error',
-            message: trainData.value[trainData.value.length - 1].error,
-          });
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  return socket;
 }
 
 const closeSocket = () => {

@@ -1,0 +1,18 @@
+export default {
+  TITLE: 'Substation AI analysis host',
+  DESCRIPTION: '',
+  ELECTRIC: '',
+  RUN_MODEL: '',
+  EXPLAIN: '',
+  BACKGROUND: '',
+  BACKGROUND_DESC: ' ',
+  RESUME: '',
+  RESUME_DESC1: '',
+  RESUME_DESC2: '',
+  PAIN: '',
+  PAIN_DESC: '',
+  ADVANTAGE: '',
+  ADVANTAGE_DESC: '',
+  ADVANTAGE_DESC1: '',
+  FRIENDLY_TIP: ' ',
+};

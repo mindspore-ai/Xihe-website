@@ -1,16 +1,5 @@
 import { request } from '@/shared/axios';
-import { LOGIN_KEYS, saveUserAuth } from '@/shared/login';
-
-function getHeaderConfig() {
-  const headersConfig = localStorage.getItem(LOGIN_KEYS.USER_TOKEN)
-    ? {
-        headers: {
-          'csrf-token': localStorage.getItem(LOGIN_KEYS.USER_TOKEN),
-        },
-      }
-    : {};
-  return headersConfig;
-}
+import { saveUserAuth, getHeaderConfig } from '@/shared/login';
 
 export function buildAuthenticationClient(params) {
   const url = '/oneid/oidc/authorize';
@@ -22,7 +11,7 @@ export function buildAuthenticationClient(params) {
  * @returns
  */
 export function queryUserToken(params) {
-  const url = `/server/login`;
+  const url = '/server/login';
   return request
     .get(url, { $doException: true, params })
     .then((res) => {
@@ -40,7 +29,7 @@ export function queryUserToken(params) {
 export async function queryUserInfo(params) {
   const { token, userName } = params;
   if (token) {
-    const url = `/server/user`;
+    const url = '/server/user';
     return request
       .get(url, { $doException: true, ...getHeaderConfig() })
       .then((res) => {
@@ -152,7 +141,7 @@ export function getUserEmail(id) {
   });
 }
 export function sendCode(reopt) {
-  const url = `/server/user/email/sendbind`;
+  const url = '/server/user/email/sendbind';
   return request
     .post(url, reopt, { $doException: true, ...getHeaderConfig() })
     .then((res) => {
@@ -160,7 +149,7 @@ export function sendCode(reopt) {
     });
 }
 export function bindUserEmail(params) {
-  const url = `/server/user/email/bind`;
+  const url = '/server/user/email/bind';
   return request
     .post(url, params, { $doException: true, ...getHeaderConfig() })
     .then((res) => {
@@ -168,7 +157,7 @@ export function bindUserEmail(params) {
     });
 }
 export function changeUserEmail(params) {
-  const url = `/api/users/change_email/`;
+  const url = '/api/users/change_email/';
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -184,19 +173,19 @@ export function getUserPhone(id) {
   });
 }
 export function setUserPhone(reopt) {
-  const url = `/api/users/send_phone_code/`;
+  const url = '/api/users/send_phone_code/';
   return request.post(url, { phone: reopt }, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 export function keepUserPhone(params) {
-  const url = `/api/users/set_phone/`;
+  const url = '/api/users/set_phone/';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
 }
 export function changeUserPhone(params) {
-  const url = `/api/users/change_phone/`;
+  const url = '/api/users/change_phone/';
   return request.put(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -207,7 +196,7 @@ export function changeUserPhone(params) {
  * @returns
  */
 export function getRank() {
-  const url = `/api/base/statistics/`;
+  const url = '/api/base/statistics/';
   return request.put(url, null, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -217,23 +206,13 @@ export function getRank() {
  * @returns
  */
 export function getUserCompetition(params) {
-  const url = `/server/competition`;
+  const url = '/server/competition';
   return request
-    .get(url, Object.assign({ params }, getHeaderConfig()))
+    .get(url, { ...{ params }, ...getHeaderConfig() })
     .then((res) => {
       return res;
     });
 }
-/**
- * 获取用户进行中、已结束的比赛
- * @returns
- */
-/* export function getCompetition(status) {
-  const url = `/api/competitions/user_competitions/?status=${status}`;
-  return request.get(url, getHeaderConfig()).then((res) => {
-    return res.data;
-  });
-} */
 
 /**
  * 用户动态
@@ -262,7 +241,7 @@ export function getUserCollection(name) {
  * @returns
  */
 export function getFollowing(params) {
-  const url = `/server/user/following`;
+  const url = '/server/user/following';
   return request.post(url, params, getHeaderConfig()).then((res) => {
     return res.data;
   });
@@ -275,7 +254,7 @@ export function getFollowing(params) {
 export function cancelFollowing(params) {
   const url = `/server/user/following/${params.account}`;
   return request
-    .delete(url, Object.assign({ data: params }, getHeaderConfig()))
+    .delete(url, { ...{ data: params }, ...getHeaderConfig() })
     .then((res) => {
       return res.data;
     });
@@ -306,7 +285,7 @@ export function getUserFollow(name) {
  * 检查邮箱是否存在
  */
 export function checkEmail() {
-  const url = `/server/user/check_email`;
+  const url = '/server/user/check_email';
   return request.get(url, getHeaderConfig()).then((res) => {
     return res.data;
   });

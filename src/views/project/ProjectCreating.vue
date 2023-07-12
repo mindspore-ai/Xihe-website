@@ -136,7 +136,7 @@ const rules = reactive({
     {
       validator: (rule, value, callback) => {
         if (value && (value.length < 3 || value.length > 35)) {
-          callback(new Error('项目中文名称长度为3-35个字符'));
+          callback(new Error('项目标题长度为3-35个字符'));
         } else {
           callback();
         }

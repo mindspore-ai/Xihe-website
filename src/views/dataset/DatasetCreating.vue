@@ -291,7 +291,7 @@ function deleteAllTags() {
           {
             validator: (rule, value, callback) => {
               if (value && (value.length < 3 || value.length > 35)) {
-                callback('数据集中文名称长度为3-35个字符');
+                callback('数据集标题长度为3-35个字符');
               } else {
                 callback();
               }

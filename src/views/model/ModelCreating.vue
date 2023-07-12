@@ -306,7 +306,7 @@ function deleteAllTags() {
                     {
                       validator: (rule, value, callback) => {
                         if (value && (value.length < 3 || value.length > 35)) {
-                          callback('模型中文名称长度为3-35个字符');
+                          callback('模型标题长度为3-35个字符');
                         } else {
                           callback();
                         }

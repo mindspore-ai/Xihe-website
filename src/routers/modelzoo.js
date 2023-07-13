@@ -1,6 +1,7 @@
 import { LOGIN_STATUS } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 import { getStatistics } from '@/api/api-modelzoo.js';
+import { ElMessage } from 'element-plus';
 
 export default [
   // 大模型体验
@@ -173,8 +174,11 @@ export default [
           .then((res) => {
             return res;
           })
-          .catch((e) => {
-            return e;
+          .catch(() => {
+            ElMessage({
+              type: 'error',
+              message: 'error',
+            });
           });
         to.fullPath = '/modelzoo/wukong';
         to.query = {};

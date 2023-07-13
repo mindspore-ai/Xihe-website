@@ -5,6 +5,7 @@ import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 import { useUserInfoStore } from '@/stores';
 
 import successIcon from '@/assets/icons/success.png';
+import { ElMessage } from 'element-plus';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 const userInfoStore = useUserInfoStore();
@@ -25,7 +26,10 @@ const handleCopy = async () => {
     await writeToClipboard(invitationUrl.value);
     toggleDlg(true);
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 };
 </script>

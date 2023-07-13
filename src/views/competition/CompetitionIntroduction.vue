@@ -6,6 +6,7 @@ import { handleMarkdown } from '@/shared/markdown';
 import { useCompetitionData } from '@/stores';
 
 import { getGuide } from '@/api/api-competition';
+import { ElMessage } from 'element-plus';
 
 const comInfo = computed(() => {
   return useCompetitionData().competitionData;
@@ -21,8 +22,11 @@ getGuide(comInfo.value.doc)
     codeString.value = README;
     result.value = mkit.render(codeString.value);
   })
-  .catch((err) => {
-    return err;
+  .catch(() => {
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   });
 </script>
 <template>

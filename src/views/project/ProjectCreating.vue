@@ -227,7 +227,10 @@ function getModelTags(type) {
       });
     });
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getModelTags('project');

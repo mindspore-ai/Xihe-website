@@ -1,6 +1,6 @@
 import { request } from '@/shared/axios';
 import { getHeaderConfig } from '@/shared/login';
-
+import { ElMessage } from 'element-plus';
 /**
  * 查询文件
  * @returns
@@ -71,8 +71,11 @@ export function modifyTags(params, owner, id) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -172,8 +175,11 @@ export function modifyProjectAdd(params, projectId) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -199,7 +205,10 @@ export function modifyModelAdd(params, projectId) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }

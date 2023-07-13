@@ -106,7 +106,10 @@ function setWebsocket(url) {
     try {
       userFinetune.setFinetuneData(JSON.parse(event.data).data);
     } catch (e) {
-      return e;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   };
   return socket;
@@ -140,7 +143,10 @@ function getFinetune() {
           }
         });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   } else {
     showFinetune.value = true;

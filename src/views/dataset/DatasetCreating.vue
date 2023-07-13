@@ -138,7 +138,10 @@ function getModelTags(type) {
       });
     });
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getModelTags('dataset');

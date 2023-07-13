@@ -276,8 +276,7 @@ function showDialog2() {
 }
 function goRule() {
   window.open(
-    'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
-    '_black'
+    'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html'
   );
 }
 </script>

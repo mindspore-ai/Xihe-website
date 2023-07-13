@@ -546,6 +546,7 @@ async function deleteAllTags() {
                 class="reference"
                 href="https://xihe-docs.mindspore.cn/zh/basics/project_ui/"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ i18n.head.reference }}
               </a>

@@ -7,6 +7,7 @@ import {
   defineProps,
   defineEmits,
 } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { applyCompetition } from '@/api/api-competition';
 import { getAreaData } from '@/api/api-competition';
@@ -19,6 +20,7 @@ import { ElMessage } from 'element-plus';
 
 import { useUserInfoStore, useCompetitionData } from '@/stores';
 
+const router = useRouter();
 const userInfoStore = useUserInfoStore();
 const userComData = useCompetitionData();
 
@@ -277,8 +279,11 @@ function saveInfo(formEl) {
 }
 // 跳转到隐私政策
 function goPrivacy() {
-  sessionStorage.setItem('privacyType', 'competition');
-  window.open('/privacy');
+  let routerUrl = router.resolve({
+    path: '/privacy',
+    query: { type: 'competition' },
+  });
+  window.open(routerUrl.href, '_blank');
 }
 </script>
 <template>

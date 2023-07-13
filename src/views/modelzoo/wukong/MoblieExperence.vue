@@ -991,6 +991,7 @@ function handleNum(index) {
         当前体验服务的内容均由人工智能模型生成，平台对其生成内容的准确性、完整性和功能性不做任何保证，在使用体验服务前，请您务必仔细阅读并理解透彻
         <a
           target="blank"
+          rel="noopener noreferrer"
           href="https://xihe-docs.mindspore.cn/zh/appendix/license/"
           >《昇思大模型平台协议》</a
         >

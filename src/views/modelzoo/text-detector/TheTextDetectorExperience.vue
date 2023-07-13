@@ -391,7 +391,12 @@ function handleLanguageSelect(item) {
           {{ i18n.PRODUCTION_INTRO_1 }}
           <span class="tip-blod">{{ i18n.PRODUCTION_INTRO_2 }}</span>
           {{ i18n.PRODUCTION_INTRO_3 }}
-          <a class="tip-link" :href="feedbackLink" target="blank">
+          <a
+            class="tip-link"
+            :href="feedbackLink"
+            rel="noopener noreferrer"
+            target="blank"
+          >
             {{ i18n.PRODUCTION_INTRO_4 }}
           </a>
         </div>
@@ -421,7 +426,12 @@ function handleLanguageSelect(item) {
           {{ i18n.PRODUCTION_INTRO_1_EN }}
           <span class="tip-blod">{{ i18n.PRODUCTION_INTRO_2_EN }}</span>
           {{ i18n.PRODUCTION_INTRO_3_EN }}
-          <a class="tip-link" :href="feedbackLink" target="blank">
+          <a
+            class="tip-link"
+            :href="feedbackLink"
+            rel="noopener noreferrer"
+            target="blank"
+          >
             {{ i18n.PRODUCTION_INTRO_4_EN }}
           </a>
         </div>

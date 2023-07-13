@@ -711,6 +711,7 @@ watch(
                     v-if="isCusEvaluated"
                     :href="`${evaluateUrl}`"
                     onclick="return false"
+                    rel="noopener noreferrer"
                   >
                     <o-button type="primary" @click="goAimPage"
                       >查看报告</o-button

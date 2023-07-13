@@ -18,6 +18,7 @@ import {
   getUserCompetition,
 } from '@/api/api-user';
 import { getMyCourseList } from '@/api/api-course';
+import { ElMessage } from 'element-plus';
 
 import IconDialog from '~icons/app/dialog';
 import IconLock from '~icons/app/lock';
@@ -163,7 +164,10 @@ function getFollow(name) {
         userInfoStore.followingCount++;
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }
@@ -179,7 +183,10 @@ function cancelFollow(name) {
       userInfoStore.followingCount--;
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 

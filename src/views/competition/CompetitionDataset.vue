@@ -8,6 +8,7 @@ import { handleMarkdown } from '@/shared/markdown';
 
 import { getGuide } from '@/api/api-competition';
 import { useCompetitionData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const userComData = useCompetitionData().competitionData;
 
@@ -21,8 +22,11 @@ getGuide(userComData.dataset_doc)
     codeString.value = README;
     result.value = mkit.render(codeString.value);
   })
-  .catch((err) => {
-    return err;
+  .catch(() => {
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   });
 
 function downloadDataset() {

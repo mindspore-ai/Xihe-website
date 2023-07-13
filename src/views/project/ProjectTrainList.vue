@@ -115,7 +115,10 @@ function setWebsocket(url) {
         }
       }
     } catch (e) {
-      return e;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   };
   return socket;
@@ -146,7 +149,10 @@ function getTrainList() {
       }
     });
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getTrainList();

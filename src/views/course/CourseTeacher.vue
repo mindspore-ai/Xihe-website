@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { handleMarkdown } from '@/shared/markdown';
 import { useCourseData } from '@/stores';
 import { getGuide } from '@/api/api-competition';
+import { ElMessage } from 'element-plus';
 
 const userCourseData = useCourseData();
 const mkit = handleMarkdown();
@@ -15,8 +16,11 @@ getGuide(userCourseData.courseData.teacher)
     codeString.value = README;
     result.value = mkit.render(codeString.value);
   })
-  .catch((err) => {
-    return err;
+  .catch(() => {
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   });
 </script>
 <template>

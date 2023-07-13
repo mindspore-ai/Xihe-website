@@ -128,7 +128,10 @@ function verifyFile() {
       }
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 verifyFile();

@@ -12,6 +12,7 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconSelected from '~icons/app/selected';
 
 import { getCompetitionList } from '@/api/api-competition';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const allCompetition = ref([]); // 当前所有比赛
@@ -32,7 +33,10 @@ async function getAllCompetition() {
       currentCompetition.value = res.data.slice(0, competitionPager.size);
     }
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getAllCompetition();

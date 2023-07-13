@@ -68,7 +68,10 @@ async function getCollectedImages() {
       });
     }
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 onMounted(() => {
@@ -94,7 +97,10 @@ async function confirmQuitPublic() {
     }
     getCollectedImages();
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
   showConfirmDlg.value = false;
 }

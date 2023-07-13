@@ -11,6 +11,7 @@ import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { goAuthorize } from '@/shared/login';
 
 import { getUserFollow, cancelFollowing, getFollowing } from '@/api/api-user';
+import { ElMessage } from 'element-plus';
 
 const userInfoStore = useUserInfoStore();
 const visitorInfoStore = useVisitorInfoStore();
@@ -40,7 +41,10 @@ function getFollowList() {
       currentFollowList.value = res.data.data;
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getFollowList();
@@ -71,7 +75,10 @@ function getWatch(name) {
         getFollowList();
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }
@@ -89,7 +96,10 @@ function cancelWatch(name) {
         getFollowList();
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }

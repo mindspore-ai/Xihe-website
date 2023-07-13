@@ -106,8 +106,11 @@ function getMore() {
           addWatermark(imgs.value[i].link, i);
         }
       })
-      .catch((err) => {
-        return err;
+      .catch(() => {
+        ElMessage({
+          type: 'error',
+          message: 'error',
+        });
       });
   }
 }

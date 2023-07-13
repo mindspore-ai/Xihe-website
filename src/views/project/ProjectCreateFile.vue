@@ -504,6 +504,7 @@ function selectFile(item) {
           <a
             href="https://xihe-docs.mindspore.cn/zh/tutorial/train/"
             target="_blank"
+            rel="noopener noreferrer"
             style="color: #0d8dff"
             >表单方式-创建训练实例</a
           >

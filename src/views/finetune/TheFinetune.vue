@@ -244,8 +244,11 @@ const closeSocket = () => {
 
 // 跳转到隐私政策
 function goPrivacy() {
-  sessionStorage.setItem('privacyType', 'finetune');
-  window.open('/privacy');
+  let routerUrl = router.resolve({
+    path: '/privacy',
+    query: { type: 'finetune' },
+  });
+  window.open(routerUrl.href, '_blank');
 }
 
 // 页面刷新
@@ -532,6 +535,7 @@ onUnmounted(() => {
           <a
             href="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/finetune/%E7%94%B3%E8%AF%B7%E8%A1%A8%20.xlsx"
             style="color: #0d8dff"
+            rel="noopener noreferrer"
           >
             大模型微调公测申请表
           </a>

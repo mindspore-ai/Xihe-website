@@ -250,7 +250,9 @@ function goCourseDetail(id) {
   </div>
   <div v-else class="empty1">
     <img :src="emptyImg" alt="" />
-    <p>暂未参加课程，<a href="/course">点击报名课程</a></p>
+    <p>
+      暂未参加课程，<a href="/course" rel="noopener noreferrer">点击报名课程</a>
+    </p>
   </div>
 </template>
 

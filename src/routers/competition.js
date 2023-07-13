@@ -84,14 +84,6 @@ export default [
               return import('@/views/competition/CompetitionRank.vue');
             },
           },
-          // 讨论
-          {
-            path: 'discussion',
-            name: 'discussion',
-            component: () => {
-              return import('@/views/competition/CompetitionDiscussion.vue');
-            },
-          },
           // 协议
           {
             path: 'agreement',

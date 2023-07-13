@@ -53,6 +53,7 @@ function goBack() {
               <a
                 href="https://xihe.mindspore.cn/projects/MindSpore/token_classification"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <OButton
                   :size="screenWidth < 820 ? 'mini' : 'small'"

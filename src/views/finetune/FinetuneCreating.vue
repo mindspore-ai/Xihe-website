@@ -277,6 +277,7 @@ function confirmCreating(formEl) {
                 <a
                   href="https://xihe.mindspore.cn/modelzoo/taichu"
                   target="_blank"
+                  rel="noopener noreferrer"
                   >在线体验</a
                 >
                 <span> 以图生文。 </span>

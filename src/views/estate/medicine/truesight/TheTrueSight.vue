@@ -65,7 +65,6 @@ function goBack() {
         </div>
         <div class="medicine-content-desc">
           <div class="industry-info">
-            <!-- <router-view /> -->
             <div class="project-explain">
               <p class="explain-title">{{ t('truesight.EXPLAIN') }}</p>
               <div class="case-background">

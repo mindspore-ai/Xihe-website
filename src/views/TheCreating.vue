@@ -43,9 +43,12 @@ const bannerLabel = computed(() => {
         <div class="title">{{ i18n[bannerLabel].new }}</div>
         <div class="introduce">
           {{ i18n[bannerLabel].introduce }}
-          <a :href="i18n[bannerLabel].docUrl" target="blank">{{
-            i18n[bannerLabel].reference
-          }}</a>
+          <a
+            :href="i18n[bannerLabel].docUrl"
+            rel="noopener noreferrer"
+            target="blank"
+            >{{ i18n[bannerLabel].reference }}</a
+          >
         </div>
       </div>
     </div>

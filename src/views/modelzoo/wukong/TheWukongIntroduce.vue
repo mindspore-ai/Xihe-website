@@ -185,7 +185,11 @@ const githubLink2 =
             <div class="more-dataset">
               <div>
                 <span>{{ t('wukong.WUKONG_INFO.RELATE_DETAIL_1') }}</span>
-                <a :href="githubLink1" target="_blank">
+                <a
+                  :href="githubLink1"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   {{ githubLink1 }}
                 </a>
                 <span>。</span>
@@ -194,7 +198,11 @@ const githubLink2 =
                 <span>
                   {{ t('wukong.WUKONG_INFO.RELATE_DETAIL_2') }}
                 </span>
-                <a :href="githubLink2" target="_blank">
+                <a
+                  :href="githubLink2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {{ githubLink2 }}
                 </a>
                 <span>

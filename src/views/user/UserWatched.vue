@@ -25,14 +25,6 @@ const isAuthentic = computed(() => {
 const userInfo = computed(() => {
   return isAuthentic.value ? userInfoStore : visitorInfoStore;
 });
-// 暂无接口
-// let i18n = {
-//   placeholder: '搜索我的关注',
-//   sortCondition: [
-//     { text: '按照关注时间排序', value: '' },
-//     { text: '按照首字母排序', value: '' },
-//   ],
-// };
 
 let queryData = reactive({
   search: null,
@@ -137,32 +129,6 @@ function handleCurrentChange(val) {
           }})</el-breadcrumb-item
         >
       </el-breadcrumb>
-      <!-- 下拉排序 暂无接口-->
-      <!-- <div class="watched-head">
-        <div class="watched-head-left">筛选</div>
-        <div class="watched-head-right">
-          <el-input
-            :prefix-icon="Search"
-            class="w-50 m-2"
-            :placeholder="i18n.placeholder"
-          />
-          <el-dropdown popper-class="filter">
-            <span class="el-dropdown-link">
-              <o-icon><icon-menu></icon-menu></o-icon>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu class="watched-dropdown">
-                <el-dropdown-item
-                  v-for="(item, index) in i18n.sortCondition"
-                  :key="item.text"
-                  @click="dropdownClick(index)"
-                  >{{ item.text }}</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </div> -->
       <div
         v-if="currentFollowList && currentFollowList.length"
         class="watched-list"
@@ -276,7 +242,6 @@ function handleCurrentChange(val) {
     }
     .watched-list {
       height: calc(100% - 21px);
-      // height: calc(100% - 123px);
       overflow: hidden;
       border-radius: 16px;
       .watched-list-item {
@@ -295,7 +260,6 @@ function handleCurrentChange(val) {
         }
         .list-item-left {
           width: 70%;
-          // margin-left: 24px;
           display: flex;
           align-items: center;
           .watched-info {

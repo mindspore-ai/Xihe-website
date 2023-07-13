@@ -70,9 +70,13 @@ function learnMore() {
 
       <p class="main-text">
         {{ i18n.TEXT_5 }}
-        <a class="reference_link" :href="i18n.REFERENCE_LINK" target="blank">{{
-          i18n.REFERENCE_LINK
-        }}</a>
+        <a
+          class="reference_link"
+          :href="i18n.REFERENCE_LINK"
+          rel="noopener noreferrer"
+          target="blank"
+          >{{ i18n.REFERENCE_LINK }}</a
+        >
       </p>
     </div>
   </div>

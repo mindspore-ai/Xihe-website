@@ -339,17 +339,18 @@ if (isAuthentic.value) {
     .then((res) => {
       personalData.competition = res.data.data;
       isCompetitionData.value = true;
+
+      getMyCourseList({ mine: true })
+        .then((res) => {
+          personalData.course = res.data;
+          isCourseData.value = true;
+        })
+        .catch(() => {
+          isCourseData.value = true;
+        });
     })
     .catch(() => {
       isCompetitionData.value = true;
-    });
-  getMyCourseList({ mine: true })
-    .then((res) => {
-      personalData.course = res.data;
-      isCourseData.value = true;
-    })
-    .catch(() => {
-      isCourseData.value = true;
     });
 }
 </script>

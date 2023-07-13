@@ -1,23 +1,31 @@
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 import privacy from '@/assets/statement/privacy.md?raw';
 import competitionPrivacy from '@/assets/statement/competition_privacy.md?raw';
 import finetunePrivacy from '@/assets/statement/finetune_privacy.md?raw';
 import MdStatement from '@/components/MdStatement.vue';
+import { router } from '@/routers';
 
-const activeName = ref('first');
-const privacyType = sessionStorage.getItem('privacyType');
+const route = useRoute();
+const activeName = ref('');
 function getPrivacyType() {
-  if (privacyType === 'competition') {
-    activeName.value = 'second';
-  } else if (privacyType === 'finetune') {
-    activeName.value = 'three';
+  if (route.query.type) {
+    activeName.value = route.query.type;
+  } else {
+    activeName.value = '';
   }
 }
 getPrivacyType();
-function handleClick() {
-  sessionStorage.removeItem('privacyType');
+function handleClick(tab) {
+  let query = {};
+  if (tab.index === '2') {
+    query = { type: 'finetune' };
+  } else if (tab.index === '1') {
+    query = { type: 'competition' };
+  }
+  router.push({ path: '/privacy', query });
 }
 </script>
 
@@ -28,13 +36,13 @@ function handleClick() {
     </div>
     <div class="privacy-content">
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label="平台相关隐私政策" name="first">
+        <el-tab-pane label="平台相关隐私政策" name="">
           <MdStatement :statement="privacy"></MdStatement>
         </el-tab-pane>
-        <el-tab-pane label="比赛和课程相关隐私政策" name="second">
+        <el-tab-pane label="比赛和课程相关隐私政策" name="competition">
           <MdStatement :statement="competitionPrivacy"></MdStatement>
         </el-tab-pane>
-        <el-tab-pane label="微调相关隐私政策" name="three">
+        <el-tab-pane label="微调相关隐私政策" name="finetune">
           <MdStatement :statement="finetunePrivacy"></MdStatement>
         </el-tab-pane>
       </el-tabs>

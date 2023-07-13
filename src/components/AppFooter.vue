@@ -54,14 +54,8 @@ function onCookieClick() {
     </div>
     <!-- 隐私政策 -->
     <div v-if="isCookieTip" class="cookie-privacy">
-      <!-- <template>
-        <span>{{ i18n.common.COOKIE_LEGAL_TEXT }} </span>
-        <a :href="'/' + lang + '/other/privacy/'">{{
-          i18n.common.COOKIE_LEGAL_LINK_TEXT
-        }}</a>
-      </template> -->
       <span> 本站点使用Cookies，继续浏览表示您同意我们使用Cookies。</span>
-      <a href="/privacy">Cookies和隐私政策。</a>
+      <a href="/privacy" rel="noopener noreferrer">Cookies和隐私政策。</a>
       <o-icon class="icon" @click="onCookieClick">
         <icon-close></icon-close>
       </o-icon>

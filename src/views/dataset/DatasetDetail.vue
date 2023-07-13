@@ -453,7 +453,7 @@ watch(
             <router-link :to="{ path: `/${route.params.user}` }">
               {{ detailData.owner }} </router-link
             >/
-            <span>{{ detailData.name }}</span>
+            <span class="name">{{ detailData.name }}</span>
             <div
               class="card-head-copy"
               @click="copyText(`${detailData.owner}/${detailData.name}`)"
@@ -799,6 +799,9 @@ $theme: #0d8dff;
     & > a:hover {
       cursor: pointer;
       color: #0d8dff;
+    }
+    .name {
+      white-space: nowrap;
     }
   }
   .card-head-copy {

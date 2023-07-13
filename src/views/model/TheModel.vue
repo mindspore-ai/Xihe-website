@@ -582,6 +582,7 @@ onUnmounted(() => {
               class="reference"
               href="https://xihe-docs.mindspore.cn/zh/basics/model_ui/"
               target="_blank"
+              rel="noopener noreferrer"
               >{{ i18n.head.reference }}</a
             >
           </div>

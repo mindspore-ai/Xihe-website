@@ -50,6 +50,7 @@ function goBack() {
               <a
                 href="https://xihe.mindspore.cn/projects/MindSpore/yolov7-tch-projects"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <OButton
                   :size="screenWidth < 820 ? 'mini' : 'small'"

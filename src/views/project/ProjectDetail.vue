@@ -492,6 +492,7 @@ function forkCreateClick() {
       projectFork(detailData.value.owner, detailData.value.id, params)
         .then(() => {
           loadingShow.value = false;
+          fileData.$reset();
           router.push(
             `/projects/${userInfoStore.userName}/${forkForm.storeName}`
           );

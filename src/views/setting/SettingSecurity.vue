@@ -161,8 +161,10 @@ function disabled() {
   tokenInput.value.blur();
 }
 function refresh() {
-  refreshGitlabToken().then((res) => {
-    gitlabToken.value = res?.data?.token;
+  refreshGitlabToken().then(() => {
+    getGitlabToken().then((res) => {
+      gitlabToken.value = res?.data?.token;
+    });
   });
 }
 </script>

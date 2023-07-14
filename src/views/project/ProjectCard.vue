@@ -288,12 +288,7 @@ watch(
     immediate: true,
   }
 );
-// watch(
-//   () => route.path,
-//   () => {
-//     location.reload();
-//   }
-// );
+
 function goEditor() {
   pushParams.contents = ['README.md'];
   router.push({

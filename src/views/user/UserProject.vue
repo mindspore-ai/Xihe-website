@@ -106,45 +106,6 @@ watch(
 <template>
   <div>
     <div v-if="projectData.total" class="project-card">
-      <!-- <div class="card-list"> -->
-      <!-- <div
-          v-for="item in projectData.projects"
-          :key="item.id"
-          class="pro-card"
-          @click="goDetail(item.owner, item.name)"
-        >
-          <div class="card-top">
-            <img
-              :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg${item.cover_id}.png`"
-              alt=""
-            />
-            <div class="title">
-              <span>
-                {{ item.name }}
-              </span>
-            </div>
-            <div class="dig">
-              <o-icon> <icon-heart></icon-heart> </o-icon>{{ item.like_count }}
-            </div>
-            <div class="card-modal"></div>
-          </div>
-
-          <div class="card-bottom">
-            <div class="info">
-              <div class="info-avata">
-                <img :src="avatarImg" alt="" />
-              </div>
-              <div class="info-name">{{ item.owner }}</div>
-            </div>
-            <div class="time">
-              <o-icon>
-                <icon-time></icon-time>
-              </o-icon>
-              {{ item.updated_at.split(' ')[0] }}
-            </div>
-          </div>
-        </div> -->
-      <!-- </div> -->
       <div v-for="item in projectData.projects" :key="item.id" class="list">
         <projectcard
           :card-data="item"

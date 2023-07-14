@@ -257,7 +257,6 @@ defineExpose({ getFansList });
       top: calc(50% + 21px);
       left: 50%;
       transform: translate(-50%, -50%);
-      // height: calc(100% - 21px);
       display: flex;
       justify-content: center;
       align-items: center;

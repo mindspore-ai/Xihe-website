@@ -65,9 +65,6 @@ function changeTab(index) {
             </template>
           </el-table-column>
           <el-table-column prop="submit_at" label="提交时间" width="210" />
-          <!-- <template v-if="preliminaryData" #append>
-          查看全部<OIcon><IconArrowDown /></OIcon>
-        </template> -->
         </el-table>
       </div>
     </div>

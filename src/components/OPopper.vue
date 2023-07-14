@@ -43,10 +43,6 @@ import IconPoppver from '~icons/app/popover.svg';
     font-size: 24px;
   }
   :deep(.el-popover.el-popper) {
-    // padding: 16px 16px 16px 16px;
-    // font-size: 12px;
-    // line-height: 16px;
-    // color: #656565;
     .remind {
       color: #f13b35;
     }

@@ -1,5 +1,4 @@
 <script setup>
-// import introImg from '@/assets/imgs/estate/electricity/intelligentsystem/system-intro.png';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -24,9 +23,6 @@ const { t } = useI18n();
         <div>
           {{ t('laborcontract.RESUME_DESC1') }}
         </div>
-        <!-- <div class="case-img">
-          <img :src="introImg" alt="" />
-        </div> -->
       </div>
     </div>
     <div class="case-advantage">

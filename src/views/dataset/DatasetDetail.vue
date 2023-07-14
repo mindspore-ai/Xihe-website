@@ -58,9 +58,6 @@ let dialogList = {
 
   menuList: [
     { tab: '应用分类', key: 'task' },
-    // { tab: '处理器', key: 'device_target' },
-    // { tab: '文件格式', key: 'model_format' },
-    // { tab: '框架', key: 'libraries' },
     { tab: 'License', key: 'licenses' },
     { tab: '其他', key: 'tags' },
   ],

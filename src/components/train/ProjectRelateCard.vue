@@ -10,11 +10,6 @@ import { useUserInfoStore } from '@/stores';
 
 const userInfo = useUserInfoStore();
 
-// const i18n = {
-//   download: '下载量',
-//   uploadTime: '上传时间',
-// };
-
 defineProps({
   // 相关项目的详情信息
   detailData: {

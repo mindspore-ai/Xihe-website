@@ -397,6 +397,7 @@ const logoPic = [
             </div>
           </div>
         </div>
+        <iframe src="https://www.openeuler.org/zh/" frameborder="0"></iframe>
         <div ref="middleImg" class="middle-img">
           <div
             class="project-card"

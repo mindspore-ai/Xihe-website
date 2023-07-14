@@ -594,6 +594,8 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+    <iframe src="https://www.openeuler.org/zh/" frameborder="0"></iframe>
+
     <AppContent :pc-top="40">
       <div class="model-body">
         <!-- 应用分类查看全部-->

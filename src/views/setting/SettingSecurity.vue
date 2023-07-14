@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { useUserInfoStore } from '@/stores';
 
 import { setUserPhone, keepUserPhone, changeUserPhone } from '@/api/api-user';
-import { getGitlabToken } from '@/api/api-gitlab';
+import { getGitlabToken, refreshGitlabToken } from '@/api/api-gitlab';
 
 import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
@@ -160,6 +160,11 @@ const tokenInput = ref(null);
 function disabled() {
   tokenInput.value.blur();
 }
+function refresh() {
+  refreshGitlabToken().then((res) => {
+    gitlabToken.value = res?.data?.token;
+  });
+}
 </script>
 
 <template>
@@ -191,28 +196,13 @@ function disabled() {
         ></o-icon>
       </div>
     </div>
+    <o-button size="small" @click="refresh">刷新TOKEN</o-button>
   </div>
-  <!-- <div class="setting-box">
-    <p class="setting-title">密码</p>
-    <div class="setting-content">
-      <o-input
-        v-model="userInfoStore.userName"
-        placeholder="请输入新密码"
-        class="setting-input"
-      ></o-input>
-      <OButton class="setting-btn">保存更改</OButton>
-    </div>
-  </div> -->
-
   <div class="setting-box">
-    <!-- <p class="setting-title">手机号码</p> -->
     <div v-if="userInfoStore.phone" class="setting-content">
       <el-input v-model="phoneExhibition" disabled></el-input>
     </div>
     <div class="setting-content">
-      <!-- <OButton class="setting-btn" @click="togglePhoneDlg(true)"
-        >{{ userInfoStore.phone ? '更换' : '绑定' }}手机号码</OButton
-      > -->
       <ODialog
         :show="showPhoneDlg"
         :close="false"
@@ -225,14 +215,6 @@ function disabled() {
         </template>
         <div class="dlg-body">
           <el-form ref="ruleFormRef" :model="ruleForm">
-            <!-- <div class="dlg-body-list">
-            <p>*密码验证</p>
-            <o-input
-              placeholder="请输入当前账号密码"
-              class="phoneBind-input"
-              style="width: 300px"
-            ></o-input>
-          </div> -->
             <el-form-item
               class="dlg-body-list"
               prop="phone"
@@ -370,6 +352,9 @@ function disabled() {
       border: 1px solid #0d8dff;
       margin-top: 16px;
     }
+  }
+  .o-button {
+    margin-top: 18px;
   }
 }
 

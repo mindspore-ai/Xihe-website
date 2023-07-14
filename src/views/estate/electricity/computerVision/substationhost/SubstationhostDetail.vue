@@ -62,13 +62,6 @@ function goBack() {
           </div>
         </div>
         <div class="medicine-content-desc">
-          <!-- <div class="industry-tab">
-            <o-nav
-              :nav-items="navItems"
-              :active-item="activeNavItem"
-              @nav-click="handleNavClick"
-            ></o-nav>
-          </div> -->
           <div class="industry-info">
             <router-view />
           </div>

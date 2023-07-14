@@ -17,10 +17,6 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
-  //   trainId: {
-  //     type: String,
-  //     default: '',
-  //   },
 });
 
 const isShow = ref(false);

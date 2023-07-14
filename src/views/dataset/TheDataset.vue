@@ -52,14 +52,6 @@ let i18n = {
       haveActive: false,
       condition: [],
     },
-    // {
-    //   title: {
-    //     text: '数据集大小',
-    //     key: 'relate_datasets',
-    //   },
-    //   haveActive: false,
-    //   condition: [],
-    // },
     {
       title: {
         text: '协议',
@@ -635,7 +627,6 @@ onUnmounted(() => {
               {{ tag.kind }}
               <o-icon class="icon-x"><icon-x></icon-x></o-icon>
             </div>
-            <!-- <p class="check-all" @click="moreClick">查看全部</p> -->
           </div>
           <div class="check-all" @click="moreClick">
             <div class="check-all-modal"></div>

@@ -2,7 +2,6 @@
 import case1 from '@/assets/imgs/estate/humanity/case-aigc.png';
 import case2 from '@/assets/imgs/estate/humanity/case-yuzhi.png';
 import case3 from '@/assets/imgs/estate/humanity/case-shouyu.png';
-// import estateBanner from '@/assets/imgs/estate/estate-banner.png';
 
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -40,7 +39,6 @@ function goCasePath(item) {
 <template>
   <div class="humanity">
     <div class="humanity-head">
-      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="humanity-banner">
         <div class="banner-title">{{ t('humanity.TITLE') }}</div>
         <div class="banner-desc">

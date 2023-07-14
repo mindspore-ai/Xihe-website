@@ -65,11 +65,6 @@ const settingItems = [
     label: '我的比赛',
     icon: IconTrophy,
   },
-  // {
-  //   id: 'invitation',
-  //   label: '我的邀请',
-  //   icon: IconInvitation,
-  // },
   {
     id: 'clouddev',
     label: '我的开发环境',
@@ -112,7 +107,6 @@ const navItems = [
     id: 'lives',
     label: '动态',
     creative: false,
-    // isPrivate: true,
   },
   {
     id: 'projects',
@@ -644,7 +638,6 @@ if (isAuthentic.value) {
     display: flex;
     max-width: 1448px;
     margin: 0 auto;
-    // min-height: calc(100vh - 296px);
     min-height: calc(100vh - 450px);
     padding: 40px 16px 64px 16px;
 

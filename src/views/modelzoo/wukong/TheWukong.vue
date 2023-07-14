@@ -297,9 +297,6 @@ watch(
     left: 0;
     top: 0;
     width: 100%;
-    // @media screen and (max-width: 820px) {
-    //   display: none;
-    // }
   }
   .bg2-image-mobile {
     position: absolute;

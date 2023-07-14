@@ -108,7 +108,6 @@ function onCookieClick() {
       font-size: 14px;
       margin: 0 auto;
       .text {
-        // color: rgba(255, 255, 255, 1);
         color: #000000;
         height: 26px;
         line-height: 26px;
@@ -118,7 +117,6 @@ function onCookieClick() {
       .division {
         width: 1px;
         height: 20px;
-        // background-color: rgba(255, 255, 255, 1);
         background-color: #000000;
         margin-top: 2px;
       }
@@ -143,7 +141,6 @@ function onCookieClick() {
     p {
       margin-top: 8px;
       font-size: 12px;
-      // color: #ffffff;
       opacity: 0.8;
       line-height: 12px;
     }

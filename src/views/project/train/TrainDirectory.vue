@@ -5,6 +5,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue';
 import IconFolder from '~icons/app/folder';
 import IconFile from '~icons/app/file';
 import { getGitlabTree } from '@/api/api-gitlab';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const props = defineProps({
@@ -50,7 +51,10 @@ async function getDirData(dirPath2) {
       }
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 function getDirByPath(item) {
@@ -88,7 +92,10 @@ async function getFileData(dirPath2) {
       }
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 function getFileByPath(item) {

@@ -34,7 +34,10 @@ const handleCopy = async () => {
       message: '复制成功',
     });
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 };
 

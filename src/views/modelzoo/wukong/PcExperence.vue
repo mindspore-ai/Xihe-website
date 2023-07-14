@@ -281,7 +281,10 @@ if (isLogined.value) {
           });
       }
     } catch (err) {
-      return err;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   };
 }
@@ -364,7 +367,10 @@ async function cancelPublicImage(i) {
       message: '已取消公开',
     });
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 // 分享图片
@@ -580,7 +586,10 @@ async function handleInfer() {
                     });
                 }
               } catch (err) {
-                return err;
+                ElMessage({
+                  type: 'error',
+                  message: 'error',
+                });
               }
             };
           }, 2000);

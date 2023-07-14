@@ -14,6 +14,7 @@ import IconHome from '~icons/app/home1';
 import IconCourse from '~icons/app/my-course';
 import IconCloud from '~icons/app/cloud';
 import { Search } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 import {
   useUserInfoStore,
@@ -308,7 +309,10 @@ function getFollow(name) {
         userInfoStore.followingCount++;
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }
@@ -324,7 +328,10 @@ function cancelFollow(name) {
       userInfoStore.followingCount--;
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 

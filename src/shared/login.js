@@ -5,6 +5,7 @@ import {
 } from '@/api/api-user';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import Cookies from 'js-cookie';
+import { ElMessage } from 'element-plus';
 
 const APP_ID = import.meta.env.VITE_APP_ID;
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
@@ -134,7 +135,10 @@ export async function logout() {
     saveUserAuth();
     window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 
@@ -173,7 +177,9 @@ export async function doLogin() {
 // authing认证
 export async function goAuthorize() {
   try {
-    window.location.href = `${LOGIN_URL}/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${window.location.href}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
+    window.location.href = `${LOGIN_URL}/oneid/oidc/authorize?client_id=${APP_ID}&redirect_uri=${decodeURI(
+      window.location.href
+    )}&response_type=code&scope=openid+profile+email+phone+address+username+id_token`;
   } catch (error) {
     setStatus(LOGIN_STATUS.FAILED);
   }

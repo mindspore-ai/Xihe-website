@@ -107,8 +107,11 @@ function previewFile() {
         showBlob.value = false;
       }
     })
-    .catch((error) => {
-      return error;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 function verifyFile() {
@@ -137,8 +140,11 @@ function verifyFile() {
         router.push('/404');
       }
     })
-    .catch((error) => {
-      return error;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 verifyFile();

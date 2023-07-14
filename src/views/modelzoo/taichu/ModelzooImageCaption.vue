@@ -88,7 +88,10 @@ function submitUpload() {
           }
         });
       } catch (e) {
-        return e;
+        ElMessage({
+          type: 'error',
+          message: 'error',
+        });
       }
     }
   }

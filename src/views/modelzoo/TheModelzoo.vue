@@ -4,8 +4,6 @@ import AppContent from '@/components/AppContent.vue';
 
 import taichu from '@/assets/imgs/modelzoo/taichu.png';
 import luojia from '@/assets/imgs/modelzoo/Luojia.png';
-// import codegeex from '@/assets/imgs/modelzoo/codegeex.png';
-// import pangu from '@/assets/imgs/modelzoo/pangu.png';
 import shenlong from '@/assets/imgs/modelzoo/shenlong.png';
 import dasheng from '@/assets/imgs/modelzoo/dasheng.png';
 import wukong from '@/assets/imgs/modelzoo/wukong.png';
@@ -26,13 +24,6 @@ let i18n = {
   more: '更多',
   clear: '清除',
   cardLists: [
-    // {
-    //   title: 'CodeGeeX',
-    //   introduce: '130亿参数的多编程语言代码生成预训练模型',
-    //   url: codegeex,
-    //   path: '/modelzoo/codegeex',
-    //   openness: true,
-    // },
     {
       title: 'AI文本检测器',
       introduce:
@@ -64,13 +55,6 @@ let i18n = {
       path: '/modelzoo/luojia',
       openness: true,
     },
-    // {
-    //   title: '鹏程.盘古',
-    //   introduce: '业界首个千亿级参数中文自然语言处理大模型',
-    //   url: pangu,
-    //   path: '/modelzoo/pangu',
-    //   openness: true,
-    // },
     {
       title: '鹏程.神农',
       introduce: '面向生物医学领域的人工智能平台',

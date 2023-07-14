@@ -46,8 +46,11 @@ const TypeSet = async function (elements) {
     .then(() => {
       return window.MathJax.typesetPromise(elements);
     })
-    .catch((err) => {
-      return err;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
   return window.MathJax.startup.promise;
 };
@@ -157,11 +160,17 @@ function getReadMeFile() {
           codeString.value = '';
         }
       })
-      .catch((err) => {
-        return err;
+      .catch(() => {
+        ElMessage({
+          type: 'error',
+          message: 'error',
+        });
       });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 route.hash ? getReadMeFile() : '';

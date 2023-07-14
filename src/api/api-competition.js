@@ -1,6 +1,6 @@
 import { request } from '@/shared/axios';
 import { getHeaderConfig } from '@/shared/login';
-
+import { ElMessage } from 'element-plus';
 /**
  * 获取单个比赛信息
  * @returns
@@ -224,7 +224,10 @@ export function getGuide(link) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }

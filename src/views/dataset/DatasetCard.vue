@@ -15,6 +15,7 @@ import IconFile from '~icons/app/dataset';
 import { getGitlabFileRaw } from '@/api/api-gitlab';
 import { getReadmeInfo } from '@/api/api-dataset';
 import { useFileData } from '@/stores';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();
@@ -73,11 +74,17 @@ function getReadMeFile() {
           codeString.value = '';
         }
       })
-      .catch((err) => {
-        return err;
+      .catch(() => {
+        ElMessage({
+          type: 'error',
+          message: 'error',
+        });
       });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 

@@ -72,7 +72,10 @@ async function getPublicPictures() {
       });
     }
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getPublicPictures();
@@ -94,7 +97,10 @@ async function confirmQuitPublic() {
     }
     publicList.value.splice(deleteIndex.value, 1);
   } catch (err) {
-    return err;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
   showConfirmDlg.value = false;
 }
@@ -133,7 +139,10 @@ async function cancelImgCollected(item) {
       item.is_like = false;
     }
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 </script>

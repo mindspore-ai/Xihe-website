@@ -130,7 +130,10 @@ async function getPodInfo(id) {
       });
     }
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 
@@ -149,7 +152,10 @@ async function getCloudDisposeList() {
       }
     });
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getCloudDisposeList();
@@ -178,7 +184,10 @@ async function orderCloudSbuscrible(id) {
       };
     }
   } catch (e) {
-    return e;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 

@@ -205,7 +205,10 @@ function getDetailData() {
       detailData.value = res.data;
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 getDetailData();

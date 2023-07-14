@@ -1,5 +1,6 @@
 import { request } from '@/shared/axios';
 import { getHeaderConfig } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 /**
  * 获取项目页面数据（筛选）
@@ -76,8 +77,11 @@ export function modifyTags(params, owner, id) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -195,8 +199,11 @@ export function modifyProjectAdd(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -211,8 +218,11 @@ export function modifyModelAdd(params, projectId) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -268,8 +278,11 @@ export function getTrainLog(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -305,8 +318,11 @@ export function startInference(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 export function startInference2(params) {
@@ -316,8 +332,11 @@ export function startInference2(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -332,8 +351,11 @@ export function stopInference(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -347,8 +369,11 @@ export function getLog(pk) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -363,8 +388,11 @@ export function autoEvaluate(params, projectId, trainId) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 

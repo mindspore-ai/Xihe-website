@@ -448,9 +448,6 @@ function confirmDialog() {
       <OIcon v-if="!meauActive"><icon-menu></icon-menu></OIcon>
       <OIcon v-else><icon-close></icon-close></OIcon>
     </div>
-    <!-- <div v-else class="back" @click="goBack">
-      <OIcon><icon-back></icon-back></OIcon>
-    </div> -->
 
     <img v-if="locale === 'zh'" :src="logoImg" alt="" @click="toPage('/')" />
     <img
@@ -472,13 +469,6 @@ function confirmDialog() {
           @click="goAuthorize"
         >
           <icon-user class="user-login-icon"></icon-user>
-          <!-- <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="goAuthorize">{{
-                locale === 'zh' ? '登录' : 'Login'
-              }}</el-dropdown-item>
-            </el-dropdown-menu>
-          </template> -->
         </div>
         <el-dropdown
           v-if="userInfoStore.id"

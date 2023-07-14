@@ -9,6 +9,7 @@ import OButton from '@/components/OButton.vue';
 
 import { useUserInfoStore, useVisitorInfoStore } from '@/stores';
 import { getUserFans, getFollowing, cancelFollowing } from '@/api/api-user';
+import { ElMessage } from 'element-plus';
 
 const currentFansList = ref([]);
 const userInfoStore = useUserInfoStore();
@@ -63,7 +64,10 @@ function getFollow(name) {
         getFansList();
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }
@@ -77,7 +81,10 @@ function cancelFollow(name) {
       getFansList();
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 
@@ -250,7 +257,6 @@ defineExpose({ getFansList });
       top: calc(50% + 21px);
       left: 50%;
       transform: translate(-50%, -50%);
-      // height: calc(100% - 21px);
       display: flex;
       justify-content: center;
       align-items: center;

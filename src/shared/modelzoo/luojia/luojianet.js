@@ -3,6 +3,8 @@ window.CESIUM_BASE_URL = '/lib/Cesium/';
 import * as Cesium from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { DrawRect, guid } from './drawrect';
+import { ElMessage } from 'element-plus';
+
 const VIRTUALEARTH = import.meta.env.VITE_VIRTUAL_EARTH;
 const GAODESERVE = import.meta.env.VITE_GAODE_SERVE;
 const BINGICON = import.meta.env.VITE_BING_ICON;
@@ -379,7 +381,10 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了
@@ -457,7 +462,10 @@ export default class ExampleCesium {
     try {
       var handler = new Cesium.ScreenSpaceEventHandler(slider);
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
 
     // TODO：改下单位，现在屏幕变了就对不上了

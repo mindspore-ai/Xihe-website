@@ -21,8 +21,11 @@ export function uploadModelzooPic(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -37,8 +40,11 @@ export function getSinglePicture(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -58,8 +64,11 @@ export function getMultiplePicture(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -79,8 +88,11 @@ export function uploadVqaPicture(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -95,8 +107,11 @@ export function handleVqaInference(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -111,8 +126,11 @@ export function handleGenerateCode(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -132,8 +150,11 @@ export function handlePanguInfer(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -153,8 +174,11 @@ export function handleLuojiaUploadPic(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -169,8 +193,11 @@ export function handleLuoJiaInfer() {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -185,8 +212,11 @@ export function handleLuoJiaHistory() {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -201,8 +231,11 @@ export function getWkExamples() {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -248,8 +281,11 @@ export function toDigg(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -264,8 +300,11 @@ export function cancelDigg(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -280,8 +319,11 @@ export function addLikePicture2(params) {
     .then((res) => {
       return res.data;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 /**
@@ -299,14 +341,17 @@ export function addLikePicture(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
+    .catch(() => {
       if (e.code === 'wukong_excced_max_like_num') {
         ElMessage({
           type: 'warning',
           message: '收藏上限为10张，请取消收藏后再操作',
         });
       }
-      return e;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -321,8 +366,11 @@ export function cancelLikePicture(id) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -337,8 +385,11 @@ export function collectedPictures() {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -353,8 +404,11 @@ export function temporaryLink(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -380,8 +434,11 @@ export function publicTemporaryPicture(params) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 
@@ -396,8 +453,11 @@ export function cancelPublic(id) {
     .then((res) => {
       return res;
     })
-    .catch((e) => {
-      return e;
+    .catch(() => {
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     });
 }
 

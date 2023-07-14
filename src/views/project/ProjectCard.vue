@@ -96,12 +96,18 @@ function getReadMeFile() {
             codeString.value = '';
           }
         })
-        .catch((err) => {
-          return err;
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: 'error',
+          });
         });
     }
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 
@@ -282,12 +288,6 @@ watch(
     immediate: true,
   }
 );
-// watch(
-//   () => route.path,
-//   () => {
-//     location.reload();
-//   }
-// );
 function goEditor() {
   pushParams.contents = ['README.md'];
   router.push({

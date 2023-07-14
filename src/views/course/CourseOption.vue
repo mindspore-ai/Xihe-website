@@ -41,15 +41,6 @@ const navItems = reactive([
     isIndividual: true,
     showTask: courseInfo.id === 'c001' ? true : false,
   },
-  /* {
-    id: 'discussion',
-    label: '讨论',
-    // href: courseInfo.forum,
-    href: 'https://xihe.mindspore.cn/',
-    windowOpen: true,
-    isIndividual: false,
-    showTask: true,
-  }, */
   {
     id: 'courseTeacher',
     label: '教师介绍',

@@ -152,7 +152,10 @@ async function getDetailData(path) {
         getDetailData(`${contents.value.join('/')}/`);
       });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 function toggleDelDlg(flag, itemFileName, itemIsFolder) {

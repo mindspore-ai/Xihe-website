@@ -14,6 +14,7 @@ import IconHome from '~icons/app/home1';
 import IconCourse from '~icons/app/my-course';
 import IconCloud from '~icons/app/cloud';
 import { Search } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 import {
   useUserInfoStore,
@@ -65,11 +66,6 @@ const settingItems = [
     label: '我的比赛',
     icon: IconTrophy,
   },
-  // {
-  //   id: 'invitation',
-  //   label: '我的邀请',
-  //   icon: IconInvitation,
-  // },
   {
     id: 'clouddev',
     label: '我的开发环境',
@@ -112,7 +108,6 @@ const navItems = [
     id: 'lives',
     label: '动态',
     creative: false,
-    // isPrivate: true,
   },
   {
     id: 'projects',
@@ -308,7 +303,10 @@ function getFollow(name) {
         userInfoStore.followingCount++;
       });
     } catch (error) {
-      return error;
+      ElMessage({
+        type: 'error',
+        message: 'error',
+      });
     }
   }
 }
@@ -324,7 +322,10 @@ function cancelFollow(name) {
       userInfoStore.followingCount--;
     });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 
@@ -644,7 +645,6 @@ if (isAuthentic.value) {
     display: flex;
     max-width: 1448px;
     margin: 0 auto;
-    // min-height: calc(100vh - 296px);
     min-height: calc(100vh - 450px);
     padding: 40px 16px 64px 16px;
 

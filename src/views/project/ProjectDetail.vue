@@ -33,6 +33,7 @@ import { checkEmail } from '@/api/api-user';
 
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 onBeforeRouteLeave(() => {
   fileData.$reset();
@@ -255,7 +256,10 @@ function getDetailData() {
         router.push('/404');
       });
   } catch (error) {
-    return error;
+    ElMessage({
+      type: 'error',
+      message: 'error',
+    });
   }
 }
 const preStorage = ref();

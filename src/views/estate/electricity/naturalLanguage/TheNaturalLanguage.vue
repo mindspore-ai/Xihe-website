@@ -317,35 +317,6 @@ const beforeLeave = (activeTab) => {
         </el-tab-pane>
       </el-tabs>
     </div>
-    <!-- <div class="platform-data">
-      <div class="platform-desc">
-        <div class="title">最活跃的AI+电力行业生产平台</div>
-        <div class="desc">
-          昇思赋能电力行业，覆盖从AI生产（输出算法模型）到应用（实现算法工程化封装）各环节，有效解决AI+电力研发门槛高、成本高和效率低的问题。
-        </div>
-        <div class="more">
-          <span> 共建AI+电力生态 </span>
-          <o-icon><icon-arrowBlue></icon-arrowBlue></o-icon>
-        </div>
-      </div>
-      <div class="data-list">
-        <div class="data-item">
-          <o-icon><icon-count></icon-count></o-icon>
-          <div class="count">1.9M+</div>
-          <div class="title">用户访问量</div>
-        </div>
-        <div class="data-item">
-          <o-icon><icon-count></icon-count></o-icon>
-          <div class="count">1.96K+</div>
-          <div class="title">模型使用次数</div>
-        </div>
-        <div class="data-item">
-          <o-icon><icon-count></icon-count></o-icon>
-          <div class="count">20.7K+</div>
-          <div class="title">日活数</div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 

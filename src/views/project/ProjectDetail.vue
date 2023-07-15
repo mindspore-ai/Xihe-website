@@ -18,8 +18,8 @@ import OPopper from '@/components/OPopper.vue';
 
 import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
-import protocol from '../../../config/protocol';
-import { trainSdk, inferSdk } from '../../../config/protocol';
+import protocol from '../../shared/config/protocol';
+import { trainSdk, inferSdk } from '../../shared/config/protocol';
 
 import {
   modifyTags,

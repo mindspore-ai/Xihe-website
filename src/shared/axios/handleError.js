@@ -26,6 +26,9 @@ export default (err) => {
       case 408:
         err.msg = '请求超时(408)';
         break;
+      case 418:
+        err.msg = '疑似攻击行为(418)';
+        break;
       case 500:
         err.msg = '服务器错误(500)';
         break;

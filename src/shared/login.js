@@ -5,7 +5,6 @@ import {
 } from '@/api/api-user';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import Cookies from 'js-cookie';
-import { ElMessage } from 'element-plus';
 
 const APP_ID = import.meta.env.VITE_APP_ID;
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
@@ -135,10 +134,7 @@ export async function logout() {
     saveUserAuth();
     window.location.href = `${LOGOUT_URL}/logout?redirect_uri=${redirectUri}&id_token=${idToken}`;
   } catch (error) {
-    ElMessage({
-      type: 'error',
-      message: 'error',
-    });
+    return error;
   }
 }
 

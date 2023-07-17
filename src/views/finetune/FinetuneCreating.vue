@@ -3,13 +3,12 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import IconNecessary from '~icons/app/necessary.svg';
 import IconPoppver from '~icons/app/popover.svg';
+import { ElMessage } from 'element-plus';
 
 import { ArrowRight } from '@element-plus/icons-vue';
-
-import OButton from '@/components/OButton.vue';
-
 import { createFinetune } from '@/api/api-finetune';
-import { ElMessage } from 'element-plus';
+import OButton from '@/components/OButton.vue';
+import { WEBSITE_URL } from '@/shared/config/website-url';
 
 const router = useRouter();
 
@@ -275,7 +274,7 @@ function confirmCreating(formEl) {
                   以图生文，即让算法根据输入的一幅图自动生成对应的描述性的文字，是图像理解中非常重要的基础任务。您可以
                 </span>
                 <a
-                  href="https://xihe.mindspore.cn/modelzoo/taichu"
+                  :href="`${WEBSITE_URL}/modelzoo/taichu`"
                   target="_blank"
                   rel="noopener noreferrer"
                   >在线体验</a

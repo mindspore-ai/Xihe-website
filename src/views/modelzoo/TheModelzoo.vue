@@ -11,6 +11,8 @@ import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
 
 import IconArrow from '~icons/app/arrow-blue';
 import OIcon from '@/components/OIcon.vue';
+import { HIASCEND_URL, GITEE_URL } from '@/shared/config/website-url';
+
 let i18n = {
   head: {
     title: '大模型',
@@ -72,11 +74,11 @@ let i18n = {
 };
 
 function goMindformers() {
-  window.open('https://gitee.com/mindspore/mindformers', '_blank');
+  window.open(`${GITEE_URL}/mindspore/mindformers`, '_blank');
 }
 
 function goAscend() {
-  window.open('https://www.hiascend.com/zh/software/modelzoo', '_blank');
+  window.open(`${HIASCEND_URL}/zh/software/modelzoo`, '_blank');
 }
 </script>
 <template>

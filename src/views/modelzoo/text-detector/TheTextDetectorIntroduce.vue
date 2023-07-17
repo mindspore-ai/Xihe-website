@@ -2,6 +2,7 @@
 import TextDetector from '@/assets/imgs/modelzoo/text-detector.png';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { ARXIV_URL } from '@/shared/config/website-url';
 
 const i18n = {
   TITLE: '简述',
@@ -14,7 +15,7 @@ const i18n = {
   TEXT_4:
     ' 具体实施上，首先本研究参考了传统的PU学习方法，在训练过程中引入PU损失函数；然后基于不同长短语料的属性变化，对PU损失函数进行改进，提出了对语料长度较为敏感的MPU损失函数，增强了PU学习的效果。最后，为了充分发挥MPU损失的潜力，本研究提出了“文本多尺度化”模块，使训练语料长度更加多样化。',
   TEXT_5: '更多相关细节可以参考',
-  REFERENCE_LINK: 'https://arxiv.org/abs/2305.18149',
+  REFERENCE_LINK: `${ARXIV_URL}/abs/2305.18149`,
 };
 
 const screenWidth = useWindowResize();
@@ -23,7 +24,7 @@ function goOnlineExperience() {
   window.open('/modelzoo/text-detector');
 }
 function learnMore() {
-  window.open('https://arxiv.org/abs/2305.18149', 'blank');
+  window.open(`${ARXIV_URL}/abs/2305.18149`, 'blank');
 }
 </script>
 <template>

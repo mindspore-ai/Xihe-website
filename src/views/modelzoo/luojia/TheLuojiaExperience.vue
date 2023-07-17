@@ -16,6 +16,7 @@ import IconUpload from '~icons/app/modelzoo-upload';
 
 import gif from '@/assets/gifs/loading.gif';
 import { ElMessage } from 'element-plus';
+import { OBS_CENTRAL_URL } from '@/shared/config/website-url';
 
 import {
   handleLuoJiaInfer,
@@ -206,9 +207,9 @@ function handleInferClick(mobile) {
   }
 }
 
-const inputImg = `https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/luojianet/infer/${userInfoStore.userName}/input.png`;
+const inputImg = `${OBS_CENTRAL_URL}/luojianet/infer/${userInfoStore.userName}/input.png`;
 
-const outputImg = `https://big-model-deploy.obs.cn-central-221.ovaijisuan.com/luojianet/infer/${userInfoStore.userName}/output.png`;
+const outputImg = `${OBS_CENTRAL_URL}/luojianet/infer/${userInfoStore.userName}/output.png`;
 
 // 下载图片
 function handleOriImgDownload() {

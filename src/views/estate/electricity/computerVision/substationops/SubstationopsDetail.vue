@@ -1,4 +1,3 @@
-<!-- 智慧病理诊断系统 -->
 <script setup>
 import { useRouter } from 'vue-router';
 
@@ -7,6 +6,7 @@ import IconArrowRight from '~icons/app/arrow-right.svg';
 import IconLeft from '~icons/app/left.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { WEBSITE_URL } from '@/shared/config/website-url';
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -50,7 +50,7 @@ function goBack() {
             </div>
             <div class="banner-btn">
               <a
-                href="https://xihe.mindspore.cn/projects/MindSpore/yolov7-tch-projects"
+                :href="`${WEBSITE_URL}/projects/MindSpore/yolov7-tch-projects`"
                 target="_blank"
                 rel="noopener noreferrer"
               >

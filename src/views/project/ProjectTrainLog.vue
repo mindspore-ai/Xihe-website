@@ -27,6 +27,7 @@ import IconPoppver from '~icons/app/popover.svg';
 
 import { getHeaderConfig } from '@/shared/login';
 import { ElMessage } from 'element-plus';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
 
@@ -707,11 +708,13 @@ watch(
             <div v-if="isAim">
               <div class="have-aim">
                 <p>
-                  当前为自定义评估，若运行失败请参考<a
-                    href="https://xihe-docs.mindspore.cn/zh/tutorial/evaluation/"
+                  当前为自定义评估，若运行失败请参考
+                  <a
+                    :href="`${WEBSITE_DOCS_URL}/zh/tutorial/evaluation/`"
                     target="_blank"
-                    >添加自定义评估代码</a
                   >
+                    添加自定义评估代码
+                  </a>
                 </p>
                 <div class="info-btn">
                   <o-button

@@ -2,6 +2,7 @@
 import { defineProps } from 'vue';
 import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
+import { OBS_NORTH4_URL } from '@/shared/config/website-url';
 
 defineProps({
   cardData: {
@@ -21,7 +22,7 @@ const i18n = {
   <div class="project-card">
     <div class="card-top">
       <img
-        :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/long_proimg${cardData.related_project[0].cover_id}.png`"
+        :src="`${OBS_NORTH4_URL}/xihe-img/project-img/long_proimg${cardData.related_project[0].cover_id}.png`"
         alt=""
       />
       <p class="title">{{ cardData.related_project[0].name }}</p>

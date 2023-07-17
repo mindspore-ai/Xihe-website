@@ -15,6 +15,7 @@ import { useI18n } from 'vue-i18n';
 import { useLoginStore, useUserInfoStore, useEmailDialogState } from '@/stores';
 import IconUser from '~icons/app/user.svg';
 import { goAuthorize, logout } from '@/shared/login';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 const { t, locale } = useI18n();
 const loginStore = useLoginStore();
@@ -372,7 +373,8 @@ function toggleMenu(menu) {
 }
 function toPage(path, index) {
   if (path === '/docs') {
-    window.open('https://xihe-docs.mindspore.cn');
+    window.open(`${WEBSITE_DOCS_URL}`);
+    console.log(11);
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
     mobileNav[3].isActive = false;
@@ -448,7 +450,6 @@ function confirmDialog() {
       <OIcon v-if="!meauActive"><icon-menu></icon-menu></OIcon>
       <OIcon v-else><icon-close></icon-close></OIcon>
     </div>
-
     <img v-if="locale === 'zh'" :src="logoImg" alt="" @click="toPage('/')" />
     <img
       v-else-if="locale === 'en'"

@@ -23,6 +23,7 @@ import { Close } from '@element-plus/icons-vue';
 import { getSearchData } from '@/api/api-search';
 
 import translateWhitelist from '@/whitelist/whitelist-translate';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 import { useI18n } from 'vue-i18n';
 
@@ -258,7 +259,7 @@ function handleLogoClick() {
 // 点击导航
 function handleSelect(path) {
   if (path === '/docs') {
-    window.open('https://xihe-docs.mindspore.cn');
+    window.open(`${WEBSITE_DOCS_URL}`);
   } else if (!path) {
     return;
   } else {

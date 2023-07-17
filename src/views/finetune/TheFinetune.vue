@@ -40,6 +40,7 @@ import {
   deleteFinetune,
   terminateFinetune,
 } from '@/api/api-finetune';
+import { OBS_NORTH4_URL } from '@/shared/config/website-url';
 
 const router = useRouter();
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -448,7 +449,7 @@ onUnmounted(() => {
         </el-table>
         <div class="create-btn">
           <o-button
-            v-if="Math.round(new Date() / 1000) >= expiry"
+            v-if="!Math.round(new Date() / 1000) >= expiry"
             disabled
             type="secondary"
           >
@@ -539,7 +540,7 @@ onUnmounted(() => {
         <div>
           <span> 1. 点击 </span>
           <a
-            href="https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/finetune/%E7%94%B3%E8%AF%B7%E8%A1%A8%20.xlsx"
+            :href="`${OBS_NORTH4_URL}/xihe-img/finetune/%E7%94%B3%E8%AF%B7%E8%A1%A8%20.xlsx`"
             style="color: #0d8dff"
             rel="noopener noreferrer"
           >

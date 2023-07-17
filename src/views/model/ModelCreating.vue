@@ -13,7 +13,7 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 
-import protocol from '../../shared/config/protocol';
+import protocol from '@/shared/config/protocol';
 import { createModelStore, checkNames, getTags } from '@/api/api-model';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';

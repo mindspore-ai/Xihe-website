@@ -2,6 +2,8 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
+
 const route = useRoute();
 const i18n = {
   models: {
@@ -10,7 +12,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个模型仓库',
     progress2: '上传文件',
-    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/model_ui/',
+    docUrl: `${WEBSITE_DOCS_URL}/zh/basics/model_ui/`,
   },
   datasets: {
     new: '新建数据集',
@@ -18,7 +20,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个数据集仓库',
     progress2: '上传文件',
-    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/dataset_ui/',
+    docUrl: `${WEBSITE_DOCS_URL}/zh/basics/dataset_ui/`,
   },
   projects: {
     new: '新建项目',
@@ -27,7 +29,7 @@ const i18n = {
     reference: '参考文档',
     progress1: '创建一个项目仓库',
     progress2: '上传文件',
-    docUrl: 'https://xihe-docs.mindspore.cn/zh/basics/project_ui/',
+    docUrl: `${WEBSITE_DOCS_URL}/zh/basics/project_ui/`,
   },
 };
 

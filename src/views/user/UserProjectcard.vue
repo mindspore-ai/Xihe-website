@@ -4,6 +4,7 @@ import IconTime from '~icons/app/time';
 import IconHeart from '~icons/app/heart';
 import IconDownload from '~icons/app/download';
 import IconFork from '~icons/app/fork-gray';
+import { OBS_NORTH4_URL } from '@/shared/config/website-url';
 
 defineProps({
   cardData: {
@@ -49,7 +50,7 @@ const i18n = {
     <div class="card-top">
       <div class="img-box">
         <img
-          :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
+          :src="`${OBS_NORTH4_URL}/xihe-img/project-img/coverimg${cardData.cover_id}.png`"
           alt=""
           class="cover"
         />

@@ -8,12 +8,12 @@ import shennongInfo1 from '@/assets/imgs/shennong/shennong-info1.png';
 import shennongVideo from '@/assets/imgs/shennong/shennong-video2.png';
 import shennongPlay from '@/assets/imgs/taichu/taichuplay.png';
 import taichuClose from '@/assets/imgs/taichu/taichu-close.png';
+import { OBS_EAST_URL } from '@/shared/config/website-url';
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const shennongvideo =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E9%B9%8F%E5%9F%8E%E7%A5%9E%E5%86%9C.mp4';
+const shennongvideo = `${OBS_EAST_URL}/turing/newVideo/%E9%B9%8F%E5%9F%8E%E7%A5%9E%E5%86%9C.mp4`;
 const showShennongVideo = ref(false);
 
 // 播放视频

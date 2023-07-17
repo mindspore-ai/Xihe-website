@@ -13,6 +13,7 @@ import IconDown from '~icons/app/down';
 import { textDetectorInfer } from '@/api/api-modelzoo';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { GITHUB_URL } from '@/shared/config/website-url';
 
 const screenWidth = useWindowResize();
 
@@ -118,7 +119,7 @@ const i18n = {
   PRODUCTION_INTRO_4_EN: 'give feedback',
 };
 
-const feedbackLink = 'https://github.com/YuchuanTian/AIGC_text_detector';
+const feedbackLink = `${GITHUB_URL}/YuchuanTian/AIGC_text_detector`;
 const btnRef = ref();
 const inputMsg = ref('');
 const detectionLang = ref('zh');

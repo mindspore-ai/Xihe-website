@@ -15,7 +15,7 @@ import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 
-import protocol from '../../shared/config/protocol';
+import protocol from '@/shared/config/protocol';
 import { getTags, modifyTags } from '@/api/api-model';
 import { getUserDig, cancelCollection } from '@/api/api-project';
 

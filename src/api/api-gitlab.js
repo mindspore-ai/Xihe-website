@@ -45,16 +45,9 @@ export async function getGitlabConfig() {
 export function getRepoDetailByName(params) {
   const url = `/server/${params.modular}/${params.user}/${params.repoName}`;
   return request
-    .get(url, getHeaderConfig())
+    .get(url, { $doException: true, ...getHeaderConfig() })
     .then((res) => {
       return res.data;
-    })
-    .catch((err) => {
-      ElMessage({
-        type: 'error',
-        message: err.msg,
-      });
-      throw new Error(err);
     });
 }
 // 上传文件

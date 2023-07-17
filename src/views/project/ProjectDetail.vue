@@ -15,6 +15,7 @@ import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OPopper from '@/components/OPopper.vue';
+import NotAccess from '@/views/TheNotaccess.vue';
 
 import { useUserInfoStore, useFileData, useLoginStore } from '@/stores';
 
@@ -195,6 +196,7 @@ const forkForm = reactive({
 const ownerName = ref([]);
 ownerName.value.push(userInfoStore.userName);
 
+const isPrivate = ref(false);
 // 项目详情数据
 function getDetailData() {
   try {
@@ -248,12 +250,15 @@ function getDetailData() {
         getAllTags();
       })
       .catch((error) => {
-        ElMessage({
-          type: 'error',
-          message: error,
-          center: true,
-        });
-        router.push('/404');
+        if (error.msg === "can't access private project") {
+          isPrivate.value = true;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: error,
+            center: true,
+          });
+        }
       });
   } catch (error) {
     ElMessage({
@@ -985,6 +990,7 @@ watch(
       </el-dialog>
     </div>
   </div>
+  <Not-Access v-if="isPrivate"></Not-Access>
 </template>
 
 <style lang="scss" scoped>

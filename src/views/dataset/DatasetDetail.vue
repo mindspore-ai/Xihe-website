@@ -14,6 +14,7 @@ import IconUp from '~icons/app/up';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
 import TrainLikes from '@/components/train/TrainLikes.vue';
+import NotAccess from '@/views/TheNotaccess.vue';
 
 import { getUserDig, cancelCollection } from '@/api/api-project';
 import protocol from '@/shared/config/protocol';
@@ -154,6 +155,7 @@ function getTagList() {
 }
 
 let modelTags = ref([]);
+const isPrivate = ref(false);
 // 数据集详情数据
 function getDetailData() {
   try {
@@ -193,8 +195,16 @@ function getDetailData() {
         preStorage.value = JSON.stringify(headTags.value);
         getTagList();
       })
-      .catch(() => {
-        router.push('/404');
+      .catch((error) => {
+        if (error.msg === "can't access private dataset") {
+          isPrivate.value = true;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: error,
+            center: true,
+          });
+        }
       });
   } catch (error) {
     router.push('/404');
@@ -606,6 +616,7 @@ watch(
       </el-dialog>
     </div>
   </div>
+  <Not-Access v-if="isPrivate"></Not-Access>
 </template>
 
 <style lang="scss" scoped>

@@ -14,6 +14,7 @@ import IconUp from '~icons/app/up';
 import TrainLikes from '@/components/train/TrainLikes.vue';
 import OButton from '@/components/OButton.vue';
 import OIcon from '@/components/OIcon.vue';
+import NotAccess from '@/views/TheNotaccess.vue';
 
 import protocol from '@/shared/config/protocol';
 import { getTags, modifyTags } from '@/api/api-model';
@@ -139,6 +140,7 @@ function getTagList() {
 }
 
 let modelTags = ref([]);
+const isPrivate = ref(false);
 // 模型详情数据
 function getDetailData() {
   getRepoDetailByName({
@@ -197,8 +199,16 @@ function getDetailData() {
 
       getTagList();
     })
-    .catch(() => {
-      router.push('/404');
+    .catch((error) => {
+      if (error.msg === "can't access private model") {
+        isPrivate.value = true;
+      } else {
+        ElMessage({
+          type: 'error',
+          message: error,
+          center: true,
+        });
+      }
     });
 }
 getDetailData();
@@ -635,6 +645,7 @@ watch(
       </el-dialog>
     </div>
   </div>
+  <Not-Access v-if="isPrivate"></Not-Access>
 </template>
 
 <style lang="scss" scoped>

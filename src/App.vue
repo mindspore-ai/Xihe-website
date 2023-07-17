@@ -374,7 +374,6 @@ function toggleMenu(menu) {
 function toPage(path, index) {
   if (path === '/docs') {
     window.open(`${WEBSITE_DOCS_URL}`);
-    console.log(11);
   } else if (router.currentRoute.value.fullPath === path) {
     meauActive.value = false;
     mobileNav[3].isActive = false;

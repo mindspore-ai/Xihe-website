@@ -12,6 +12,7 @@ import IconUpload from '~icons/app/modelzoo-upload';
 import avatar from '@/assets/imgs/taichu/vqa-avatar.png';
 import { useI18n } from 'vue-i18n';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { ElMessage } from 'element-plus';
 
 const screenWidth = useWindowResize();
 const { t } = useI18n();
@@ -172,6 +173,40 @@ function customUpload() {
     inp.value.click();
   }
 }
+
+function handleFileChange(e) {
+  const fileInput = e.target;
+  const file = fileInput.files[0];
+
+  if (file && isImage(file) && isFileSizeValid(file, 2)) {
+    // 文件满足条件，进行上传或其他操作
+    // 1.获取本地选取的图片
+    imgUrl.value = window.URL.createObjectURL(file);
+
+    srcList.value.push(imgUrl.value);
+
+    formData.delete('picture');
+
+    handleUploadImg(imgUrl.value);
+  } else {
+    // 文件不符合要求，做出相应处理
+    ElMessage({
+      type: 'warning',
+      message: '上传图片格式应为png/jpeg/jpg且大小不超过2M',
+    });
+  }
+}
+
+function isImage(file) {
+  const acceptedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
+  return acceptedFormats.includes(file.type);
+}
+
+function isFileSizeValid(file, maxSizeInMB) {
+  const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+  return file.size <= maxSizeInBytes;
+}
+
 const latestIndex = ref(0);
 
 // 发送文本
@@ -261,15 +296,15 @@ const handleKeydown = (e) => {
 };
 onMounted(() => {
   // 1.获取本地选取的图片
-  inp.value.onchange = function (e) {
-    imgUrl.value = window.URL.createObjectURL(e.target.files[0]);
+  // inp.value.onchange = function (e) {
+  //   imgUrl.value = window.URL.createObjectURL(e.target.files[0]);
 
-    srcList.value.push(imgUrl.value);
+  //   srcList.value.push(imgUrl.value);
 
-    formData.delete('picture');
+  //   formData.delete('picture');
 
-    handleUploadImg(imgUrl.value);
-  };
+  //   handleUploadImg(imgUrl.value);
+  // };
 
   inputDom.value = inputContent.value.ref;
   inputContent.value.ref.addEventListener('keydown', handleKeydown);
@@ -360,6 +395,7 @@ onUnmounted(() => {
             type="file"
             accept="image/png,image/jpg,image/jpeg"
             style="display: none"
+            @change="handleFileChange"
           />
         </div>
       </div>

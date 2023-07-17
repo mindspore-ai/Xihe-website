@@ -225,11 +225,6 @@ watch(tagKinds, (newValue) => {
     </div>
     <div class="logo">
       <p class="title">{{ t('electricity.PARTNERS') }}</p>
-      <!-- <div class="logo-img">
-        <div v-for="(item, index) in logoPic" :key="index" class="img">
-          <img :src="item" alt="" />
-        </div>
-      </div> -->
       <swiper
         :speed="8000"
         :free-mode="true"
@@ -281,10 +276,6 @@ watch(tagKinds, (newValue) => {
   background-position: 0 1984px;
   @media screen and (max-width: 820px) {
     background-image: none;
-    // background-image: url('@/assets/imgs/estate/electricity-mobile.jpg');
-    // background-repeat: no-repeat;
-    // background-size: 100% 664px;TODO:
-    // background-position: 0 1984px;
   }
   .electricity-head {
     padding-top: 80px;

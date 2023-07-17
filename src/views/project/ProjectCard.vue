@@ -288,7 +288,6 @@ watch(
     immediate: true,
   }
 );
-
 function goEditor() {
   pushParams.contents = ['README.md'];
   router.push({

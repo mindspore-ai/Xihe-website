@@ -41,7 +41,6 @@ function goCasePath(item) {
 <template>
   <div class="industry">
     <div class="industry-head">
-      <!-- <img :src="estateBanner" alt="" /> -->
       <div class="industry-banner">
         <div class="banner-title">{{ t('industry.TITLE') }}</div>
         <div class="banner-desc">

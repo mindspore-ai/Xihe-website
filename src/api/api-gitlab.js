@@ -15,6 +15,12 @@ export function getGitlabToken() {
     return res.data;
   });
 }
+export function refreshGitlabToken() {
+  const url = `/server/user/${getUserInfo().userName}/gitlab/refresh`;
+  return request.get(url, getHeaderConfig()).then((res) => {
+    return res.data;
+  });
+}
 
 export async function getGitlabConfig() {
   const loginStore = useLoginStore();

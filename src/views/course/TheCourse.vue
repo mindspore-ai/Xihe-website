@@ -96,16 +96,6 @@ function goCourseDetail(id) {
             {{ i18n.head.introduce }}
           </div>
         </div>
-        <!-- <div class="banner-right">
-          <div class="header-search">
-            <o-icon class="search-icon"><icon-search></icon-search></o-icon>
-            <o-input
-              style="border: none"
-              placeholder="搜索MindSpore的模型"
-              class="header-input"
-            />
-          </div>
-        </div> -->
       </div>
     </div>
     <div class="course-body wrap">

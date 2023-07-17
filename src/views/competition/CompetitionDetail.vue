@@ -153,7 +153,6 @@ provide('getDetailData', getDetailData);
                   已结束
                 </div>
               </div>
-              <!-- <div class="card-body">{{ competitionData.description }}</div> -->
               <div class="card-body">
                 {{ competitionData.desc }}
               </div>

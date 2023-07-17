@@ -176,16 +176,6 @@ const navItems = reactive([
     isActive: false,
     windowOpen: true,
   },
-  /*  {
-    id: 'leaderboards',
-    label: '排行榜',
-    href: '/leaderboard',
-  }, */
-  // {
-  //   id: 'teams',
-  //   label: '团队',
-  //   href: '/teams',
-  // },
 ]);
 const loginedDropdownItems = reactive([
   {
@@ -558,55 +548,12 @@ const handleCommand = (command) => {
 <template>
   <div class="header">
     <div v-if="locale === 'zh'" class="header-logo" @click="handleLogoClick">
-      <!-- <img
-        v-if="route.path === '/modelzoo/wukong'"
-        :src="logoImg1"
-        alt=""
-        srcset=""
-      /> -->
       <img :src="logoImg" alt="" srcset="" />
     </div>
     <div v-else class="header-logo" @click="handleLogoClick">
       <img :src="logoImg2" alt="" srcset="" />
     </div>
     <div class="header-content">
-      <!-- <el-menu
-        v-if="show"
-        class="modelzoo-menu"
-        :default-active="route.path"
-        mode="horizontal"
-        text-color="#fff"
-        active-text-color="#0d8dff"
-        @select="handleSelect"
-      >
-        <template v-for="item in navItems">
-          <el-menu-item
-            v-if="item.id !== 'modelzoo'"
-            :key="item.id"
-            :index="item.href"
-          >
-            {{ item.label }}
-          </el-menu-item>
-          <el-sub-menu
-            v-else
-            :key="item"
-            popper-class="modelzooItem"
-            :popper-offset="0"
-            :index="item.id"
-          >
-            <template #title>{{ item.label }}</template>
-            <div class="sub-menu">
-              <el-menu-item
-                v-for="val in item.menuList"
-                :key="val.id"
-                :index="val.href"
-              >
-                {{ val.label }}
-              </el-menu-item>
-            </div>
-          </el-sub-menu>
-        </template>
-      </el-menu> -->
       <div v-if="show" class="header-menu">
         <div
           v-for="item in navItems"
@@ -739,12 +686,6 @@ const handleCommand = (command) => {
                   <img :src="userImg" alt="" />
                   <span>{{ locale === 'zh' ? '用户' : 'users' }}</span>
                 </div>
-                <!-- <div class="search-result-num" @click="getuser(keyword)">
-                  <span class="related-result"
-                    >查看{{ userCount }}个相关用户</span
-                  >
-                  <o-icon class="right-icon"><icon-arrow-right /></o-icon>
-                </div> -->
               </div>
               <div class="result-items-item">
                 <ul>
@@ -803,20 +744,7 @@ const handleCommand = (command) => {
               @click="handleCommand(t('home.LANG'))"
             >
               {{ t('home.LANG') }}
-              <!-- <OIcon><IconDown></IconDown></OIcon> -->
             </span>
-
-            <!-- <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item
-                  v-for="(item, key) in options"
-                  :key="key"
-                  :class="{ active: lang === item.value }"
-                  :command="item"
-                  >{{ item.label }}</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template> -->
           </el-dropdown>
         </div>
 

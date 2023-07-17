@@ -11,7 +11,7 @@ import IconPoppver from '~icons/app/popover.svg';
 import { ArrowRight } from '@element-plus/icons-vue';
 import OButton from '@/components/OButton.vue';
 
-import protocol from '../../../config/protocol';
+import protocol from '@/shared/config/protocol';
 import { createDataset, checkNames, getTags } from '@/api/api-dataset';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';

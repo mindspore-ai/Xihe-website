@@ -24,6 +24,7 @@ import { useUserInfoStore } from '@/stores';
 import { ElMessage } from 'element-plus';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
 import { useI18n } from 'vue-i18n';
+import { WEBSITE_URL } from '@/shared/config/website-url';
 
 const { t } = useI18n();
 const screenWidth = useWindowResize();
@@ -230,7 +231,7 @@ async function publicImage(imgId) {
   }
 }
 
-const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
+const copyContent = `${WEBSITE_URL}/modelzoo/wukong`;
 
 // 移动端点击收藏图片
 function handleImageClick(img) {

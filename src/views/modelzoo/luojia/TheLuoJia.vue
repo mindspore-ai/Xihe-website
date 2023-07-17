@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 
 import IconArrow from '~icons/app/arrow-blue';
 import { ArrowRight } from '@element-plus/icons-vue';
+import { GITHUB_URL } from '@/shared/config/website-url';
 
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -15,7 +16,7 @@ function goToExperience() {
 }
 
 function knowMore() {
-  window.open('https://github.com/WHULuoJiaTeam/luojianet');
+  window.open(`${GITHUB_URL}/WHULuoJiaTeam/luojianet`);
 }
 function enterLuoJiaNet() {
   window.open('http://58.48.42.237/luojiaNet/user/login');

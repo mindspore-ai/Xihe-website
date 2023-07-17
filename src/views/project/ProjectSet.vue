@@ -9,6 +9,7 @@ import { ElDialog } from 'element-plus';
 
 import { useUserInfoStore, useFileData } from '@/stores';
 import { modifyProject, deleteProject } from '@/api/api-project';
+import { OBS_NORTH4_URL } from '@/shared/config/website-url';
 
 import IconPoppver from '~icons/app/popover.svg';
 import warningImg from '@/assets/icons/warning.png';
@@ -92,19 +93,19 @@ const queryRef = ref(null);
 const photos = reactive([
   {
     id: '1',
-    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg1.png',
+    url: `${OBS_NORTH4_URL}/xihe-img/project-img/proimg1.png`,
   },
   {
     id: '2',
-    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg2.png',
+    url: `${OBS_NORTH4_URL}/xihe-img/project-img/proimg2.png`,
   },
   {
     id: '3',
-    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg3.png',
+    url: `${OBS_NORTH4_URL}/xihe-img/project-img/proimg3.png`,
   },
   {
     id: '4',
-    url: 'https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/proimg4.png',
+    url: `${OBS_NORTH4_URL}/xihe-img/project-img/proimg4.png`,
   },
 ]);
 const photoId = ref(0);

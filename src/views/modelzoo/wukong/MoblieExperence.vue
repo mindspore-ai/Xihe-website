@@ -44,6 +44,8 @@ import { goAuthorize } from '@/shared/login';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
 import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
+import { WEBSITE_URL, WEBSITE_DOCS_URL } from '@/shared/config/website-url';
+
 import {
   wuKongInfer,
   addLikePicture,
@@ -969,10 +971,11 @@ function handleNum(index) {
 
         <div class="poster-download">
           <div class="link">
-            <p>https://xihe.mindspore.cn/modelzoo/wukong</p>
+            <p>
+              {{ `${WEBSITE_URL}/modelzoo/wukong` }}
+            </p>
 
-            <o-icon
-              @click="copyText(`https://xihe.mindspore.cn/modelzoo/wukong`)"
+            <o-icon @click="copyText(`${WEBSITE_URL}/modelzoo/wukong`)"
               ><icon-copy></icon-copy
             ></o-icon>
           </div>
@@ -1001,7 +1004,7 @@ function handleNum(index) {
         <a
           target="blank"
           rel="noopener noreferrer"
-          href="https://xihe-docs.mindspore.cn/zh/appendix/license/"
+          :href="`${WEBSITE_DOCS_URL}/zh/appendix/license/`"
           >《昇思大模型平台协议》</a
         >
       </div>

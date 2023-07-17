@@ -23,24 +23,20 @@ import taichuFixImg from '@/assets/imgs/taichu/taichuFixImage.png';
 import OButton from '@/components/OButton.vue';
 import { ArrowRight } from '@element-plus/icons-vue';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { OBS_EAST_URL, GITEE_URL } from '@/shared/config/website-url';
+
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
 const screenWidth = useWindowResize();
 
-const taichuvideo1 =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4';
-const taichuvideo2 =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2002.mp4';
-const taichuvideo3 =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2001.mp4';
-const taichuvideo4 =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2002.mp4';
-const referencevideo =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E7%B4%AB%E4%B8%9C%E5%A4%AA%E5%88%9D.mp4';
-const instancevideo =
-  'https://obs-9be7.obs.cn-east-2.myhuaweicloud.com/turing/newVideo/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%BA%94%E7%94%A8%E8%A7%86%E9%A2%91%E8%B0%83%E8%89%B2%E7%89%88-0614.mp4';
+const taichuvideo1 = `${OBS_EAST_URL}/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2001.mp4`;
+const taichuvideo2 = `${OBS_EAST_URL}/turing/newVideo/%E4%BB%A5%E5%9B%BE%E7%94%9F%E9%9F%B3%2002.mp4`;
+const taichuvideo3 = `${OBS_EAST_URL}/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2001.mp4`;
+const taichuvideo4 = `${OBS_EAST_URL}/turing/newVideo/%E4%BB%A5%E9%9F%B3%E7%94%9F%E5%9B%BE%2002.mp4`;
+const referencevideo = `${OBS_EAST_URL}/turing/newVideo/%E7%B4%AB%E4%B8%9C%E5%A4%AA%E5%88%9D.mp4`;
+const instancevideo = `${OBS_EAST_URL}/turing/newVideo/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%BA%94%E7%94%A8%E8%A7%86%E9%A2%91%E8%B0%83%E8%89%B2%E7%89%88-0614.mp4`;
 
 const showVideo = ref(false);
 const showReferenceVideo = ref(false);
@@ -113,7 +109,7 @@ function goTaichuExperience() {
   window.open('/modelzoo/taichu');
 }
 function goTaichuMore() {
-  window.open('https://gitee.com/mindspore/omni-perception-pretrainer');
+  window.open(`${GITEE_URL}/mindspore/omni-perception-pretrainer`);
 }
 </script>
 <template>

@@ -17,6 +17,7 @@ import { getDatasetData } from '@/api/api-dataset';
 import { goAuthorize } from '@/shared/login';
 import { debounce } from 'lodash/function';
 import { ElMessage } from 'element-plus';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 const userInfoStore = useUserInfoStore();
 
@@ -512,7 +513,7 @@ onUnmounted(() => {
             {{ i18n.head.introduce }}
             <a
               class="reference"
-              href="https://xihe-docs.mindspore.cn/zh/basics/dataset_ui/"
+              :href="`${WEBSITE_DOCS_URL}/zh/basics/dataset_ui/`"
               target="_blank"
               rel="noopener noreferrer"
               >{{ i18n.head.reference }}</a

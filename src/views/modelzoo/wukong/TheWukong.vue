@@ -18,6 +18,7 @@ import { ArrowRight } from '@element-plus/icons-vue';
 import { goAuthorize } from '@/shared/login';
 import { useLoginStore } from '@/stores';
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { GITHUB_URL } from '@/shared/config/website-url';
 
 const screenWidth = useWindowResize();
 
@@ -63,7 +64,7 @@ function toggleAlbum() {
 
 function learnWukongMore() {
   window.open(
-    'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
+    `${GITHUB_URL}/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua`
   );
 }
 

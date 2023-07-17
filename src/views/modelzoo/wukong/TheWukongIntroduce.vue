@@ -12,6 +12,8 @@ import wukongBanner1 from '@/assets/imgs/wukong/wukong-banner1.png';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 import useWindowResize from '@/shared/hooks/useWindowResize.js';
+import { GITHUB_URL, WUKONG_GITHUB_URL } from '@/shared/config/website-url';
+
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
@@ -51,13 +53,12 @@ function goExperience() {
 // 了解更多
 function learnWukongMore() {
   window.open(
-    'https://github.com/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua'
+    `${GITHUB_URL}/mindspore-lab/minddiffusion/tree/main/vision/wukong-huahua`
   );
 }
 
-const githubLink1 = 'https://wukong-dataset.github.io/wukong-dataset/';
-const githubLink2 =
-  'https://github.com/christophschuhmann/improved-aesthetic-predictor';
+const githubLink1 = `${WUKONG_GITHUB_URL}/wukong-dataset/`;
+const githubLink2 = `${GITHUB_URL}/christophschuhmann/improved-aesthetic-predictor`;
 </script>
 <template>
   <div class="wukong-intro">

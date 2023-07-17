@@ -19,18 +19,16 @@ import recommendation from '~icons/app/recommendation';
 
 import OEmpty from '@/components/OEmpty.vue';
 import emptyImg from '@/assets/imgs/model-empty.png';
-
 import OIcon from '@/components/OIcon.vue';
 import OButton from '@/components/OButton.vue';
 
 import { debounce } from 'lodash/function';
-
 import { goAuthorize } from '@/shared/login';
+import { ElMessage } from 'element-plus';
 
 import { getProjectData, getTags } from '@/api/api-project';
-
 import { useLoginStore } from '@/stores';
-import { ElMessage } from 'element-plus';
+import { WEBSITE_DOCS_URL, OBS_NORTH4_URL } from '@/shared/config/website-url';
 
 const loginStore = useLoginStore();
 
@@ -544,7 +542,7 @@ async function deleteAllTags() {
               {{ i18n.head.introduce }}
               <a
                 class="reference"
-                href="https://xihe-docs.mindspore.cn/zh/basics/project_ui/"
+                :href="`${WEBSITE_DOCS_URL}/zh/basics/project_ui/`"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -760,7 +758,7 @@ async function deleteAllTags() {
                     </div>
                     <img
                       class="cover"
-                      :src="`https://obs-xihe-beijing4.obs.cn-north-4.myhuaweicloud.com/xihe-img/project-img/coverimg${item.cover_id}.png`"
+                      :src="`${OBS_NORTH4_URL}/xihe-img/project-img/coverimg${item.cover_id}.png`"
                       alt=""
                     />
                   </div>

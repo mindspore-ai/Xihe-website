@@ -2,8 +2,8 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import protocol from '../../../config/protocol';
-import { trainSdk, inferSdk, projectPhoto } from '../../../config/protocol';
+import protocol from '@/shared/config/protocol';
+import { trainSdk, inferSdk, projectPhoto } from '@/shared/config/protocol';
 import { setNewProject, checkNames, getTags } from '@/api/api-project.js';
 
 import { useUserInfoStore } from '@/stores';

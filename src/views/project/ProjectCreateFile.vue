@@ -15,6 +15,7 @@ import { getRepoDetailByName } from '@/api/api-gitlab';
 
 import { useUserInfoStore } from '@/stores';
 import OButton from '@/components/OButton.vue';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 import TrainModel from '@/views/project/train/TrainModel.vue';
 import TrainDataset from '@/views/project/train/TrainDataset.vue';
@@ -505,7 +506,7 @@ function selectFile(item) {
         <div class="createfile-content-tip">
           你可以通过表单方式创建训练实例，详情请参考
           <a
-            href="https://xihe-docs.mindspore.cn/zh/tutorial/train/"
+            :href="`${WEBSITE_DOCS_URL}/zh/tutorial/train/`"
             target="_blank"
             rel="noopener noreferrer"
             style="color: #0d8dff"

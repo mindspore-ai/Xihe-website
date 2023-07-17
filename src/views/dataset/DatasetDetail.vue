@@ -16,7 +16,7 @@ import OIcon from '@/components/OIcon.vue';
 import TrainLikes from '@/components/train/TrainLikes.vue';
 
 import { getUserDig, cancelCollection } from '@/api/api-project';
-import protocol from '../../../config/protocol';
+import protocol from '@/shared/config/protocol';
 import { getTags, modifyTags } from '@/api/api-dataset';
 import { getRepoDetailByName } from '@/api/api-gitlab';
 import { goAuthorize } from '@/shared/login';

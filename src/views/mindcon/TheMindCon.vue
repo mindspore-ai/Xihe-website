@@ -37,6 +37,7 @@ import { goAuthorize } from '@/shared/login';
 import { ElMessage } from 'element-plus';
 import { ElDialog } from 'element-plus';
 import { useI18n } from 'vue-i18n';
+import { HIASCEND_URL } from '@/shared/config/website-url';
 
 const { t } = useI18n();
 
@@ -149,14 +150,14 @@ function goChallenge(index) {
           window.open(routerData.href, '_blank');
         } else {
           window.open(
-            'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+            `${HIASCEND_URL}/forum/thread-0226105249356182016-1-1.html`,
             '_blank'
           );
         }
       } else {
         showApplication.value = true;
         window.open(
-          'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html',
+          `${HIASCEND_URL}/forum/thread-0226105249356182016-1-1.html`,
           '_blank'
         );
       }
@@ -275,9 +276,7 @@ function showDialog2() {
   }
 }
 function goRule() {
-  window.open(
-    'https://www.hiascend.com/forum/thread-0226105249356182016-1-1.html'
-  );
+  window.open(`${HIASCEND_URL}/forum/thread-0226105249356182016-1-1.html`);
 }
 </script>
 <template>

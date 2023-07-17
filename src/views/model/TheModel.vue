@@ -22,6 +22,7 @@ import AppContent from '@/components/AppContent.vue';
 
 import { getModelData, getTags } from '@/api/api-model';
 import { ElMessage } from 'element-plus';
+import { WEBSITE_DOCS_URL } from '@/shared/config/website-url';
 
 const userInfoStore = useUserInfoStore();
 
@@ -580,7 +581,7 @@ onUnmounted(() => {
             {{ i18n.head.introduce }}
             <a
               class="reference"
-              href="https://xihe-docs.mindspore.cn/zh/basics/model_ui/"
+              :href="`${WEBSITE_DOCS_URL}/zh/basics/model_ui/`"
               target="_blank"
               rel="noopener noreferrer"
               >{{ i18n.head.reference }}</a

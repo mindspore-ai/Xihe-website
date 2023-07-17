@@ -6,7 +6,7 @@ import { setUserData } from '@/api/api-user';
 
 import OButton from '@/components/OButton.vue';
 
-import avatarUrl from '../../../config/avatar-url';
+import avatarUrl from '@/shared/config/avatar-url';
 import { ElMessage } from 'element-plus';
 const filterData = ref();
 

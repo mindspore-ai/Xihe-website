@@ -35,6 +35,7 @@ import writeToClipboard from '@/shared/hooks/writeToClipboard.js';
 
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
+import { WEBSITE_URL } from '@/shared/config/website-url';
 
 const { t } = useI18n();
 
@@ -58,7 +59,7 @@ const params = ref({
   level: 'official',
 });
 
-const copyContent = 'https://xihe.mindspore.cn/modelzoo/wukong';
+const copyContent = `${WEBSITE_URL}/modelzoo/wukong`;
 
 // 给生成图片加文字水印
 function addWatermark(imgUrl, index) {
